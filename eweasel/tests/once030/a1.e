@@ -1,0 +1,3 @@
+once class A
+
+end

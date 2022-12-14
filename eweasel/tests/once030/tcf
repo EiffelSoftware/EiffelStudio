@@ -1,0 +1,17 @@
+test_name 	once-class-without-creator
+test_description Once class without an explicit creation procedure should not cause the compiler to crash.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	a1.e $CLUSTER a.e
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	validity_error A VKCC:1
+
+copy_raw 	a2.e $CLUSTER a.e
+resume_compile
+compile_result 	ok
+execute_work	NONE exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+test_end

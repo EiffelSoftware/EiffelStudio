@@ -1926,6 +1926,7 @@ test once-class-reference-initialization	once026 tcf pass once once_creation
 test once-class-creation-procedure		once027 tcf pass once once_creation
 test once-class-uniqueness			once028 tcf pass once once_creation
 test once-class-separateness-difference		once029 tcf pass once once_creation
+test once-class-without-creator			once030 tcf pass once once_creation
 
 -- Compiler termination (exception trace, panic, etc.)
 

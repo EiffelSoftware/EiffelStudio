@@ -316,7 +316,8 @@ feature -- Deserialization
 	consumed_assembly (j: detachable JSON_VALUE): detachable CONSUMED_ASSEMBLY
 		local
 			uid, fn, n, v, c, k, s: JSON_STRING
-			is_in_gac: JSON_BOOLEAN
+			b_is_in_gac: JSON_BOOLEAN
+			is_in_gac: BOOLEAN
 			loc, gp: PATH
 		do
 			if attached {JSON_OBJECT} j as jo then
@@ -334,8 +335,16 @@ feature -- Deserialization
 				s := jo.string_item (names.gac_path)
 				if s /= Void then
 					create gp.make_from_string (s.unescaped_string_32)
+				else
+					-- GAC deprecated in .Net core
+					gp := loc
 				end
-				is_in_gac := jo.boolean_item (names.is_in_gac)
+				b_is_in_gac := jo.boolean_item (names.is_in_gac)
+				if b_is_in_gac /= Void then
+					is_in_gac := b_is_in_gac.item
+				else
+					is_in_gac := False -- Deprecated for .Net core
+				end
 
 				if
 					uid /= Void and fn /= Void and
@@ -344,7 +353,7 @@ feature -- Deserialization
 				then
 					create Result.make (uid.unescaped_string_32, fn.unescaped_string_32,
 							n.unescaped_string_32, v.unescaped_string_32, c.unescaped_string_32, k.unescaped_string_32,
-							loc, gp, is_in_gac.item
+							loc, gp, is_in_gac
 						)
 					if attached jo.boolean_item (names.is_consumed) as jb and then jb.item then
 						Result.set_is_consumed (True, attached jo.boolean_item (names.has_info_only) as jb2 and then jb2.item)

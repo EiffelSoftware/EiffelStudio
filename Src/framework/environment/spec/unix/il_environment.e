@@ -80,13 +80,13 @@ feature -- Access
 	is_version_installed (a_version: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_version' installed?
 		do
-			Result := across installed_runtimes as l_runtime some l_runtime.item.same_string_general (a_version) end
+			Result := installed_runtimes.has (a_version)
 		end
 
-	installed_runtimes: ARRAYED_LIST [IMMUTABLE_STRING_32]
-			-- List all installed version of the runtime.
+	installed_runtimes: STRING_TABLE [PATH]
+			-- All paths of installed versions of .NET runtime indexed by their version names.
 		do
-			create Result.make (1)
+			create Result.make (0)
 		ensure
 			installed_runtimes_not_void: Result /= Void
 		end
@@ -97,6 +97,14 @@ feature -- Access
 			is_dotnet_installed: is_dotnet_installed
 		do
 			create Result.make_empty
+		end
+
+	installed_sdks: STRING_TABLE [PATH]
+			-- All paths of installed versions of .NET SDKs indexed by their version names.
+		require
+			is_dotnet_installed: is_dotnet_installed
+		do
+			create Result.make (0)
 		end
 
 	dotnet_framework_sdk_path: like dotnet_framework_path
@@ -144,7 +152,7 @@ invariant
 	version_not_void: version /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -157,22 +165,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class IL_ENVIRONMENT

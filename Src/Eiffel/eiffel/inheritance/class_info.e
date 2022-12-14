@@ -127,19 +127,19 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			vgcp4: VGCP4
 			has_default_create: BOOLEAN
 			position: like {FEATURE_I}.creator_position
-			is_once: BOOLEAN
 		do
 			a_class := feat_table.associated_class
-			is_once := a_class.is_once
 			if not attached creators as cs then
 					-- Do nothing.
 				has_default_create := True
 				if a_class.class_id = system.any_id then
 					if attached feat_table.item_id (system.names.default_create_name_id) as f then
 						f.set_creator_position (1)
+						check_once_creator (f, a_class, agent (c: CLASS_C): LOCATION_AS do Result := c.ast.class_name end (a_class))
 					end
 				elseif attached feat_table.feature_of_rout_id (system.default_create_rout_id) as f then
 					f.set_creator_position (1)
+					check_once_creator (f, a_class, agent (c: CLASS_C): LOCATION_AS do Result := c.ast.class_name end (a_class))
 				end
 			elseif a_class.is_deferred then
 				create vgcp1
@@ -191,15 +191,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 									vgcp21.set_location (f.item.start_location)
 									Error_handler.insert_error (vgcp21)
 								end
-								if not is_once then
-										-- Skip checks specific to once classes.
-								elseif not a_feature.is_once then
-									error_handler.insert_error (create {ONCE_CREATION_ERROR}.make ({ONCE_CREATION_ERROR}.reason_non_once, a_feature, a_class, f.item.start_location))
-								elseif a_feature.written_in /= class_id then
-									error_handler.insert_error (create {ONCE_CREATION_ERROR}.make ({ONCE_CREATION_ERROR}.reason_inherited, a_feature, a_class, f.item.start_location))
-								elseif a_feature.is_object_relative_once then
-									error_handler.insert_error (create {ONCE_CREATION_ERROR}.make ({ONCE_CREATION_ERROR}.reason_object_relative, a_feature, a_class, f.item.start_location))
-								end
+								check_once_creator (a_feature, a_class, agent (f.item).start_location)
 								a_feature.set_creator_position (position)
 								position := position + 1
 							end
@@ -216,8 +208,25 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			end
 		end
 
+feature {NONE} -- Validity checks
+
+	check_once_creator (a_feature: FEATURE_I; a_class: CLASS_C; l: FUNCTION [LOCATION_AS])
+			-- Check that feature `f` of class `c` is valid as a creation procedure if the class is once.
+			-- Report an error if this is not the case for location `l`.
+		do
+			if not a_class.is_once then
+					-- Skip the check for non-once classes.
+			elseif not a_feature.is_once then
+				error_handler.insert_error (create {ONCE_CREATION_ERROR}.make ({ONCE_CREATION_ERROR}.reason_non_once, a_feature, a_class, l.item))
+			elseif a_feature.written_in /= class_id then
+				error_handler.insert_error (create {ONCE_CREATION_ERROR}.make ({ONCE_CREATION_ERROR}.reason_inherited, a_feature, a_class, l.item))
+			elseif a_feature.is_object_relative_once then
+				error_handler.insert_error (create {ONCE_CREATION_ERROR}.make ({ONCE_CREATION_ERROR}.reason_object_relative, a_feature, a_class, l.item))
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

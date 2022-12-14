@@ -179,7 +179,10 @@ feature {NONE} -- Status report
 			Result :=
 				context.associated_class.is_once and then
 				is_process_or_thread_relative_once and then
-				context.associated_class.has_creator_of_name_id (feature_name_id)
+				(context.associated_class.has_creator_of_name_id (feature_name_id) or else
+				context.associated_class.allows_default_creation and then
+				attached context.associated_class.default_create_feature as d and then
+				d.feature_name_id = feature_name_id)
 		end
 
 feature -- C code generation
@@ -357,7 +360,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

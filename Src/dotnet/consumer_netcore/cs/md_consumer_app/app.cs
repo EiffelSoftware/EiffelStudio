@@ -50,6 +50,8 @@ namespace EifMdConsumer
                 } else if (a.Equals("-o")) {
                     i = i + 1;
                     cache_location = args[i];
+                } else if (a.Equals("-json")) {
+                    // Ignore as JSON is the default and only format
                 } else if (a.Equals("-halt")) {
                     has_halt = true;
                 } else if (a.Equals("-nologo")) {

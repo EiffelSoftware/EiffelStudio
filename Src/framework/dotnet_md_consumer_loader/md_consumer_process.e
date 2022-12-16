@@ -19,6 +19,7 @@ inherit
 		end
 
 	EIFFEL_LAYOUT
+	SHARED_EXECUTION_ENVIRONMENT
 
 create
 	make
@@ -135,6 +136,10 @@ feature -- XML generation
 				args.extend (sdk_path.name)
 				args.extend ("-i")
 				args.extend (sdk_path.extended ("ref").name)
+			end
+			if attached execution_environment.item (eiffel_layout.default_il_environment.ise_dotnet_framework_env) as d then
+				args.extend ("-i")
+				args.extend (d)
 			end
 
 			p := pf.process_launcher (emdc_location.name, args, emdc_location.parent.name)

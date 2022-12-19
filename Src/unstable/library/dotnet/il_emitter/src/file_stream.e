@@ -126,6 +126,14 @@ feature -- Element change
 			end
 		end
 
+
+	put_managed_pointer (mp: MANAGED_POINTER)
+		do
+			if attached output_stream as l_stream then
+				l_stream.put_managed_pointer (mp, l_stream.count, mp.count)
+			end
+		end
+
 	put_new_line
 		do
 			if attached output_stream as l_stream then
@@ -155,6 +163,38 @@ feature -- Element change
 			Result := debug_output
 		end
 
+
+	go (abs_position: INTEGER_32)
+			-- Go to the absolute `position'.
+			-- (New position may be beyond physical length.)
+		do
+			if attached output_stream as l_stream then
+				l_stream.go (abs_position)
+			end
+		end
+
+
+	read_stream (a_buf: ARRAY [NATURAL_8]; a_len: INTEGER_32)
+			-- Read a string of at most `a_len' bound characters
+			-- or until end of file.
+			-- Make result available in `a_buf'.
+		local
+			l_converter: BYTE_ARRAY_CONVERTER
+		do
+			if attached output_stream as l_stream then
+				l_stream.read_stream (a_len)
+				create l_converter.make_from_string (l_stream.last_string)
+				a_buf.make_from_array (l_converter.to_natural_8_array)
+			end
+		end
+
+	count: INTEGER
+			-- size in bytes.
+		do
+			if attached output_stream as l_stream then
+				Result := l_stream.count
+			end
+		end
 
 feature -- PE_LIB	
 

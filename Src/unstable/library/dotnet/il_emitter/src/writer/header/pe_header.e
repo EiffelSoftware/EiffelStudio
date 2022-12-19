@@ -12,25 +12,25 @@ feature -- Access
 			-- `signature'
 
 	cpu_type: INTEGER_16 assign set_cpu_type
-			-- `cpu_type'
+			-- `cpu_type' machine
 
 	num_objects: INTEGER_16 assign set_num_objects
-			-- `num_objects'
+			-- `num_objects'number of sections
 
 	time: INTEGER assign set_time
-			-- `time'
+			-- `time' time/date stamp
 
 	symbol_ptr: INTEGER assign set_symbol_ptr
-			-- `symbol_ptr'
+			-- `symbol_ptr' pointer to symbol table.
 
 	num_symbols: INTEGER assign set_num_symbols
-			-- `num_symbols'
+			-- `num_symbols' number of symbols.
 
 	nt_hdr_size: INTEGER_16 assign set_nt_hdr_size
-			-- `nt_hdr_size'
+			-- `nt_hdr_size' optional header size.
 
 	flags: INTEGER_16 assign set_flags
-			-- `flags'
+			-- `flags' characteristics
 
 	magic: INTEGER_16 assign set_magic
 			-- `magic'
@@ -119,7 +119,7 @@ feature -- Access
 	loader_flags: INTEGER assign set_loader_flags
 			-- `loader_flags'
 
-	num_rvas: INTEGER assign  set_num_rvas
+	num_rvas: INTEGER assign set_num_rvas
 			-- `num_rvas'
 
 	export_rva: INTEGER assign set_export_rva
@@ -200,29 +200,23 @@ feature -- Access
 	iat_size: INTEGER assign set_iat_size
 			-- `iat_size'
 
-	delay_imports_size: INTEGER assign set_delay_imports_size
-			-- `delay_imports_size'
-
 	delay_imports_rva: INTEGER assign set_delay_imports_rva
 			-- `delay_imports_rva'
 
-	com_size: INTEGER assign set_com_size
-			-- `com_size'
+	delay_imports_size: INTEGER assign set_delay_imports_size
+			-- `delay_imports_size'
 
 	com_rva: INTEGER assign set_com_rva
 			-- `com_rva'
 
-	res3_size: INTEGER assign set_res3_size
-			-- `res3_size'
+	com_size: INTEGER assign set_com_size
+			-- `com_size'
 
 	res3_rva: INTEGER assign set_res3_rva
 			-- `res3_rva'
 
-feature -- Measurement
-
-	new: ANY
-			-- `new'
-		attribute check False then end end --| Remove line when `new' is initialized in creation procedure.
+	res3_size: INTEGER assign set_res3_size
+			-- `res3_size'
 
 feature -- Element change
 
@@ -799,6 +793,9 @@ feature -- Measurement
 			n := l_internal.field_count (l_obj)
 			across 1 |..| n as ic loop
 				if attached l_internal.field (ic, l_obj) as l_field then
+					print ("%NField_name: " + l_internal.field_name (ic, l_obj))
+					print (" -  value: " + l_field.out)
+					print (" -  offset:" + l_internal.field_offset (ic, l_obj).out)
 					if attached {INTEGER_32} l_field then
 						Result := Result + {PLATFORM}.integer_32_bytes
 					elseif attached {INTEGER_16} l_field then
@@ -810,6 +807,295 @@ feature -- Measurement
 			end
 		ensure
 			instance_free: class
+		end
+
+	managed_pointer: MANAGED_POINTER
+		local
+			offset: INTEGER
+		do
+				-- Allocate memory for the current object.
+			create Result.make (size_of)
+				-- Initialize offset
+			offset := 0
+				-- signature
+			Result.put_integer_32_le (signature, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- cpu_type
+			Result.put_integer_16_le (cpu_type, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				--num_objects
+			Result.put_integer_16_le (num_objects, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				-- time
+			Result.put_integer_32_le (time, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- symbol_ptr
+			Result.put_integer_32_le (symbol_ptr, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- num_symbols
+			Result.put_integer_32_le (num_symbols, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- nt_hdr_size
+			Result.put_integer_16_le (nt_hdr_size, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				-- flags
+			Result.put_integer_16_le (flags, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				-- magic
+			Result.put_integer_16_le (magic, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				-- linker_major_version
+			Result.put_natural_8_le (linker_major_version, offset)
+			offset := offset + {PLATFORM}.natural_8_bytes
+
+				-- linker_minor_version
+			Result.put_natural_8_le (linker_minor_version, offset)
+			offset := offset + {PLATFORM}.natural_8_bytes
+
+				-- code size
+			Result.put_integer_32_le (code_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- data_size
+			Result.put_integer_32_le (data_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- bss_size
+			Result.put_integer_32_le (bss_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- entry_point
+			Result.put_integer_32_le (entry_point, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- code_base
+			Result.put_integer_32_le (code_base, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- data_base
+			Result.put_integer_32_le (data_base, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- image_base
+			Result.put_integer_32_le (image_base, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- object_align
+			Result.put_integer_32_le (object_align, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- file_align
+			Result.put_integer_32_le (file_align, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- os_major_version
+			Result.put_integer_16_le (os_major_version, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				-- os_minor_version
+			Result.put_integer_16_le (os_minor_version, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				-- user_major_version
+			Result.put_integer_16_le (user_major_version, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				-- user_minor_version
+			Result.put_integer_16_le (user_minor_version, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				-- subsys_major_version
+			Result.put_integer_16_le (subsys_major_version, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				-- subsys_minor_version
+			Result.put_integer_16_le (subsys_minor_version, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				-- uu_1
+			Result.put_integer_32_le (uu_1, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- image_size
+			Result.put_integer_32_le (image_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- header_size
+			Result.put_integer_32_le (header_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- checksum
+			Result.put_integer_32_le (chekcsum, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- subsystem
+			Result.put_integer_16_le (subsystem, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				-- dll_flags
+			Result.put_integer_16_le (dll_flags, offset)
+			offset := offset + {PLATFORM}.integer_16_bytes
+
+				-- stack_size
+			Result.put_integer_32_le (stack_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- stack_commit
+			Result.put_integer_32_le (stack_commit, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- header_size
+			Result.put_integer_32_le (heap_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- heap_commit
+			Result.put_integer_32_le (heap_commit, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- loader_flags
+			Result.put_integer_32_le (loader_flags, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- num_rvas
+			Result.put_integer_32_le (num_rvas, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- export_rva
+			Result.put_integer_32_le (export_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- export_size
+			Result.put_integer_32_le (export_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- import_rva
+			Result.put_integer_32_le (import_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- import_size
+			Result.put_integer_32_le (import_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- resource_rva
+			Result.put_integer_32_le (resource_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- resource_size
+			Result.put_integer_32_le (resource_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- exception_rva
+			Result.put_integer_32_le (exception_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- exception_size
+			Result.put_integer_32_le (exception_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- security_rva
+			Result.put_integer_32_le (security_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- security_size
+			Result.put_integer_32_le (security_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- fixup_rva
+			Result.put_integer_32_le (fixup_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- fixup_size
+			Result.put_integer_32_le (fixup_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- debug_rva
+			Result.put_integer_32_le (debug_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- debug_size
+			Result.put_integer_32_le (debug_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- desc_rva
+			Result.put_integer_32_le (desc_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- desc_size
+			Result.put_integer_32_le (desc_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- mspec_rva
+			Result.put_integer_32_le (mspec_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- mspec_size
+			Result.put_integer_32_le (mspec_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- tls_rva
+			Result.put_integer_32_le (tls_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- tls_size
+			Result.put_integer_32_le (tls_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- loadconfig_rva
+			Result.put_integer_32_le (loadconfig_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- loadconfig_size
+			Result.put_integer_32_le (loadconfig_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- boundimp_rva
+			Result.put_integer_32_le (boundimp_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- boundimp_size
+			Result.put_integer_32_le (boundimp_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- iat_rva
+			Result.put_integer_32_le (iat_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- iat_size
+			Result.put_integer_32_le (iat_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- delay_impots_rva
+			Result.put_integer_32_le (delay_imports_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- delay_imports_size
+			Result.put_integer_32_le (delay_imports_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- com_rva
+			Result.put_integer_32_le (com_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- com_size
+			Result.put_integer_32_le (com_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- res3_rva
+			Result.put_integer_32_le (res3_rva, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
+
+				-- res3_size
+			Result.put_integer_32_le (res3_size, offset)
+			offset := offset + {PLATFORM}.integer_32_bytes
 		end
 
 end

@@ -10,18 +10,30 @@ inherit
 
 	REFACTORING_HELPER
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+		do
+			create private_exponent.make_empty
+			create key_pair.make_empty
+			create modulus.make_empty
+		end
+
 feature -- Access
 
 
-	modulus_bits: NATURAL
+	modulus_bits: NATURAL_64
 
     public_exponent: INTEGER
 
-	private_exponent: detachable ARRAY [NATURAL_8]
+	private_exponent:  ARRAY [NATURAL_8]
 
-	key_pair: detachable ARRAY [NATURAL_8]
+	key_pair:  ARRAY [NATURAL_8]
 
-	modulus: detachable ARRAY [NATURAL_8]
+	modulus: ARRAY [NATURAL_8]
 
 
 feature -- Status Report
@@ -37,7 +49,8 @@ feature -- Status Report
 			to_implement ("Add implementation")
 		end
 
-	get_strong_name_signature (a_sig: ARRAY [NATURAL_8]; a_hash: ARRAY [NATURAL_8]; a_hash_size: NATURAL_32 ): NATURAL_32
+	get_strong_name_signature (a_sig: ARRAY [NATURAL_8]; a_sig_len: CELL [NATURAL_64]; a_hash: ARRAY [NATURAL_8]; a_hash_size: NATURAL_64 )
+			-- Defined as void RSAEncoder::GetStrongNameSignature(Byte* sig, size_t* sigSize, const Byte* hash, size_t hashSize)
 		do
 			to_implement ("Add implementation")
 		end

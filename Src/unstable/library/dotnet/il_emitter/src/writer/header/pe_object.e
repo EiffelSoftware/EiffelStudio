@@ -90,6 +90,54 @@ feature -- Element Change
 			flags_set: flags = a_flags
 		end
 
+
+feature --
+
+	managed_pointer: MANAGED_POINTER
+		local
+			l_converter: BYTE_ARRAY_CONVERTER
+			l_pos: INTEGER
+		do
+			create Result.make (size_of)
+
+				-- name
+			create l_converter.make_from_string (name)
+			Result.put_array (l_converter.to_natural_8_array, 0)
+			l_pos := name.capacity
+
+				-- virtual_size
+			Result.put_integer_32_le (virtual_size, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- virtual_addr
+			Result.put_integer_32_le (virtual_addr, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- raw_size
+			Result.put_integer_32_le (raw_size, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- raw_ptr
+			Result.put_integer_32_le (raw_ptr, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- Reserved [1]
+			Result.put_integer_32_le (reserved[1], l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- Reserved [2]
+			Result.put_integer_32_le (reserved[2], l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- Reserved [3]
+			Result.put_integer_32_le (reserved[3], l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- flags
+			Result.put_integer_32_le (reserved[2], l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+		end
+
 feature -- Measurement
 
 	size_of: INTEGER
@@ -115,5 +163,6 @@ feature -- Measurement
 		ensure
 			instance_free: class
 		end
+
 
 end

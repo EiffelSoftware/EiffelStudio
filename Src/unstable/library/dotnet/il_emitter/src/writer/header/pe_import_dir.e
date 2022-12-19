@@ -88,6 +88,4 @@ feature -- Measurement
 		ensure
 			instance_free: class
 		end
-
-
 end

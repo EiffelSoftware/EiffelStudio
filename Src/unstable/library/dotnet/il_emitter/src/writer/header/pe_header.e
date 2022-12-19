@@ -809,6 +809,9 @@ feature -- Measurement
 			instance_free: class
 		end
 
+
+feature -- Managed Pointer		
+
 	managed_pointer: MANAGED_POINTER
 		local
 			offset: INTEGER

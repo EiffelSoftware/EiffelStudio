@@ -91,7 +91,7 @@ feature -- Element Change
 		end
 
 
-feature --
+feature -- Managed Pointer
 
 	managed_pointer: MANAGED_POINTER
 		local

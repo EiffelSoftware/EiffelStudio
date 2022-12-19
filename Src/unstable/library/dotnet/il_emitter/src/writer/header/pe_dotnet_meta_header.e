@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {DOTNET_META_HEADER}."
+	description: "Summary description for {PE_DOTNET_META_HEADER}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	DOTNET_META_HEADER
+	PE_DOTNET_META_HEADER
 
 inherit
 	ANY
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			META_SIG := 0x424A5342
 		end
 
-	make_from_other (a_other: DOTNET_META_HEADER)
+	make_from_other (a_other: PE_DOTNET_META_HEADER)
 		do
 
 		end
@@ -32,13 +32,13 @@ feature -- Access
 
 	meta_sig: NATURAL
 
-	singature: NATURAL
+	singature: NATURAL_32
 
-	major: NATURAL
+	major: NATURAL_16
 
-	minor: NATURAL
+	minor: NATURAL_16
 
-	reserved: NATURAL
+	reserved: NATURAL_32
 
 feature -- Element Change
 
@@ -58,7 +58,7 @@ feature -- Element Change
 			signature_set: singature = a_Val
 		end
 
-	set_major (a_val: NATURAL)
+	set_major (a_val: NATURAL_16)
 			-- Set `major` with `a_val`.
 		do
 			major := a_val
@@ -66,7 +66,7 @@ feature -- Element Change
 			major_set: major = a_val
 		end
 
-	set_minor (a_val: NATURAL)
+	set_minor (a_val: NATURAL_16)
 			-- Set 	`minor` with `a_val`
 		do
 			minor := a_val

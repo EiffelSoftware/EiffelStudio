@@ -104,6 +104,16 @@ feature -- Element change
 			end
 		end
 
+	put_natural_32 (i: NATURAL_32)
+		do
+			if attached output_stream as l_stream then
+				l_stream.put_natural_32 (i)
+			end
+			if on_debug then
+				debug_output.append_natural_32 (i)
+			end
+		end
+
 
 	put_natural_64 (i: NATURAL_64)
 		do
@@ -114,6 +124,7 @@ feature -- Element change
 				debug_output.append_natural_64 (i)
 			end
 		end
+
 
 
 	put_string (s: READABLE_STRING_GENERAL)

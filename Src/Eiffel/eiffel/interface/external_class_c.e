@@ -1631,7 +1631,7 @@ feature {NONE} -- Implementation
 					l_assemblies as a
 				loop
 					if
-						attached {CONF_PHYSICAL_ASSEMBLY} a as p and then
+						attached {CONF_PHYSICAL_ASSEMBLY} a.item as p and then
 						not p.is_dependency
 					then
 						l_path.extend (p.consumed_assembly.location.name)

@@ -199,6 +199,11 @@ feature {EMITTER} -- Access
 				create Result.make_from_string (cache_name)
 			end
 			Result := Result.extended (cache_bit_platform).extended (clr_version)
+
+			if eiffel_assembly_cache_path.name.ends_with (Result.name) then
+					-- the related path is already included in the assembly cache path.
+				create Result.make_empty
+			end
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty

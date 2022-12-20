@@ -443,7 +443,11 @@ namespace md_consumer
                     } else {
                         res = "";
                     }
-                    suffix_table.Add(res, l_name);
+                    if (!suffix_table.Contains(res)) {
+                        suffix_table.Add(res, l_name);
+                    } else {
+                        // FIXME: check why item was already added.
+                    }
                     return res;
                 }
             }

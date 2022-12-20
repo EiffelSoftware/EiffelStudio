@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+// using Microsoft.Build.Framework; // See for SdkResolver
 
 using EifMdConsumer;
 
@@ -21,7 +22,9 @@ namespace EifMdConsumer
             }
 
             List<string> add_assemblies = new List<string>(3);
-            List<string> ref_assemblies = new List<string>(3);
+            List<string> ref_assemblies = new List<string>(2);
+            List<string> sdk_locations = new List<string>(1);
+          
             string? cache_location = null;
 
             string? json_outputfile = null;
@@ -29,6 +32,7 @@ namespace EifMdConsumer
             bool is_help = false;
             bool has_halt = false;
             bool nologo = false;
+            bool is_debug=false;
 
             int res = 0;
             // res = a.LoadFromAssemblyPath (inputFile);
@@ -42,6 +46,9 @@ namespace EifMdConsumer
                 } else if (a.Equals("-i")) {
                     i = i + 1;
                     ref_assemblies.Add(args[i]);
+                } else if (a.Equals("-sdk")) {
+                    i = i + 1;
+                    sdk_locations.Add(args[i]);
                 } else if (a.Equals("--json-output-file")) {
                     i = i + 1;
                     json_outputfile = args[i];
@@ -54,15 +61,18 @@ namespace EifMdConsumer
                     // Ignore as JSON is the default and only format
                 } else if (a.Equals("-halt")) {
                     has_halt = true;
+                } else if (a.Equals("-debug")) {
+                    is_debug = true;                    
                 } else if (a.Equals("-nologo")) {
                     nologo = true;                    
                 } else if (a.Equals("--help") || a.Equals("-?")) {
                     is_help = true;
                 } else {
                     // TODO: maybe reject those values!
-                    add_assemblies.Add(args[i]);
+                    Console.WriteLine("Ignore parameter: " + args[i]);
                 }
             }
+
             if (is_help) {
                 Program.display_help();
                 return 0;
@@ -73,13 +83,24 @@ namespace EifMdConsumer
                     if (!nologo) {
                         Program.display_logo();
                     }
+                    if (cache_location != null && !Directory.Exists(cache_location)) {
+                        Console.WriteLine("Create cache location \"" + cache_location + "\"");
+                        Directory.CreateDirectory(cache_location);
+                    }
                     // Initialize ASSEMBLY_LOADER
                     md_consumer.ASSEMBLY_LOADER loader = md_consumer.SHARED_ASSEMBLY_LOADER.assembly_loader;
+                    if (is_debug) {
+                        loader.set_is_debug (true);
+                    }
                     loader.register_locations(ref_assemblies);
+                    loader.register_sdk_locations(sdk_locations);
                     
                     StringBuilder o = new StringBuilder();
                     if (cache_location != null) {
                         md_consumer.CACHE_WRITER cache = new md_consumer.CACHE_WRITER(cache_location, o);
+                        if (is_debug) {
+                            cache.set_is_debug (true);
+                        }
                         List<string> processed = new List<string>(10);
                         foreach (var a in add_assemblies) {
                             var ca = cache.add_assembly_ex(a, has_info_only, ref_assemblies, processed);

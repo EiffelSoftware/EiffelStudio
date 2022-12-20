@@ -54,12 +54,34 @@ namespace md_consumer
         }
         public bool same_as (CONSUMED_ASSEMBLY? other)
         {
-            if (other == null) {
+            if (this == other) {
+                return true;
+            } else if (other == null) {
                 return false;
             } else {
-                return string.Equals(location, other.location, StringComparison.OrdinalIgnoreCase); //FIXME
+                return same_locations(location, other.location);
             }
         }
+
+        private bool same_locations (string loc1, string loc2)
+        {
+            string s1;
+            string s2;
+            if (Path.IsPathRooted(loc1) && Path.IsPathRooted(loc2)) {
+                s1 = Path.GetFullPath(loc1);
+                s2 = Path.GetFullPath(loc2);             
+            } else {
+                s1 = loc1;
+                s2 = loc2;
+            }
+            if ((System.Environment.OSVersion.Platform == PlatformID.Unix) || (System.Environment.OSVersion.Platform == PlatformID.Other)) {
+                return string.Equals(s1, s2);
+            } else {
+                /* Windows */
+                return string.Equals(s1, s2, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
         public bool same_info_as (CONSUMED_ASSEMBLY? other)
         {
             if (other == null) {
@@ -75,15 +97,9 @@ namespace md_consumer
                     ;
             }
         }
-        public bool has_same_path (string path, bool is_already_prepared=false)       
+        public bool has_same_path (string path)
         {
-            string p;
-            if (is_already_prepared) {
-                p = path;
-            } else {
-                p = Path.GetFullPath(path);
-            }
-            return location.Equals(p); //FIXME implement same file as ... using handle ...
+            return same_locations(location, path);
         }
 
         public void set_is_consumed (bool a_is_consumed, bool info_only) {

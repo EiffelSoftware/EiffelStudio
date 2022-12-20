@@ -46,14 +46,17 @@ namespace md_consumer
         public void update_assembly (CONSUMED_ASSEMBLY a)
         {
             is_dirty = true;
+            bool found=false;
             for (int i = 0; i < assemblies.Count; i++) {
                 var ass = assemblies[i];
                 if (ass.same_as (a)) {
+                    found = true;
                     assemblies[i] = a;
                     is_dirty = true;
                     break;
                 }
             }
+            //DEBUG: Debug.Assert(found, "Assembly not found to be updated");
         }
     }
     public class CACHE_COMMON
@@ -176,7 +179,7 @@ namespace md_consumer
             if (lst  != null) {
                 string p = Path.GetFullPath(a_path);
                 foreach (var ca in lst) {
-                    if (ca.has_same_path (p, true)) {
+                    if (ca.has_same_path (p)) {
                         return ca;
                     }
                 }
@@ -355,12 +358,17 @@ namespace md_consumer
         string cache_location;
         CACHE_READER reader;
         StringBuilder output;
+        private bool is_debug=false;
 
         public CACHE_WRITER(string loc, StringBuilder o)
         {
             cache_location = loc;
             output = o;
             reader = new CACHE_READER(cache_location);
+        }
+        public void set_is_debug (bool b)
+        {
+            is_debug = b;
         }
         public CACHE_INFO cache_info()
         {
@@ -564,9 +572,9 @@ namespace md_consumer
                     consumed_ca.set_is_consumed(true, a_info_only);
                     l_info.update_assembly(consumed_ca);
                     if (!consumed_ca.location.Equals(l_key_path)) {
-                        CONSUMED_ASSEMBLY dup_ca = new CONSUMED_ASSEMBLY(consumed_ca);
-                        dup_ca.location = l_key_path;
-                        l_info.add_assembly(dup_ca);
+                        l_info_updated = true;
+                        consumed_ca.location = l_key_path;
+                        l_info.update_assembly(consumed_ca);
                     }
                     update_info(l_info);
 
@@ -620,7 +628,13 @@ namespace md_consumer
         {
             Assembly? a = SHARED_ASSEMBLY_LOADER.assembly_loader.assembly_from(path);
             if (a != null) {
-                return AssemblyAnalyzer.new_consumed_assembly(a, a_id);
+                string s_id = a_id;
+                if (is_debug) {
+                    // human friendly title
+                    AssemblyName? l_assembly_name = a.GetName();
+                    s_id = l_assembly_name.Name + "!" + s_id;
+                }
+                return AssemblyAnalyzer.new_consumed_assembly(a, s_id);
             } else {
                 return null;
             }

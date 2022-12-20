@@ -174,37 +174,58 @@ namespace md_consumer
                 return checked_type(t).is_eiffel_compliant();
         }
 
+        private bool prepare_consumed_type_into (Type t, Dictionary <string,List<TYPE_NAME_SOLVER>> names)
+        {
+            if (is_consumed_type (t))
+            {
+                TYPE_NAME_SOLVER type_name = new TYPE_NAME_SOLVER(t);
+                string simple_name = type_name.simple_name;
+                List<TYPE_NAME_SOLVER>? l_names = null;
+                if (names.ContainsKey(simple_name)) {
+                    l_names = names[simple_name];
+                }
+                if (l_names == null) {
+                    l_names = new List<TYPE_NAME_SOLVER>();
+                    names.Add(simple_name, l_names);
+                }
+                l_names.Add(type_name);
+                l_names.Sort();
+                // l_names.Sort((a,b) => a.weight.CompareTo(b.weight));                        
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         public void prepare_consumed_types(Assembly assembly, bool a_info_only)
         {
             int generated_count = 0;
-            string simple_name;
             Dictionary <string,List<TYPE_NAME_SOLVER>> names = new Dictionary<string, List<TYPE_NAME_SOLVER>>();
-            TYPE_NAME_SOLVER type_name;
             Module[] l_modules = assembly.GetModules();
             foreach (Module m in l_modules)
             {
                 Type[] l_types = m.GetTypes();
                 foreach (Type t in l_types) 
                 {
-                    if (is_consumed_type (t))
-                    {
+                    if (prepare_consumed_type_into(t, names)) {
                         generated_count = generated_count + 1;
-                        type_name = new TYPE_NAME_SOLVER(t);
-                        simple_name = type_name.simple_name;
-                        List<TYPE_NAME_SOLVER>? l_names = null;
-                        if (names.ContainsKey(simple_name)) {
-                            l_names = names[simple_name];
+                    }
+                }                         
+                // FIXME : check ... status_querier  see the Eiffel class ASSEMBLY_CONSUMER.prepare_consumed_types
+            }
+            try {
+                Type[] l_fwd_types = assembly.GetForwardedTypes();
+                if (l_fwd_types != null) {
+                    foreach (Type t in l_fwd_types) 
+                    {
+                        if (prepare_consumed_type_into(t, names)) {
+                            generated_count = generated_count + 1;
                         }
-                        if (l_names == null) {
-                            l_names = new List<TYPE_NAME_SOLVER>();
-                            names.Add(simple_name, l_names);
-                        }
-                        l_names.Add(type_name);
-                        l_names.Sort();
-                        // l_names.Sort((a,b) => a.weight.CompareTo(b.weight));                        
                     }
                 }
-                // FIXME : check ... status_querier  see the Eiffel class ASSEMBLY_CONSUMER.prepare_consumed_types
+            } catch {
+                // FIXME: Oups ...unable to load assembly. See why and if there is a cleaner way to handle the issue.
+
             }
 
             Dictionary<string,string> used_names = new Dictionary<string, string>();

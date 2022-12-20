@@ -234,9 +234,8 @@ namespace md_consumer
         public bool is_consumed_method (MethodBase m)
         // Is `m` a public/family  CLS compliant method?
         {
-            if (m.IsHideBySig) {
-                return false;  //FIXME: added !IsHideBySig
-            } else if (m.IsPublic || m.IsFamily || m.IsFamilyOrAssembly) {
+            //FIXME: see if IsHideBySig should be taken into account
+            if (m.IsPublic || m.IsFamily || m.IsFamilyOrAssembly) {
                 return is_eiffel_compliant_member (m);
             } else {
                 return false;

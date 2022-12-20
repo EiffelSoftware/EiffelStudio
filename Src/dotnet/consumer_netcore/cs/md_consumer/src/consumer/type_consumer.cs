@@ -643,6 +643,9 @@ namespace md_consumer
 			// 	cp_procedure: CONSUMED_PROCEDURE
 			// 	cp_field: CONSUMED_FIELD
 			// do
+
+			// DEBUG: Console.WriteLine("Initialize " + eiffel_name + " : " + system_type.ToString());
+
 			try {
 			// 		check
 			// 			non_void_internal_constructors: internal_constructors /= Void
@@ -685,59 +688,64 @@ namespace md_consumer
 				
 				foreach(MemberInfo l_member in internal_members) 
 				{
-					if (l_member.MemberType == MemberTypes.Method) {
-						MethodInfo l_meth = (MethodInfo) l_member;
-						if (!is_property_or_event (l_meth)) {
-							if (is_function (l_meth)) {
-								CONSUMED_FUNCTION? cp_function = consumed_function (l_meth, false);
-								if (cp_function != null) {
-									l_functions.Add (cp_function);
-								}
-							} else {
-								CONSUMED_PROCEDURE? cp_procedure = consumed_procedure (l_meth, false);
-								if (cp_procedure != null) {
-									l_procedures.Add (cp_procedure);
-								}
-							}
-						} else {
-							// -- The method will be added at the same time than the property or the event.
-						}
-					} else if (l_member.MemberType == MemberTypes.Field) {
-						FieldInfo l_field = (FieldInfo) l_member;
-						Type l_field_type = l_field.FieldType;
-						if (is_enum && !l_field.IsLiteral) {
-							// -- Get base type of enumeration
-							underlying_enum_type = referenced_type_from_type (l_field_type);
-						}
-						if (is_consumed_field (l_field)) {
-							CONSUMED_FIELD? cp_field = consumed_field (l_field);
-							if (cp_field != null) {
-								l_fields.Add (cp_field);
-								if (is_public_field (l_field) && !is_init_only_field (l_field)) {
-									CONSUMED_PROCEDURE? l_setter = attribute_setter_feature (l_field, l_fields.Last().eiffel_name);
-									if (l_setter != null) {
-										cp_field.set_setter (l_setter);
-										l_procedures.Add (l_setter);
-									} else {
-										Debug.Assert(false, "has setter");
+					try {
+						if (l_member.MemberType == MemberTypes.Method) {
+							MethodInfo l_meth = (MethodInfo) l_member;
+							// DEBUG: Console.WriteLine(" - " + eiffel_name + "." + l_meth.Name + " : " + l_meth.ToString());
+							if (!is_property_or_event (l_meth)) {
+								if (is_function (l_meth)) {
+									CONSUMED_FUNCTION? cp_function = consumed_function (l_meth, false);
+									if (cp_function != null) {
+										l_functions.Add (cp_function);
+									}
+								} else {
+									CONSUMED_PROCEDURE? cp_procedure = consumed_procedure (l_meth, false);
+									if (cp_procedure != null) {
+										l_procedures.Add (cp_procedure);
 									}
 								}
 							} else {
-								Debug.Assert(false, "has field");
+								// -- The method will be added at the same time than the property or the event.
+							}
+						} else if (l_member.MemberType == MemberTypes.Field) {
+							FieldInfo l_field = (FieldInfo) l_member;
+							if (is_enum && !l_field.IsLiteral) {
+								// -- Get base type of enumeration
+								Type l_field_type = l_field.FieldType;
+								underlying_enum_type = referenced_type_from_type (l_field_type);
+							}
+							if (is_consumed_field (l_field)) {
+								CONSUMED_FIELD? cp_field = consumed_field (l_field);
+								if (cp_field != null) {
+									l_fields.Add (cp_field);
+									if (is_public_field (l_field) && !is_init_only_field (l_field)) {
+										CONSUMED_PROCEDURE? l_setter = attribute_setter_feature (l_field, l_fields.Last().eiffel_name);
+										if (l_setter != null) {
+											cp_field.set_setter (l_setter);
+											l_procedures.Add (l_setter);
+										} else {
+											Debug.Assert(false, "has setter");
+										}
+									}
+								} else {
+									Debug.Assert(false, "has field");
+								}
+							}
+						} else if (l_member.MemberType == MemberTypes.Property) {
+							PropertyInfo l_property = (PropertyInfo) l_member;
+							CONSUMED_PROPERTY? cp_property = consumed_property(l_property);
+							if (cp_property != null) {
+								l_properties.Add (cp_property);
+							}
+						} else if (l_member.MemberType == MemberTypes.Event) {
+							EventInfo l_event = (EventInfo) l_member;
+							CONSUMED_EVENT? cp_event = consumed_event(l_event);
+							if (cp_event != null) {
+								l_events.Add (cp_event);
 							}
 						}
-					} else if (l_member.MemberType == MemberTypes.Property) {
-						PropertyInfo l_property = (PropertyInfo) l_member;
-						CONSUMED_PROPERTY? cp_property = consumed_property(l_property);
-						if (cp_property != null) {
-							l_properties.Add (cp_property);
-						}
-					} else if (l_member.MemberType == MemberTypes.Event) {
-						EventInfo l_event = (EventInfo) l_member;
-						CONSUMED_EVENT? cp_event = consumed_event(l_event);
-						if (cp_event != null) {
-							l_events.Add (cp_event);
-						}
+					} catch {
+						// DEBUG: Console.WriteLine("ERROR: issue with field " + l_member.Name);
 					}
 				}
 
@@ -1139,8 +1147,15 @@ namespace md_consumer
 		}
 		public bool is_function (MethodInfo info)
 		{
-			if (info.IsHideBySig) return false; // FIXME: check why we get it there.
-			return !is_Void_type(info.ReturnType);
+			// FIXME: check if info.IsHideBySig should be taken into account.
+			Type? rt = null;
+			try {
+				rt = info.ReturnType;
+			} catch {
+				// FIXME: check why exception could be raised here. It seems to depend on the signature, maybe with function pointer?
+				rt = null;
+			}
+			return !is_Void_type(rt);
 		}
 		public void add_property (PropertyInfo info)
 		{

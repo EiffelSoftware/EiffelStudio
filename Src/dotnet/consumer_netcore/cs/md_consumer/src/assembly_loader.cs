@@ -23,6 +23,7 @@ namespace md_consumer
         public List<string> locations;
         Dictionary<string,Assembly?> loaded_assemblies;
         List<string> ignored_assemblies;
+        private bool is_debug=false;
 
         public ASSEMBLY_LOADER(List<string>? locs)
         {
@@ -38,17 +39,28 @@ namespace md_consumer
                 loaded_assemblies[asm.Location] = asm;
             }
         }
-
+        public void set_is_debug (bool b)
+        {
+            is_debug = b;
+        }
+        public void register_sdk_locations(List<string>? locs)
+        {
+            register_locations (locs);
+        }
         public void register_locations(List<string>? locs)
         {
             if (locs != null && locs.Count > 0) {
                 foreach (var i in locs) {
-                    if (!locations.Contains(i)) {
-                        locations.Add (i);
-                    }
+                    register_location(i);
                 }
             }
         }
+        public void register_location(string loc)
+        {
+            if (!locations.Contains(loc)) {
+                locations.Add (loc);
+            }
+        }        
         public Assembly? loaded_assembly (string n)
         {
             if (loaded_assemblies.ContainsKey(n)) {
@@ -194,18 +206,33 @@ namespace md_consumer
     }
     class PathAssemblyResolverExt : System.Reflection.PathAssemblyResolver
     {
-        private List<string> dirs;
-        private Dictionary<string,string> ext_paths;
+        private List<string> directories;
+        private List<string>? discovered_dirs=null;
+        private Dictionary<string,string?> ext_paths;
         public PathAssemblyResolverExt(IEnumerable<string> assemblyPaths, IEnumerable<string> assemblyDirs) : base (assemblyPaths)
         {
-            ext_paths = new Dictionary<string, string>(10);
-            dirs = new List<string>(3);
+            ext_paths = new Dictionary<string, string?>(10);
+            directories = new List<string>(3);
             foreach (var i in assemblyDirs) {
-                dirs.Add(i);
+                directories.Add(i);
             }
+        }
+        private string? assembly_location_from_directories(AssemblyName assemblyName, List<string> dirs)
+        {
+            string? assname = assemblyName.Name;
+            if (assname != null) {
+                foreach (var d in dirs) {
+                    string fn = Path.Combine(d, assname + ".dll");
+                    if (File.Exists(fn)) {
+                        return fn;
+                    }
+                }
+            }
+            return null;
         }
         public override Assembly? Resolve(MetadataLoadContext context, AssemblyName assemblyName)
         {
+            // Console.WriteLine("Search " + assemblyName.Name);
             Assembly? res = base.Resolve(context, assemblyName);
             if (res == null) {
                 string? fn = null;
@@ -214,25 +241,35 @@ namespace md_consumer
                     fn = ext_paths[n];
                 }
                 if (fn == null) {
-                    string? assname = assemblyName.Name;
-                    if (assname != null) {
-                        foreach (var d in dirs) {
-                            fn = Path.Combine(d, assemblyName.Name + ".dll");
-                            if (File.Exists(fn)) {
-                                break;
+                    fn = assembly_location_from_directories(assemblyName, directories);
+                }
+                if (fn == null) {
+                    if (discovered_dirs == null) {
+                        discovered_dirs = new List<string>(0);
+                        foreach(var d in directories) {
+                            string dn = Path.Combine(d, "ref");
+                            if (Directory.Exists(dn) && !directories.Contains(dn) && !discovered_dirs.Contains(dn)) {
+                                discovered_dirs.Add(dn);
                             }
+
                         }
                     }
-                }
+                    if (discovered_dirs != null && discovered_dirs.Count > 0) {
+                        fn = assembly_location_from_directories(assemblyName, discovered_dirs);
+                    }
+                }                
+
+                ext_paths[n] = fn; /* Record result, even if not found! */
+
                 if (fn != null && File.Exists(fn)) {
                     try {
                         res = context.LoadFromAssemblyPath(fn);
-                        ext_paths[n] = fn;
                     } catch {
                         res = null;
                     }
                 }
             }
+
             return res;
         }
     }    

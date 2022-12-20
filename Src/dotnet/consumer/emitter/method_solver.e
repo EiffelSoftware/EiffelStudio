@@ -11,19 +11,9 @@ frozen class
 inherit
 	COMPARABLE
 
-	NAME_FORMATTER
-		undefine
-			is_equal
-		end
-
 	ARGUMENT_SOLVER
 		rename
 			arguments as solved_arguments
-		undefine
-			is_equal
-		end
-
-	SHARED_ASSEMBLY_MAPPING
 		undefine
 			is_equal
 		end

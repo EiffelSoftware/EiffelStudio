@@ -95,6 +95,7 @@ feature {NONE} -- Initialization
 			if a_parser.add_assemblies then
 				l_assemblies := a_parser.assemblies
 				l_references := a_parser.reference_paths
+					-- NOTE: For now ignore, a_parser.sdk_paths [2022-12-20]
 
 				create l_files.make (30)
 				if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then

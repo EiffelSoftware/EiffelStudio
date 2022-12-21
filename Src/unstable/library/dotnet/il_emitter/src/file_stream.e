@@ -14,7 +14,6 @@ create
 
 feature {NONE} -- Initialiation
 
-
 	make (a_file_name: STRING_32)
 		do
 			create {PLAIN_TEXT_FILE} output_stream.make_create_read_write (a_file_name)
@@ -22,7 +21,6 @@ feature {NONE} -- Initialiation
 			on_debug := False
 			create module_ref.make (0)
 		end
-
 
 	make_binary (a_file_name: STRING_32)
 		do
@@ -65,7 +63,6 @@ feature -- Access
 			-- In memory string
 			-- iff debug is enabled.
 
-
 	module_ref: HASH_TABLE [NATURAL_64, NATURAL_64]
 
 feature -- Element change
@@ -74,7 +71,7 @@ feature -- Element change
 		do
 			on_debug := True
 		ensure
-			on_debug_enabled:  on_debug = True
+			on_debug_enabled: on_debug = True
 		end
 
 	disable_debug
@@ -104,6 +101,16 @@ feature -- Element change
 			end
 		end
 
+	put_natural_16 (i: NATURAL_16)
+		do
+			if attached output_stream as l_stream then
+				l_stream.put_natural_16 (i)
+			end
+			if on_debug then
+				debug_output.append_natural_16 (i)
+			end
+		end
+
 	put_natural_32 (i: NATURAL_32)
 		do
 			if attached output_stream as l_stream then
@@ -113,7 +120,6 @@ feature -- Element change
 				debug_output.append_natural_32 (i)
 			end
 		end
-
 
 	put_natural_64 (i: NATURAL_64)
 		do
@@ -125,8 +131,6 @@ feature -- Element change
 			end
 		end
 
-
-
 	put_string (s: READABLE_STRING_GENERAL)
 		do
 			if attached output_stream as l_stream then
@@ -136,7 +140,6 @@ feature -- Element change
 				debug_output.append_string (s)
 			end
 		end
-
 
 	put_managed_pointer (mp: MANAGED_POINTER)
 		do
@@ -174,7 +177,6 @@ feature -- Element change
 			Result := debug_output
 		end
 
-
 	go (abs_position: INTEGER_32)
 			-- Go to the absolute `position'.
 			-- (New position may be beyond physical length.)
@@ -183,7 +185,6 @@ feature -- Element change
 				l_stream.go (abs_position)
 			end
 		end
-
 
 	read_stream (a_buf: ARRAY [NATURAL_8]; a_len: INTEGER_32)
 			-- Read a string of at most `a_len' bound characters
@@ -207,7 +208,7 @@ feature -- Element change
 			end
 		end
 
-feature -- PE_LIB	
+feature -- PE_LIB
 
 	find (a_name: STRING_32): detachable ANY
 		local
@@ -218,7 +219,6 @@ feature -- PE_LIB
 				Result := l_res.resource
 			end
 		end
-
 
 	add_method (a_method: CIL_METHOD)
 		do

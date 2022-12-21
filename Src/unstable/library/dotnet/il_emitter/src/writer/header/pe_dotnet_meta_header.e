@@ -8,20 +8,12 @@ class
 
 inherit
 	ANY
-		redefine
-			default_create
-		end
 
 create
 	default_create,
 	make_from_other
 
 feature {NONE} -- Initialization
-
-	default_create
-		do
-			META_SIG := 0x424A5342
-		end
 
 	make_from_other (a_other: PE_DOTNET_META_HEADER)
 		do
@@ -30,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	meta_sig: NATURAL
+	META_SIG: NATURAL_32 = 0x424A5342
 
 	singature: NATURAL_32
 
@@ -41,14 +33,6 @@ feature -- Access
 	reserved: NATURAL_32
 
 feature -- Element Change
-
-	set_meta_sig (a_val: NATURAL)
-			-- Set `meta_sig` with `a_val`.
-		do
-			meta_sig := a_val
-		ensure
-			meta_sig_set: meta_sig = a_val
-		end
 
 	set_signature (a_val: NATURAL)
 			-- Set `signature` with `a_val`.
@@ -80,6 +64,55 @@ feature -- Element Change
 			reserved := a_val
 		ensure
 			reserved_set: reserved = a_val
+		end
+
+feature -- Managed Pointer
+
+	managed_pointer: MANAGED_POINTER
+		local
+			l_pos: INTEGER
+		do
+			create Result.make (size_of)
+			l_pos := 0
+
+				--signature
+			Result.put_natural_32_le (singature, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				--major
+			Result.put_natural_16_le (major, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_16_bytes
+
+				--minor
+			Result.put_natural_16_le (minor, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_16_bytes
+
+				--reserved
+			Result.put_natural_32_le (reserved, l_pos)
+		end
+
+feature -- Measurement
+
+	size_of: INTEGER
+		local
+			l_internal: INTERNAL
+			n: INTEGER
+			l_obj: PE_IMPORT_DIR
+		do
+			create l_obj
+			create l_internal
+			n := l_internal.field_count (l_obj)
+			across 1 |..| n as ic loop
+				if attached l_internal.field (ic, l_obj) as l_field then
+					if attached {NATURAL_32} l_field then
+						Result := Result + {PLATFORM}.natural_32_bytes
+					elseif attached {NATURAL_16} l_field then
+						Result := Result + {PLATFORM}.natural_16_bytes
+					end
+				end
+			end
+		ensure
+			instance_free: class
 		end
 
 end

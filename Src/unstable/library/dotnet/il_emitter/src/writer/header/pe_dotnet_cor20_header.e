@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 			create managed_native_header.make_filled (0, 1, 2)
 		end
 
-
 feature -- Access
 
 	cb: NATURAL assign set_cb
@@ -162,6 +161,80 @@ feature -- Element change
 			managed_native_header := a_managed_native_header
 		ensure
 			managed_native_header_assigned: managed_native_header = a_managed_native_header
+		end
+
+
+feature -- Managed Pointer
+
+	managed_pointer: MANAGED_POINTER
+		local
+			l_converter: BYTE_ARRAY_CONVERTER
+			l_pos: INTEGER
+		do
+			create Result.make (size_of)
+			l_pos := 0
+
+				--cb
+			Result.put_natural_32_le (cb, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- major_runtime_version
+			Result.put_natural_16_le (major_runtime_version, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_16_bytes
+
+				-- minor_runtime_version			
+			Result.put_natural_16_le (minor_runtime_version, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_16_bytes
+
+				-- metadata[2]
+			Result.put_natural_32_le (metadata [1], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+			Result.put_natural_32_le (metadata [2], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- Flags
+			Result.put_natural_32_le (flags, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- entry_point_token
+			Result.put_natural_32_le (entry_point_token, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- resources[2]
+			Result.put_natural_32_le (resources [1], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+			Result.put_natural_32_le (resources [2], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- strong_name_signature [2]
+			Result.put_natural_32_le (strong_name_signature [1], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+			Result.put_natural_32_le (strong_name_signature [2], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- code_manager_table [2]
+			Result.put_natural_32_le (code_manager_table [1], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+			Result.put_natural_32_le (code_manager_table [2], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- vtable_fixup [2]
+			Result.put_natural_32_le (vtable_fixup [1], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+			Result.put_natural_32_le (vtable_fixup [2], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- export_address_table_jumps [2]
+			Result.put_natural_32_le (export_address_table_jumps [1], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+			Result.put_natural_32_le (export_address_table_jumps [2], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- managed_native_header [2]
+			Result.put_natural_32_le (managed_native_header [1], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+			Result.put_natural_32_le (managed_native_header [2], l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
 		end
 
 feature -- Measurement

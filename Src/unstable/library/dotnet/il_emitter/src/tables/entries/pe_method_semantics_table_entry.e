@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_semantics: NATURAL_16; a_method: NATURAL; a_association: PE_SEMANTICS)
+	make_with_data (a_semantics: NATURAL_16; a_method: NATURAL_64; a_association: PE_SEMANTICS)
 		do
 			semantics := a_semantics
 			create method.make_with_index (a_method)

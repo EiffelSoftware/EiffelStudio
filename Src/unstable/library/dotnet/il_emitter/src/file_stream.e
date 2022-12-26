@@ -141,6 +141,16 @@ feature -- Element change
 			end
 		end
 
+	put_character (a_char: CHARACTER_8)
+		do
+			if attached output_stream as l_stream then
+				l_stream.put_character (a_char)
+			end
+			if on_debug then
+				debug_output.append_character (a_char)
+			end
+		end
+
 	put_managed_pointer (mp: MANAGED_POINTER)
 		do
 			if attached output_stream as l_stream then

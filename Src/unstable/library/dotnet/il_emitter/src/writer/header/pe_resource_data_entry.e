@@ -56,13 +56,38 @@ feature -- Element change
 			reserved_assigned: reserved = a_reserved
 		end
 
+feature -- Managed Pointer
+
+	managed_pointer: MANAGED_POINTER
+		local
+			l_pos: INTEGER
+		do
+			create Result.make (size_of)
+			l_pos := 0
+
+				--rva
+			Result.put_integer_32_le (rva, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				--size
+			Result.put_integer_32_le (size, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				--code_page
+			Result.put_integer_32_le (code_page, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				--reserved
+			Result.put_integer_32_le (reserved, l_pos)
+		end
+
 feature -- Measurement
 
 	size_of: INTEGER
 		local
 			l_internal: INTERNAL
 			n: INTEGER
-			l_obj: PE_OBJECT
+			l_obj: PE_RESOURCE_DATA_ENTRY
 		do
 			create l_obj
 			create l_internal

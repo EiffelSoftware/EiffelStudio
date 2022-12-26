@@ -49,14 +49,13 @@ feature -- Element change
 			size_assigned: size = a_size
 		end
 
-
 feature -- Measurement
 
 	size_of: INTEGER
 		local
 			l_internal: INTERNAL
 			n: INTEGER
-			l_obj: PE_HEADER
+			l_obj: PE_FIXUP_BLOCK
 		do
 			create l_obj
 			create l_internal

@@ -66,6 +66,34 @@ feature -- Element change
 			ident_entry_assigned: ident_entry = an_ident_entry
 		end
 
+feature -- Managed Pointer
+
+	managed_pointer: MANAGED_POINTER
+		local
+			l_pos: INTEGER
+		do
+			create Result.make (size_of)
+			l_pos :=0
+
+				-- resource_flags
+			Result.put_integer_32_le (resource_flags, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- time
+			Result.put_integer_32_le (time, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- version
+			Result.put_integer_32_le (version, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- name_entry
+			Result.put_integer_16_le (name_entry, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_16_bytes
+
+				-- ident_entry
+			Result.put_integer_32_le (ident_entry, l_pos)
+		end
 
 feature -- Measurement
 
@@ -73,7 +101,7 @@ feature -- Measurement
 		local
 			l_internal: INTERNAL
 			n: INTEGER
-			l_obj: PE_OBJECT
+			l_obj: PE_RESOURCE_DIR_TABLE
 		do
 			create l_obj
 			create l_internal
@@ -82,6 +110,8 @@ feature -- Measurement
 				if attached l_internal.field (ic, l_obj) as l_field then
 					if attached {INTEGER_32} l_field then
 						Result := Result + {PLATFORM}.integer_32_bytes
+					elseif attached {INTEGER_16} l_field then
+						Result := Result + {PLATFORM}.integer_16_bytes
 					end
 				end
 			end

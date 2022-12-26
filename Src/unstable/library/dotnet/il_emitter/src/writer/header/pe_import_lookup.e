@@ -53,7 +53,7 @@ feature -- Measurement
 		local
 			l_internal: INTERNAL
 			n: INTEGER
-			l_obj: PE_OBJECT
+			l_obj: PE_IMPORT_LOOKUP
 		do
 			create l_obj
 			create l_internal

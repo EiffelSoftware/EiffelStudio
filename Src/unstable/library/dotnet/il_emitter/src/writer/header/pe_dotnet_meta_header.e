@@ -97,7 +97,7 @@ feature -- Measurement
 		local
 			l_internal: INTERNAL
 			n: INTEGER
-			l_obj: PE_IMPORT_DIR
+			l_obj: PE_DOTNET_META_HEADER
 		do
 			create l_obj
 			create l_internal

@@ -14,11 +14,19 @@ feature {NONE} -- Initialization
 	make
 		do
 			create objects
-			create tables.make_filled (create {DNL_TABLE}.make, 1, {PE_TABLE_CONSTANTS}.max_tables)
+			initialize_dnl_tables
 			create lib_path.make_empty
 			create sizes.make_filled (0, 1, {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes)
 		end
 
+
+	initialize_dnl_tables
+		do
+			create {ARRAYED_LIST [DNL_TABLE]} tables.make ({PE_TABLE_CONSTANTS}.max_tables)
+			across 1 |..| {PE_TABLE_CONSTANTS}.max_tables as  i loop
+				tables.force((create {DNL_TABLE}.make))
+			end
+		end
 
 feature {NONE} -- Implemenation
 
@@ -40,7 +48,7 @@ feature {NONE} -- Implemenation
 
 	objects: PE_OBJECT
 
-	tables: ARRAY [DNL_TABLE]
+	tables: LIST [DNL_TABLE]
 		-- build with Max_Tables
 
 	sizes: ARRAY [NATURAL_32]

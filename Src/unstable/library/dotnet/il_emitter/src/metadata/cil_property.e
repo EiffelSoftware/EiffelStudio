@@ -31,6 +31,7 @@ feature {NONE} -- Intialization
 			setter_void: setter = Void
 			getter_void: getter = Void
 			flags_set: flags = special_name
+			instance_set: instance = True
 		end
 
 	make_with_lib (a_lib: PE_LIB; a_name: STRING_32; a_type: CIL_TYPE; a_indices: LIST [CIL_TYPE]; has_setter: BOOLEAN; a_parent: detachable CIL_DATA_CONTAINER)
@@ -44,6 +45,9 @@ feature {NONE} -- Intialization
 		ensure
 			name_set: name = a_name
 			type_set: type = a_type
+			flags_set: flags = special_name
+			instance_set: instance = True
+			parent_set: parent = a_parent
 		end
 
 feature -- Access
@@ -282,8 +286,41 @@ feature -- Output
 		end
 
 	pe_dump (a_stream: FILE_STREAM): BOOLEAN
+		local
+			l_property_index: NATURAL_64
+			l_name_index: NATURAL_64
+			l_sig: ARRAY [NATURAL_8]
+			l_sz:  CELL [NATURAL_64]
+			l_property_signature: NATURAL_64
+			l_table: PE_TABLE_ENTRY_BASE
+			l_semantics: PE_SEMANTICS
+			l_dis: NATURAL_64
 		do
-			to_implement ("Add Implementation")
+			if attached {PE_WRITER} a_stream.pe_writer as l_writer then
+					-- TODO chec if the index it's ok or we need to add 1.
+				l_property_index := l_writer.next_table_index ({PE_TABLES}.tproperty.value.to_integer_32)
+				l_name_index := l_writer.hash_string (name)
+				create l_sz.put (0)
+				l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.property_sig (Current, l_sz)
+				l_property_signature := l_writer.hash_blob (l_sig, l_sz.item)
+
+				create {PE_PROPERTY_TABLE_ENTRY} l_table.make_with_data (flags.to_natural_16, l_name_index, l_property_signature)
+				l_dis := l_writer.add_table_entry (l_table)
+
+				create l_semantics.make_with_tag_and_index ({PE_SEMANTICS}.property, l_property_index)
+
+				-- FIXME : Coverity complains that the following 'new' statements leak memory, however, I think
+			    -- the design is that the related constructors have side effects and the whole point of the new is to invoke those
+			    -- however, this is an awkard design that is hard to maintain and should probably be reworked.
+
+			    create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data ({PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, if attached getter as l_getter  then l_getter.prototype.pe_index else {NATURAL_64} 0 end, l_semantics)
+				l_dis := l_writer.add_table_entry (l_table)
+				if attached setter as l_setter then
+					create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data ({PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_setter.prototype.pe_index, l_semantics)
+					l_dis := l_writer.add_table_entry (l_table)
+				end
+			end
+			Result := True
 		end
 
 end

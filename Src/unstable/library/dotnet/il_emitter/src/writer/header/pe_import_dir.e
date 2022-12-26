@@ -21,7 +21,7 @@ feature -- Access
 	dll_name: INTEGER assign set_dll_name
 			-- `dll_name'
 
-	thunk_post: INTEGER assign set_thunk_post
+	thunk_pos: INTEGER assign set_thunk_pos
 			-- name thunk
 
 feature -- Element change
@@ -58,14 +58,43 @@ feature -- Element change
 			dll_name_assigned: dll_name = a_dll_name
 		end
 
-	set_thunk_post (a_thunk_post: like thunk_post)
-			-- Assign `thunk_post' with `a_thunk_post'.
+	set_thunk_pos (a_thunk_pos: like thunk_pos)
+			-- Assign `thunk_pos' with `a_thunk_pos'.
 		do
-			thunk_post := a_thunk_post
+			thunk_pos := a_thunk_pos
 		ensure
-			thunk_post_assigned: thunk_post = a_thunk_post
+			thunk_post_assigned: thunk_pos = a_thunk_pos
 		end
 
+
+feature -- Managed Pointer
+
+	managed_pointer: MANAGED_POINTER
+		local
+			l_pos: INTEGER
+		do
+			create Result.make (size_of)
+			l_pos := 0
+
+				-- thunk_pos2
+			Result.put_integer_32_le (thunk_pos2, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- time
+			Result.put_integer_32_le (time, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- version
+			Result.put_integer_32_le (version, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- dll_name
+			Result.put_integer_32_le (dll_name, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- thunk_pos
+			Result.put_integer_32_le (thunk_pos, l_pos)
+		end
 
 feature -- Measurement
 

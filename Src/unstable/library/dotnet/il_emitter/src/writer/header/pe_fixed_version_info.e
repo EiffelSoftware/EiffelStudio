@@ -153,4 +153,89 @@ feature -- Element change
 			file_date_ls_assigned: file_date_ls = a_file_date_ls
 		end
 
+feature -- Managed Pointer
+
+	managed_pointer: MANAGED_POINTER
+		local
+			l_pos: INTEGER
+		do
+			create Result.make (size_of)
+			l_pos := 0
+
+				-- signature
+			Result.put_natural_32_le (signature, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- struct_version
+			Result.put_natural_32_le (struct_version, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- file_version_ms
+			Result.put_natural_32_le (file_version_ms, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- file_version_ls
+			Result.put_natural_32_le (file_version_ls, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- product_version_ms
+			Result.put_natural_32_le (product_version_ms, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- product_version_ls
+			Result.put_natural_32_le (product_version_ls, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- file_flags_mask
+			Result.put_natural_32_le (file_flags_mask, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- file_flags
+			Result.put_natural_32_le (file_flags, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- file_os
+			Result.put_natural_32_le (file_os, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- file_type
+			Result.put_natural_32_le (file_type, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- file_subtype
+			Result.put_natural_32_le (file_subtype, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- file_date_ms
+			Result.put_natural_32_le (file_date_ms, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- file_date_ls
+			Result.put_natural_32_le (file_date_ls, l_pos)
+		end
+
+feature -- Measurement
+
+	size_of: INTEGER
+		local
+			l_internal: INTERNAL
+			n: INTEGER
+			l_obj: PE_FIXED_VERSION_INFO
+		do
+			create l_obj
+			create l_internal
+			n := l_internal.field_count (l_obj)
+			across 1 |..| n as ic loop
+				if attached l_internal.field (ic, l_obj) as l_field then
+					if attached {NATURAL_32} l_field then
+						Result := Result + {PLATFORM}.natural_32_bytes
+					end
+				end
+			end
+		ensure
+			instance_free: class
+		end
+
+
+
 end

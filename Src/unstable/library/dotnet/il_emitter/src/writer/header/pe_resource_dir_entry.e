@@ -58,13 +58,34 @@ feature -- Element change
 			escape_assigned: escape = an_escape
 		end
 
+feature -- Managed Pointer
+
+	managed_pointer: MANAGED_POINTER
+		local
+			l_pos: INTEGER
+		do
+			create Result.make (size_of)
+			l_pos := 0
+
+				-- rva_or_id
+			Result.put_integer_32_le (rva_or_id, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- subdir_or_data
+			Result.put_integer_32_le (subdir_or_data, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
+				-- escape
+			Result.put_integer_32_le (escape, l_pos)
+		end
+
 feature -- Measurement
 
 	size_of: INTEGER
 		local
 			l_internal: INTERNAL
 			n: INTEGER
-			l_obj: PE_OBJECT
+			l_obj: PE_RESOURCE_DIR_ENTRY
 		do
 			create l_obj
 			create l_internal

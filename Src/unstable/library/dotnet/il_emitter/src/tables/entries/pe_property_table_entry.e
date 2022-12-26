@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flags: NATURAL_16; a_name: NATURAL; a_property_type: NATURAL)
+	make_with_data (a_flags: NATURAL_16; a_name: NATURAL_64; a_property_type: NATURAL_64)
 		do
 			flags := a_flags
 			create name.make_with_index (a_name)

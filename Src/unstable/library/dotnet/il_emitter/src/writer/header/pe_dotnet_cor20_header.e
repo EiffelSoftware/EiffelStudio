@@ -163,7 +163,6 @@ feature -- Element change
 			managed_native_header_assigned: managed_native_header = a_managed_native_header
 		end
 
-
 feature -- Managed Pointer
 
 	managed_pointer: MANAGED_POINTER
@@ -182,7 +181,7 @@ feature -- Managed Pointer
 			Result.put_natural_16_le (major_runtime_version, l_pos)
 			l_pos := l_pos + {PLATFORM}.natural_16_bytes
 
-				-- minor_runtime_version			
+				-- minor_runtime_version
 			Result.put_natural_16_le (minor_runtime_version, l_pos)
 			l_pos := l_pos + {PLATFORM}.natural_16_bytes
 
@@ -263,7 +262,6 @@ feature -- Measurement
 			instance_free: class
 		end
 
-
 invariant
 	valid_metadata_capacity: metadata.capacity = 2
 	valid_resources_capacity: resources.capacity = 2
@@ -272,4 +270,5 @@ invariant
 	valid_vtable_fixup_capacity: vtable_fixup.capacity = 2
 	valid_export_address_table_jumps_capacity: export_address_table_jumps.capacity = 2
 	valid_managed_native_header_capacity: managed_native_header.capacity = 2
+
 end

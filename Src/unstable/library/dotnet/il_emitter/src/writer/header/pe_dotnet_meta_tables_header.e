@@ -87,6 +87,44 @@ feature -- Element change
 			mask_sorted_assigned: mask_sorted = a_mask_sorted
 		end
 
+
+feature -- Managed Pointer
+
+	managed_pointer: MANAGED_POINTER
+		local
+			l_pos: INTEGER
+		do
+			create Result.make (size_of)
+			l_pos := 0
+
+				-- reserved1
+			Result.put_natural_32_le (reserved1, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+
+				-- major_version
+			Result.put_natural_8_le (major_version, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_8_bytes
+
+				-- minor_version
+			Result.put_natural_8_le (minor_version, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_8_bytes
+
+				-- heap_offset_sizes
+			Result.put_natural_8_le (heap_offset_sizes, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_8_bytes
+
+				-- reserved2
+			Result.put_natural_8_le (reserved2, l_pos)
+			l_pos := l_pos + {PLATFORM}.natural_8_bytes
+
+				-- mask_valid
+			Result.put_integer_64_le (mask_valid, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_64_bytes
+
+				-- mask_sorted
+			Result.put_integer_64_le (mask_sorted, l_pos)
+		end
+
 feature -- Measurement
 
 	size_of: INTEGER

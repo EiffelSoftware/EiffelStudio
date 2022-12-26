@@ -20,6 +20,15 @@ feature -- Initialization
 			l_api: CIL_EMITTER_API
 			time: TIME
 		do
+			test_pe_version_string({STRING_32}"FileVersion", "1.1.0.1")
+			--test_pe_version_string({STRING_32}"FileDescription", " ")
+			text_hexadecimal_value
+			test_path_entries
+			test_pe_strings_32
+			test_pe_naturals
+			test_pe_reader
+			test_pe_import_dir
+			test_pe_write_string
 			test_byte_array_to_string
 			file_test
 			test_natural_64
@@ -259,6 +268,21 @@ feature -- Initialization
 			is_class: class
 		end
 
+feature -- Test Path
+
+	test_path_entries
+		local
+			l_file_name: STRING_32
+			l_path: PATH
+			n: INTEGER
+		do
+			--l_file_name := {STRING_32}"C:\\Documents\\Newsletters\\Summer2018.pdf"
+			l_file_name := {STRING_32}"Summer2018.pdf"
+			create l_path.make_from_string (l_file_name)
+			n := l_path.components.count
+			l_file_name := l_path.components[n].name
+		end
+
 feature -- C Byte Array
 
 	test_byte_array
@@ -328,6 +352,162 @@ feature -- C Byte Array
 			l_file.put_string (" sam")
 			l_file.close
 		end
+
+
+	text_hexadecimal_value
+		local
+			l_file: RAW_FILE
+			l_fmt_int: FORMAT_INTEGER
+			language: NATURAL_32
+			l_buf: STRING_32
+		do
+			create l_file.make_create_read_write ("eiffel_test.bin")
+			language := 0x4b0
+			l_buf := language.to_hex_string.to_string_32
+			l_buf.append_character ('%U')
+			put_string_32 (l_buf, l_file)
+			l_file.close
+		end
+
+	put_string_32 (a_str: READABLE_STRING_32; a_file: RAW_FILE)
+		do
+			across 1 |..| a_str.count as i loop a_file.put_natural_32 (a_str.code (i)) end
+		end
+
+feature -- PE Reader
+
+	test_pe_reader
+		local
+			l_reader: PE_READER
+		do
+			create l_reader.make
+		end
+
+feature -- PE Writer tests
+
+	test_pe_version_string (a_name: STRING_32; a_value: STRING)
+		local
+			l_file: RAW_FILE
+			n1: NATURAL_16
+			n: NATURAL_32
+			l_buf: STRING_32
+			l_name: STRING_32
+			l_index: INTEGER
+		do
+			create l_file.make_create_read_write ("eiffel_test.bin")
+
+			n1 := (a_name.count * 2 + a_value.count * 2 + 6 + 2 + 2).to_natural_16
+			n := (a_name.count + 2).to_natural_32
+			if n \\ 4 /= 0 then
+				n1 := n1 + (n - n \\ 4).to_natural_16
+			end
+			n := ((a_value.count + 1) * 2).to_natural_32
+			if n \\ 4 /= 0 then
+				n1 := n1 + (n - n \\ 4).to_natural_16
+			end
+			l_file.put_natural_16 (n1)
+
+			n1 := ((a_value.count + 1) * 2).to_natural_16
+			l_file.put_natural_16 (n1)
+			create l_buf.make_from_string_general (a_value)
+			l_buf.append_character ('%U')
+			n1 := 1
+			l_file.put_natural_16 (n1)
+
+
+				-- put_wide_character.
+			create l_name.make_from_string_general (a_name)
+			l_name.append_character ('%U')
+			l_index := l_name.count // 2
+			across 1 |..| l_index as i loop
+				l_file.put_natural_16 (l_name.code (i).to_natural_16)
+			end
+			l_file.put_character (l_name.at (l_index + 1).to_character_8)
+
+			n1 := 1
+			across 1 |..| ((n1*2).to_integer_32 - 1) as  i loop
+				l_file.put_natural_16 (l_buf.code (i).to_natural_16)
+			end
+
+			l_file.close
+		end
+
+
+	test_pe_strings_32
+		local
+			l_file: RAW_FILE
+			l_converter: UTF_CONVERTER
+			l_string: STRING_32
+			l_arr: SPECIAL [NATURAL_8]
+		do
+			l_string := {STRING_32}"V"
+			create l_file.make_create_read_write ("eiffel_test.bin")
+			across 1 |..| l_string.count as i loop
+				l_file.put_natural_32 (l_string.code (i))
+			end
+			l_file.close
+		end
+
+
+	test_pe_naturals
+		local
+			l_file: RAW_FILE
+			l_val: NATURAL_32
+		do
+			l_val := 0
+			create l_file.make_create_read_write ("eiffel_test.bin")
+			l_file.put_natural_16 (l_val.to_natural_16)
+			l_val :=0x25ff
+			l_file.put_natural_16 (l_val.to_natural_16)
+			l_file.close
+		end
+
+	test_pe_import_dir
+		local
+			l_file: RAW_FILE
+			l_dir: ARRAY [PE_IMPORT_DIR]
+			l_item: NATURAL_32
+			l_main_name: NATURAL_32
+			l_mp: MANAGED_POINTER
+		do
+			create l_dir.make_filled (create{PE_IMPORT_DIR}, 1,2)
+			l_dir [1] := (create {PE_IMPORT_DIR})
+			l_dir [1].thunk_pos2 := 10 + 2 * {PE_IMPORT_DIR}.size_of
+			l_item := (l_dir [1].thunk_pos2 + 8).to_natural_32
+			if l_item \\ 16 /= 0 then
+				l_item := l_item + 16 - (l_item \\ 16)
+			end
+			l_main_name := l_item
+			l_item := l_item + 2
+			l_item := l_item + 12  -- in C++ sizeof("_CorXXXMain");
+			l_dir [1].dll_name := l_item.to_integer_32
+			l_dir [1].thunk_pos := 10
+
+			create l_file.make_create_read_write ("eiffel_test.bin")
+
+			create l_mp.make (0)
+			across l_dir as dir loop
+				l_mp.append (dir.managed_pointer)
+			end
+
+			l_file.put_managed_pointer (l_mp, l_file.count, l_mp.count)
+			l_file.close
+		end
+
+
+	test_pe_write_string
+		local
+			l_file: RAW_FILE
+			l_str: STRING
+		do
+			l_str := "#Strings"
+			l_str.append_character('%U')
+			create l_file.make_create_read_write ("eiffel_test.bin")
+
+			l_file.put_string (l_str)
+			l_file.close
+		end
+
 
 
 feature -- GUID

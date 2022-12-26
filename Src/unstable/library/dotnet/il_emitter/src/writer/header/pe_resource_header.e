@@ -8,13 +8,11 @@ class
 
 feature -- Access
 
-
 	data_size: INTEGER_32 assign set_data_size
 			-- `data_sIze'
 
 	hrd_size: INTEGER_32 assign set_hrd_size
 			-- `hrd_size'
-
 
 feature -- Element change
 
@@ -40,7 +38,7 @@ feature -- Measurement
 		local
 			l_internal: INTERNAL
 			n: INTEGER
-			l_obj: PE_OBJECT
+			l_obj: PE_RESOURCE_HEADER
 		do
 			create l_obj
 			create l_internal

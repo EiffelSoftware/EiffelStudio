@@ -780,37 +780,7 @@ feature -- Element change
 			res3_rva_assigned: res3_rva = a_res3_rva
 		end
 
-feature -- Measurement
-
-	size_of: INTEGER
-		local
-			l_internal: INTERNAL
-			n: INTEGER
-			l_obj: PE_HEADER
-		do
-			create l_obj
-			create l_internal
-			n := l_internal.field_count (l_obj)
-			across 1 |..| n as ic loop
-				if attached l_internal.field (ic, l_obj) as l_field then
-					print ("%NField_name: " + l_internal.field_name (ic, l_obj))
-					print (" -  value: " + l_field.out)
-					print (" -  offset:" + l_internal.field_offset (ic, l_obj).out)
-					if attached {INTEGER_32} l_field then
-						Result := Result + {PLATFORM}.integer_32_bytes
-					elseif attached {INTEGER_16} l_field then
-						Result := Result + {PLATFORM}.integer_16_bytes
-					elseif attached {NATURAL_8} l_field then
-						Result := Result + {PLATFORM}.natural_8_bytes
-					end
-				end
-			end
-		ensure
-			instance_free: class
-		end
-
-
-feature -- Managed Pointer		
+feature -- Managed Pointer
 
 	managed_pointer: MANAGED_POINTER
 		local
@@ -1099,6 +1069,37 @@ feature -- Managed Pointer
 				-- res3_size
 			Result.put_integer_32_le (res3_size, offset)
 			offset := offset + {PLATFORM}.integer_32_bytes
+		end
+
+feature -- Measurement
+
+	size_of: INTEGER
+		local
+			l_internal: INTERNAL
+			n: INTEGER
+			l_obj: PE_HEADER
+		do
+			create l_obj
+			create l_internal
+			n := l_internal.field_count (l_obj)
+			across 1 |..| n as ic loop
+				if attached l_internal.field (ic, l_obj) as l_field then
+					debug
+						print ("%NField_name: " + l_internal.field_name (ic, l_obj))
+						print (" -  value: " + l_field.out)
+						print (" -  offset:" + l_internal.field_offset (ic, l_obj).out)
+					end
+					if attached {INTEGER_32} l_field then
+						Result := Result + {PLATFORM}.integer_32_bytes
+					elseif attached {INTEGER_16} l_field then
+						Result := Result + {PLATFORM}.integer_16_bytes
+					elseif attached {NATURAL_8} l_field then
+						Result := Result + {PLATFORM}.natural_8_bytes
+					end
+				end
+			end
+		ensure
+			instance_free: class
 		end
 
 end

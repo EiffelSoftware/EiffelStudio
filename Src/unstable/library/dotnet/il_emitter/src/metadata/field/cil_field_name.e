@@ -12,7 +12,8 @@ inherit
 		rename
 			make as make_value
 		redefine
-			il_src_dump
+			il_src_dump,
+			render
 		end
 
 create
@@ -35,7 +36,6 @@ feature -- Access
 	field: CIL_FIELD
 		-- The field reference.		
 
-
 feature -- Output
 
 	il_src_dump (a_file: FILE_STREAM): BOOLEAN
@@ -53,6 +53,19 @@ feature -- Output
 			a_file.put_string (" ")
 			a_file.put_string ({CIL_QUALIFIERS}.name (field.name, field.parent, False))
 			Result := True
+		end
+
+	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_code: INTEGER; a_result: SPECIAL [NATURAL_8]): NATURAL_64
+		local
+			l_res: BOOLEAN
+		do
+			if attached {CIL_DATA_CONTAINER} field.parent as l_container and then l_container.in_assembly_ref then
+				l_res := field.pe_dump (a_stream)
+				{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_result, field.pe_index | {PE_TABLES}.tmemberref.value |<< 24, 0)
+			else
+				{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_result, field.pe_index | {PE_TABLES}.tfield.value |<< 24, 0)
+			end
+			Result := 4
 		end
 
 end

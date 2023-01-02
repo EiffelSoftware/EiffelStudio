@@ -9,7 +9,6 @@ class
 
 feature -- Access
 
-		-- TODO this values are defined in the class Qualifiers but doesn't match with the ECMA
 		-- The full list is in section
 		-- II.15.4.2 Predefined attributes on methods CIL_ECMA-335
 

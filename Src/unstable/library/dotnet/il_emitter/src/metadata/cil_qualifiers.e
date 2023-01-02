@@ -1,14 +1,18 @@
 note
 	description: "[
-		Qualifiers is a generic class that holds all the 'tags' you would see on various objects in
-		the assembly file.   Where possible things are handled impicitly for example 'nested'
-		will automatically be added when a class is nested in another class.
-	]"
+			Qualifiers is a generic class that holds all the 'tags' you would see on various objects in
+			the assembly file.   Where possible things are handled impicitly for example 'nested'
+			will automatically be added when a class is nested in another class.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	CIL_QUALIFIERS
+
+inherit
+
+	CIL_QUALIFIERS_ENUM
 
 create
 	make,
@@ -40,13 +44,12 @@ feature -- Access
 
 	flags: INTEGER;
 
-	after_flags : INTEGER
+	after_flags: INTEGER
 		do
 			Result := {CIL_QUALIFIERS_ENUM}.preservesig | {CIL_QUALIFIERS_ENUM}.cil | {CIL_QUALIFIERS_ENUM}.managed | {CIL_QUALIFIERS_ENUM}.runtime
 		ensure
 			instance_free: class
 		end
-
 
 feature -- Change Element
 
@@ -56,7 +59,6 @@ feature -- Change Element
 			flags := a_flag
 		end
 
-
 feature -- Static features
 
 	qualifier_names: ARRAYED_LIST [STRING]
@@ -65,39 +67,39 @@ feature -- Static features
 			-- see QUALIFIERS class.
 		once
 			create Result.make_from_array (<<
-										  	"public",
-                                             "private",
-                                             "static",
-                                             "instance",
-                                             "explicit",
-                                             "ansi",
-                                             "sealed",
-                                             "enum",
-                                             "value",
-                                             "sequential",
-                                             "auto",
-                                             "literal",
-                                             "hidebysig",
-                                             "preservesig",
-                                             "specialname",
-                                             "rtspecialname",
-                                             "cil",
-                                             "managed",
-                                             "runtime",
-                                             "",
-                                             "virtual",
-                                             "newslot",
-                                             "",
-                                             "",
-                                             "",
-                                             "",
-                                             "",
-                                             "",
-                                             "",
-                                             "",
-                                             "",
-                                             ""
-			>>)
+					"public",
+					"private",
+					"static",
+					"instance",
+					"explicit",
+					"ansi",
+					"sealed",
+					"enum",
+					"value",
+					"sequential",
+					"auto",
+					"literal",
+					"hidebysig",
+					"preservesig",
+					"specialname",
+					"rtspecialname",
+					"cil",
+					"managed",
+					"runtime",
+					"",
+					"virtual",
+					"newslot",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					""
+				>>)
 		ensure
 			instance_free: class
 		end
@@ -113,10 +115,10 @@ feature -- Static features
 					a_rv.append (l_parent.name)
 					if attached {CIL_CLASS} l_parent and then
 						(attached l_parent.parent or else
-						not attached {CIL_CLASS}l_parent.parent)
+							not attached {CIL_CLASS} l_parent.parent)
 					then
 						if a_type then
-							a_rv.append ("%/0xf8/")
+							a_rv.append ("ø")
 						else
 							a_rv.append ("/")
 						end
@@ -151,6 +153,9 @@ feature -- Static features
 		end
 
 	name (a_root: STRING_32; a_parent: detachable CIL_DATA_CONTAINER; a_type: BOOLEAN): STRING_32
+			-- get a name for a DataContainer object, suitable for use in an ASM file
+			--| The main problem is there is a separator character between the first class encountered
+			--| and its members, which is different depending on whether it is a type or a field
 		do
 			Result := name_prefix (a_parent, a_type)
 			if not Result.is_empty then
@@ -160,39 +165,73 @@ feature -- Static features
 				if not Result.is_empty then
 					Result.append ("::")
 				end
-				Result.append_character(''')
-				Result.append(a_root)
-				Result.append_character(''')
+				Result.append_character (''')
+				Result.append (a_root)
+				Result.append_character (''')
 			end
 		ensure
 			instance_free: class
 		end
 
+	object_name (a_stem: STRING_32; a_parent: CIL_DATA_CONTAINER): 	STRING_32
+		local
+			pos, npos: INTEGER
+			rv: STRING_32
+			l_dis: INTEGER
+		do
+			create rv.make_empty
+			l_dis := reverse_name_prefix (rv, a_parent.parent, pos, False)
+			npos := rv.index_of ('/', 1)
+			if npos /= 0 then
+				rv[npos] := '.'
+			end
+			if not rv.is_empty then
+				if rv[rv.count] = '.' then
+					if rv.count = 1 then
+						rv := ""
+					else
+						rv := rv.substring (1, rv.count - 1)
+					end
+				end
+			end
+			if not a_stem.is_empty then
+				if rv.is_empty then
+					rv := a_stem
+				else
+					rv := rv + "::" + a_stem
+				end
+			end
+			Result := rv
+		end
+
 feature -- Output
 
 	il_src_dump_before_flags (a_file: FILE_STREAM)
+			-- most qualifiers come before the name of the item
 		local
 			n: INTEGER
 		do
 			n := after_flags.bit_not & flags
 			across 0 |..| 31 as i loop
-					if n & (1 |<< i) /= 0 then
+				if n & (1 |<< i) /= 0 then
 					a_file.put_string (" ")
-					a_file.put_string (qualifier_names[i+1])
+					a_file.put_string (qualifier_names [i + 1])
 				end
 			end
 		end
 
 	il_src_dump_after_flags (a_file: FILE_STREAM)
+			-- but a couple of the method qualifiers come after the method definition
 		local
 			n: INTEGER
 		do
 			n := after_flags & flags
 			across 0 |..| 31 as i loop
-					if n & (1 |<< i) /= 0 then
+				if n & (1 |<< i) /= 0 then
 					a_file.put_string (" ")
-					a_file.put_string (qualifier_names[i+1])
+					a_file.put_string (qualifier_names [i + 1])
 				end
 			end
 		end
+
 end

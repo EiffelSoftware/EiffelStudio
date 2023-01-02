@@ -1,9 +1,9 @@
 note
 	description: "[
-		Object representing a value
-		A value, typically to be used as an operand.
-		Various other classes derive from this to make specific types of operand values.
-	]"
+			Object representing a value
+			A value, typically to be used as an operand.
+			Various other classes derive from this to make specific types of operand values.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,11 +11,13 @@ class
 	CIL_VALUE
 
 create
-	make
+	make,
+	make_with_type
 
 feature {NONE} --Initialization
 
 	make (a_name: STRING_32; a_type: detachable CIL_TYPE)
+			-- Create an object with `a_name` and type `a_type`
 		do
 			name := a_name
 			type := a_type
@@ -24,13 +26,19 @@ feature {NONE} --Initialization
 			type_set: type = a_type
 		end
 
+
+	make_with_type (a_type: CIL_TYPE)
+		do
+			make ("", a_type)
+		end
+
 feature -- Access
 
 	name: STRING_32
 
 	type: detachable CIL_TYPE
-		-- type of value.
-		-- TODO check if it's better to use NULL pattern.
+			-- type of value.
+			-- TODO check if it's better to use NULL pattern.
 
 feature -- Change Element
 
@@ -54,17 +62,18 @@ feature -- Output
 
 	il_src_dump (a_file: FILE_STREAM): BOOLEAN
 		do
-			-- used for types
+				-- used for types
 			if attached type as l_type then
 				Result := l_type.il_src_dump (a_file)
 			end
 			Result := True
 		end
 
-	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_result: detachable SPECIAL [NATURAL_8]): NATURAL_32
+	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_result: SPECIAL [NATURAL_8]): NATURAL_64
 		do
 			if attached type as l_type then
 				Result := l_type.render (a_stream, a_result)
 			end
 		end
+
 end

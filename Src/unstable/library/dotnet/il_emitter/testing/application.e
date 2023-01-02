@@ -394,6 +394,7 @@ feature -- PE Writer tests
 			l_name: STRING_32
 			l_index: INTEGER
 		do
+			print (a_name.substring (1, a_name.count))
 			create l_file.make_create_read_write ("eiffel_test.bin")
 
 			n1 := (a_name.count * 2 + a_value.count * 2 + 6 + 2 + 2).to_natural_16

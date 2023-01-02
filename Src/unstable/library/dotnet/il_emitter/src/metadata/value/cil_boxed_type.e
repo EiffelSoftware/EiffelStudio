@@ -32,18 +32,17 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	render (a_stream: FILE_STREAM; a_bytes: detachable SPECIAL [NATURAL_8]): NATURAL_8
+	render (a_stream: FILE_STREAM; a_bytes: SPECIAL [NATURAL_8]): NATURAL_8
 		do
 			to_implement ("Add implementation")
 		end
 
-
 	il_src_dump (a_stream: FILE_STREAM): BOOLEAN
 		do
-			 	-- no point in looking up the type name in the assembly for this...
+				-- no point in looking up the type name in the assembly for this...
 			a_stream.put_string ("[mscorlib]System.")
-			a_stream.put_string (type_names [{CIL_BASIC_TYPE}.index_of(basic_type) + 1])
-    		Result := True
+			a_stream.put_string (type_names [{CIL_BASIC_TYPE}.index_of (basic_type) + 1])
+			Result := True
 		end
 
 feature -- Static

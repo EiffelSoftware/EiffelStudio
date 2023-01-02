@@ -41,9 +41,28 @@ feature -- Access
 
 feature -- Output
 
-	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_byte: detachable SPECIAL [NATURAL_8]): NATURAL_32
+	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_byte: SPECIAL [NATURAL_8]): NATURAL_64
+		local
+			l_res: BOOLEAN
 		do
-			to_implement ("Add implementation")
+			if a_opcode = {CIL_INSTRUCTION_OPCODES}.index_of ({CIL_INSTRUCTION_OPCODES}.i_calli) then
+				if signature.pe_index_type = 0 then
+					l_res := signature.pe_dump (a_stream, True)
+				end
+				{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_byte, signature.pe_index_type | ({PE_TABLES}.tstandalonesig.value |<< 24).to_natural_64, 0)
+			else
+				if signature.pe_index = 0 and then signature.pe_index_call_site = 0 then
+					l_res := signature.pe_dump (a_stream, False)
+				end
+				if signature.pe_index /= 0 then
+					{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_byte, signature.pe_index | ({PE_TABLES}.tmethoddef.value |<< 24).to_natural_64, 0)
+				elseif not signature.generic.is_empty then
+					{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_byte, signature.pe_index_call_site | ({PE_TABLES}.tmethodspec.value |<< 24).to_natural_64, 0)
+				else
+					{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_byte, signature.pe_index_call_site | ({PE_TABLES}.tmemberref.value |<< 24).to_natural_64, 0)
+				end
+			end
+			Result := 4
 		end
 
 	il_src_dump (a_file: FILE_STREAM): BOOLEAN

@@ -52,13 +52,6 @@ feature -- Commands
 			Result.disable_sensitive
 		end
 
-	Override_scan_cmd: EB_OVERRIDE_SCAN_COMMAND
-			-- Command to check override clusters for changes and recompile.
-		once
-			create Result.make
-			Result.disable_sensitive
-		end
-
 	Discover_melt_cmd: EB_DISCOVER_AND_MELT_COMMAND
 			-- Command to find unreferenced externally added classes and recompile.
 		once
@@ -210,7 +203,7 @@ feature -- Commands
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

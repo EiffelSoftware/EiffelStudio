@@ -54,7 +54,6 @@ feature -- Visit nodes
 			-- Process `a_library'.
 		do
 			if
-				not is_override_only and then
 				attached a_library.library_target as t and then
 				not processed_libraries.has (t.system.uuid)
 			then
@@ -67,18 +66,14 @@ feature -- Visit nodes
 	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Process `a_precompile'.
 		do
-			if not is_override_only then
-				process_library (a_precompile)
-			end
+			process_library (a_precompile)
 		end
 
 	process_cluster (a_cluster: CONF_CLUSTER)
 			-- Process `a_cluster'.
 		do
-			if not is_override_only then
-				on_process_group (a_cluster)
-				find_modified (a_cluster)
-			end
+			on_process_group (a_cluster)
+			find_modified (a_cluster)
 		end
 
 	process_override (an_override: CONF_OVERRIDE)
@@ -100,34 +95,13 @@ feature -- Visit nodes
 
 feature -- Status
 
-	is_override_only: BOOLEAN
-			-- Should we only check the override clusters?
-
 	is_force_rebuild: BOOLEAN
 			-- Do we need to do a full rebuild of the configuration?
-
-feature -- Status update
-
-	enable_override_only
-			-- Only scan override clusters.
-		do
-			is_override_only := True
-		ensure
-			is_override_only: is_override_only
-		end
 
 feature -- Access
 
 	modified_classes: ARRAYED_LIST [CONF_CLASS]
 			-- The list of modified classes.
-
-feature -- Update
-
-	resest_modified_classes
-			-- Reset `modified_classes'.
-		do
-			create modified_classes.make (0)
-		end
 
 feature -- Observer
 
@@ -204,7 +178,7 @@ feature {NONE} -- Implementation
 			-- Handle class in source file `f` in directory `d` in cluster `c`.
 		do
 			is_force_rebuild :=
-				not is_force_rebuild and then
+				is_force_rebuild or else
 				valid_eiffel_extension (f) and then
 				(attached c.classes_by_filename as t ⇒
 				not t.has ((create {PATH}.make_from_string (d)).extended (f)))
@@ -215,7 +189,7 @@ invariant
 	process_group_observer_not_void: process_group_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

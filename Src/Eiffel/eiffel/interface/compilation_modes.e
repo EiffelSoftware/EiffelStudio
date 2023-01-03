@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Status of current compilation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	COMPILATION_MODES
@@ -12,7 +12,7 @@ feature -- Properties
 
 	is_freezing, is_finalizing,
 	is_precompiling, is_quick_melt,
-	is_override_scan, is_discover: BOOLEAN
+	is_discover: BOOLEAN
 			-- Type of compilation.
 
 feature -- Access
@@ -28,8 +28,6 @@ feature -- Access
 				end
 			elseif is_quick_melt then
 				Result := quick_melt_type
-			elseif is_override_scan then
-				Result := override_scan_type
 			elseif is_discover then
 				Result := discover_type
 			elseif is_freezing then
@@ -47,7 +45,6 @@ feature -- Access
 	precompile_type: STRING = "Precompile"
 	precompile_finalize_type: STRING = "Precompile+Finalize"
 	quick_melt_type: STRING = "Quick_melt"
-	override_scan_type: STRING = "Override_scan"
 	discover_type: STRING = "Discover"
 	freeze_type: STRING = "Freeze"
 	finalize_type: STRING = "Finalize"
@@ -64,12 +61,6 @@ feature -- Update
 			-- Set `is_quick_melt' to `True'
 		do
 			is_quick_melt := True
-		end
-
-	set_is_override_scan
-			-- Set `is_override_scan' to `True'
-		do
-			is_override_scan := True
 		end
 
 	set_is_finalizing
@@ -96,7 +87,6 @@ feature -- Setting
 
 	reset_modes
 		do
-			is_override_scan := False
 			is_quick_melt := False
 			is_freezing := False
 			is_finalizing := False
@@ -105,7 +95,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -118,22 +108,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class COMPILATION_MODES
+end

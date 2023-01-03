@@ -135,7 +135,6 @@ feature -- Button texts
 	b_Finalize: STRING_32						do Result := locale.translation("Finalize")	end
 	b_Freeze: STRING_32							do Result := locale.translation("Freeze")	end
 	b_Precompile: STRING_32						do Result := locale.translation("Precompile")	end
-	b_override_scan: STRING_32					do Result := locale.translation("Recompile Overrides")	end
 	b_discover_melt: STRING_32					do Result := locale.translation("Find Added Classes & Recompile")	end
 	b_Cut: STRING_32								do Result := locale.translation("Cut")	end
 	b_Copy: STRING_32							do Result := locale.translation("Copy")	end
@@ -1033,7 +1032,6 @@ feature -- Menu mnenomics
 	m_Open_containing_folder: STRING_32	do Result := locale.translation("Open Containing Folder")	end
 	m_Pretty_print: STRING_32			do Result := locale.translation("Expand an Object")	end
 	m_Project: STRING_32					do Result := locale.translation("&Project")	end
-	m_Override_scan: STRING_32			do Result := locale.translation("Recompile &Overrides")	end
 	m_Discover_melt: STRING_32			do Result := locale.translation("Find &Added Classes && Recompile")	end
 	m_Raise: STRING_32					do Result := locale.translation("&Raise")	end
 	m_Raise_all: STRING_32				do Result := locale.translation("&Raise All")	end
@@ -2876,7 +2874,6 @@ feature -- Description texts
 	e_Print: STRING_32					do Result := locale.translation("Print the currently edited text")	end
 	e_Project_name: STRING_32			do Result := locale.translation("Name of the current project")	end
 	e_Project_settings: STRING_32		do Result := locale.translation("Change project settings, right click to open external editor")	end
-	e_override_scan: STRING_32			do Result := locale.translation("Recompile override clusters")	end
 	e_discover_melt: STRING_32			do Result := locale.translation("Discover unreferenced externally added classes and recompile.")	end
 	e_Raise_all: STRING_32				do Result := locale.translation("Raise all windows")	end
 	e_Raise_all_unsaved: STRING_32		do Result := locale.translation("Raise all unsaved windows")	end
@@ -3065,7 +3062,10 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	ca_ignore:
+		"CA033", "CA033: too large class",
+		"CA011", "CA011: too many arguments"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

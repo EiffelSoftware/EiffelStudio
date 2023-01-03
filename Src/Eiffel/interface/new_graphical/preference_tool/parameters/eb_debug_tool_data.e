@@ -89,7 +89,6 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 				hidden_toolbar_item_name ({EB_EXEC_FINALIZED_CMD}.name),
 				hidden_toolbar_item_name ({EB_FREEZE_PROJECT_COMMAND}.name),
 				hidden_toolbar_item_name ({EB_FINALIZE_PROJECT_COMMAND}.name),
-				hidden_toolbar_item_name ({EB_OVERRIDE_SCAN_COMMAND}.name),
 				hidden_toolbar_item_name ({EB_DISCOVER_AND_MELT_COMMAND}.name)>>
 		end
 
@@ -471,7 +470,7 @@ invariant
 note
 	ca_ignore:
 		"CA093", "CA093: manifest array type mismatch"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

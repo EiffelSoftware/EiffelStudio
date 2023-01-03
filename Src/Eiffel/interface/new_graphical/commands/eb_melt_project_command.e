@@ -1,9 +1,9 @@
-note
+﻿note
 	description	: "Command to update the Eiffel project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_MELT_PROJECT_COMMAND
@@ -459,10 +459,6 @@ feature {NONE} -- Implementation
 			a_cmd.auto_recycle (l_item)
 			Result.extend (l_item)
 
-			l_item := override_scan_cmd.new_menu_item
-			a_cmd.auto_recycle (l_item)
-			Result.extend (l_item)
-
 			l_item := freeze_project_cmd.new_menu_item
 			a_cmd.auto_recycle (l_item)
 			Result.extend (l_item)
@@ -530,7 +526,7 @@ feature {NONE} -- Implementation
 			-- Number of compilations done in a certain mode so far.
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -561,4 +557,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_MELT_PROJECT_COMMAND
+end

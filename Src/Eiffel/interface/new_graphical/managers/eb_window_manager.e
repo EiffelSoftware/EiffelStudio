@@ -378,14 +378,11 @@ feature -- Status report
 	last_focused_window: detachable EB_WINDOW
 			-- Return the window which last had the keyboard focus.
 			-- Return Void if no window is focused.
-		local
-			l_list: ARRAYED_LIST [EB_WINDOW]
 		do
 			if not focused_windows.is_empty then
 				Result := focused_windows.last
 			elseif not managed_windows.is_empty then
-				l_list := managed_windows
-				Result := l_list.last
+				Result := managed_windows.last
 			end
 		end
 
@@ -647,7 +644,6 @@ feature -- Actions on all windows
 			melt_project_cmd.enable_sensitive
 			terminate_c_compilation_cmd.disable_sensitive
 			refactoring_manager.enable_sensitive
-			override_scan_cmd.enable_sensitive
 			discover_melt_cmd.enable_sensitive
 			analyze_cmd.enable_sensitive
 			analyze_editor_cmd.update_sensitive
@@ -1105,7 +1101,6 @@ feature -- Events
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
 			Project_cancel_cmd.enable_sensitive
-			override_scan_cmd.disable_sensitive
 			discover_melt_cmd.disable_sensitive
 			analyze_cmd.disable_sensitive
 			analyze_editor_cmd.disable_sensitive
@@ -1123,7 +1118,6 @@ feature -- Events
 			Freeze_project_cmd.disable_sensitive
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
-			override_scan_cmd.disable_sensitive
 			discover_melt_cmd.disable_sensitive
 			analyze_cmd.disable_sensitive
 			analyze_editor_cmd.disable_sensitive
@@ -1139,7 +1133,6 @@ feature -- Events
 			Freeze_project_cmd.enable_sensitive
 			Finalize_project_cmd.enable_sensitive
 			Precompilation_cmd.enable_sensitive
-			override_scan_cmd.enable_sensitive
 			discover_melt_cmd.enable_sensitive
 			analyze_cmd.enable_sensitive
 			analyze_editor_cmd.update_sensitive
@@ -1184,7 +1177,6 @@ feature -- Events
 			clean_compile_project_cmd.enable_sensitive
 			System_cmd.enable_sensitive
 			System_information_cmd.enable_sensitive
-			override_scan_cmd.enable_sensitive
 			discover_melt_cmd.enable_sensitive
 			analyze_cmd.enable_sensitive
 			analyze_editor_cmd.update_sensitive
@@ -1206,7 +1198,6 @@ feature -- Events
 					Run_project_cmd.disable_sensitive
 					Run_workbench_cmd.disable_sensitive
 					Run_finalized_cmd.disable_sensitive
-					override_scan_cmd.disable_sensitive
 					discover_melt_cmd.disable_sensitive
 				else
 					Melt_project_cmd.enable_sensitive
@@ -1216,7 +1207,6 @@ feature -- Events
 					Run_project_cmd.enable_sensitive
 					Run_workbench_cmd.enable_sensitive
 					Run_finalized_cmd.enable_sensitive
-					override_scan_cmd.enable_sensitive
 					discover_melt_cmd.enable_sensitive
 				end
 				analyze_cmd.enable_sensitive
@@ -1241,7 +1231,6 @@ feature -- Events
 				Run_project_cmd.disable_sensitive
 				Run_workbench_cmd.disable_sensitive
 				Run_finalized_cmd.disable_sensitive
-				override_scan_cmd.disable_sensitive
 				discover_melt_cmd.disable_sensitive
 				analyze_cmd.disable_sensitive
 				analyze_editor_cmd.disable_sensitive
@@ -1279,7 +1268,6 @@ feature -- Events
 			Run_project_cmd.disable_sensitive
 			Run_workbench_cmd.disable_sensitive
 			Run_finalized_cmd.disable_sensitive
-			override_scan_cmd.disable_sensitive
 			discover_melt_cmd.disable_sensitive
 			analyze_cmd.disable_sensitive
 			analyze_editor_cmd.disable_sensitive
@@ -1663,7 +1651,7 @@ feature{NONE} -- Implementation
 note
 	ca_ignore:
 		"CA033", "CA033: too long class"
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -784,7 +784,6 @@ feature -- Stone process
 	set_stone (a_stone: detachable STONE)
 			-- Change the currently focused stone.
 		local
-			l_checker: EB_STONE_CHECKER
 			l_override_pref: STRING
 			l_editor: EB_SMART_EDITOR
 		do
@@ -843,8 +842,7 @@ feature -- Stone process
 				end
 
 					-- Apply now the stone.							
-				create l_checker.make (Current)
-				l_checker.set_stone_after_first_check (a_stone)
+				(create {EB_STONE_CHECKER}.make (Current)).set_stone_after_first_check (a_stone)
 
 				update_save_symbol
 				is_processing_stone := False
@@ -883,12 +881,12 @@ feature -- Stone process
 								create {CLASSI_STONE} Result.make (l_item)
 							end
 						end
-					elseif ext.is_case_insensitive_equal_general ("ecf") then
-						if attached universe.library_at_location (p, True) as libs then
-							if libs.count > 0 then
-								create {CLUSTER_STONE} Result.make (libs.first)
-							end
-						end
+					elseif
+						ext.is_case_insensitive_equal_general ("ecf") and then
+						attached universe.library_at_location (p, True) as libs and then
+						libs.count > 0
+					then
+						create {CLUSTER_STONE} Result.make (libs.first)
 					end
 				end
 			end
@@ -982,7 +980,6 @@ feature -- Stone process
 				-- Update project commands.
 			Melt_project_cmd.update (window)
 			discover_melt_cmd.update (window)
-			override_scan_cmd.update (window)
 			Freeze_project_cmd.update (window)
 			Finalize_project_cmd.update (window)
 			project_cancel_cmd.update (window)
@@ -1036,10 +1033,11 @@ feature -- Stone process
 			if attached l_service_consumer.service as l_service then
 				l_outputs := l_service.active_outputs
 				from l_outputs.start until l_outputs.after loop
-					if attached {ES_OUTPUT_PANE_I} l_outputs.item_for_iteration as l_output then
-						if attached {ES_EDITOR_WIDGET} l_output.widget_from_window (Current) as l_editor_widget then
-							l_editor_widget.editor.refresh
-						end
+					if
+						attached {ES_OUTPUT_PANE_I} l_outputs.item_for_iteration as l_output and then
+						attached {ES_EDITOR_WIDGET} l_output.widget_from_window (Current) as l_editor_widget
+					then
+						l_editor_widget.editor.refresh
 					end
 					l_outputs.forth
 				end
@@ -1067,10 +1065,11 @@ feature -- Stone process
 			if attached l_service_consumer.service as l_service then
 				l_outputs := l_service.active_outputs
 				from l_outputs.start until l_outputs.after loop
-					if attached {ES_OUTPUT_PANE_I} l_outputs.item_for_iteration as l_output then
-						if attached {ES_EDITOR_WIDGET} l_output.widget_from_window (Current) as l_editor_widget then
-							l_editor_widget.editor.margin.refresh
-						end
+					if
+						attached {ES_OUTPUT_PANE_I} l_outputs.item_for_iteration as l_output and then
+						attached {ES_EDITOR_WIDGET} l_output.widget_from_window (Current) as l_editor_widget
+					then
+						l_editor_widget.editor.margin.refresh
 					end
 					l_outputs.forth
 				end
@@ -1214,7 +1213,7 @@ feature -- Resource Update
 			save_canceled := False
 			if
 				attached {CLASSI_STONE} stone as l_class_stone and
-				attached {ES_MULTI_SEARCH_TOOL_PANEL} tools.search_tool as l_multi_search_tool
+				attached tools.search_tool as l_multi_search_tool
 			then
 				l_multi_search_tool.class_changed (l_class_stone.class_i)
 			end
@@ -1240,23 +1239,18 @@ feature -- Resource Update
 			Eiffel_project.Workbench.change_class (a_class.original_class)
 		end
 
-
 	on_before_text_saved
 			-- Notify the editor that the text is about to be saved.
-		local
-			l_editor: EB_SMART_EDITOR
-			l_class_i: CLASS_I
-			l_modifier: ES_CLASS_LICENSER
 		do
 			Precursor
-			l_editor := editors_manager.current_editor
-			if l_editor /= Void and then l_editor.is_interface_usable and then attached {CLASSI_STONE} l_editor.stone as l_class then
+			if
+				attached editors_manager.current_editor as l_editor and then
+				l_editor.is_interface_usable and then
+				attached {CLASSI_STONE} l_editor.stone as l_class and then
+				attached l_class.class_i as l_class_i
+			then
 					-- We have the class stone
-				l_class_i := l_class.class_i
-				if l_class_i /= Void then
-					create l_modifier
-					l_modifier.relicense (l_class_i)
-				end
+				(create {ES_CLASS_LICENSER}).relicense (l_class_i)
 			end
 		end
 
@@ -1385,18 +1379,20 @@ feature -- Window management
 
 			layout_manager.store_editors_layout
 
-			if attached tools.features_relation_tool as l_features_relation_tool then
-				if attached {FEATURE_STONE} l_features_relation_tool.stone as l_feature_stone then
-					l_feature_id := id_of_feature (l_feature_stone.e_feature)
-				end
+			if
+				attached tools.features_relation_tool as l_features_relation_tool and then
+				attached {FEATURE_STONE} l_features_relation_tool.stone as l_feature_stone
+			then
+				l_feature_id := id_of_feature (l_feature_stone.e_feature)
 			end
-			if attached tools.class_tool as l_class_tool then
-				if attached {CLASSI_STONE} l_class_tool.stone as l_class_stone then
-					check
-						class_not_void: l_class_stone.class_i.config_class /= Void
-					end
-					l_class_id := id_of_class (l_class_stone.class_i.config_class)
+			if
+				attached tools.class_tool as l_class_tool and then
+				attached {CLASSI_STONE} l_class_tool.stone as l_class_stone
+			then
+				check
+					class_not_void: l_class_stone.class_i.config_class /= Void
 				end
+				l_class_id := id_of_class (l_class_stone.class_i.config_class)
 			end
 			Result.save_context_data (l_class_id, l_feature_id, 1)
 		ensure
@@ -1614,26 +1610,28 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 	save_size
 			-- Save window size.
 		do
-			if not window.is_minimized then
-				if not window.is_maximized then
-						-- Only save the size of the window if not maximized,
-						-- since if maximized we know the size of the window, it is
-						-- the size of the screen.
-					development_window_data.save_size (window.width, window.height)
-				end
+			if
+				not window.is_minimized and then
+				not window.is_maximized
+			then
+					-- Only save the size of the window if not maximized,
+					-- since if maximized we know the size of the window, it is
+					-- the size of the screen.
+				development_window_data.save_size (window.width, window.height)
 			end
 		end
 
 	save_size_and_dpi
 			-- Save window size abd dpi.
 		do
-			if not window.is_minimized then
-				if not window.is_maximized then
-						-- Only save the size of the window if not maximized,
-						-- since if maximized we know the size of the window, it is
-						-- the size of the screen.
-					development_window_data.save_size_and_dpi (dpi, window.width, window.height)
-				end
+			if
+				not window.is_minimized and then
+				not window.is_maximized
+			then
+					-- Only save the size of the window if not maximized,
+					-- since if maximized we know the size of the window, it is
+					-- the size of the screen.
+				development_window_data.save_size_and_dpi (dpi, window.width, window.height)
 			end
 		end
 
@@ -1704,11 +1702,12 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implementation
 				disable_editors_command
 					-- Remove the stone being focused, otherwise the stone was thought being edited.
 				old_set_stone (Void)
-				if shell_tools.is_interface_usable then
+				if
+					shell_tools.is_interface_usable and then
+					attached {ES_STONABLE_I} shell_tools.tool ({ES_FEATURES_TOOL}) as l_stonable
+				then
 						-- Remove stone from tool.
-					if attached {ES_STONABLE_I} shell_tools.tool ({ES_FEATURES_TOOL}) as l_stonable then
-						l_stonable.set_stone_with_query (Void)
-					end
+					l_stonable.set_stone_with_query (Void)
 				end
 
 				set_title (window_manager.new_title)
@@ -2044,7 +2043,6 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialized by EB_DEVELOPMENT_WINDOW_
 			-- Used by `send_stone_to_context_cmd'.
 		local
 			l_feature_text: STRING_32
-			l_feature_stone: FEATURE_STONE
 			l_class_c: detachable CLASS_C
 			l_feature: E_FEATURE
 		do
@@ -2058,8 +2056,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialized by EB_DEVELOPMENT_WINDOW_
 						l_feature := l_class_c.feature_with_name_32 (l_feature_text)
 					end
 					if l_feature /= Void then
-						create l_feature_stone.make (l_feature)
-						tools.set_stone_and_pop_tool (l_feature_stone)
+						tools.set_stone_and_pop_tool (create {FEATURE_STONE}.make (l_feature))
 					else
 						tools.set_stone_and_pop_tool (stone)
 					end
@@ -2100,20 +2097,21 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			if context_refreshing_timer /= Void then
 				context_refreshing_timer.set_interval (0)
 			end
-			if managed_main_formatters.first.selected then
+			if
+				managed_main_formatters.first.selected and then
+				attached {CLASSC_STONE} stone as l_classc_stone
+			then
 					-- We only do that for the clickable view
-				if attached {CLASSC_STONE} stone as l_classc_stone then
-					ed := editors_manager.current_editor
-					if
-						ed /= Void
-						and then ed.text_displayed /= Void
-					then
-						l_feature := ed.text_displayed.current_feature_containing
-						if l_feature /= Void then
-							set_editing_location_by_feature (l_feature.name)
-						else
-							set_editing_location_by_feature (Void)
-						end
+				ed := editors_manager.current_editor
+				if
+					ed /= Void
+					and then ed.text_displayed /= Void
+				then
+					l_feature := ed.text_displayed.current_feature_containing
+					if l_feature /= Void then
+						set_editing_location_by_feature (l_feature.name)
+					else
+						set_editing_location_by_feature (Void)
 					end
 				end
 			end
@@ -2650,7 +2648,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

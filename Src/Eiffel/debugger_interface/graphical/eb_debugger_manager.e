@@ -298,7 +298,6 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (Melt_project_cmd)
 			toolbarable_commands.extend (Freeze_project_cmd)
 			toolbarable_commands.extend (Finalize_project_cmd)
-			toolbarable_commands.extend (override_scan_cmd)
 			toolbarable_commands.extend (discover_melt_cmd)
 			toolbarable_commands.extend (clean_compile_project_cmd)
 
@@ -366,12 +365,12 @@ feature -- Settings
 	refresh_breakpoints_tool
 			-- Refresh breakpoint tool if needed.
 		do
-			if debugging_window /= Void then
-				if attached {ES_BREAKPOINTS_TOOL} debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}) as l_tool then
-					if l_tool.is_shown then
-						l_tool.refresh
-					end
-				end
+			if
+				attached debugging_window and then
+				attached {ES_BREAKPOINTS_TOOL} debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}) as l_tool and then
+				l_tool.is_shown
+			then
+				l_tool.refresh
 			end
 		end
 
@@ -1205,11 +1204,12 @@ feature -- Output
 				l_formatter := debugger_formatter
 				l_output.activate (False)
 
-				if attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
-					if not l_output_pane.is_auto_scrolled then
-						l_output_pane.is_auto_scrolled := True
-						l_auto_scrolled_changed := True
-					end
+				if
+					attached {ES_OUTPUT_PANE_I} l_output as l_output_pane and then
+					not l_output_pane.is_auto_scrolled
+				then
+					l_output_pane.is_auto_scrolled := True
+					l_auto_scrolled_changed := True
 				end
 
 					-- Build the text
@@ -1237,11 +1237,12 @@ feature -- Output
 			if attached debugger_output as l_output then
 				l_formatter := debugger_formatter
 
-				if attached {ES_OUTPUT_PANE_I} l_output as l_output_pane then
-					if not l_output_pane.is_auto_scrolled then
-						l_output_pane.is_auto_scrolled := True
-						l_auto_scrolled_changed := True
-					end
+				if
+					attached {ES_OUTPUT_PANE_I} l_output as l_output_pane and then
+					not l_output_pane.is_auto_scrolled
+				then
+					l_output_pane.is_auto_scrolled := True
+					l_auto_scrolled_changed := True
 				end
 
 				l_output.activate (False)
@@ -1292,14 +1293,12 @@ feature -- Change
 
 	display_breakpoints (show_tool_if_closed: BOOLEAN)
 			-- Show the list of breakpoints (set and disabled) in the output manager.
-		local
-			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			conv_dev := last_focused_development_window (False)
-			if conv_dev /= Void then
-				if show_tool_if_closed then
-					conv_dev.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).show (False)
-				end
+			if
+				attached last_focused_development_window (False) as conv_dev and then
+				show_tool_if_closed
+			then
+				conv_dev.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).show (False)
 			end
 		end
 
@@ -1568,7 +1567,6 @@ feature -- Status setting
 			l_tool: ES_WATCH_TOOL
 			nwt: INTEGER
 			l_unlock: BOOLEAN
-			l_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
 		do
 			force_debug_mode_cmd.disable_sensitive
 			initialize_debugging_window
@@ -1647,12 +1645,13 @@ feature -- Status setting
 			debugging_window.docking_layout_manager.restore_debug_docking_layout
 
 				--| Set the Grid Objects tool split position to 200 which is the default size of the local tree.
-			if objects_tool.is_interface_usable and then objects_tool.is_tool_instantiated then
-				if objects_tool.split_exists then
-					if 0 <= objects_split_proportion and objects_split_proportion <= 1 then
-						objects_tool.set_split_proportion (objects_split_proportion)
-					end
-				end
+			if
+				objects_tool.is_interface_usable and then
+				objects_tool.is_tool_instantiated and then
+				objects_tool.split_exists and then
+				0 <= objects_split_proportion and objects_split_proportion <= 1
+			then
+				objects_tool.set_split_proportion (objects_split_proportion)
 			end
 
 			if l_unlock then
@@ -1662,8 +1661,8 @@ feature -- Status setting
 			unpopup_switching_mode
 			force_debug_mode_cmd.enable_sensitive
 
-			create l_builder.make (debugging_window)
-			l_builder.update_exist_layouts_menu
+			;(create {EB_DEVELOPMENT_WINDOW_MENU_BUILDER}.make
+				(debugging_window)).update_exist_layouts_menu
 		ensure
 			raised
 		end
@@ -1732,11 +1731,12 @@ feature -- Status setting
 			propagate_stone: BOOLEAN
 		do
 			if raised then
-				if attached {CALL_STACK_STONE} st as cst then
-					if application_is_executing then
-						propagate_stone := application.current_execution_stack_number /= cst.level_number
-						application.set_current_execution_stack_number (cst.level_number)
-					end
+				if
+					attached {CALL_STACK_STONE} st as cst and then
+					application_is_executing
+				then
+					propagate_stone := application.current_execution_stack_number /= cst.level_number
+					application.set_current_execution_stack_number (cst.level_number)
 				end
 				if resynchronization_requested or propagate_stone then
 					resynchronization_requested := False
@@ -1857,10 +1857,11 @@ feature -- Debugging events
 		local
 			retried: BOOLEAN
 		do
-			if not retried then
-				if attached debugging_window as w then
-					w.tools.launch_stone (st)
-				end
+			if
+				not retried and then
+				attached debugging_window as w
+			then
+				w.tools.launch_stone (st)
 			end
 		rescue
 			retried := True
@@ -1966,11 +1967,12 @@ feature -- Debugging events
 				if st /= Void then
 					launch_stone (st)
 						--| After launch_stone, the call stack tool will show something,
-					if call_stack_tool.is_visible then
+					if
+						call_stack_tool.is_visible and then
 							-- Show it, only if the tool is visible (in the UI)
-						if eb_preferences.debug_tool_data.always_show_callstack_tool_when_stopping then
-							call_stack_tool.show (False)
-						end
+						eb_preferences.debug_tool_data.always_show_callstack_tool_when_stopping
+					then
+						call_stack_tool.show (False)
 					end
 					if call_stack_tool.is_shown then
 						debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}).show (False)
@@ -2283,23 +2285,21 @@ feature {NONE} -- Implementation
 					a_shortcut_pref: SHORTCUT_PREFERENCE; a_use_acc: BOOLEAN;
 					a_action: PROCEDURE): EB_STANDARD_CMD
 		local
-			l_cmd: EB_STANDARD_CMD
 			l_acc: EV_ACCELERATOR
 		do
-			create l_cmd.make
-			l_cmd.enable_sensitive
-			l_cmd.set_menu_name (a_menu_name)
-			l_cmd.set_pixmap (a_pixmap)
-			l_cmd.add_agent (a_action)
+			create Result.make
+			Result.enable_sensitive
+			Result.set_menu_name (a_menu_name)
+			Result.set_pixmap (a_pixmap)
+			Result.add_agent (a_action)
 			if a_shortcut_pref /= Void then
-				l_cmd.set_referred_shortcut (a_shortcut_pref)
+				Result.set_referred_shortcut (a_shortcut_pref)
 				if a_use_acc then
 					create l_acc.make_with_key_combination (a_shortcut_pref.key, a_shortcut_pref.is_ctrl, a_shortcut_pref.is_alt, a_shortcut_pref.is_shift)
-					l_acc.actions.extend (agent l_cmd.execute)
-					l_cmd.set_accelerator (l_acc)
+					l_acc.actions.extend (agent Result.execute)
+					Result.set_accelerator (l_acc)
 				end
 			end
-			Result := l_cmd
 		end
 
 	objects_split_proportion: REAL
@@ -2619,7 +2619,7 @@ feature {NONE} -- MSIL system implementation
 			-- DLL type constant for MSIL system
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

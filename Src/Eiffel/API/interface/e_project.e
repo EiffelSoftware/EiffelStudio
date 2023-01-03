@@ -479,24 +479,6 @@ feature -- Update
 			error_implies: error_occurred implies save_error
 		end
 
-	override_scan
-			-- Same as `quick_melt' but only scans override clusters for changes.
-		require
-			able_to_compile: able_to_compile
-		do
-			if not Compilation_modes.is_precompiling then
-				Compilation_modes.set_is_override_scan
-				melt (False, True, True, True)
-			else
-				Compilation_modes.reset_modes
-				precompile (False)
-			end
-		ensure
-			was_saved: successful and then not
-				error_occurred implies was_saved
-			error_implies: error_occurred implies save_error
-		end
-
 	freeze
 			-- Melt eiffel project and then freeze it (i.e generate
 			-- C code for workbench mode).
@@ -805,10 +787,8 @@ feature {NONE} -- Retrieval
 			project_eif_ok: project_directory.is_project_file_valid
 			prev_read_write_error: not read_write_error
 		local
-			precomp_r: PRECOMP_R
 			e_project: like Current
 			p_eif: PROJECT_EIFFEL_FILE
-			precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 			remote_dir: REMOTE_PROJECT_DIRECTORY
 		do
 			set_error_status (Ok_status)
@@ -834,18 +814,13 @@ feature {NONE} -- Retrieval
 					dynamic_lib := e_project.dynamic_lib
 					Workbench.update_from_retrieved_project (e_project.saved_workbench)
 					if Comp_system.is_precompiled then
-						precomp_dirs := Workbench.precompiled_directories
-						Precompilation_directories.copy (precomp_dirs)
+						Precompilation_directories.copy (Workbench.precompiled_directories)
 						create remote_dir.make (project_directory)
 						remote_dir.set_system_name (Comp_system.name)
 						remote_dir.set_is_precompile_finalized (comp_system.is_precompile_finalized)
-						Precompilation_directories.force
-							(remote_dir, Comp_system.compilation_id)
-					else
-						if Comp_system.uses_precompiled then
-							create precomp_r
-							precomp_r.set_precomp_dir
-						end
+						Precompilation_directories.force (remote_dir, Comp_system.compilation_id)
+					elseif Comp_system.uses_precompiled then
+						(create {PRECOMP_R}).set_precomp_dir
 					end
 
 					Comp_system.server_controler.init
@@ -989,12 +964,9 @@ feature {NONE} -- Implementation
 		-- performances.
 
 	degree_output_cell: CELL [DEGREE_OUTPUT]
-			-- Degree output window
-		local
-			deg_output: DEGREE_OUTPUT
+			-- Degree output window.
 		once
-			create deg_output
-			create Result.put (deg_output)
+			create Result.put (create {DEGREE_OUTPUT})
 		end
 
 	compiler_objects: SETTABLE_COMPILER_OBJECTS
@@ -1046,7 +1018,7 @@ invariant
 	degree_output_not_void: degree_output /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

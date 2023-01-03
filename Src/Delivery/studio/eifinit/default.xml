@@ -865,7 +865,6 @@
 
 	<PREF NAME="shortcuts.project.compile" DESCRIPTION="Shortcut to compile current project."><SHORTCUT>F7</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.project.search_new_class_and_compile" DESCRIPTION="Shortcut to search new classes and compile current project."><SHORTCUT Alt="True">F8</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.project.check_overrides_and_compile" DESCRIPTION="Shortcut to check overrides and compile current project."><SHORTCUT Shift="True">F8</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.project.freeze" DESCRIPTION="Shortcut to freeze current project."><SHORTCUT Ctrl="True">F7</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.project.finalize" DESCRIPTION="Shortcut to finalize current project."><SHORTCUT Ctrl="True" Shift="True">F7</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.project.cancel" DESCRIPTION="Shortcut to cancel compilation."><SHORTCUT Ctrl="True">Pause</SHORTCUT></PREF>

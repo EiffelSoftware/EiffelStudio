@@ -803,8 +803,6 @@ end
 			locations: ARRAYED_LIST [TUPLE [c: CLASS_C; l: LOCATION_AS]]
 			location: TUPLE [c: CLASS_C; l: LOCATION_AS]
 			l_has_error: BOOLEAN
-			l_agent_sorter: AGENT_EQUALITY_TESTER [VTCM]
-			l_sorter: QUICK_SORTER [VTCM]
 			l_list: ARRAYED_LIST [VTCM]
 		do
 			if missing_classes_warning /= Void then
@@ -848,9 +846,9 @@ end
 				missing_classes_warning := Void
 
 				if l_has_error then
-					create l_agent_sorter.make (agent {VTCM}.less_than)
-					create l_sorter.make (l_agent_sorter)
-					l_sorter.sort (l_list)
+					(create {QUICK_SORTER [VTCM]}.make
+						(create {AGENT_EQUALITY_TESTER [VTCM]}.make
+							(agent {VTCM}.less_than))).sort (l_list)
 					across l_list as w loop
 						error_handler.insert_warning (w.item, w.item.associated_class.is_warning_reported_as_error (w_export_class_missing))
 					end
@@ -954,9 +952,7 @@ end
 			l_conf_class: CONF_CLASS
 			l_class_i: CLASS_I
 			l_errors, l_warnings: LIST [CONF_ERROR]
-			vd71: VD71
 			vd80: VD80
-			vd25: VD25
 			l_target: CONF_TARGET
 			l_file: PLAIN_TEXT_FILE
 			d1, d2: DATE_TIME
@@ -1001,8 +997,7 @@ end
 				-- We need to check that there is a root, otherwise compiler
 				-- would crash later in `update_root_class'. See eweasel test#incr380.
 			if l_target.root = Void then
-				create vd25.make (l_target.name)
-				Error_handler.insert_error (vd25)
+				Error_handler.insert_error (create {VD25}.make (l_target.name))
 				Error_handler.raise_error
 			else
 					-- Check for testing library in current config
@@ -1055,8 +1050,7 @@ end
 					until
 						l_errors.after
 					loop
-						create vd71.make (l_errors.item)
-						Error_handler.insert_error (vd71)
+						Error_handler.insert_error (create {VD71}.make (l_errors.item))
 						l_errors.forth
 					end
 					set_is_force_rebuild (True)
@@ -1217,7 +1211,6 @@ end
 			l_classes: SEARCH_TABLE [CLASS_I]
 			l_class: CLASS_I
 			l_name: STRING
-			l_vd87: VD87
 		do
 			from
 				l_classes := universe.all_classes
@@ -1233,8 +1226,7 @@ end
 						l_table.force (l_class, l_name)
 					else
 						set_is_force_rebuild (True)
-						create l_vd87.make (l_table.found_item, l_class)
-						error_handler.insert_error (l_vd87)
+						error_handler.insert_error (create {VD87}.make (l_table.found_item, l_class))
 						error_handler.checksum
 					end
 				end
@@ -1326,9 +1318,6 @@ end
 				else
 						-- Let the configuration system check for compiled classes that have been modified.
 					create l_vis_modified.make (universe.conf_state)
-					if compilation_modes.is_override_scan then
-						l_vis_modified.enable_override_only
-					end
 					l_vis_modified.process_group_observer.extend (agent degree_output.put_process_group)
 					universe.target.process (l_vis_modified)
 
@@ -1706,15 +1695,12 @@ feature -- Recompilation
 			-- Incremetal recompilation of the system.
 		require
 			no_error: not Error_handler.has_error
-		local
-			precomp_r: PRECOMP_R
 		do
 			freezing_occurred := False
 
 			If System.uses_precompiled then
 					-- Validate the precompilation.
-				create precomp_r
-				precomp_r.check_version_number
+				(create {PRECOMP_R}).check_version_number
 			end
 
 			has_been_changed := is_config_changed
@@ -1806,7 +1792,6 @@ feature -- Recompilation
 			valid_options: (a_generate_code implies a_system_check) and then (a_system_check implies a_syntax_analysis)
 		local
 			d1, d2: DATE_TIME
-			l_il_env: IL_ENVIRONMENT
 			l_needs_code_generation: BOOLEAN
 			l_new_unref_classes_added_to_system, l_old_moved, l_compiled_classes_added, l_compiled_classes_removed, l_missing_classes_added_to_system: BOOLEAN
 		do
@@ -1822,10 +1807,8 @@ feature -- Recompilation
 
 				-- Set ISE_DOTNET_FRAMEWORK environment variable			
 			if il_generation then
-				create l_il_env.make (clr_runtime_version)
-				l_il_env.register_environment_variable
+				(create {IL_ENVIRONMENT}.make (clr_runtime_version)).register_environment_variable
 			end
-
 
 				-- Recompilation initialization
 			init_recompilation
@@ -4400,7 +4383,6 @@ feature -- Generation
 			table: POLY_TABLE [ENTRY]
 			i, nb: INTEGER
 			used, used_for_routines, used_for_types: PACKED_BOOLEANS
-			l_rout_id: INTEGER
 			l_buf: like generation_buffer
 			l_header_buf: like header_generation_buffer
 			l_table_name: STRING
@@ -4548,8 +4530,7 @@ feature -- Generation
 			until
 				l_rout_ids.after
 			loop
-				l_rout_id := l_rout_ids.item
-				l_table_name := l_encoder.routine_table_name (l_rout_id)
+				l_table_name := l_encoder.routine_table_name (l_rout_ids.item)
 					-- Declare initialization routine for table
 				l_header_buf.put_new_line
 				l_header_buf.put_string ("extern void ")
@@ -4655,7 +4636,7 @@ feature -- Generation
 		require
 			in_final_mode
 		local
-			i, nb, nb_ref, nb_exp: INTEGER
+			i, nb: INTEGER
 			class_type: CLASS_TYPE
 			skeleton: SKELETON
 			reference_file: INDENT_FILE
@@ -4675,9 +4656,7 @@ feature -- Generation
 
 				if class_type /= Void then
 					skeleton := class_type.skeleton
-					nb_ref := skeleton.nb_reference
-					nb_exp := skeleton.nb_expanded
-					buffer.put_integer (nb_ref + nb_exp)
+					buffer.put_integer (skeleton.nb_reference + skeleton.nb_expanded)
 				else
 					buffer.put_integer (0)
 				end
@@ -6334,7 +6313,6 @@ feature -- Statistics
 	display_catcall_statistics
 		local
 			l_str: STRING
-			l_cat_call_summary: CAT_CALL_SUMMARY_WARNING
 		do
 				-- To be used for global statistics on the project.
 			debug ("catcall")
@@ -6351,8 +6329,7 @@ feature -- Statistics
 					l_str.append ("%Tlike-current-features: " + statistics.like_current_feature.out + "%N")
 					l_str.append ("%Tother: " + statistics.other.out)
 					l_str.append ("%N")
-					create l_cat_call_summary.make (l_str)
-					error_handler.insert_warning (l_cat_call_summary, False)
+					error_handler.insert_warning (create {CAT_CALL_SUMMARY_WARNING}.make (l_str), False)
 				end
 			end
 		end
@@ -6437,7 +6414,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

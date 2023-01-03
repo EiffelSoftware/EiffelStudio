@@ -104,7 +104,7 @@ feature {NONE} -- Actions
 	perform_compilation
 			-- Perform compilation for current iteration in backup directory.
 		local
-			l_text: STRING
+			l_text: STRING_32
 			l_dev: EB_DEVELOPMENT_WINDOW
 			l_values: like extract_values
 		do
@@ -126,8 +126,6 @@ feature {NONE} -- Actions
 					l_dev.precompilation_cmd.execute_and_wait
 				elseif l_text.is_equal (compilation_modes.discover_type) then
 					l_dev.discover_melt_cmd.execute_and_wait
-				elseif l_text.is_equal (compilation_modes.override_scan_type) then
-					l_dev.override_scan_cmd.execute_and_wait
 				elseif l_text.is_equal (compilation_modes.freeze_type) then
 					l_dev.freeze_project_cmd.execute_and_wait
 				elseif l_text.is_equal (compilation_modes.finalize_type) then
@@ -348,13 +346,13 @@ feature {NONE} -- Implementation
 			compilation_info_text_representation_not_void: Result /= Void
 		end
 
-	extract_values (i: INTEGER; a_key: STRING): ARRAYED_LIST [STRING]
+	extract_values (i: INTEGER; a_key: STRING): ARRAYED_LIST [STRING_32]
 			-- Extract values associated with `a_key' in `compilation_info.txt' for `i'-th compilation.
 		require
 			i_positive: i > 0
 			a_key_not_void: a_key /= Void
 		local
-			l_text, l_key, l_value: STRING
+			l_text, l_key, l_value: STRING_32
 			l_pos, l_end_pos: INTEGER
 		do
 			from
@@ -390,9 +388,9 @@ feature {NONE} -- Implementation
 		local
 			l_comp_first, l_comp_last, l_file_name: PATH
 			l_file: PLAIN_TEXT_FILE
-			l_removed_files: ARRAYED_LIST [STRING]
-			l_split: LIST [STRING]
-			l_class_name, l_cluster_id: STRING
+			l_removed_files: ARRAYED_LIST [STRING_32]
+			l_split: LIST [STRING_32]
+			l_class_name, l_cluster_id: STRING_32
 		do
 			l_comp_first := backup_path (1)
 			l_comp_last := backup_path (counter.value)
@@ -528,7 +526,7 @@ invariant
 	compilation_counter_pref_not_void: compilation_counter_pref /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

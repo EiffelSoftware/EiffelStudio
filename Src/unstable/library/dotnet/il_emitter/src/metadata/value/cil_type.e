@@ -81,7 +81,8 @@ feature -- Access
 	array_level: INTEGER
 
 	basic_type: CIL_BASIC_TYPE
-			--The type of the CLS_TYPE object
+			--The type of the CLS_TYPE object.
+			--| tp_ in the C++ code.
 
 	type_ref: detachable CIL_DATA_CONTAINER
 			-- The class reference for class type objects.

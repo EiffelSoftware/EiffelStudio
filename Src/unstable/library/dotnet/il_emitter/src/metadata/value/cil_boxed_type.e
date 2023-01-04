@@ -33,8 +33,27 @@ feature {NONE} -- Initialization
 feature -- Output
 
 	render (a_stream: FILE_STREAM; a_bytes: SPECIAL [NATURAL_8]): NATURAL_8
+		local
+			l_system: NATURAL_64
+			l_name: NATURAL_64
+			l_result: ANY
+			l_res: BOOLEAN
 		do
-			to_implement ("Add implementation")
+			if attached {PE_WRITER} a_stream.pe_writer as l_writer then
+				if pe_index = 0 then
+						-- systemName in C++.
+					l_system := l_writer.system_index
+
+					l_name := l_writer.hash_string (type_names[{CIL_BASIC_TYPE}.index_of (basic_type)])
+					l_result := a_stream.find ("System." + type_names[{CIL_BASIC_TYPE}.index_of (basic_type)])
+					if attached {CIL_CLASS} l_result as l_class then
+						l_res := l_class.pe_dump (a_stream)
+						pe_index := l_class.pe_index
+					end
+				end
+				{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | {PE_TABLES}.ttyperef.value |<< 24, 0)
+				Result := 4
+			end
 		end
 
 	il_src_dump (a_stream: FILE_STREAM): BOOLEAN

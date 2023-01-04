@@ -217,7 +217,7 @@ feature -- Operations
 	traverse (a_callback: CIL_CALLBACK)
 			--  Traverse the declaration tree.
 		do
-			to_implement ("Add implementation")
+			fixme ("In C++ code, there is a method declaration in PElib.h, but there is no implementation in the PElib.cpp")
 		end
 
 	allocate_method (a_method_sig: CIL_METHOD_SIGNATURE; a_flags: CIL_QUALIFIERS; a_entry: BOOLEAN): CIL_METHOD

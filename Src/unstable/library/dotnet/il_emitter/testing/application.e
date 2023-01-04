@@ -20,6 +20,7 @@ feature -- Initialization
 			l_api: CIL_EMITTER_API
 			time: TIME
 		do
+			test_string_to_buf
 			test_pe_version_string({STRING_32}"FileVersion", "1.1.0.1")
 			--test_pe_version_string({STRING_32}"FileDescription", " ")
 			text_hexadecimal_value
@@ -384,6 +385,19 @@ feature -- PE Reader
 		end
 
 feature -- PE Writer tests
+
+	test_string_to_buf
+		local
+			l_str: STRING_32
+			l_str2: STRING
+			l_buf: STRING_32
+			l_size: INTEGER
+		do
+
+			l_str := {STRING_32}"Hello"
+			l_str.append_character('%U')
+
+		end
 
 	test_pe_version_string (a_name: STRING_32; a_value: STRING)
 		local

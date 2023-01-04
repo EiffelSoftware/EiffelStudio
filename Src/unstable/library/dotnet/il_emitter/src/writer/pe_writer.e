@@ -1184,7 +1184,7 @@ feature {NONE} -- Implementation
 
 	compute_rtv_string_size: NATURAL
 		do
-			to_implement ("To double check")
+			fixme ("To double check this works as expected")
 			Result := (rtv_string.count + 1).to_natural_32
 		end
 
@@ -1262,9 +1262,8 @@ feature -- Write operations
 						-- but if snkLen_ is greater than 2048, the buffer
 						-- will not be large enough.
 					create l_buf.make_filled (0, 1, snk_base.to_integer_32)
-					to_implement ("To improve performance we can create a put_ntimes_natural_8 (0, snk_base")
+					fixme ("To improve performance we can create a put_ntimes_natural_8 (0, snk_base")
 					put_array (l_buf)
-
 				end
 			end
 			Result := True

@@ -216,36 +216,59 @@ feature -- Output
 	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_result: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_32
 		local
 			l_sz: INTEGER
+			l_str: STRING_32
+			l_us_index: NATURAL_64
 		do
-			l_sz := a_offset
-			inspect type
-			when {CIL_OPERAND_TYPE}.t_none then
-					-- No operand, nothing to display
-			when {CIL_OPERAND_TYPE}.t_label then
-					-- Shouldn't be rendered.
-			when {CIL_OPERAND_TYPE}.t_value then
-				if attached {CIL_VALUE} ref_value as l_ref_value then
-						-- TODO check if we need to add an offset to index the
-						-- byte array
-					l_sz := l_ref_value.render (a_stream, a_opcode, a_operand_type, a_result).to_integer_32
-				end
-			when {CIL_OPERAND_TYPE}.t_int then
-					-- TODO double check
-					-- this piece of code needs to be simpler
-				if a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_immed1).to_integer_32 then
-					a_result [l_sz] := int_value.to_natural_8
-					l_sz := l_sz + 1
-				elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_immed4).to_integer_32 then
-					a_result [l_sz] := int_value.to_natural_8
-					l_sz := l_sz + 4
-				elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_immed8).to_integer_32 then
-					a_result [l_sz] := int_value.to_natural_8
-					l_sz := l_sz + 8
-				end
-			else
+			if attached {PE_WRITER} a_stream as l_writer then
+				l_sz := a_offset
+				inspect type
+				when {CIL_OPERAND_TYPE}.t_none then
+						-- No operand, nothing to display
+				when {CIL_OPERAND_TYPE}.t_label then
+						-- Shouldn't be rendered.
+				when {CIL_OPERAND_TYPE}.t_value then
+					if attached {CIL_VALUE} ref_value as l_ref_value then
+							-- TODO check if we need to add an offset to index the
+							-- byte array
+						l_sz := l_ref_value.render (a_stream, a_opcode, a_operand_type, a_result).to_integer_32
+					end
+				when {CIL_OPERAND_TYPE}.t_int then
+						-- TODO double check
+						-- this piece of code needs to be simpler
+					if a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_immed1).to_integer_32 then
+						{BYTE_ARRAY_HELPER}.put_array_natural_8_with_integer_64 (a_result, int_value, l_sz)
+						l_sz := l_sz + 1
+					elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_immed4).to_integer_32 then
+						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_integer_64 (a_result, int_value, l_sz)
+						l_sz := l_sz + 4
+					elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_immed8).to_integer_32 then
+						{BYTE_ARRAY_HELPER}.put_array_integer_64 (a_result, int_value, l_sz)
+						l_sz := l_sz + 8
+					end
+				when {CIL_OPERAND_TYPE}.t_real then
+					if a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_float4).to_integer_32 then
+						{BYTE_ARRAY_HELPER}.put_array_float_with_double (a_result, float_value, l_sz)
+						l_sz := l_sz + 4
+					elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_float8).to_integer_32 then
+						{BYTE_ARRAY_HELPER}.put_array_double (a_result, float_value, l_sz)
+						l_sz := l_sz + 8
+					end
+				when {CIL_OPERAND_TYPE}.t_string then
 
+							-- -Eiffel strings are not null-terminated.
+						create l_str.make_from_string (string_value)
+
+							-- check if this assumtion is correct
+						check not_null_character: not l_str.has ('%U') end
+
+							--| add the null character
+						l_str.append_character ('%U')
+						l_us_index := l_writer.hash_us (l_str, l_str.count)
+						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_result, l_us_index | ({NATURAL_64}0x70 |<< 24), 0 )
+						l_sz := l_sz + 4
+				end
+				Result := l_sz.to_natural_32
 			end
-			to_implement ("Work in progress")
 		end
 
 	il_src_dump (a_file: FILE_STREAM): BOOLEAN

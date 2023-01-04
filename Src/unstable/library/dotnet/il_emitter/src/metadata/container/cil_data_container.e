@@ -273,7 +273,6 @@ feature -- Traverse
 			l_exit: BOOLEAN
 			l_continue: BOOLEAN
 		do
-			to_implement ("Add implementation")
 			across children as child until l_exit loop
 				if attached {CIL_CLASS} child as l_class then
 					if not a_callback.enter_class (l_class) then

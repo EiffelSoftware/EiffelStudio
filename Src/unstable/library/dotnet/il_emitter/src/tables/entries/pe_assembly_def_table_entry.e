@@ -34,15 +34,34 @@ feature -- Access
 	major, minor, build, revision: NATURAL_16
 			-- Defined as word two bytes.
 
-	flags: INTEGER
+	flags: INTEGER assign set_flags
 
-	public_key_index: detachable PE_BLOB
+	public_key_index: detachable PE_BLOB assign set_public_key_index
 	name_index: PE_STRING
 	culture_index: detachable PE_STRING
 
 feature -- flags
 
 	DefaultHashAlgId: INTEGER = 0x8004
+
+
+feature -- Element Change
+
+	set_public_key_index (a_index: like public_key_index)
+			-- Set `public_key_index` with `a_index`.
+		do
+			public_key_index := a_index
+		ensure
+			public_key_index_set: public_key_index = a_index
+		end
+
+	set_flags (a_flag: INTEGER)
+			-- Set `flags` with `a_flag`.
+		do
+			flags := a_flag
+		ensure
+			flags_set: flags = a_flag
+		end
 
 feature -- Operations
 

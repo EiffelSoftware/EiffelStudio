@@ -94,7 +94,7 @@ feature -- Access
 	pe_base: NATURAL assign set_pe_base
 			-- `pe_base'
 
-	snk_len: NATURAL assign set_snk_len
+	snk_len: NATURAL_64 assign set_snk_len
 			-- `snk_len'
 
 	snk_file: STRING_32
@@ -779,6 +779,8 @@ feature -- Operations
 			l_tables_header: PE_DOTNET_META_TABLES_HEADER
 			l_counts: ARRAY [NATURAL_64]
 			l_buffer: ARRAY [NATURAL_8]
+			l_buf: ARRAY [NATURAL_8]
+			l_len: CELL [NATURAL_64]
 			l_sect: INTEGER
 		do
 				-- pe_header setup.
@@ -788,6 +790,7 @@ feature -- Operations
 			l_pe_header.cpu_type := {PE_HEADER_CONSTANTS}.pe_intel386.to_integer_16
 			l_pe_header.magic := {PE_HEADER_CONSTANTS}.pe_magicnum.to_natural_8
 			l_pe_header.nt_hdr_size := 0xe0
+
 				-- optional header size
 			l_pe_header.flags := ({PE_HEADER_CONSTANTS}.pe_file_executable + if dll then {PE_HEADER_CONSTANTS}.pe_file_library else 0 end).to_natural_8
 			l_pe_header.linker_major_version := 6
@@ -798,6 +801,7 @@ feature -- Operations
 			l_pe_header.subsys_major_version := 4
 			l_pe_header.subsystem := (if gui then {PE_HEADER_CONSTANTS}.PE_SUBSYS_WINDOWS else {PE_HEADER_CONSTANTS}.PE_SUBSYS_CONSOLE end).to_integer_16
 			l_pe_header.dll_flags := 0x8540
+
 				-- magic!
 			l_pe_header.stack_size := 0x100000
 			l_pe_header.stack_commit := 0x1000
@@ -853,7 +857,27 @@ feature -- Operations
 			l_core_20_header.entry_point_token := entry_point.to_natural_32
 
 			if not snk_file.is_empty then
-				to_implement ("Implement snkfile code")
+
+				snk_len := rsa_encoder.load_strong_name_keys (snk_file)
+				if snk_len /= 0 then
+					create l_buf.make_filled (0, 1, 16384)
+					create l_len.put (0)
+					rsa_encoder.get_public_key_data (l_buf, l_len)
+
+					if attached {PE_ASSEMBLY_DEF_TABLE_ENTRY} tables [{PE_TABLES}.index_of ({PE_TABLES}.tassemblydef).to_integer_32].table[1] as l_table then
+						l_table.public_key_index := (create {PE_BLOB}.make_with_index (hash_blob (l_buf, l_len.item)))
+					end
+					if attached {PE_ASSEMBLY_DEF_TABLE_ENTRY} tables [{PE_TABLES}.index_of ({PE_TABLES}.tassemblydef).to_integer_32].table[1] as l_table then
+						l_table.flags := l_table.flags | {PE_ASSEMBLY_FLAGS}.publickey
+					end
+					l_core_20_header.flags := l_core_20_header.flags | 8
+						-- Strong name signed.
+					if snk_len = 0 then
+						print ("%NWarning: key file not found or invalid.   Assembly will not be signed")
+						io.put_new_line
+					end
+
+				end
 			end
 
 			cildata_rva.value := l_current_rva.to_natural_32
@@ -1059,7 +1083,7 @@ feature -- Operations
 			l_current_rva := l_current_rva + 6
 			if snk_len /= 0 then
 				l_core_20_header.strong_name_signature [1] := l_current_rva.to_natural_32
-				l_core_20_header.strong_name_signature [2] := snk_len
+				l_core_20_header.strong_name_signature [2] := snk_len.to_natural_32
 				l_current_rva := l_current_rva + snk_len
 			end
 

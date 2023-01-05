@@ -38,13 +38,13 @@ feature -- Access
 
 feature -- Status Report
 
-	load_strong_name_keys (a_file: STRING_32)
+	load_strong_name_keys (a_file: STRING_32): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end
 
 
-	get_public_key_data (a_key: ARRAY [NATURAL_8]): NATURAL_32
+	get_public_key_data (a_key: ARRAY [NATURAL_8]; a_len: CELL [NATURAL_64])
 		do
 			to_implement ("Add implementation")
 		end

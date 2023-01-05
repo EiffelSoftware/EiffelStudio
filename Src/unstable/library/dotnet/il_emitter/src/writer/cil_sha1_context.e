@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Object that will hold context information for the hashing operation
 		]"
@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 		do
 			create message_digest.make_filled (0, 1, 5)
 			create message_block.make_filled (0, 1, 64)
+			message_block_index := 1
 		ensure
 			message_block_set: message_block.capacity = 64
 			message_digest_set: message_digest.capacity = 5
@@ -43,7 +44,7 @@ feature -- Access
 			--| defined as unsigned char Message_Block[64]
 
 	message_block_index: INTEGER
-			-- Index into message block array.		
+			-- Index into message block array.
 
 	computed: INTEGER
 			--Is the digest computed?
@@ -59,13 +60,13 @@ feature -- Operations
 		do
 			length_low := 0
 			length_high := 0
-			message_block_index := 0
+			message_block_index := 1
 
-			message_digest[1] := 0x67452301
-    		message_digest[2] := 0xEFCDAB89
-    		message_digest[3] := 0x98BADCFE
-    		message_digest[4] := 0x10325476
-    		message_digest[5] := 0xC3D2E1F0
+			message_digest [1] := 0x67452301
+			message_digest [2] := 0xEFCDAB89
+			message_digest [3] := 0x98BADCFE
+			message_digest [4] := 0x10325476
+			message_digest [5] := 0xC3D2E1F0
 
 			computed := 0
 			corrupted := 0
@@ -78,7 +79,7 @@ feature -- Operations
 		local
 			n, n1: NATURAL
 		do
-			if corrupted /=0 then
+			if corrupted /= 0 then
 				Result := 0
 			else
 				if computed = 0 then
@@ -89,18 +90,57 @@ feature -- Operations
 						n := message_digest [i]
 						n1 := 0
 						n1 := (n |>> 24) + ((n |>> 8) & 0xff00) + ((n |<< 8) & 0xff0000) + (n |<< 24)
-						message_digest[i] := n1
+						message_digest [i] := n1
 					end
 				end
 				Result := 1
 			end
 		end
 
-	sha_input (a_string: STRING_32; a_val: NATURAL)
+	sha1_input (a_string: STRING_32; a_length: NATURAL)
+		local
+			l_exit: BOOLEAN
+			l_length: NATURAL
+			i: INTEGER
 		do
-			to_implement ("Add implementation")
-		end
+			if a_length = 0 then
+				l_exit := True
+			end
 
+			if not l_exit and then (computed /= 0 or else corrupted /= 0) then
+				l_exit := True
+			end
+
+			if not l_exit then
+				from
+					i := 1
+					l_length := a_length
+				until
+					l_length = 0 or corrupted /= 0
+				loop
+					message_block [message_block_index] := (a_string.at (i).code & 0xff).to_natural_8
+					length_low := length_low + 8
+
+						-- Force it to 32 bits
+					length_low := length_low & 0xFFFFFFFF
+					if length_low = 0 then
+						length_high := length_high + 1
+							-- Force it to 32 bits
+						length_high := length_high & 0xFFFFFFFF
+						if length_high = 0 then
+								-- Message too long
+							corrupted := 1
+						end
+					end
+					if message_block_index = 64 then
+						sha1_process_message_block
+					end
+					message_block_index := message_block_index + 1
+					i := i + 1
+				end
+
+			end
+		end
 
 feature -- Convertion
 
@@ -112,21 +152,126 @@ feature -- Convertion
 			end
 		end
 
-feature {NONE} -- implementation	
+feature {NONE} -- implementation
+
+	sha1_process_message_block
+			-- *  Description:
+			-- *      This function will process the next 512 bits of the message
+			-- *      stored in the Message_Block array.
+			-- *
+			-- *  Parameters:
+			-- *      None.
+			-- *
+			-- *  Returns:
+			-- *      Nothing.
+			-- *
+			-- *  Comments:
+			-- *      Many of the variable names in the SHAContext, especially the
+			-- *      single character names, were used because those were the names
+			-- *      used in the publication.
+		local
+			K: ARRAY [NATURAL]
+				--  Constants defined in SHA-1
+			temp: NATURAL
+				-- temporary word value
+			W: ARRAY [NATURAL]
+				-- word sequence
+				--|unsigned W[80]
+
+			A, B, C, D, E: NATURAL
+			-- word buffers.
+
+		do
+			K := {ARRAY [NATURAL]} <<0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xCA62C1D6>>
+
+			create W.make_filled (0, 1, 80)
+			across 1 |..| 16 as t loop
+				W [t] := (message_block [t * 4]).to_natural_32 |<< 24
+				W [t] := W [t] | (message_block [t * 4 + 1]).to_natural_32 |<< 16
+				W [t] := W [t] | (message_block [t * 4 + 2]).to_natural_32 |<< 8
+				W [t] := W [t] | (message_block [t * 4 + 3]).to_natural_32
+			end
+
+			across 17 |..| 80 as t loop
+					-- The ⊕ operator is the bitwise XOR operator
+				W [t] := sha1_circular_shift (1, W [t - 3] ⊕ W [t - 8] ⊕ W [t - 14] ⊕ W [t - 16]).to_natural_32
+			end
+
+			A := message_digest [1]
+			B := message_digest [2]
+			C := message_digest [3]
+			D := message_digest [4]
+			E := message_digest [5]
+
+			across 1 |..| 20 as t loop
+				temp := sha1_circular_shift (5, A) + ((B & C) | ((B.bit_not) & D)) + E + W [t] + K [1]
+				temp := temp & 0xFFFFFFFF
+				E := D
+				D := C
+				C := sha1_circular_shift (30, B)
+				B := A
+				A := temp
+			end
+
+			across 21 |..| 40 as t loop
+				temp := sha1_circular_shift (5, A) + (B ⊕ C ⊕ D) + E + W [t] + K [2]
+				temp := temp & 0xFFFFFFFF
+				E := D
+				D := C
+				C := sha1_circular_shift (30, B)
+				B := A
+				A := temp
+			end
+
+			across 41 |..| 60 as t loop
+				temp := sha1_circular_shift (5, A) + ((B & C) | (B & D) | (C & D)) + E + W [t] + K [3]
+				temp := temp & 0xFFFFFFFF
+				E := D
+				D := C
+				C := sha1_circular_shift (30, B)
+				B := A
+				A := temp
+			end
+
+			across 61 |..| 80 as t loop
+				temp := sha1_circular_shift (5, A) + (B ⊕ C ⊕ D) + E + W [t] + K [4]
+				temp := temp & 0xFFFFFFFF
+				E := D
+				D := C
+				C := sha1_circular_shift (30, B)
+				B := A
+				A := temp
+			end
+
+			message_digest [1] := (message_digest [1] + A) & 0xFFFFFFFF
+			message_digest [2] := (message_digest [2] + B) & 0xFFFFFFFF
+			message_digest [3] := (message_digest [3] + C) & 0xFFFFFFFF
+			message_digest [4] := (message_digest [4] + D) & 0xFFFFFFFF
+			message_digest [5] := (message_digest [5] + E) & 0xFFFFFFFF
+
+			message_block_index := 1
+		end
 
 	sha1_pad_message
-				--  Pad the current context.
-				-- Description:
-				--     According to the standard, the message must be padded to an even
-				--     512 bits.  The first padding bit must be a '1'.  The last 64
-				--     bits represent the length of the original message.  All bits in
-				--     between should be 0.  This function will pad the message
-				--     according to those rules by filling the Message_Block array
-				--     accordingly.  It will also call `sha1_process_message_block`
-				--     appropriately.  When it returns, it can be assumed that the
-				--     message digest has been computed.
+			--  Pad the current context.
+			-- Description:
+			--     According to the standard, the message must be padded to an even
+			--     512 bits.  The first padding bit must be a '1'.  The last 64
+			--     bits represent the length of the original message.  All bits in
+			--     between should be 0.  This function will pad the message
+			--     according to those rules by filling the Message_Block array
+			--     accordingly.  It will also call `sha1_process_message_block`
+			--     appropriately.  When it returns, it can be assumed that the
+			--     message digest has been computed.
 		do
 			to_implement ("Add implementation")
+		end
+
+feature -- Helper
+
+	sha1_circular_shift (a_bits: INTEGER; a_word: NATURAL): NATURAL_32
+		do
+			Result := ((a_word |<< a_bits) & 0xFFFFFFFF) | (a_word |>> (32 - a_bits))
 		end
 
 end

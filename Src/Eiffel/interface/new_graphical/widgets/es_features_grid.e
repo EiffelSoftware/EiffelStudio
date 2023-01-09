@@ -11,7 +11,8 @@ class
 inherit
 	ES_IDE_GRID
 		redefine
-			internal_recycle
+			internal_recycle,
+			on_zoom
 		end
 
 	EB_EDITOR_TOKEN_GRID_SUPPORT
@@ -75,6 +76,11 @@ inherit
 		end
 
 	EB_SHARED_FORMAT_TABLES
+		undefine
+			default_create, is_equal, copy
+		end
+
+	EB_SHARED_WRITER
 		undefine
 			default_create, is_equal, copy
 		end
@@ -986,13 +992,22 @@ feature {NONE} -- Tree item factory
 			end
 		end
 
+	on_zoom (a_zoom_factor: INTEGER)
+		do
+			Precursor (a_zoom_factor)
+			update_editor_token_font_info
+		end
+
+	update_editor_token_font_info
+		do
+			editor_token_font_info.f := label_font_table
+			editor_token_font_info.h := label_font_height
+		end
+
 	editor_token_font_info: TUPLE [f: SPECIAL [EV_FONT]; h: INTEGER]
 			-- Info for Editor tokens
-		local
-			esw: EB_SHARED_WRITER
 		once
-			create esw
-			Result := [esw.label_font_table, esw.label_font_height]
+			Result := [label_font_table, label_font_height]
 		end
 
 	add_tree_item_for_parent_list (a_row: EV_GRID_ROW; a_parent_list: PARENT_LIST_AS; a_text: STRING_GENERAL; pix: EV_PIXMAP)
@@ -1117,7 +1132,7 @@ feature -- Grid item factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

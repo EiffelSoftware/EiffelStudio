@@ -81,13 +81,20 @@ feature -- IDE Events
 	on_zoom (a_zoom_factor: INTEGER)
 		local
 			h: INTEGER
+			l_changed: BOOLEAN
 		do
 			grid_preferences.set_zoom_factor (a_zoom_factor)
 			h := grid_preferences.font_with_zoom_factor.height
 			across
 				label_font_table as ic
 			loop
-				ic.item.set_height (h)
+				if ic.item.height /= h then
+					l_changed := True
+					ic.item.set_height (h)
+				end
+			end
+			if l_changed then
+				update_label_font_height
 			end
 		end
 
@@ -138,7 +145,7 @@ feature -- IDE Grid factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

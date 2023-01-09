@@ -1995,7 +1995,7 @@ feature {NONE} -- Preference Handler
 			-- See `on_editor_preference_change`.
 
 	on_editor_preference_change
-			-- Update rows to reflect changes in editor preferences (such as new fonf size).
+			-- Update rows to reflect changes in editor preferences (such as new font size).
 		local
 			row_index: like {ES_GRID}.row_count
 			row: like {ES_GRID}.row
@@ -2009,6 +2009,7 @@ feature {NONE} -- Preference Handler
 			loop
 				row := grid_events.row (row_index)
 				if attached {EB_GRID_EDITOR_TOKEN_ITEM} row.item (description_column) as e then
+					e.set_overriden_fonts (e.label_font_table, e.label_font_height)
 					row_height :=
 						e.label_font_height.max
 						(e.required_height_for_text_and_component).max
@@ -2167,7 +2168,7 @@ invariant
 	item_count_matches_error_and_warning_count: error_count + warning_count + hint_count = item_count
 
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

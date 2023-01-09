@@ -39,16 +39,27 @@ feature -- Font tables
 			l_bold_font := (create {EV_LABEL}).font
 			l_bold_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			Result.put (l_bold_font, preferences.editor_data.keyword_font_id)
+			update_label_font_height
+		end
+
+	label_font_height_cell: CELL [INTEGER]
+		once
+			create Result.put (0)
 		end
 
 	label_font_height: INTEGER
 			-- Height in pixel of `label_font_table'
-		once
-			Result := (create {EVS_UTILITY}).grid_row_height_for_fonts (label_font_table)
+		do
+			Result := label_font_height_cell.item
+		end
+
+	update_label_font_height
+		do
+			label_font_height_cell.replace ({EVS_UTILITY}.grid_row_height_for_fonts (label_font_table))
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

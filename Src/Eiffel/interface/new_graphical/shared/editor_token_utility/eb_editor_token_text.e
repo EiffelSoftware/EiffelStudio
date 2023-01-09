@@ -570,7 +570,6 @@ feature -- Access
 		local
 			l_cursor: CURSOR
 			l_tokens: like tokens
-			l_eol: EDITOR_TOKEN_EOL
 		do
 			l_tokens := tokens
 			l_cursor := l_tokens.cursor
@@ -580,8 +579,7 @@ feature -- Access
 			until
 				l_tokens.after
 			loop
-				l_eol ?= l_tokens.item
-				if l_eol = Void then
+				if attached {EDITOR_TOKEN_EOL} l_tokens.item as l_eol then
 					Result.append (l_tokens.item.wide_image)
 				else
 					Result.append_character ('%N')
@@ -750,7 +748,7 @@ feature -- Measure
 			result_correct: Result > 0 implies (Result <= token_position.count and then token_position.i_th (Result).has_x_y (x, y))
 		end
 
-	pebble (a_index: INTEGER): ANY
+	pebble (a_index: INTEGER): detachable ANY
 			-- Pebble of item at position `a_index'.
 		do
 			if a_index >= 1 and a_index <= adapted_tokens.count then
@@ -1047,7 +1045,7 @@ feature{NONE} -- Implementation
 			l_ellipsis_token: like ellipsis_token
 			l_mid: INTEGER
 		do
-			l_editor_token ?= a_token.twin
+			l_editor_token := {like ellipsis_token} / a_token.twin
 			l_start_x := a_position.x
 			l_line_height := actual_line_height
 			l_ellipsis_token := ellipsis_token
@@ -1127,7 +1125,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

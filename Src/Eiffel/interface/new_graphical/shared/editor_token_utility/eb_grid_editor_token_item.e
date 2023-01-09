@@ -117,7 +117,7 @@ feature -- Access
 	component_spacing: INTEGER
 			-- Space in pixel between text and the first trailer
 
-	pebble_at_position: ANY
+	pebble_at_position: detachable ANY
 			-- Pebble at pointer position
 			-- Void if no pebble found at that position		
 		local
@@ -128,7 +128,7 @@ feature -- Access
 		do
 			l_index := token_index_at_current_position
 			if l_index > 0 then
-				Result ?= editor_token_pebble (l_index)
+				Result := editor_token_pebble (l_index)
 			else
 				l_index := component_index_at_pointer_position
 				if l_index > 0 and then l_index <= component_position.count and then l_index <= component_count then
@@ -660,7 +660,7 @@ feature -- Pick and drop
 			Result := token_index_at_imp (l_relative_position)
 		end
 
-	editor_token_pebble (a_index: INTEGER): ANY
+	editor_token_pebble (a_index: INTEGER): detachable ANY
 			-- Pebble of token item indicated by `a_index'
 			-- Void if no pebble available.
 		do
@@ -685,7 +685,6 @@ feature -- Pick and drop
 			-- Return value is the picked pebble if any.
 		local
 			l_index: INTEGER
-			l_stone: STONE
 			l_pointer_position: EV_COORDINATE
 		do
 			l_pointer_position := a_orignal_pointer_position.twin
@@ -696,8 +695,7 @@ feature -- Pick and drop
 			l_index := token_index_at_position (l_pointer_position)
 
 			if l_index > 0 then
-				l_stone ?= editor_token_pebble (l_index)
-				if l_stone /= Void then
+				if attached {STONE} editor_token_pebble (l_index) as l_stone then
 					Result := l_stone
 					set_is_pick_on_text (True)
 					set_last_picked_item (l_index)
@@ -807,9 +805,6 @@ feature{NONE} -- Implementation
 			l_width, l_height: INTEGER
 		do
 			l_components := components
-			if not l_components.is_empty then
-
-			end
 			l_component_position := component_position
 			if not l_components.is_empty then
 				l_component_position.wipe_out
@@ -887,7 +882,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

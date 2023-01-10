@@ -285,7 +285,7 @@ feature -- Status report
 
 feature {NONE} -- Usage
 
-	copyright: STRING = "Copyright Eiffel Software 1985-2022. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 1985-2023. All Rights Reserved."
 			-- <Precursor>
 
 	name: attached STRING = "Hallow, Windows Installer Xml v3.0 Tool"

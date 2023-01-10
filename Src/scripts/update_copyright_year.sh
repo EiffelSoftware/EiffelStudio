@@ -7,6 +7,7 @@ function do_sed {
 	sed -i -e "$1" "$2" 
 	svn diff "$2"
 	echo $2 >> file_to_commit.log
+	echo $2 \\ >> commit_year_changes.sh
 }
 
 function doall_sed {
@@ -15,6 +16,7 @@ function doall_sed {
 		sed -i -e "$1" "$filename" 
 		svn diff "$filename"
 		echo $filename >> file_to_commit.log
+		echo $filename \\ >> commit_year_changes.sh
 	done
 }
 function do_update_copyright_eiffel_software {
@@ -26,6 +28,9 @@ if [ -z "$EIFFEL_SRC" ]; then export EIFFEL_SRC=$(readlink -n -q -m `pwd`/..) ; 
 echo Update copyright year to $curr_year.
 echo EIFFEL_SRC=$EIFFEL_SRC
 echo  > file_to_commit.log
+echo  echo Update to year $curr_year > commit_year_changes.sh
+echo  export EIFFEL_SRC=#EIFFEL_SRC >> commit_year_changes.sh
+echo  svn commit \\ >> commit_year_changes.sh
 
 # $EIFFEL_SRC/framework/environment/interface/eiffel_env.e
 do_sed "s/\(copyright_year: STRING = \"\)[0-9][0-9][0-9][0-9]/\1$curr_year/g" $EIFFEL_SRC/framework/environment/interface/eiffel_env.e
@@ -89,5 +94,12 @@ do_sed "s/\(Copyright Eiffel Software [0-9][0-9][0-9][0-9]-\)[0-9][0-9][0-9][0-9
 
 sort -u file_to_commit.log -o file_to_commit.log
 sed -i -e  "s~$EIFFEL_SRC~\$EIFFEL_SRC~g" file_to_commit.log
+
+echo  -m \"chore: Updated to year $curr_year .\"  >> commit_year_changes.sh
+
+sed -i -e  "s~$EIFFEL_SRC~  \$EIFFEL_SRC~g" commit_year_changes.sh
+sed -i -e  "s~#EIFFEL_SRC~$EIFFEL_SRC~g" commit_year_changes.sh
+
 echo "Files to commit (in file_to_commit.log):"
 cat file_to_commit.log
+

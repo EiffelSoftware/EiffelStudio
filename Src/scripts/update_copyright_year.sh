@@ -6,7 +6,7 @@ function do_sed {
 	echo sed -i -e "$1" "$2" 
 	sed -i -e "$1" "$2" 
 	svn diff "$2"
-	echo $2 >> file_to_commit.log
+	echo $2 >> file_for_year_changes.log
 	echo $2 \\ >> commit_year_changes.sh
 }
 
@@ -15,7 +15,7 @@ function doall_sed {
 		echo sed -i -e "$1" "$filename" 
 		sed -i -e "$1" "$filename" 
 		svn diff "$filename"
-		echo $filename >> file_to_commit.log
+		echo $filename >> file_for_year_changes.log
 		echo $filename \\ >> commit_year_changes.sh
 	done
 }
@@ -27,7 +27,7 @@ if [ -z "$EIFFEL_SRC" ]; then export EIFFEL_SRC=$(readlink -n -q -m `pwd`/..) ; 
 
 echo Update copyright year to $curr_year.
 echo EIFFEL_SRC=$EIFFEL_SRC
-echo  > file_to_commit.log
+echo  > file_for_year_changes.log
 echo  echo Update to year $curr_year > commit_year_changes.sh
 echo  export EIFFEL_SRC=#EIFFEL_SRC >> commit_year_changes.sh
 echo  svn commit \\ >> commit_year_changes.sh
@@ -92,14 +92,14 @@ do_update_copyright_eiffel_software $EIFFEL_SRC/dotnet/consumer/main/argument_pa
 # finish_freezing
 do_sed "s/\(Copyright Eiffel Software [0-9][0-9][0-9][0-9]-\)[0-9][0-9][0-9][0-9]/\1$curr_year/g" $EIFFEL_SRC/Delivery/studio/spec/unix/finish_freezing
 
-sort -u file_to_commit.log -o file_to_commit.log
-sed -i -e  "s~$EIFFEL_SRC~\$EIFFEL_SRC~g" file_to_commit.log
+sort -u file_for_year_changes.log -o file_for_year_changes.log
+sed -i -e  "s~$EIFFEL_SRC~\$EIFFEL_SRC~g" file_for_year_changes.log
 
 echo  -m \"chore: Updated to year $curr_year .\"  >> commit_year_changes.sh
 
 sed -i -e  "s~$EIFFEL_SRC~  \$EIFFEL_SRC~g" commit_year_changes.sh
 sed -i -e  "s~#EIFFEL_SRC~$EIFFEL_SRC~g" commit_year_changes.sh
 
-echo "Files to commit (in file_to_commit.log):"
-cat file_to_commit.log
+echo "Files to commit (in file_for_year_changes.log):"
+cat file_for_year_changes.log
 

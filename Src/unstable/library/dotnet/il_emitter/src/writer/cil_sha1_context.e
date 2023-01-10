@@ -264,8 +264,54 @@ feature {NONE} -- implementation
 			--     appropriately.  When it returns, it can be assumed that the
 			--     message digest has been computed.
 		do
-			to_implement ("Add implementation")
-		end
+				-- Check to see if the current message block is too small to hold
+				-- the initial padding bits and length.  If so, we will pad the
+				-- block, process it, and then continue padding into a second
+				-- block.
+
+			if message_block_index > 56 then
+				-- the original code use > 55 but it 0-index.
+				message_block [message_block_index] := 0x80
+				message_block_index :=  message_block_index + 1
+				from
+				until
+				   	message_block_index = 65
+				loop
+				   message_block[message_block_index] := 0
+				   message_block_index := message_block_index + 1
+				end
+
+				sha1_process_message_block
+
+				from
+				until
+				   	message_block_index = 57
+				loop
+				   message_block[message_block_index] := 0
+				   message_block_index := message_block_index + 1
+				end
+			else
+				message_block [message_block_index] := 0x80
+				from
+				until
+					message_block_index = 57
+				loop
+				   message_block[message_block_index] := 0
+				   message_block_index := message_block_index + 1
+				end
+			end
+				--  Store the message length as the last 8 octets
+			message_block[57] := ((length_high |>> 24) & 0xFF).to_natural_8
+			message_block[58] := ((length_high |>> 16) & 0xFF).to_natural_8
+			message_block[59] := ((length_high |>> 8) & 0xFF).to_natural_8
+			message_block[60] := ((length_high) & 0xFF).to_natural_8
+			message_block[61] := ((length_low |>> 24) & 0xFF).to_natural_8
+			message_block[62] := ((length_low |>> 16) & 0xFF).to_natural_8
+			message_block[63] := ((length_low |>> 8) & 0xFF).to_natural_8
+			message_block[64] := ((length_low) & 0xFF).to_natural_8
+
+			sha1_process_message_block
+	end
 
 feature -- Helper
 

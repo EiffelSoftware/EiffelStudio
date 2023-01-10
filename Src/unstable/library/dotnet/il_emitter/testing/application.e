@@ -20,9 +20,13 @@ feature -- Initialization
 			l_api: CIL_EMITTER_API
 			time: TIME
 		do
+			test_big_digits
+			test_copy_arrays
+			test_array_wrapped_code
+			test_arrays
 			test_string_to_buf
-			test_pe_version_string({STRING_32}"FileVersion", "1.1.0.1")
-			--test_pe_version_string({STRING_32}"FileDescription", " ")
+			test_pe_version_string ({STRING_32} "FileVersion", "1.1.0.1")
+				--test_pe_version_string({STRING_32}"FileDescription", " ")
 			text_hexadecimal_value
 			test_path_entries
 			test_pe_strings_32
@@ -277,11 +281,41 @@ feature -- Test Path
 			l_path: PATH
 			n: INTEGER
 		do
-			--l_file_name := {STRING_32}"C:\\Documents\\Newsletters\\Summer2018.pdf"
-			l_file_name := {STRING_32}"Summer2018.pdf"
+				--l_file_name := {STRING_32}"C:\\Documents\\Newsletters\\Summer2018.pdf"
+			l_file_name := {STRING_32} "Summer2018.pdf"
 			create l_path.make_from_string (l_file_name)
 			n := l_path.components.count
-			l_file_name := l_path.components[n].name
+			l_file_name := l_path.components [n].name
+		end
+
+
+feature -- Test BigDigits
+
+	test_big_digits
+		local
+			l_result: ARRAY [NATURAL_32]
+					-- Array to hold the result of the operation
+			l_base: ARRAY [NATURAL_32]
+					-- Array holding the base number
+			l_exponent: ARRAY [NATURAL_32]
+					-- Array holding the exponent
+			l_modulus: ARRAY [NATURAL_32]
+					-- Array holding the modulus
+			l_ndigits: NATURAL_64
+					-- Number of digits in the base number.	
+
+			l_dis: INTEGER
+		do
+			create l_result.make_filled (0, 1, 50)
+			create l_base.make_filled (0, 1, 50)
+			l_base [1] := 9
+			create l_exponent.make_filled (0, 1, 50)
+			l_exponent [1] := 3
+			create l_modulus.make_filled (0, 1, 50)
+			l_modulus [1] := 10
+			l_ndigits := 1
+			l_dis := {CIL_RSA_ENCODER}.c_mp_mod_exp(l_result.area.base_address, l_base.area.base_address, l_exponent.area.base_address, l_modulus.area.base_address, l_ndigits)
+			check expected_9: l_result [1] = 9 end
 		end
 
 feature -- C Byte Array
@@ -293,14 +327,14 @@ feature -- C Byte Array
 			l_special: SPECIAL [NATURAL_8]
 
 		do
-			l_arr := <<0,0,0,0,0,0,0,0>>
+			l_arr := <<0, 0, 0, 0, 0, 0, 0, 0>>
 			l_special := l_arr.to_special
 			create l_mp.make_from_array (l_arr)
 			l_mp.put_integer_32 (2147483646, 0)
 			l_arr := l_mp.read_array (0, 8)
 			{BYTE_ARRAY_HELPER}.put_array_integer_32 (l_special, 2147483646, 0)
 
-			l_arr := <<0,0,0,0,0,0,0,0>>
+			l_arr := <<0, 0, 0, 0, 0, 0, 0, 0>>
 			{BYTE_ARRAY_HELPER}.put_array_integer_32 (l_arr.to_special, 26, 0)
 		end
 
@@ -316,12 +350,11 @@ feature -- C Byte Array
 
 			create str.make (l_arr.count)
 			across 1 |..| l_arr.count as i loop
-				str.append_character (l_arr[i].to_character_8)
+				str.append_character (l_arr [i].to_character_8)
 			end
 			print (str)
 
 		end
-
 
 	test_natural_64
 		local
@@ -335,12 +368,10 @@ feature -- C Byte Array
 			l_val := l_mp.read_natural_64 (0)
 		end
 
-
 	fun_test (a_arr: SPECIAL [NATURAL_8])
 		do
-			{BYTE_ARRAY_HELPER}.put_array_integer_32 (a_arr, 2 | (27 |<< 24) , 0)
+			{BYTE_ARRAY_HELPER}.put_array_integer_32 (a_arr, 2 | (27 |<< 24), 0)
 		end
-
 
 	file_test
 		local
@@ -349,11 +380,10 @@ feature -- C Byte Array
 			create l_file.make_create_read_write ("test.txt")
 
 			l_file.put_string ("This is an apple")
-			l_file.go (l_file.count -7)
+			l_file.go (l_file.count - 7)
 			l_file.put_string (" sam")
 			l_file.close
 		end
-
 
 	text_hexadecimal_value
 		local
@@ -384,6 +414,184 @@ feature -- PE Reader
 			create l_reader.make
 		end
 
+feature -- Test Arrays
+
+	test_copy_arrays
+		local
+			l_result: ARRAY [NATURAL_8]
+			l_pos: INTEGER
+			l_tmp: NATURAL_8
+		do
+			create l_result.make_filled (0, 1, 50)
+			l_result.fill_with (0xff)
+			l_result [1] := 0
+			l_result [2] := 1
+			l_pos := l_result.count - 20 - der_header.count
+				-- C++ version uses sizeof.
+				--|result.size() - 20 - sizeof(DerHeader) - 1;
+			l_result [l_pos] := 0
+			l_result.subcopy (der_header, 1, der_header.count, l_pos + 1)
+			l_pos := l_result.count - 20
+
+
+			  -- reverse it before encryption..
+		    across 1 |..| (l_result.count // 2) as i loop
+		    	l_tmp := l_result [i]
+				l_result [i] := l_result [l_result.count - i]
+				l_result [l_result.count - i] := l_tmp
+		    end
+		end
+
+
+feature -- Static
+
+	der_header: ARRAY [NATURAL_8]
+		do
+			Result := {ARRAY [NATURAL_8]} <<0x30, 0x21, 0x30, 0x09, 0x06, 0x05, 0x2b, 0x0e, 0x03, 0x02, 0x1a, 0x05, 0x00, 0x04, 0x14>>
+		ensure
+			instance_free: class
+		end
+
+
+	test_arrays
+		local
+			l_arr: ARRAY [NATURAL_8]
+			l_arr2: ARRAY [NATURAL_8]
+			mp: MANAGED_POINTER
+			l_file: RAW_FILE
+
+		do
+			create l_file.make_create_read_write ("eif_array.bin")
+			create l_arr.make_filled (0, 1, 100)
+			create mp.share_from_pointer (l_arr.area.base_address, 100)
+			mp.put_natural_32_le (0x2400, 0)
+			mp.put_natural_32_le (0x8004, 1 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le ((0x14 + 20 // 8).to_natural_32, 2 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (1, 3 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (2, 4 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (3, 5 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (4, 6 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (5, 7 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (6, 8 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (7, 9 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (8, 10 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (9, 11 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (10, 12 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (11, 13 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (12, 14 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (13, 15 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (14, 16 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (15, 17 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (16, 18 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (17, 19 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (18, 20 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (19, 21 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (20, 22 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (21, 23 * {PLATFORM}.natural_32_bytes)
+			mp.put_natural_32_le (22, 24 * {PLATFORM}.natural_32_bytes)
+
+				--
+			mp.put_character ('1', 23 * {PLATFORM}.natural_32_bytes) --  change to RSA1 (pub key only)
+			mp.put_natural_8_le (6, 12 * {PLATFORM}.natural_32_bytes) -- change to pub key only
+
+			print ("%N((char*)dkey)[12 + 0x0b] :=" + mp.read_character (23 * {PLATFORM}.natural_32_bytes).out)
+			print ("%N(dkey[12 + 0x0b] :=" + mp.read_natural_32_le (23 * {PLATFORM}.natural_32_bytes).out)
+			print ("%N((char*)dkey)[12 + 0] :=" + mp.read_natural_8_le (12 * {PLATFORM}.natural_32_bytes).out)
+			print ("%N(dkey[12 + 0] :=" + mp.read_natural_32_le (12 * {PLATFORM}.natural_32_bytes).out)
+
+			l_file.put_managed_pointer (mp, l_file.count, mp.count)
+			l_file.close
+
+		end
+
+	test_array_wrapped_code
+		local
+			l_arr: ARRAY [NATURAL_8]
+			l_mp: MANAGED_POINTER
+			l_size: NATURAL_64
+			l_file: RAW_FILE
+		do
+			create l_arr.make_filled (0, 1, 100)
+			--create l_mp.share_from_pointer (l_arr.area.base_address, 100)
+			c_array_wrap_code (l_arr.area.base_address, $l_size, 20)
+
+--			print ("%N((char*)dkey)[12 + 0x0b] :=" + l_mp.read_natural_8_le (23 * {PLATFORM}.natural_32_bytes).out)
+--			print ("%N(dkey[12 + 0x0b] :=" + l_mp.read_natural_32_le (23 * {PLATFORM}.natural_32_bytes).out)
+--			print ("%N((char*)dkey)[12 + 0] :=" + l_mp.read_natural_8_le (12 * {PLATFORM}.natural_32_bytes).out)
+--			print ("%N(dkey[12 + 0] :=" + l_mp.read_natural_32_le (12 * {PLATFORM}.natural_32_bytes).out)
+
+			create l_file.make_create_read_write ("eif_carray.bin")
+			l_file.put_managed_pointer (create {MANAGED_POINTER}.make_from_array (l_arr), l_file.count, l_arr.count)
+			l_file.close
+		end
+
+	c_array_wrap_code (a_key: POINTER; a_key_size: TYPED_POINTER [NATURAL_64]; a_modulus_bits: NATURAL_64)
+		external
+			"C++ inline use <iostream>, <fstream>"
+		alias
+			"[
+																						
+															{
+									
+																	typedef uint32_t DIGIT_T;
+																	DIGIT_T* dkey = (DIGIT_T*)$a_key;
+																	dkey[0] = 0x2400;
+																	dkey[1] = 0x8004;
+																	dkey[2] = 0x14 + $a_modulus_bits / 8;
+																	//
+																	//memcpy(dkey + 3, keyPair, dkey[2]);
+																	//
+																	
+																	// Code for testing
+																	dkey[2] = 0x14 + $a_modulus_bits / 8;
+																	dkey[3] = 1;
+																	dkey[4] = 2;
+																	dkey[5] = 3;
+																	dkey[6] = 4;
+																	dkey[7] = 5;
+																	dkey[8] = 6;
+																	dkey[9] = 7;
+																	dkey[10] = 8;
+																	dkey[11] = 9;
+																	dkey[12] = 10;
+																	dkey[13] = 11;
+																	dkey[14] = 12;
+																	dkey[15] = 13;
+																	dkey[16] = 14;
+																	dkey[17] = 15;
+																	dkey[18] = 16;
+																	dkey[19] = 17;
+																	dkey[20] = 18;
+																	dkey[21] = 19;
+																	dkey[22] = 20;
+																	dkey[23] = 21;
+																	dkey[24] = 22;
+																			
+																	((char*)dkey)[12 + 0x0b] = '1';  // change to RSA1 (pub key only)
+																	((char*)dkey)[12 + 0] = 6;       // change to pub key only
+																	*($a_key_size) = dkey[2] + 12;
+																	
+																	 std::cout << "dkey[12 + 0x0b] = " << dkey[12 + 0x0b] << std::endl;
+																	 std::cout << "((char*)dkey)[12 + 0x0b] = " << ((char*)dkey)[12 + 0x0b] << std::endl;
+												
+																	 std::cout << "dkey[12 + 0] = " << dkey[12 + 0] << std::endl;
+																	 std::cout << "((char*)dkey)[12 + 0] = " << ((char*)dkey)[12 + 0] << std::endl;
+																	
+																	std::ofstream outfile;
+													    			outfile.open("carray_key.bin", std::ios::binary);
+													
+																	outfile.write(((char*)($a_key)), 100);
+								    								outfile.close();
+								    								std::ofstream outfile2;
+													    			outfile2.open("carray_dkey.bin", std::ios::binary);
+													
+																	outfile2.write(((char*)(dkey)), 100);
+								    								outfile2.close();
+				
+															}
+			]"
+		end
+
 feature -- PE Writer tests
 
 	test_string_to_buf
@@ -394,8 +602,8 @@ feature -- PE Writer tests
 			l_size: INTEGER
 		do
 
-			l_str := {STRING_32}"Hello"
-			l_str.append_character('%U')
+			l_str := {STRING_32} "Hello"
+			l_str.append_character ('%U')
 
 		end
 
@@ -429,7 +637,6 @@ feature -- PE Writer tests
 			n1 := 1
 			l_file.put_natural_16 (n1)
 
-
 				-- put_wide_character.
 			create l_name.make_from_string_general (a_name)
 			l_name.append_character ('%U')
@@ -440,13 +647,12 @@ feature -- PE Writer tests
 			l_file.put_character (l_name.at (l_index + 1).to_character_8)
 
 			n1 := 1
-			across 1 |..| ((n1*2).to_integer_32 - 1) as  i loop
+			across 1 |..| ((n1 * 2).to_integer_32 - 1) as i loop
 				l_file.put_natural_16 (l_buf.code (i).to_natural_16)
 			end
 
 			l_file.close
 		end
-
 
 	test_pe_strings_32
 		local
@@ -455,14 +661,13 @@ feature -- PE Writer tests
 			l_string: STRING_32
 			l_arr: SPECIAL [NATURAL_8]
 		do
-			l_string := {STRING_32}"V"
+			l_string := {STRING_32} "V"
 			create l_file.make_create_read_write ("eiffel_test.bin")
 			across 1 |..| l_string.count as i loop
 				l_file.put_natural_32 (l_string.code (i))
 			end
 			l_file.close
 		end
-
 
 	test_pe_naturals
 		local
@@ -472,7 +677,7 @@ feature -- PE Writer tests
 			l_val := 0
 			create l_file.make_create_read_write ("eiffel_test.bin")
 			l_file.put_natural_16 (l_val.to_natural_16)
-			l_val :=0x25ff
+			l_val := 0x25ff
 			l_file.put_natural_16 (l_val.to_natural_16)
 			l_file.close
 		end
@@ -485,7 +690,7 @@ feature -- PE Writer tests
 			l_main_name: NATURAL_32
 			l_mp: MANAGED_POINTER
 		do
-			create l_dir.make_filled (create{PE_IMPORT_DIR}, 1,2)
+			create l_dir.make_filled (create {PE_IMPORT_DIR}, 1, 2)
 			l_dir [1] := (create {PE_IMPORT_DIR})
 			l_dir [1].thunk_pos2 := 10 + 2 * {PE_IMPORT_DIR}.size_of
 			l_item := (l_dir [1].thunk_pos2 + 8).to_natural_32
@@ -494,7 +699,7 @@ feature -- PE Writer tests
 			end
 			l_main_name := l_item
 			l_item := l_item + 2
-			l_item := l_item + 12  -- in C++ sizeof("_CorXXXMain");
+			l_item := l_item + 12 -- in C++ sizeof("_CorXXXMain");
 			l_dir [1].dll_name := l_item.to_integer_32
 			l_dir [1].thunk_pos := 10
 
@@ -509,21 +714,18 @@ feature -- PE Writer tests
 			l_file.close
 		end
 
-
 	test_pe_write_string
 		local
 			l_file: RAW_FILE
 			l_str: STRING
 		do
 			l_str := "#Strings"
-			l_str.append_character('%U')
+			l_str.append_character ('%U')
 			create l_file.make_create_read_write ("eiffel_test.bin")
 
 			l_file.put_string (l_str)
 			l_file.close
 		end
-
-
 
 feature -- GUID
 
@@ -571,9 +773,6 @@ feature -- GUID
 		    memcpy($a_guid, rnd.data(), rnd.size());
 			}"
 		end
-
-
-
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"

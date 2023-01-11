@@ -29,7 +29,7 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 .c.o:
 	$(CC) $(CFLAGS) -c $<
 
-OBJECTS = eif_bigdigits.o
+OBJECTS = bigdigits.o
 
 eif_bigdigits.a: $(OBJECTS)
 	mkdir -p ./C/spec/$(PLATFORM)/lib

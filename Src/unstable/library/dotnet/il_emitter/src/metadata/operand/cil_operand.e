@@ -219,8 +219,8 @@ feature -- Output
 			l_str: STRING_32
 			l_us_index: NATURAL_64
 		do
-			if attached {PE_WRITER} a_stream as l_writer then
-				l_sz := a_offset
+			if attached {PE_WRITER} a_stream.pe_writer as l_writer then
+				l_sz := 0
 				inspect type
 				when {CIL_OPERAND_TYPE}.t_none then
 						-- No operand, nothing to display
@@ -236,21 +236,21 @@ feature -- Output
 						-- TODO double check
 						-- this piece of code needs to be simpler
 					if a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_immed1).to_integer_32 then
-						{BYTE_ARRAY_HELPER}.put_array_natural_8_with_integer_64 (a_result, int_value, l_sz)
+						{BYTE_ARRAY_HELPER}.put_array_natural_8_with_integer_64 (a_result, int_value, l_sz + a_offset)
 						l_sz := l_sz + 1
 					elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_immed4).to_integer_32 then
-						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_integer_64 (a_result, int_value, l_sz)
+						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_integer_64 (a_result, int_value, l_sz + a_offset)
 						l_sz := l_sz + 4
 					elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_immed8).to_integer_32 then
-						{BYTE_ARRAY_HELPER}.put_array_integer_64 (a_result, int_value, l_sz)
+						{BYTE_ARRAY_HELPER}.put_array_integer_64 (a_result, int_value, l_sz + a_offset)
 						l_sz := l_sz + 8
 					end
 				when {CIL_OPERAND_TYPE}.t_real then
 					if a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_float4).to_integer_32 then
-						{BYTE_ARRAY_HELPER}.put_array_float_with_double (a_result, float_value, l_sz)
+						{BYTE_ARRAY_HELPER}.put_array_float_with_double (a_result, float_value, l_sz + a_offset)
 						l_sz := l_sz + 4
 					elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_float8).to_integer_32 then
-						{BYTE_ARRAY_HELPER}.put_array_double (a_result, float_value, l_sz)
+						{BYTE_ARRAY_HELPER}.put_array_double (a_result, float_value, l_sz + a_offset)
 						l_sz := l_sz + 8
 					end
 				when {CIL_OPERAND_TYPE}.t_string then

@@ -432,6 +432,9 @@ feature -- Operations
 			across methods as method loop
 				method.compile (a_stream)
 			end
+			across children as child loop
+				child.compile(a_stream)
+			end
 		end
 
 	render (a_stream: FILE_STREAM)

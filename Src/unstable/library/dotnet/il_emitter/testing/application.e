@@ -20,32 +20,32 @@ feature -- Initialization
 			l_api: CIL_EMITTER_API
 			time: TIME
 		do
-			test_big_digits
-			test_copy_arrays
-			test_array_wrapped_code
-			test_arrays
-			test_string_to_buf
-			test_pe_version_string ({STRING_32} "FileVersion", "1.1.0.1")
-				--test_pe_version_string({STRING_32}"FileDescription", " ")
-			text_hexadecimal_value
-			test_path_entries
-			test_pe_strings_32
-			test_pe_naturals
-			test_pe_reader
-			test_pe_import_dir
-			test_pe_write_string
-			test_byte_array_to_string
-			file_test
-			test_natural_64
-			test_byte_array
-			test_guid;
-			(create {TEST_1}).test;
-			(create {TEST_2}).test;
-			(create {TEST_3}).test;
-			(create {TEST_4}).test;
-			(create {TEST_5}).test;
-			(create {TEST_6}).test;
-			(create {TEST_7}).test;
+--			test_big_digits
+--			test_copy_arrays
+--			test_array_wrapped_code
+--			test_arrays
+--			test_string_to_buf
+--			test_pe_version_string ({STRING_32} "FileVersion", "1.1.0.1")
+--				--test_pe_version_string({STRING_32}"FileDescription", " ")
+--			text_hexadecimal_value
+--			test_path_entries
+--			test_pe_strings_32
+--			test_pe_naturals
+--			test_pe_reader
+--			test_pe_import_dir
+--			test_pe_write_string
+--			test_byte_array_to_string
+--			file_test
+--			test_natural_64
+--			test_byte_array
+--			test_guid;
+--			(create {TEST_1}).test;
+--			(create {TEST_2}).test;
+--			(create {TEST_3}).test;
+--			(create {TEST_4}).test;
+--			(create {TEST_5}).test;
+--			(create {TEST_6}).test;
+--			(create {TEST_7}).test;
 			(create {TEST_8}).test;
 		end
 
@@ -288,21 +288,20 @@ feature -- Test Path
 			l_file_name := l_path.components [n].name
 		end
 
-
 feature -- Test BigDigits
 
 	test_big_digits
 		local
 			l_result: ARRAY [NATURAL_32]
-					-- Array to hold the result of the operation
+				-- Array to hold the result of the operation
 			l_base: ARRAY [NATURAL_32]
-					-- Array holding the base number
+				-- Array holding the base number
 			l_exponent: ARRAY [NATURAL_32]
-					-- Array holding the exponent
+				-- Array holding the exponent
 			l_modulus: ARRAY [NATURAL_32]
-					-- Array holding the modulus
+				-- Array holding the modulus
 			l_ndigits: NATURAL_64
-					-- Number of digits in the base number.	
+				-- Number of digits in the base number.
 
 			l_dis: INTEGER
 		do
@@ -314,7 +313,7 @@ feature -- Test BigDigits
 			create l_modulus.make_filled (0, 1, 50)
 			l_modulus [1] := 10
 			l_ndigits := 1
-			l_dis := {CIL_RSA_ENCODER}.c_mp_mod_exp(l_result.area.base_address, l_base.area.base_address, l_exponent.area.base_address, l_modulus.area.base_address, l_ndigits)
+			l_dis := {CIL_RSA_ENCODER}.c_mp_mod_exp (l_result.area.base_address, l_base.area.base_address, l_exponent.area.base_address, l_modulus.area.base_address, l_ndigits)
 			check expected_9: l_result [1] = 9 end
 		end
 
@@ -433,15 +432,13 @@ feature -- Test Arrays
 			l_result.subcopy (der_header, 1, der_header.count, l_pos + 1)
 			l_pos := l_result.count - 20
 
-
-			  -- reverse it before encryption..
-		    across 1 |..| (l_result.count // 2) as i loop
-		    	l_tmp := l_result [i]
+				-- reverse it before encryption..
+			across 1 |..| (l_result.count // 2) as i loop
+				l_tmp := l_result [i]
 				l_result [i] := l_result [l_result.count - i]
 				l_result [l_result.count - i] := l_tmp
-		    end
+			end
 		end
-
 
 feature -- Static
 
@@ -451,7 +448,6 @@ feature -- Static
 		ensure
 			instance_free: class
 		end
-
 
 	test_arrays
 		local
@@ -512,13 +508,13 @@ feature -- Static
 			l_file: RAW_FILE
 		do
 			create l_arr.make_filled (0, 1, 100)
-			--create l_mp.share_from_pointer (l_arr.area.base_address, 100)
+				--create l_mp.share_from_pointer (l_arr.area.base_address, 100)
 			c_array_wrap_code (l_arr.area.base_address, $l_size, 20)
 
---			print ("%N((char*)dkey)[12 + 0x0b] :=" + l_mp.read_natural_8_le (23 * {PLATFORM}.natural_32_bytes).out)
---			print ("%N(dkey[12 + 0x0b] :=" + l_mp.read_natural_32_le (23 * {PLATFORM}.natural_32_bytes).out)
---			print ("%N((char*)dkey)[12 + 0] :=" + l_mp.read_natural_8_le (12 * {PLATFORM}.natural_32_bytes).out)
---			print ("%N(dkey[12 + 0] :=" + l_mp.read_natural_32_le (12 * {PLATFORM}.natural_32_bytes).out)
+----			print ("%N((char*)dkey)[12 + 0x0b] :=" + l_mp.read_natural_8_le (23 * {PLATFORM}.natural_32_bytes).out)
+----			print ("%N(dkey[12 + 0x0b] :=" + l_mp.read_natural_32_le (23 * {PLATFORM}.natural_32_bytes).out)
+----			print ("%N((char*)dkey)[12 + 0] :=" + l_mp.read_natural_8_le (12 * {PLATFORM}.natural_32_bytes).out)
+----			print ("%N(dkey[12 + 0] :=" + l_mp.read_natural_32_le (12 * {PLATFORM}.natural_32_bytes).out)
 
 			create l_file.make_create_read_write ("eif_carray.bin")
 			l_file.put_managed_pointer (create {MANAGED_POINTER}.make_from_array (l_arr), l_file.count, l_arr.count)
@@ -530,65 +526,65 @@ feature -- Static
 			"C++ inline use <iostream>, <fstream>"
 		alias
 			"[
-																						
-															{
-									
-																	typedef uint32_t DIGIT_T;
-																	DIGIT_T* dkey = (DIGIT_T*)$a_key;
-																	dkey[0] = 0x2400;
-																	dkey[1] = 0x8004;
-																	dkey[2] = 0x14 + $a_modulus_bits / 8;
-																	//
-																	//memcpy(dkey + 3, keyPair, dkey[2]);
-																	//
-																	
-																	// Code for testing
-																	dkey[2] = 0x14 + $a_modulus_bits / 8;
-																	dkey[3] = 1;
-																	dkey[4] = 2;
-																	dkey[5] = 3;
-																	dkey[6] = 4;
-																	dkey[7] = 5;
-																	dkey[8] = 6;
-																	dkey[9] = 7;
-																	dkey[10] = 8;
-																	dkey[11] = 9;
-																	dkey[12] = 10;
-																	dkey[13] = 11;
-																	dkey[14] = 12;
-																	dkey[15] = 13;
-																	dkey[16] = 14;
-																	dkey[17] = 15;
-																	dkey[18] = 16;
-																	dkey[19] = 17;
-																	dkey[20] = 18;
-																	dkey[21] = 19;
-																	dkey[22] = 20;
-																	dkey[23] = 21;
-																	dkey[24] = 22;
-																			
-																	((char*)dkey)[12 + 0x0b] = '1';  // change to RSA1 (pub key only)
-																	((char*)dkey)[12 + 0] = 6;       // change to pub key only
-																	*($a_key_size) = dkey[2] + 12;
-																	
-																	 std::cout << "dkey[12 + 0x0b] = " << dkey[12 + 0x0b] << std::endl;
-																	 std::cout << "((char*)dkey)[12 + 0x0b] = " << ((char*)dkey)[12 + 0x0b] << std::endl;
-												
-																	 std::cout << "dkey[12 + 0] = " << dkey[12 + 0] << std::endl;
-																	 std::cout << "((char*)dkey)[12 + 0] = " << ((char*)dkey)[12 + 0] << std::endl;
-																	
-																	std::ofstream outfile;
-													    			outfile.open("carray_key.bin", std::ios::binary);
-													
-																	outfile.write(((char*)($a_key)), 100);
-								    								outfile.close();
-								    								std::ofstream outfile2;
-													    			outfile2.open("carray_dkey.bin", std::ios::binary);
-													
-																	outfile2.write(((char*)(dkey)), 100);
-								    								outfile2.close();
 				
-															}
+																			{
+				
+																					typedef uint32_t DIGIT_T;
+																					DIGIT_T* dkey = (DIGIT_T*)$a_key;
+																					dkey[0] = 0x2400;
+																					dkey[1] = 0x8004;
+																					dkey[2] = 0x14 + $a_modulus_bits / 8;
+																					//
+																					//memcpy(dkey + 3, keyPair, dkey[2]);
+																					//
+				
+																					// Code for testing
+																					dkey[2] = 0x14 + $a_modulus_bits / 8;
+																					dkey[3] = 1;
+																					dkey[4] = 2;
+																					dkey[5] = 3;
+																					dkey[6] = 4;
+																					dkey[7] = 5;
+																					dkey[8] = 6;
+																					dkey[9] = 7;
+																					dkey[10] = 8;
+																					dkey[11] = 9;
+																					dkey[12] = 10;
+																					dkey[13] = 11;
+																					dkey[14] = 12;
+																					dkey[15] = 13;
+																					dkey[16] = 14;
+																					dkey[17] = 15;
+																					dkey[18] = 16;
+																					dkey[19] = 17;
+																					dkey[20] = 18;
+																					dkey[21] = 19;
+																					dkey[22] = 20;
+																					dkey[23] = 21;
+																					dkey[24] = 22;
+				
+																					((char*)dkey)[12 + 0x0b] = '1';  // change to RSA1 (pub key only)
+																					((char*)dkey)[12 + 0] = 6;       // change to pub key only
+																					*($a_key_size) = dkey[2] + 12;
+				
+																					 std::cout << "dkey[12 + 0x0b] = " << dkey[12 + 0x0b] << std::endl;
+																					 std::cout << "((char*)dkey)[12 + 0x0b] = " << ((char*)dkey)[12 + 0x0b] << std::endl;
+				
+																					 std::cout << "dkey[12 + 0] = " << dkey[12 + 0] << std::endl;
+																					 std::cout << "((char*)dkey)[12 + 0] = " << ((char*)dkey)[12 + 0] << std::endl;
+				
+																					std::ofstream outfile;
+																	    			outfile.open("carray_key.bin", std::ios::binary);
+				
+																					outfile.write(((char*)($a_key)), 100);
+												    								outfile.close();
+												    								std::ofstream outfile2;
+																	    			outfile2.open("carray_dkey.bin", std::ios::binary);
+				
+																					outfile2.write(((char*)(dkey)), 100);
+												    								outfile2.close();
+				
+																			}
 			]"
 		end
 

@@ -45,8 +45,21 @@ feature {NONE} -- Initialiation
 			create module_ref.make (0)
 		end
 
+
+feature {PE_WRITER}
+
 	output_stream: detachable FILE
+
 			-- Stream to write the content.
+
+
+feature -- Elemetn Change
+
+	set_stream (a_pe_writer: PE_WRITER; a_pe_lib: PE_LIB)
+		do
+			pe_writer := a_pe_writer
+			pe_lib := a_pe_lib
+		end
 
 feature -- Access
 
@@ -154,7 +167,7 @@ feature -- Element change
 	put_managed_pointer (mp: MANAGED_POINTER)
 		do
 			if attached output_stream as l_stream then
-				l_stream.put_managed_pointer (mp, l_stream.count, mp.count)
+				l_stream.put_managed_pointer (mp, 0, mp.count)
 			end
 		end
 

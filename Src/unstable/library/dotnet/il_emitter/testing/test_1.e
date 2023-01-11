@@ -53,8 +53,8 @@ feature -- Access
 
 			start.optimize
 
-			lib_entry.dump_output_file ("test1.il",{CIL_OUTPUT_MODE}.ilasm, False)
-			lib_entry.dump_output_file ("test1.exe",{CIL_OUTPUT_MODE}.peexe, False)
+			lib_entry.dump_output_file ({STRING_32}"test1.il",{CIL_OUTPUT_MODE}.ilasm, False)
+			lib_entry.dump_output_file ({STRING_32}"test1.exe",{CIL_OUTPUT_MODE}.peexe, False)
 
 		end
 end

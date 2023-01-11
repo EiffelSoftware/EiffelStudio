@@ -95,7 +95,7 @@ feature -- Output
 		do
 			if not in_assembly_ref then
 				l_pe_flags := transfer_flags
-				if attached {PE_WRITER} a_stream as l_writer then
+				if attached {PE_WRITER} a_stream.pe_writer as l_writer then
 					l_typename_index := l_writer.hash_string (name)
 					l_namespace_index := parent_namespace (a_stream)
 					l_extends := l_writer.enum_base

@@ -21,13 +21,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (has_seh: BOOLEAN; a_flags: INTEGER; a_method_def: NATURAL_64; a_max_stack: INTEGER; a_local_count: INTEGER; a_code_size: INTEGER; a_signature: NATURAL_64)
+make (has_seh: BOOLEAN; a_flags: INTEGER; a_method_def: NATURAL_64; a_max_stack: INTEGER; a_local_count: INTEGER; a_code_size: INTEGER; a_signature: NATURAL_64)
 		do
 			flags := a_flags
 			hrd_size := 3
 			max_stack := a_max_stack.to_natural_16
 			code_size := a_code_size.to_natural_64
 			signature_token := a_signature
+			method_def := a_method_def
 			create {ARRAYED_LIST [CIL_SEH_DATA]} seh_data.make (0)
 			if (flags & 0xfff) = 0 then
 				if max_stack <= 8 and then code_size < 8 and then

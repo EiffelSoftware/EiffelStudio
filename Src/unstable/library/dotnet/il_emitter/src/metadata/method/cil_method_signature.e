@@ -555,14 +555,14 @@ feature -- Output
 							end
 						end
 					else
-						if attached {PE_WRITER} a_stream as l_writer then
+						if attached {PE_WRITER} a_stream.pe_writer as l_writer then
 							l_function := l_writer.hash_string (name)
 						end
 						if attached {CIL_CLASS} container as l_class then
 							l_cls := l_class
 						end
 						l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.method_ref_sig (Current, l_sz)
-						if attached {PE_WRITER} a_stream as l_writer then
+						if attached {PE_WRITER} a_stream.pe_writer as l_writer then
 							l_method_signature := l_writer.hash_blob (l_sig, l_sz.item)
 						end
 						if attached l_cls then
@@ -595,7 +595,7 @@ feature -- Output
 			elseif (flags & {CIL_METHOD_SIGNATURE_ATTRIBUTES}.vararg /= 0) and then
 				not (flags & {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed /= 0) then
 					create l_sz.put (0)
-					if attached {PE_WRITER} a_stream as l_write then
+					if attached {PE_WRITER} a_stream.pe_writer as l_write then
 						l_function := l_write.hash_string (name)
 						l_parent_index := if attached method_parent as l_method_parent then l_method_parent.pe_index_type else {NATURAL_64}0 end
 						l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.method_ref_sig (Current, l_sz)

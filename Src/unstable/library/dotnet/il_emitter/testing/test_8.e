@@ -72,7 +72,7 @@ feature -- Test
 			method_main.optimize
 
 			pe_file.dump_output_file ("test_8.il", {CIL_OUTPUT_MODE}.ilasm, false)
-			pe_file.dump_output_file ("test_8.il", {CIL_OUTPUT_MODE}.peexe, false)
+			pe_file.dump_output_file ("test_8.exe", {CIL_OUTPUT_MODE}.peexe, false)
 
 		end
 

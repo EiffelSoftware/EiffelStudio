@@ -605,7 +605,7 @@ feature -- Compile
 			if attached l_last then
 				l_sz := (l_last.offset + l_last.instruction_size).to_natural_32
 				if l_sz /= 0 then
-					create l_result.make_empty (l_sz.to_integer_32)
+					create l_result.make_filled (0, l_sz.to_integer_32)
 					l_pos := 0
 					across instructions as ins loop
 						l_pos := l_pos + ins.render (a_stream, l_result, l_pos, labels).to_integer_32
@@ -616,6 +616,10 @@ feature -- Compile
 			end
 			labels.wipe_out
 			a_sz.put (l_sz)
+			if l_result /= Void then
+				Result := l_result.to_array
+			end
+
 		end
 
 	compile (a_stream: FILE_STREAM)

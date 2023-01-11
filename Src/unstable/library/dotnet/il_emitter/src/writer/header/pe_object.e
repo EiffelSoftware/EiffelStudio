@@ -13,6 +13,8 @@ inherit
 			default_create
 		end
 
+create
+	default_create
 
 feature {NONE} -- Initialization
 
@@ -26,7 +28,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING assign set_name
-		-- Size 8.
+			-- Size 8.
 
 	virtual_size: INTEGER assign set_virtual_size
 
@@ -43,7 +45,7 @@ feature -- Access
 feature -- Element Change
 
 	set_name (a_name: like name)
-			-- Set `name` with `a_name`.	
+			-- Set `name` with `a_name`.
 		do
 			name := a_name
 		ensure
@@ -90,7 +92,6 @@ feature -- Element Change
 			flags_set: flags = a_flags
 		end
 
-
 feature -- Managed Pointer
 
 	managed_pointer: MANAGED_POINTER
@@ -122,19 +123,19 @@ feature -- Managed Pointer
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
 				-- Reserved [1]
-			Result.put_integer_32_le (reserved[1], l_pos)
+			Result.put_integer_32_le (reserved [1], l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
 				-- Reserved [2]
-			Result.put_integer_32_le (reserved[2], l_pos)
+			Result.put_integer_32_le (reserved [2], l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
 				-- Reserved [3]
-			Result.put_integer_32_le (reserved[3], l_pos)
+			Result.put_integer_32_le (reserved [3], l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
 				-- flags
-			Result.put_integer_32_le (reserved[2], l_pos)
+			Result.put_integer_32_le (reserved [2], l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 		end
 
@@ -163,6 +164,5 @@ feature -- Measurement
 		ensure
 			instance_free: class
 		end
-
 
 end

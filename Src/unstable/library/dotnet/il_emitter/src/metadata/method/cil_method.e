@@ -83,7 +83,7 @@ feature -- Access
 		end
 
 	token: NATURAL_64
-		-- redundant from `rendering.method_def` because PE_WRITER deletes all PE_METHODS
+			-- redundant from `rendering.method_def` because PE_WRITER deletes all PE_METHODS
 
 feature -- Status Report
 
@@ -465,8 +465,10 @@ feature -- Output
 		do
 			if attached {PE_METHOD} rendering as l_rendering then
 				create l_sz.put (l_rendering.code_size)
+					-- code_ and codeSize_ are zero if no instruction, e.g. in delegate impls; seems a legal outcome
 				l_rendering.code := compile_cc (a_stream, l_sz)
 				l_rendering.code_size := l_sz.item
+				compile_seh (l_rendering.seh_data)
 			end
 		end
 
@@ -499,8 +501,11 @@ feature {NONE} -- Implementation
 			l_ctor_index: NATURAL_64
 			l_data: ARRAY [NATURAL_8]
 			l_data_sig: NATURAL_64
-			l_attribute:  PE_CUSTOM_ATTRIBUTE
+			l_attribute: PE_CUSTOM_ATTRIBUTE
 			l_type: PE_CUSTOM_ATTRIBUTE_TYPE
+			l_method_def: NATURAL_64
+			l_local_count: INTEGER
+			l_signature: NATURAL_64
 		do
 			create l_sz.put (0)
 			if attached {CIL_TYPE} prototype.return_type as l_return_type then
@@ -555,22 +560,30 @@ feature {NONE} -- Implementation
 				l_pe_flags := l_pe_flags | {PE_METHOD}.entrypoint
 			end
 			if invoke_mode = {CIL_INVOKE_MODE}.cil and not l_is_runtime then
-				l_pe_flags := l_pe_flags |	{PE_METHOD}.cil
+				l_pe_flags := l_pe_flags | {PE_METHOD}.cil
 			end
 
 			check rendering = Void end
 
+			l_method_def := if attached {PE_WRITER} a_stream.pe_writer as l_writer then l_writer.next_table_index ({PE_TABLES}.tmethoddef.value.to_integer_32) else {NATURAL_32} 0 end
+			l_local_count := if attached l_last then (l_last.offset + l_last.instruction_size) else 0 end
+			if l_method_signature /= 0 then
+				l_signature := l_method_signature | ({PE_TABLES}.tstandalonesig.value |<< 24)
+			else
+				l_signature := 0
+			end
+
 			create l_rendering.make (has_seh, l_pe_flags,
-									if attached {PE_WRITER}a_stream.pe_writer as l_writer then l_writer.next_table_index ({PE_TABLES}.tmethoddef.value.to_integer_32) else {NATURAL_32}0 end,
-									max_stack.to_natural_16, var_list.count,
-									if attached l_last then (l_last.offset + l_last.instruction_size) else 0 end,
-									if l_method_signature /= 0 then l_method_signature | ({PE_TABLES}.tstandalonesig.value |<< 24) else {NATURAL_64}0 end)
+				l_method_def,
+				max_stack.to_natural_16, var_list.count,
+				l_local_count,
+				l_signature)
 
 			token := l_rendering.method_def | ({PE_TABLES}.tmethoddef.value |<< 24)
 
 			if invoke_mode = {CIL_INVOKE_MODE}.cil then
 				if l_is_runtime and then not instructions.is_empty or else not l_is_runtime and then instructions.is_empty then
-					-- "Invalid method\t" << GetContainer()->getAssembly()->Name().c_str() << GetContainer()->Name().c_str() << Signature()->Name().c_str();
+						-- "Invalid method\t" << GetContainer()->getAssembly()->Name().c_str() << GetContainer()->Name().c_str() << Signature()->Name().c_str();
 				end
 				if attached {PE_WRITER} a_stream.pe_writer as l_writer then
 					l_writer.add_method (l_rendering)
@@ -579,55 +592,55 @@ feature {NONE} -- Implementation
 			end
 
 			if (flags.flags & {CIL_QUALIFIERS_ENUM}.CIL) /= 0 then
-	            l_impl_flags := l_impl_flags| {PE_METHOD_DEF_TABLE_ENTRY}.il
-	        elseif (flags.flags & {CIL_QUALIFIERS_ENUM}.Runtime) /= 0 then
-	            l_impl_flags := l_impl_flags | {PE_METHOD_DEF_TABLE_ENTRY}.runtime
-	        end
-	        if (flags.flags & {CIL_QUALIFIERS_ENUM}.Managed) /= 0  then
-	            l_impl_flags := l_impl_flags | {PE_METHOD_DEF_TABLE_ENTRY}.Managed
-	        end
-	        if (flags.flags & {CIL_QUALIFIERS_ENUM}.PreserveSig) /= 0 then
-	            l_impl_flags := l_impl_flags | {PE_METHOD_DEF_TABLE_ENTRY}.PreserveSig
-	        end
-	        if (flags.flags & {CIL_QUALIFIERS_ENUM}.Public) /= 0 then
-	           	l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.Public
-	        elseif (flags.flags & {CIL_QUALIFIERS_ENUM}.Private) /= 0 then
-	            l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.Private
-	        end
-	        if (flags.flags & {CIL_QUALIFIERS_ENUM}.Virtual ) /= 0 then
-	            l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.Virtual
-	        end
-	        if (flags.flags & {CIL_QUALIFIERS_ENUM}.NewSlot) /= 0 then
-	            l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.NewSlot
-	        end
-	        if (flags.flags & {CIL_QUALIFIERS_ENUM}.Static) /= 0 then
-	            l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.Static
-	        end
-	        if (flags.flags & {CIL_QUALIFIERS_ENUM}.SpecialName) /= 0 then
-	            l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.SpecialName
+				l_impl_flags := l_impl_flags | {PE_METHOD_DEF_TABLE_ENTRY}.il
+			elseif (flags.flags & {CIL_QUALIFIERS_ENUM}.Runtime) /= 0 then
+				l_impl_flags := l_impl_flags | {PE_METHOD_DEF_TABLE_ENTRY}.runtime
 			end
-	        if (flags.flags & {CIL_QUALIFIERS_ENUM}.RTSpecialName) /= 0 then
-	            l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.RTSpecialName
-	        end
-	        if (flags.flags & {CIL_QUALIFIERS_ENUM}.HideBySig) /= 0 then
-	            l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.HideBySig
-	        end
-	        if invoke_mode = {CIL_INVOKE_MODE}.PInvoke then
-	            l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.PinvokeImpl
-	        end
+			if (flags.flags & {CIL_QUALIFIERS_ENUM}.Managed) /= 0 then
+				l_impl_flags := l_impl_flags | {PE_METHOD_DEF_TABLE_ENTRY}.Managed
+			end
+			if (flags.flags & {CIL_QUALIFIERS_ENUM}.PreserveSig) /= 0 then
+				l_impl_flags := l_impl_flags | {PE_METHOD_DEF_TABLE_ENTRY}.PreserveSig
+			end
+			if (flags.flags & {CIL_QUALIFIERS_ENUM}.Public) /= 0 then
+				l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.Public
+			elseif (flags.flags & {CIL_QUALIFIERS_ENUM}.Private) /= 0 then
+				l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.Private
+			end
+			if (flags.flags & {CIL_QUALIFIERS_ENUM}.Virtual) /= 0 then
+				l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.Virtual
+			end
+			if (flags.flags & {CIL_QUALIFIERS_ENUM}.NewSlot) /= 0 then
+				l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.NewSlot
+			end
+			if (flags.flags & {CIL_QUALIFIERS_ENUM}.Static) /= 0 then
+				l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.Static
+			end
+			if (flags.flags & {CIL_QUALIFIERS_ENUM}.SpecialName) /= 0 then
+				l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.SpecialName
+			end
+			if (flags.flags & {CIL_QUALIFIERS_ENUM}.RTSpecialName) /= 0 then
+				l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.RTSpecialName
+			end
+			if (flags.flags & {CIL_QUALIFIERS_ENUM}.HideBySig) /= 0 then
+				l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.HideBySig
+			end
+			if invoke_mode = {CIL_INVOKE_MODE}.PInvoke then
+				l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.PinvokeImpl
+			end
 
-	        if attached {PE_WRITER} a_stream.pe_writer as l_writer then
+			if attached {PE_WRITER} a_stream.pe_writer as l_writer then
 
-	        	l_name_index := l_writer.hash_string (prototype.name)
-	        	l_import_name_index := l_name_index
+				l_name_index := l_writer.hash_string (prototype.name)
+				l_import_name_index := l_name_index
 
-	        	if not import_name.is_empty then
-	        		l_import_name_index := l_writer.hash_string (import_name)
-	        	end
+				if not import_name.is_empty then
+					l_import_name_index := l_writer.hash_string (import_name)
+				end
 				l_param_index := l_writer.next_table_index ({PE_TABLES}.tparam.value.to_integer_32)
 
-	        	l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.method_def_sig(prototype, l_sz)
-				l_method_signature :=  l_writer.hash_blob (l_sig, l_sz.item.to_natural_8)
+				l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.method_def_sig (prototype, l_sz)
+				l_method_signature := l_writer.hash_blob (l_sig, l_sz.item.to_natural_8)
 
 				create {PE_METHOD_DEF_TABLE_ENTRY} l_table.make_with_data (l_rendering, l_impl_flags, l_mf_flags, l_name_index, l_method_signature, l_param_index)
 				prototype.set_pe_index (l_writer.add_table_entry (l_table))
@@ -637,12 +650,12 @@ feature {NONE} -- Implementation
 				across prototype.params as param loop
 					l_flags := 0
 					l_name_index := l_writer.hash_string (param.name)
-					create {PE_PARAM_TABLE_ENTRY} l_table.make_with_data(l_flags, i.to_natural_16, l_name_index)
+					create {PE_PARAM_TABLE_ENTRY} l_table.make_with_data (l_flags, i.to_natural_16, l_name_index)
 					i := i + 1
 					l_last_param_index := l_writer.add_table_entry (l_table)
 				end
 
-				if invoke_mode = {CIL_INVOKE_MODE}.pinvoke  then
+				if invoke_mode = {CIL_INVOKE_MODE}.pinvoke then
 					l_flags := 0
 					if pinvoke_type = {CIL_INVOKE_TYPE}.cdecl then
 						l_flags := l_flags | {PE_IMPL_MAP_TABLE_ENTRY}.CallConvCdecl
@@ -675,7 +688,7 @@ feature {NONE} -- Implementation
 							Result := l_result.pe_dump (a_stream)
 							l_ctor_index := l_result.prototype.pe_index_call_site
 						end
-						l_data := {ARRAY [NATURAL_8]}<<1, 0, 0, 0>>
+						l_data := {ARRAY [NATURAL_8]} <<1, 0, 0, 0>>
 						l_data_sig := l_writer.hash_blob (l_data, l_data.count.to_natural_8)
 						l_writer.set_param_attribute (l_ctor_index, l_data_sig)
 						l_attribute_type := l_writer.param_attribute_type
@@ -687,7 +700,8 @@ feature {NONE} -- Implementation
 						l_res := l_writer.add_table_entry (l_table).to_natural_8
 					end
 				end
-	        end
+				rendering := l_rendering
+			end
 			Result := True
 		end
 

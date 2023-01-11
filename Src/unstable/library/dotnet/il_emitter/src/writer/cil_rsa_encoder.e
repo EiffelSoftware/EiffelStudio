@@ -112,7 +112,7 @@ feature -- C/C++ wrapper
 
 	c_get_public_key_data (a_key: POINTER; a_key_size: TYPED_POINTER [NATURAL_64]; a_key_pair: POINTER; a_modulus_bits: NATURAL_64)
 		external
-			"C++ inline "
+			"C inline "
 		alias
 			"[
 				typedef uint32_t DIGIT_T;

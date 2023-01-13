@@ -69,6 +69,18 @@ feature -- Access
 			result_contains_attached_valid_items: ∀ p: Result ¦ not p.is_empty
 		end
 
+	runtime_paths: ARRAYED_LIST [IMMUTABLE_STRING_32]
+			-- List of dotnet runtime paths used in resolution
+		require
+			successful: is_successful
+			add_assemblies: add_assemblies
+		once
+			Result := options_values_of_name (runtime_switch)
+		ensure
+			result_attached: Result /= Void
+			result_contains_attached_valid_items: ∀ p: Result ¦ not p.is_empty
+		end
+
 	cache_path: PATH
 			-- A location of a cache
 		require
@@ -167,6 +179,14 @@ feature -- Status report
 			Result := has_option (debug_switch)
 		end
 
+	is_silent: BOOLEAN
+			-- Indicate if the silent mode is enabled.
+		require
+			successful: is_successful
+		once
+			Result := has_option (silent_switch)
+		end
+
 feature {NONE} -- Usage
 
 	name: STRING = "Eiffel Assembly Metadata %"Consumer%""
@@ -200,6 +220,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_ASSEMBLY_SWITCH}.make (remove_switch, "Remove all specified assemblies from the cache.", False, False, loose_argument_name, loose_argument_description, False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (reference_switch, "Add a lookup reference path for dependency resolution.", True, True, "path", "A location on disk", False))
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (sdk_switch, "Add a SDK location.", True, True, "path", "A location on disk", False))
+			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (runtime_switch, "Add a runtime location.", True, True, "path", "A location on disk", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_switch, "Lists the content of the cache.", False, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, "Display verbose output.", True, False))
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (output_switch, "Location of Eiffel assembly cache to perform operations on.", True, False, "cache", "A location of an Eiffel assembly cache", False))
@@ -207,6 +228,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (halt_switch, "Waits for user to press enter before exiting.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (json_switch, "Use JSON content for the cache storage.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (debug_switch, "Enable debug mode", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (silent_switch, "Silent mode, output only the minimal information", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (help_switch, "Display help", True, False))
 
 		end
@@ -217,9 +239,9 @@ feature {NONE} -- Usage
 			create Result.make (5)
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (help_switch)>>, False))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (add_switch),
-					switch_of_name (info_only_switch), switch_of_name (reference_switch), switch_of_name (sdk_switch),
+					switch_of_name (info_only_switch), switch_of_name (reference_switch), switch_of_name (sdk_switch), switch_of_name (runtime_switch),
 					switch_of_name (output_switch), switch_of_name (verbose_switch), switch_of_name (halt_switch),
-					switch_of_name (json_switch), switch_of_name (debug_switch)>>, False))
+					switch_of_name (json_switch), switch_of_name (debug_switch), switch_of_name (silent_switch)>>, False))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (remove_switch), switch_of_name (output_switch), switch_of_name (halt_switch), switch_of_name (json_switch), switch_of_name (debug_switch)>>, False))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (list_switch), switch_of_name (output_switch), switch_of_name (verbose_switch), switch_of_name (halt_switch), switch_of_name (json_switch), switch_of_name (debug_switch)>>, False))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (clean_switch), switch_of_name (output_switch), switch_of_name (halt_switch), switch_of_name (json_switch), switch_of_name (debug_switch)>>, False))
@@ -232,6 +254,7 @@ feature {NONE} -- Switches
 	remove_switch: STRING = "r"
 	reference_switch: STRING = "i"
 	sdk_switch: STRING = "sdk"
+	runtime_switch: STRING = "runtime"
 	list_switch: STRING = "l"
 	verbose_switch: STRING = "v"
 	output_switch: STRING = "o"
@@ -239,6 +262,7 @@ feature {NONE} -- Switches
 	halt_switch: STRING = "halt"
 	json_switch: STRING = "json"
 	debug_switch: STRING = "debug"
+	silent_switch: STRING = "silent"
 			-- Switch names
 
 	loose_argument_name: STRING = "assembly"

@@ -62,6 +62,7 @@ feature {NONE} -- Initialization
 			l_error: BOOLEAN
 			l_domain: detachable APP_DOMAIN
 			l_receiver: detachable SYSTEM_OBJECT
+			l_is_silent: BOOLEAN
 		do
 			if a_parser.use_specified_cache then
 				create l_manager.make_with_path (a_parser.cache_path)
@@ -71,6 +72,7 @@ feature {NONE} -- Initialization
 			l_cache_writer := l_manager.cache_writer
 			l_verbose := a_parser.show_verbose_output
 			l_use_json := a_parser.use_json_storage
+			l_is_silent := a_parser.is_silent
 			if l_verbose then
 				l_cache_writer.set_error_printer (agent display_error)
 				l_cache_writer.set_status_printer (agent display_message_with_new_line)
@@ -78,18 +80,22 @@ feature {NONE} -- Initialization
 
 			l_writer := writer
 
-			if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
-				l_writer.put_string ("Using runtime directory: ")
-				l_writer.put_string (utf32_to_console_encoding (console_encoding, create {STRING_32}.make_from_cil (l_runtime_dir)))
-				l_writer.new_line
-				l_writer.new_line
+			if not l_is_silent then
+				if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
+					l_writer.put_string ("Using runtime directory: ")
+					l_writer.put_string (utf32_to_console_encoding (console_encoding, create {STRING_32}.make_from_cil (l_runtime_dir)))
+					l_writer.new_line
+					l_writer.new_line
+				end
 			end
 
 			if l_use_json then
 				{EIFFEL_SERIALIZATION}.set_use_json_storage (True)
-				l_writer.put_string ("Using JSON storage")
-				l_writer.new_line
-				l_writer.new_line
+				if not l_is_silent then
+					l_writer.put_string ("Using JSON storage")
+					l_writer.new_line
+					l_writer.new_line
+				end
 			end
 
 			if a_parser.add_assemblies then
@@ -180,7 +186,9 @@ feature {NONE} -- Initialization
 			end
 
 			l_manager.unload
-			display_message_with_new_line ("%NCompleted.%N")
+			if not l_is_silent then
+				display_message_with_new_line ("%NCompleted.%N")
+			end
 
 			if a_parser.wait_for_user_interaction then
 				io.put_string ("Please press enter to exit...")

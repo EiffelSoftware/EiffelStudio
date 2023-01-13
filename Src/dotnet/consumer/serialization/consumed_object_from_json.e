@@ -349,7 +349,7 @@ feature -- Deserialization
 				if
 					uid /= Void and fn /= Void and
 					n /= Void and v /= Void and c /= Void and k /= Void and
-					loc /= Void and gp /= Void and is_in_gac /= Void
+					loc /= Void and gp /= Void
 				then
 					create Result.make (uid.unescaped_string_32, fn.unescaped_string_32,
 							n.unescaped_string_32, v.unescaped_string_32, c.unescaped_string_32, k.unescaped_string_32,

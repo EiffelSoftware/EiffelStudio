@@ -441,7 +441,7 @@ namespace md_consumer
             begin_serialize_object(ref_type, inc_type_name);
             writer.WritePropertyName(JSON_NAMES.name); //"name");
             writer.WriteStringValue(ref_type.name);
-            writer.WritePropertyName(JSON_NAMES.assembly); //"assembly");
+            writer.WritePropertyName(JSON_NAMES.assembly_id); //"assembly_id");
             writer.WriteNumberValue(ref_type.assembly_id);
             if (ref_type is CONSUMED_ARRAY_TYPE) {
                 CONSUMED_ARRAY_TYPE arr_type = (CONSUMED_ARRAY_TYPE) ref_type;

@@ -56,7 +56,9 @@ namespace md_consumer
                     break;
                 }
             }
-            //DEBUG: Debug.Assert(found, "Assembly not found to be updated");
+            if (!found) {
+            	//DEBUG: Debug.Assert(found, "Assembly not found to be updated");
+            }
         }
     }
     public class CACHE_COMMON
@@ -240,8 +242,7 @@ namespace md_consumer
             CONSUMED_ASSEMBLY_TYPES? res = null;
             string fn = assembly_types_file_name_from_consumed_assembly (ca);
             if (File.Exists(fn)) {
-
-                string json = System.IO.File.ReadAllText(info_location);
+                string json = System.IO.File.ReadAllText(fn);
                 JsonNode? jdoc = JsonNode.Parse(json);
                 JsonNode? jroot = jdoc!.Root;
                 if (jroot != null) {
@@ -249,20 +250,22 @@ namespace md_consumer
                     if (j_types != null) {
                         int l_count = j_types["count"]!.GetValue<int>();
                         res = new CONSUMED_ASSEMBLY_TYPES(l_count);
-                        JsonArray? j_eiffel_names = j_types["eiffel_names"]!.AsArray();
-                        JsonArray? j_dotnet_names = j_types["dotnet_names"]!.AsArray();
-                        JsonArray? j_flags = j_types["flags"]!.AsArray();
-                        JsonArray? j_positions = j_types["positions"]!.AsArray();
+                        JsonArray? j_eiffel_names = j_types["eiffel_names"]?.AsArray();
+                        JsonArray? j_dotnet_names = j_types["dotnet_names"]?.AsArray();
+                        JsonArray? j_flags = j_types["flags"]?.AsArray();
+                        JsonArray? j_positions = j_types["positions"]?.AsArray();
                         if (j_eiffel_names != null && j_dotnet_names != null && j_flags != null && j_positions != null) {
                             for (int i = 0; i < l_count; i++) {
-                                string? en = j_eiffel_names[i]!.GetValue<string>();
-                                string? dn = j_dotnet_names[i]!.GetValue<string>();
+                                string? en = j_eiffel_names[i]?.GetValue<string>();
+                                string? dn = j_dotnet_names[i]?.GetValue<string>();
                                 int fl = j_flags[i]!.GetValue<int>();
                                 int po = j_positions[i]!.GetValue<int>();
-                                res.eiffel_names[i] = en;
-                                res.dotnet_names[i] = dn;
-                                res.flags[i] = fl;
-                                res.positions[i] = po;
+                                if (en != null && dn != null) {
+                                    res.eiffel_names[i] = en;
+                                    res.dotnet_names[i] = dn;
+                                    res.flags[i] = fl;
+                                    res.positions[i] = po;
+                                }
                             }
                         }
                     }
@@ -308,6 +311,23 @@ namespace md_consumer
                 }
             }
             return -1;
+        }
+
+        public string? json_type_from_consumed_assembly_at_position (CONSUMED_ASSEMBLY ca, int pos)
+        {
+            if (pos >= 0) {
+                string fn = assembly_classes_file_name_from_consumed_assembly(ca);
+                if (File.Exists(fn)) {
+                    string? json=null;
+                    using (FileStream f = File.OpenRead(fn)) {
+                        f.Position = pos;
+                        var freader = new StreamReader(f);
+                        json = freader.ReadLine();
+                        return json;
+                    }
+                }
+            }
+            return null;
         }
         public CONSUMED_TYPE? consumed_type (Type a_type)
         {
@@ -468,7 +488,7 @@ namespace md_consumer
         }         
         public void unconsume_assembly(string a_path)
         {
-            Debug.Assert(reader.is_assembly_in_cache (a_path, true), "is assembly in cache");
+            // Debug.Assert(reader.is_assembly_in_cache (a_path, true), "is assembly in cache");
             output.AppendLine(String.Format("Unconsuming assembly '{0}'", a_path));
             CACHE_READER r = reader;
             CONSUMED_ASSEMBLY? ca = r.consumed_assembly_from_path(a_path);
@@ -637,6 +657,117 @@ namespace md_consumer
                 return AssemblyAnalyzer.new_consumed_assembly(a, s_id);
             } else {
                 return null;
+            }
+        }
+
+        public void build_html()
+        {
+            build_info_html(Path.Join(cache_location, "index.html"));
+        }
+        public void build_info_html(string fn)
+        {
+            CACHE_INFO inf = cache_info();
+            string html = @"<html>
+                <head>
+                    <title>.Net MetaData</title>
+                    <style>
+                        div#assemblies {
+                            margin-bottom: 3px;
+                        }
+                        a { text-decoration: none; }
+                        span.name { font-weight: bold; }
+                        span.location { font-style: italic; color: #999; }
+                    </style>
+                </head>
+                <body>
+                ";
+            html += "<h1>Assemblies</h1><div id=\"assemblies\">";
+            foreach (CONSUMED_ASSEMBLY ca in inf.assemblies) {
+                html += "<div><a href=\""+ ca.folder_name +"/index.html\">";
+                string title = ca.guid;
+                if (ca.name != null) {
+                    title = ca.name;
+                }
+                html += "<span class=\"name\">" + title + "</span>: ";
+                html += "<span class=\"location\">" + ca.location + "</span>";
+                html += "</a></div>\n";
+                try {
+                    build_assembly_html(ca, title, Path.Join(cache_location, ca.folder_name, "index.html"));
+                } catch {
+                    // Ignore for now.
+                }
+            }
+            html += "</div>";
+            html += "</body></html>";
+            using (StreamWriter file = new(fn)) {
+                file.WriteLine(html);
+            }
+        }
+
+        public void build_assembly_html(CONSUMED_ASSEMBLY ca, string title, string fn)
+        {
+            string html = @"<html>
+                <head>
+                    <title>";
+            html += title;
+            html += @"</title>
+                    <style>
+                        div#assemblies {
+                            margin-bottom: 3px;
+                        }
+                        a { text-decoration: none; }
+                        span.name { font-weight: bold; }
+                        span.location { font-style: italic; color: #999; }
+                        div#types > div { margin-top: .5em; }
+                        code.json { display: none; font-size: smaller; color: #999; }
+                        div#types > div:hover code.json { display: block; }
+                    </style>
+                </head>
+                <body>";
+            string n = ca.guid;
+            if (ca.name != null) {
+                n = ca.name;
+            }
+            html += "<h1>Assembly: " + n + "</h1>";
+            html += "<div id=\"info\">";
+            html += "<div>Location: " + ca.location + "</div>\n";
+            html += "<div>Version: " + ca.version + "</div>\n";
+            html += "<div>Culture: " + ca.culture + "</div>\n";
+            html += "<div>Pub Key: " + ca.public_key_token + "</div>\n";
+            html += "</div>";
+            CONSUMED_ASSEMBLY_TYPES? l_types = reader.assembly_types(ca);
+            if (l_types != null) {
+                html += "<h2>" + l_types.count + " types</h2>\n<div id=\"types\">";
+                for(int i = 0; i < l_types.count; i++) {
+                    string? en = l_types.eiffel_names[i];
+                    string? dn = l_types.dotnet_names[i];
+                    if (en != null && dn != null) {
+                        html += "<div><strong>"+ dn +"</strong>: "+ en ;
+                        string? json = reader.json_type_from_consumed_assembly_at_position(ca, l_types.positions[i]);
+                        if (json != null) {
+                            html += "<code class=\"json\">" + System.Net.WebUtility.HtmlEncode (json) + "</code>\n";
+                        }
+                    }
+                }
+                html += "</div>";
+            }
+            string f;
+            f = Path.Join (cache_location, ca.folder_name, "classes.info");
+            if (File.Exists(f)) {
+                html += "<div><a href=\"classes.info\">Classes</a></div>\n";
+            }
+            f = Path.Join (cache_location, ca.folder_name, "types.info");
+            if (File.Exists(f)) {
+                html += "<div><a href=\"types.info\">Types</a></div>\n";
+            }
+            f = Path.Join (cache_location, ca.folder_name, "referenced_assemblies.info");
+            if (File.Exists(f)) {
+                html += "<div><a href=\"referenced_assemblies.info\">Referenced assemblies</a></div>\n";
+            }
+
+            html += "</body></html>";
+            using (StreamWriter file = new(fn)) {
+                file.WriteLine(html);
             }
         }
     }

@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Linq;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+// using System.Diagnostics.CodeAnalysis;
 
 
 namespace md_consumer
@@ -839,7 +839,10 @@ namespace md_consumer
 						// -- When there is only one constructor, let's call it make
 						// -- to avoid confusion.
 		 			tc[0].set_name (Creation_routine_name);
-					res.Add(tc[0].consumed_constructor());
+					var c = tc[0].consumed_constructor();
+					if (c != null) {
+						res.Add(c);
+					}
 				} else {
 						// -- Compute all possible names for constructor.
 					int p = 0;
@@ -852,7 +855,10 @@ namespace md_consumer
 					CONSUMED_ARGUMENT[] args = csolver.arguments;
 					if (args.Length == 0) {
 						csolver.set_name(Creation_routine_name);
-						res.Add(csolver.consumed_constructor());
+						var c = csolver.consumed_constructor();
+						if (c != null) {
+							res.Add(c);
+						}
 						p = p + 1;
 					}
 					string name;
@@ -871,7 +877,10 @@ namespace md_consumer
 						}
 						name = name_solver.unique_feature_name (name);
 						csolver.set_name (name);
-						res.Add (csolver.consumed_constructor());
+						var c = csolver.consumed_constructor();
+						if (c != null) {
+							res.Add(c);
+						}
 						p = p + 1;
 					}
 					while (p <= p_max)
@@ -900,7 +909,10 @@ namespace md_consumer
 						}
 						name = name_solver.unique_feature_name(name);
 						csolver.set_name(name);
-						res.Add(csolver.consumed_constructor());
+						var c = csolver.consumed_constructor();
+						if (c != null) {
+							res.Add(c);
+						}
 						p = p + 1;
 					}
 				}

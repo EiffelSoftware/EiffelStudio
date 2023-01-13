@@ -129,7 +129,8 @@ namespace md_consumer
                     Assembly? a_ref = null;
                     try {
                         // Console.WriteLine("TRY to load ref ass " + n.Name + "\n");
-                        a_ref = Assembly.Load(n);
+                        a_ref = SHARED_ASSEMBLY_LOADER.assembly_loader.assembly_from_name(n);
+                        // a_ref = Assembly.Load(n);
                     }
                     catch (FileNotFoundException fnf) { Console.WriteLine("ERROR while trying to load ref ass " + n.Name + ": FILE NOT FOUND ("+ fnf.FileName +")\n"); }
                     catch (FileLoadException) { Console.WriteLine("ERROR while trying to load ref ass " + n.Name + ": FILE LOAD EXCEPTION\n"); }

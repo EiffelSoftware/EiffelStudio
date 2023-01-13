@@ -10,7 +10,7 @@ namespace EifMdConsumer
 {
     class Program
     {
-        static public string version = "8.0.0.1";
+        static public string version = "8.0.0.3";
         static int Main(string[] args)
         {
             md_consumer.MdConsumer? md;
@@ -24,6 +24,7 @@ namespace EifMdConsumer
             List<string> add_assemblies = new List<string>(3);
             List<string> ref_assemblies = new List<string>(2);
             List<string> sdk_locations = new List<string>(1);
+            List<string> runtime_locations = new List<string>(1);
           
             string? cache_location = null;
 
@@ -32,7 +33,10 @@ namespace EifMdConsumer
             bool is_help = false;
             bool has_halt = false;
             bool nologo = false;
-            bool is_debug=false;
+            bool is_debug = false;
+            bool is_cleaning = false;
+            bool build_html = false;
+            bool is_silent = false;
 
             int res = 0;
             // res = a.LoadFromAssemblyPath (inputFile);
@@ -46,9 +50,14 @@ namespace EifMdConsumer
                 } else if (a.Equals("-i")) {
                     i = i + 1;
                     ref_assemblies.Add(args[i]);
+                } else if (a.Equals("-clean")) {
+                    is_cleaning = true;
                 } else if (a.Equals("-sdk")) {
                     i = i + 1;
                     sdk_locations.Add(args[i]);
+                } else if (a.Equals("-runtime")) {
+                    i = i + 1;
+                    runtime_locations.Add(args[i]);
                 } else if (a.Equals("--json-output-file")) {
                     i = i + 1;
                     json_outputfile = args[i];
@@ -61,10 +70,14 @@ namespace EifMdConsumer
                     // Ignore as JSON is the default and only format
                 } else if (a.Equals("-halt")) {
                     has_halt = true;
+                } else if (a.Equals("-build_html")) {                    
+                    build_html = true;
                 } else if (a.Equals("-debug")) {
-                    is_debug = true;                    
+                    is_debug = true;     
+                } else if (a.Equals("-silent")) {
+                    is_silent = true;                
                 } else if (a.Equals("-nologo")) {
-                    nologo = true;                    
+                    nologo = true;
                 } else if (a.Equals("--help") || a.Equals("-?")) {
                     is_help = true;
                 } else {
@@ -77,15 +90,20 @@ namespace EifMdConsumer
                 Program.display_help();
                 return 0;
             } else {
-                if (add_assemblies.Count == 0) {
+                if (!(build_html || is_cleaning) && add_assemblies.Count == 0) {
                     Console.WriteLine("Error: no assembly given via -a argument. See usage using --help\n");
                 } else {
                     if (!nologo) {
                         Program.display_logo();
                     }
-                    if (cache_location != null && !Directory.Exists(cache_location)) {
-                        Console.WriteLine("Create cache location \"" + cache_location + "\"");
-                        Directory.CreateDirectory(cache_location);
+                    if (cache_location != null) {
+                        if (is_cleaning && Directory.Exists(cache_location)) {
+                            Directory.Delete(cache_location, true);
+                        }
+                        if (!Directory.Exists(cache_location)) {
+                            Console.WriteLine("Create cache location \"" + cache_location + "\"");
+                            Directory.CreateDirectory(cache_location);
+                        }
                     }
                     // Initialize ASSEMBLY_LOADER
                     md_consumer.ASSEMBLY_LOADER loader = md_consumer.SHARED_ASSEMBLY_LOADER.assembly_loader;
@@ -94,6 +112,7 @@ namespace EifMdConsumer
                     }
                     loader.register_locations(ref_assemblies);
                     loader.register_sdk_locations(sdk_locations);
+                    loader.register_runtime_locations(runtime_locations);
                     
                     StringBuilder o = new StringBuilder();
                     if (cache_location != null) {
@@ -104,6 +123,9 @@ namespace EifMdConsumer
                         List<string> processed = new List<string>(10);
                         foreach (var a in add_assemblies) {
                             var ca = cache.add_assembly_ex(a, has_info_only, ref_assemblies, processed);
+                        }
+                        if (build_html || is_debug) {
+                            cache.build_html();
                         }
                     } else {
                         md = new md_consumer.MdConsumer();
@@ -138,7 +160,7 @@ Copyright Eiffel Software 2006-2022. All Rights Reserved.
             Program.display_logo();
             Console.WriteLine(@"USAGE:
    emdc [-nologo]
-   emdc -a <assembly> [-a...] [-g] [-i <path> [-i...]] [-o <cache>] [-v] [-halt] [-json] [-nologo]
+   emdc -a <assembly> [-a...] [-g] [-i <path> [-i...]] [-sdk <directory>] [-runtime <directory>] [-o <cache>] [-v] [-halt] [-json] [-nologo]
 
 OPTIONS:
    Options should be prefixed with: '-' or '/'
@@ -148,6 +170,10 @@ OPTIONS:
    -g      : Forces consumer to ignore all types in added assemblies. (Optional)
    -i      : Add a lookup reference path for dependency resolution. (Optional)
              <path>: A location on disk
+   -sdk    : Add a SDK location for dependency resolution. (Optional)
+             <path>: A directory location on disk
+   -runtime: Add a runtime location for dependency resolution. (Optional)
+             <path>: A directory location on disk
    -v      : Display verbose output. (Optional)
    -o      : Location of Eiffel assembly cache to perform operations on. (Optional)
              <cache>: A location of an Eiffel assembly cache

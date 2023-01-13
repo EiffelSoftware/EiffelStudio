@@ -496,12 +496,20 @@ namespace md_consumer
             arguments = base.method_arguments (cons);
             is_public = cons.IsPublic;
         }
-        public CONSUMED_CONSTRUCTOR consumed_constructor()
+        public CONSUMED_CONSTRUCTOR? consumed_constructor()
         {
             Debug.Assert(name != null, "has attached name");
             Type? declaring_type = internal_constructor.DeclaringType;
             Debug.Assert(declaring_type != null, "has type");
-            return new CONSUMED_CONSTRUCTOR(name, arguments, is_public, shared_assembly_mapping.referenced_type_from_type(declaring_type));
+            if (declaring_type != null) {
+                var en = name;
+                if (en == null) {
+                    en = internal_constructor.Name;
+                }
+                return new CONSUMED_CONSTRUCTOR(en, arguments, is_public, shared_assembly_mapping.referenced_type_from_type(declaring_type));
+            } else {
+                return null;
+            }
         }
 
         public bool is_less (CONSTRUCTOR_SOLVER other)

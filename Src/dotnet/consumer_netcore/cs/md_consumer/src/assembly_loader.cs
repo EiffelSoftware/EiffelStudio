@@ -21,6 +21,7 @@ namespace md_consumer
     {
         MetadataLoadContext? md_context;
         public List<string> locations;
+        public List<string> side_locations;
         Dictionary<string,Assembly?> loaded_assemblies;
         List<string> ignored_assemblies;
         private bool is_debug=false;
@@ -28,16 +29,17 @@ namespace md_consumer
         public ASSEMBLY_LOADER(List<string>? locs)
         {
             locations = new List<string>(0);
+            side_locations = new List<string>(0);
             loaded_assemblies = new Dictionary<string,Assembly?>(1);
             ignored_assemblies = new List<string>(0);
                 
             register_locations(locs);
 
-            foreach (AssemblyName an in System.Reflection.Assembly.GetExecutingAssembly().GetReferencedAssemblies()) {
-                Assembly asm = System.Reflection.Assembly.Load(an.ToString());
-                loaded_assemblies[an.ToString()] = asm;
-                loaded_assemblies[asm.Location] = asm;
-            }
+            // foreach (AssemblyName an in System.Reflection.Assembly.GetExecutingAssembly().GetReferencedAssemblies()) {
+            //     Assembly asm = System.Reflection.Assembly.Load(an.ToString());
+            //     loaded_assemblies[an.ToString()] = asm;
+            //     loaded_assemblies[asm.Location] = asm;
+            // }
         }
         public void set_is_debug (bool b)
         {
@@ -47,6 +49,25 @@ namespace md_consumer
         {
             register_locations (locs);
         }
+        public void register_runtime_locations(List<string>? locs)
+        {
+            register_locations (locs);
+            if (locs != null) {
+                    // Search for other runtime folder, to resolve the location of specific assemblies (such as System.IO.Port, ...)
+                foreach (var loc in locs) {
+                    var fdn = Path.GetDirectoryName(Path.GetDirectoryName(loc)); // parent of parent
+                    var fn = Path.GetFileName(loc);
+                    if (fdn != null) {
+                        foreach (var d in Directory.GetDirectories(fdn)) {
+                            var ndn = Path.Join(d, fn);
+                            if (Directory.Exists(ndn)) {
+                                register_side_location(ndn);
+                            }
+                        }
+                    }
+                }
+            }
+        }        
         public void register_locations(List<string>? locs)
         {
             if (locs != null && locs.Count > 0) {
@@ -60,7 +81,13 @@ namespace md_consumer
             if (!locations.Contains(loc)) {
                 locations.Add (loc);
             }
-        }        
+        }     
+        public void register_side_location(string loc)
+        {
+            if (!side_locations.Contains(loc)) {
+                side_locations.Add (loc);
+            }
+        }              
         public Assembly? loaded_assembly (string n)
         {
             if (loaded_assemblies.ContainsKey(n)) {
@@ -148,9 +175,16 @@ namespace md_consumer
                         } else {
                             // Console.WriteLine(String.Format("Location already in resolver paths: {0}", location));
                         }
+
+                        if (side_locations != null && side_locations.Count > 0) {
+                            /* Register side_location at the last position, so it is used only in last cases */
+                            foreach (string loc in side_locations) {
+                                register_resolver_path (loc, paths, dirs);
+                            }
+                        }
                         // Console.WriteLine("RESOLVER paths:"); foreach(var v in paths) { Console.WriteLine("  - " + v); }
                         var resolver = new PathAssemblyResolverExt(paths, dirs);
-                        mlc = new MetadataLoadContext(resolver);
+                        mlc = new MetadataLoadContext(resolver); //, "netstandard");
                         md_context = mlc;
                     }                       
 

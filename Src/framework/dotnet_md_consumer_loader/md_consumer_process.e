@@ -35,13 +35,19 @@ feature {NONE} -- Initialization
 			not a_runtime_version.is_empty
 		local
 			dir: DIRECTORY
+			p: PATH
+			fut: FILE_UTILITIES
 		do
-			emdc_location :=
-				if attached {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC") as s then
-					create {PATH}.make_from_string (s)
-				else
-					eiffel_layout.emdc_command_name
+			emdc_location := eiffel_layout.emdc_command_name
+			if attached {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC") as s then
+				create p.make_from_string (s)
+				if fut.file_path_exists (p) then
+					emdc_location := p
 				end
+			end
+
+			is_debug := attached {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC_DEBUG") as s and then s.is_case_insensitive_equal ("true")
+
 			cache_location := a_cache_path
 			create dir.make_with_path (a_cache_path)
 			if not dir.exists then
@@ -82,6 +88,9 @@ feature -- Status report
 			Result := exists and then fut.directory_path_exists (cache_location)
 		end
 
+	is_debug: BOOLEAN
+			-- Is debug mode?
+
 	last_error_message: detachable READABLE_STRING_32
 			-- <Precursor>
 
@@ -101,6 +110,7 @@ feature -- XML generation
 			pf: BASE_PROCESS_FACTORY
 			args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			cmd: STRING_32
+			s: STRING_32
 		do
 			create pf
 			create args.make (10)
@@ -128,19 +138,32 @@ feature -- XML generation
 				end
 			end
 			if
-				not eiffel_layout.default_il_environment.installed_sdks.is_empty and then
-				attached eiffel_layout.default_il_environment.installed_sdks.new_cursor as c and then
-				attached c.item as sdk_path
+				attached eiffel_layout.default_il_environment.installed_sdks as l_installed_sdks and then
+				not l_installed_sdks.is_empty
 			then
-				args.extend ("-i")
-				args.extend (sdk_path.name)
-				args.extend ("-i")
-				args.extend (sdk_path.extended ("ref").name)
+				s := Void
+				across
+					l_installed_sdks as i_sdk
+				-- Next line is commented to keep the LAST SDK entry
+--				until s /= Void -- `s` holds the FIRST SDK entry
+				loop
+						--FIXME jfiat [2022/12/16] : why using the first or last ?
+					s := i_sdk.name
+				end
+				if s /= Void then
+					args.extend ("-sdk")
+					args.extend (s)
+				end
 			end
 			if attached execution_environment.item (eiffel_layout.default_il_environment.ise_dotnet_framework_env) as d then
-				args.extend ("-i")
+				args.extend ("-runtime")
 				args.extend (d)
 			end
+
+			if is_debug then
+				args.force ("-debug")
+			end
+			args.force("-silent")
 
 			p := pf.process_launcher (emdc_location.name, args, emdc_location.parent.name)
 

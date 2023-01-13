@@ -106,8 +106,8 @@ feature -- Error handling primitives
 	force_display
 			-- Make sure the user can see the messages we send.
 		do
-			if error_displayer /= Void then
-				error_displayer.force_display
+			if attached error_displayer as ed then
+				ed.force_display
 			end
 		end
 
@@ -299,7 +299,7 @@ invariant
 	warning_list_exists: warning_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

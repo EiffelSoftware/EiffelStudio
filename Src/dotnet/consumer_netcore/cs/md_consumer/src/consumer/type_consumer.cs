@@ -1224,6 +1224,7 @@ namespace md_consumer
 		new protected void initialize_type_consumer(Type t, string en, string dotnet_name)
 		{
 			CONSUMED_REFERENCED_TYPE? parent = null;
+			// Note: `parent` is computed only for full type info ...
 			bool l_force_sealed = false;
 			List<CONSUMED_REFERENCED_TYPE> interfaces = new List<CONSUMED_REFERENCED_TYPE>(0);
 

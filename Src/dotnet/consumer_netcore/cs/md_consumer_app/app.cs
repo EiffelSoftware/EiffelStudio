@@ -85,6 +85,9 @@ namespace EifMdConsumer
                     Console.WriteLine("Ignore parameter: " + args[i]);
                 }
             }
+            if (is_silent) {
+                nologo = true;
+            }
 
             if (is_help) {
                 Program.display_help();

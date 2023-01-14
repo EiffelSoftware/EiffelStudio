@@ -119,6 +119,10 @@ namespace md_consumer
                 writer.WritePropertyName(JSON_NAMES.is_interface); //"is_interface");
                 writer.WriteBooleanValue(true);
             }
+            if (type.parent != null) {
+                writer.WritePropertyName(JSON_NAMES.parent); 
+                serialize_referenced_type_as_object(type.parent);
+            }                  
             if (type.is_deferred()) {
                 writer.WritePropertyName(JSON_NAMES.is_deferred); //"is_deferred");
                 writer.WriteBooleanValue(true);

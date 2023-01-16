@@ -136,7 +136,10 @@ namespace md_consumer
                         eiffel_args = new Dictionary<string,string>();
                         eiffel_names[method.dotnet_name()] = eiffel_args;
                     }
-                    eiffel_args.Add(method.eiffel_name, key_args (method.internal_method.GetParameters(), method.internal_method.ReturnType, method.internal_method.DeclaringType));
+                    eiffel_args.Add(
+                        key_args (method.internal_method.GetParameters(), method.internal_method.ReturnType, method.internal_method.DeclaringType),
+                        method.eiffel_name
+                    );
                 }
             }
 		 	solved = true;
@@ -170,6 +173,8 @@ namespace md_consumer
                     string s = key_args(args, return_type, declaring_type);
                     if (tb.ContainsKey(s)) {
                         return tb[s];
+                    } else {
+                        // FIXME: why?
                     }
                 }
             }

@@ -343,7 +343,7 @@ feature -- Output
 			then
 				create l_data.make_empty (4)
 				if attached seh_catch_type as l_seh_catch_type then
-					l_dis := l_seh_catch_type.render (a_stream, l_data)
+					l_dis := l_seh_catch_type.render (a_stream, l_data, l_sz + a_offset)
 				end
 			end
 			if opcode /= {CIL_INSTRUCTION_OPCODES}.i_label and then
@@ -386,7 +386,7 @@ feature -- Output
 						instructions [{CIL_INSTRUCTION_OPCODES}.index_of (opcode) + 1].operand_type /= {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_single) + 1
 						-- TODO double check if this comparision is ok!!!
 					then
-						l_sz := l_sz + l_operand.render (a_stream, {CIL_INSTRUCTION_OPCODES}.index_of (opcode) + 1,
+						l_sz := l_sz + l_operand.render (a_stream, {CIL_INSTRUCTION_OPCODES}.index_of (opcode),
 								instructions [{CIL_INSTRUCTION_OPCODES}.index_of (opcode) + 1].operand_type,
 								a_result, l_sz + a_offset).to_integer_32
 					end

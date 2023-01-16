@@ -179,6 +179,7 @@ feature -- Access: Signature Generators
 					a_buf [a_offset + l_rv] := {PE_TYPES_ENUM}.ELEMENT_TYPE_PINNED
 					l_rv := l_rv + 1
 				end
+
 				if l_tp.by_ref then
 					a_buf [a_offset + l_rv] := {PE_TYPES_ENUM}.ELEMENT_TYPE_BYREF
 					l_rv := l_rv + 1
@@ -212,7 +213,7 @@ feature -- Access: Signature Generators
 					--    for (int i = 0; i < tp->PointerLevel(); i++)
 					--        buf[offset + rv++] = ELEMENT_TYPE_PTR;
 					--#endif
-				across 0 |..| (l_tp.array_level - 1) as i loop
+				across 0 |..| (l_tp.pointer_level - 1) as i loop
 					a_buf [a_offset + l_rv] := {PE_TYPES_ENUM}.ELEMENT_TYPE_PTR
 					l_rv := l_rv + 1
 				end
@@ -290,12 +291,15 @@ feature -- Access: Signature Generators
 						end
 					end
 				when {CIL_BASIC_TYPE}.void_ then
-					if l_tp.pe_index /= 0 then
-						a_buf [a_offset + l_rv] := {PE_TYPES_ENUM}.ELEMENT_TYPE_CLASS
-						l_rv := l_rv + 1
-						a_buf [a_offset + l_rv] := (l_tp.pe_index |<< 2).to_integer_32 | {PE_TYPEDEF_OR_REF}.TypeRef
-						l_rv := l_rv + 1
-					end
+						if l_tp.pe_index /= 0 then
+							a_buf [a_offset + l_rv] := {PE_TYPES_ENUM}.ELEMENT_TYPE_CLASS
+							l_rv := l_rv + 1
+							a_buf [a_offset + l_rv] := (l_tp.pe_index |<< 2).to_integer_32 | {PE_TYPEDEF_OR_REF}.TypeRef
+							l_rv := l_rv + 1
+						else
+							a_buf [a_offset + l_rv] := {PE_SIGNATURE_GENERATOR}.basic_types [{CIL_BASIC_TYPE}.index_of (l_tp.basic_type)]
+							l_rv := l_rv + 1
+						end
 				else
 						-- fall through
 					a_buf [a_offset + l_rv] := {PE_SIGNATURE_GENERATOR}.basic_types [{CIL_BASIC_TYPE}.index_of (l_tp.basic_type)]
@@ -340,18 +344,18 @@ feature -- Convert
 			create l_rv.make_empty (l_sz.to_integer_32)
 			across 0 |..| (a_size - 1) as i loop
 				if a_buf [i] > 0x3fff then
-					l_rv.force((((a_buf [i] |>> 24) & 0x1f) | 0xc0).to_natural_8, l_pos)
+					l_rv.force ((((a_buf [i] |>> 24) & 0x1f) | 0xc0).to_natural_8, l_pos)
 					l_pos := l_pos + 1
-					l_rv.force(((a_buf [i] |>> 16) & 0xff).to_natural_8, l_pos)
+					l_rv.force (((a_buf [i] |>> 16) & 0xff).to_natural_8, l_pos)
 					l_pos := l_pos + 1
-					l_rv.force(((a_buf [i] |>> 8) & 0xff).to_natural_8, l_pos)
+					l_rv.force (((a_buf [i] |>> 8) & 0xff).to_natural_8, l_pos)
 					l_pos := l_pos + 1
-					l_rv.force((a_buf [i] & 0xff).to_natural_8, l_pos)
+					l_rv.force ((a_buf [i] & 0xff).to_natural_8, l_pos)
 					l_pos := l_pos + 1
 				elseif (a_buf [i] > 0x7f) then
-					l_rv.force(((a_buf [i] |>> 8) | 0x80).to_natural_8, l_pos)
+					l_rv.force (((a_buf [i] |>> 8) | 0x80).to_natural_8, l_pos)
 					l_pos := l_pos + 1
-					l_rv.force((a_buf [i] & 0xff).to_natural_8, l_pos)
+					l_rv.force ((a_buf [i] & 0xff).to_natural_8, l_pos)
 					l_pos := l_pos + 1
 				else
 					l_rv.force (a_buf [i].to_natural_8, l_pos)

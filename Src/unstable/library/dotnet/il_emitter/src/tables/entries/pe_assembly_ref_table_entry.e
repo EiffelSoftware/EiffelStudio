@@ -16,6 +16,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_data (a_flags: INTEGER; a_major, a_minor, a_build, a_revision: NATURAL_16; a_name_index: NATURAL_64; a_key_index: NATURAL_64)
+			-- Defaul value for a_key_index = 0
 		do
 			flags := a_flags
 			major := a_major
@@ -24,6 +25,10 @@ feature {NONE} -- Initialization
 			revision := a_revision
 			create name_index.make_with_index (a_name_index)
 			create public_key_index.make_with_index (a_key_index)
+				-- Create a default culture index.
+			create culture_index.make_with_index (0)
+				-- Create a default hash_index
+			create hash_index.make_with_index (0)
 
 		end
 
@@ -43,10 +48,9 @@ feature -- Access
 
 	name_index: PE_STRING
 
-	culture_index: detachable PE_STRING
+	culture_index: PE_STRING
 
-	hash_index: detachable PE_BLOB
-
+	hash_index: PE_BLOB
 
 feature -- Operations
 
@@ -72,14 +76,14 @@ feature -- Operations
 			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest.to_special, revision, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
 			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_integer_32 (a_dest.to_special, flags, l_bytes.to_integer_32)
-			l_bytes := l_bytes +  4
+			l_bytes := l_bytes + 4
 
 				-- Write public_key_index, name_index, culture_index and hash_index to the buffer and update the number of bytes.
 
- 			l_bytes := l_bytes + public_key_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
- 			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + if attached culture_index as l_ci then l_ci.render (a_sizes, a_dest, l_bytes.to_integer_32) else {NATURAL_64}0 end
-			l_bytes := l_bytes + if attached hash_index as l_hi then l_hi.render (a_sizes, a_dest, l_bytes.to_integer_32) else {NATURAL_64}0 end
+			l_bytes := l_bytes + public_key_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + culture_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + hash_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
 
 				-- Return the total number of bytes written.
 			Result := l_bytes
@@ -109,8 +113,8 @@ feature -- Operations
 
 			l_bytes := l_bytes + public_key_index.get (a_sizes, a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + name_index.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + if attached culture_index as l_ci then l_ci.get (a_sizes, a_src, l_bytes.to_integer_32) else {NATURAL_64}0 end
-			l_bytes := l_bytes + if attached hash_index as l_hi then l_hi.get (a_sizes, a_src, l_bytes.to_integer_32) else {NATURAL_64}0 end
+			l_bytes := l_bytes + culture_index.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + hash_index.get (a_sizes, a_src, l_bytes.to_integer_32)
 
 				-- Return the number of bytes readed.
 			Result := l_bytes

@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-make (has_seh: BOOLEAN; a_flags: INTEGER; a_method_def: NATURAL_64; a_max_stack: INTEGER; a_local_count: INTEGER; a_code_size: INTEGER; a_signature: NATURAL_64)
+	make (has_seh: BOOLEAN; a_flags: INTEGER; a_method_def: NATURAL_64; a_max_stack: INTEGER; a_local_count: INTEGER; a_code_size: INTEGER; a_signature: NATURAL_64)
 		do
 			flags := a_flags
 			hrd_size := 3
@@ -92,13 +92,13 @@ feature -- Access
 				{BYTE_ARRAY_HELPER}.put_array_natural_8_with_natural_64 (l_dest.to_special, (flags & 3).to_natural_64 + (code_size |<< 2), 0)
 			else
 				n := 12
-				{BYTE_ARRAY_HELPER}.put_array_natural_16_with_natural_64 (l_dest.to_special, 0x3000 + (flags & 3).to_natural_64 + if seh_data.is_empty then {NATURAL_64} 0 else seh_data.count.to_natural_64 end, 0)
+				{BYTE_ARRAY_HELPER}.put_array_natural_16_with_natural_64 (l_dest.to_special, 0x3000 + (flags & 0xfff).to_natural_64 + if seh_data.is_empty then {NATURAL_64} 0 else moresects.to_natural_64 end, 0)
 				{BYTE_ARRAY_HELPER}.put_array_natural_16 (l_dest.to_special, max_stack, 2)
 				{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (l_dest.to_special, code_size, 4)
 				{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (l_dest.to_special, signature_token, 8)
 			end
 				-- Todo check
-			a_stream.put_managed_pointer (create {MANAGED_POINTER}.make_from_array (l_dest))
+			a_stream.put_managed_pointer (create {MANAGED_POINTER}.make_from_array (l_dest.subarray (1, n)))
 			check code_not_void: code /= Void end
 			if attached code as l_code then
 				a_stream.put_managed_pointer (create {MANAGED_POINTER}.make_from_array (l_code.subarray (1, code_size.to_integer_32)))
@@ -127,7 +127,7 @@ feature -- Access
 				end
 					-- TODO double check this
 				if l_end >= seh_data.count and then seh_data.count < 21 then
-					l_header := {ARRAY[NATURAL_8]}<<ehtable.to_natural_8, (seh_data.count * 12 + 4).to_natural_8, 0, 0>>
+					l_header := {ARRAY [NATURAL_8]} <<ehtable.to_natural_8, (seh_data.count * 12 + 4).to_natural_8, 0, 0>>
 					a_stream.put_managed_pointer (create {MANAGED_POINTER}.make_from_array (l_header))
 					n := n + 4
 					across 1 |..| seh_data.count as i loop
@@ -157,38 +157,38 @@ feature -- Access
 					end
 				else
 					l_q := seh_data.count * 24 + 4
-					l_header :=	{ARRAY[NATURAL_8]}<<
+					l_header := {ARRAY [NATURAL_8]} <<
 							(ehtable | ehfatformat).to_natural_8,
 							(l_q & 0xff).to_natural_8,
 							((l_q |>> 8) & 0xff).to_natural_8,
 							((l_q |>> 16) & 0xff).to_natural_8
-					>>
+						>>
 					a_stream.put_managed_pointer (create {MANAGED_POINTER}.make_from_array (l_header))
 					n := n + 4
 					across 1 |..| seh_data.count as i loop
-		                l_data := seh_data [i]
-		                create l_bytes.make_filled (0, 1, 24)
-		                l_bytes [1] := l_data.flags.value.to_natural_8
-		                l_bytes [2] := 0
-		                l_bytes [3] := 0
-		                l_bytes [4] := 0
-		                l_bytes [5] := (l_data.try_offset & 0xff).to_natural_8
-		                l_bytes [6] := ((l_data.try_offset |>> 8) & 0xff).to_natural_8
-		                l_bytes [7] := ((l_data.try_offset |>> 16) & 0xff).to_natural_8
-		                l_bytes [8] := ((l_data.try_offset |>> 24) & 0xff).to_natural_8
-		                l_bytes [9] := (l_data.try_length & 0xff).to_natural_8
-		                l_bytes [10] := ((l_data.try_length |>> 8) & 0xff).to_natural_8
-		                l_bytes [11] := ((l_data.try_length |>> 16) & 0xff).to_natural_8
-		                l_bytes [12] := ((l_data.try_length |>> 24) & 0xff).to_natural_8
-		                l_bytes [13] := (l_data.handler_offset & 0xff).to_natural_8
-		                l_bytes [14] := ((l_data.handler_offset |>> 8) & 0xff).to_natural_8
-		                l_bytes [15] := ((l_data.handler_offset |>> 16) & 0xff).to_natural_8
-		                l_bytes [16] := ((l_data.handler_offset |>> 24) & 0xff).to_natural_8
-		                l_bytes [17] := (l_data.handler_length & 0xff).to_natural_8
-		                l_bytes [18] := ((l_data.handler_length |>> 8) & 0xff).to_natural_8
-		                l_bytes [19] := ((l_data.handler_length |>> 16) & 0xff).to_natural_8
-		                l_bytes [20] := ((l_data.handler_length |>> 24) & 0xff).to_natural_8
-		                if (l_data.flags.value & {CIL_SEH_DATA_ENUM}.filter.value) /= 0 then
+						l_data := seh_data [i]
+						create l_bytes.make_filled (0, 1, 24)
+						l_bytes [1] := l_data.flags.value.to_natural_8
+						l_bytes [2] := 0
+						l_bytes [3] := 0
+						l_bytes [4] := 0
+						l_bytes [5] := (l_data.try_offset & 0xff).to_natural_8
+						l_bytes [6] := ((l_data.try_offset |>> 8) & 0xff).to_natural_8
+						l_bytes [7] := ((l_data.try_offset |>> 16) & 0xff).to_natural_8
+						l_bytes [8] := ((l_data.try_offset |>> 24) & 0xff).to_natural_8
+						l_bytes [9] := (l_data.try_length & 0xff).to_natural_8
+						l_bytes [10] := ((l_data.try_length |>> 8) & 0xff).to_natural_8
+						l_bytes [11] := ((l_data.try_length |>> 16) & 0xff).to_natural_8
+						l_bytes [12] := ((l_data.try_length |>> 24) & 0xff).to_natural_8
+						l_bytes [13] := (l_data.handler_offset & 0xff).to_natural_8
+						l_bytes [14] := ((l_data.handler_offset |>> 8) & 0xff).to_natural_8
+						l_bytes [15] := ((l_data.handler_offset |>> 16) & 0xff).to_natural_8
+						l_bytes [16] := ((l_data.handler_offset |>> 24) & 0xff).to_natural_8
+						l_bytes [17] := (l_data.handler_length & 0xff).to_natural_8
+						l_bytes [18] := ((l_data.handler_length |>> 8) & 0xff).to_natural_8
+						l_bytes [19] := ((l_data.handler_length |>> 16) & 0xff).to_natural_8
+						l_bytes [20] := ((l_data.handler_length |>> 24) & 0xff).to_natural_8
+						if (l_data.flags.value & {CIL_SEH_DATA_ENUM}.filter.value) /= 0 then
 							l_bytes [21] := (l_data.filter_offset & 0xff).to_natural_8
 							l_bytes [22] := ((l_data.filter_offset |>> 8) & 0xff).to_natural_8
 							l_bytes [23] := ((l_data.filter_offset |>> 16) & 0xff).to_natural_8

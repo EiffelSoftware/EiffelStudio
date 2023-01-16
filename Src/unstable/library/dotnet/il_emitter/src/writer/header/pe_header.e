@@ -1068,7 +1068,6 @@ feature -- Managed Pointer
 
 				-- res3_size
 			Result.put_integer_32_le (res3_size, offset)
-			offset := offset + {PLATFORM}.integer_32_bytes
 		end
 
 feature -- Measurement

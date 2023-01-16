@@ -628,7 +628,8 @@ feature -- Output
 					 if attached {CIL_TYPE} array_object as l_array_object then
 					 	l_method_ref_type := {PE_MEMBER_REF_PARENT}.TypeSpec
 						create l_buf.make_filled (0, 16)
-						l_dis :=  l_array_object.render (a_stream, l_buf)
+						-- TODO double check offset
+						l_dis :=  l_array_object.render (a_stream, l_buf, 0)
 						l_parent := l_array_object.pe_index
 					 elseif attached {CIL_DATA_CONTAINER} container as l_container then
 					     if l_container.pe_index = 0 then

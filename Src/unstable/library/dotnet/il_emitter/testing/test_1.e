@@ -1,7 +1,7 @@
 note
 	description: "[
-		The first program just calls putchar('A') via pinvoke.
-	]"
+			The first program just calls putchar('A') via pinvoke.
+		]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,13 +25,13 @@ feature -- Access
 			create lib_entry.make ("test1", {PE_LIB}.bits32)
 			working := lib_entry.working_assembly
 
-			create signature_rep.make("putchar", 0, Void)
-			signature_rep.set_return_type(create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
-			signature_rep.add_parameter (create {CIL_PARAM}.make ("ch",create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.i32)))
+			create signature_rep.make ("putchar", 0, Void)
+			signature_rep.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
+			signature_rep.add_parameter (create {CIL_PARAM}.make ("ch", create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.i32)))
 			lib_entry.add_pinvoke_reference (signature_rep, "msvcrt.dll", true)
 
 			create signature_m.make ("$Main", {CIL_QUALIFIERS_ENUM}.managed, working)
-			signature_m.set_return_type(create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
+			signature_m.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
 
 			create start.make (signature_m, create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.private | {CIL_QUALIFIERS_ENUM}.Static | {CIL_QUALIFIERS_ENUM}.hidebysig | {CIL_QUALIFIERS_ENUM}.Cil | {CIL_QUALIFIERS_ENUM}.managed), True)
 
@@ -39,7 +39,7 @@ feature -- Access
 
 			op := {CIL_OPERAND_FACTORY}.character_operand ('A', {CIL_OPERAND_SIZE}.i32)
 			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4, op)
-			start.add_instruction(ins)
+			start.add_instruction (ins)
 
 			create method_name.make (signature_rep)
 
@@ -50,11 +50,11 @@ feature -- Access
 			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void)
 			start.add_instruction (ins)
 
-
 			start.optimize
 
-			lib_entry.dump_output_file ({STRING_32}"test1.il",{CIL_OUTPUT_MODE}.ilasm, False)
-			lib_entry.dump_output_file ({STRING_32}"test1.exe",{CIL_OUTPUT_MODE}.peexe, False)
+			lib_entry.dump_output_file ({STRING_32} "test1.il", {CIL_OUTPUT_MODE}.ilasm, False)
+			lib_entry.dump_output_file ({STRING_32} "test1.exe", {CIL_OUTPUT_MODE}.peexe, False)
 
 		end
+
 end

@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {TEST_8}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -65,14 +64,14 @@ feature -- Test
 			l_sig_write_line.set_return_type (create {CIL_TYPE}.make({CIL_BASIC_TYPE}.Void_))
 			l_sig_write_line.add_parameter (create {CIL_PARAM}.make ("", create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.string)))
 
-			method_main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldstr, {CIL_OPERAND_FACTORY}.string_operand ("Hi There!")))
+			method_main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldstr, {CIL_OPERAND_FACTORY}.string_operand ("Hello there from Eiffel to CIL!")))
 			method_main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_call, {CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (l_sig_write_line))))
 			method_main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void))
 
 			method_main.optimize
 
-			pe_file.dump_output_file ("test_8.il", {CIL_OUTPUT_MODE}.ilasm, false)
-			pe_file.dump_output_file ("test_8.exe", {CIL_OUTPUT_MODE}.peexe, false)
+			pe_file.dump_output_file ("test_8e.il", {CIL_OUTPUT_MODE}.ilasm, false)
+			pe_file.dump_output_file ("test_8e.exe", {CIL_OUTPUT_MODE}.peexe, false)
 
 		end
 

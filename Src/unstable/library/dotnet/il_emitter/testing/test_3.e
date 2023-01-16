@@ -40,10 +40,10 @@ feature -- Test
 			method_name: CIL_METHOD_NAME
 
 		do
-			-- here we have set the ilonly flag, which is another prerequisite for
-			-- being able to make the assembly visible.
-			-- Note I have never tried accessing an EXE file that is tagged this way,
-			-- only DLLs.
+				-- here we have set the ilonly flag, which is another prerequisite for
+				-- being able to make the assembly visible.
+				-- Note I have never tried accessing an EXE file that is tagged this way,
+				-- only DLLs.
 			create lib_entry.make ("test3", {PE_LIB}.il_only | {PE_LIB}.bits32)
 
 			working := lib_entry.working_assembly
@@ -51,9 +51,9 @@ feature -- Test
 			working.add (namespace)
 
 			create cls.make ("cls", create {CIL_QUALIFIERS}.make_with_flags (
-							{CIL_QUALIFIERS_ENUM}.ansi |
-							{CIL_QUALIFIERS_ENUM}.sealed)
-							, -1, -1)
+					{CIL_QUALIFIERS_ENUM}.ansi |
+					{CIL_QUALIFIERS_ENUM}.sealed)
+				, -1, -1)
 			namespace.add (cls)
 
 			create i8_cls.make ("int8[]", create {CIL_QUALIFIERS}.make_with_flags (
@@ -62,8 +62,7 @@ feature -- Test
 					{CIL_QUALIFIERS_ENUM}.ansi |
 					{CIL_QUALIFIERS_ENUM}.sealed |
 					{CIL_QUALIFIERS_ENUM}.value)
-					, 1, 1)
-
+				, 1, 1)
 
 			create ps.make ("pS", create {CIL_TYPE}.make_with_container (i8_cls), create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.public | {CIL_QUALIFIERS_ENUM}.static))
 			create str.make ("Str", create {CIL_TYPE}.make_with_container (i8_cls), create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.public | {CIL_QUALIFIERS_ENUM}.static))
@@ -97,18 +96,17 @@ feature -- Test
 			signature_es.add_parameter (param1)
 
 			create start.make (signature_es,
-											create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.Public |
-													{CIL_QUALIFIERS_ENUM}.Static |
-													{CIL_QUALIFIERS_ENUM}.hidebysig |
-													{CIL_QUALIFIERS_ENUM}.Cil |
-													{CIL_QUALIFIERS_ENUM}.managed), False)
+				create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.Public |
+					{CIL_QUALIFIERS_ENUM}.Static |
+					{CIL_QUALIFIERS_ENUM}.hidebysig |
+					{CIL_QUALIFIERS_ENUM}.Cil |
+					{CIL_QUALIFIERS_ENUM}.managed), False)
 
-
-			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldsflda,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_FIELD_NAME}.make (ps)))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldsflda, {CIL_OPERAND_FACTORY}.complex_operand (create {CIL_FIELD_NAME}.make (ps)))
 			start.add_instruction (ins)
-			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldarg,{CIL_OPERAND_FACTORY}.complex_operand (param1))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldarg, {CIL_OPERAND_FACTORY}.complex_operand (param1))
 			start.add_instruction (ins)
-			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_call,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signature_ep)))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_call, {CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signature_ep)))
 			start.add_instruction (ins)
 			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_pop, Void)
 			start.add_instruction (ins)
@@ -123,27 +121,25 @@ feature -- Test
 			signature_m.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
 
 			create main.make (signature_m,
-											create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.private |
-													{CIL_QUALIFIERS_ENUM}.Static |
-													{CIL_QUALIFIERS_ENUM}.hidebysig |
-													{CIL_QUALIFIERS_ENUM}.Cil |
-													{CIL_QUALIFIERS_ENUM}.managed), True)
+				create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.private |
+					{CIL_QUALIFIERS_ENUM}.Static |
+					{CIL_QUALIFIERS_ENUM}.hidebysig |
+					{CIL_QUALIFIERS_ENUM}.Cil |
+					{CIL_QUALIFIERS_ENUM}.managed), True)
 
 			working.add (main)
 
-			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldsflda,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_FIELD_NAME}.make (str)))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldsflda, {CIL_OPERAND_FACTORY}.complex_operand (create {CIL_FIELD_NAME}.make (str)))
 			main.add_instruction (ins)
-			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_call,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signature_es)))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_call, {CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signature_es)))
 			main.add_instruction (ins)
 			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void)
 			main.add_instruction (ins)
 
-			main.optimize 
-
-
+			main.optimize
 
 			lib_entry.dump_output_file ("test3.il", {CIL_OUTPUT_MODE}.ilasm, False)
-			--lib_entry.dump_output_file ("test1.exe", {CIL_OUTPUT_MODE}.peexe, False)
+			lib_entry.dump_output_file ("test3.exe", {CIL_OUTPUT_MODE}.peexe, False)
 
 		end
 

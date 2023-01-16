@@ -106,9 +106,10 @@ feature -- Test
 			main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_call, {CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signatures))))
 			main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void))
 
-			main.optimize 
+			main.optimize
 
 			lib_entry.dump_output_file ("test7.il", {CIL_OUTPUT_MODE}.ilasm, False)
+			lib_entry.dump_output_file ("test7.exe", {CIL_OUTPUT_MODE}.ilasm, False)
 
 		end
 end

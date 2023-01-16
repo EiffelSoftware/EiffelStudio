@@ -128,11 +128,12 @@ feature -- Test
 			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void)
 			main.add_instruction (ins)
 
-			main.optimize 
+			main.optimize
 
 
 
 			lib_entry.dump_output_file ("test5.il", {CIL_OUTPUT_MODE}.ilasm, False)
+			lib_entry.dump_output_file ("test5.exe", {CIL_OUTPUT_MODE}.ilasm, False)
 
 		end
 end

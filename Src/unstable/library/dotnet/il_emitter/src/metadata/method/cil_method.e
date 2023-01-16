@@ -530,7 +530,7 @@ feature {NONE} -- Implementation
 						l_tp.basic_type = {CIL_BASIC_TYPE}.class_ref
 					then
 						if l_tp.pe_index = 0 then
-							l_res := l_tp.render (a_stream, create {ARRAY [NATURAL_8]}.make_filled (0, 1, 256))
+							l_res := l_tp.render (a_stream, create {ARRAY [NATURAL_8]}.make_filled (0, 1, 256),0)
 						end
 					end
 				end
@@ -542,7 +542,7 @@ feature {NONE} -- Implementation
 						l_tp.basic_type = {CIL_BASIC_TYPE}.class_ref
 					then
 						if l_tp.pe_index = 0 then
-							l_res := l_tp.render (a_stream, create {ARRAY [NATURAL_8]}.make_filled (0, 1, 256))
+							l_res := l_tp.render (a_stream, create {ARRAY [NATURAL_8]}.make_filled (0, 1, 256),0)
 						end
 					end
 				end

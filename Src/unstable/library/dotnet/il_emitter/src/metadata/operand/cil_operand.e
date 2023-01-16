@@ -230,7 +230,7 @@ feature -- Output
 					if attached {CIL_VALUE} ref_value as l_ref_value then
 							-- TODO check if we need to add an offset to index the
 							-- byte array
-						l_sz := l_ref_value.render (a_stream, a_opcode, a_operand_type, a_result).to_integer_32
+						l_sz := l_ref_value.render (a_stream, a_opcode, a_operand_type, a_result, a_offset).to_integer_32
 					end
 				when {CIL_OPERAND_TYPE}.t_int then
 						-- TODO double check
@@ -255,17 +255,17 @@ feature -- Output
 					end
 				when {CIL_OPERAND_TYPE}.t_string then
 
-							-- -Eiffel strings are not null-terminated.
-						create l_str.make_from_string (string_value)
+						-- -Eiffel strings are not null-terminated.
+					create l_str.make_from_string (string_value)
 
-							-- check if this assumtion is correct
-						check not_null_character: not l_str.has ('%U') end
+						-- check if this assumtion is correct
+					check not_null_character: not l_str.has ('%U') end
 
-							--| add the null character
-						l_str.append_character ('%U')
-						l_us_index := l_writer.hash_us (l_str, l_str.count)
-						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_result, l_us_index | ({NATURAL_64}0x70 |<< 24), 0 )
-						l_sz := l_sz + 4
+						--| add the null character
+					l_str.append_character ('%U')
+					l_us_index := l_writer.hash_us (l_str, l_str.count)
+					{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_result, l_us_index | ({NATURAL_64} 0x70 |<< 24), a_offset)
+					l_sz := l_sz + 4
 				end
 				Result := l_sz.to_natural_32
 			end

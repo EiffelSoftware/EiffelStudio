@@ -350,7 +350,7 @@ feature -- Output
 					end
 					create {PE_ASSEMBLY_REF_TABLE_ENTRY} l_table.make_with_data ({PE_ASSEMBLY_FLAGS}.PA_none, major.to_natural_16, minor.to_natural_16, build.to_natural_16, revision.to_natural_16, l_name_index, l_blob_index)
 				else
-					create {PE_ASSEMBLY_DEF_TABLE_ENTRY} l_table.make_with_data ({PE_ASSEMBLY_FLAGS}.PA_none, major.to_natural_16, minor.to_natural_16, build.to_natural_16, revision.to_natural_16, l_name_index)
+					create {PE_ASSEMBLY_DEF_TABLE_ENTRY} l_table.make_with_data ({PE_ASSEMBLY_FLAGS}.PA_none, major.to_natural_16, minor.to_natural_16, build.to_natural_16, revision.to_natural_16, l_name_index, 0)
 				end
 				pe_index := l_writer.add_table_entry (l_table)
 				Result := True

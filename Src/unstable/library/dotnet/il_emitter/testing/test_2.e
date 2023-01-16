@@ -105,10 +105,10 @@ feature -- Access
 			start.add_instruction (ins)
 
 
-			start.optimize 
+			start.optimize
 
 			lib_entry.dump_output_file ("test2.il", {CIL_OUTPUT_MODE}.ilasm, False)
-			--lib_entry.dump_output_file ("test1.exe", {CIL_OUTPUT_MODE}.peexe, False)
+			lib_entry.dump_output_file ("test2.exe", {CIL_OUTPUT_MODE}.peexe, False)
 
 		end
 

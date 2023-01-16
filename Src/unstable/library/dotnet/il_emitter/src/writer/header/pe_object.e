@@ -135,8 +135,9 @@ feature -- Managed Pointer
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
 				-- flags
-			Result.put_integer_32_le (reserved [2], l_pos)
+			Result.put_integer_32_le (flags, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+
 		end
 
 feature -- Measurement

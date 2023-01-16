@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 							create l_val.make_filled (0, 8)
 								-- we create an special object with 8 slots
 								-- since size_t could have 8 bytes.
-							l_dis := l_gen.render (a_stream, l_val)
+							l_dis := l_gen.render (a_stream, l_val, 0)
 							l_gen.set_pe_index ({BYTE_ARRAY_HELPER}.byte_array_to_natural_64 (l_val, 0))
 						end
 					end
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 			l_namespace_index: NATURAL_64
 			l_result: BOOLEAN
 		do
-			if pe_index /= 0 then
+			if pe_index = 0 then
 				if attached {CIL_CLASS} parent as l_class then
 						-- This is a nested class
 					l_result := l_class.pe_dump (a_stream)

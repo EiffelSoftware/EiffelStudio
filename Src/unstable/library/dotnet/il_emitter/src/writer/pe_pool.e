@@ -33,13 +33,11 @@ feature -- Access
 	max_size: NATURAL_64
 
 	base: SPECIAL [NATURAL_8]
-		-- todo double check if we need to use
-		-- SPECIAL instead of ARRAY
+			-- todo double check if we need to use
+			-- SPECIAL instead of ARRAY
 
 	confirm (new_size: NATURAL_64)
 			-- C++ uses ensure
-		require
-			valid_size: size + new_size <= max_size
 		do
 			if size + new_size > max_size then
 				if size + new_size < max_size * 2 then
@@ -75,16 +73,22 @@ feature -- Element Change
 		local
 			l_index: INTEGER
 		do
-			 -- TODO double check if
-			 -- base.copy_data (other: SPECIAL [T], source_index, destination_index, n: INTEGER_32)
-			 -- could replace the following code.
+				-- TODO double check if
+				-- base.copy_data (other: SPECIAL [T], source_index, destination_index, n: INTEGER_32)
+				-- could replace the following code.
 			l_index := a_index
 				-- TODO fixme
 			fixme ("Implement the loop with from since there is no NATURAL_INTERVAL")
-			across 1 |..| a_count.to_integer_32 as ic  loop
-				base [l_index] := ic.to_natural_8
-				l_index := l_index + 1
+			across 1 |..| (a_count).to_integer_32 as ic loop
+				if ic <= a_data.count then
+					base [l_index] := a_data [ic]
+					l_index := l_index + 1
+				else
+					base [l_index] := ('%U').code.to_natural_8
+					l_index := l_index + 1
+				end
 			end
+			base [l_index] := ('%U').code.to_natural_8
 		end
 
 end

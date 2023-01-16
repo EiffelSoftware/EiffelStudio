@@ -359,7 +359,7 @@ feature -- Output
 			Result := True
 		end
 
-	render (a_stream: FILE_STREAM; a_bytes: SPECIAL [NATURAL_8]): NATURAL_8
+	render (a_stream: FILE_STREAM; a_bytes: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_8
 		local
 			l_is_ref: BOOLEAN
 			l_res: BOOLEAN
@@ -385,11 +385,11 @@ feature -- Output
 							create l_table.make_with_data (l_signature)
 							pe_index := l_writer.add_table_entry (l_table)
 						end
-						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24), 0)
+						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24), a_offset)
 					elseif l_is_ref then
-						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttyperef.value |<< 24), 0)
+						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttyperef.value |<< 24), a_offset)
 					else
-						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypedef.value |<< 24), 0)
+						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypedef.value |<< 24), a_offset)
 					end
 					Result := 4
 				when {CIL_BASIC_TYPE}.method_ref then
@@ -404,7 +404,7 @@ feature -- Output
 						create l_table.make_with_data (l_signature)
 						pe_index := l_writer.add_table_entry (l_table)
 					end
-					{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24), 0)
+					{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24), a_offset)
 					Result := 4
 				else
 					if pe_index = 0 then
@@ -416,7 +416,7 @@ feature -- Output
 						create l_table.make_with_data (l_signature)
 						pe_index := l_writer.add_table_entry (l_table)
 					end
-					{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24), 0)
+					{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24), a_offset)
 					Result := 4
 				end
 			end

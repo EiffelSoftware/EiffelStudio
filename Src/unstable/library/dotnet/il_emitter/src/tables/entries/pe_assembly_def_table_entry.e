@@ -15,7 +15,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flags: INTEGER; a_major, a_minor, a_build, a_revision: NATURAL_16; a_name_index: NATURAL_64)
+	make_with_data (a_flags: INTEGER; a_major, a_minor, a_build, a_revision: NATURAL_16; a_name_index: NATURAL_64; a_key_index: NATURAL_64)
+			-- key_index default value = 0
 		do
 			hash_alg_id := DefaultHashAlgId.to_natural_16
 			flags := a_flags
@@ -24,6 +25,8 @@ feature {NONE} -- Initialization
 			build := a_build
 			revision := a_revision
 			create name_index.make_with_index (a_name_index)
+			create public_key_index.make_with_index (a_key_index)
+			create culture_index.make_with_index (0)
 		end
 
 feature -- Access
@@ -36,9 +39,9 @@ feature -- Access
 
 	flags: INTEGER assign set_flags
 
-	public_key_index: detachable PE_BLOB assign set_public_key_index
+	public_key_index: PE_BLOB assign set_public_key_index
 	name_index: PE_STRING
-	culture_index: detachable PE_STRING
+	culture_index: PE_STRING
 
 feature -- flags
 
@@ -94,9 +97,9 @@ feature -- Operations
 
 				-- Write public_key_index, name_index, culture_index to the buffer and update the number of bytes.
 
- 			l_bytes := l_bytes + if attached public_key_index as l_pki then l_pki.render (a_sizes, a_dest, l_bytes.to_integer_32) else {NATURAL_64}0 end
+ 			l_bytes := l_bytes + public_key_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
  			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + if attached culture_index as l_ci then l_ci.render (a_sizes, a_dest, l_bytes.to_integer_32) else {NATURAL_64}0 end
+			l_bytes := l_bytes + culture_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
 
 				-- Return the total number of bytes written.
 			Result := l_bytes
@@ -127,9 +130,9 @@ feature -- Operations
 				-- Get the public_key_index, name_index  culture_index and
 				-- update the number of bytes.
 
-			l_bytes := l_bytes + if attached public_key_index as l_pki then l_pki.get (a_sizes, a_src, l_bytes.to_integer_32) else {NATURAL_64}0 end
+			l_bytes := l_bytes + public_key_index.get (a_sizes, a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + name_index.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + if attached culture_index as l_ci then l_ci.get (a_sizes, a_src, l_bytes.to_integer_32) else {NATURAL_64}0 end
+			l_bytes := l_bytes + culture_index.get (a_sizes, a_src, l_bytes.to_integer_32)
 
 				-- Return the number of bytes readed.
 			Result := l_bytes

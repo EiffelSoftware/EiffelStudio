@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	render (a_stream: FILE_STREAM; a_bytes: SPECIAL [NATURAL_8]): NATURAL_8
+	render (a_stream: FILE_STREAM; a_bytes: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_8
 		local
 			l_system: NATURAL_64
 			l_name: NATURAL_64
@@ -51,7 +51,7 @@ feature -- Output
 						pe_index := l_class.pe_index
 					end
 				end
-				{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | {PE_TABLES}.ttyperef.value |<< 24, 0)
+				{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | {PE_TABLES}.ttyperef.value |<< 24, a_offset)
 				Result := 4
 			end
 		end

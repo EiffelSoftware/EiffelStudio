@@ -139,7 +139,7 @@ feature -- Test
 			main.optimize
 
 			lib_entry.dump_output_file ("test4.il", {CIL_OUTPUT_MODE}.ilasm, False)
-				--lib_entry.dump_output_file ("test1.exe", {CIL_OUTPUT_MODE}.peexe, False)
+			lib_entry.dump_output_file ("test4.exe", {CIL_OUTPUT_MODE}.peexe, False)
 
 		end
 

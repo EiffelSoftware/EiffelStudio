@@ -573,7 +573,7 @@ feature -- Output
 						else
 							create l_member_ref.make_with_tag_and_index (
 													0,
-													if attached container as ll_container then ll_container.pe_index		else {NATURAL_64}0 end)
+													if attached container as ll_container then ll_container.pe_index else {NATURAL_64}0 end)
 
 						end
 						create {PE_MEMBER_REF_TABLE_ENTRY} l_table.make_with_data (l_member_ref, l_function, l_method_signature)

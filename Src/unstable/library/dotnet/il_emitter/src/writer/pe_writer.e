@@ -479,7 +479,7 @@ feature -- Stream functions
 			l_str: STRING_8
 			l_converter: BYTE_ARRAY_CONVERTER
 		do
-			if attached string_map.item (a_utf8) as l_val then
+			if string_map.has_key (a_utf8) and then attached string_map.item (a_utf8) as l_val then
 				Result := l_val
 			else
 				if strings.size = 0 then

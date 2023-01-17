@@ -61,7 +61,7 @@ feature -- Access
 
 			-- we have to first make a pinvoke reference WITHOUT extra args
 
-			create signature_ex.make ("printf", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.vararg, Void)
+			create signature_ex.make ("Write", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.vararg, Void)
 			signature_ex.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.i32))
 			signature_ex.add_parameter (create {CIL_PARAM}.make ("format", create {CIL_TYPE}.make_with_pointer_level ({CIL_BASIC_TYPE}.Void_, 1)))
 			lib_entry.add_pinvoke_reference (signature_ex, "msvcrt.dll", true)
@@ -70,7 +70,7 @@ feature -- Access
 			--  then we make a call site signature that enumerates all the args
 			--  including the ones we are adding as variable length
 			--  this is the one we use in the call
-			create signature_ep.make ("printf", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.vararg, Void)
+			create signature_ep.make ("Write", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.vararg, Void)
 			signature_ep.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.i32))
 			signature_ep.add_parameter (create {CIL_PARAM}.make ("format", create {CIL_TYPE}.make_with_pointer_level ({CIL_BASIC_TYPE}.Void_, 1)))
 			signature_ep.add_vararg_param (create {CIL_PARAM}.make ("A_1", create {CIL_TYPE}.make_with_pointer_level ({CIL_BASIC_TYPE}.Void_, 1)))

@@ -53,6 +53,7 @@ feature -- Operations
 				-- Return the total number of bytes written.
 			Result := l_bytes
 		end
+		
 	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
 		local
 			l_bytes: NATURAL_64

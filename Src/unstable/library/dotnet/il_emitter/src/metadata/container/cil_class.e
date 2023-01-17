@@ -20,7 +20,20 @@ inherit
 			il_src_dump,
 			pe_dump,
 			traverse
+		select
+			il_src_dump,
+			pe_dump,
+			traverse
 		end
+
+	CIL_DATA_CONTAINER
+		rename
+			make as make_container,
+			pe_dump as pe_dump_dc,
+			il_src_dump as il_src_dump_dc,
+			traverse as traverse_dc
+		end
+
 
 	REFACTORING_HELPER
 
@@ -203,9 +216,15 @@ feature -- Status Report
 					l_pe_flags := l_pe_flags | {PE_TYPEDEF_TABLE_ENTRY}.public
 				end
 			end
+
 			if flags.flags & {CIL_QUALIFIERS_ENUM}.sequential /= 0 then
+				l_pe_flags := l_pe_flags | {PE_TYPEDEF_TABLE_ENTRY}.sequentiallayout
+			end
+
+			if flags.flags & {CIL_QUALIFIERS_ENUM}.explicit /= 0 then
 				l_pe_flags := l_pe_flags | {PE_TYPEDEF_TABLE_ENTRY}.explicitlayout
 			end
+
 			if flags.flags & {CIL_QUALIFIERS_ENUM}.sealed /= 0 then
 				l_pe_flags := l_pe_flags | {PE_TYPEDEF_TABLE_ENTRY}.sealed
 			end
@@ -466,9 +485,9 @@ feature {NONE} -- Implementation
 					create {PE_NESTED_CLASS_TABLE_ENTRY} l_table.make_with_data (pe_index, l_enclosing)
 					l_dis := l_writer.add_table_entry (l_table)
 				end
-				if attached {CIL_DATA_CONTAINER} Current as l_dc then
-					l_result := l_dc.pe_dump (a_stream)
-				end
+
+					-- Call the {CIL_DATA_CONTAINER}.pe_dump version.
+				l_result := pe_dump_dc (a_stream)
 					-- properties
 				if not properties.is_empty then
 					l_property_index := l_writer.next_table_index ({PE_TABLES}.tproperty.value.to_integer_32)

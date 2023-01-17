@@ -58,9 +58,9 @@ feature -- Output
 			a_stream.put_string (" {")
 			a_stream.put_new_line
 			a_stream.flush
-			if attached {CIL_DATA_CONTAINER} Current as l_current then
-				Result := l_current.pe_dump (a_stream)
-			end
+				-- Call {CIL_DATA_CONTAINER}.pe_dump
+			Result := pe_dump_dc (a_stream)
+
 			a_stream.put_string ("  .field public specialname rtspecialname ")
 			{CIL_FIELD}.il_src_dump_type_name (a_stream, value_size)
 			a_stream.put_string (" value__")
@@ -113,12 +113,11 @@ feature -- Output
 						create {PE_NESTED_CLASS_TABLE_ENTRY} l_table.make_with_data (pe_index, l_enclosing)
 						l_dis := l_writer.add_table_entry (l_table)
 					end
-					if attached {CIL_DATA_CONTAINER} Current as l_current then
-						Result := l_current.pe_dump (a_stream)
-							-- should only be the enumerations
-					end
+						-- Call {CIL_DATA_CONTAINER}.pe_dump
+					Result := pe_dump_dc (a_stream)
+						-- should only be the enumerations
 					inspect value_size
-					when {CIL_VALUE_SIZE}.i8  then
+					when {CIL_VALUE_SIZE}.i8 then
 						l_tsize := {CIL_BASIC_TYPE}.i8
 					when {CIL_VALUE_SIZE}.i16 then
 						l_tsize := {CIL_BASIC_TYPE}.i16
@@ -139,7 +138,7 @@ feature -- Output
 
 					l_sig_index := l_writer.hash_blob (l_sig, l_sz.item)
 					l_name_index := l_writer.hash_string (l_field.name)
-					create {PE_FIELD_TABLE_ENTRY} l_table.make_with_data ( {PE_FIELD_TABLE_ENTRY}.Public | {PE_FIELD_TABLE_ENTRY}.SpecialName | {PE_FIELD_TABLE_ENTRY}.RTSpecialName, l_name_index, l_sig_index)
+					create {PE_FIELD_TABLE_ENTRY} l_table.make_with_data ({PE_FIELD_TABLE_ENTRY}.Public | {PE_FIELD_TABLE_ENTRY}.SpecialName | {PE_FIELD_TABLE_ENTRY}.RTSpecialName, l_name_index, l_sig_index)
 					pe_index := l_writer.add_table_entry (l_table)
 				end
 			elseif pe_index = 0 then -- !peIndex

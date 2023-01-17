@@ -500,6 +500,7 @@ feature -- Contributor
 				s.append ("<p>To request a <em>university</em> license, please fill in the following form")
 			end
 			s.append (".</p>")
+			s.append ("<p>Please use your university email address, other you may need to provide additional document.</p>")
 			s.append ("<p>We ask you to update the form once a year if you wish to retain the license.</p>")
 			s.append ("</div>")
 		end

@@ -1595,13 +1595,16 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 					end
 				else
-					l_feat := last_type.base_class.feature_with_rout_id (l_info.routine_id)
-					if l_feat /= Void then
-						l_type := l_feat.type
+						-- FIXME: check why last_type could be Void here.
+					if
+						attached last_type as l_last_type and then
+						attached l_last_type.base_class.feature_with_rout_id (l_info.routine_id) as l_base_feat
+					then
+						l_type := l_base_feat.type
 						if not expr_type_visiting then
 							l_as.expr.process (Current)
 							l_text_formatter_decorator.process_symbol_text (ti_dot)
-							l_feat.append_name (l_text_formatter_decorator)
+							l_base_feat.append_name (l_text_formatter_decorator)
 						end
 					else
 						set_error_message ("Could not find routine of a given routine ID in an inherited conversion")
@@ -5157,7 +5160,7 @@ note
 	ca_ignore: "CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

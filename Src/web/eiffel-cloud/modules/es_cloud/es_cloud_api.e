@@ -557,7 +557,7 @@ feature -- Element change license
 				assign_license_to_user (a_license, a_user)
 			end
 			es_cloud_storage.save_license (a_license)
-			notify_updated_license (a_user, Void, a_license)
+			notify_updated_license (a_user, a_license)
 		end
 
 	discard_license (a_license: ES_CLOUD_LICENSE)
@@ -1789,26 +1789,28 @@ feature -- Email processing
 			end
 		end
 
-	notify_updated_license (a_user: detachable CMS_USER; a_email_addr: detachable READABLE_STRING_8; a_license: ES_CLOUD_LICENSE)
+	notify_updated_license (a_cloud_user: detachable ES_CLOUD_USER; a_license: ES_CLOUD_LICENSE)
 		local
 			e: CMS_EMAIL
 			res: PATH
 			s: STRING_8
 			msg: READABLE_STRING_8
+			l_user: CMS_USER
 		do
 			create res.make_from_string ("templates")
+			if a_cloud_user /= Void then
+				l_user := a_cloud_user.cms_user
+			end
 			if attached cms_api.module_theme_resource_location (module, res.extended ("notify_updated_license_email.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
 				tpl.set_value (a_license, "license")
 				tpl.set_value (a_license.expiration_date, "expiration_date")
 				tpl.set_value (a_license.key, "license_key")
 				tpl.set_value (module.license_location (a_license) , "license_key_url")
-				if a_user /= Void then
-					tpl.set_value (a_user, "user")
-					tpl.set_value (a_user.email, "user_email")
-					tpl.set_value (a_user.name, "user_name")
-					tpl.set_value (cms_api.user_display_name (a_user), "profile_name")
-				else
-					tpl.set_value (a_email_addr, "user_email")
+				if l_user /= Void then
+					tpl.set_value (l_user, "user")
+					tpl.set_value (l_user.email, "user_email")
+					tpl.set_value (l_user.name, "user_name")
+					tpl.set_value (cms_api.user_display_name (l_user), "profile_name")
 				end
 				msg := tpl.string
 			else
@@ -1820,21 +1822,14 @@ feature -- Email processing
 				if attached a_license.expiration_date as dt then
 					s.append ("Expiration date: " + cms_api.date_time_to_iso8601_string (dt) + " .%N")
 				end
-				if a_user = Void then
-					if a_email_addr /= Void then
-						s.append ("The license is associated with email %"" + a_email_addr + "%" .%N")
-					else
-						check should_not_occur: False end
-						s.append ("The license is associated with no email and no user!%N")
-					end
-				else
-					s.append ("The license is associated with account %"" + utf_8_encoded (cms_api.user_display_name (a_user)) + " %"")
-					if a_email_addr /= Void then
-						s.append (" (email %"" + a_email_addr + "%")")
+				if l_user /= Void then
+					s.append ("The license is associated with account %"" + utf_8_encoded (cms_api.user_display_name (l_user)) + " %"")
+					if attached l_user.email as l_email_addr then
+						s.append (" (email %"" + l_email_addr + "%")")
 					end
 					s.append (" .%N")
 				end
-				s.append ("Notification from site " + cms_api.site_url + " .%N")
+				s.append ("%NNotification from site " + cms_api.site_url + " .%N")
 				s.replace_substring_all ("%N", "<br/>")
 				msg := s
 			end

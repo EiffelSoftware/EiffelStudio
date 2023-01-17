@@ -557,6 +557,7 @@ feature -- Element change license
 				assign_license_to_user (a_license, a_user)
 			end
 			es_cloud_storage.save_license (a_license)
+			notify_updated_license (a_user, Void, a_license)
 		end
 
 	discard_license (a_license: ES_CLOUD_LICENSE)
@@ -1697,6 +1698,9 @@ feature -- Email processing
 			else
 				create s.make_empty;
 				s.append ("New "+ html_encoded (a_license.plan.title_or_name) +" EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				s.append ("%T")
+				s.append (module.license_location (a_license))
+				s.append ("%N")
 				if a_user = Void then
 					if a_email_addr /= Void then
 						s.append ("The license is associated with email %"" + a_email_addr + "%".%N")
@@ -1707,11 +1711,12 @@ feature -- Email processing
 				else
 					s.append ("The license is associated with account %"" + utf_8_encoded (cms_api.user_display_name (a_user)) + "%"")
 					if a_email_addr /= Void then
-						s.append ("(email %"" + a_email_addr + "%")")
+						s.append (" (email %"" + a_email_addr + "%")")
 					end
 					s.append (".%N")
 				end
-				s.append ("Notification from site " + cms_api.site_url + " .%N")
+				s.append ("%NNotification from site " + cms_api.site_url + " .%N")
+				s.replace_substring_all ("%N", "<br/>")
 				msg := s
 			end
 			create l_info.make_empty
@@ -1752,6 +1757,9 @@ feature -- Email processing
 			else
 				create s.make_empty;
 				s.append ("EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				s.append ("%T")
+				s.append (module.license_location (a_license))
+				s.append ("%N")
 				if attached a_license.expiration_date as dt then
 					s.append ("Extended to date: " + cms_api.date_time_to_iso8601_string (dt) + " .%N")
 				end
@@ -1765,11 +1773,12 @@ feature -- Email processing
 				else
 					s.append ("The license is associated with account %"" + utf_8_encoded (cms_api.user_display_name (a_user)) + " %"")
 					if a_email_addr /= Void then
-						s.append ("(email %"" + a_email_addr + "%")")
+						s.append (" (email %"" + a_email_addr + "%")")
 					end
 					s.append (" .%N")
 				end
 				s.append ("Notification from site " + cms_api.site_url + " .%N")
+				s.replace_substring_all ("%N", "<br/>")
 				msg := s
 			end
 			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Extended EiffelStudio license " + utf_8_encoded (a_license.key), msg)
@@ -1778,6 +1787,63 @@ feature -- Email processing
 				e := cms_api.new_html_email (l_addr, "[NOTIF] Extended EiffelStudio license " + utf_8_encoded (a_license.key), msg)
 				cms_api.process_email (e)
 			end
+		end
+
+	notify_updated_license (a_user: detachable CMS_USER; a_email_addr: detachable READABLE_STRING_8; a_license: ES_CLOUD_LICENSE)
+		local
+			e: CMS_EMAIL
+			res: PATH
+			s: STRING_8
+			msg: READABLE_STRING_8
+		do
+			create res.make_from_string ("templates")
+			if attached cms_api.module_theme_resource_location (module, res.extended ("notify_updated_license_email.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
+				tpl.set_value (a_license, "license")
+				tpl.set_value (a_license.expiration_date, "expiration_date")
+				tpl.set_value (a_license.key, "license_key")
+				tpl.set_value (module.license_location (a_license) , "license_key_url")
+				if a_user /= Void then
+					tpl.set_value (a_user, "user")
+					tpl.set_value (a_user.email, "user_email")
+					tpl.set_value (a_user.name, "user_name")
+					tpl.set_value (cms_api.user_display_name (a_user), "profile_name")
+				else
+					tpl.set_value (a_email_addr, "user_email")
+				end
+				msg := tpl.string
+			else
+				create s.make_empty;
+				s.append ("Updated EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				s.append ("%T")
+				s.append (module.license_location (a_license))
+				s.append ("%N")
+				if attached a_license.expiration_date as dt then
+					s.append ("Expiration date: " + cms_api.date_time_to_iso8601_string (dt) + " .%N")
+				end
+				if a_user = Void then
+					if a_email_addr /= Void then
+						s.append ("The license is associated with email %"" + a_email_addr + "%" .%N")
+					else
+						check should_not_occur: False end
+						s.append ("The license is associated with no email and no user!%N")
+					end
+				else
+					s.append ("The license is associated with account %"" + utf_8_encoded (cms_api.user_display_name (a_user)) + " %"")
+					if a_email_addr /= Void then
+						s.append (" (email %"" + a_email_addr + "%")")
+					end
+					s.append (" .%N")
+				end
+				s.append ("Notification from site " + cms_api.site_url + " .%N")
+				s.replace_substring_all ("%N", "<br/>")
+				msg := s
+			end
+			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Updated EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			cms_api.process_email (e)
+--			if attached config.additional_notification_email as l_addr then
+--				e := cms_api.new_html_email (l_addr, "[NOTIF] Updated EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+--				cms_api.process_email (e)
+--			end
 		end
 
 	notify_redeemed_license (a_user: detachable CMS_USER; a_email_addr: detachable READABLE_STRING_8; a_license: ES_CLOUD_LICENSE; a_redeem_token: ES_CLOUD_REDEEM_TOKEN)
@@ -1806,6 +1872,9 @@ feature -- Email processing
 			else
 				create s.make_empty;
 				s.append ("EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				s.append ("%T")
+				s.append (module.license_location (a_license))
+				s.append ("%N")
 				s.append ("Redeem token: " + html_encoded (a_redeem_token.name))
 				if attached a_redeem_token.origin as l_orig then
 					s.append (" from [" + html_encoded (l_orig) + "]")
@@ -1825,11 +1894,12 @@ feature -- Email processing
 				else
 					s.append ("The license is associated with account %"" + utf_8_encoded (cms_api.user_display_name (a_user)) + " %"")
 					if a_email_addr /= Void then
-						s.append ("(email %"" + a_email_addr + "%")")
+						s.append (" (email %"" + a_email_addr + "%")")
 					end
 					s.append (" .%N")
 				end
 				s.append ("Notification from site " + cms_api.site_url + " .%N")
+				s.replace_substring_all ("%N", "<br/>")
 				msg := s
 			end
 			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Redeemed EiffelStudio license " + utf_8_encoded (a_license.key), msg)

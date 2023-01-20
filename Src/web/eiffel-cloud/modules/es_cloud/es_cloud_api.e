@@ -1699,7 +1699,7 @@ feature -- Email processing
 				create s.make_empty;
 				s.append ("New "+ html_encoded (a_license.plan.title_or_name) +" EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
 				s.append ("%T")
-				s.append (module.license_location (a_license))
+				s.append (cms_api.absolute_url (module.license_location (a_license), Void))
 				s.append ("%N")
 				if a_user = Void then
 					if a_email_addr /= Void then
@@ -1758,7 +1758,7 @@ feature -- Email processing
 				create s.make_empty;
 				s.append ("EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
 				s.append ("%T")
-				s.append (module.license_location (a_license))
+				s.append (cms_api.absolute_url (module.license_location (a_license), Void))
 				s.append ("%N")
 				if attached a_license.expiration_date as dt then
 					s.append ("Extended to date: " + cms_api.date_time_to_iso8601_string (dt) + " .%N")
@@ -1817,7 +1817,7 @@ feature -- Email processing
 				create s.make_empty;
 				s.append ("Updated EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
 				s.append ("%T")
-				s.append (module.license_location (a_license))
+				s.append (cms_api.absolute_url (module.license_location (a_license), Void))
 				s.append ("%N")
 				if attached a_license.expiration_date as dt then
 					s.append ("Expiration date: " + cms_api.date_time_to_iso8601_string (dt) + " .%N")
@@ -1868,7 +1868,7 @@ feature -- Email processing
 				create s.make_empty;
 				s.append ("EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
 				s.append ("%T")
-				s.append (module.license_location (a_license))
+				s.append (cms_api.absolute_url (module.license_location (a_license), Void))
 				s.append ("%N")
 				s.append ("Redeem token: " + html_encoded (a_redeem_token.name))
 				if attached a_redeem_token.origin as l_orig then

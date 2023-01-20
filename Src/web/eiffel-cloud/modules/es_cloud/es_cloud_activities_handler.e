@@ -185,11 +185,6 @@ feature -- Execution
 							l_sessions /= Void and then
 							not l_sessions.is_empty
 						then
-							if l_session /= Void then
-								s.append (" <span class=%"access datetime_ago%" datetime=%""+ date_time_to_timestamp_string (l_session.last_date) +"%" title=%"" + date_time_to_string (l_session.last_date) + "%">")
-								ago.append_date_to ("", l_session.last_date, s)
-								s.append ("</span>")
-							end
 							s.append ("<ul><!-- sessions -->")
 							across
 								l_sessions as sess_ic
@@ -200,6 +195,10 @@ feature -- Execution
 								end
 							end
 							s.append ("</ul>")
+						elseif l_session /= Void then
+							s.append (" <span class=%"access datetime_ago%" datetime=%""+ date_time_to_timestamp_string (l_session.last_date) +"%" title=%"" + date_time_to_string (l_session.last_date) + "%">")
+							ago.append_date_to ("", l_session.last_date, s)
+							s.append ("</span>")
 						end
 						s.append ("</li>%N")
 					end

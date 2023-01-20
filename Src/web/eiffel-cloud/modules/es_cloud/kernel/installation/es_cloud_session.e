@@ -70,7 +70,7 @@ feature -- Access
 		do
 			if attached data as l_data then
 				create jp.make
-				jp.parse_string (l_data)
+				jp.parse_string (l_data.to_string_8)
 				if
 					attached jp.parsed_json_object as jo and then
 					attached {JSON_STRING} (jo / a_name) as jv

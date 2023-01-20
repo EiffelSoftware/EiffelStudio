@@ -85,7 +85,10 @@ feature -- Execution
 
 			if api.has_permission ({ES_CLOUD_MODULE}.perm_view_any_es_activities) or l_own_data then
 				if l_license /= Void then
-					s.append ("<p class=%"es-message%">License <strong>" + html_encoded (l_license.plan.title_or_name) + "</strong> "+ api.html_encoded (l_license.key))
+					s.append ("<p class=%"es-message%">License <strong>" + html_encoded (l_license.plan.title_or_name) + "</strong> ")
+					s.append ("<a href=%"" + api.location_url (es_cloud_api.module.license_location (l_license), Void) + "%">")
+					s.append (html_encoded (l_license.key))
+					s.append ("</a>")
 					if l_license_user /= Void then
 						s.append ("<br/>(account "+ api.html_encoded (api.real_user_display_name (l_license_user)) + ")")
 					end
@@ -166,6 +169,10 @@ feature -- Execution
 									append_session_to_html (Void, l_session, s, ago)
 									s.append ("<li class=%"description%">Note: Only the last session is shown.</li>")
 									s.append ("</ul>")
+								else
+									s.append (" <span class=%"access datetime_ago%" datetime=%""+ date_time_to_timestamp_string (l_session.last_date) +"%" title=%"" + date_time_to_string (l_session.last_date) + "%">")
+									ago.append_date_to ("", l_session.last_date, s)
+									s.append ("</span>")
 								end
 							end
 						elseif

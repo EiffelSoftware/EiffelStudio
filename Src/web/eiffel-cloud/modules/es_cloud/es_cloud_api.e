@@ -1781,10 +1781,10 @@ feature -- Email processing
 				s.replace_substring_all ("%N", "<br/>")
 				msg := s
 			end
-			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Extended EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Extended " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key), msg)
 			cms_api.process_email (e)
 			if attached config.additional_notification_email as l_addr then
-				e := cms_api.new_html_email (l_addr, "[NOTIF] Extended EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+				e := cms_api.new_html_email (l_addr, "[NOTIF] Extended " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key), msg)
 				cms_api.process_email (e)
 			end
 		end
@@ -1833,7 +1833,7 @@ feature -- Email processing
 				s.replace_substring_all ("%N", "<br/>")
 				msg := s
 			end
-			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Updated EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Updated " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key), msg)
 			cms_api.process_email (e)
 --			if attached config.additional_notification_email as l_addr then
 --				e := cms_api.new_html_email (l_addr, "[NOTIF] Updated EiffelStudio license " + utf_8_encoded (a_license.key), msg)
@@ -1897,10 +1897,10 @@ feature -- Email processing
 				s.replace_substring_all ("%N", "<br/>")
 				msg := s
 			end
-			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Redeemed EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Redeemed " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key), msg)
 			cms_api.process_email (e)
 			if attached config.additional_notification_email as l_addr then
-				e := cms_api.new_html_email (l_addr, "[NOTIF] Redeemed EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+				e := cms_api.new_html_email (l_addr, "[NOTIF] Redeemed " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key), msg)
 				cms_api.process_email (e)
 			end
 		end

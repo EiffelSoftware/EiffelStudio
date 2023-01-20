@@ -47,7 +47,7 @@ feature -- Execution
 		local
 			l_active_user, l_license_user, l_user: ES_CLOUD_USER
 			r: like new_generic_response
-			s: STRING
+			s, sub: STRING
 			l_session: detachable ES_CLOUD_SESSION
 			l_sessions: detachable LIST [ES_CLOUD_SESSION]
 			inst: ES_CLOUD_INSTALLATION
@@ -185,16 +185,26 @@ feature -- Execution
 							l_sessions /= Void and then
 							not l_sessions.is_empty
 						then
-							s.append ("<ul><!-- sessions -->")
+							create sub.make_empty
 							across
 								l_sessions as sess_ic
 							loop
 								l_session := sess_ic.item
 								if l_display_all or not (l_session.is_ended or l_session.is_expired (es_cloud_api)) then
-									append_session_to_html (Void, l_session, s, ago)
+									append_session_to_html (Void, l_session, sub, ago)
 								end
 							end
-							s.append ("</ul>")
+							if sub.is_whitespace then
+								if l_session /= Void then
+									s.append (" <span class=%"access datetime_ago%" datetime=%""+ date_time_to_timestamp_string (l_session.last_date) +"%" title=%"" + date_time_to_string (l_session.last_date) + "%">")
+									ago.append_date_to ("", l_session.last_date, s)
+									s.append ("</span>")
+								end
+							else
+								s.append ("<ul><!-- sessions -->")
+								s.append (sub)
+								s.append ("</ul>")
+							end
 						elseif l_session /= Void then
 							s.append (" <span class=%"access datetime_ago%" datetime=%""+ date_time_to_timestamp_string (l_session.last_date) +"%" title=%"" + date_time_to_string (l_session.last_date) + "%">")
 							ago.append_date_to ("", l_session.last_date, s)

@@ -1,7 +1,7 @@
 note
 	description: "[
-		Value is a local variable.
-	]"
+			Value is a local variable.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,20 +21,19 @@ inherit
 create
 	make
 
-feature {NONE}-- Initialization
+feature {NONE} -- Initialization
 
 	make (a_name: STRING_32; a_type: detachable CIL_TYPE)
 		do
-			make_value(a_name, a_type)
+			make_value (a_name, a_type)
 			uses := 0
 			index := -1
 		ensure
-			uses_set : uses = 0
+			uses_set: uses = 0
 			index_set: index = -1
 		end
 
 feature -- Access
-
 
 	uses: INTEGER
 
@@ -71,7 +70,6 @@ feature -- Output
 			Result := True
 		end
 
-
 	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_result: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_64
 		local
 			l_sz: INTEGER
@@ -79,10 +77,11 @@ feature -- Output
 			if a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_index1) then
 				{BYTE_ARRAY_HELPER}.put_array_natural_8_with_integer_32 (a_result, index, a_offset)
 				l_sz := 1
-			elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_index2)  then
+			elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_index2) then
 				{BYTE_ARRAY_HELPER}.put_array_natural_16_with_integer_32 (a_result, index, a_offset)
 				l_sz := 2
 			end
 			Result := l_sz.to_natural_64
 		end
+
 end

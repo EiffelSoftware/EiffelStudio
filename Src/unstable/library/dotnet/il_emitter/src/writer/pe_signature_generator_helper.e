@@ -119,6 +119,7 @@ feature -- Access: Signature Generators
 				-- local sig
 			l_size := l_size + 1
 			signature_generator.work_area [l_size] := a_method.var_list.count
+			l_size := l_size + 1
 				-- todo check if we need to create an size or count feature in CIL_METHOD
 				-- to avoid call to var_list.count
 

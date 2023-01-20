@@ -221,7 +221,7 @@ feature --Element Change
 
 	number (n: NATURAL): NATURAL
 		do
-			if attached {CIL_NAMESPACE} Current then
+			if not (attached {CIL_NAMESPACE} Current) then
 				Result := n + 1
 				pe_index := Result
 			end

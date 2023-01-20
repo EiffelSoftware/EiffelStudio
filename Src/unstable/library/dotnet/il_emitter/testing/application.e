@@ -41,7 +41,7 @@ feature -- Initialization
 --			test_guid;
 --			(create {TEST_1}).test;
 --			(create {TEST_2}).test;
-			(create {TEST_3}).test;
+--			(create {TEST_3}).test;
 --			(create {TEST_4}).test;
 --			(create {TEST_5}).test;
 --			(create {TEST_6}).test;

@@ -368,57 +368,88 @@ feature -- Output
 			l_signature: NATURAL_64
 			l_table: PE_TYPE_SPEC_TABLE_ENTRY
 		do
-			if attached {CIL_DATA_CONTAINER}type_ref as l_type_ref and then
+			if attached {CIL_DATA_CONTAINER} type_ref as l_type_ref and then
 				attached {PE_WRITER} a_stream.pe_writer as l_writer then
 				inspect basic_type
 				when {CIL_BASIC_TYPE}.class_ref then
-						-- this one generate newarr [NAppCore]NAppCore/Thread*	
-					l_is_ref := l_type_ref.in_assembly_ref
-					if l_is_ref then
-						l_res := l_type_ref.pe_dump (a_stream)
-					end
-					if show_type then
-						if pe_index = 0 then
-							create l_sz.put (0)
-							l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.type_sig (Current, l_sz)
-							l_signature := l_writer.hash_blob (l_sig, l_sz.item)
-							create l_table.make_with_data (l_signature)
-							pe_index := l_writer.add_table_entry (l_table)
-						end
-						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24), a_offset)
-					elseif l_is_ref then
-						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttyperef.value |<< 24), a_offset)
-					else
-						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypedef.value |<< 24), a_offset)
-					end
+					render_class (a_stream, l_writer, l_type_ref, a_bytes, a_offset)
+						-- this one generate newarr [NAppCore]NAppCore/Thread*
+--					l_is_ref := l_type_ref.in_assembly_ref
+--					if l_is_ref then
+--						l_res := l_type_ref.pe_dump (a_stream)
+--					end
+--					if show_type then
+--						if pe_index = 0 then
+--							create l_sz.put (0)
+--							l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.type_sig (Current, l_sz)
+--							l_signature := l_writer.hash_blob (l_sig, l_sz.item)
+--							create l_table.make_with_data (l_signature)
+--							pe_index := l_writer.add_table_entry (l_table)
+--						end
+--						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24), a_offset)
+--					elseif l_is_ref then
+--						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttyperef.value |<< 24), a_offset)
+--					else
+--						{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypedef.value |<< 24), a_offset)
+--					end
 					Result := 4
 				when {CIL_BASIC_TYPE}.method_ref then
 						-- TODO refactor
 						-- since this code is the same for a default case.
 					if pe_index = 0 then
-						-- if rendering a method as a type we are always going to put the sig
-                		-- in the type spec table.
-                		create l_sz.put (0)
-                		l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.type_sig (Current, l_sz)
+							-- if rendering a method as a type we are always going to put the sig
+							-- in the type spec table.
+						create l_sz.put (0)
+						l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.type_sig (Current, l_sz)
 						l_signature := l_writer.hash_blob (l_sig, l_sz.item)
 						create l_table.make_with_data (l_signature)
 						pe_index := l_writer.add_table_entry (l_table)
 					end
-					{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24), a_offset)
+					{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24).to_natural_64, a_offset)
 					Result := 4
 				else
 					if pe_index = 0 then
 							-- if rendering a method as a type we are always going to put the sig
-				            -- in the type spec table.
-			            create l_sz.put (0)
-			            l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.type_sig (Current, l_sz)
+							-- in the type spec table.
+						create l_sz.put (0)
+						l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.type_sig (Current, l_sz)
 						l_signature := l_writer.hash_blob (l_sig, l_sz.item)
 						create l_table.make_with_data (l_signature)
 						pe_index := l_writer.add_table_entry (l_table)
 					end
-					{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24), a_offset)
+					{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24).to_natural_64, a_offset)
 					Result := 4
 				end
+			end
+		end
+
+	render_class (a_stream: FILE_STREAM; a_writer: PE_WRITER; a_type_ref: CIL_DATA_CONTAINER; a_bytes: SPECIAL [NATURAL_8]; a_offset: INTEGER)
+		local
+			l_is_ref: BOOLEAN
+			l_res: BOOLEAN
+			l_sig: ARRAY [NATURAL_8]
+			l_sz: CELL [NATURAL_64]
+			l_signature: NATURAL_64
+			l_table: PE_TYPE_SPEC_TABLE_ENTRY
+		do
+				-- this one generate newarr [NAppCore]NAppCore/Thread*
+			l_is_ref := a_type_ref.in_assembly_ref
+			if l_is_ref then
+				l_res := a_type_ref.pe_dump (a_stream)
+			end
+			if show_type then
+				if pe_index = 0 then
+					create l_sz.put (0)
+					l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.type_sig (Current, l_sz)
+					l_signature := a_writer.hash_blob (l_sig, l_sz.item)
+					create l_table.make_with_data (l_signature)
+					pe_index := a_writer.add_table_entry (l_table)
+				end
+				{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec.value |<< 24).to_natural_64, a_offset)
+			elseif l_is_ref then
+				{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, a_type_ref.pe_index | ({PE_TABLES}.ttyperef.value |<< 24).to_natural_64, a_offset)
+			else
+				{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, a_type_ref.pe_index | ({PE_TABLES}.ttypedef.value |<< 24).to_natural_64, a_offset)
 			end
 		end
 

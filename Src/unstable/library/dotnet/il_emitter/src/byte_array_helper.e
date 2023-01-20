@@ -26,10 +26,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.natural_8_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_8_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_8_bytes)
 		ensure
 			instance_free: class
@@ -43,10 +43,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.integer_32_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_32_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_8_bytes)
 		ensure
 			instance_free: class
@@ -60,10 +60,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.integer_64_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_64_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_8_bytes)
 		ensure
 			instance_free: class
@@ -77,10 +77,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.natural_64_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_64_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_8_bytes)
 		ensure
 			instance_free: class
@@ -95,10 +95,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.natural_16_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_16_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_16_bytes)
 		ensure
 			instance_free: class
@@ -112,10 +112,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.natural_32_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_32_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_16_bytes)
 		ensure
 			instance_free: class
@@ -129,10 +129,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.integer_32_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_32_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_16_bytes)
 		ensure
 			instance_free: class
@@ -146,10 +146,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.natural_64_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_64_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_16_bytes)
 		ensure
 			instance_free: class
@@ -163,10 +163,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.natural_32_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_32_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_32_bytes)
 		ensure
 			instance_free: class
@@ -180,10 +180,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.natural_64_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_64_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_32_bytes)
 		ensure
 			instance_free: class
@@ -197,10 +197,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.integer_32_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_32_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_32_bytes)
 		ensure
 			instance_free: class
@@ -214,10 +214,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.natural_64_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_64_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_64_bytes)
 		ensure
 			instance_free: class
@@ -231,10 +231,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.integer_8_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_8_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.integer_8_bytes)
 		ensure
 			instance_free: class
@@ -248,10 +248,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.integer_16_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_16_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.integer_16_bytes)
 		ensure
 			instance_free: class
@@ -265,10 +265,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.integer_32_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_32_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.integer_32_bytes)
 		ensure
 			instance_free: class
@@ -282,10 +282,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.natural_64_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_64_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.integer_32_bytes)
 		ensure
 			instance_free: class
@@ -299,10 +299,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.integer_64_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_64_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.integer_32_bytes)
 		ensure
 			instance_free: class
@@ -316,7 +316,7 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.integer_64_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_64_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
@@ -333,10 +333,10 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.real_64_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_real_64_le (a_value, a_pos)
-			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
 			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.real_32_bytes)
 		ensure
 			instance_free: class
@@ -350,7 +350,7 @@ feature -- Element Change
 			l_mp: MANAGED_POINTER
 		do
 			create l_arr.make_from_special (a_arr)
-			create l_mp.make (l_arr.count + a_pos)
+			create l_mp.make (l_arr.count + a_pos + {PLATFORM}.real_64_bytes)
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_real_64_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)

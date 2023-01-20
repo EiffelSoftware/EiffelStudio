@@ -87,7 +87,7 @@ feature -- Access
 			-- Multimap is an associative container that contains a sorted list of key-value pairs, while permitting multiple entries with the same key.
 			-- Sorting is done according to the comparison function Compare, applied to the keys. Search, insertion, and removal operations have logarithmic complexity.
 
-	assembly_name: STRING_32
+	assembly_name: STRING_32 assign set_assembly_name
 
 	output_stream: detachable FILE_STREAM
 
@@ -604,6 +604,14 @@ feature -- Assembly
 			lib_path_set: lib_path = a_paths
 		end
 
+	set_assembly_name (a_name: STRING_32)
+			-- Set assembly_name with `a_name`.
+		do
+			assembly_name := a_name
+		ensure
+			assembly_name_set: assembly_name.same_string_general (a_name)
+		end
+
 feature -- Element Change
 
 	add_using (a_path: STRING_32): BOOLEAN
@@ -692,8 +700,9 @@ feature -- Output
 			when {CIL_OUTPUT_MODE}.ilasm then
 				rv := il_src_dump
 			when {CIL_OUTPUT_MODE}.peexe then
-				rv := dump_pe_file (a_file_name, true, a_gui)
+				rv := dump_pe_file (a_file_name, True, a_gui)
 			when {CIL_OUTPUT_MODE}.pedll then
+				rv := dump_pe_file (a_file_name, False, a_gui)
 			when {CIL_OUTPUT_MODE}.object then
 				rv := obj_out
 			else

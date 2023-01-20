@@ -386,6 +386,8 @@ feature -- Output
 					a_file.flush
 				end
 				if not var_list.is_empty then
+						-- TODO
+						-- heck section I I.15.4.1.3 The . locals directive
 					a_file.put_string ("%T.locals (")
 					a_file.put_new_line
 					a_file.flush
@@ -408,17 +410,18 @@ feature -- Output
 							Result := l_type.il_src_dump (a_file)
 						end
 						a_file.put_string (" ")
-
+						Result := it.il_src_dump (a_file)
 						if @ it.cursor_index + 1 /= @ it.last_index then
-							a_file.put_string (",")
+							--a_file.put_string (")")
 							a_file.put_new_line
 							a_file.flush
 						else
+							a_file.put_string (",")
 							a_file.put_new_line
 							a_file.flush
 						end
 					end
-					a_file.put_string ("%T")
+					a_file.put_string ("%T)")
 					a_file.put_new_line
 					a_file.flush
 				end
@@ -446,7 +449,7 @@ feature -- Output
 
 	pe_dump (a_stream: FILE_STREAM): BOOLEAN
 		do
-			if is_pinvoke and then in_assembly_ref then
+			if not is_pinvoke and then in_assembly_ref then
 				Result := prototype.pe_dump (a_stream, False)
 			else
 				if attached rendering then
@@ -530,7 +533,7 @@ feature {NONE} -- Implementation
 						l_tp.basic_type = {CIL_BASIC_TYPE}.class_ref
 					then
 						if l_tp.pe_index = 0 then
-							l_res := l_tp.render (a_stream, create {ARRAY [NATURAL_8]}.make_filled (0, 1, 256),0)
+							l_res := l_tp.render (a_stream, create {SPECIAL [NATURAL_8]}.make_filled (0, 256), 0)
 						end
 					end
 				end
@@ -542,14 +545,15 @@ feature {NONE} -- Implementation
 						l_tp.basic_type = {CIL_BASIC_TYPE}.class_ref
 					then
 						if l_tp.pe_index = 0 then
-							l_res := l_tp.render (a_stream, create {ARRAY [NATURAL_8]}.make_filled (0, 1, 256),0)
+							l_res := l_tp.render (a_stream, create {SPECIAL [NATURAL_8]}.make_filled (0, 256), 0)
 						end
 					end
 				end
 				l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.local_var_sig (Current, l_sz)
 				if attached {PE_WRITER} a_stream.pe_writer as l_writer then
-					l_method_signature := l_writer.hash_blob (l_sig, l_sz.item.to_natural_8)
+					l_method_signature := l_writer.hash_blob (l_sig, l_sz.item)
 					create {PE_STANDALONE_SIG_TABLE_ENTRY} l_table.make_with_data (l_method_signature)
+					l_method_signature := l_writer.add_table_entry (l_table)
 				end
 			end
 			if not instructions.is_empty then

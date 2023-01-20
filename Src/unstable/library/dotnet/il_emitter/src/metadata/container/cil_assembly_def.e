@@ -65,7 +65,7 @@ feature -- Access
 	is_external: BOOLEAN assign set_is_external
 			-- `is_external'
 
-	public_key_token: ARRAY [NATURAL_8]
+	public_key_token: ARRAY [NATURAL_8] assign set_public_key_token
 
 	snk_file: STRING_32
 			-- name of strong name key file
@@ -159,6 +159,12 @@ feature -- Element change
 			is_loaded := True
 		ensure
 			loaded_set: is_loaded
+		end
+
+
+	set_public_key_token(a_pub_key_token: like public_key_token)
+		do
+			create public_key_token.make_from_array (a_pub_key_token)
 		end
 
 	insert_namespaces_table (a_lib: PE_LIB; a_namespaces: STRING_TABLE [CIL_NAMESPACE]; a_name: STRING_32): detachable CIL_NAMESPACE
@@ -358,6 +364,8 @@ feature -- Output
 		end
 
 	il_header_dump (a_file: FILE_STREAM): BOOLEAN
+		local
+			l_exit: BOOLEAN
 		do
 			a_file.put_string (".assembly ")
 			if is_external then
@@ -382,7 +390,7 @@ feature -- Output
 				a_file.flush
 			end
 
-			across 1 |..| 8 as i loop
+			across 1 |..| 8 as i until l_exit loop
 				if public_key_token [i] /= 0 then
 					a_file.put_string ("%T.publickeytoken = (")
 					across 1 |..| 8 as j loop
@@ -392,6 +400,7 @@ feature -- Output
 					a_file.put_string (")")
 					a_file.put_new_line
 					a_file.flush
+					l_exit := True
 				end
 			end
 			a_file.put_string ("}")

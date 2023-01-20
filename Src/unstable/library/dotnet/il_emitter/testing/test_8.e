@@ -64,7 +64,7 @@ feature -- Test
 			l_sig_write_line.set_return_type (create {CIL_TYPE}.make({CIL_BASIC_TYPE}.Void_))
 			l_sig_write_line.add_parameter (create {CIL_PARAM}.make ("", create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.string)))
 
-			method_main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldstr, {CIL_OPERAND_FACTORY}.string_operand ("Hello there from Eiffel to CIL!")))
+			method_main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldstr, {CIL_OPERAND_FACTORY}.string_operand ("Hello there from Eiffel to New !")))
 			method_main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_call, {CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (l_sig_write_line))))
 			method_main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void))
 

@@ -499,7 +499,7 @@ feature -- Emails
 			l_partial_user: CMS_PARTIAL_USER
 		do
 			create jp.make
-			jp.parse_string (a_json)
+			jp.parse_string (a_json.to_string_8)
 			if
 				jp.is_parsed and then
 				jp.is_valid and then
@@ -787,6 +787,6 @@ feature -- Misc
 
 
 note
-	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2023, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

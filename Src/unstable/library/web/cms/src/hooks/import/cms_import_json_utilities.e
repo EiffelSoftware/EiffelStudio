@@ -1,6 +1,6 @@
 note
 	description: "[
-			Usefull routines to import to JSON.
+			Useful routines to import to JSON.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,7 +12,6 @@ feature -- Access
 
 	json_value_from_string (a_json_string: READABLE_STRING_GENERAL): detachable JSON_VALUE
 		local
-			f: RAW_FILE
 			s: STRING_8
 			jp: JSON_PARSER
 		do
@@ -133,6 +132,6 @@ feature -- Access
 		end
 
 note
-	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2023, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

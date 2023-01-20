@@ -341,7 +341,7 @@ feature -- Handler
 
 							-- create medadata file
 						l_uploaded_file.set_size (uf.size)
-						l_uploaded_file.set_type (uf.content_type)
+						l_uploaded_file.set_type (uf.content_type.to_string_8) -- READABLE_STRING to STRING
 
 							-- store the just uploaded file
 						l_files_api.save_uploaded_file (l_uploaded_file)
@@ -435,7 +435,7 @@ feature -- Handler
 
 									-- add remove button
 								a_output.append ("<td>")
-								a_output.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + f.filename + "/remove") + "%">Remove</a>%N")
+								a_output.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + url_encoded (f.filename) + "/remove") + "%">Remove</a>%N")
 								a_output.append ("</td>%N")
 
 								a_output.append ("</tr>%N")

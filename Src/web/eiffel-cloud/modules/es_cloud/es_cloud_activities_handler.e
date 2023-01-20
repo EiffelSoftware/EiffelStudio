@@ -108,7 +108,12 @@ feature -- Execution
 					not l_installations.is_empty
 				then
 					if l_license /= Void then
-						s.append ("<p>EiffelStudio license " + html_encoded (l_license.key) + " is installed on " + l_installations.count.out + " devices: ")
+						s.append ("<p>EiffelStudio license " + html_encoded (l_license.key) + " is installed on " + l_installations.count.out)
+						if l_installations.count > 1 then
+							s.append (" devices: ")
+						else
+							s.append (" device: ")
+						end
 					else
 						s.append ("<p>EiffelStudio : installed " + l_installations.count.out + " time(s) ")
 					end
@@ -128,8 +133,9 @@ feature -- Execution
 							l_hide_sessions := False
 						else
 							l_hide_sessions := True
-							l_session := es_cloud_api.last_user_session (l_user, inst)
 						end
+						l_session := es_cloud_api.last_user_session (l_user, inst)
+
 						l_can_be_deleted := not l_hide_sessions
 
 						s.append ("<li class=%"es-installation")
@@ -179,7 +185,12 @@ feature -- Execution
 							l_sessions /= Void and then
 							not l_sessions.is_empty
 						then
-							s.append ("<ul>")
+							if l_session /= Void then
+								s.append (" <span class=%"access datetime_ago%" datetime=%""+ date_time_to_timestamp_string (l_session.last_date) +"%" title=%"" + date_time_to_string (l_session.last_date) + "%">")
+								ago.append_date_to ("", l_session.last_date, s)
+								s.append ("</span>")
+							end
+							s.append ("<ul><!-- sessions -->")
 							across
 								l_sessions as sess_ic
 							loop

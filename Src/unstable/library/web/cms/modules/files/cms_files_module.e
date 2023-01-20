@@ -207,7 +207,7 @@ feature -- Handler
 					body.append ("<br/><br/>%N")
 
 					body.append ("<a class=%"button%" href=%"" + l_file_url + "%">Download</a>%N")
-					body.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + f.filename + "/remove") + "%">Remove</a>%N")
+					body.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + percent_encoded (f.filename) + "/remove") + "%">Remove</a>%N")
 					body.append ("</div>%N") -- metadata
 					body.append ("<br/>%N")
 					body.append ("<div class=%"overview%">")
@@ -435,7 +435,7 @@ feature -- Handler
 
 									-- add remove button
 								a_output.append ("<td>")
-								a_output.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + url_encoded (f.filename) + "/remove") + "%">Remove</a>%N")
+								a_output.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + percent_encoded (f.filename) + "/remove") + "%">Remove</a>%N")
 								a_output.append ("</td>%N")
 
 								a_output.append ("</tr>%N")

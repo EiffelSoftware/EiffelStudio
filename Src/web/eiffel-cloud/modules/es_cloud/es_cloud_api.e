@@ -1756,7 +1756,7 @@ feature -- Email processing
 				msg := tpl.string
 			else
 				create s.make_empty;
-				s.append ("EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				s.append ("New EiffelStudio license " + utf_8_encoded (a_license.key) + " (plan: " + utf_8_encoded (a_license.plan.title_or_name) + ").%N")
 				s.append ("%T")
 				s.append (cms_api.absolute_url (module.license_location (a_license), Void))
 				s.append ("%N")
@@ -1815,7 +1815,7 @@ feature -- Email processing
 				msg := tpl.string
 			else
 				create s.make_empty;
-				s.append ("Updated EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				s.append ("Updated EiffelStudio license " + utf_8_encoded (a_license.key) + " (plan: " + utf_8_encoded (a_license.plan.title_or_name) + ").%N")
 				s.append ("%T")
 				s.append (cms_api.absolute_url (module.license_location (a_license), Void))
 				s.append ("%N")

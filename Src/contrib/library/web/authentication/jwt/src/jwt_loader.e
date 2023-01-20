@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 				not a_string.is_empty and then
 				(a_string [1].is_space or a_string [a_string.count].is_space)
 			then
-				s := a_string
+				s := a_string.to_string_8
 				s.adjust
 				Result := s
 			else

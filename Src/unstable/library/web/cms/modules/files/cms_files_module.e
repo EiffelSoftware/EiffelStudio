@@ -549,7 +549,7 @@ feature -- Mapping helper: uri template agent (analogue to the demo-module)
 			a_tpl_attached: a_tpl /= Void
 			proc_attached: proc /= Void
 		do
-			map_uri_template (a_router, a_tpl, create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (proc), rqst_methods)
+			map_uri_template (a_router, a_tpl.to_string_8, create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (proc), rqst_methods)
 		end
 
 end

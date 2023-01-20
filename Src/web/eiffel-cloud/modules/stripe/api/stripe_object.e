@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 
 	boolean_item (j: JSON_OBJECT; k: READABLE_STRING_GENERAL; dft: BOOLEAN): BOOLEAN
 		do
-			if attached {JSON_BOOLEAN} (j @ k) as jb then
+			if attached {JSON_BOOLEAN} (j / k) as jb then
 				Result := jb.item
 			else
 				Result := dft
@@ -64,10 +64,10 @@ feature {NONE} -- Implementation
 
 	integer_64_item (j: JSON_OBJECT; k: READABLE_STRING_GENERAL): INTEGER_64
 		do
-			if attached {JSON_NUMBER} (j @ k) as jnum then
+			if attached {JSON_NUMBER} (j / k) as jnum then
 				Result := jnum.integer_64_item
 			elseif
-				attached {JSON_STRING} (j @ k) as js and then
+				attached {JSON_STRING} (j / k) as js and then
 				js.item.is_integer_64
 			then
 				Result := js.item.to_integer_64
@@ -81,10 +81,10 @@ feature {NONE} -- Implementation
 
 	natural_64_item (j: JSON_OBJECT; k: READABLE_STRING_GENERAL): NATURAL_64
 		do
-			if attached {JSON_NUMBER} (j @ k) as jnum then
+			if attached {JSON_NUMBER} (j / k) as jnum then
 				Result := jnum.natural_64_item
 			elseif
-				attached {JSON_STRING} (j @ k) as js and then
+				attached {JSON_STRING} (j / k) as js and then
 				js.item.is_natural_64
 			then
 				Result := js.item.to_natural_64
@@ -93,21 +93,21 @@ feature {NONE} -- Implementation
 
 	string_8_item (j: JSON_OBJECT; k: READABLE_STRING_GENERAL): detachable STRING_8
 		do
-			if attached {JSON_STRING} (j @ k) as js then
+			if attached {JSON_STRING} (j / k) as js then
 				Result := js.unescaped_string_8
 			end
 		end
 
 	string_32_item (j: JSON_OBJECT; k: READABLE_STRING_GENERAL): detachable STRING_32
 		do
-			if attached {JSON_STRING} (j @ k) as js then
+			if attached {JSON_STRING} (j / k) as js then
 				Result := js.unescaped_string_32
 			end
 		end
 
 	safe_string_8_item (j: JSON_OBJECT; k: READABLE_STRING_GENERAL; dft: READABLE_STRING_8): READABLE_STRING_8
 		do
-			if attached {JSON_STRING} (j @ k) as js then
+			if attached {JSON_STRING} (j / k) as js then
 				Result := js.unescaped_string_8
 			else
 				Result := dft
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 
 	safe_string_32_item (j: JSON_OBJECT; k: READABLE_STRING_GENERAL; dft: READABLE_STRING_32): READABLE_STRING_32
 		do
-			if attached {JSON_STRING} (j @ k) as js then
+			if attached {JSON_STRING} (j / k) as js then
 				Result := js.unescaped_string_32
 			else
 				Result := dft
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 		local
 			v: detachable ANY
 		do
-			if attached {JSON_OBJECT} (j @ k) as jo then
+			if attached {JSON_OBJECT} (j / k) as jo then
 				create Result.make_caseless (jo.count)
 				across
 					jo as ic
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 		local
 			v: detachable ANY
 		do
-			if attached {JSON_ARRAY} (j @ k) as jarr then
+			if attached {JSON_ARRAY} (j / k) as jarr then
 				create Result.make (jarr.count)
 				across
 					jarr as ic

@@ -89,7 +89,7 @@ feature -- Element change
 			if s = Void or else s.is_whitespace then
 				version := Void
 			else
-				create version.make_from_string (s)
+				create version.make_from_string_8 (s)
 			end
 		end
 

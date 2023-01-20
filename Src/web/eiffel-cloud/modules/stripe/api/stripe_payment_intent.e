@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 					customer_id := string_8_item (j, "customer")
 				end
 
-				if attached {JSON_ARRAY} (j @ "charges" @ "data") as j_data_array then
+				if attached {JSON_ARRAY} (j / "charges" / "data") as j_data_array then
 					create l_charges.make (1)
 					charges := l_charges
 					across

@@ -91,11 +91,11 @@ feature {NONE} -- Initialization
 				name := string_32_item (j, "name")
 				description := string_32_item (j, "description")
 				phone := string_8_item (j, "phone")
-				if attached {JSON_STRING} (j @ "invoice_settings" @ "default_payment_method") as j_payment_method then
+				if attached {JSON_STRING} (j / "invoice_settings" / "default_payment_method") as j_payment_method then
 					set_default_payment_method_id (j_payment_method.unescaped_string_8)
 				end
-				if attached {JSON_ARRAY} (j @ "subscriptions" @ "data") as j_arr then
-					subscriptions := {JSON_OBJECT} / (j @ "subscriptions")
+				if attached {JSON_ARRAY} (j / "subscriptions" / "data") as j_arr then
+					subscriptions := {JSON_OBJECT} / (j / "subscriptions")
 				end
 				metadata := table_item (j, "metadata")
 			end
@@ -137,7 +137,7 @@ feature -- Element change
 		do
 			email := v
 		end
-		
+
 	set_name (v: READABLE_STRING_GENERAL)
 		do
 			name := v.to_string_32

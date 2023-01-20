@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			charges := l_charges
 			currency := "usd" -- Default
 			id := safe_string_8_item (j, "id", "")
-			if attached {JSON_OBJECT} (j @ "data" @ "object") as jobj then
+			if attached {JSON_OBJECT} (j / "data" / "object") as jobj then
 				if attached {JSON_NUMBER} jobj.number_item ("amount") as j_amount then
 					amount := j_amount.integer_64_item.to_integer_32
 				end
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 					end
 				end
 
-				if attached {JSON_ARRAY} (jobj @ "charges" @ "data") as j_data_array then
+				if attached {JSON_ARRAY} (jobj / "charges" / "data") as j_data_array then
 					across
 						j_data_array as ic
 					loop

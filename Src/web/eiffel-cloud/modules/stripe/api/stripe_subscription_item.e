@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 				subscription_id := safe_string_8_item (j, "subscription", subscription_id)
 				created_timestamp := integer_32_item (j, "created")
 
-				if attached {JSON_OBJECT} (j @ "plan") as j_plan then
+				if attached {JSON_OBJECT} (j / "plan") as j_plan then
 					create plan.make_with_json (j_plan)
 				end
 				plan_count := integer_32_item (j, "quantity")

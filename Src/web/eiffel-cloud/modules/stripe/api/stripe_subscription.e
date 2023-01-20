@@ -140,10 +140,10 @@ feature {NONE} -- Initialization
 				start_date_timestamp := integer_32_item (j, "start_date")
 				collection_method := safe_string_8_item (j, "collection_method", collection_method)
 				default_payment_method := string_8_item (j, "default_payment_method")
-				if attached {JSON_OBJECT} (j @ "plan") as j_plan then
+				if attached {JSON_OBJECT} (j / "plan") as j_plan then
 					create plan.make_with_json (j_plan)
 				end
-				if attached {JSON_ARRAY} (j @ "items" @ "data") as j_items then
+				if attached {JSON_ARRAY} (j / "items" / "data") as j_items then
 					across
 						j_items as ic
 					loop

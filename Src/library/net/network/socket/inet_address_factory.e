@@ -1,5 +1,5 @@
 ﻿note
-	description: "Factory of INET_ADDRESS"
+	description: "Factory of {INET_ADDRESS}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
     		valid_src: src /= Void
     	local
     		i: INTEGER
-    		token: STRING
+    		token: STRING_8
 		do
 			create Result.make (10)
 			if not src.is_empty then
@@ -617,7 +617,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -403,7 +403,7 @@ feature -- Conversion
 			Result := item.to_double
 		end
 
-	to_binary_string: STRING
+	to_binary_string: STRING_8
 			-- Convert `item' into a binary string.
 		local
 			i: INTEGER
@@ -436,7 +436,7 @@ feature -- Conversion
 			valid_character: ("01").has (Result)
 		end
 
-	to_octal_string: STRING
+	to_octal_string: STRING_8
 			-- Convert `item' into an octal string.
 		local
 			i: INTEGER
@@ -469,7 +469,7 @@ feature -- Conversion
 			valid_character: ("01234567").has (Result)
 		end
 
-	to_hex_string: STRING
+	to_hex_string: STRING_8
 			-- Convert `item' into an hexadecimal string.
 		local
 			i: INTEGER
@@ -676,7 +676,7 @@ invariant
 	sign_times_abs: sign * abs = item
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

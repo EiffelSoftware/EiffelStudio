@@ -33,7 +33,7 @@ feature -- Test
 
 			l_type: CIL_CLASS
 			l_label, l_id2: CIL_OPERAND
-			l_try_label, l_catch_label: CIL_OPERAND
+			l_leave_label: CIL_OPERAND
 		do
 				-- Create the workgin assembly `manu_assembluy`
 				-- md_emit.define_assembly
@@ -80,7 +80,6 @@ feature -- Test
 					l_exception := l_r
 				end
 			end
-
 
 			l_result := pe_file.find ({STRING_32} "Console", Void, Void)
 			if l_result.type /= {CIL_FIND_TYPE}.s_class then
@@ -158,103 +157,106 @@ feature -- Test
 			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_label, l_label))
 			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void))
 
---				-- Method test
---			create l_method_sig.make ("test", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
---			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
+				-- Method test
+			create l_method_sig.make ("test", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
+			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
 
---				-- Define method
---			create l_method.make (l_method_sig,
---				create {CIL_QUALIFIERS}.make_with_flags (
---						{CIL_QUALIFIERS_ENUM}.public |
---						{CIL_QUALIFIERS_ENUM}.cil |
---						{CIL_QUALIFIERS_ENUM}.Managed
---					), False)
---			l_method.optimize
+				-- Define method
+			create l_method.make (l_method_sig,
+				create {CIL_QUALIFIERS}.make_with_flags (
+						{CIL_QUALIFIERS_ENUM}.public |
+						{CIL_QUALIFIERS_ENUM}.cil |
+						{CIL_QUALIFIERS_ENUM}.Managed
+					), False)
+			l_method.optimize
 
---			l_type.add (l_method)
+			l_type.add (l_method)
 
---				-- Locals
---			create l_locals.make ("l_obj", create {CIL_TYPE}.make (create {CIL_BASIC_TYPE}.object))
---			l_method.add_local (l_locals)
---			create l_locals.make ("l_type", create {CIL_TYPE}.make_with_container (l_type))
---			l_method.add_local (l_locals)
+				-- Locals
+			create l_locals.make ("l_obj", create {CIL_TYPE}.make (create {CIL_BASIC_TYPE}.object))
+			l_method.add_local (l_locals)
+			create l_locals.make ("l_type", create {CIL_TYPE}.make_with_container (l_type))
+			l_method.add_local (l_locals)
 
---				-- Method body
---			l_label := {CIL_OPERAND_FACTORY}.label_operand ("label_1")
---			l_id2 := {CIL_OPERAND_FACTORY}.label_operand ("label_2")
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldarg_0, l_id2))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldarg_0, Void))
+				-- Method body
+			l_label := {CIL_OPERAND_FACTORY}.label_operand ("label1")
+			l_id2 := {CIL_OPERAND_FACTORY}.label_operand ("label2")
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_label, l_id2))
 
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_br, l_label))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4_1, Void))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_pop, Void))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_br, l_id2))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_br, l_label))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4_1, Void))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_pop, Void))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_br, l_id2))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_label, l_label))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void))
 
---				-- Method test2
---			create l_method_sig.make ("test2", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
---			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
+				-- Method test2
+			create l_method_sig.make ("test2", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
+			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
 
---				-- Define method
---			create l_method.make (l_method_sig,
---				create {CIL_QUALIFIERS}.make_with_flags (
---						{CIL_QUALIFIERS_ENUM}.public |
---						{CIL_QUALIFIERS_ENUM}.cil |
---						{CIL_QUALIFIERS_ENUM}.Managed
---					), False)
---			l_method.optimize
+				-- Define method
+			create l_method.make (l_method_sig,
+				create {CIL_QUALIFIERS}.make_with_flags (
+						{CIL_QUALIFIERS_ENUM}.public |
+						{CIL_QUALIFIERS_ENUM}.cil |
+						{CIL_QUALIFIERS_ENUM}.Managed
+					), False)
+			l_method.optimize
 
---			l_type.add (l_method)
+			l_type.add (l_method)
 
---				 -- Locals
---			create l_locals.make ("l_obj", create {CIL_TYPE}.make (create {CIL_BASIC_TYPE}.object))
---			l_method.add_local (l_locals)
---			create l_locals.make ("l_type", create {CIL_TYPE}.make_with_container (l_type))
---			l_method.add_local (l_locals)
+				-- Locals
+			create l_locals.make ("l_obj", create {CIL_TYPE}.make (create {CIL_BASIC_TYPE}.object))
+			l_method.add_local (l_locals)
+			create l_locals.make ("l_type", create {CIL_TYPE}.make_with_container (l_type))
+			l_method.add_local (l_locals)
 
---				-- Method body
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldarg_0, Void))
+				-- Method body
+				-- Method body
+			l_label := {CIL_OPERAND_FACTORY}.label_operand ("label1")
+			l_id2 := {CIL_OPERAND_FACTORY}.label_operand ("label2")
 
---			l_label := {CIL_OPERAND_FACTORY}.label_operand ("label_1")
---			l_id2 := {CIL_OPERAND_FACTORY}.label_operand ("label_2")
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_br, l_label))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4_1, Void))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_pop, Void))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_br, l_id2))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_label, l_id2))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_br, l_label))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4_1, Void))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_pop, Void))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_br, l_id2))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_label, l_label))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void))
 
---				-- Method test_rescue
---			create l_method_sig.make ("test_rescue", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
---			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
+				-- Method test_rescue
+			create l_method_sig.make ("test_rescue", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
+			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
 
---				 -- Define method
---			create l_method.make (l_method_sig,
---				create {CIL_QUALIFIERS}.make_with_flags (
---						{CIL_QUALIFIERS_ENUM}.public |
---						{CIL_QUALIFIERS_ENUM}.cil |
---						{CIL_QUALIFIERS_ENUM}.Managed
---					), False)
---			l_method.optimize
+				-- Define method
+			create l_method.make (l_method_sig,
+				create {CIL_QUALIFIERS}.make_with_flags (
+						{CIL_QUALIFIERS_ENUM}.public |
+						{CIL_QUALIFIERS_ENUM}.cil |
+						{CIL_QUALIFIERS_ENUM}.Managed
+					), False)
+			l_method.optimize
 
---			l_type.add (l_method)
+			l_type.add (l_method)
 
---			l_try_label := {CIL_OPERAND_FACTORY}.label_operand ("try_exit")
---			l_catch_label := {CIL_OPERAND_FACTORY}.label_operand ("catch_exit")
+			l_leave_label := {CIL_OPERAND_FACTORY}.label_operand ("leave")
 
---				 -- Try block
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make_seh ({CIL_SEH}.seh_try, True, Void))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4_1, Void))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_pop, Void))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_leave, l_try_label))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make_seh ({CIL_SEH}.seh_try, False, Void))
+				-- Try block
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make_seh ({CIL_SEH}.seh_try, True, Void))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4_1, Void))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_pop, Void))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_leave, l_leave_label))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make_seh ({CIL_SEH}.seh_try, False, Void))
 
---				 -- Catch block
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make_seh ({CIL_SEH}.seh_catch, True, if attached l_exception then create {CIL_TYPE}.make_with_container (l_exception) else Void end))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_pop, Void))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldstr, {CIL_OPERAND_FACTORY}.string_operand ("Manu is nice")))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_pop, Void))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_leave, l_catch_label))
---			l_method.add_instruction (create {CIL_INSTRUCTION}.make_seh ({CIL_SEH}.seh_catch, False, Void))
+				-- Catch block
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make_seh ({CIL_SEH}.seh_catch, True, if attached l_exception then create {CIL_TYPE}.make_with_container (l_exception) else Void end))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldstr, {CIL_OPERAND_FACTORY}.string_operand ("Manu is nice")))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_pop, Void))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_leave, l_leave_label))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make_seh ({CIL_SEH}.seh_catch, False, Void))
+
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_label, l_leave_label))
+			l_method.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void))
 
 			pe_file.dump_output_file ("test_9e.il", {CIL_OUTPUT_MODE}.ilasm, false)
 			pe_file.dump_output_file ("test_9e.dll", {CIL_OUTPUT_MODE}.pedll, false)

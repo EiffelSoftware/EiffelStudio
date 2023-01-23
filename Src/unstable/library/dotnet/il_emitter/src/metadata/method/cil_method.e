@@ -572,18 +572,18 @@ feature {NONE} -- Implementation
 			l_method_def := if attached {PE_WRITER} a_stream.pe_writer as l_writer then l_writer.next_table_index ({PE_TABLES}.tmethoddef.value.to_integer_32) else {NATURAL_32} 0 end
 			l_local_count := if attached l_last then (l_last.offset + l_last.instruction_size) else 0 end
 			if l_method_signature /= 0 then
-				l_signature := l_method_signature | ({PE_TABLES}.tstandalonesig.value |<< 24)
+				l_signature := l_method_signature | ({PE_TABLES}.tstandalonesig.value |<< 24).to_natural_64
 			else
 				l_signature := 0
 			end
 
 			create l_rendering.make (has_seh, l_pe_flags,
 				l_method_def,
-				max_stack.to_natural_16, var_list.count,
+				max_stack, var_list.count,
 				l_local_count,
 				l_signature)
 
-			token := l_rendering.method_def | ({PE_TABLES}.tmethoddef.value |<< 24)
+			token := l_rendering.method_def | ({PE_TABLES}.tmethoddef.value |<< 24).to_natural_64
 
 			if invoke_mode = {CIL_INVOKE_MODE}.cil then
 				if l_is_runtime and then not instructions.is_empty or else not l_is_runtime and then instructions.is_empty then

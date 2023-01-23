@@ -354,13 +354,14 @@ feature -- Output
 			if opcode = {CIL_INSTRUCTION_OPCODES}.i_seh and then
 				seh_type = {CIL_SEH}.seh_catch
 			then
-				create l_data.make_empty (4)
+				create l_data.make_filled (0, 4)
 				if attached seh_catch_type as l_seh_catch_type then
-					l_dis := l_seh_catch_type.render (a_stream, l_data, l_sz + a_offset)
+					l_dis := l_seh_catch_type.render (a_stream, l_data, l_sz + 0)
 				end
 			end
 			if opcode /= {CIL_INSTRUCTION_OPCODES}.i_label and then
 				opcode /= {CIL_INSTRUCTION_OPCODES}.i_comment and then
+				opcode /= {CIL_INSTRUCTION_OPCODES}.i_seh and then
 				opcode /= {CIL_INSTRUCTION_OPCODES}.i_line
 			then
 				a_result.force (instructions [{CIL_INSTRUCTION_OPCODES}.index_of (opcode) + 1].op1, l_sz + a_offset)
@@ -388,10 +389,10 @@ feature -- Output
 					n := if attached labels [l_branch_label] as l_ins then l_ins.offset - l_cur else 0 - l_cur end
 						-- calculate offset to target
 					if is_rel4 then
-						a_result.force (n.to_natural_8, l_sz + a_offset)
+						{BYTE_ARRAY_HELPER}.put_array_natural_8_with_integer_32 (a_result, n, l_sz + a_offset)
 						l_sz := l_sz + 4
 					else
-						a_result.force (n.to_natural_8, l_sz + a_offset)
+						{BYTE_ARRAY_HELPER}.put_array_natural_8_with_integer_32 (a_result, n, l_sz + a_offset)
 						l_sz := l_sz + 1
 					end
 				else

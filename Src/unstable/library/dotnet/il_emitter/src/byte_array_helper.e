@@ -30,7 +30,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_8_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_8_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -47,7 +47,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_32_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_8_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -64,7 +64,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_64_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_8_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -81,7 +81,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_64_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_8_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -99,7 +99,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_16_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_16_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -116,7 +116,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_32_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_16_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -133,7 +133,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_32_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_16_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -150,7 +150,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_64_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_16_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -167,7 +167,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_32_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_32_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -184,7 +184,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_64_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_32_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -201,7 +201,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_32_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_32_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -218,7 +218,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_64_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_64_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -235,7 +235,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_8_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.integer_8_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -252,7 +252,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_16_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.integer_16_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -269,7 +269,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_32_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.integer_32_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -286,7 +286,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_natural_64_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.integer_32_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -303,7 +303,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_64_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.integer_32_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -320,7 +320,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_integer_64_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.integer_64_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -337,7 +337,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_real_64_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.real_32_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end
@@ -354,7 +354,7 @@ feature -- Element Change
 			l_mp.put_array (l_arr, 0)
 			l_mp.put_real_64_le (a_value, a_pos)
 			l_arr := l_mp.read_array (a_arr.lower, a_arr.count)
-			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.real_64_bytes)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, a_arr.capacity - a_pos)
 		ensure
 			instance_free: class
 		end

@@ -305,7 +305,7 @@ feature -- Output
 					else
 						l_npos := l_name.index_of (']', 1)
 						if l_npos /= 0 and then l_npos /= l_name.count then
-							a_file.put_string (l_name.substring (1, l_npos + 1))
+							a_file.put_string (l_name.substring (1, l_npos))
 							a_file.put_string ("'")
 							a_file.put_string (l_name.substring (l_npos + 1, l_name.count))
 							a_file.put_string ("'")

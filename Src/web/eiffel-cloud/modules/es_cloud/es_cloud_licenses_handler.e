@@ -220,6 +220,18 @@ feature -- Execution
 										+ "?message=" + url_encoded ({STRING_32} "%N%N-- " + lic.plan.title_or_name + {STRING_32} " license %"" + lic.key + "%".")
 										+ "%">contact us</a>.</div>")
 						s.append ("</div>")
+						s.append ("<!-- DEBUG%N")
+						if attached {ES_CLOUD_LICENSE_SUBSCRIPTION} es_cloud_api.license_subscription (lic) as l_sub then
+							s.append ("- subscription:%N")
+							if attached l_sub.subscription_reference as ref then
+								s.append ("  - ref:" + html_encoded (ref) + "%N")
+							else
+								s.append ("  - ref: NONE !%N")
+							end
+						else
+							s.append ("- subscription: NONE !%N")
+						end
+						s.append ("-->%N")
 					end
 					s.append ("</div>")
 					if api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_licenses) then

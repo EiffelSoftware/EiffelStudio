@@ -39,6 +39,13 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	SHARED_ES_CLOUD_SERVICE
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -181,6 +188,19 @@ feature {NONE} -- Initialization
 			create tf; tf.disable_edit; hb.extend (tf)
 			ini_files_tf := tf
 
+				-- Cloud account data
+			create hb
+			hb.set_padding_width (layout_constants.tiny_padding_size)
+			l_advanced_box.extend (hb); l_advanced_box.disable_item_expand (hb)
+			create but_check.make_with_text ("Cloud account data")
+			but_check.set_tooltip ("Cloud account data such as credential.")
+			but_check.enable_select
+			align_lst.extend (but_check)
+			hb.extend (but_check); hb.disable_item_expand (but_check)
+			cloud_account_cb := but_check
+			create tf; tf.disable_edit; hb.extend (tf)
+			cloud_account_tf := tf
+
 				-- Custom Edit
 			create hb
 			hb.set_padding_width (layout_constants.tiny_padding_size)
@@ -261,14 +281,16 @@ feature -- Access
 	ui_layout_tf,
 	templates_tf,
 	studio_config_tf,
-	ini_files_tf: EV_TEXT_FIELD
+	ini_files_tf,
+	cloud_account_tf: EV_TEXT_FIELD
 
 
 	preferences_cb,
 	ui_layout_cb,
 	studio_config_cb,
 	templates_cb,
-	ini_files_cb: EV_CHECK_BUTTON
+	ini_files_cb,
+	cloud_account_cb: EV_CHECK_BUTTON
 
 	advanced_button: EV_CHECK_BUTTON
 	advanced_box: EV_BOX
@@ -312,6 +334,9 @@ feature -- Event
 				ini_files_cb.enable_sensitive
 				ini_files_tf.enable_edit
 
+				cloud_account_cb.enable_sensitive
+				cloud_account_tf.enable_edit
+
 				import_button.hide
 			else
 				but.set_text (interface_names.b_edit_settings)
@@ -324,6 +349,8 @@ feature -- Event
 				templates_tf.disable_edit
 
 				ini_files_tf.disable_edit
+
+				cloud_account_tf.disable_edit
 
 				update_choices_status
 				import_button.show
@@ -448,8 +475,11 @@ feature -- Event
 					loop
 						if ic.item.is_current_symbol or ic.item.is_parent_symbol then
 						elseif attached ic.item.extension as ext and then ext.same_string ("ini") then
-							safe_copy_file_to (create {RAW_FILE}.make_with_path (d.path.extended_path (ic.item)),
-									create {RAW_FILE}.make_with_path (eiffel_layout.user_files_path.extended_path (ic.item)), text_widget)
+							safe_copy_file_to (
+									create {RAW_FILE}.make_with_path (d.path.extended_path (ic.item)),
+									create {RAW_FILE}.make_with_path (eiffel_layout.user_files_path.extended_path (ic.item)),
+									text_widget
+								)
 						end
 					end
 						-- Update external commands
@@ -459,6 +489,26 @@ feature -- Event
 					then
 						c.update_commands_from_ini_file
 						c.update_menus_from_outside
+					end
+				end
+				if cloud_account_cb.is_sensitive and then cloud_account_cb.is_selected then
+					if text_widget /= Void then
+						text_widget.append_text ("- Cloud account data.%N")
+					end
+					if attached es_cloud_s.service as cld then
+						create d.make_with_name (cloud_account_tf.text)
+						across
+							d.entries as ic
+						loop
+							if ic.item.is_current_symbol or ic.item.is_parent_symbol then
+							elseif ic.item.name.ends_with ("-credential.dat") then
+								if attached cld.kept_credential_from_file (d.path.extended_path (ic.item)) as l_acc then
+									if cld.kept_credential = Void then
+										cld.keep_credential (l_acc.username, l_acc.password)
+									end
+								end
+							end
+						end
 					end
 				end
 				progress_bar.set_value (100)
@@ -576,8 +626,18 @@ feature -- Event
 			cb.set_tooltip (ufp.name + "  *.ini files")
 			tf.set_text (ufp.name)
 
-				-- Update choices
+				-- Cloud account data
+				--| See {ES_CLOUD}.make_with_url
+			p := eiffel_layout.hidden_files_path_for_version (v, False).extended ("accounts")
+			if eiffel_layout.is_workbench then
+				p := p.extended ("workbench")
+			end
+			cb := cloud_account_cb
+			tf := cloud_account_tf
+			cb.set_tooltip (p.name + "  Cloud accout data")
+			tf.set_text (p.name)
 
+				-- Update choices
 			update_choices_status
 
 				-- Button Import
@@ -629,6 +689,16 @@ feature -- Event
 			else
 				cb.disable_sensitive
 			end
+
+				-- Cloud account data
+			p := cloud_account_tf.text
+			cb := cloud_account_cb
+			if ut.directory_exists (p) then
+				cb.enable_sensitive
+			else
+				cb.disable_sensitive
+			end
+
 		end
 
 feature {NONE} -- Implementation
@@ -795,7 +865,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

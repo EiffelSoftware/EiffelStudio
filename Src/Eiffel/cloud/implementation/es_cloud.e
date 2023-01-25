@@ -171,19 +171,44 @@ feature {NONE} -- Initialization
 
 feature -- Remember credentials
 
-	kept_credential: detachable TUPLE [username: READABLE_STRING_32; password: detachable READABLE_STRING_32]
+	kept_credential_from_file (fn: PATH): like kept_credential
 		local
 			retried: BOOLEAN
-			p: PATH
 			f: RAW_FILE
 			sed: SED_STORABLE_FACILITIES
+			js: STRING
+			jparser: JSON_PARSER
 		do
 			if not retried then
-				p := credential_storage_filename
-				if p /= Void then
-					create f.make_with_path (p)
-					if f.exists and then f.is_access_readable then
-						f.open_read
+				create f.make_with_path (fn)
+				if f.exists and then f.is_access_readable then
+					create js.make (f.count)
+					f.open_read
+					from
+						f.start
+					until
+						f.exhausted or f.end_of_file
+					loop
+						f.read_stream (1024)
+						js.append (f.last_string)
+					end
+					f.close
+					create jparser.make
+					jparser.parse_string (js)
+					if jparser.is_parsed and jparser.is_valid then
+						if attached jparser.parsed_json_object as jo then
+							if attached {JSON_OBJECT} jo [account_json_name] as jacc then
+								if attached jacc.string_item (account_json_username) as u then
+									if attached jacc.string_item (account_json_password) as pwd then
+										Result := [u.unescaped_string_32, pwd.unescaped_string_32]
+									else
+										Result := [u.unescaped_string_32, Void]
+									end
+								end
+							end
+						end
+					else
+							-- Try storable
 						create sed
 						if attached {TUPLE [username: READABLE_STRING_GENERAL; password: detachable READABLE_STRING_GENERAL]} sed.retrieved_from_medium (f) as d then
 							if attached d.password as pwd then
@@ -200,16 +225,21 @@ feature -- Remember credentials
 			retry
 		end
 
+	kept_credential: detachable TUPLE [username: READABLE_STRING_32; password: detachable READABLE_STRING_32]
+		do
+			if attached credential_storage_filename as p then
+				Result := kept_credential_from_file (p)
+			end
+		end
+
 	keep_credential (u,pwd: detachable READABLE_STRING_32)
 		local
 			p: PATH
-			sed: SED_STORABLE_FACILITIES
-			d: like kept_credential
 			f: RAW_FILE
 			retried: BOOLEAN
+			jo,jcredential: JSON_OBJECT
 		do
 			if not retried then
-				-- FIXME: use json or xml storage!
 				p := credential_storage_filename
 				if p /= Void then
 					create f.make_with_path (p)
@@ -219,10 +249,13 @@ feature -- Remember credentials
 						end
 					elseif not f.exists or else f.is_access_writable then
 						if ensure_parent_exists (p) then
-							d := [u, pwd]
+							create jo.make_with_capacity (1)
+							create jcredential.make_with_capacity (2)
+							jcredential.put_string (u, account_json_username)
+							jcredential.put_string (pwd, account_json_password)
+							jo.put (jcredential, account_json_name)
 							f.open_write
-							create sed
-							sed.store_in_medium (d, f)
+							f.put_string (jo.representation)
 							f.close
 						else
 								-- FIXME ...
@@ -243,6 +276,12 @@ feature -- Remember credentials
 				Result := Result.appended ("-credential.dat")
 			end
 		end
+
+feature {NONE} -- JSON names
+
+	account_json_name: STRING = "acc"
+	account_json_username: STRING = "u"
+	account_json_password: STRING = "p"
 
 feature {NONE} -- Clean up
 
@@ -1167,7 +1206,7 @@ feature {NONE} -- Implementation: Internal cache
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

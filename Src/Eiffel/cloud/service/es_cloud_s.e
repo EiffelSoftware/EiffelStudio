@@ -169,6 +169,10 @@ feature -- Remember credentials
 		deferred
 		end
 
+	kept_credential_from_file (fn: PATH): like kept_credential
+		deferred
+		end
+
 	keep_credential (u,p: detachable READABLE_STRING_32)
 		deferred
 		end
@@ -443,7 +447,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

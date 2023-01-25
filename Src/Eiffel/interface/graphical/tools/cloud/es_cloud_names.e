@@ -31,7 +31,7 @@ feature -- Authentication
 	link_create_new_account: STRING_32 do Result := locale.translation_in_context ("Create a new account", "eiffel.account") end
 
 	button_remember_credentials: STRING_32 do Result := locale.translation_in_context ("Remember my credentials", "eiffel.account") end
-	tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on a public machine!", "eiffel.account") end
+	tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on a public machine! Password is stored in plain text.", "eiffel.account") end
 
 	label_open_eiffelstudio_account_web_site: STRING_32 do Result := locale.translation_in_context ("Open EiffelStudio account website in web browser.", "eiffel.account") end
 
@@ -134,7 +134,7 @@ feature -- General
 	tooltip_button_update: STRING_32 do Result := locale.translation_in_context ("Update account information (synchronize)", "cloud.info") end
 
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

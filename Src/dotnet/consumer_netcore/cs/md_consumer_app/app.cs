@@ -127,7 +127,7 @@ namespace EifMdConsumer
                         foreach (var a in add_assemblies) {
                             var ca = cache.add_assembly_ex(a, has_info_only, ref_assemblies, processed);
                         }
-                        if (build_html || is_debug) {
+                        if (build_html) {
                             cache.build_html();
                         }
                     } else {

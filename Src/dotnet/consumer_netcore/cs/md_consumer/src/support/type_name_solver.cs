@@ -15,9 +15,11 @@ namespace md_consumer
         public string simple_name;
         public string eiffel_name;
         public int weight=0;
+        public int assembly_id=-1;
 
-        public TYPE_NAME_SOLVER(Type a_type)
+        public TYPE_NAME_SOLVER(Type a_type, int aid)
         {
+            assembly_id = aid;
             internal_type = a_type;
             simple_name = a_type.Name;
             eiffel_name = "";

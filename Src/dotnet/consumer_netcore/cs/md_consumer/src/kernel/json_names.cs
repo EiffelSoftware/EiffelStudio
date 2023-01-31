@@ -85,6 +85,10 @@ namespace md_consumer
         public const string is_attribute = "is_attribute" ;
 
         public const string multiple_source = "multiple_source" ;
+
+        public const string items = "items" ; // "items"
+        public const string flag = "f" ; // "flag"
+        public const string position = "p" ; // "position"
         
 
     }

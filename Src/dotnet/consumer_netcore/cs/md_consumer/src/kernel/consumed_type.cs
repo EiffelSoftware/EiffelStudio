@@ -12,10 +12,18 @@ namespace md_consumer
     {
         public string name;
         public int assembly_id;
+		public bool has_generic_type=false;
+        public bool has_pointer_type=false;
+        public bool is_forwarded_type=false;
+        public bool is_excluded() {
+            return has_generic_type || has_pointer_type;
+        }        
 
         public CONSUMED_REFERENCED_TYPE(string n, int i)
         {
             name = n;
+            has_generic_type = n.IndexOf('`') > 0 || n.IndexOf('[') > 0;// FIXME: support for generics?
+            has_pointer_type = name.IndexOf('*') > 0 ;
             assembly_id = i;
         }
 
@@ -37,6 +45,9 @@ namespace md_consumer
     public class CONSUMED_ARRAY_TYPE : CONSUMED_REFERENCED_TYPE
     {
         public CONSUMED_REFERENCED_TYPE element_type;
+        public new bool is_excluded() {
+            return base.is_excluded() || element_type.is_excluded();
+        }   
         public CONSUMED_ARRAY_TYPE(string n, int i, CONSUMED_REFERENCED_TYPE t) : base (n, i)
         {
             element_type = t;
@@ -47,6 +58,8 @@ namespace md_consumer
     {
         public string dotnet_name;
         public string eiffel_name;
+        public int assembly_id=-1;
+        public bool is_forwarded_type=false;
         public CONSUMED_REFERENCED_TYPE? parent;
         public List<CONSUMED_REFERENCED_TYPE> interfaces;
         public int flags = 0;
@@ -63,12 +76,19 @@ namespace md_consumer
         public List<CONSUMED_EVENT>? events = null;
         public List<CONSUMED_CONSTRUCTOR>? constructors = null;
 
+        public bool is_excluded() {
+            return parent != null && parent.is_excluded();
+            // FIXME: add more criteria!
+        }        
+
         public CONSUMED_TYPE (string dn, string en,
 			bool is_inter, bool is_abstract, bool is_sealed, bool is_value_type, bool is_enumerator,
             CONSUMED_REFERENCED_TYPE? par,
-            List<CONSUMED_REFERENCED_TYPE> interf
+            List<CONSUMED_REFERENCED_TYPE> interf,
+            int aid=-1
         )
         {
+            assembly_id = aid;
             dotnet_name = dn;
             eiffel_name = en;
             if (is_inter) flags = flags | is_interface_mask;
@@ -124,140 +144,12 @@ namespace md_consumer
 			bool is_inter, bool is_abstract, bool is_sealed, bool is_value_type, bool is_enumerator,
             CONSUMED_REFERENCED_TYPE? par,
             List<CONSUMED_REFERENCED_TYPE> interfaces,
-            CONSUMED_REFERENCED_TYPE enc_type
-        ) : base(dn, en, is_inter, is_abstract, is_sealed, is_value_type, is_enumerator, par, interfaces)
+            CONSUMED_REFERENCED_TYPE enc_type,
+            int aid=-1
+        ) : base(dn, en, is_inter, is_abstract, is_sealed, is_value_type, is_enumerator, par, interfaces, aid)
         {
             enclosing_type = enc_type;
         }
     }
     
-    public class JSON_CONSUMED_TYPE
-    {
-        public Type type;
-
-        public JSON_CONSUMED_TYPE(Type t)
-        {
-            type = t;
-        }
-
-        public void appendToJson(Utf8JsonWriter writer) 
-        {
-            writer.WritePropertyName("type");
-            writer.WriteStartObject();
-
-            Type? baseType = type.BaseType;
-            string? tname = type_declaration();
-
-            if (tname != null) { // && is_eiffel_compliant()) {
-
-                writer.WritePropertyName("name");
-                writer.WriteStringValue(tname);
-
-                if (type.IsClass && baseType != null && !String.Equals(baseType.FullName, "System.Object", StringComparison.InvariantCulture))
-                {
-                    writer.WritePropertyName("ancestor");
-                    writer.WriteStringValue(baseType.FullName);
-                }
-                ConstructorInfo[] l_constructors = type.GetConstructors();
-                if (l_constructors.Length > 0)
-                {
-                    writer.WritePropertyName("constructors");
-                    writer.WriteStartArray();
-                    foreach (ConstructorInfo ci in l_constructors)
-                    {
-                        writer.WriteStringValue(ci.ToString());
-                    }
-                    writer.WriteEndArray();
-                }
-
-                FieldInfo[] l_fields = type.GetFields();
-                if (l_fields.Length > 0)
-                {
-                    writer.WritePropertyName("fields");
-                    writer.WriteStartArray();
-                    foreach (FieldInfo fi in l_fields)
-                    {
-                        writer.WriteStringValue(fi.ToString());
-                    }
-                    writer.WriteEndArray();
-                }
-
-                MethodInfo[] l_methods = type.GetMethods();
-                if (l_methods.Length > 0)
-                {
-                    writer.WritePropertyName("methods");
-                    writer.WriteStartArray();
-                    foreach (MethodInfo mi in l_methods)
-                    {
-                        writer.WriteStringValue(mi.ToString());
-                    }
-                    writer.WriteEndArray();
-                }
-            }
-            writer.WriteEndObject(); // type
-        }
-
-        public void appendTypeNamesToJsonArray(Utf8JsonWriter writer) 
-        {
-            Type? baseType = type.BaseType;
-            string? tname = type_declaration();
-
-            if (tname != null && is_eiffel_compliant()) {
-                tname = tname + " " + type.FullName;
-                writer.WriteStringValue(tname);
-            }
-        }
-
-        string? type_declaration()
-        {
-            if (type.IsClass)
-            {
-                return "class";
-            }
-            else if (type.IsValueType)
-            {
-                Type? baseType = type.BaseType;
-
-                if (String.Equals(baseType?.FullName, "System.Enum", StringComparison.InvariantCulture))
-                {
-                    return "enum";
-                }
-                else
-                {
-                    return "struct";
-                }
-            }
-            else if (type.IsInterface)
-            {
-                return "interface";
-            }
-            else
-            {
-                // return "unknown";
-                return null;
-            }
-        }
-        bool is_eiffel_compliant() 
-        {
-            /*
-             * Check REFLECTION.is_consumed_type and EC_CHECKED_ENTITY 
-             */
-             
-            string? tname=type_declaration();
-
-            if (tname == null)
-            {
-                return false;
-            }
-            else if (type.IsNested || type.IsNotPublic || type.Name.Contains("<"))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-    }
-
 }

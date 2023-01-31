@@ -27,11 +27,13 @@ namespace md_consumer
 		protected NAME_SOLVER name_solver = new NAME_SOLVER();
 		protected ARGUMENT_SOLVER argument_solver = new ARGUMENT_SOLVER();
 		protected OVERLOAD_SOLVER overload_solver;
+		public int assembly_id=-1;
 
 
-        public TYPE_CONSUMER(Type t, string en)
+        public TYPE_CONSUMER(Type t, string en, int aid=-1)
         {
 			shared_assembly_mapping = new SHARED_ASSEMBLY_MAPPING();
+			assembly_id=aid;
             system_type = t;
             eiffel_name = en;
 
@@ -59,8 +61,44 @@ namespace md_consumer
 				dotnet_name, eiffel_name, t.IsInterface, t.IsAbstract,
 					false, t.IsValueType, t.IsEnum, null, new List<CONSUMED_REFERENCED_TYPE>(0)
 			);
+			if (assembly_id >= 0) {
+				// Type info only for forwarded type
+				initialize_type_base_consumer(t, en, dotnet_name, false, null, new List<CONSUMED_REFERENCED_TYPE>(0));
+			} else {
+				initialize_type_consumer(t, en, dotnet_name);
+			}
+			consumed_type.assembly_id = assembly_id;
+		}
 
-			initialize_type_consumer(t, en, dotnet_name);
+		protected void initialize_type_base_consumer(Type t, string en, string dotnet_name, bool force_sealed, CONSUMED_REFERENCED_TYPE? parent, List<CONSUMED_REFERENCED_TYPE> interfaces)
+		{
+			if (t.IsNestedPublic || t.IsNestedFamily || t.IsNestedFamORAssem) {
+					// -- `t.declaring_type' contains enclosing type of current nested type.
+				Type? l_decl_type = t.DeclaringType;
+				if (l_decl_type != null) {
+					Debug.Assert(is_consumed_type (l_decl_type), "is_declaring_type_consumed");
+					CONSUMED_REFERENCED_TYPE enc_type = referenced_type_from_type(l_decl_type);
+					consumed_type = new CONSUMED_NESTED_TYPE(
+							dotnet_name, en, t.IsInterface, (! force_sealed && t.IsAbstract),
+							force_sealed, t.IsValueType, t.IsEnum, parent, interfaces,
+							enc_type
+						);
+				} else {
+					Debug.Assert(false, "declaring_type_attached");
+					consumed_type = new CONSUMED_TYPE(
+							dotnet_name, en, t.IsInterface, (! force_sealed && t.IsAbstract),
+							force_sealed, t.IsValueType, t.IsEnum, parent, interfaces
+						);
+				}
+			} else {
+				consumed_type = new CONSUMED_TYPE(
+							dotnet_name, en, t.IsInterface, (! force_sealed && t.IsAbstract),
+							force_sealed, t.IsValueType, t.IsEnum, parent, interfaces
+						);
+			}
+			if (assembly_id >= 0) {
+				consumed_type.assembly_id = assembly_id;
+			}			
 		}
 
 		protected void initialize_type_consumer(Type t, string en, string dotnet_name)
@@ -99,7 +137,7 @@ namespace md_consumer
 
 			l_force_sealed = t.IsSealed;
 			if (!l_force_sealed && (t.IsInterface || t.IsAbstract)) {
-					// -- Enum and ValueType should not be decended from in Eiffel
+					// -- Enum and ValueType should not be descended from in Eiffel
 				l_force_sealed = t.Equals (typeof (System.Enum)) || t.Equals (typeof (System.ValueType));
 				if (!l_force_sealed) {
 						// -- For non-Eiffel compliant interfaces we need to force them to be frozen
@@ -116,38 +154,7 @@ namespace md_consumer
 				}
 			}
 
-			if (t.IsNestedPublic || t.IsNestedFamily || t.IsNestedFamORAssem) {
-					// -- `t.declaring_type' contains enclosing type of current nested type.
-				Type? l_decl_type = t.DeclaringType;
-				if (l_decl_type != null) {
-					Debug.Assert(is_consumed_type (l_decl_type), "is_declaring_type_consumed");
-					CONSUMED_REFERENCED_TYPE? enc_type = referenced_type_from_type(l_decl_type);
-					if (enc_type != null) {
-						consumed_type = new CONSUMED_NESTED_TYPE(
-								dotnet_name, eiffel_name, t.IsInterface, (! l_force_sealed && t.IsAbstract),
-								l_force_sealed, t.IsValueType, t.IsEnum, parent, interfaces,
-								enc_type
-							);
-					} else {
-						Debug.Assert(false, "declaring_type_attached");
-						consumed_type = new CONSUMED_TYPE(
-							dotnet_name, eiffel_name, t.IsInterface, (! l_force_sealed && t.IsAbstract),
-							l_force_sealed, t.IsValueType, t.IsEnum, parent, interfaces
-						);
-					}
-				} else {
-					Debug.Assert(false, "declaring_type_attached");
-					consumed_type = new CONSUMED_TYPE(
-							dotnet_name, eiffel_name, t.IsInterface, (! l_force_sealed && t.IsAbstract),
-							l_force_sealed, t.IsValueType, t.IsEnum, parent, interfaces
-						);
-				}
-			} else {
-				consumed_type = new CONSUMED_TYPE(
-							dotnet_name, eiffel_name, t.IsInterface, (! l_force_sealed && t.IsAbstract),
-							l_force_sealed, t.IsValueType, t.IsEnum, parent, interfaces
-						);
-			}
+			initialize_type_base_consumer(t, en, dotnet_name, l_force_sealed, parent, interfaces);
 
 			if (t.IsInterface) {
 					// -- Lookup members of current interface `t' but also add members coming
@@ -275,24 +282,29 @@ namespace md_consumer
 				Type? l_decl_type = info.DeclaringType;
 				if (l_decl_type != null) {
 					string l_dotnet_name = l_info_name;
-		 			string? l_unique_eiffel_name = overload_solver.unique_eiffel_name (l_info_name, info.GetParameters(), info.ReturnType, l_decl_type);
-		 			if (l_unique_eiffel_name == null) {
-						l_unique_eiffel_name = l_info_name;
+					try {
+						string? l_unique_eiffel_name = overload_solver.unique_eiffel_name (l_info_name, info.GetParameters(), info.ReturnType, l_decl_type);
+						if (l_unique_eiffel_name == null) {
+							l_unique_eiffel_name = l_info_name;
+						}
+						return new CONSUMED_PROCEDURE (
+								l_unique_eiffel_name,
+								l_dotnet_name,
+								SHARED_NAME_FORMATTER.formatted_feature_name (l_dotnet_name),
+								argument_solver.method_arguments(info),
+								info.IsFinal,
+								info.IsStatic,
+								info.IsAbstract,
+								info.IsPublic,
+								(((int)info.Attributes) & (int)MethodAttributes.NewSlot) == (int)MethodAttributes.NewSlot,
+								info.IsVirtual,
+								property_or_event,
+								referenced_type_from_type (l_decl_type)
+							);
+					} catch {
+						// FIXME: exception due to function pointer... info.GetParameters() and info.ReturnType.
+						return null;
 					}
-					return new CONSUMED_PROCEDURE (
-							l_unique_eiffel_name,
-							l_dotnet_name,
-							SHARED_NAME_FORMATTER.formatted_feature_name (l_dotnet_name),
-							argument_solver.method_arguments(info),
-							info.IsFinal,
-							info.IsStatic,
-							info.IsAbstract,
-							info.IsPublic,
-							(((int)info.Attributes) & (int)MethodAttributes.NewSlot) == (int)MethodAttributes.NewSlot,
-							info.IsVirtual,
-							property_or_event,
-							referenced_type_from_type (l_decl_type)
-						);
 				} else {
 					Debug.Assert(false, "from doc");
 				}
@@ -361,12 +373,18 @@ namespace md_consumer
 		 		l_info = METHOD_RETRIEVER.property_getter (info);
 		 		if (l_info != null) {
 					l_getter = consumed_function (l_info, true);
+					if (l_getter != null && l_getter.is_excluded()) {
+						l_getter = null;
+					}
 		 		}
 			}
 			if (info.CanWrite) {
 		 		l_info = METHOD_RETRIEVER.property_setter (info);
 		 		if (l_info != null) {
 					l_setter = consumed_procedure (l_info, true);
+					if (l_setter != null && l_setter.is_excluded()) {
+						l_setter = null;
+					}
 		 		}				
 			}
 			if (l_info != null) {
@@ -404,14 +422,22 @@ namespace md_consumer
 
 			if (l_raise_method != null) {
 				l_raiser = consumed_procedure (l_raise_method, true);
+				if (l_raiser != null && l_raiser.is_excluded()) {
+					l_raiser = null;
+				}
 			}
 			if (l_add_method != null) {
 				l_adder = consumed_procedure (l_add_method, true);
+				if (l_adder != null && l_adder.is_excluded()) {
+					l_adder = null;
+				}
 			}
 			if (l_remove_method != null) {
 				l_remover = consumed_procedure (l_remove_method, true);
+				if (l_remover != null && l_remover.is_excluded()) {
+					l_remover = null;
+				}				
 			}
-
 			string dotnet_name = info.Name;
 			if (l_remover != null || l_raiser != null || l_adder != null) {
 				Type? l_type = info.DeclaringType;
@@ -695,12 +721,12 @@ namespace md_consumer
 							if (!is_property_or_event (l_meth)) {
 								if (is_function (l_meth)) {
 									CONSUMED_FUNCTION? cp_function = consumed_function (l_meth, false);
-									if (cp_function != null) {
+									if (cp_function != null && !cp_function.is_excluded()) {
 										l_functions.Add (cp_function);
 									}
 								} else {
 									CONSUMED_PROCEDURE? cp_procedure = consumed_procedure (l_meth, false);
-									if (cp_procedure != null) {
+									if (cp_procedure != null && !cp_procedure.is_excluded()) {
 										l_procedures.Add (cp_procedure);
 									}
 								}
@@ -716,11 +742,11 @@ namespace md_consumer
 							}
 							if (is_consumed_field (l_field)) {
 								CONSUMED_FIELD? cp_field = consumed_field (l_field);
-								if (cp_field != null) {
+								if (cp_field != null && !cp_field.is_excluded()) {
 									l_fields.Add (cp_field);
 									if (is_public_field (l_field) && !is_init_only_field (l_field)) {
 										CONSUMED_PROCEDURE? l_setter = attribute_setter_feature (l_field, l_fields.Last().eiffel_name);
-										if (l_setter != null) {
+										if (l_setter != null && !l_setter.is_excluded()) {
 											cp_field.set_setter (l_setter);
 											l_procedures.Add (l_setter);
 										} else {
@@ -728,7 +754,7 @@ namespace md_consumer
 										}
 									}
 								} else {
-									Debug.Assert(false, "has field");
+									Debug.Assert(cp_field != null && cp_field.is_excluded(), "has field");
 								}
 							}
 						} else if (l_member.MemberType == MemberTypes.Property) {
@@ -764,13 +790,28 @@ namespace md_consumer
 					l_functions = new List<CONSUMED_FUNCTION>(l_other_functions.Count + Additional_enum_features);
 					foreach (CONSUMED_FUNCTION fct in l_other_functions)
 					{
-						l_functions.Add(fct);
+						if (!fct.is_excluded()) {
+							l_functions.Add(fct);
+						}
 					}
-					l_functions.Add (infix_and_feature (internal_referenced_type));
-					l_functions.Add (infix_or_feature (internal_referenced_type));
-					if (underlying_enum_type != null) {
-						l_functions.Add (from_integer_feature (internal_referenced_type, underlying_enum_type));
-						l_functions.Add (to_integer_feature (internal_referenced_type, underlying_enum_type));
+					CONSUMED_FUNCTION? f = null;
+					f = infix_and_feature (internal_referenced_type);
+					if (!f.is_excluded()) {
+						l_functions.Add (f);
+					}
+					f = infix_or_feature (internal_referenced_type);
+					if (!f.is_excluded()) {
+						l_functions.Add (f);
+					}
+					if (underlying_enum_type != null && !underlying_enum_type.is_excluded()) {
+						f = from_integer_feature (internal_referenced_type, underlying_enum_type);
+						if (!f.is_excluded()) {
+							l_functions.Add (f);
+						}
+						f = to_integer_feature (internal_referenced_type, underlying_enum_type);
+						if (!f.is_excluded()) {
+							l_functions.Add (f);
+						}
 					}
 				}
 				consumed_type.set_functions (l_functions);
@@ -840,7 +881,7 @@ namespace md_consumer
 						// -- to avoid confusion.
 		 			tc[0].set_name (Creation_routine_name);
 					var c = tc[0].consumed_constructor();
-					if (c != null) {
+					if (c != null && !c.is_excluded()) {
 						res.Add(c);
 					}
 				} else {
@@ -856,7 +897,7 @@ namespace md_consumer
 					if (args.Length == 0) {
 						csolver.set_name(Creation_routine_name);
 						var c = csolver.consumed_constructor();
-						if (c != null) {
+						if (c != null && !c.is_excluded()) {
 							res.Add(c);
 						}
 						p = p + 1;
@@ -878,7 +919,7 @@ namespace md_consumer
 						name = name_solver.unique_feature_name (name);
 						csolver.set_name (name);
 						var c = csolver.consumed_constructor();
-						if (c != null) {
+						if (c != null && !c.is_excluded()) {
 							res.Add(c);
 						}
 						p = p + 1;
@@ -910,7 +951,7 @@ namespace md_consumer
 						name = name_solver.unique_feature_name(name);
 						csolver.set_name(name);
 						var c = csolver.consumed_constructor();
-						if (c != null) {
+						if (c != null && !c.is_excluded()) {
 							res.Add(c);
 						}
 						p = p + 1;
@@ -1213,57 +1254,20 @@ namespace md_consumer
 		public string Operator_name_prefix = "op_";
 		public string Op_implicit = "op_implicit";
 		public string Op_explicit = "op_Explicit";
-    }
+	}
 
-    class TYPE_INFO_ONLY_CONSUMER : TYPE_CONSUMER
-    {
-        public TYPE_INFO_ONLY_CONSUMER(Type t, string en) : base (t, en)
-        {
+	class TYPE_INFO_ONLY_CONSUMER : TYPE_CONSUMER
+	{
+		public TYPE_INFO_ONLY_CONSUMER(Type t, string en, int aid=-1) : base (t, en, aid)
+		{
 		}
-
 		new protected void initialize_type_consumer(Type t, string en, string dotnet_name)
 		{
-			CONSUMED_REFERENCED_TYPE? parent = null;
-			// Note: `parent` is computed only for full type info ...
-			bool l_force_sealed = false;
 			List<CONSUMED_REFERENCED_TYPE> interfaces = new List<CONSUMED_REFERENCED_TYPE>(0);
+			CONSUMED_REFERENCED_TYPE? parent = null;
+			bool l_force_sealed = false;
 
-			if (t.IsNestedPublic || t.IsNestedFamily || t.IsNestedFamORAssem) {
-					// -- `t.declaring_type' contains enclosing type of current nested type.
-				Type? l_decl_type = t.DeclaringType;
-				if (l_decl_type != null) {
-					Debug.Assert(is_consumed_type (l_decl_type), "is_declaring_type_consumed");
-					CONSUMED_REFERENCED_TYPE enc_type = referenced_type_from_type(l_decl_type);
-					consumed_type = new CONSUMED_NESTED_TYPE(
-							dotnet_name, en, t.IsInterface, (! l_force_sealed && t.IsAbstract),
-							l_force_sealed, t.IsValueType, t.IsEnum, parent, interfaces,
-							enc_type
-						);
-				} else {
-					Debug.Assert(false, "declaring_type_attached");
-					consumed_type = new CONSUMED_TYPE(
-							dotnet_name, en, t.IsInterface, (! l_force_sealed && t.IsAbstract),
-							l_force_sealed, t.IsValueType, t.IsEnum, parent, interfaces
-						);
-				}
-			} else {
-				consumed_type = new CONSUMED_TYPE(
-							dotnet_name, en, t.IsInterface, (! l_force_sealed && t.IsAbstract),
-							l_force_sealed, t.IsValueType, t.IsEnum, parent, interfaces
-						);
-			}
-
-        	// if (t.IsNestedPublic || t.IsNestedAssembly || t.IsNestedFamANDAssem) {
-			// 	Type? l_declaring_type = t.DeclaringType;
-			// 	if (l_declaring_type != null) {
-			// 		Debug.Assert(is_consumed_type(l_declaring_type), "is declaring type consumed");
-			// 		consumed_type = new CONSUMED_NESTED_TYPE(dotnet_name, en, t.IsInterface, t.IsAbstract, false, t.IsValueType, t.IsEnum, null, new List<CONSUMED_REFERENCED_TYPE>(0), referenced_type_from_type(l_declaring_type));
-			// 	} else{
-			// 		Debug.Assert(false, "declaring type attached");
-			// 	}
-			// } else {
-			// 	consumed_type = new CONSUMED_TYPE(dotnet_name, en, t.IsInterface, t.IsAbstract, false, t.IsValueType, t.IsEnum, null, new List<CONSUMED_REFERENCED_TYPE>(0));
-			// }
-        }
-    }
+			initialize_type_base_consumer(t, en, dotnet_name, l_force_sealed, parent, interfaces);
+		}
+	}
 }

@@ -52,6 +52,17 @@ namespace md_consumer
             is_consumed = ca.is_consumed;
             has_info_only = ca.has_info_only;
         }
+
+        public string title() {
+            string? res = fullname;
+            if (res == null) {
+                res = name;
+            }
+            if (res == null) {
+                res = location;
+            }
+            return res;
+        }
         public bool same_as (CONSUMED_ASSEMBLY? other)
         {
             if (this == other) {
@@ -109,7 +120,6 @@ namespace md_consumer
 
         public void appendToJson(Utf8JsonWriter writer) 
         {
-            
             writer.WritePropertyName(JSON_NAMES.assembly);
             writer.WriteStartObject();
 

@@ -34,14 +34,17 @@ namespace md_consumer
         public string[] dotnet_names; // Assembly types .Net names
         public int[] flags; // Flags
         public int[] positions; // Positions of types
+        public int[] assembly_ids; // Potential assembly ids (for forwarded types)
         public int count = 0; // Number of types
-        public CONSUMED_ASSEMBLY_TYPES(int a_count)
+        public int capacity = 0; // Capacity of current containers.
+        public CONSUMED_ASSEMBLY_TYPES(int a_capacity)
         {
-            eiffel_names = new string[a_count];
-            dotnet_names = new string[a_count];
-            flags = new int[a_count];
-            positions = new int[a_count];
-            count =  a_count;
+            eiffel_names = new string[a_capacity];
+            dotnet_names = new string[a_capacity];
+            flags = new int[a_capacity];
+            positions = new int[a_capacity];
+            assembly_ids = new int[a_capacity];
+            capacity =  a_capacity;
         }
 
         public string[] namespaces()
@@ -75,8 +78,7 @@ namespace md_consumer
             return l_types_index.ToArray();
         }
 
-        private int index = 0; // Number of items inserted so far in arrays
-        public void put (string dn, string en, bool a_int, bool a_enum, bool a_delegate, bool a_value_type, int a_pos)
+        public void put (string dn, string en, bool a_int, bool a_enum, bool a_delegate, bool a_value_type, int a_pos, int assembly_id)
         // Add type with Eiffel name `en`, and .Net name `dn`.
         // - a_int: is interface?
         // - a_enum: is enum?
@@ -85,16 +87,17 @@ namespace md_consumer
         // Put those information for position `a_pos`
         {
             int flag = 0;
-            eiffel_names[index] = en;
-            dotnet_names[index] = dn;
-            positions[index] = a_pos;
+            eiffel_names[count] = en;
+            dotnet_names[count] = dn;
+            positions[count] = a_pos;
             if (a_int) { flag = flag_is_interface; }
             else if (a_enum) { flag = flag_is_enum; }
             else if (a_delegate) { flag = flag_is_delegate; }
             else if (a_value_type) { flag = flag_is_value_type; }
-            flags[index] = flag;
+            flags[count] = flag;
+            assembly_ids[count] = assembly_id;
 
-            index = index + 1;
+            count = count + 1;
         }
 
         static public int flag_is_class = 0;

@@ -20,11 +20,38 @@ namespace md_consumer
         {
             return "make";
         }
+
         public CONSUMED_CONSTRUCTOR(string en, CONSUMED_ARGUMENT[] args, bool pub, CONSUMED_REFERENCED_TYPE a_type) : base (en, en, pub, a_type)
         {
             dotnet_name = ".ctor" ;
             arguments = args;
         }
+
+        new public bool is_excluded() {
+            if (base.is_excluded()) {
+                return true;
+            } else {
+                if (arguments != null) {
+                    foreach (var a in arguments) {
+                        if (a.is_excluded()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }        
+        public bool has_generic_type() 
+        {
+            if (arguments != null) {
+                foreach (var a in arguments) {
+                    if (a.has_generic_type) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }          
 
         public bool is_equal (CONSUMED_ARGUMENT other)
         {

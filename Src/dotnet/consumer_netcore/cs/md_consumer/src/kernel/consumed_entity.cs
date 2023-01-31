@@ -32,6 +32,11 @@ namespace md_consumer
 
         public CONSUMED_REFERENCED_TYPE declared_type;
         public bool _is_public ;
+        public bool is_excluded() {
+            // Is current entity excluded from consumer result?
+            // FIXME: for now, any generic related entity is excluded
+            return declared_type.is_excluded();
+        }
 
         public bool is_public()
         {
@@ -63,7 +68,6 @@ namespace md_consumer
                 return eiffel_name.CompareTo(other.eiffel_name);
             }
         }
-    
     }
 
     public class CONSUMED_PROPERTY : CONSUMED_ENTITY

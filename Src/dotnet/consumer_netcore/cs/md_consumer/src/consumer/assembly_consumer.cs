@@ -31,13 +31,29 @@ namespace md_consumer
             destination_path_name = cache_location;
         }
 
+        public bool assembly_ids_has (CONSUMED_ASSEMBLY ca)
+        {
+            foreach(CONSUMED_ASSEMBLY i in assembly_ids) {
+                if (i.same_as (ca)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public MdConsumerData consume(Assembly assembly, bool a_info_only)
         {
             MdConsumerData md_data = new MdConsumerData();
-
-            System.Diagnostics.Trace.WriteLine(string.Format("Beginning consumption for assembly '{0}'.", assembly.ToString()));
-            System.Diagnostics.Trace.WriteLine(string.Format("Consuming into '{0}'.", destination_path_name));
+            if (a_info_only) {
+                System.Diagnostics.Trace.WriteLine(string.Format("Beginning consumption for assembly '{0}'.", assembly.ToString()));
+                System.Diagnostics.Trace.WriteLine(string.Format("Consuming into '{0}'.", destination_path_name));
+            } else {
+                System.Diagnostics.Trace.WriteLine(string.Format("Beginning full consumption for assembly '{0}'.", assembly.ToString()));
+                System.Diagnostics.Trace.WriteLine(string.Format("Consuming fully into '{0}'.", destination_path_name));
+            }
+            //JFIAT 
             shared_assembly_mapping.reset_assembly_mapping();
+
 
             // AssemblyName[] l_referenced_assemblies = assembly.GetReferencedAssemblies();
             // int count = l_referenced_assemblies.Length;
@@ -46,25 +62,26 @@ namespace md_consumer
             string? l_ass_full_name = assembly.FullName;
 
             if (l_ass_full_name != null) {
-                last_index = 1;
-                assembly_ids.Clear();
-                // CONSUMED_ASSEMBLY? ca = -- get consumed assembly from cache
-                // assembly_ids.Add(ca);
-                var l_assembly_mapping = shared_assembly_mapping.assembly_mapping();
-                l_assembly_mapping.Add(l_ass_full_name, last_index);
-                build_referenced_assemblies (assembly);
+            	assembly_ids.Clear();
+                CONSUMED_ASSEMBLY? ca = consumed_assembly(assembly);
+                if (ca != null) {
+                    assembly_ids.Add(ca);
+                }
+                if (!shared_assembly_mapping.is_assembly_mapped(l_ass_full_name)) { //JFIAT
+                    last_index = shared_assembly_mapping.last_index() + 1;
+                    shared_assembly_mapping.record_assembly_mapping(last_index, l_ass_full_name);
+                }
+                build_referenced_assemblies (assembly, a_info_only);
                 prepare_consumed_types(assembly, a_info_only);
                 serialize_consumed_types (a_info_only, md_data);
             }       
-            return md_data;    
+            return md_data;
         }
-
-        public void build_referenced_assemblies (Assembly ass)
+        public void build_referenced_assemblies (Assembly ass, bool a_info_only)
         {
             AssemblyName[] referenced_assemblies = ass.GetReferencedAssemblies();
             int count = referenced_assemblies.Length;
             if (count > 0) {
-                var l_assembly_mapping = shared_assembly_mapping.assembly_mapping();
                 foreach (AssemblyName l_assembly_name in referenced_assemblies)
                 {
                     Assembly? l_ref_ass = null;
@@ -72,20 +89,23 @@ namespace md_consumer
                         l_ref_ass = SHARED_ASSEMBLY_LOADER.assembly_loader.assembly_from_name(l_assembly_name);
                     } catch {
                         l_ref_ass = null;
-                    }                    
+                    }
                     if (l_ref_ass == null) {
                         System.Diagnostics.Trace.WriteLine(string.Format(" ! could not load assembly '{0}'.", l_assembly_name.ToString()));
                     } else {
                         string? l_ref_ass_full_name = l_ref_ass.FullName;
                         if (l_ref_ass_full_name != null) {
                             CONSUMED_ASSEMBLY? ca = consumed_assembly (l_ref_ass);
-                            if (ca != null && !shared_assembly_mapping.is_assembly_mapped(l_ref_ass_full_name)) {
-                                // last_index = last_index + 1;
-                                last_index = assembly_ids.Count;
-                                assembly_ids.Add(ca);
-                                shared_assembly_mapping.record_assembly_mapping(last_index, l_ref_ass_full_name);
-                                    // Add also referenced assemblies of assembly referenced.
-                                build_referenced_assemblies (l_ref_ass);
+                            if (ca != null) {
+                                if (!shared_assembly_mapping.is_assembly_mapped(l_ref_ass_full_name)) {
+                                    last_index = shared_assembly_mapping.last_index() + 1;
+                                    shared_assembly_mapping.record_assembly_mapping(last_index, l_ref_ass_full_name);
+                                }
+                                if (!assembly_ids_has(ca)) {
+                                    assembly_ids.Add(ca);
+                                        // Add also referenced assemblies of assembly referenced.
+                                    build_referenced_assemblies (l_ref_ass, a_info_only);
+                                }
                             }
                         }
                     }
@@ -175,11 +195,11 @@ namespace md_consumer
                 return checked_type(t).is_eiffel_compliant();
         }
 
-        private bool prepare_consumed_type_into (Type t, Dictionary <string,List<TYPE_NAME_SOLVER>> names)
+        private bool prepare_consumed_type_into (Type t, Dictionary <string,List<TYPE_NAME_SOLVER>> names, int assembly_id = -1)
         {
             if (is_consumed_type (t))
             {
-                TYPE_NAME_SOLVER type_name = new TYPE_NAME_SOLVER(t);
+                TYPE_NAME_SOLVER type_name = new TYPE_NAME_SOLVER(t, assembly_id);
                 string simple_name = type_name.simple_name;
                 List<TYPE_NAME_SOLVER>? l_names = null;
                 if (names.ContainsKey(simple_name)) {
@@ -215,11 +235,12 @@ namespace md_consumer
                 // FIXME : check ... status_querier  see the Eiffel class ASSEMBLY_CONSUMER.prepare_consumed_types
             }
             try {
-                Type[] l_fwd_types = assembly.GetForwardedTypes();
+                Type[] l_fwd_types = assembly.GetForwardedTypes(); // FIXME : fetch assembly.GetForwardedTypes()  ? or rely on referenced assemblies? Review Eiffel .Net compiler and its dependency on "mscorlib" !!!
                 if (l_fwd_types != null) {
                     foreach (Type t in l_fwd_types) 
                     {
-                        if (prepare_consumed_type_into(t, names)) {
+                        int aid = shared_assembly_mapping.assembly_index(t);
+                        if (prepare_consumed_type_into(t, names, aid)) {
                             generated_count = generated_count + 1;
                         }
                     }
@@ -259,9 +280,9 @@ namespace md_consumer
                         try {
                             if (a_info_only) {
                                 // Expand type info ...
-                                tc = new TYPE_INFO_ONLY_CONSUMER(t, tns.eiffel_name);
+                                tc = new TYPE_INFO_ONLY_CONSUMER(t, tns.eiffel_name, tns.assembly_id);
                             } else {
-                                tc = new TYPE_CONSUMER(t, tns.eiffel_name);
+                                tc = new TYPE_CONSUMER(t, tns.eiffel_name, tns.assembly_id);
                             }
                             type_consumers.Add(tns.eiffel_name, tc);
                         }
@@ -310,7 +331,7 @@ namespace md_consumer
                         }
                         // Do not add base types in consumed data
                         if (!is_base_type(type.dotnet_name)) {
-                            types.put(type.dotnet_name, type.eiffel_name, type.is_interface(), type.is_enum(), l_is_delegate, l_is_value_type, l_file_position);
+                            types.put(type.dotnet_name, type.eiffel_name, type.is_interface(), type.is_enum(), l_is_delegate, l_is_value_type, l_file_position, type.assembly_id);
                             // Delete constructor of System.Object for compiler
                             if (type.dotnet_name.Equals("System.Object")) {
                                 type.set_constructors(new List<CONSUMED_CONSTRUCTOR>(0));
@@ -328,7 +349,7 @@ namespace md_consumer
                 } else {
                     CONSUMED_TYPE type = tc.consumed_type;
                     if (!is_base_type(type.dotnet_name)) {
-                        types.put(type.dotnet_name, type.eiffel_name, type.is_interface(), type.is_enum(), false, false, 0);
+                        types.put(type.dotnet_name, type.eiffel_name, type.is_interface(), type.is_enum(), false, false, 0, type.assembly_id);
                     }
                 }
             }

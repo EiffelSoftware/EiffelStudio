@@ -79,4 +79,9 @@ feature	-- Names
 
 	type: JSON_STRING once Result := "type" end
 
+	items: JSON_STRING once Result := "items" end
+	flag: JSON_STRING once Result := "flag" end
+	position: JSON_STRING once Result := "position" end
+	assembly_ids: JSON_STRING once Result := "assembly_ids" end
+
 end

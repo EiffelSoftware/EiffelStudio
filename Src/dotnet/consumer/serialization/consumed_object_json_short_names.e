@@ -42,7 +42,9 @@ inherit
 			declared_type,
 			return_type,
 			associated_reference_type,
-			enclosing_type
+			enclosing_type,
+			flag,
+			position
 		end
 
 feature	-- Names
@@ -104,5 +106,8 @@ feature	-- Names
 --	is_infix: JSON_STRING once Result := "is_infix" end
 --	is_prefix: JSON_STRING once Result := "is_prefix" end
 --	is_constructor: JSON_STRING once Result := "is_constructor" end
+	flag: JSON_STRING once Result := "f" end
+	position: JSON_STRING once Result := "p" end
+
 
 end

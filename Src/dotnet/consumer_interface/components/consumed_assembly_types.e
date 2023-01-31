@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			create dotnet_names.make_filled (Void, a_count + 1)
 			create flags.make_filled (0, a_count + 1)
 			create positions.make_filled (0, a_count + 1)
+			create assembly_ids.make_filled (0, a_count + 1)
 			count := a_count
 		ensure
 			count_set: count = a_count
@@ -41,6 +42,9 @@ feature -- Access
 
 	positions: SPECIAL [INTEGER]
 			-- Position of types.
+
+	assembly_ids: SPECIAL [INTEGER]
+			-- Potential assembly ids (for forwarded types).
 
 	count: INTEGER
 			-- Number of types.
@@ -140,9 +144,30 @@ feature -- Element Settings
 				flag := {TYPE_FLAGS}.Is_value_type
 			end
 			flags.put (flag, index)
+			assembly_ids.put (0, index)
 		ensure
 			eiffel_name_inserted: eiffel_names.item (index) = en
 			dotnet_name_inserted: dotnet_names.item (index) = dn
+			position_inserted: positions.item (index) = a_pos
+		end
+
+	put_forwarded (dn, en: STRING; int, enum, dele, val: BOOLEAN; a_pos: INTEGER; a_assembly_id: INTEGER)
+			-- Add forwarded type with Eiffel name `en' and .NET name `dn'.
+			-- type is interface if `int' is true, enum if `enum'
+			-- is true, delegate if `dele' is true, deferred if
+			-- `def' is true and value type if `val' is true.
+		require
+			non_void_dotnet_name: dn /= Void
+			valid_dotnet_name: not dn.is_empty
+			non_void_eiffel_name: en /= Void
+			valid_eiffel_name: not en.is_empty
+		do
+			put (dn, en, int, enum, dele, val, a_pos)
+			assembly_ids.put (a_assembly_id, index)
+		ensure
+			eiffel_name_inserted: eiffel_names.item (index) = en
+			dotnet_name_inserted: dotnet_names.item (index) = dn
+			assembly_id_inserted: assembly_ids.item (index) = a_assembly_id
 			position_inserted: positions.item (index) = a_pos
 		end
 

@@ -30,34 +30,82 @@ namespace md_consumer
             writer.WriteStartObject();
             writer.WritePropertyName(JSON_NAMES.count); //"count");
             writer.WriteNumberValue(types.count);
+            bool use_items_object = true;
+            if (use_items_object) {
+                writer.WritePropertyName(JSON_NAMES.items); //"items");
+                writer.WriteStartArray();
+                int en_count=types.eiffel_names.Length;
+                int dn_count=types.dotnet_names.Length;
+                int fl_count=types.flags.Length;
+                int po_count=types.positions.Length;
+                int as_count=types.assembly_ids.Length;
+                string? en=null;
+                string? dn=null;
 
-            writer.WritePropertyName(JSON_NAMES.eiffel_names); //"eiffel_names");
-            writer.WriteStartArray();
-            foreach (string en in types.eiffel_names) {
-                writer.WriteStringValue(en);
-            }
-            writer.WriteEndArray();
+                for (var i=0; i < types.count; i++) {
+                    if (i < en_count) {
+                        en = types.eiffel_names[i];
+                    } else {
+                        en = null;
+                    }
+                    if (i < dn_count) {
+                        dn = types.dotnet_names[i];
+                    } else {
+                        dn = null;
+                    }
+                    if (en != null || dn != null) {
+                        writer.WriteStartObject();
+                        writer.WritePropertyName(JSON_NAMES.eiffel_name); //"eiffel_name");
+                        writer.WriteStringValue(en);
+                        writer.WritePropertyName(JSON_NAMES.dotnet_name); //"dotnet_name");
+                        writer.WriteStringValue(dn);
 
-            writer.WritePropertyName(JSON_NAMES.dotnet_names); //"dotnet_names");
-            writer.WriteStartArray();
-            foreach (string dn in types.dotnet_names) {
-                writer.WriteStringValue(dn);
-            }
-            writer.WriteEndArray();
+                        if (i < as_count && types.assembly_ids[i] > 0) {
+                            writer.WritePropertyName(JSON_NAMES.assembly_id); //"aid");
+                            writer.WriteNumberValue(types.assembly_ids[i]);
+                        }
+                        if (i < fl_count && types.flags[i] > 0) {
+                            writer.WritePropertyName(JSON_NAMES.flag); //"flag");
+                            writer.WriteNumberValue(types.flags[i]);
+                        }
+                        if (i < po_count && types.positions[i] > 0) {
+                            writer.WritePropertyName(JSON_NAMES.position); //"position");
+                            writer.WriteNumberValue(types.positions[i]);
+                        }
+                        writer.WriteEndObject();
 
-            writer.WritePropertyName(JSON_NAMES.flags); //"flags");
-            writer.WriteStartArray();
-            foreach (int f in types.flags) {
-                writer.WriteNumberValue(f);
+                    }
+                }
+                writer.WriteEndArray();
+            } else {
+                writer.WritePropertyName(JSON_NAMES.eiffel_names); //"eiffel_names");
+                writer.WriteStartArray();
+                foreach (string en in types.eiffel_names) {
+                    writer.WriteStringValue(en);
+                }
+                writer.WriteEndArray();
+
+                writer.WritePropertyName(JSON_NAMES.dotnet_names); //"dotnet_names");
+                writer.WriteStartArray();
+                foreach (string dn in types.dotnet_names) {
+                    writer.WriteStringValue(dn);
+                }
+                writer.WriteEndArray();
+
+                writer.WritePropertyName(JSON_NAMES.flags); //"flags");
+                writer.WriteStartArray();
+                foreach (int f in types.flags) {
+                    writer.WriteNumberValue(f);
+                }
+                writer.WriteEndArray();
+                
+                writer.WritePropertyName(JSON_NAMES.positions); //"positions");
+                writer.WriteStartArray();
+                foreach (int pos in types.positions) {
+                    writer.WriteNumberValue(pos);
+                }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
-            
-            writer.WritePropertyName(JSON_NAMES.positions); //"positions");
-            writer.WriteStartArray();
-            foreach (int pos in types.positions) {
-                writer.WriteNumberValue(pos);
-            }
-            writer.WriteEndArray();
             writer.WriteEndObject();
         }
         public void serialize_assembly_mapping (List<CONSUMED_ASSEMBLY> list)
@@ -81,6 +129,10 @@ namespace md_consumer
                     writer.WritePropertyName(JSON_NAMES.name); //"name");
                     writer.WriteStringValue(a.name);
                 }
+                if (a.fullname != null) {
+                    writer.WritePropertyName(JSON_NAMES.fullname); //"fullname");
+                    writer.WriteStringValue(a.fullname);
+                }                
                 writer.WritePropertyName(JSON_NAMES.version); //"version");
                 writer.WriteStringValue(a.version);
                 writer.WritePropertyName(JSON_NAMES.culture); //"culture");
@@ -115,6 +167,10 @@ namespace md_consumer
             writer.WriteStringValue(type.dotnet_name);
             writer.WritePropertyName(JSON_NAMES.eiffel_name); //"eiffel_name");
             writer.WriteStringValue(type.eiffel_name);
+            if (type.assembly_id >= 0) {
+                writer.WritePropertyName(JSON_NAMES.assembly_id + "__"); //"assembly_id");
+                writer.WriteNumberValue(type.assembly_id);
+            }
             if (type.is_interface()) {
                 writer.WritePropertyName(JSON_NAMES.is_interface); //"is_interface");
                 writer.WriteBooleanValue(true);
@@ -455,4 +511,134 @@ namespace md_consumer
             end_serialize_object(ref_type, inc_type_name);
         }
     }
+
+    public class JSON_CONSUMED_TYPE
+    {
+        public Type type;
+
+        public JSON_CONSUMED_TYPE(Type t)
+        {
+            type = t;
+        }
+
+        public void appendToJson(Utf8JsonWriter writer) 
+        {
+            writer.WritePropertyName("type");
+            writer.WriteStartObject();
+
+            Type? baseType = type.BaseType;
+            string? tname = type_declaration();
+
+            if (tname != null) { // && is_eiffel_compliant()) {
+
+                writer.WritePropertyName("name");
+                writer.WriteStringValue(tname);
+
+                if (type.IsClass && baseType != null && !String.Equals(baseType.FullName, "System.Object", StringComparison.InvariantCulture))
+                {
+                    writer.WritePropertyName("ancestor");
+                    writer.WriteStringValue(baseType.FullName);
+                }
+                ConstructorInfo[] l_constructors = type.GetConstructors();
+                if (l_constructors.Length > 0)
+                {
+                    writer.WritePropertyName("constructors");
+                    writer.WriteStartArray();
+                    foreach (ConstructorInfo ci in l_constructors)
+                    {
+                        writer.WriteStringValue(ci.ToString());
+                    }
+                    writer.WriteEndArray();
+                }
+
+                FieldInfo[] l_fields = type.GetFields();
+                if (l_fields.Length > 0)
+                {
+                    writer.WritePropertyName("fields");
+                    writer.WriteStartArray();
+                    foreach (FieldInfo fi in l_fields)
+                    {
+                        writer.WriteStringValue(fi.ToString());
+                    }
+                    writer.WriteEndArray();
+                }
+
+                MethodInfo[] l_methods = type.GetMethods();
+                if (l_methods.Length > 0)
+                {
+                    writer.WritePropertyName("methods");
+                    writer.WriteStartArray();
+                    foreach (MethodInfo mi in l_methods)
+                    {
+                        writer.WriteStringValue(mi.ToString());
+                    }
+                    writer.WriteEndArray();
+                }
+            }
+            writer.WriteEndObject(); // type
+        }
+
+        public void appendTypeNamesToJsonArray(Utf8JsonWriter writer) 
+        {
+            Type? baseType = type.BaseType;
+            string? tname = type_declaration();
+
+            if (tname != null && is_eiffel_compliant()) {
+                tname = tname + " " + type.FullName;
+                writer.WriteStringValue(tname);
+            }
+        }
+
+        private string? type_declaration()
+        {
+            if (type.IsClass)
+            {
+                return "class";
+            }
+            else if (type.IsValueType)
+            {
+                Type? baseType = type.BaseType;
+
+                if (String.Equals(baseType?.FullName, "System.Enum", StringComparison.InvariantCulture))
+                {
+                    return "enum";
+                }
+                else
+                {
+                    return "struct";
+                }
+            }
+            else if (type.IsInterface)
+            {
+                return "interface";
+            }
+            else
+            {
+                // return "unknown";
+                return null;
+            }
+        }
+        private bool is_eiffel_compliant() 
+        {
+            /*
+             * Check REFLECTION.is_consumed_type and EC_CHECKED_ENTITY 
+             */
+             
+            string? tname=type_declaration();
+
+            if (tname == null)
+            {
+                return false;
+            }
+            else if (type.IsNested || type.IsNotPublic || type.Name.Contains("<"))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+
 }

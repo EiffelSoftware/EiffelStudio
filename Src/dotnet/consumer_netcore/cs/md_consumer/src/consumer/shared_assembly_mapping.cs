@@ -16,6 +16,10 @@ namespace md_consumer
         static public Dictionary<string,int> assembly_mapping_table = new Dictionary<string,int>();
         // static public int none;
 
+        public int last_index() {
+            return assembly_mapping_table.Count;
+        }
+
         public SHARED_ASSEMBLY_MAPPING()
         {
             // assembly_mapping_cell = (new Dictionary<string,int>(), 0);
@@ -25,7 +29,7 @@ namespace md_consumer
             return assembly_mapping_table;
         }
 
-        public int index_for_assembly(string? a_full_name)
+        public int assembly_index(string? a_full_name)
         {
             if (a_full_name == null) {
                 return -1;
@@ -37,6 +41,14 @@ namespace md_consumer
                 }
             }
         }
+        public int assembly_index(Assembly a)
+        {
+            return assembly_index(a.FullName);
+        }
+        public int assembly_index(Type t)
+        {
+            return assembly_index(t.Assembly.FullName);
+        }        
         public bool is_assembly_mapped(string? a_full_name)
         {
             if (a_full_name == null) {
@@ -47,10 +59,12 @@ namespace md_consumer
         }
         public void record_assembly_mapping (int index, string a_full_name)
         {
+            // Console.WriteLine("# " + index + ": " + a_full_name);
             assembly_mapping_table.Add(a_full_name, index);
         }
         public void reset_assembly_mapping()
         {
+            // Console.WriteLine("# RESET assembly mapping #");
             assembly_mapping_table = new Dictionary<string,int>();
         }
 
@@ -72,14 +86,13 @@ namespace md_consumer
                     Debug.Assert(false, "from doc");
                 }
             } else {
-                Dictionary<string, int> am = assembly_mapping();
                 Assembly l_assembly = t.Assembly;
                 string? l_full_name = l_assembly.FullName;
                 string? l_name = t.FullName;
 
                 if (l_full_name != null && l_name != null) {
-                    if (am.ContainsKey (l_full_name)) {
-                        int id = am[l_full_name];
+                    if (is_assembly_mapped (l_full_name)) {
+                        int id = assembly_index(l_full_name);
                         if (t.IsArray) {
                             Type? l_type = t.GetElementType();
                             if (l_type != null) {
@@ -100,6 +113,9 @@ namespace md_consumer
             if (res == null) {
                 // Debug.Assert (false, "has result");
                 res = new CONSUMED_REFERENCED_TYPE(t.Name, -1);
+                if (t.ContainsGenericParameters) {
+                    res.has_generic_type = true;
+                }
             }
             return res;
         }    

@@ -206,11 +206,11 @@ feature -- Deserialization
 	consumed_assembly_types (j: detachable JSON_VALUE): detachable CONSUMED_ASSEMBLY_TYPES
 		local
 			l_eiffel_names, l_dotnet_names: ARRAYED_LIST [detachable STRING]
-			l_positions, l_flags: ARRAYED_LIST [INTEGER]
-			l_count, i, f, nb: INTEGER
+			l_positions, l_flags, l_assembly_ids: ARRAYED_LIST [INTEGER]
+			l_count, i, f, aid, nb: INTEGER
 		do
-			if attached {JSON_OBJECT} j as jo then
-				if attached {JSON_NUMBER} (jo[names.count]) as j_count then
+			if attached {JSON_OBJECT} j as jobj then
+				if attached {JSON_NUMBER} (jobj[names.count]) as j_count then
 					l_count := j_count.integer_64_item.to_integer_32
 				end
 
@@ -221,68 +221,119 @@ feature -- Deserialization
 				create l_dotnet_names.make (nb)
 				create l_flags.make (nb)
 				create l_positions.make (nb)
-
-				if attached {JSON_ARRAY} (jo / names.eiffel_names) as lst_eiffel_names then
-					check l_count <= lst_eiffel_names.count end
-					nb := nb.min (lst_eiffel_names.count)
-					i := 0
+				create l_assembly_ids.make (nb)
+				if attached {JSON_ARRAY} (jobj / names.items) as lst then
+					nb := 0
 					across
-						lst_eiffel_names as en
+						lst as l_item
 					loop
-						i := i + 1
-						if attached {JSON_STRING} en as str then
-							l_eiffel_names.extend (str.unescaped_string_8)
-						elseif attached {JSON_NULL} en then
-							l_eiffel_names.extend (Void)
-						else
-							report_error ("ERROR: missing eiffel_name%N")
+						if attached {JSON_OBJECT} l_item as jo then
+							nb := nb + 1
+							if attached {JSON_STRING} jo.string_item (names.eiffel_name) as j_en then
+								l_eiffel_names.extend (j_en.unescaped_string_8)
+							else
+								l_eiffel_names.extend (Void)
+								report_error ("ERROR: missing eiffel_name%N")
+							end
+							if attached {JSON_STRING} jo.string_item (names.dotnet_name) as j_dn then
+								l_dotnet_names.extend (j_dn.unescaped_string_8)
+							else
+								l_dotnet_names.extend (Void)
+								report_error ("ERROR: missing dotnet_name%N")
+							end
+							if attached {JSON_NUMBER} jo.number_item (names.position) as j_pos then
+								l_positions.extend (j_pos.integer_64_item.to_integer_32)
+							else
+								l_positions.extend (0)
+							end
+							if attached {JSON_NUMBER} jo.number_item (names.flag) as j_flag then
+								l_flags.extend (j_flag.integer_64_item.to_integer_32)
+							else
+								l_flags.extend (0)
+							end
+							if attached {JSON_NUMBER} jo.number_item (names.assembly_id) as j_aid then
+								l_assembly_ids.extend (j_aid.integer_64_item.to_integer_32)
+							else
+								l_assembly_ids.extend (0)
+							end
 						end
 					end
-					check i = l_eiffel_names.count end
-					nb := nb.min (l_eiffel_names.count)
-				end
-				if attached {JSON_ARRAY} (jo / names.dotnet_names) as lst_dotnet_names then
-					check l_count <= lst_dotnet_names.count end
-					nb := nb.min (lst_dotnet_names.count)
-					i := 0
-					across
-						lst_dotnet_names as dn
-					loop
-						i := i + 1
-						if attached {JSON_STRING} dn as str then
-							l_dotnet_names.extend (str.unescaped_string_8)
-						elseif attached {JSON_NULL} dn then
-							l_dotnet_names.extend (Void)
-						else
-							report_error ("ERROR: missing dotnet_name%N")
+				else
+					if attached {JSON_ARRAY} (jobj / names.eiffel_names) as lst_eiffel_names then
+						check l_count <= lst_eiffel_names.count end
+						nb := nb.min (lst_eiffel_names.count)
+						i := 0
+						across
+							lst_eiffel_names as en
+						loop
+							i := i + 1
+							if attached {JSON_STRING} en as str then
+								l_eiffel_names.extend (str.unescaped_string_8)
+							elseif attached {JSON_NULL} en then
+								l_eiffel_names.extend (Void)
+							else
+								report_error ("ERROR: missing eiffel_name%N")
+							end
+						end
+						check i = l_eiffel_names.count end
+						nb := nb.min (l_eiffel_names.count)
+					end
+					if attached {JSON_ARRAY} (jobj / names.dotnet_names) as lst_dotnet_names then
+						check l_count <= lst_dotnet_names.count end
+						nb := nb.min (lst_dotnet_names.count)
+						i := 0
+						across
+							lst_dotnet_names as dn
+						loop
+							i := i + 1
+							if attached {JSON_STRING} dn as str then
+								l_dotnet_names.extend (str.unescaped_string_8)
+							elseif attached {JSON_NULL} dn then
+								l_dotnet_names.extend (Void)
+							else
+								report_error ("ERROR: missing dotnet_name%N")
+							end
+						end
+						check i = l_dotnet_names.count end
+						nb := nb.min (l_dotnet_names.count)
+					end
+					if attached {JSON_ARRAY} (jobj / names.flags) as lst_flags then
+						check l_count <= lst_flags.count end
+						nb := nb.min (lst_flags.count)
+						across
+							lst_flags as fl
+						loop
+							if attached {JSON_NUMBER} fl as num then
+								l_flags.extend (num.integer_64_item.to_integer_32)
+							else
+								l_flags.extend (0)
+							end
 						end
 					end
-					check i = l_dotnet_names.count end
-					nb := nb.min (l_dotnet_names.count)
-				end
-				if attached {JSON_ARRAY} (jo / names.flags) as lst_flags then
-					check l_count <= lst_flags.count end
-					nb := nb.min (lst_flags.count)
-					across
-						lst_flags as fl
-					loop
-						if attached {JSON_NUMBER} fl as num then
-							l_flags.extend (num.integer_64_item.to_integer_32)
-						else
-							l_flags.extend (0)
+					if attached {JSON_ARRAY} (jobj / names.positions) as lst_positions then
+						check l_count <= lst_positions.count end
+						nb := nb.min (lst_positions.count)
+						across
+							lst_positions as po
+						loop
+							if attached {JSON_NUMBER} po as num then
+								l_positions.extend (num.integer_64_item.to_integer_32)
+							else
+								l_positions.extend (0)
+							end
 						end
 					end
-				end
-				if attached {JSON_ARRAY} (jo / names.positions) as lst_positions then
-					check l_count <= lst_positions.count end
-					nb := nb.min (lst_positions.count)
-					across
-						lst_positions as po
-					loop
-						if attached {JSON_NUMBER} po as num then
-							l_positions.extend (num.integer_64_item.to_integer_32)
-						else
-							l_positions.extend (0)
+					if attached {JSON_ARRAY} (jobj / names.assembly_ids) as lst_aids then
+						check l_count <= lst_aids.count end
+						nb := nb.min (lst_aids.count)
+						across
+							lst_aids as j_aid
+						loop
+							if attached {JSON_NUMBER} j_aid as num then
+								l_assembly_ids.extend (num.integer_64_item.to_integer_32)
+							else
+								l_assembly_ids.extend (0)
+							end
 						end
 					end
 				end
@@ -292,22 +343,35 @@ feature -- Deserialization
 				until
 					i > nb
 				loop
-					f := l_flags.i_th (i)
 					if
 						attached l_eiffel_names.i_th (i) as l_en and then
 						attached l_dotnet_names.i_th (i) as l_dn
 					then
-						Result.put (
-								l_dn,
-								l_en,
-								f = {TYPE_FLAGS}.Is_interface,
-								f = {TYPE_FLAGS}.Is_enum,
-								f = {TYPE_FLAGS}.Is_delegate,
-								f = {TYPE_FLAGS}.Is_value_type,
-								l_positions.i_th (i)
-							)
+						f := l_flags.i_th (i)
+						aid := l_assembly_ids.i_th (i)
+						if aid <= 0 then
+							Result.put (
+									l_dn,
+									l_en,
+									f = {TYPE_FLAGS}.Is_interface,
+									f = {TYPE_FLAGS}.Is_enum,
+									f = {TYPE_FLAGS}.Is_delegate,
+									f = {TYPE_FLAGS}.Is_value_type,
+									l_positions.i_th (i)
+								)
+						else
+							Result.put_forwarded (
+									l_dn,
+									l_en,
+									f = {TYPE_FLAGS}.Is_interface,
+									f = {TYPE_FLAGS}.Is_enum,
+									f = {TYPE_FLAGS}.Is_delegate,
+									f = {TYPE_FLAGS}.Is_value_type,
+									l_positions.i_th (i),
+									aid
+								)
+						end
 					end
-
 					i := i + 1
 				end
 			end

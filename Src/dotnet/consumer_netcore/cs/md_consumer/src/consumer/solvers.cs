@@ -58,7 +58,7 @@ namespace md_consumer
                 }
             }
             if (reserved_names.ContainsKey(res)) {
-                Debug.Assert(false, "not expected");
+                // Debug.Assert(false, "not expected");
             } else {
                 reserved_names.Add(res,res);
             }
@@ -136,10 +136,18 @@ namespace md_consumer
                         eiffel_args = new Dictionary<string,string>();
                         eiffel_names[method.dotnet_name()] = eiffel_args;
                     }
-                    eiffel_args.Add(
-                        key_args (method.internal_method.GetParameters(), method.internal_method.ReturnType, method.internal_method.DeclaringType),
-                        method.eiffel_name
-                    );
+                    try {
+                        var k = key_args (method.internal_method.GetParameters(), method.internal_method.ReturnType, method.internal_method.DeclaringType);
+                        if (!eiffel_args.ContainsKey(k)) {
+                            eiffel_args.Add(k, method.eiffel_name);
+                        } else {
+                            // How come?
+                        }
+                    } catch {
+                        // FIXME: find out why we have an exception here?
+                        // Exception thrown: 'System.NotSupportedException' in System.Reflection.MetadataLoadContext.dll: 'Parsing function pointer types in signatures is not supported.'
+
+                    }
                 }
             }
 		 	solved = true;
@@ -294,6 +302,7 @@ namespace md_consumer
     class ARGUMENT_SOLVER : SHARED_NAME_FORMATTER
     {
         protected SHARED_ASSEMBLY_MAPPING shared_assembly_mapping;
+        public bool has_error = false;
         public ARGUMENT_SOLVER()
         {
             shared_assembly_mapping = new SHARED_ASSEMBLY_MAPPING();
@@ -308,28 +317,40 @@ namespace md_consumer
 		// 	en, dn: STRING
 		// do
             List<CONSUMED_ARGUMENT> res = new List<CONSUMED_ARGUMENT>(0);
-            ParameterInfo[] l_params = info.GetParameters();
-            int i = 0;
-            foreach (ParameterInfo p in l_params)
-            {
-                string dn;
-                string en;
-                string? l_arg_name = p.Name;
-                if (l_arg_name != null) {
-                    dn = l_arg_name;
-                    en = SHARED_NAME_FORMATTER.formatted_argument_name (dn, i + 1);
-                    if (dn.Length == 0) {
+
+                // FIXME: check why sometime there is an exception:
+                // Exception thrown: 'System.NotSupportedException' in System.Reflection.MetadataLoadContext.dll: 'Parsing function pointer types in signatures is not supported.'
+            ParameterInfo[]? l_params;
+            try {
+                l_params = info.GetParameters();
+            } catch {
+                l_params = null;
+                has_error = true;
+            }
+            if (l_params != null) {
+                int i = 0;
+                foreach (ParameterInfo p in l_params)
+                {
+                    string dn;
+                    string en;
+                    string? l_arg_name = p.Name;
+                    if (l_arg_name != null) {
+                        dn = l_arg_name;
+                        en = SHARED_NAME_FORMATTER.formatted_argument_name (dn, i + 1);
+                        if (dn.Length == 0) {
+                            dn = en;
+                        }
+                    } else {
+                        en = SHARED_NAME_FORMATTER.formatted_argument_name ("", i + 1);
                         dn = en;
                     }
-                } else {
-                    en = SHARED_NAME_FORMATTER.formatted_argument_name ("", i + 1);
-                    dn = en;
+                    Type? t = p.ParameterType;
+                    if (t != null) {
+                        CONSUMED_ARGUMENT arg = new CONSUMED_ARGUMENT(dn, en, shared_assembly_mapping.referenced_type_from_type (t));
+                        res.Add(arg);
+                    }
+                    i = i + 1;
                 }
-                Type? t = p.ParameterType;
-                if (t != null) {
-                    res.Add(new CONSUMED_ARGUMENT(dn, en, shared_assembly_mapping.referenced_type_from_type (t)));
-                }
-                i = i + 1;
             }
             return res.ToArray();
 		// ensure

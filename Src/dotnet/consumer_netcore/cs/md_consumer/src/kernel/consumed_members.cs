@@ -11,10 +11,13 @@ namespace md_consumer
     public class CONSUMED_MEMBER : CONSUMED_ENTITY
     {
         protected int flags = 0;
-        public CONSUMED_MEMBER(string en, string dn, bool pub,CONSUMED_REFERENCED_TYPE a_type) : base (en, dn, pub, a_type)
+        public CONSUMED_MEMBER(string en, string dn, bool pub, CONSUMED_REFERENCED_TYPE a_type) : base (en, dn, pub, a_type)
         {
         }
-
+        public bool has_generic_type() 
+        {
+            return false;
+        }
         new public bool is_public()
         {
             return (flags & FEATURE_ATTRIBUTE.is_public) == FEATURE_ATTRIBUTE.is_public;
@@ -109,6 +112,34 @@ namespace md_consumer
                 flags = flags | FEATURE_ATTRIBUTE.is_static;
             }
             flags = flags | FEATURE_ATTRIBUTE.is_attribute_setter;
+        }     
+        public new bool is_excluded() 
+        {
+            if (base.is_excluded()) {
+                return true;
+            } else {
+                if (arguments != null) {
+                    foreach (var a in arguments) {
+                        if (a.is_excluded()) {
+                            return true;
+                        }
+                    }
+                }                
+            }
+            return false;
+        }
+        public new bool has_generic_type() 
+        {
+            if (arguments != null) {
+                foreach (var a in arguments) {
+                    if (a.has_generic_type) {
+                        return true;
+                    }
+                }
+            } else {
+                return base.has_generic_type();
+            }
+            return false;
         }        
         //FIXME ...
     }
@@ -116,6 +147,7 @@ namespace md_consumer
     public class CONSUMED_FUNCTION : CONSUMED_PROCEDURE
     {
         public CONSUMED_REFERENCED_TYPE return_type;
+
         public CONSUMED_FUNCTION(string en, string dn, string den, CONSUMED_ARGUMENT[] args, CONSUMED_REFERENCED_TYPE ret, 
             bool froz, bool a_static, bool defer, bool inf, bool pref, bool pub, bool ns, bool virt, bool poe, CONSUMED_REFERENCED_TYPE a_type) : base (en, dn, den, args,froz,a_static,defer,pub,ns,virt,poe, a_type)
         {
@@ -128,7 +160,14 @@ namespace md_consumer
                 flags = flags | FEATURE_ATTRIBUTE.is_prefix;
             }
         }
-
+        public new bool is_excluded()
+        {
+            return return_type.is_excluded() || base.is_excluded();
+        }
+        public new bool has_generic_type() 
+        {
+            return return_type.has_generic_type || base.has_generic_type();
+        }
         public bool is_infix()
         {
             return (flags & FEATURE_ATTRIBUTE.is_infix) == FEATURE_ATTRIBUTE.is_infix;
@@ -177,6 +216,14 @@ namespace md_consumer
                 flags = flags | FEATURE_ATTRIBUTE.is_init_only;
             }
             return_type = rt;
+        }
+        new public bool is_excluded() {
+            return base.is_excluded() || (has_return_value && return_type.is_excluded());
+        }
+
+        public new bool has_generic_type() 
+        {
+            return has_return_value && return_type.has_generic_type;
         }
 
         public void set_setter(CONSUMED_PROCEDURE? a_setter)

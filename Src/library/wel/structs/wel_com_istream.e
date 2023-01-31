@@ -118,15 +118,33 @@ feature -- Command
 			end
 		end
 
+	destroy
+			-- Destroy.
+		do
+			if item /= default_pointer then
+				destroy_item
+			end
+		end
+		
 	dispose
 			-- <Precursor>
 		do
-			if item /= default_pointer then
-				c_release (item)
-			end
+			destroy
 		end
 
 feature {NONE} -- Implementation
+
+	destroy_item
+			-- Called by the `dispose' routine to
+			-- destroy `item' by calling the
+			-- corresponding Windows function and
+			-- set `item' to `default_pointer'.
+		require
+			exists: item /= default_pointer
+		do
+			c_release (item)
+			item := default_pointer
+		end
 
 	shlwapi_handle: POINTER
 			--
@@ -358,7 +376,7 @@ feature -- STREAM_SEEK Enumeration
 			-- dlibMove parameter is the new seek position relative to the end of the stream.
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

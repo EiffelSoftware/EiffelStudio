@@ -61,6 +61,7 @@ feature -- Command
 		local
 			l_result: INTEGER_32
 		do
+			destroy_item
 			item := c_gdip_load_image_from_stream (gdi_plus_handle, a_stream.item, $l_result)
 		end
 
@@ -85,8 +86,9 @@ feature -- Command
 			l_stream: WEL_COM_ISTREAM
 		do
 			create l_stream.create_istream_from_memory (a_pointer, a_byte_counts)
-
 			load_image_from_stream (l_stream)
+				-- Do not wait for the GC to release memory.
+			l_stream.destroy
 		end
 
 	frozen save_image_to_file (a_file_name: READABLE_STRING_GENERAL)
@@ -827,7 +829,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

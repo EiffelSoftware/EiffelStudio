@@ -14,10 +14,6 @@ class
 inherit
 	EC_CHECKED_ENTITY
 
-	EC_CHECKED_ENTITY_FACTORY
-		export
-			{NONE} all
-		end
 
 create
 	make
@@ -111,7 +107,7 @@ invariant
 	member_not_void: member /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -69,12 +69,10 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 	check_eiffel_compliance
 			-- Checks entity to see if it is Eiffel-compliant.
 		local
-			l_member: like member
 			l_compliant: BOOLEAN
 		do
 			Precursor {EC_CHECKED_MEMBER}
 			if internal_is_eiffel_compliant then
-				l_member := member
 				if not internal_is_compliant then
 					l_compliant := checked_event_type.is_eiffel_compliant
 					if l_compliant then
@@ -87,7 +85,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

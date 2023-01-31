@@ -181,7 +181,7 @@ feature {NONE} -- Query
 					until
 						i = l_count or not Result
 					loop
-						c := l_name.item (0)
+						c := l_name.item (i)
 						Result := c.is_alpha_numeric or c = '_'
 						i := i + 1
 					end
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

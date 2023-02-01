@@ -420,7 +420,7 @@ namespace md_consumer
             var l_mapping = new SHARED_ASSEMBLY_MAPPING();
             l_mapping.reset_assembly_mapping();
             if (assemblies != null) {
-                Console.WriteLine("Load assembly mapping ...");
+                // Console.WriteLine("Load assembly mapping ...");
                 int i = 0;
                 foreach (var c in assemblies) {
                     i = l_mapping.last_index() + 1;

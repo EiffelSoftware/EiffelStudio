@@ -132,7 +132,7 @@ namespace md_consumer
         {
             if (arguments != null) {
                 foreach (var a in arguments) {
-                    if (a.has_generic_type) {
+                    if (a.has_generic_type()) {
                         return true;
                     }
                 }

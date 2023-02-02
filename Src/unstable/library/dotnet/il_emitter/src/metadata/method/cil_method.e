@@ -192,6 +192,37 @@ feature -- Write Body
 			put_opcode ({CIL_INSTRUCTION_OPCODES}.i_ret)
 		end
 
+	put_exception_block_start
+			-- Insert exception block start
+		do
+			add_instruction (create {CIL_INSTRUCTION}.make_seh ({CIL_SEH}.seh_try, True, Void))
+		end
+
+	put_exception_block_end
+			-- Insert exception block end
+		do
+			add_instruction (create {CIL_INSTRUCTION}.make_seh ({CIL_SEH}.seh_try, False, Void))
+		end
+
+	put_exception_catch_start (a_type: detachable CIL_TYPE)
+			-- Insert exception catch block with a handler exceptin of type a_type if it's
+			-- attached.
+		do
+			add_instruction (create {CIL_INSTRUCTION}.make_seh ({CIL_SEH}.seh_catch, True, a_type))
+		end
+
+	put_exception_catch_end
+			-- Insert the exception catch block end.
+		do
+			add_instruction (create {CIL_INSTRUCTION}.make_seh ({CIL_SEH}.seh_catch, False, Void))
+		end
+
+	put_opcode_mdtoken (a_opcode: CIL_INSTRUCTION_OPCODES; a_token: READABLE_STRING_GENERAL)
+			-- Insert `a_opcode' manipulating a_metadata token `a_token'.
+		do
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, {CIL_OPERAND_FACTORY}.string_operand (a_token)))
+		end
+
 feature -- Operations
 
 	optimize

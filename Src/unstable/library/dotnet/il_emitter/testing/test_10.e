@@ -25,6 +25,8 @@ feature -- Test
 			l_field: CIL_FIELD
 			l_locals: CIL_LOCAL
 			l_sig_ctor: CIL_METHOD_SIGNATURE
+			l_method_sig: CIL_METHOD_SIGNATURE
+			l_exception: CIL_CLASS
 
 			l_label, l_id2: CIL_OPERAND
 		do
@@ -44,6 +46,7 @@ feature -- Test
 			cil_emit.define_mscorlib_assembly_ref (cil_assembly_info, {ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
 
 			cil_type := cil_emit.define_type ("TEST", create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.auto | {CIL_QUALIFIERS_ENUM}.ansi | {CIL_QUALIFIERS_ENUM}.public), cil_emit.define_type_ref_mscorlib ("Object"))
+			working_assembly.add (cil_type)
 
 				-- Method signature for System.object::.ctor()
 			create l_sig_ctor.make_default
@@ -51,8 +54,11 @@ feature -- Test
 			l_sig_ctor.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
 			cil_emit.define_method_ref (".ctor", cil_emit.define_type_ref_mscorlib ("Object"), l_sig_ctor)
 
-				-- Method .ctor
-			cil_method := cil_emit.define_method (".ctor", create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.public |
+				-- Method signature for TEST::.ctor()
+			create l_method_sig.make (".ctor", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
+			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
+
+			cil_method := cil_emit.define_method (l_method_sig, create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.public |
 							{CIL_QUALIFIERS_ENUM}.specialname |
 							{CIL_QUALIFIERS_ENUM}.rtspecialname |
 							{CIL_QUALIFIERS_ENUM}.cil |
@@ -74,7 +80,7 @@ feature -- Test
 			l_id2 := cil_emit.define_label ("label2")
 
 			cil_method.mark_label (l_id2)
-			cil_method.put_opcode ({CIL_INSTRUCTION_OPCODES}.i_ldarg)
+			cil_method.put_opcode ({CIL_INSTRUCTION_OPCODES}.i_ldarg_0)
 			cil_method.put_call (l_sig_ctor)
 
 			cil_method.put_opcode_label ({CIL_INSTRUCTION_OPCODES}.i_br, l_label)
@@ -84,8 +90,101 @@ feature -- Test
 			cil_method.mark_label (l_label)
 			cil_method.put_return
 
-			cil_emit.dump_output_file ("emit_test_9e.il", {CIL_OUTPUT_MODE}.ilasm, false)
 
+
+				-- Define method test
+
+				-- Method signature for TEST::.test()
+			create l_method_sig.make (".test", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
+			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
+
+			cil_method := cil_emit.define_method (l_method_sig,  create {CIL_QUALIFIERS}.make_with_flags (
+						{CIL_QUALIFIERS_ENUM}.public |
+						{CIL_QUALIFIERS_ENUM}.cil |
+						{CIL_QUALIFIERS_ENUM}.Managed
+					), cil_type, False)
+
+
+				-- Define labels
+			l_label := cil_emit.define_label ("label1")
+			l_id2 := cil_emit.define_label ("label2")
+
+				-- Write method body
+			cil_method.mark_label (l_id2)
+			cil_method.put_opcode_label ({CIL_INSTRUCTION_OPCODES}.i_br, l_label)
+			cil_method.put_opcode ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4_1)
+			cil_method.put_opcode ({CIL_INSTRUCTION_OPCODES}.i_pop)
+			cil_method.put_opcode_label ({CIL_INSTRUCTION_OPCODES}.i_br, l_id2)
+			cil_method.mark_label (l_label)
+			cil_method.put_return
+
+
+				-- Define method test2
+
+				-- Method signature for TEST::.test2()
+			create l_method_sig.make (".test2", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
+			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
+
+			cil_method := cil_emit.define_method (l_method_sig,  create {CIL_QUALIFIERS}.make_with_flags (
+						{CIL_QUALIFIERS_ENUM}.public |
+						{CIL_QUALIFIERS_ENUM}.cil |
+						{CIL_QUALIFIERS_ENUM}.Managed
+					), cil_type, False)
+
+
+				-- Define labels
+			l_label := cil_emit.define_label ("label1")
+			l_id2 := cil_emit.define_label ("label2")
+
+				-- Write method body
+			cil_method.mark_label (l_id2)
+			cil_method.put_opcode_label ({CIL_INSTRUCTION_OPCODES}.i_br, l_label)
+			cil_method.put_opcode ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4_1)
+			cil_method.put_opcode ({CIL_INSTRUCTION_OPCODES}.i_pop)
+			cil_method.put_opcode_label ({CIL_INSTRUCTION_OPCODES}.i_br, l_id2)
+			cil_method.mark_label (l_label)
+			cil_method.put_return
+
+
+				-- Define method test_rescue
+
+			l_exception := cil_emit.define_type_ref_mscorlib ("Exception")
+			create l_method_sig.make (".test_rescue", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
+			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
+
+			cil_method := cil_emit.define_method (l_method_sig,  create {CIL_QUALIFIERS}.make_with_flags (
+						{CIL_QUALIFIERS_ENUM}.public |
+						{CIL_QUALIFIERS_ENUM}.cil |
+						{CIL_QUALIFIERS_ENUM}.Managed
+					), cil_type, False)
+
+
+
+				-- Define labels
+			l_label := cil_emit.define_label ("label1")
+
+				-- Write body
+
+			cil_method.put_exception_block_start
+			cil_method.put_opcode ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4_1)
+			cil_method.put_opcode ({CIL_INSTRUCTION_OPCODES}.i_pop)
+			cil_method.put_opcode_label ({CIL_INSTRUCTION_OPCODES}.i_leave, l_label)
+			cil_method.put_exception_block_end
+
+			cil_method.put_exception_catch_start (if attached l_exception then create {CIL_TYPE}.make_with_container (l_exception) else Void end)
+			cil_method.put_opcode ({CIL_INSTRUCTION_OPCODES}.i_pop)
+			cil_method.put_opcode_mdtoken({CIL_INSTRUCTION_OPCODES}.i_ldstr, "Manu is nice!!")
+			cil_method.put_opcode ({CIL_INSTRUCTION_OPCODES}.i_pop)
+			cil_method.put_opcode_label ({CIL_INSTRUCTION_OPCODES}.i_leave, l_label)
+			cil_method.put_exception_catch_end
+			cil_method.mark_label (l_label)
+			cil_method.put_return
+
+
+
+				-- Generate the output.
+			cil_emit.dump_output_file ("emit_test_9e.il", {CIL_OUTPUT_MODE}.ilasm, false)
+			cil_emit.dump_output_file ("emit_test_9e.dll", {CIL_OUTPUT_MODE}.pedll, false)
 
 		end
 

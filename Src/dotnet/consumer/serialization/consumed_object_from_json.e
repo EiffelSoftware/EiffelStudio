@@ -474,7 +474,11 @@ feature -- Deserialization
 							)
 					end
 					if Result /= Void then
-						-- Complete the other infos...
+							-- Complete the other infos...
+						if attached {JSON_NUMBER} jo [names.assembly_id] as j_aid then
+							Result.set_assembly_id (j_aid.integer_64_item.to_integer_32)
+						end
+
 						if attached {JSON_ARRAY} jo [names.constructors] as j_constructors then
 							Result.set_constructors (consumed_constructors (j_constructors))
 						end

@@ -261,18 +261,27 @@ namespace md_consumer
                             JsonNode? jn = null;
                             string? en = null;
                             string? dn = null;
+                            int aid = 0;
                             foreach (var j in j_items) {
                                 jo = j?.AsObject();
                                 if (jo != null) {
                                     en = jo[JSON_NAMES.eiffel_name]?.GetValue<string>();
                                     dn = jo[JSON_NAMES.dotnet_name]?.GetValue<string>();
+
                                     if (en != null && dn != null) {
+                                        var jnum = jo[JSON_NAMES.assembly_id];
+                                        if (jnum == null) {
+                                            aid = 0;
+                                        } else {
+                                            aid = jnum.GetValue<int>();
+                                        }
                                         res.eiffel_names[i] = en;
                                         res.dotnet_names[i] = dn;
                                         jn = jo[JSON_NAMES.flag];
                                         res.flags[i] = jn != null ? jn.GetValue<int>() : 0;
                                         jn = jo[JSON_NAMES.position];
                                         res.positions[i] = jn != null ? jn.GetValue<int>() : 0;
+                                        res.assembly_ids[i] = aid;
                                     }
                                 }
                                 i = i + 1;
@@ -282,21 +291,28 @@ namespace md_consumer
                             JsonArray? j_dotnet_names = j_types["dotnet_names"]?.AsArray();
                             JsonArray? j_flags = j_types["flags"]?.AsArray();
                             JsonArray? j_positions = j_types["positions"]?.AsArray();
+                            JsonArray? j_assembly_ids = j_types["assembly"]?.AsArray();
                             if (j_eiffel_names != null && j_dotnet_names != null && j_flags != null && j_positions != null) {
                                 for (int i = 0; i < l_count; i++) {
                                     string? en = j_eiffel_names[i]?.GetValue<string>();
                                     string? dn = j_dotnet_names[i]?.GetValue<string>();
                                     int fl = j_flags[i]!.GetValue<int>();
                                     int po = j_positions[i]!.GetValue<int>();
+                                    int aid = 0;
+                                    if (j_assembly_ids != null) {
+                                        aid = j_assembly_ids[i]!.GetValue<int>();
+                                    }
                                     if (en != null && dn != null) {
                                         res.eiffel_names[i] = en;
                                         res.dotnet_names[i] = dn;
                                         res.flags[i] = fl;
                                         res.positions[i] = po;
+                                        res.assembly_ids[i] = aid;
                                     }
                                 }
                             }
                         }
+                        res.count = l_count;
                     }
                 }
             }
@@ -786,13 +802,15 @@ namespace md_consumer
             html += "<h1>Assembly: " + n + "</h1>";
             html += "<div id=\"info\">";
             html += "<div>Location: " + ca.location + "</div>\n";
+            html += "<div>GUID: " + ca.guid + "</div>\n";
             html += "<div>Version: " + ca.version + "</div>\n";
             html += "<div>Culture: " + ca.culture + "</div>\n";
             html += "<div>Pub Key: " + ca.public_key_token + "</div>\n";
             html += "</div>";
             CONSUMED_ASSEMBLY_TYPES? l_types = reader.assembly_types(ca);
             if (l_types != null) {
-                html += "<h2>" + l_types.count + " types</h2>\n<div id=\"types\">";
+                html += "<h2>" + l_types.count + " types</h2>\n";
+                html += "<details><summary>all types</summary>\n<div id=\"types\">";
                 for(int i = 0; i < l_types.count; i++) {
                     string? en = l_types.eiffel_names[i];
                     string? dn = l_types.dotnet_names[i];
@@ -810,6 +828,7 @@ namespace md_consumer
                     }
                 }
                 html += "</div>\n";
+                html += "</details>\n";                
             }
             string f;
             f = Path.Join (cache_location, ca.folder_name, "classes.info");
@@ -827,7 +846,11 @@ namespace md_consumer
                 if (mapping != null) {
                     html += "<ol>\n";
                     foreach (CONSUMED_ASSEMBLY i_ca in mapping.assemblies) {
-                        html += "<li>"+ System.Net.WebUtility.HtmlEncode (i_ca.title()) +"</li>\n";
+                        if (i_ca.guid.Equals(ca.guid)) {
+                            html += "<li>Current: "+ System.Net.WebUtility.HtmlEncode (i_ca.title()) +"</li>\n";
+                        } else {
+                            html += "<li><a href=\"../"+ i_ca.folder_name + "/index.html\">"+ System.Net.WebUtility.HtmlEncode (i_ca.title()) +"</a></li>\n";
+                        }
                     }
                     html += "</ol>\n";
                 }

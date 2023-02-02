@@ -105,6 +105,13 @@ namespace md_consumer
                     writer.WriteNumberValue(pos);
                 }
                 writer.WriteEndArray();
+
+                writer.WritePropertyName(JSON_NAMES.assemblies); //"assemblies");
+                writer.WriteStartArray();
+                foreach (int aid in types.assembly_ids) {
+                    writer.WriteNumberValue(aid);
+                }
+                writer.WriteEndArray();
             }
             writer.WriteEndObject();
         }
@@ -168,7 +175,7 @@ namespace md_consumer
             writer.WritePropertyName(JSON_NAMES.eiffel_name); //"eiffel_name");
             writer.WriteStringValue(type.eiffel_name);
             if (type.assembly_id >= 0) {
-                writer.WritePropertyName(JSON_NAMES.assembly_id + "__"); //"assembly_id");
+                writer.WritePropertyName(JSON_NAMES.assembly_id); //"assembly_id");
                 writer.WriteNumberValue(type.assembly_id);
             }
             if (type.is_interface()) {

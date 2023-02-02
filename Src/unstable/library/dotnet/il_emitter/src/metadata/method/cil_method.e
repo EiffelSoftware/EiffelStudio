@@ -155,6 +155,43 @@ feature -- Change Element
 			max_stack_set: max_stack = a_stack
 		end
 
+
+feature -- Write Body
+
+	put_opcode (a_opcode: CIL_INSTRUCTION_OPCODES)
+			-- Insert the `a_opcode` in the current Method.
+		do
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, Void))
+		end
+
+	put_opcode_label (a_opcode: CIL_INSTRUCTION_OPCODES; a_operand: CIL_OPERAND)
+			-- Insert the `a_opcode` with a label in the current Method.
+		require
+			label_operand: a_operand.type = {CIL_OPERAND_TYPE}.t_label
+		do
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, a_operand))
+		end
+
+	mark_label (a_operand: CIL_OPERAND)
+			-- Insert a label `a_operand'.
+		require
+			label_operand: a_operand.type = {CIL_OPERAND_TYPE}.t_label
+		do
+			put_opcode_label ({CIL_INSTRUCTION_OPCODES}.i_label, a_operand)
+		end
+
+	put_call (a_method: CIL_METHOD_SIGNATURE)
+			-- Insert a method call to `a_method'
+		do
+			add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_call, {CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (a_method))))
+		end
+
+	put_return
+			-- Instert a return.
+		do
+			put_opcode ({CIL_INSTRUCTION_OPCODES}.i_ret)
+		end
+
 feature -- Operations
 
 	optimize

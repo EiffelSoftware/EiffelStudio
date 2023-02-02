@@ -47,7 +47,10 @@ feature -- Initialization
 --			(create {TEST_6}).test;
 --			(create {TEST_7}).test;
 --			(create {TEST_8}).test;
-			(create {TEST_9}).test;
+--			(create {TEST_9}).test;
+--			(create {TEST_9}).test;
+			(create {TEST_10}).test;
+
 		end
 
 	test
@@ -82,8 +85,8 @@ feature -- Initialization
 		local
 			l_list: LIST [STRING_32]
 		do
-			l_list := (create {PE_LIB}.make ("", 0)).split_path ("System::Console.WriteLine")
-			l_list := (create {PE_LIB}.make ("", 0)).split_path ("System.IO.FileStream..ctor")
+			l_list := (create {PE_LIB}.make_with_name ("", 0)).split_path ("System::Console.WriteLine")
+			l_list := (create {PE_LIB}.make_with_name ("", 0)).split_path ("System.IO.FileStream..ctor")
 		end
 
 	test_3

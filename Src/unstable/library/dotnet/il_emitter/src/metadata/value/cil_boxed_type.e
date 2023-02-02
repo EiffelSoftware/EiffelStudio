@@ -60,7 +60,8 @@ feature -- Output
 		do
 				-- no point in looking up the type name in the assembly for this...
 				-- TODO double check with the latest .Net framework.
-			a_stream.put_string ("[mscorlib]System.")
+			--a_stream.put_string ("[mscorlib]System.")
+			a_stream.put_string ("[System.Runtime]System.")
 			a_stream.put_string (type_names [{CIL_BASIC_TYPE}.index_of (basic_type) + 1])
 			Result := True
 		end

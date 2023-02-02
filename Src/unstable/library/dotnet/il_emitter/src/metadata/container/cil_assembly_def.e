@@ -21,9 +21,15 @@ inherit
 		end
 
 create
+	make_default,
 	make
 
 feature {NONE} -- Initialization
+
+	make_default
+		do
+			make ("", False, Void)
+		end
 
 	make (a_name: STRING_32; a_external: BOOLEAN; a_byte: detachable ARRAY [NATURAL_8])
 		require
@@ -161,8 +167,7 @@ feature -- Element change
 			loaded_set: is_loaded
 		end
 
-
-	set_public_key_token(a_pub_key_token: like public_key_token)
+	set_public_key_token (a_pub_key_token: like public_key_token)
 		do
 			create public_key_token.make_from_array (a_pub_key_token)
 		end
@@ -185,7 +190,7 @@ feature -- Element change
 				create l_end.make_from_string (l_name)
 				if n /= 0 then
 					l_parent := insert_namespaces_table (a_lib, a_namespaces, l_name.substring (l_name.lower, n))
-					l_end := l_name.substring (n+1, l_name.count)
+					l_end := l_name.substring (n + 1, l_name.count)
 				end
 				if attached l_parent then
 					l_dc := l_parent.find_container_string (l_end, Void)

@@ -21,9 +21,15 @@ inherit
 	REFACTORING_HELPER
 
 create
-	make
+	make,
+	make_default
 
 feature {NONE} -- Initialization
+
+	make_default
+		do
+			make ("", 0, Void)
+		end
 
 	make (a_name: STRING_32; a_flags: INTEGER; a_container: detachable CIL_DATA_CONTAINER)
 		do
@@ -238,6 +244,13 @@ feature -- Element change
 		ensure
 			generic_param_count_set: generic_param_count = a_count
 		end
+
+	set_flags (a_flags: like flags)
+			-- Set flags with `a_flags'.
+		do
+			flags := a_flags
+		end
+		
 
 feature -- Status Report
 

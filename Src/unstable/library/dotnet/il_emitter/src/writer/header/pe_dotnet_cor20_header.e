@@ -167,7 +167,6 @@ feature -- Managed Pointer
 
 	managed_pointer: MANAGED_POINTER
 		local
-			l_converter: BYTE_ARRAY_CONVERTER
 			l_pos: INTEGER
 		do
 			create Result.make (size_of)

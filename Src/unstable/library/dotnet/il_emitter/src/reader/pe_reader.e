@@ -67,9 +67,7 @@ feature -- Operations
 			if str.is_empty then
 				str := search_for_managed_file (a_name, a_major, a_minor, a_build, a_revision)
 			end
-
 		end
-
 
 	search_on_path (a_name: STRING_32): STRING_32
 		local

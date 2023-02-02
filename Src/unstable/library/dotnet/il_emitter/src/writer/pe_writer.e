@@ -1523,7 +1523,6 @@ feature -- Write operations
 			l_dir: PE_RESOURCE_DIR_ENTRY
 			l_resource_data: PE_RESOURCE_DATA_ENTRY
 			l_n1: NATURAL_16
-			l_version_info_string: STRING_32
 			l_version_info: PE_FIXED_VERSION_INFO
 			l_n: NATURAL_64
 			l_path: PATH

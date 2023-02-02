@@ -265,6 +265,14 @@ feature --Element Change
 			fields.is_empty
 		end
 
+	set_name (a_name: like name)
+			-- Set `name' with `a_name'
+		do
+			name := a_name
+		ensure
+			name_set: name = a_name
+		end
+
 feature -- Traverse
 
 	traverse (a_callback: CIL_CALLBACK): BOOLEAN

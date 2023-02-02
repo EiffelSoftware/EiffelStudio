@@ -266,7 +266,8 @@ feature -- Output
 						if attached seh_catch_type as l_seh_catch_type then
 							Result := l_seh_catch_type.il_src_dump (a_file)
 						else
-							a_file.put_string ("  [mscorlib]System.Object")
+							--a_file.put_string ("  [mscorlib]System.Object")
+							a_file.put_string ("  [System.Runtime]System.Object")
 						end
 						a_file.put_string (" {")
 						a_file.put_new_line

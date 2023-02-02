@@ -37,7 +37,7 @@ feature -- Test
 		do
 				-- Create the workgin assembly `manu_assembluy`
 				-- md_emit.define_assembly
-			create pe_file.make ("manus_assembly", {PE_LIB}.il_only)
+			create pe_file.make_with_name ("manus_assembly", {PE_LIB}.il_only)
 			pe_file.set_assembly_name ("manus_assembly.dll")
 
 			assembly := pe_file.working_assembly

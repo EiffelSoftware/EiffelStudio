@@ -348,7 +348,11 @@ feature -- Deserialization
 						attached l_dotnet_names.i_th (i) as l_dn
 					then
 						f := l_flags.i_th (i)
-						aid := l_assembly_ids.i_th (i)
+						if l_assembly_ids.valid_index (i) then
+							aid := l_assembly_ids.i_th (i)
+						else
+							aid := 0
+						end
 						if aid <= 0 then
 							Result.put (
 									l_dn,

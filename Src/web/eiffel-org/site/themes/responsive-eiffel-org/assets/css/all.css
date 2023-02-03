@@ -3431,3 +3431,7 @@ div.container {
 a {
   color: #5082D9;
   text-decoration: none; }
+
+ul.pagination li {
+	margin-right: .5em;
+	display: inline-block; }

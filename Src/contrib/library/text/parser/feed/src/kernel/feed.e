@@ -57,6 +57,12 @@ feature -- Access
 
 feature -- Element change
 
+	set_title (a_title: READABLE_STRING_GENERAL)
+			-- Set `title` to `a_title`.
+		do
+			create title.make_from_string_general (a_title)
+		end
+
 	set_description (a_description: detachable READABLE_STRING_GENERAL; a_description_content_type: like description_content_type)
 			-- Set `description' with `a_description' and optional content type `text:$a_description_content_type'.
 		do

@@ -81,7 +81,6 @@ feature {NONE} -- Router/administration
 			l_admin_import_handler: CMS_ADMIN_IMPORT_HANDLER
 			l_admin_path_alias_handler: CMS_ADMIN_PATH_ALIAS_HANDLER
 
-
 			l_uri_mapping: WSF_URI_MAPPING
 		do
 			create l_admin_handler.make (a_api)
@@ -227,17 +226,23 @@ feature -- Hooks
 					if attached {CMS_LOCAL_LINK} content_lnk as ll then
 						ll.set_weight (10)
 					end
+					create lnk.make ("Nodes", l_api.administration_path_location ("nodes/"))
+					lnk.set_permission_arguments (<<"admin node">>)
+					lnk.set_help ("Nodes")
+					lnk.set_weight (2)
+					content_lnk.extend (lnk)
+
 					create lnk.make ("Formats", l_api.administration_path_location ("formats"))
 					lnk.set_permission_arguments (<<"admin formats">>)
 					lnk.set_help ("Content formats and filters")
-					lnk.set_weight (2)
+					lnk.set_weight (3)
 					content_lnk.extend (lnk)
 
 						-- Per module cache permission!
 					create lnk.make ("Cache", l_api.administration_path_location ("cache"))
 					lnk.set_help ("Clear caches")
 					lnk.set_permission_arguments (<<"admin cache">>)
-					lnk.set_weight (3)
+					lnk.set_weight (4)
 					content_lnk.extend (lnk)
 				end
 

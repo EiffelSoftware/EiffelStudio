@@ -16,6 +16,8 @@ inherit
 			permissions
 		end
 
+	CMS_WITH_MODULE_ADMINISTRATION
+
 	CMS_HOOK_MENU_SYSTEM_ALTER
 
 	CMS_HOOK_RESPONSE_ALTER
@@ -88,7 +90,7 @@ feature {CMS_API} -- Module management
 			end
 		end
 
-feature {CMS_API} -- Access: API
+feature {CMS_API, CMS_NODE_MODULE_ADMINISTRATION} -- Access: API
 
 	module_api: detachable CMS_MODULE_API
 			-- <Precursor>
@@ -103,6 +105,13 @@ feature {CMS_API} -- Access: API
 
 	node_api: detachable CMS_NODE_API
 			-- <Precursor>
+
+feature {NONE} -- Administration
+
+	administration: CMS_NODE_MODULE_ADMINISTRATION
+		do
+			create Result.make (Current)
+		end
 
 feature -- Access			
 

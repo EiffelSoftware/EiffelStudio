@@ -44,9 +44,6 @@ feature {NONE} -- Router/administration
 
 				create hlr.make (agent handle_get_typed_nodes (?, ?, l_mod_api))
 				a_router.handle ("/nodes/{type}", hlr, a_router.Methods_get)
-
---				a_router.handle ("/nodes/", create {CMS_NODE_ADMIN_HANDLER}.make (l_mod_api), a_router.methods_get)
---				a_router.handle ("/nodes/{type}", create {CMS_NODE_ADMIN_HANDLER}.make (l_mod_api), a_router.methods_get)
 			end
 		end
 
@@ -99,36 +96,19 @@ feature -- Routes
 							l_page_helper.get_setting_from_request (req)
 							if l_page_helper.has_upper_limit and then l_page_helper.pages_count > 1 then
 								l_page_helper.append_to_html (l_response, s_pager)
---								if l_page_helper.page_size > 25 then
---									s.append (s_pager)
---								end
 							end
 
---							l_lower := 1
---							l_upper := 25
---							if attached {WSF_STRING} req.query_parameter ("lower") as s_lower then
---								l_lower := s_lower.integer_value.to_natural_64
---							end
---							if attached {WSF_STRING} req.query_parameter ("upper") as s_upper then
---								l_upper := s_upper.integer_value.to_natural_64
---							end
---							l_lower := l_lower.min (nb)
---							l_upper := l_upper.min (nb)
---							create l_pager.make ("?lower={lower}&upper={upper}", 0, nb, 25)
---							l_pager.set_active_range (l_lower, l_upper)
 
 							s.append ("<h1>" + nb.out + " " + html_encoded (nt.title) + " nodes ...</h1>%N")
 							s.append (s_pager)
---							l_pager.append_to_html (l_response.wsf_theme, s)
 							s.append ("<ul class=%"nodes%">")
-							create qp.make (l_page_helper.current_page_offset, l_page_helper.page_size) --l_lower - 1, (l_upper - l_lower + 1).to_natural_32)
+							create qp.make (l_page_helper.current_page_offset, l_page_helper.page_size)
 							across l_node_api.recent_nodes_of_type (nt, qp) as ic loop
 								s.append ("<li class=%""+ url_encoded (nt.name)+"%">")
 								s.append ("<a href=%""+ api.cms_api.url (api.node_path (ic.item), Void) +"%">" + html_encoded (ic.item.title) + "</a>")
 								s.append ("</li>")
 							end
 							s.append ("</ul>")
---							l_pager.append_to_html (l_response.wsf_theme, s)
 							s.append (s_pager)
 						else
 							api.cms_api.response_api.send_not_found (Void, req, res)

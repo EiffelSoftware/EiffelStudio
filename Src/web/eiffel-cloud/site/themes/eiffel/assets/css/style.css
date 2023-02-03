@@ -576,3 +576,7 @@ form div.description.collapsible div:nth-child(0n+1):not(expanded)::before {
 form div.description.collapsible div:nth-child(0n+1).expanded::before {
   content: "[ - ] ";
 }
+ul.pagination li {
+    margin-right: .5em;
+    display: inline-block;
+}

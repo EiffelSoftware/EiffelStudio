@@ -350,3 +350,7 @@ div.menu.tabs ul.horizontal li.active {
 div.menu.tabs ul.horizontal li:last-child {
   border-right: solid 1px #ccc;
 }
+ul.pagination li {
+  margin-right: .5em;
+  display: inline-block;
+}

@@ -304,4 +304,8 @@ form div.description.collapsible div:nth-child(0n+1) {
 form div.description.collapsible div:nth-child(0n+2) {
 	//display: none;
 }
+ul.pagination li {
+    margin-right: .5em;
+    display: inline-block;
+}
 

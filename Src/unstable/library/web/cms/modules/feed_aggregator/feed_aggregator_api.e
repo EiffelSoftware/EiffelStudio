@@ -91,6 +91,9 @@ feature -- Access
 								if attached cfg.text_item ({STRING_32} "feeds." + l_feed_id + ".option_description") as l_description_opt then
 									agg.set_description_enabled (not l_description_opt.is_case_insensitive_equal_general ("disabled"))
 								end
+								if attached cfg.text_item ({STRING_32} "feeds." + l_feed_id + ".description") as l_description then
+									agg.set_description (l_description)
+								end
 								across
 									l_locations as loc_ic
 								loop
@@ -213,6 +216,13 @@ feature -- Operation
 			end
 			if Result /= Void then
 				Result.set_date (create {DATE_TIME}.make_now_utc)
+				if attached agg.description as d then
+					Result.set_description (d, Void)
+				else
+						-- Use `title` computed by FEED.extended (...) function.
+					Result.set_description (Result.title, Void)
+				end
+				Result.set_title (agg.name)
 			end
 		end
 

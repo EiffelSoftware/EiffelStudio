@@ -166,3 +166,7 @@ table.with_border td {
     position: relative;
   }
 }
+ul.pagination li {
+    margin-right: .5em;
+    display: inline-block;
+}

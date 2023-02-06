@@ -11,27 +11,40 @@ create
 	make
 
 
+
 feature {NONE} -- Initialization
 
-	make (a_type: CIL_BASIC_TYPE)
+	make
 		do
-			create type.make (a_type)
+			create field.make ("",create {CIL_TYPE}.make (create {CIL_BASIC_TYPE}.void_), create {CIL_QUALIFIERS}.make)
 		end
-
-	make_with_pointer_level (a_type: CIL_BASIC_TYPE; a_pointer_level: INTEGER)
-		do
-			create type.make_with_pointer_level( a_type, a_pointer_level)
-		end
-
-	make_with_container (a_container: CIL_DATA_CONTAINER)
-		do
-			create type.make_with_container (a_container)
-		end
-
 
 feature -- Access		
 
 
-	type: CIL_TYPE
-		-- type of the field.
+	field: CIL_FIELD
+		-- The field
+
+feature -- Change Element
+
+	set_name (a_name: READABLE_STRING_GENERAL)
+			-- Set field name with `a_name'
+		do
+			field.set_name (a_name)
+		end
+
+
+	set_field_type (a_type: CIL_TYPE)
+			-- Set field type with `a_type'
+		do
+			field.set_type (a_type)
+		end
+
+
+	set_flags (a_flags: CIL_QUALIFIERS)
+			-- Set field flags with `a_flags'.
+		do
+			field.set_flags (a_flags)
+		end
+
 end

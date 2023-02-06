@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 						if attached {STRING_8} l_value as s8 then
 							sv := s8
 						elseif attached {STRING_32} l_value as s32 then
-							sv := s32.as_string_8 -- FIXME: use html encoder
+							sv := theme.html_encoded (s32)
 						else
 							sv := l_value.out
 						end
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2023, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

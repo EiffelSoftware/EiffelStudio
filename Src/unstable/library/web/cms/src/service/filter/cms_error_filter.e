@@ -35,10 +35,13 @@ feature -- Basic operations
 				end
 				execute_next (req, res)
 			else
-				api.logger.put_critical (generator + ".execute" + api.string_representation_of_errors, Void)
+				api.logger.put_critical (generator + ".execute " + utf_8_encoded (api.string_representation_of_errors), Void)
 				(create {INTERNAL_SERVER_ERROR_CMS_RESPONSE}.make (req, res, api)).execute
 				api.reset_error
 			end
 		end
 
+note
+	copyright: "2011-2023, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

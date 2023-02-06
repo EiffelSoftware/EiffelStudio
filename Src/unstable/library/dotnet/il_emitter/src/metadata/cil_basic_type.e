@@ -1,5 +1,5 @@
 note
-	description: "Enumeration Representing CIL Basic TYpes"
+	description: "Enumeration Representing CIL Basic Types"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,8 +15,8 @@ create
 
 feature {NONE} -- Creation
 
-	class_ref once  end
-	method_ref once  end
+	class_ref once end
+	method_ref once end
 	type_var once end
 	method_param once end
 	Void_ once end
@@ -69,7 +69,6 @@ feature -- Access
 			instance_free: class
 		end
 
-
 	index_of (a_value: CIL_BASIC_TYPE): NATURAL_8
 			-- Index of first occurrence of item identical to `a_value'.
 			-- -1 if none.
@@ -77,8 +76,9 @@ feature -- Access
 			l_area: SPECIAL [CIL_BASIC_TYPE]
 		do
 			l_area := (create {ARRAYED_LIST [CIL_BASIC_TYPE]}.make_from_iterable ({CIL_BASIC_TYPE}.instances)).area
-			Result :=  l_area.index_of(a_value, l_area.lower).to_natural_8
+			Result := l_area.index_of (a_value, l_area.lower).to_natural_8
 		ensure
 			instance_free: class
 		end
+
 end

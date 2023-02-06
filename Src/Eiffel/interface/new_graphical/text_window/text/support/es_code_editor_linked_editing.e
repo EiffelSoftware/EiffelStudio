@@ -123,7 +123,7 @@ feature -- Element change
 
 feature -- Execute
 
-	dbg_print (m: READABLE_STRING_8)
+	dbg_print (m: READABLE_STRING_GENERAL)
 		do
 			debug ("editor_linked_editing")
 				print (m)
@@ -143,7 +143,7 @@ feature -- Execute
 				not lst.is_empty
 			then
 				debug ("editor_linked_editing")
-					dbg_print ("Begin linked editing [nb tokens:" + lst.count.out +", token=%"" + lst.first.initial_text + "%"].%N")
+					dbg_print ({STRING_32} "Begin linked editing [nb tokens:" + lst.count.out +", token=%"" + lst.first.initial_text + "%"].%N")
 				end
 
 				bgcol := background_color
@@ -156,7 +156,7 @@ feature -- Execute
 				loop
 					l_item := ic.item
 					debug ("editor_linked_editing")
-						dbg_print (" - " + l_item.debug_output + " -> %"" + l_item.initial_text + "%"%N")
+						dbg_print ({STRING_32} " - " + l_item.debug_output + " -> %"" + l_item.initial_text + "%"%N")
 					end
 					across
 						l_item.tokens as toks
@@ -192,7 +192,7 @@ feature -- Execute
 					loop
 						l_item := ic.item
 						debug ("editor_linked_editing")
-							dbg_print (" - " + l_item.debug_output + " -> %"" + l_item.initial_text + "%"%N")
+							dbg_print ({STRING_32} " - " + l_item.debug_output + " -> %"" + l_item.initial_text + "%"%N")
 						end
 						across
 							l_item.tokens as toks
@@ -221,7 +221,7 @@ feature -- Execute
 							lst as ic
 						loop
 							l_item := ic.item
-							dbg_print (" - " + l_item.debug_output + " -> %"" + l_item.initial_text + "%"%N")
+							dbg_print ({STRING_32} " - " + l_item.debug_output + " -> %"" + l_item.initial_text + "%"%N")
 						end
 					end
 				end
@@ -245,32 +245,32 @@ feature -- Execute
 				s.replace_substring_all ("%T", "%%T")
 				s.keep_head (60)
 				if attached ln.first_token as ftok then
-					Result.append (" @<" + ftok.pos_in_text.out)
+					Result.append_string_general (" @<" + ftok.pos_in_text.out)
 				end
 				if attached ln.eol_token as eoltok then
-					Result.append (" @>" + eoltok.pos_in_text.out)
+					Result.append_string_general (" @>" + eoltok.pos_in_text.out)
 				end
-				Result.append (" '" + s + "'%N")
+				Result.append ({STRING_32} " '" + s + "'%N")
 				from
 					tok := ln.first_token
 				until
 					tok = Void
 				loop
-					Result.append (" @" + tok.pos_in_text.out)
+					Result.append_string_general (" @" + tok.pos_in_text.out)
 
-					Result.append ("[" + tok.length.out + "]")
+					Result.append_string_general ("[" + tok.length.out + "]")
 
 					create s.make_from_string (tok.wide_image)
 					s.replace_substring_all ("%T", " ")
 					s.keep_head (6)
-					Result.append ("/" + s + "/")
+					Result.append ({STRING_32} "/" + s + "/")
 					if attached {EDITOR_TOKEN_EOL} tok then
 						tok := Void
 					else
 						tok := tok.next
 					end
 				end
-				Result.append ("%N")
+				Result.append_string_general ("%N")
 				ln := ln.next
 			end
 		end
@@ -293,7 +293,9 @@ feature -- Execute
 		local
 			l_item: ES_CODE_EDITOR_LINKED_ITEM
 		do
-			dbg_print ("on editing #" + a_pos_in_text.out + " diff=" + a_size_diff.out + "%N")
+			debug ("editor_linked_editing")
+				dbg_print ("on editing #" + a_pos_in_text.out + " diff=" + a_size_diff.out + "%N")
+			end
 			across
 				linked_items as lst
 			loop
@@ -303,14 +305,20 @@ feature -- Execute
 					l_item.end_pos := l_item.end_pos + a_size_diff
 				elseif l_item.end_pos < a_pos_in_text then
 						-- Ignore
-					dbg_print ("%%(" + l_item.start_pos.out + "," + l_item.end_pos.out + ") => KEEP.%N")
+					debug ("editor_linked_editing")
+						dbg_print ("%%(" + l_item.start_pos.out + "," + l_item.end_pos.out + ") => KEEP.%N")
+					end
 				else
-					dbg_print ("%%(" + l_item.start_pos.out + "," + l_item.end_pos.out + ") => ")
+					debug ("editor_linked_editing")
+						dbg_print ("%%(" + l_item.start_pos.out + "," + l_item.end_pos.out + ") => ")
+					end
 					if l_item.start_pos > a_pos_in_text then
 						l_item.start_pos := l_item.start_pos + a_size_diff
 					end
 					l_item.end_pos := l_item.end_pos + a_size_diff
-					dbg_print ("%%(" + l_item.start_pos.out + "," + l_item.end_pos.out + ").%N")
+					debug ("editor_linked_editing")
+						dbg_print ("%%(" + l_item.start_pos.out + "," + l_item.end_pos.out + ").%N")
+					end
 				end
 			end
 		end
@@ -373,8 +381,8 @@ feature {NONE} -- Execution
 
 					debug ("editor_linked_editing")
 						dbg_print ("Execute linked editing [pos=" + pos.out + "].%N")
-						dbg_print (" editing item " + l_editing_item.debug_output + " %"" + cs + "%".%N")
-						dbg_print (" cursor token:%"" + cs + "%".%N")
+						dbg_print ({STRING_32} " editing item " + l_editing_item.debug_output + {STRING_32} " %"" + cs + {STRING_32} "%".%N")
+						dbg_print ({STRING_32} " cursor token:%"" + cs + {STRING_32} "%".%N")
 					end
 					l_new_item_text := txt.string_between_pos_in_text (l_editing_item.start_pos, l_editing_item.end_pos)
 
@@ -384,7 +392,7 @@ feature {NONE} -- Execution
 						l_item := ic.item
 						if l_item = l_editing_item then
 							debug ("editor_linked_editing")
-								dbg_print ("!" + l_item.debug_output + " [diff="+a_size_diff.out+",pos="+pos.out+"] Editing !!!%N")
+								dbg_print ({STRING_32} "!" + l_item.debug_output + {STRING_32} " [diff="+a_size_diff.out+ ",pos="+pos.out+ "] Editing !!!%N")
 							end
 								-- l_editing_item already updated with diff, but now offset
 							if pos > l_item.end_pos then -- previous `end_pos'!
@@ -392,11 +400,11 @@ feature {NONE} -- Execution
 							end
 
 							debug ("editor_linked_editing")
-								dbg_print (" " + l_item.debug_output + " [diff="+a_size_diff.out+",pos="+pos.out+"] %"" + l_item.initial_text + "%" updated.%N")
+								dbg_print ({STRING_32} " " + l_item.debug_output + " [diff="+a_size_diff.out+",pos="+pos.out+"] %"" + l_item.initial_text + "%" updated.%N")
 							end
 						else
 							debug ("editor_linked_editing")
-								dbg_print (" " + l_item.debug_output + " [diff="+a_size_diff.out+",pos="+pos.out+"] %"" + l_item.initial_text + "%" replaced with %""+ cs +"%".%N")
+								dbg_print ({STRING_32} " " + l_item.debug_output + " [diff="+a_size_diff.out+",pos="+pos.out+"] %"" + l_item.initial_text + "%" replaced with %""+ cs +"%".%N")
 							end
 
 							replace_for_replace_all (txt, l_item.start_pos, l_item.end_pos, l_new_item_text) -- FIXME: replace tokens in l_item!
@@ -409,7 +417,7 @@ feature {NONE} -- Execution
 							end
 
 							debug ("editor_linked_editing")
-								dbg_print (" " + l_item.debug_output + " [diff="+a_size_diff.out+"] %"" + l_item.initial_text + "%" updated.%N")
+								dbg_print ({STRING_32} " " + l_item.debug_output + " [diff="+a_size_diff.out+"] %"" + l_item.initial_text + "%" updated.%N")
 							end
 
 							l_item.line.update_token_information
@@ -423,7 +431,7 @@ feature {NONE} -- Execution
 					end
 				else
 					debug ("editor_linked_editing")
-						dbg_print ("Execute linked editing outside editing token %"" + a_cursor.token.wide_image + "%"!!!%N")
+						dbg_print ({STRING_32} "Execute linked editing outside editing token %"" + a_cursor.token.wide_image + "%"!!!%N")
 					end
 					terminate
 				end
@@ -435,11 +443,13 @@ feature {NONE} -- Execution
 			end
 		end
 
-	replace_for_replace_all (a_text: like text; a_start_pos, a_end_pos: INTEGER; a_new_string: READABLE_STRING_8)
+	replace_for_replace_all (a_text: like text; a_start_pos, a_end_pos: INTEGER; a_new_string: READABLE_STRING_GENERAL)
 		local
 			p: INTEGER
 		do
-			dbg_print ("Replace [" + a_start_pos.out + "," + a_end_pos.out + "] %"" + a_text.string_between_pos_in_text (a_start_pos, a_end_pos) + "%" by %"" + a_new_string + "%"%N")
+			debug ("editor_linked_editing")
+				dbg_print ({STRING_32} "Replace [" + a_start_pos.out + "," + a_end_pos.out + "] %"" + a_text.string_between_pos_in_text (a_start_pos, a_end_pos) + "%" by %"" + a_new_string.to_string_32 + "%"%N")
+			end
 			if a_start_pos = a_end_pos then
 				p := a_text.cursor.pos_in_text
 				a_text.cursor.go_to_position (a_start_pos)
@@ -459,7 +469,9 @@ feature {NONE} -- Execution
 			prev_tok: detachable EDITOR_TOKEN
 		do
 			if tok.pos_in_text = 0 then
-				dbg_print ("Updated token pos_in_text: #" + tok.pos_in_text.out + "%N")
+				debug ("editor_linked_editing")
+					dbg_print ("Updated token pos_in_text: #" + tok.pos_in_text.out + "%N")
+				end
 				prev_tok := tok.previous
 				if prev_tok /= Void and then prev_tok.pos_in_text > 0 then
 					tok.set_pos_in_text (prev_tok.pos_in_text + prev_tok.length)
@@ -568,7 +580,9 @@ feature {NONE} -- Implementation
 
 			txt := text
 
-			dbg_print (dbg_text_positions (txt))
+			debug ("editor_linked_editing")
+				dbg_print (dbg_text_positions (txt))
+			end
 
 
 			pos := txt.cursor.pos_in_text
@@ -684,7 +698,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	output (s: STRING)
+	output (s: READABLE_STRING_GENERAL)
 		local
 			tab: STRING
 		do
@@ -33,9 +33,8 @@ feature -- Output
 				create tab.make_filled (' ', level * 2)
 				io.put_new_line
 --				io.put_integer (level)
-				io.put_string (tab)
 			end
-			io.put_string (s)
+			io.put_string_32 (s.to_string_32)
 		end
 
 	set_next_output_appended
@@ -301,6 +300,7 @@ feature -- Template
 
 	visit_template (a_template: WIKI_TEMPLATE)
 		local
+			k: READABLE_STRING_GENERAL
 			l_key: STRING
 		do
 			output ("{{TEMPLATE %"" + a_template.name + "%"")
@@ -311,7 +311,12 @@ feature -- Template
 				across
 					lst as ic
 				loop
-					l_key := ic.key.as_string_8
+					k := ic.key
+					if k.is_valid_as_string_8 then
+						l_key := k.to_string_8
+					else
+						l_key := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (k)
+					end
 					visit_raw_string (create {WIKI_RAW_STRING}.make (l_key + "="))
 					visit_string (create {WIKI_STRING}.make (ic.item))
 				end
@@ -578,7 +583,7 @@ feature -- Implementation
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2023, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

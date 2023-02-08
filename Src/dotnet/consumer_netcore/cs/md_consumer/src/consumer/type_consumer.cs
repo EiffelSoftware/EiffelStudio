@@ -906,7 +906,7 @@ namespace md_consumer
 					while (p <= p_max && tc[p].arguments.Length <= Constructor_overload_resolution) {
 						csolver = tc[p];
 						args = csolver.arguments;
-						name = Complete_creation_routine_name_prefix.Length.ToString() + Complete_creation_routine_name_prefix;
+						name = Complete_creation_routine_name_prefix;
 						i = 0;
 						foreach (CONSUMED_ARGUMENT arg in args)
 						{
@@ -928,7 +928,7 @@ namespace md_consumer
 					{
 						csolver = tc[p];
 						args = csolver.arguments;
-						name = Partial_creation_routine_name_prefix.Length.ToString() + Partial_creation_routine_name_prefix;
+						name = Partial_creation_routine_name_prefix;
 						if (args.Length > 0) {
 							name = name + args[0].eiffel_name;
 						} else {
@@ -938,15 +938,15 @@ namespace md_consumer
 						foreach (CONSUMED_ARGUMENT arg in args)
 						{
 							i = i + 1;
-							if (i > 1 ) { // FIXME: why starting at the second position?
-								if (l_reserved.ContainsKey(name)) {
-									break;
-								}
-								if (i > 1) {
-									name = name + "_and_";
-								}
-								name = name + arg.eiffel_name;
+							// if (i > 1 ) { // FIXME: why starting at the second position?
+							if (l_reserved.ContainsKey(name)) {
+								break;
 							}
+							if (i > 1) {
+								name = name + "_and_";
+							}
+							name = name + arg.eiffel_name;
+							// }
 						}
 						name = name_solver.unique_feature_name(name);
 						csolver.set_name(name);
@@ -1136,7 +1136,10 @@ namespace md_consumer
 				return true;
 			} else {
 				Type? vt = Type.GetType("System.Void");
-				if (vt != null && vt.Equals(t)) {
+				if (vt != null) {
+					string? aqn = t.AssemblyQualifiedName;
+					return aqn != null && aqn.Equals(vt.AssemblyQualifiedName);
+				} else if (t.FullName != null && t.FullName.Equals("System.Void")) {
 					return true;
 				} else {
 					Debug.Assert(vt != null, "from documentation");

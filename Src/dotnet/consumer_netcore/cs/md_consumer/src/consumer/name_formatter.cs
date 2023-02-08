@@ -220,9 +220,8 @@ namespace md_consumer
                                 if (i == 1) {
                                     put_us = p != 'I' && p != 'C' && p != 'S';                          
                                 } else {
-                                    put_us = true;
+                                    put_us = i > 1;
                                 }
-                                put_us = put_us || i > 1;                        
                             } else {
 									// allows IUnknown = iunknown, SetIUnknown = set_iunknown and SetFBar = set_f_bar
                                 if (i >= 2) {
@@ -235,9 +234,8 @@ namespace md_consumer
                                     if (i == 1) {
                                         put_us = p != 'I';
                                     } else {
-                                        put_us = true;
+                                        put_us = i > 1;
                                     }
-                                    put_us = put_us || i > 1;
                                 }
                             }
                         } else if (Char.IsLower(p) && Char.IsUpper(c)) {
@@ -279,13 +277,13 @@ namespace md_consumer
                 return res;
             } else {
                 res = name;
-                // if (res.Length == 0) {
-                //     // do nothing;
-                // } else if (res[0] = '_') {
-                //     res = 'm' + res;
-                // } else (Char.IsDigit(res[0])) {
-                //     res = "m_" + res;
-                // }
+                if (res.Length == 0) {
+                    // do nothing;
+                } else if (res[0] == '_') {
+                    res = 'm' + res;
+                } else if (Char.IsDigit(res[0])) {
+                    res = "m_" + res;
+                }
                 return formatted_variable_name(res);
             }
         // ensure

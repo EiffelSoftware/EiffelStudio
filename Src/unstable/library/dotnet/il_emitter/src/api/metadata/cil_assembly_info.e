@@ -20,16 +20,16 @@ feature {NONE} -- Initialization
 feature -- Access
 
 
-	revision: INTEGER assign set_revision
+	revision: NATURAL_16 assign set_revision
 			-- `revision'
 
-	build: INTEGER assign set_build
+	build: NATURAL_16 assign set_build
 			-- `build'
 
-	minor: INTEGER assign set_minor
+	minor: NATURAL_16 assign set_minor
 			-- `minor'
 
-	major: INTEGER assign set_major
+	major: NATURAL_16 assign set_major
 			-- `major'
 
 

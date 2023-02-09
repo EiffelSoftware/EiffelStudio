@@ -3,6 +3,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
+
 class
 	CIL_ENUM
 
@@ -105,7 +106,7 @@ feature -- Output
 					if attached {CIL_CLASS} parent as l_parent then
 						l_namespace_index := 0
 					end
-					create {PE_TYPEDEF_TABLE_ENTRY} l_table.make_with_data (l_pe_flags, l_typename_index, l_namespace_index, l_extends_class, l_field_index, l_method_index)
+					create {PE_TYPE_DEF_TABLE_ENTRY} l_table.make_with_data (l_pe_flags, l_typename_index, l_namespace_index, l_extends_class, l_field_index, l_method_index)
 					pe_index := l_writer.add_table_entry (l_table)
 
 					if attached {CIL_CLASS} parent as l_parent then

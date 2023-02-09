@@ -204,32 +204,32 @@ feature -- Status Report
 		local
 			l_pe_flags: INTEGER
 		do
-			l_pe_flags := {PE_TYPEDEF_TABLE_ENTRY}.class_
+			l_pe_flags := {PE_TYPE_DEF_TABLE_ENTRY}.class_
 			if attached {CIL_CLASS} parent as l_parent then
 				if flags.flags & {CIL_QUALIFIERS_ENUM}.public /= 0 then
-					l_pe_flags := l_pe_flags | {PE_TYPEDEF_TABLE_ENTRY}.nestedpublic
+					l_pe_flags := l_pe_flags | {PE_TYPE_DEF_TABLE_ENTRY}.nestedpublic
 				else
-					l_pe_flags := l_pe_flags | {PE_TYPEDEF_TABLE_ENTRY}.nestedprivate
+					l_pe_flags := l_pe_flags | {PE_TYPE_DEF_TABLE_ENTRY}.nestedprivate
 				end
 			else
 				if flags.flags & {CIL_QUALIFIERS_ENUM}.public /= 0 then
-					l_pe_flags := l_pe_flags | {PE_TYPEDEF_TABLE_ENTRY}.public
+					l_pe_flags := l_pe_flags | {PE_TYPE_DEF_TABLE_ENTRY}.public
 				end
 			end
 
 			if flags.flags & {CIL_QUALIFIERS_ENUM}.sequential /= 0 then
-				l_pe_flags := l_pe_flags | {PE_TYPEDEF_TABLE_ENTRY}.sequentiallayout
+				l_pe_flags := l_pe_flags | {PE_TYPE_DEF_TABLE_ENTRY}.sequentiallayout
 			end
 
 			if flags.flags & {CIL_QUALIFIERS_ENUM}.explicit /= 0 then
-				l_pe_flags := l_pe_flags | {PE_TYPEDEF_TABLE_ENTRY}.explicitlayout
+				l_pe_flags := l_pe_flags | {PE_TYPE_DEF_TABLE_ENTRY}.explicitlayout
 			end
 
 			if flags.flags & {CIL_QUALIFIERS_ENUM}.sealed /= 0 then
-				l_pe_flags := l_pe_flags | {PE_TYPEDEF_TABLE_ENTRY}.sealed
+				l_pe_flags := l_pe_flags | {PE_TYPE_DEF_TABLE_ENTRY}.sealed
 			end
 			if flags.flags & {CIL_QUALIFIERS_ENUM}.ansi /= 0 then
-				l_pe_flags := l_pe_flags | {PE_TYPEDEF_TABLE_ENTRY}.ansiclass
+				l_pe_flags := l_pe_flags | {PE_TYPE_DEF_TABLE_ENTRY}.ansiclass
 			end
 			Result := l_pe_flags
 		end
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 					l_type_type := {PE_TYPEDEF_OR_REF}.typedef
 				end
 				create l_extends_class.make_with_tag_and_index (l_type_type, l_extends)
-				create {PE_TYPEDEF_TABLE_ENTRY} l_table.make_with_data (l_pe_flags, l_typename_index, l_namespace_index, l_extends_class, l_field_index, l_method_index)
+				create {PE_TYPE_DEF_TABLE_ENTRY} l_table.make_with_data (l_pe_flags, l_typename_index, l_namespace_index, l_extends_class, l_field_index, l_method_index)
 				pe_index := l_writer.add_table_entry (l_table)
 
 				if pack > 0 or else size > 0 then

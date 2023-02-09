@@ -431,6 +431,7 @@ feature -- Element Change
 			--  and this class will self-report the table index to use
 		local
 			n: INTEGER
+			l_token: NATURAL_32
 		do
 			n := a_entry.table_index
 			tables [n].table.force (a_entry)
@@ -448,6 +449,7 @@ feature -- Element Change
 				to_implement ("Double check if its requried.")
 			end
 			Result := tables [n].table.count.to_natural_32
+			l_token :=  ((n |<< 24).to_natural_32 | Result.to_natural_32)
 		end
 
 	add_method (a_method: PE_METHOD)

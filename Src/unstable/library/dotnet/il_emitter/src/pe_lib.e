@@ -893,7 +893,7 @@ feature {NONE} -- Output Implementation
 
 				create l_type_def.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
 
-				create {PE_TYPEDEF_TABLE_ENTRY} l_table.make_with_data (0, l_module_index, 0, l_type_def, 1, 1)
+				create {PE_TYPE_DEF_TABLE_ENTRY} l_table.make_with_data (0, l_module_index, 0, l_type_def, 1, 1)
 				l_n := l_pe_writer.add_table_entry (l_table)
 
 				create l_base_types.put (0)

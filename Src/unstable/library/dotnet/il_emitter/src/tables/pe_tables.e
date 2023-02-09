@@ -128,6 +128,7 @@ feature {NONE} -- Creation Procedures
 
 	tAssemblyDef
 			-- our main assembly
+			-- 0x20
 		once value := 32 end
 
 	tAssemblyRef

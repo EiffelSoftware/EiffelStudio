@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	PE_TYPEDEF_TABLE_ENTRY
+	PE_TYPE_DEF_TABLE_ENTRY
 
 inherit
 

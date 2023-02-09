@@ -37,7 +37,7 @@ feature -- Test
 			cil_assembly_info.set_major (5)
 			cil_assembly_info.set_minor (2)
 
-			working_assembly := cil_emit.define_assembly ("manus_assembly", cil_assembly_info, "")
+			working_assembly := cil_emit.define_assembly ({STRING_32}"manu_assembly", cil_assembly_info, "")
 
 			cil_assembly_info.set_major (1)
 			cil_assembly_info.set_minor (0)
@@ -45,8 +45,7 @@ feature -- Test
 
 			cil_emit.define_mscorlib_assembly_ref (cil_assembly_info, {ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
 
-			cil_type := cil_emit.define_type ("TEST", create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.auto | {CIL_QUALIFIERS_ENUM}.ansi | {CIL_QUALIFIERS_ENUM}.public), cil_emit.define_type_ref_mscorlib ("Object"))
-			working_assembly.add (cil_type)
+			cil_type := cil_emit.define_type ({STRING_32}"TEST", create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.auto | {CIL_QUALIFIERS_ENUM}.ansi | {CIL_QUALIFIERS_ENUM}.public), cil_emit.define_type_ref_mscorlib ({STRING_32}"Object"))
 
 				-- Method signature for System.object::.ctor()
 			create l_sig_ctor.make_default
@@ -90,20 +89,17 @@ feature -- Test
 			cil_method.mark_label (l_label)
 			cil_method.put_return
 
-
-
 				-- Define method test
 
 				-- Method signature for TEST::.test()
 			create l_method_sig.make (".test", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
 			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
 
-			cil_method := cil_emit.define_method (l_method_sig,  create {CIL_QUALIFIERS}.make_with_flags (
-						{CIL_QUALIFIERS_ENUM}.public |
-						{CIL_QUALIFIERS_ENUM}.cil |
-						{CIL_QUALIFIERS_ENUM}.Managed
-					), cil_type, False)
-
+			cil_method := cil_emit.define_method (l_method_sig, create {CIL_QUALIFIERS}.make_with_flags (
+							{CIL_QUALIFIERS_ENUM}.public |
+							{CIL_QUALIFIERS_ENUM}.cil |
+							{CIL_QUALIFIERS_ENUM}.Managed
+						), cil_type, False)
 
 				-- Define labels
 			l_label := cil_emit.define_label ("label1")
@@ -117,7 +113,6 @@ feature -- Test
 			cil_method.put_opcode_label ({CIL_INSTRUCTION_OPCODES}.i_br, l_id2)
 			cil_method.mark_label (l_label)
 			cil_method.put_return
-
 
 				-- Define method test2
 
@@ -125,12 +120,11 @@ feature -- Test
 			create l_method_sig.make (".test2", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
 			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
 
-			cil_method := cil_emit.define_method (l_method_sig,  create {CIL_QUALIFIERS}.make_with_flags (
-						{CIL_QUALIFIERS_ENUM}.public |
-						{CIL_QUALIFIERS_ENUM}.cil |
-						{CIL_QUALIFIERS_ENUM}.Managed
-					), cil_type, False)
-
+			cil_method := cil_emit.define_method (l_method_sig, create {CIL_QUALIFIERS}.make_with_flags (
+							{CIL_QUALIFIERS_ENUM}.public |
+							{CIL_QUALIFIERS_ENUM}.cil |
+							{CIL_QUALIFIERS_ENUM}.Managed
+						), cil_type, False)
 
 				-- Define labels
 			l_label := cil_emit.define_label ("label1")
@@ -145,20 +139,17 @@ feature -- Test
 			cil_method.mark_label (l_label)
 			cil_method.put_return
 
-
 				-- Define method test_rescue
 
 			l_exception := cil_emit.define_type_ref_mscorlib ("Exception")
 			create l_method_sig.make (".test_rescue", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, Void)
 			l_method_sig.set_return_type (create {CIL_TYPE}.make ({CIL_BASIC_TYPE}.Void_))
 
-			cil_method := cil_emit.define_method (l_method_sig,  create {CIL_QUALIFIERS}.make_with_flags (
-						{CIL_QUALIFIERS_ENUM}.public |
-						{CIL_QUALIFIERS_ENUM}.cil |
-						{CIL_QUALIFIERS_ENUM}.Managed
-					), cil_type, False)
-
-
+			cil_method := cil_emit.define_method (l_method_sig, create {CIL_QUALIFIERS}.make_with_flags (
+							{CIL_QUALIFIERS_ENUM}.public |
+							{CIL_QUALIFIERS_ENUM}.cil |
+							{CIL_QUALIFIERS_ENUM}.Managed
+						), cil_type, False)
 
 				-- Define labels
 			l_label := cil_emit.define_label ("label1")
@@ -173,14 +164,12 @@ feature -- Test
 
 			cil_method.put_exception_catch_start (if attached l_exception then create {CIL_TYPE}.make_with_container (l_exception) else Void end)
 			cil_method.put_opcode ({CIL_INSTRUCTION_OPCODES}.i_pop)
-			cil_method.put_opcode_mdtoken({CIL_INSTRUCTION_OPCODES}.i_ldstr, "Manu is nice!!")
+			cil_method.put_opcode_mdtoken ({CIL_INSTRUCTION_OPCODES}.i_ldstr, "Manu is nice!!")
 			cil_method.put_opcode ({CIL_INSTRUCTION_OPCODES}.i_pop)
 			cil_method.put_opcode_label ({CIL_INSTRUCTION_OPCODES}.i_leave, l_label)
 			cil_method.put_exception_catch_end
 			cil_method.mark_label (l_label)
 			cil_method.put_return
-
-
 
 				-- Generate the output.
 			cil_emit.dump_output_file ("emit_test_9e.il", {CIL_OUTPUT_MODE}.ilasm, false)

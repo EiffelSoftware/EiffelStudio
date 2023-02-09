@@ -61,7 +61,7 @@ feature -- Operations
 		end
 
 	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
-	local
+		local
 			l_bytes: NATURAL_64
 		do
 				-- get flags from the buffer.

@@ -17,7 +17,6 @@ feature -- Initialization
 			mp: MANAGED_POINTER
 			l_val: INTEGER
 			l_cell: CELL [INTEGER]
-			l_api: CIL_EMITTER_API
 			time: TIME
 		do
 --			test_big_digits
@@ -49,7 +48,8 @@ feature -- Initialization
 --			(create {TEST_8}).test;
 --			(create {TEST_9}).test;
 --			(create {TEST_9}).test;
-			(create {TEST_10}).test;
+--			(create {TEST_10}).test;
+			(create {TEST_11}).test;
 
 		end
 

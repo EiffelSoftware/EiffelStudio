@@ -68,10 +68,19 @@ feature -- Operand is an integer constant
 	natural_operand (a_value: NATURAL; a_size: CIL_OPERAND_SIZE): CIL_OPERAND
 			-- Operand is a Natural constant.
 		do
-			Result := {CIL_OPERAND_FACTORY}.integer64_operand (a_value, a_size)
+			Result := {CIL_OPERAND_FACTORY}.integer64_operand (a_value.to_integer_64, a_size)
 		ensure
 			instance_free: class
 		end
+
+	natural64_operand (a_value: NATURAL_64; a_size: CIL_OPERAND_SIZE): CIL_OPERAND
+			-- Operand is a Natural constant.
+		do
+			Result := {CIL_OPERAND_FACTORY}.integer64_operand (a_value.to_integer_64, a_size)
+		ensure
+			instance_free: class
+		end
+
 
 	character_operand (a_value: CHARACTER; a_size: CIL_OPERAND_SIZE): CIL_OPERAND
 			-- Operand is a Natural constant.

@@ -17,6 +17,7 @@ feature {NONE} -- Initialization
 
 	make_with_data (a_flags: INTEGER; a_major, a_minor, a_build, a_revision: NATURAL_16; a_name_index: NATURAL_64; a_key_index: NATURAL_64)
 			-- key_index default value = 0
+			--|ECMA II.22.2 Assembly : 0x20
 		do
 			hash_alg_id := DefaultHashAlgId.to_natural_16
 			flags := a_flags

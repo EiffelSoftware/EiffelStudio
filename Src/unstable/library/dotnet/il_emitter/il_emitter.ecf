@@ -11,6 +11,8 @@
 		<option warning="warning" manifest_array_type="mismatch_warning">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="dead_code_removal" value="feature"/>
 		<external_include location="$ECF_CONFIG_PATH\Clib">
 			<condition>
 				<platform value="windows"/>
@@ -21,8 +23,6 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
-
-		<!-- Clib bigdigts library -->
 		<external_object location="$ECF_CONFIG_PATH/Clib/C/spec/$ISE_C_COMPILER/$ISE_PLATFORM/lib/eif_bigdigits.lib">
 			<condition>
 				<platform value="windows"/>
@@ -33,12 +33,10 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_object>
-
-		<setting name="console_application" value="true"/>
-		<setting name="dead_code_removal" value="feature"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<cluster name="src" location=".\src\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true">
+		</cluster>
 	</target>
 </system>

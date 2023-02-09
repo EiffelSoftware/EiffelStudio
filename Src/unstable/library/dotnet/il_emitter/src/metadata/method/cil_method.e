@@ -172,6 +172,98 @@ feature -- Write Body
 			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, a_operand))
 		end
 
+	put_opcode_integer_8 (a_opcode: CIL_INSTRUCTION_OPCODES; a_integer: INTEGER_8)
+			-- Insert the `a_opcode` with an integer `a_integer' in the current Method.
+		local
+			l_operand: CIL_OPERAND
+		do
+			l_operand := {CIL_OPERAND_FACTORY}.integer_operand (a_integer, {CIL_OPERAND_SIZE}.i8)
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, l_operand))
+		end
+
+	put_opcode_integer_16 (a_opcode: CIL_INSTRUCTION_OPCODES; a_integer: INTEGER_16)
+			-- Insert the `a_opcode` with an integer `a_integer' in the current Method.
+		local
+			l_operand: CIL_OPERAND
+		do
+			l_operand := {CIL_OPERAND_FACTORY}.integer_operand (a_integer, {CIL_OPERAND_SIZE}.i16)
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, l_operand))
+		end
+
+	put_opcode_integer_32 (a_opcode: CIL_INSTRUCTION_OPCODES; a_integer: INTEGER_32)
+			-- Insert the `a_opcode` with an integer `a_integer' in the current Method.
+		local
+			l_operand: CIL_OPERAND
+		do
+			l_operand := {CIL_OPERAND_FACTORY}.integer_operand (a_integer, {CIL_OPERAND_SIZE}.i32)
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, l_operand))
+		end
+
+	put_opcode_integer_64(a_opcode: CIL_INSTRUCTION_OPCODES; a_integer: INTEGER_64)
+			-- Insert the `a_opcode` with an integer `a_integer' in the current Method.
+		local
+			l_operand: CIL_OPERAND
+		do
+			l_operand := {CIL_OPERAND_FACTORY}.integer64_operand (a_integer, {CIL_OPERAND_SIZE}.i64)
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, l_operand))
+		end
+
+
+	put_opcode_natural_8 (a_opcode: CIL_INSTRUCTION_OPCODES; a_natural: NATURAL_8)
+			-- Insert the `a_opcode` with a natural `a_natural' in the current Method.
+		local
+			l_operand: CIL_OPERAND
+		do
+			l_operand := {CIL_OPERAND_FACTORY}.natural_operand (a_natural, {CIL_OPERAND_SIZE}.u8)
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, l_operand))
+		end
+
+	put_opcode_natural_16 (a_opcode: CIL_INSTRUCTION_OPCODES; a_natural: NATURAL_16)
+			-- Insert the `a_opcode` with a natural `a_natural' in the current Method.
+		local
+			l_operand: CIL_OPERAND
+		do
+			l_operand := {CIL_OPERAND_FACTORY}.natural_operand (a_natural, {CIL_OPERAND_SIZE}.u16)
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, l_operand))
+		end
+
+	put_opcode_natural_32 (a_opcode: CIL_INSTRUCTION_OPCODES; a_natural: NATURAL_32)
+			-- Insert the `a_opcode` with a natural `a_natural' in the current Method.
+		local
+			l_operand: CIL_OPERAND
+		do
+			l_operand := {CIL_OPERAND_FACTORY}.natural_operand (a_natural, {CIL_OPERAND_SIZE}.u32)
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, l_operand))
+		end
+
+	put_opcode_natural_64(a_opcode: CIL_INSTRUCTION_OPCODES; a_natural: NATURAL_64)
+			-- Insert the `a_opcode` with a natural `a_natural' in the current Method.
+		local
+			l_operand: CIL_OPERAND
+		do
+			l_operand := {CIL_OPERAND_FACTORY}.natural64_operand (a_natural, {CIL_OPERAND_SIZE}.u64)
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, l_operand))
+		end
+
+	put_opcode_real_32 (a_opcode: CIL_INSTRUCTION_OPCODES; a_real: REAL_32)
+			-- Insert the `a_opcode` with a real `a_real' in the current Method.
+		local
+			l_operand: CIL_OPERAND
+		do
+			l_operand := {CIL_OPERAND_FACTORY}.real_operand (a_real, {CIL_OPERAND_SIZE}.r4)
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, l_operand))
+		end
+
+	put_opcode_real_64(a_opcode: CIL_INSTRUCTION_OPCODES; a_real: REAL_64)
+			-- Insert the `a_opcode` with a real `a_real' in the current Method.
+		local
+			l_operand: CIL_OPERAND
+		do
+			l_operand := {CIL_OPERAND_FACTORY}.real_operand (a_real, {CIL_OPERAND_SIZE}.r8)
+			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, l_operand))
+		end
+
+
 	mark_label (a_operand: CIL_OPERAND)
 			-- Insert a label `a_operand'.
 		require

@@ -313,13 +313,14 @@ feature {NONE} -- Implementation
 					across l_classes as c loop
 						if attached {CONF_CLASS_ASSEMBLY} c as l_class then
 							create l_name.make_from_string (l_class.name)
+								-- "prefix" is the default "renaming", but if a "renaming" exists
+								-- do not apply the "prefix"
 							if
 								l_renamings /= Void and then
 								attached l_renamings.item (l_name) as l_found_item
 							then
 								l_name := l_found_item -- FIXME: should has "twin" ?
-							end
-							if l_prefix /= Void then
+							elseif l_prefix /= Void then
 								l_name.prepend (l_prefix)
 							end
 							l_new_classes.force (l_class, l_name)
@@ -914,7 +915,7 @@ invariant
 	consume_assembly_observer_not_void: consume_assembly_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

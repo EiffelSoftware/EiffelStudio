@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 				Result := a.item (l_guid)
 				if Result = Void then
 						-- see if we have information from a previous compilation
-					if attached old_assemblies as o and then attached {like get_physical_assembly} o.item (l_guid) as l_as_i then
+					if attached old_assemblies as o and then attached {CONF_PHYSICAL_ASSEMBLY} o.item (l_guid) as l_as_i then
 						Result := l_as_i
 					else
 						check old_unset: attached old_assemblies as o implies not attached o.item (l_guid) end
@@ -351,8 +351,7 @@ feature {NONE} -- Implementation
 
 				-- we have to get the dependencies from the reference file
 			l_reader := {EIFFEL_SERIALIZATION}.deserializer
-			l_reader.deserialize (an_assembly.consumed_path.extended
-				(referenced_assemblies_info_file).name, 0)
+			l_reader.deserialize (an_assembly.consumed_path.extended (referenced_assemblies_info_file).name, 0)
 			if attached {CONSUMED_ASSEMBLY_MAPPING} l_reader.deserialized_object as l_referenced_assemblies_mapping then
 				across l_referenced_assemblies_mapping.assemblies as a loop
 						-- if it's not the assembly itself
@@ -414,21 +413,25 @@ feature {NONE} -- Implementation
 						l_name /= Void and then not l_name.is_empty and then
 						l_dotnet_name /= Void
 					then
-						l_name.to_upper
-						if attached {CONF_CLASS_ASSEMBLY} l_old_dotnet_classes.item (l_dotnet_name) as l_dotnet_class then
-							l_class := l_dotnet_class
-							l_old_dotnet_classes.remove (l_dotnet_name)
-							l_class.set_group (a_assembly)
-							l_class.set_type_position (l_pos)
-							if l_class.is_compiled then
-								modified_classes.force (l_class)
-							end
+						if l_types.assembly_ids.item (i) > 0 then
+							do_nothing -- Ignore forwarded classes...
 						else
-							l_class := factory.new_class_assembly (l_name, l_dotnet_name, a_assembly, l_pos)
-							added_classes.force (l_class)
+							l_name.to_upper
+							if attached {CONF_CLASS_ASSEMBLY} l_old_dotnet_classes.item (l_dotnet_name) as l_dotnet_class then
+								l_class := l_dotnet_class
+								l_old_dotnet_classes.remove (l_dotnet_name)
+								l_class.set_group (a_assembly)
+								l_class.set_type_position (l_pos)
+								if l_class.is_compiled then
+									modified_classes.force (l_class)
+								end
+							else
+								l_class := factory.new_class_assembly (l_name, l_dotnet_name, a_assembly, l_pos)
+								added_classes.force (l_class)
+							end
+							l_new_classes.force (l_class, l_name)
+							l_new_dotnet_classes.force (l_class, l_dotnet_name)
 						end
-						l_new_classes.force (l_class, l_name)
-						l_new_dotnet_classes.force (l_class, l_dotnet_name)
 					end
 					i := i + 1
 				end

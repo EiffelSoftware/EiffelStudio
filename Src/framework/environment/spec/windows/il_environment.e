@@ -290,7 +290,8 @@ feature -- Access
 					end
 					reg.close_key (p)
 				end
-			else
+			end
+			if Result = Void then
 					-- For version v4.0 and later, the path actually depends on what was installed on your machine,
 					-- i.e. Visual Studio vs Windows SDK and the version of the SDK used.
 					-- For the time being we take the first one that is not Void.
@@ -379,7 +380,7 @@ feature {NONE} -- Implementation
 	old_sdk_keys: STRING_TABLE [STRING]
 			-- List of keys associated to each known version of the .NET runtime up to version 2.0
 		once
-			create Result.make (2)
+			create Result.make (3)
 			Result.put ("sdkInstallRoot", v1_0)
 			Result.put ("sdkInstallRootv1.1", v1_1)
 			Result.put ("sdkInstallRootv2.0", v2_0)
@@ -402,7 +403,8 @@ feature {NONE} -- Implementation
 			l_major := version.item (2)
 			l_minor := version.item (4)
 				-- Create list of known SDKs
-			create l_list.make (8)
+			create l_list.make (9)
+			l_list.extend ({STRING_32} "v10.0")	-- VS 2017
 			l_list.extend ({STRING_32} "v8.1A")	-- VS 2013
 			l_list.extend ({STRING_32} "v8.1")	-- WSDK Windows 8.1
 			l_list.extend ({STRING_32} "v8.0A")	-- VS 2012
@@ -415,6 +417,21 @@ feature {NONE} -- Implementation
 			across l_list as l_sdk loop
 				create l_path.make_from_string_general ("hkey_local_machine\SOFTWARE\Microsoft\Microsoft SDKs\Windows\")
 				l_path.append_string (l_sdk.item)
+				Result.extend (l_path)
+				create l_path.make_from_string (l_path)
+				l_path.append_string ("\WinSDK-NetFx")
+				l_path.append_character (l_major)
+				l_path.append_character (l_minor)
+				l_path.append_string_general ("Tools")
+					-- In recent versions we see also the "-x64" or "-x86" appearing but
+					-- just using the one without the suffix picks up the right binaries for our purpose.
+				Result.extend (l_path)
+			end
+			across l_list as l_sdk loop
+				create l_path.make_from_string_general ("hkey_local_machine\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\Windows\")
+				l_path.append_string (l_sdk.item)
+				Result.extend (l_path)
+				create l_path.make_from_string (l_path)
 				l_path.append_string ("\WinSDK-NetFx")
 				l_path.append_character (l_major)
 				l_path.append_character (l_minor)

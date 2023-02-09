@@ -29,7 +29,7 @@ feature -- Access
 			ins: CIL_INSTRUCTION
 			method_name: CIL_METHOD_NAME
 		do
-			create lib_entry.make ("test2", {PE_LIB}.il_only | {PE_LIB}.bits32)
+			create lib_entry.make_with_name ("test2", {PE_LIB}.il_only | {PE_LIB}.bits32)
 			working := lib_entry.working_assembly
 
 			create i8_cls.make ("int8[]", create {CIL_QUALIFIERS}.make_with_flags (

@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	CIL_TOKEN_TYPES
+	CIL_MD_TOKEN_TYPES
 
 feature -- Access
 

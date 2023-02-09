@@ -44,7 +44,7 @@ feature -- Test
 				-- being able to make the assembly visible.
 				-- Note I have never tried accessing an EXE file that is tagged this way,
 				-- only DLLs.
-			create lib_entry.make ("test3", {PE_LIB}.il_only | {PE_LIB}.bits32)
+			create lib_entry.make_with_name ("test3", {PE_LIB}.il_only | {PE_LIB}.bits32)
 
 			working := lib_entry.working_assembly
 			create namespace.make ("nmspc")

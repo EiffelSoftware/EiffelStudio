@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	CIL_METADATA_TABLES
+	CIL_MD_METADATA_TABLES
 
 create
 	make

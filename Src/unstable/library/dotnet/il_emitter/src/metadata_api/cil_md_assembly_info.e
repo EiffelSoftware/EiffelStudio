@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	CIL_ASSEMBLY_INFO
+	CIL_MD_ASSEMBLY_INFO
 
 
 create

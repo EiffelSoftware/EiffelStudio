@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Intialization	
 
-	make_with_data (a_cls: NATURAL; a_interface: PE_TYPEDEF_OR_REF)
+	make_with_data (a_cls: NATURAL_64; a_interface: PE_TYPEDEF_OR_REF)
 		do
 			create class_.make_with_index (a_cls)
 			interface := a_interface

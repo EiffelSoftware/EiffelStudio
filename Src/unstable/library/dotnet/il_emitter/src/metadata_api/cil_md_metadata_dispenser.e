@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	CIL_METADATA_DISPENSER
+	CIL_MD_METADATA_DISPENSER
 
 
 create
@@ -20,6 +20,6 @@ feature -- Scope Definition
 
 
 
-	emit: CIL_METADATA_EMIT
+	emit: CIL_MD_METADATA_EMIT
 		-- Emit metadata
 end

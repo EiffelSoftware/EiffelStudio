@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	CIL_TYPE_ATTRIBUTES
+	CIL_MD_TYPE_ATTRIBUTES
 
 feature -- Visibility attributes
 

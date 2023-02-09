@@ -39,7 +39,7 @@ feature -- Test
 			method_name: CIL_METHOD_NAME
 
 		do
-			create lib_entry.make ("test5", {PE_LIB}.il_only | {PE_LIB}.bits32)
+			create lib_entry.make_with_name ("test5", {PE_LIB}.il_only | {PE_LIB}.bits32)
 
 			working := lib_entry.working_assembly
 

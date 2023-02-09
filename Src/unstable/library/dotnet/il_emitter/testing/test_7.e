@@ -27,7 +27,7 @@ feature -- Test
 
 			signaturem: CIL_METHOD_SIGNATURE
 		do
-			create lib_entry.make ("test7", {PE_LIB}.il_only | {PE_LIB}.bits32)
+			create lib_entry.make_with_name ("test7", {PE_LIB}.il_only | {PE_LIB}.bits32)
 			working := lib_entry.working_assembly
 			create nmspc.make ("nmspc")
 			working.add (nmspc)

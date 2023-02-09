@@ -29,8 +29,6 @@ feature {NONE} -- Initialization
 	make
 			-- Create the working assembly
 			-- Note that this will ALLWAYS be the first assembly in the list.
-		local
-			l_assembly_ref: CIL_ASSEMBLY_DEF
 		do
 			core_flags := {PE_LIB}.il_only
 
@@ -442,7 +440,7 @@ feature -- Assembly
 			end
 		end
 
-	add_external_assembly (a_assembly: STRING; a_token: detachable ARRAY [NATURAL_8]): CIL_ASSEMBLY_DEF
+	add_external_assembly (a_assembly: STRING_32; a_token: detachable ARRAY [NATURAL_8]): CIL_ASSEMBLY_DEF
 			-- Add a reference to another assembly
 			-- this is an empty assembly you can put stuff in if you want to
 			--| Deprecated

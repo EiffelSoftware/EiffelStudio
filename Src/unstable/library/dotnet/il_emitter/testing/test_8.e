@@ -20,7 +20,7 @@ feature -- Test
 			l_console: CIL_CLASS
 			l_sig_write_line: CIL_METHOD_SIGNATURE
 		do
-			create pe_file.make ("test8", {PE_LIB}.il_only | {PE_LIB}.bits32)
+			create pe_file.make_with_name ("test8", {PE_LIB}.il_only | {PE_LIB}.bits32)
 
 			assembly := pe_file.working_assembly
 			create sig_main.make ("$Main", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, assembly)

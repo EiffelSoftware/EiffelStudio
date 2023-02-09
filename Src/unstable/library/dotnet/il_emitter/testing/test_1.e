@@ -22,7 +22,7 @@ feature -- Access
 			ins: CIL_INSTRUCTION
 			method_name: CIL_METHOD_NAME
 		do
-			create lib_entry.make ("test1", {PE_LIB}.bits32)
+			create lib_entry.make_with_name ("test1", {PE_LIB}.bits32)
 			working := lib_entry.working_assembly
 
 			create signature_rep.make ("putchar", 0, Void)

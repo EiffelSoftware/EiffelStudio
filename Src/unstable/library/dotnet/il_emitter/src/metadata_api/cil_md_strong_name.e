@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	CIL_STRONG_NAME
+	CIL_MD_STRONG_NAME
 
 create
 	make

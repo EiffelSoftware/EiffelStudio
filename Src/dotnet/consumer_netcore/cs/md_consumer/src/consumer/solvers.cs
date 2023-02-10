@@ -210,14 +210,17 @@ namespace md_consumer
                     int count = meth.arguments.Length;
                     int n = method.arguments.Length;
                     if (n < count) { count = n; }
-                    if (count - 1 > index) {
+                    if (count >= index) {
                         if (l_name == null) {
                             l_name =  method.starting_resolution_name();
                         }
                         string l_item_name = meth.starting_resolution_name();
                         if (l_name.Equals(l_item_name)) {
                             for(int i = index; i < count && res; i++) {
-                                res = meth == method || i >= 0 && ! meth.arguments[i].type.same_as(method.arguments[i].type);
+                                res = (meth == method) 
+                                    || (i > 0 && 
+                                        ! meth.arguments[i].type.same_as(method.arguments[i].type)
+                                    );
                             }
                         }
                     }
@@ -282,7 +285,7 @@ namespace md_consumer
             if (get_property) {
                 int len = get_prefix.Length;
                 if (dn.Length > len && String.Compare(get_prefix, dn.Substring(0, len), true) == 0) {
-                    dn = dn.Substring(1, len);
+                    dn = dn.Substring(len);
                 }
             }
             string name = dn;

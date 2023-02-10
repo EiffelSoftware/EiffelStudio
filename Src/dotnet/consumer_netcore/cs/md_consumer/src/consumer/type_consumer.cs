@@ -859,6 +859,7 @@ namespace md_consumer
 					)
 				{
 					MethodInfo l_meth = (MethodInfo) l_member;
+					string n = l_meth.Name;
 					if (!is_property_or_event (l_meth)) {
 						if (is_consumed_method(l_meth)) {
 							l_solver.add_method (l_meth);
@@ -1153,19 +1154,22 @@ namespace md_consumer
             return referenced_type_from_type(typeof(System.Int32));
         }
 
-		public bool is_property_or_event(MethodInfo info)
+        public bool is_property_or_event(MethodInfo info)
 		{
+			bool res=false;
 			string dn = info.Name;
 			int i = dn.LastIndexOf('.');
 			if (i > 0) {
 				dn = dn.Substring(i + 1);
 			}
 			string k = dn;
-			if (!info.IsHideBySig) { //FIXME: addition...
+			// if (!info.IsHideBySig) { //FIXME: addition...
 				k = k + key_args(info.GetParameters());
-			}
-			return properties_and_events.ContainsKey(k);
+			// }
+			res = properties_and_events.ContainsKey(k);	
+			return res;
 		}
+
 		public bool is_infix(MethodInfo info)
 			// -- Is function an infix function?
 		{
@@ -1218,13 +1222,13 @@ namespace md_consumer
 			if (info.CanRead) {
 				MethodInfo? g = METHOD_RETRIEVER.property_getter (info);
 				if (g != null) {
-					add_properties_or_events (g);
+					add_properties_or_events_method (g);
 				}
 			}
 			if (info.CanWrite) {
 				MethodInfo? s = METHOD_RETRIEVER.property_setter (info);
 				if (s != null) {
-					add_properties_or_events (s);
+					add_properties_or_events_method (s);
 				}
 			}			
 		}
@@ -1233,18 +1237,18 @@ namespace md_consumer
 			MethodInfo? l_adder = METHOD_RETRIEVER.event_adder (info);
 			MethodInfo? l_remover = METHOD_RETRIEVER.event_remover (info);
 			MethodInfo? l_raiser = METHOD_RETRIEVER.event_raiser (info);
-			if (l_adder != null) add_properties_or_events (l_adder);
-			if (l_remover != null) add_properties_or_events (l_remover);
-			if (l_raiser != null) add_properties_or_events (l_raiser);
+			if (l_adder != null) add_properties_or_events_method (l_adder);
+			if (l_remover != null) add_properties_or_events_method (l_remover);
+			if (l_raiser != null) add_properties_or_events_method (l_raiser);
 		}
-		public void add_properties_or_events (MethodInfo info)
+		public void add_properties_or_events_method (MethodInfo info)
 		{
 			if (is_consumed_method(info)) {
 				string dn = info.Name;
 				string key = new string(' ', 0);
 				key = dn + key_args(info.GetParameters());
 				if (!properties_and_events.ContainsKey(key)) {
-					properties_and_events.Add(info, key);
+					properties_and_events.Add(key, info);
 				}
 			}
 		}	

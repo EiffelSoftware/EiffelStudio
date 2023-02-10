@@ -11,6 +11,7 @@ inherit
 	PE_TABLE_ENTRY_BASE
 
 create
+	make,
 	make_with_data
 
 feature {NONE} -- Initialization
@@ -26,7 +27,16 @@ feature {NONE} -- Initialization
 			create param_index.make_with_index (a_param_index)
 		ensure
 			method_set: method = a_method
+		end
 
+	make (a_iflags: INTEGER; a_mflags: INTEGER; a_name_index: NATURAL_64; a_signature_index: NATURAL_64; a_param_index: NATURAL_64)
+		do
+			rva := 0
+			impl_flags := a_iflags
+			flags := a_mflags
+			create name_index.make_with_index (a_name_index)
+			create signature_index.make_with_index (a_signature_index)
+			create param_index.make_with_index (a_param_index)
 		end
 
 feature -- Access

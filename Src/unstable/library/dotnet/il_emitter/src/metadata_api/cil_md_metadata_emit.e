@@ -119,7 +119,11 @@ feature -- Assembly Definition
 			-- Add assembly metadata information to the metadata tables.
 			--| the public key could be null.
 		require
+			assembly_name_not_void: assembly_name /= Void
 			assembly_name_not_empty: not assembly_name.is_empty
+			assembly_info_not_void: assembly_info /= Void
+			valid_flags: public_key /= Void implies assembly_flags &
+				{CIL_MD_ASSEMBLY_FLAGS}.public_key = {CIL_MD_ASSEMBLY_FLAGS}.public_key
 		local
 			l_name_index: NATURAL_64
 			l_entry: PE_TABLE_ENTRY_BASE
@@ -143,7 +147,9 @@ feature -- Assembly Definition
 			public_key_token: CIL_MD_PUBLIC_KEY_TOKEN): INTEGER
 			-- Add assembly reference information to the metadata tables.
 		require
+			assembly_name_not_void: assembly_name /= Void
 			assembly_name_not_empty: not assembly_name.is_empty
+			assembly_info_not_void: assembly_info /= Void
 		local
 			l_name_index: NATURAL_64
 			l_public_key_token_index: NATURAL_64
@@ -163,6 +169,7 @@ feature -- Assembly Definition
 	define_type_ref (type_name: STRING_32; resolution_scope: INTEGER): INTEGER
 			-- Adds type reference information to the metadata tables.
 		require
+			type_name_not_void: type_name /= Void
 			type_name_not_empty: not type_name.is_empty
 			resolution_scope_valid:
 				(resolution_scope = 0) or
@@ -222,6 +229,7 @@ feature -- Assembly Definition
 	define_type (type_name: STRING_32; flags: INTEGER; extend_token: INTEGER; implements: detachable ARRAY [INTEGER]): INTEGER
 			-- Define a new type in the metadata.
 		require
+			type_name_not_void: type_name /= Void
 			type_name_not_empty: not type_name.is_empty
 			extend_token_valid:
 				(extend_token & Md_mask = Md_type_def) or
@@ -268,10 +276,12 @@ feature -- Assembly Definition
 	define_member_ref (method_name: STRING_32; in_class_token: INTEGER; a_signature: CIL_MD_SIGNATURE): INTEGER
 			-- Create reference to member in class `in_class_token'.
 		require
+			method_name_not_void: method_name /= Void
 			method_name_not_empty: not method_name.is_empty
 			in_class_token_valid: in_class_token & Md_mask = Md_type_ref or
 				in_class_token & Md_mask = Md_type_def or
 				in_class_token & md_mask = md_type_spec
+			signature_not_void: a_signature /= Void
 		local
 			l_table_type, l_table_row: NATURAL_64
 			l_member_ref_index: NATURAL_64
@@ -300,6 +310,100 @@ feature -- Assembly Definition
 			Result := last_token.to_integer_32
 		ensure
 			result_valid: Result & Md_mask = Md_member_ref
+		end
+
+	define_method (method_name: STRING_32; in_class_token: INTEGER; method_flags: INTEGER;
+			a_signature: CIL_MD_METHOD_SIGNATURE; impl_flags: INTEGER): INTEGER
+			-- Create reference to method in class `in_class_token`.
+		require
+			method_name_not_void: method_name /= Void
+			method_name_not_empty: not method_name.is_empty
+			in_class_token_valid: in_class_token & Md_mask = Md_type_ref or
+				in_class_token & Md_mask = Md_type_def or
+				in_class_token & md_mask = md_type_spec
+			signature_not_void: a_signature /= Void
+		local
+			l_table_type, l_table_row: NATURAL_64
+			l_method_def_index: NATURAL_64
+			l_method_def_entry: PE_METHOD_DEF_TABLE_ENTRY
+			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_method_signature: NATURAL_64
+			l_name_index: NATURAL_64
+			l_param_index: NATURAL_64
+		do
+				-- Extract table type and row from the in_class_token
+			l_tuple := extract_table_type_and_row (in_class_token)
+
+				-- Param index is the number of parameters.
+				--| TODO double check.
+			l_param_index := a_signature.parameter_count.to_natural_64
+
+			l_method_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+			l_name_index := pe_writer.hash_string (method_name)
+
+				-- Create a new PE_METHOD_DEF_TABLE_ENTRY instance with the given data
+			create l_method_def_entry.make (method_flags, impl_flags, l_name_index, l_method_signature, l_param_index)
+
+				-- Add the new PE_METHOD_DEF_TABLE_ENTRY instance to the metadata tables.
+			l_method_def_index := add_table_entry (l_method_def_entry)
+
+				-- Return the generated token.
+			Result := last_token.to_integer_32
+		ensure
+			result_valid: Result & Md_mask = Md_method_def
+		end
+
+	define_field (field_name: STRING_32; in_class_token: INTEGER; field_flags: INTEGER; a_signature: CIL_MD_FIELD_SIGNATURE): INTEGER
+			-- Create a new field in class `in_class_token'.
+		require
+			field_name_not_void: field_name /= Void
+			field_name_not_empty: not field_name.is_empty
+			in_class_token_valid: in_class_token & Md_mask = Md_type_def
+			signature_not_void: a_signature /= Void
+		local
+			l_table_type, l_table_row: NATURAL_64
+			l_field_def_index: NATURAL_64
+			l_field_def_entry: PE_FIELD_TABLE_ENTRY
+			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_field_signature: NATURAL_64
+			l_name_index: NATURAL_64
+		do
+				-- Extract table type and row from the in_class_token
+			l_tuple := extract_table_type_and_row (in_class_token)
+
+			l_field_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+			l_name_index := pe_writer.hash_string (field_name)
+
+				-- Create a new PE_FIELD_TABLE_ENTRY instance with the given data
+			create l_field_def_entry.make_with_data (field_flags, l_name_index, l_field_signature)
+
+				-- Add the new PE_FIELD_TABLE_ENTRY instance to the metadata tables.
+			l_field_def_index := add_table_entry (l_field_def_entry)
+
+				-- Return the generated token.
+			Result := last_token.to_integer_32
+		ensure
+			result_valid: Result & Md_mask = Md_field_def
+		end
+
+	define_signature (a_signature: CIL_MD_LOCAL_SIGNATURE): INTEGER
+			-- Define a new token for `a_signature'. To be used only for
+			-- local signature.
+		require
+				signature_not_void: a_signature /= Void
+		local
+			l_signature_hash: NATURAL_64
+			l_signature_index: NATURAL_64
+			l_signature_entry: PE_STANDALONE_SIG_TABLE_ENTRY
+		do
+			l_signature_hash := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+
+			create l_signature_entry.make_with_data (l_signature_hash)
+			l_signature_index := add_table_entry (l_signature_entry)
+
+			Result := last_token.to_integer_32
+		ensure
+			result_valid: Result & Md_mask = Md_signature
 		end
 
 feature {NONE} -- Helper

@@ -15,10 +15,12 @@ feature -- Test
 			l_emit: CIL_MD_METADATA_EMIT
 			l_assembly_info: CIL_MD_ASSEMBLY_INFO
 			l_pub_key_token: CIL_MD_PUBLIC_KEY_TOKEN
+			l_field_sig: CIL_MD_FIELD_SIGNATURE
 			sig: CIL_MD_METHOD_SIGNATURE
+			l_local_sig: CIL_MD_LOCAL_SIGNATURE
 
 			my_assembly, mscorlib_token, object_type_token, system_exception_token,
-			my_type, my_ctor, object_ctor: INTEGER
+			my_type, my_ctor, object_ctor, my_field, local_token: INTEGER
 
 		do
 			create l_dispenser.make
@@ -53,6 +55,24 @@ feature -- Test
 			sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 			object_ctor := l_emit.define_member_ref ({STRING_32} ".ctor", object_type_token, sig)
+
+			my_ctor := l_emit.define_method ({STRING_32} ".ctor",
+					my_type,
+					{CIL_MD_METHOD_ATTRIBUTES}.Public |
+					{CIL_MD_METHOD_ATTRIBUTES}.Special_name |
+					{CIL_MD_METHOD_ATTRIBUTES}.Rt_special_name,
+					sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+
+			create l_field_sig.make
+			l_field_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+
+			my_field := l_emit.define_field ({STRING_32}"item", my_type, {CIL_MD_FIELD_ATTRIBUTES}.public, l_field_sig)
+
+			create l_local_sig.make
+			l_local_sig.set_local_count (2)
+			l_local_sig.add_local_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+			l_local_sig.add_local_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_class, my_type)
+			local_token := l_emit.define_signature (l_local_sig)
 
 		end
 

@@ -103,6 +103,12 @@ since we can use the same MD_ classes (I'm just adding a prefix CIL_MD) because 
 3.  Check ECMA metadata tables and use the provided token to get the required data. (ECMA standard section II.22 Metadata logical format : tables)
 
 
+## Check if STRONG_NAME is still needed in the latest version of .Net.
+Although .NET Core supports strong-named assemblies, and all assemblies in the .NET Core library are signed, the majority of third-party assemblies do not need strong names. For more information, see Strong Name Signing on GitHub.
+https://learn.microsoft.com/en-us/dotnet/standard/assembly/sign-strong-name
+
+
+
 
 
 

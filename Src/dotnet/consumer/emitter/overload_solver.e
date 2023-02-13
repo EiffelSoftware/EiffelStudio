@@ -340,12 +340,12 @@ feature {NONE} -- Internal Statur Setting
 				name := l_dn_name
 				method_table.search (name)
 				if method_table.found and then attached method_table.found_item as l_found_item then
-					l_found_item.extend (create {METHOD_SOLVER}.make (meth, get_property))
+					l_list := l_found_item
 				else
 					create l_list.make
 					method_table.put (l_list, name)
-					l_list.extend (create {METHOD_SOLVER}.make (meth, get_property))
 				end
+				l_list.extend (create {METHOD_SOLVER}.make (meth, get_property))
 			else
 				check
 					method_name_attached: False

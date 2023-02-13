@@ -904,7 +904,7 @@ namespace md_consumer
 						p = p + 1;
 					}
 					string name;
-					while (p <= p_max && tc[p].arguments.Length <= Constructor_overload_resolution) {
+					while (p <= p_max && args.Length <= Constructor_overload_resolution) {
 						csolver = tc[p];
 						args = csolver.arguments;
 						name = Complete_creation_routine_name_prefix;
@@ -939,15 +939,13 @@ namespace md_consumer
 						foreach (CONSUMED_ARGUMENT arg in args)
 						{
 							i = i + 1;
-							// if (i > 1 ) { // FIXME: why starting at the second position?
-							if (l_reserved.ContainsKey(name)) {
+							if (!l_reserved.ContainsKey(name)) {
 								break;
 							}
+
 							if (i > 1) {
-								name = name + "_and_";
+								name = name + "_and_" + arg.eiffel_name;
 							}
-							name = name + arg.eiffel_name;
-							// }
 						}
 						name = name_solver.unique_feature_name(name);
 						csolver.set_name(name);

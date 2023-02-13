@@ -1164,7 +1164,13 @@ namespace md_consumer
 			}
 			string k = dn;
 			// if (!info.IsHideBySig) { //FIXME: addition...
+			try {
 				k = k + key_args(info.GetParameters());
+			} catch {
+				// FIXME: Exception has occurred: CLR/System.NotSupportedException
+				// Exception thrown: 'System.NotSupportedException' in System.Reflection.MetadataLoadContext.dll: 'Parsing function pointer types in signatures is not supported.'
+				// Case: System.RuntimeTypeHandle  GetActivationInfo
+			}
 			// }
 			res = properties_and_events.ContainsKey(k);	
 			return res;

@@ -461,6 +461,15 @@ namespace md_consumer
         {
             var writer = json_writer;
             serialize_entity (cons);
+            writer.WritePropertyName(JSON_NAMES.arguments); //"arguments");
+            writer.WriteStartArray();
+            foreach(CONSUMED_ARGUMENT arg in cons.arguments)
+            {
+                begin_serialize_object(arg);
+                serialize_argument(arg);
+                end_serialize_object(arg);
+            }
+            writer.WriteEndArray();
         }      
         public void serialize_procedure (CONSUMED_PROCEDURE proc)
         {

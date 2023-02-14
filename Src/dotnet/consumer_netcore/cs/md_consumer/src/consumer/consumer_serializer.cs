@@ -345,6 +345,10 @@ namespace md_consumer
                 writer.WritePropertyName(JSON_NAMES.is_static); //"is_static");
                 writer.WriteBooleanValue(true);
             }
+            if (m.is_virtual()) {
+                writer.WritePropertyName(JSON_NAMES.is_virtual); //"is_virtual");
+                writer.WriteBooleanValue(true);
+            }             
             if (m.is_deferred()) {
                 writer.WritePropertyName(JSON_NAMES.is_deferred); //"is_deferred");
                 writer.WriteBooleanValue(true);
@@ -361,10 +365,6 @@ namespace md_consumer
                 writer.WritePropertyName(JSON_NAMES.is_new_slot); //"is_new_slot");
                 writer.WriteBooleanValue(true);
             } 
-            if (m.is_virtual()) {
-                writer.WritePropertyName(JSON_NAMES.is_virtual); //"is_virtual");
-                writer.WriteBooleanValue(true);
-            } 
             if (m.is_attribute_setter()) {
                 writer.WritePropertyName(JSON_NAMES.is_attribute_setter); //"is_attribute_setter");
                 writer.WriteBooleanValue(true);
@@ -373,7 +373,7 @@ namespace md_consumer
         public void serialize_field (CONSUMED_FIELD field)
         {
             var writer = json_writer;
-            serialize_entity (field);
+            serialize_member (field);
             writer.WritePropertyName(JSON_NAMES.return_type); //"return_type");
             serialize_referenced_type_as_object (field.return_type);
             if (field.setter != null) {

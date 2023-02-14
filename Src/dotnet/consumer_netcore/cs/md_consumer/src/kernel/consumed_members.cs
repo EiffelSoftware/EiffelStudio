@@ -208,7 +208,6 @@ namespace md_consumer
         }
         public CONSUMED_FIELD(string en, string dn, CONSUMED_REFERENCED_TYPE rt, bool a_static, bool pub, bool init_only, CONSUMED_REFERENCED_TYPE a_type) : base (en, dn, pub, a_type)
         {
-            //FIXME
             if (a_static) {
                 flags = flags | FEATURE_ATTRIBUTE.is_static;
             }

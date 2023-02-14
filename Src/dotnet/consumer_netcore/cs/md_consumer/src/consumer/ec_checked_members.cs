@@ -63,14 +63,30 @@ namespace md_consumer
 							non_eiffel_compliant_reason = l_checked_type.non_eiffel_compliant_reason;
 						}
 					}
-					internal_is_eiffel_compliant = l_compliant;
+                    if (l_compliant) {
+                        if (typeof(MethodInfo).IsAssignableFrom(member.GetType())) {
+                            Type? rt = ((MethodInfo) member).ReturnType;
+                            if (rt != null) {
+                                l_checked_type = checked_type (rt);
+                                l_compliant = l_checked_type.is_eiffel_compliant();
+                                if (!l_compliant) {
+                                    if (l_checked_type.non_eiffel_compliant_reason.Equals (EC_CHECKED_REASON_CONSTANTS.reason_type_is_generic)) {
+                                        non_eiffel_compliant_reason = EC_CHECKED_REASON_CONSTANTS.reason_member_is_generic;
+                                    } else {
+                                        non_eiffel_compliant_reason = l_checked_type.non_eiffel_compliant_reason;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 } else {
 					Debug.Assert(false, "from_documentation__declaring_type_attached");
 				}
 			} else {
-				internal_is_eiffel_compliant = false;
+				l_compliant = false;
 				non_eiffel_compliant_reason = EC_CHECKED_REASON_CONSTANTS.reason_member_is_generic;
 			}
+            internal_is_eiffel_compliant = l_compliant;
         }
 
         public override ICustomAttributeProvider custom_attribute_provider() {

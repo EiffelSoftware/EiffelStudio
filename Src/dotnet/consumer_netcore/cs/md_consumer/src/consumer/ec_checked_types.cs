@@ -57,7 +57,7 @@ namespace md_consumer
                     if (l_element.is_compliant()) {
                         internal_is_compliant = true;
                     } else {
-                        // internal_is_compliant = false; //FIXME?
+                        internal_is_compliant = false;
                         non_compliant_reason = l_element.non_compliant_reason;
 
                     }
@@ -71,7 +71,7 @@ namespace md_consumer
                         if (l_checked_asm.is_compliant()) {
                             internal_is_compliant = true;
                         } else {
-                            // internal_is_compliant = false; //FIXME?
+                            internal_is_compliant = false;
                             non_compliant_reason = EC_CHECKED_REASON_CONSTANTS.reason_assembly_marked_non_cls_compliant;
                         }
                     } else {
@@ -173,7 +173,6 @@ namespace md_consumer
         }
         void check_extended_interface_compliance()
         {
-            // FIXME
             MemberInfo[] l_members;
             bool l_compliant = true;
             bool l_eiffel_compliant = true;
@@ -184,7 +183,7 @@ namespace md_consumer
                     break;
                 }
                 if (is_applicable_member(l_member)) {
-                    EC_CHECKED_MEMBER? l_checked_member = null; //FIXME = checked_member (l_member);
+                    EC_CHECKED_MEMBER? l_checked_member = checked_member (l_member);
                     if (l_checked_member != null) {
                         if (l_compliant) {
                             l_compliant = l_checked_member.is_compliant();

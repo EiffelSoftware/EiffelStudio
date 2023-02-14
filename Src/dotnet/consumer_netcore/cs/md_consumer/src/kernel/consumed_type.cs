@@ -22,7 +22,7 @@ namespace md_consumer
         public CONSUMED_REFERENCED_TYPE(string n, int i)
         {
             name = n;
-            has_generic_type = n.IndexOf('`') > 0 || n.IndexOf('[') > 0;// FIXME: support for generics?
+            has_generic_type = n.IndexOf('`') > 0; // FIXME: support for generics?
             has_pointer_type = name.IndexOf('*') > 0 ;
             assembly_id = i;
         }

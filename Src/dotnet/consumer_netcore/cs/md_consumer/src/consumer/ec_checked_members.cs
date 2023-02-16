@@ -77,10 +77,26 @@ namespace md_consumer
                                     }
                                 }
                             }
+                            if (l_compliant) {
+                                // Check arguments declaration
+                                try {
+                                    ParameterInfo[] args = ((MethodInfo) member).GetParameters();
+                                    foreach (ParameterInfo arg in args) {
+                                        if (arg.ParameterType.IsGenericType) {
+                                            l_compliant = false;
+                                            non_eiffel_compliant_reason = EC_CHECKED_REASON_CONSTANTS.reason_member_is_generic;
+                                            // non_eiffel_compliant_reason = l_checked_type.non_eiffel_compliant_reason;
+                                            break;
+                                        }
+                                    }
+                                } catch {
+                                    // FIXME: how to avoid such exception ?
+                                }
+                            }
                         }
                     }
                 } else {
-					Debug.Assert(false, "from_documentation__declaring_type_attached");
+					Debug.Assert(false, "from_documenLtation__declaring_type_attached");
 				}
 			} else {
 				l_compliant = false;

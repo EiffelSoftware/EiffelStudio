@@ -202,10 +202,9 @@ namespace md_consumer
 		// 	meth: METHOD_SOLVER
 		// 	count, i: INTEGER
 		// 	cursor: CURSOR
-            string? l_name = null;
-
 			bool res = true;
             if (method.arguments.Length > 0) {
+                string? l_name = null;
                 foreach (METHOD_SOLVER meth in method_list) {
                     if (meth != method) {
                         int count = meth.arguments.Length;

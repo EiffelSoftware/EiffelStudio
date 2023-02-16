@@ -207,22 +207,28 @@ namespace md_consumer
 			bool res = true;
             if (method.arguments.Length > 0) {
                 foreach (METHOD_SOLVER meth in method_list) {
-                    int count = meth.arguments.Length;
-                    int n = method.arguments.Length;
-                    if (n < count) { count = n; }
-                    if (count >= index) {
-                        if (l_name == null) {
-                            l_name =  method.starting_resolution_name();
-                        }
-                        string l_item_name = meth.starting_resolution_name();
-                        if (l_name.Equals(l_item_name)) {
-                            for(int i = index; i < count && res; i++) {
-                                res = (meth == method) 
-                                    || (i > 0 && 
-                                        ! meth.arguments[i].type.same_as(method.arguments[i].type)
-                                    );
+                    if (meth != method) {
+                        int count = meth.arguments.Length;
+                        int n = method.arguments.Length;
+                        if (n < count) { count = n; }
+                        if (count >= index) {
+                            if (l_name == null) {
+                                l_name =  method.starting_resolution_name();
+                            }
+                            string l_item_name = meth.starting_resolution_name();
+                            if (l_name.Equals(l_item_name)) {
+                                if (count == 0) {
+                                    res = (meth == method);
+                                } else {
+                                    for (int i = index; i < count && res; i++) {
+                                        res = (i > 0) && ! meth.arguments[i].type.same_as(method.arguments[i].type);
+                                    }
+                                }
                             }
                         }
+                    }
+                    if (res == true) {
+                        break;
                     }
                 }
             }

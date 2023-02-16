@@ -940,7 +940,9 @@ namespace md_consumer
 						{
 							i = i + 1;
 							if (!l_reserved.ContainsKey(name)) {
-								break;
+								//break;  	// FIXME For now, append all argument names.
+											// see how to improve Eiffel to select feature in inheritance clause
+										   	// passing signature, instead of relying on argument names !
 							}
 
 							if (i > 1) {

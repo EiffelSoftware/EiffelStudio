@@ -493,16 +493,15 @@ feature -- Status report
 			-- (Uses effective UID to check that parent is writable
 			-- and file does not exist.)
 		local
-			perm: FILE_IO_PERMISSION
+			fs: FILE_STREAM
 			retried: BOOLEAN
 		do
 			if not retried then
 					-- Is the parent directory writable?
 				internal_file.refresh
-				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.read,
-					internal_file.directory_name)
-				perm.demand
-				Result := not exists or else writable
+				create fs.make (internal_file.full_name, {FILE_MODE}.open, {FILE_ACCESS}.write)
+
+				Result := fs.can_write and then ( not exists or else writable )
 			else
 				Result := False
 			end
@@ -751,8 +750,7 @@ feature -- Status setting
 			if internal_name.same_string (null_name) then
 				internal_stream := {SYSTEM_STREAM}.null
 			else
-				internal_stream := internal_file.open_file_mode_file_access (
-					{FILE_MODE}.create_, {FILE_ACCESS}.write)
+				internal_stream := internal_file.open ({FILE_MODE}.create_, {FILE_ACCESS}.write)
 			end
 			mode := Write_file
 		ensure
@@ -770,8 +768,7 @@ feature -- Status setting
 			if internal_name.same_string (null_name) then
 				internal_stream := {SYSTEM_STREAM}.null
 			else
-				internal_stream := internal_file.open_file_mode_file_access (
-					{FILE_MODE}.append, {FILE_ACCESS}.write)
+				internal_stream := internal_file.open ({FILE_MODE}.append, {FILE_ACCESS}.write)
 			end
 			mode := Append_file
 		ensure
@@ -788,8 +785,7 @@ feature -- Status setting
 			if internal_name.same_string (null_name) then
 				internal_stream := {SYSTEM_STREAM}.null
 			else
-				internal_stream := internal_file.open_file_mode_file_access (
-					{FILE_MODE}.open, {FILE_ACCESS}.read_write)
+				internal_stream := internal_file.open ({FILE_MODE}.open, {FILE_ACCESS}.read_write)
 			end
 			mode := Read_write_file
 		ensure
@@ -808,8 +804,7 @@ feature -- Status setting
 			if internal_name.same_string (null_name) then
 				internal_stream := {SYSTEM_STREAM}.null
 			else
-				internal_stream := internal_file.open_file_mode_file_access (
-					{FILE_MODE}.create_, {FILE_ACCESS}.read_write)
+				internal_stream := internal_file.open ({FILE_MODE}.create_, {FILE_ACCESS}.read_write)
 			end
 			mode := Read_write_file
 		ensure
@@ -1915,7 +1910,7 @@ feature {FILE} -- Implementation
 		local
 			t: SYSTEM_DATE_TIME
 		once
-			t.make_with_year_and_month (1970 ,1 ,1 ,0 ,0 ,0)
+			t.make (1970 ,1 ,1 ,0 ,0 ,0)
 			Result := t.ticks
 		end
 
@@ -2033,7 +2028,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

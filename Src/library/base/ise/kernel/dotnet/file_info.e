@@ -341,19 +341,24 @@ feature -- Status report
 		require
 			is_ready: is_ready
 		local
-			perm: FILE_IO_PERMISSION
-			retried: BOOLEAN
+			fs: FILE_STREAM
+			retried: INTEGER
 		do
 			if
-				not retried and then
+				retried = 0 and then
 				attached internal_file as l_file
 			then
-				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.read, l_file.full_name)
-				perm.demand
+				create fs.make (l_file.full_name, {FILE_MODE}.open)
+				Result := fs.can_read
+				fs.dispose
+			elseif retried = 1 and fs /= Void then
+				fs.dispose
+				Result := False
+			else
+				Result := False
 			end
-			Result := not retried
 		rescue
-			retried := True
+			retried := retried + 1
 			retry
 		end
 
@@ -362,19 +367,24 @@ feature -- Status report
 		require
 			is_ready: is_ready
 		local
-			perm: FILE_IO_PERMISSION
-			retried: BOOLEAN
+			fs: FILE_STREAM
+			retried: INTEGER
 		do
 			if
-				not retried and then
+				retried = 0 and then
 				attached internal_file as l_file
 			then
-				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.write, l_file.full_name)
-				perm.demand
+				create fs.make (l_file.full_name, {FILE_MODE}.open)
+				Result := fs.can_write
+				fs.dispose
+			elseif retried = 1 and fs /= Void then
+				fs.dispose
+				Result := False
+			else
+				Result := False
 			end
-			Result := not retried
 		rescue
-			retried := True
+			retried := retried + 1
 			retry
 		end
 
@@ -480,7 +490,7 @@ feature {FILE_INFO} -- Access
 		local
 			t: SYSTEM_DATE_TIME
 		once
-			t.make_with_year_and_month (1970 ,1 ,1 ,0 ,0 ,0)
+			t.make (1970 ,1 ,1 ,0 ,0 ,0)
 			Result := t.ticks
 		end
 
@@ -488,7 +498,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

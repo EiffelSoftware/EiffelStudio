@@ -182,13 +182,16 @@ feature {NONE} -- Implementation
 									display_error ({STRING_32} "Configuration %"" + a_file.name + "%" uses up-to-date agent types.")
 									has_error := True
 								end
-								o.unset_is_obsolete_routine_type
+									-- The configuration still relies on the original version.
+									-- Therefore, `o.unset_is_obsolete_routine_type` would affect that version, not the latest one.
+									-- To avoid that, the option is set even if it has the same default value in the latest configuration.
+								o.set_is_obsolete_routine_type (False)
 							end
 						end
 					end
 					if is_updating_iteration then
 							-- Remove `is_obsolete_iteration` on all targets and their own clusters.
-							-- Report only one agent-related error per configuration.
+							-- Report only one iteration-related error per configuration.
 						has_error := False
 						across s.targets as t loop
 							if attached t.item.internal_options as o then
@@ -196,16 +199,22 @@ feature {NONE} -- Implementation
 									display_error ({STRING_32} "Configuration %"" + a_file.name + "%" uses up-to-date iteration syntax.")
 									has_error := True
 								end
-								o.unset_is_obsolete_iteration
+									-- The configuration still relies on the original version.
+									-- Therefore, `o.unset_is_obsolete_iteration` would affect that version, not the latest one.
+									-- To avoid that, the option is set even if it has the same default value in the latest configuration.
+								o.set_is_obsolete_iteration (False)
 							end
 							if attached t.item.internal_clusters as cs then
 								across cs as c loop
-									if attached c.item.internal_options as o then
+									if attached c.item.changeable_internal_options as o then
 										if not o.is_obsolete_iteration and not has_error then
 											display_error ({STRING_32} "Configuration %"" + a_file.name + "%" uses up-to-date iteration syntax.")
 											has_error := True
 										end
-										o.unset_is_obsolete_iteration
+											-- The configuration still relies on the original version.
+											-- Therefore, `o.unset_is_obsolete_iteration` would affect that version, not the latest one.
+											-- To avoid that, the option is set even if it has the same default value in the latest configuration.
+										o.set_is_obsolete_iteration (False)
 									end
 								end
 							end
@@ -507,7 +516,7 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

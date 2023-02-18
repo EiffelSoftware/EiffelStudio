@@ -88,10 +88,10 @@ feature {NONE} -- Implementation
 		do
 			if attached a_feature.body.arguments as l_args then
 				across l_args as l_arg loop
-					if l_arg.item.type.has_attached_mark then
-						across l_arg.item.id_list as l_id loop
-							if void_checking_contracts.has_key (l_id.item) then
-								create_violation(a_feature, void_checking_contracts.at (l_id.item), a_precondition)
+					if l_arg.type.has_attached_mark then
+						across l_arg.id_list as l_id loop
+							if void_checking_contracts.has_key (l_id) then
+								create_violation(a_feature, void_checking_contracts.at (l_id), a_precondition)
 							end
 						end
 					end

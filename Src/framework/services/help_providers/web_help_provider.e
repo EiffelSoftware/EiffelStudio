@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A base implementation for a help provider used to fetch content online.
 	]"
@@ -108,7 +108,7 @@ feature {NONE} -- Query
 		do
 			if not retried then
 					-- Create URL string
-				create l_url.make (a_url.as_string_8)
+				create l_url.make ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_url))
 				create l_protcol.make (l_url)
 				l_protcol.set_connect_timeout (30)
 				l_protcol.set_timeout (60)
@@ -242,7 +242,7 @@ feature {NONE} -- Regular expressions
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

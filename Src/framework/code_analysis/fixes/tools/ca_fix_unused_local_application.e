@@ -54,7 +54,7 @@ feature {AST_EIFFEL} -- Visitor
 					locals as l
 				loop
 						-- Iterate over all identifiers.
-					identifiers := l.item.id_list
+					identifiers := l.id_list
 					from
 							-- Current identifier.
 						i := 1
@@ -68,7 +68,7 @@ feature {AST_EIFFEL} -- Visitor
 						i > n
 					loop
 							-- Check if the current identifier is unused.
-						if across unused_locals as u some u.item.name = identifiers.i_th (i) end then
+						if across unused_locals as u some u.name = identifiers.i_th (i) end then
 								-- Update identifier count.
 							m := m - 1
 							if m = 0 then
@@ -81,7 +81,7 @@ feature {AST_EIFFEL} -- Visitor
 									r := a.token_region (token_list)
 								else
 										-- Remove this declaration.
-									r := l.item.token_region (token_list)
+									r := l.token_region (token_list)
 								end
 								if token_list.i_th (r.start_index - 1).is_separator then
 										-- Remove leading white space.
@@ -139,7 +139,7 @@ feature {AST_EIFFEL} -- Visitor
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Implementation for a GUI lookup interface which has direct access on EV_APPLICATION"
 	legal: "See notice at end of class."
@@ -39,15 +39,13 @@ feature -- Element change
 
 feature -- Window lookup
 
-	window_by_identifier (an_identifier: STRING): EV_WINDOW
+	window_by_identifier (an_identifier: READABLE_STRING_32): EV_WINDOW
 			-- Window which has `an_identifier' as `identifier_name'.
-		local
-			l_windows: LINEAR [EV_WINDOW]
 		do
 			Result ?= window ([an_identifier, Void])
 		end
 
-	windows_by_identifier (an_identifier: STRING): LIST [EV_WINDOW]
+	windows_by_identifier (an_identifier: READABLE_STRING_32): LIST [EV_WINDOW]
 			-- All windows which have `an_identifier' as `identifier_name'.
 		do
 			-- TODO: check if this cast is valid
@@ -56,12 +54,12 @@ feature -- Window lookup
 
 feature -- Identifiable lookup
 
-	identifiable (a_pattern: STRING): EV_IDENTIFIABLE
+	identifiable (a_pattern: READABLE_STRING_32): EV_IDENTIFIABLE
 			-- Identifiable corresponding to `a_pattern'.
 		local
-			l_tokens: LIST [STRING]
-			l_token: STRING
-			l_indirect: BOOLEAN
+--			l_tokens: LIST [READABLE_STRING_32]
+--			l_token: READABLE_STRING_32
+--			l_indirect: BOOLEAN
 
 			l_list: LIST [EV_IDENTIFIABLE]
 		do
@@ -117,13 +115,13 @@ feature -- Identifiable lookup
 --			end
 		end
 
-	identifiables (a_pattern: STRING): LIST [EV_IDENTIFIABLE]
+	identifiables (a_pattern: READABLE_STRING_32): LIST [EV_IDENTIFIABLE]
 			-- All identifiablkes corresponding to `a_pattern.
 		local
 			l_active_elements: LIST [EV_IDENTIFIABLE]
-			l_tokens: LIST [STRING]
-			l_token: STRING
-			l_token_info: TUPLE [name, type: STRING]
+			l_tokens: LIST [READABLE_STRING_32]
+			l_token: READABLE_STRING_32
+			l_token_info: TUPLE [name, type: READABLE_STRING_32]
 			l_indirect: BOOLEAN
 		do
 				-- check window syntax
@@ -221,7 +219,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	parse_info_token (a_token: STRING): TUPLE [name, type: STRING]
+	parse_info_token (a_token: READABLE_STRING_32): TUPLE [name, type: READABLE_STRING_32]
 			-- Parse `a_token'.
 		require
 			a_token_not_void: a_token /= Void
@@ -247,7 +245,7 @@ feature {NONE} -- Implementation
 			result_has_name_or_type: Result.name /= Void or Result.type /= Void
 		end
 
-	matches_info (an_identifiable: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): BOOLEAN
+	matches_info (an_identifiable: EV_IDENTIFIABLE; an_info: TUPLE [name, type: READABLE_STRING_32]): BOOLEAN
 			-- Does `an_identifiable' match `an_info's name and type?
 		require
 			an_identifiable_not_void: an_identifiable /= Void
@@ -258,18 +256,18 @@ feature {NONE} -- Implementation
 		do
 			-- TODO: regexp match of name
 			if an_info.name /= Void and an_info.type /= Void then
-				Result := an_identifiable.identifier_name.is_equal (an_info.name) and an_identifiable.generating_type.out.is_equal (an_info.type)
+				Result := an_identifiable.identifier_name.is_equal (an_info.name) and an_identifiable.generating_type.out.same_string_general (an_info.type)
 			elseif an_info.name /= Void then
 				Result := an_identifiable.identifier_name.is_equal (an_info.name)
 			else
 				check
 					has_type: an_info.type /= Void
 				end
-				Result := an_identifiable.generating_type.out.is_equal (an_info.type)
+				Result := an_identifiable.generating_type.out.same_string_general (an_info.type)
 			end
 		end
 
-	window (an_info: TUPLE [name, type: STRING]): EV_IDENTIFIABLE
+	window (an_info: TUPLE [name, type: READABLE_STRING_32]): EV_IDENTIFIABLE
 			-- Window which has `a_name' and `a_type'
 		require
 			an_info_not_void: an_info /= Void
@@ -285,7 +283,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	windows (an_info: TUPLE [name, type: STRING]): LIST [EV_IDENTIFIABLE]
+	windows (an_info: TUPLE [name, type: READABLE_STRING_32]): LIST [EV_IDENTIFIABLE]
 			-- Windows which have `a_name' and `a_type'
 		require
 			an_info_not_void: an_info /= Void
@@ -313,7 +311,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	identifiable_child (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): EV_IDENTIFIABLE
+	identifiable_child (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: READABLE_STRING_32]): EV_IDENTIFIABLE
 			-- Child identifiable of `a_parent' which match `an_info's name and type
 		require
 			a_parent_not_void: a_parent /= Void
@@ -339,7 +337,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	identifiable_children (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): LIST [EV_IDENTIFIABLE]
+	identifiable_children (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: READABLE_STRING_32]): LIST [EV_IDENTIFIABLE]
 			-- All child identifiables of `a_parent' which match `an_info's name and type
 		require
 			a_parent_not_void: a_parent /= Void
@@ -368,7 +366,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	identifiable_child_recursive (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): EV_IDENTIFIABLE
+	identifiable_child_recursive (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: READABLE_STRING_32]): EV_IDENTIFIABLE
 			-- Identifiable matching `an_info's name and type recursive searched starting at `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -396,7 +394,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	identifiable_children_recursive (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): LIST [EV_IDENTIFIABLE]
+	identifiable_children_recursive (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: READABLE_STRING_32]): LIST [EV_IDENTIFIABLE]
 			-- All identifiables matching `an_info's name and type recursive searched starting at `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -429,7 +427,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
 			Eiffel Software

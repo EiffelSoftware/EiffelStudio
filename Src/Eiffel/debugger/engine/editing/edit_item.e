@@ -58,7 +58,7 @@ feature -- Commands
 					until
 						item_list.after
 					loop
-						io.put_string(item_list.item_for_iteration.name+": ")
+						io.put_string_32 (item_list.item_for_iteration.name + ": ")
 						if item_list.item_for_iteration.dynamic_class /= Void then
 							io.put_string(item_list.item_for_iteration.dynamic_class.name_in_upper+"%N")
 						else
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation: to be implemented
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

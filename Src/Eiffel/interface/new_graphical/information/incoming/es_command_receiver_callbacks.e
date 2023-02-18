@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature -- Callbacks
 
-	on_condition_found (a_condition_module, a_condition: attached STRING)
+	on_condition_found (a_condition_module, a_condition: attached STRING_32)
 			-- A condition found in the processing command
 		do
 			condition_found := True
@@ -71,7 +71,7 @@ feature -- Callbacks
 			condition_module_not_void: condition_module /= Void
 		end
 
-	on_action_found (a_action_module, a_action: attached STRING)
+	on_action_found (a_action_module, a_action: attached STRING_32)
 			-- A action has been found
 		do
 			action_found := True
@@ -767,16 +767,16 @@ feature {NONE} -- Access
 
 	action_found: BOOLEAN
 
-	condition_module: detachable STRING
+	condition_module: detachable STRING_32
 
-	condition: detachable STRING
+	condition: detachable STRING_32
 
-	action_module: detachable STRING
+	action_module: detachable STRING_32
 
-	action: detachable STRING;
+	action: detachable STRING_32;
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

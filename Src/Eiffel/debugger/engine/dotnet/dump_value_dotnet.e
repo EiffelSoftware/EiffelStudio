@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects join all debug values: STRING, INTEGER, BOOLEAN, REFERENCES, ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,15 +31,16 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			-- make a object item initialized to `value'
 		do
 			Precursor {DUMP_VALUE} (value, dtype, scp_pid)
-			if attached {DEBUGGED_OBJECT_DOTNET} debugger_manager.object_manager.debugged_object (value, 0, 0) as dobj then
-				if attached {EIFNET_ABSTRACT_DEBUG_VALUE} dobj.debug_value as l_val then
-					if attached {EIFNET_DEBUG_REFERENCE_VALUE} l_val as l_eifnet_ref then
-						set_object_for_dotnet_value (l_eifnet_ref)
-					elseif attached {EIFNET_DEBUG_STRING_VALUE} l_val as l_eifnet_str then
-						set_string_for_dotnet_value (l_eifnet_str)
-					elseif attached {EIFNET_DEBUG_NATIVE_ARRAY_VALUE} l_val as l_eifnet_nat then
-						set_native_array_object_for_dotnet_value (l_eifnet_nat)
-					end
+			if
+				attached {DEBUGGED_OBJECT_DOTNET} debugger_manager.object_manager.debugged_object (value, 0, 0) as dobj and then
+				attached {EIFNET_ABSTRACT_DEBUG_VALUE} dobj.debug_value as l_val
+			then
+				if attached {EIFNET_DEBUG_REFERENCE_VALUE} l_val as l_eifnet_ref then
+					set_object_for_dotnet_value (l_eifnet_ref)
+				elseif attached {EIFNET_DEBUG_STRING_VALUE} l_val as l_eifnet_str then
+					set_string_for_dotnet_value (l_eifnet_str)
+				elseif attached {EIFNET_DEBUG_NATIVE_ARRAY_VALUE} l_val as l_eifnet_nat then
+					set_native_array_object_for_dotnet_value (l_eifnet_nat)
 				end
 			end
 		end
@@ -60,7 +61,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			end
 
 			if attached a_eifnet_dsv.string_value as s32 then
-				value_string := s32.as_string_8
+				value_string := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (s32)
 			else
 				value_string := Void
 			end
@@ -293,7 +294,7 @@ feature {NONE} -- Implementation dotnet
 	dotnet_value_class_token: NATURAL_32
 			-- Class token for the dotnet value
 
-	dotnet_value_class_name: STRING
+	dotnet_value_class_name: STRING_32
 			-- Class name for the dotnet value
 		local
 			l_edvi: EIFNET_DEBUG_VALUE_INFO
@@ -324,7 +325,7 @@ feature {NONE} -- Implementation dotnet
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -355,4 +356,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class DUMP_VALUE_DOTNET
+end

@@ -1,7 +1,4 @@
-note
-	description: "[
-
-	]"
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -18,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_code: INTEGER; a_message: READABLE_STRING_8)
+	make (a_code: INTEGER; a_message: READABLE_STRING_32)
 			-- Initializes a fault response using a code and message.
 			--
 			-- `a_code':
@@ -44,7 +41,7 @@ feature -- Access
 	code: INTEGER
 			-- Fault code.
 
-	message: IMMUTABLE_STRING_8
+	message: IMMUTABLE_STRING_32
 			-- Message from the server describing the fault.
 
 	value: XRPC_VALUE
@@ -69,7 +66,7 @@ invariant
 --	not_message_is_empty: not message.is_empty
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

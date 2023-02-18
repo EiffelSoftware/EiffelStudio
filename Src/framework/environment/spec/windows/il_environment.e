@@ -79,11 +79,11 @@ feature -- Access
 				across
 					l_runtimes as r
 				from
-					Result := r.key
-					r.forth
+					Result := @ r.key
+					;@ r.forth
 				loop
-					if Result < r.key then
-						Result := r.key
+					if Result < @ r.key then
+						Result := @ r.key
 					end
 				end
 			else
@@ -156,11 +156,11 @@ feature -- Access
 			across
 				dotnet_runtime_paths as p
 			loop
-				l_file_name := p.item.extended ("shared")
+				l_file_name := p.extended ("shared")
 				create l_dir.make_with_path (l_file_name)
 				if l_dir.exists then
 					across l_dir.entries as e loop
-						l_entry := e.item
+						l_entry := e
 						create l_dir.make_with_path (l_file_name.extended_path (l_entry))
 						if
 							not l_entry.is_current_symbol and then
@@ -168,8 +168,8 @@ feature -- Access
 							l_dir.exists
 						then
 							across l_dir.entries as v loop
-								if version_expression.matches (v.item.utf_8_name) then
-									Result [l_entry.name + "/" + v.item.name] := l_file_name.extended_path (l_entry).extended_path (v.item)
+								if version_expression.matches (v.utf_8_name) then
+									Result [l_entry.name + "/" + v.name] := l_file_name.extended_path (l_entry).extended_path (v)
 								end
 							end
 						end
@@ -203,8 +203,8 @@ feature -- Access
 				{WEL_REGISTRY_ACCESS_MODE}.Key_read)
 			if p /= default_pointer then
 				across <<"", "v1.1", "v2.0">> as k loop
-					if attached reg.key_value (p, "sdkInstallRoot" + k.item) as key then
-						Result [(<<"net10", "net11", "net20">>) [k.target_index]] :=
+					if attached reg.key_value (p, "sdkInstallRoot" + k) as key then
+						Result [(<<"net10", "net11", "net20">>) [@ k.target_index]] :=
 							create {PATH}.make_from_string (key.string_value)
 					end
 				end
@@ -213,12 +213,12 @@ feature -- Access
 				-- For version v4.0 and later, the path depends on what was installed on your machine,
 				-- i.e. Visual Studio vs Windows SDK and the version of the SDK used.
 			across <<"v8.1A", "v8.1", "v8.0A", "v8.0", "v7.1A", "v7.1", "v7.0A", "v7.0">> as v loop
-				p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\Microsoft SDKs\Windows\" + v.item,
+				p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\Microsoft SDKs\Windows\" + v,
 					{WEL_REGISTRY_ACCESS_MODE}.key_read)
 				if p /= default_pointer then
 					across 1 |..| reg.number_of_subkeys (p) as i loop
 						if
-							attached reg.enumerate_key (p, i.item) as k and then
+							attached reg.enumerate_key (p, i) as k and then
 							k.name.starts_with ("WinSDK-NetFx") and then
 							k.name.ends_with ("Tools") and then
 							attached k.name.substring (12, k.name.count - 5) as sdk_version and then
@@ -249,10 +249,10 @@ feature -- Access
 					d.entries as e
 				loop
 					if
-						not e.item.is_current_symbol and then
-						not e.item.is_parent_symbol and then
-						Version_expression.matches (e.item.utf_8_name) and then
-						attached e.item.name as v and then
+						not e.is_current_symbol and then
+						not e.is_parent_symbol and then
+						Version_expression.matches (e.utf_8_name) and then
+						attached e.name as v and then
 						attached (create {PATH}.make_from_string (f + "\" + v)) as n and then
 						(create {DIRECTORY}.make_with_path (n)).exists
 					then
@@ -299,7 +299,7 @@ feature -- Access
 				until
 					Result /= Void
 				loop
-					p := reg.open_key_with_access (l_path.item, {WEL_REGISTRY_ACCESS_MODE}.key_read)
+					p := reg.open_key_with_access (l_path, {WEL_REGISTRY_ACCESS_MODE}.key_read)
 					if p /= default_pointer then
 						key := reg.key_value (p, "InstallationFolder")
 						if key /= Void then
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 
 			across l_list as l_sdk loop
 				create l_path.make_from_string_general ("hkey_local_machine\SOFTWARE\Microsoft\Microsoft SDKs\Windows\")
-				l_path.append_string (l_sdk.item)
+				l_path.append_string (l_sdk)
 				Result.extend (l_path)
 				create l_path.make_from_string (l_path)
 				l_path.append_string ("\WinSDK-NetFx")
@@ -528,7 +528,7 @@ invariant
 		version.item (3) = '.' and version.item (4).is_digit)
 
 note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -44,7 +44,7 @@ feature {NONE} -- Basic Operations
 			across
 				a_literals as l
 			loop
-				a_file.put_string (l.item.name)
+				a_file.put_string (l.name)
 				a_file.put_new_line
 			end
 		ensure
@@ -64,7 +64,7 @@ feature {NONE} -- Basic Operations
 			across
 				a_properties as p
 			loop
-				l_prop := p.item
+				l_prop := p
 				if attached l_prop.name as n then
 					a_file.put_string (n)
 				end
@@ -91,7 +91,7 @@ feature {NONE} -- Basic Operations
 			across
 				a_sections as s
 			loop
-				l_section := s.item
+				l_section := s
 				a_file.put_character ({INI_SCANNER_SYMBOLS}.section_start_indicator)
 				a_file.put_string (l_section.label)
 				a_file.put_character ({INI_SCANNER_SYMBOLS}.assigner_indicator)
@@ -105,7 +105,7 @@ feature {NONE} -- Basic Operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

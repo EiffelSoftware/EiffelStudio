@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="service_environment" uuid="C100127C-D9D4-4017-B008-2AAADC15BBA8" library_target="service_environment">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="service_environment" uuid="C100127C-D9D4-4017-B008-2AAADC15BBA8" library_target="service_environment">
 	<target name="service_environment">
 		<description>A service to access and monitor changes to the executing environment.</description>
 		<root all_classes="true"/>
@@ -22,6 +22,8 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</file_rule>
+		<option warning="error">
+		</option>
 		<capability>
 			<concurrency support="none"/>
 		</capability>

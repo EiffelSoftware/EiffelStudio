@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 	make (a: like assertions; c: BOOLEAN; k_as: like ensure_keyword)
 			-- Create new REQUIRE AST node.
 		require
-			consistent_assertions: c = (attached a and then across a as p some p.item.is_class end)
+			consistent_assertions: c = (attached a and then across a as p some p.is_class end)
 		do
 			initialize (a)
 			is_class := c
@@ -101,10 +101,10 @@ feature -- Roundtrip/Location
 		end
 
 invariant
-	is_class_consistent: is_class = (attached  full_assertion_list as a and then across a as p some p.item.is_class end)
+	is_class_consistent: is_class = (attached  full_assertion_list as a and then across a as p some p.is_class end)
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

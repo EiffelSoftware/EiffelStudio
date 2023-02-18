@@ -322,7 +322,7 @@ feature {NONE} -- Implementation Properties
 
 feature {NONE} -- Implementation helper
 
-	error_value (a_name, a_mesg: STRING): DUMMY_MESSAGE_DEBUG_VALUE
+	error_value (a_name: STRING_32; a_mesg: STRING): DUMMY_MESSAGE_DEBUG_VALUE
 		do
 			create Result.make_with_name (a_name)
 			Result.set_message (a_mesg)
@@ -347,7 +347,7 @@ invariant
 note
 	date        : "$Date$"
 	revision    : "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

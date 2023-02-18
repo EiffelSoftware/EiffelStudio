@@ -1,6 +1,5 @@
 ﻿note
 	description: "Test extraction implementation."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -156,11 +155,11 @@ feature {NONE} -- Status setting
 					create l_name.make (30)
 					l_name.append (a_class_name)
 					l_name.append_string_general (".test_")
-					l_name.append (r.key)
+					l_name.append (@ r.key)
 					from
 						i := 1
 					until
-						i > r.item
+						i > r
 					loop
 						publish_test_creation (if i > 1 then l_name + "_" + i.out else l_name end)
 						i := i + 1
@@ -198,7 +197,7 @@ feature {NONE} -- Constants
 	e_no_application_status: STRING = "Could not retrieve application status"
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

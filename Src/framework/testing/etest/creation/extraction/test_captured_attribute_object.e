@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "[
 		Captured Eiffel object containing arbitrary attributes.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	attributes: HASH_TABLE [STRING, STRING]
+	attributes: HASH_TABLE [STRING, STRING_32]
 			-- <Precursor>
 
 feature -- Status report
@@ -44,7 +43,7 @@ feature -- Status report
 
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

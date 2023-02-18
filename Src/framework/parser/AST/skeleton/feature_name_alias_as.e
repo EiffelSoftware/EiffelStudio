@@ -111,8 +111,8 @@ feature -- Status report
 			until
 				Result /= Void
 			loop
-				if ic.item.is_bracket then
-					Result := ic.item.alias_name
+				if ic.is_bracket then
+					Result := ic.alias_name
 				end
 			end
 		end
@@ -126,8 +126,8 @@ feature -- Status report
 			until
 				Result /= Void
 			loop
-				if ic.item.is_parentheses then
-					Result := ic.item.alias_name
+				if ic.is_parentheses then
+					Result := ic.alias_name
 				end
 			end
 		end
@@ -170,7 +170,7 @@ feature -- Status setting
 				across
 					l_aliases as ic
 				loop
-					a := ic.item
+					a := ic
 					if not a.is_circumfix then
 						a.set_is_binary
 					end
@@ -194,7 +194,7 @@ feature -- Status setting
 				across
 					l_aliases as ic
 				loop
-					a := ic.item
+					a := ic
 					if not a.is_circumfix then
 						a.set_is_unary
 					end
@@ -305,7 +305,7 @@ invariant
 		x.alias_name.value.same_string (y.alias_name.value) ⇒ @ x.target_index = @ y.target_index
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

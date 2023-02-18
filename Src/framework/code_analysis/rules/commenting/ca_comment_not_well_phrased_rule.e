@@ -8,6 +8,7 @@
 			sentences.
 		]"
 	author: "Samuel Schmid"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -52,7 +53,7 @@ feature {NONE} -- Implementation
 			until
 				done
 			loop
-				comment := c.item
+				comment := c
 				line := comment.content_32
 				if
 					not attached first_comment and then
@@ -106,10 +107,10 @@ feature {NONE} -- Implementation
 		do
 			if attached a_class.features as l_features then
 				across l_features as l_feature loop
-					if attached l_feature.item.clients then
-						l_comment := find_feature_clause_comment (l_feature.item.feature_keyword.index, l_feature.item.clients.clients.count)
+					if attached l_feature.clients then
+						l_comment := find_feature_clause_comment (l_feature.feature_keyword.index, l_feature.clients.clients.count)
 					else
-						l_comment := find_feature_clause_comment (l_feature.item.feature_keyword.index, 0)
+						l_comment := find_feature_clause_comment (l_feature.feature_keyword.index, 0)
 					end
 
 					if not is_empty_comment (l_comment.content_32) and then not starts_with_upper (l_comment.content_32) then

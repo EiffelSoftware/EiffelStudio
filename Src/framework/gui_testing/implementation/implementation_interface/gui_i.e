@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Interface for GUI lookup"
 	legal: "See notice at end of class."
@@ -48,7 +48,7 @@ feature -- Element change
 
 feature -- Window lookup
 
-	window_by_identifier (an_identifier: STRING): EV_WINDOW
+	window_by_identifier (an_identifier: READABLE_STRING_32): EV_WINDOW
 			-- Window which has `an_identifier' as `identifier_name'.
 		require
 			an_identifier_not_void: an_identifier /= Void
@@ -58,7 +58,7 @@ feature -- Window lookup
 			result_correct: -- has_window_with_identifier (an_identifier) implies Result /= Void
 		end
 
-	windows_by_identifier (an_identifier: STRING): LIST [EV_WINDOW]
+	windows_by_identifier (an_identifier: READABLE_STRING_32): LIST [EV_WINDOW]
 			-- All windows which have `an_identifier' as `identifier_name'.
 		require
 			an_identifier_not_void: an_identifier /= Void
@@ -71,7 +71,7 @@ feature -- Window lookup
 
 feature -- Identifiable lookup
 
-	identifiable (a_pattern: STRING): EV_IDENTIFIABLE
+	identifiable (a_pattern: READABLE_STRING_32): EV_IDENTIFIABLE
 			-- Identifiable corresponding to `a_pattern'.
 		require
 			a_pattern_not_void: a_pattern /= Void
@@ -82,7 +82,7 @@ feature -- Identifiable lookup
 			result_correct: -- has_identifiable (a_pattern) implies Result /= Void
 		end
 
-	identifiables (a_pattern: STRING): LIST [EV_IDENTIFIABLE]
+	identifiables (a_pattern: READABLE_STRING_32): LIST [EV_IDENTIFIABLE]
 			-- All identifiablkes corresponding to `a_pattern'.
 		require
 			a_pattern_not_void: a_pattern /= Void
@@ -96,10 +96,10 @@ feature -- Identifiable lookup
 
 feature -- Support
 
-	valid_pattern (a_pattern: STRING): BOOLEAN
+	valid_pattern (a_pattern: READABLE_STRING_32): BOOLEAN
 			-- Is `a_pattern' valid to use for searching?
 		local
-			l_tokens: LIST [STRING]
+			l_tokens: LIST [READABLE_STRING_32]
 			l_last_was_empty: BOOLEAN
 		do
 			if a_pattern /= Void and then not a_pattern.is_empty then
@@ -132,7 +132,7 @@ feature -- Support
 
 feature {NONE} -- Implementation
 
-	valid_token (a_token: STRING): BOOLEAN
+	valid_token (a_token: READABLE_STRING_32): BOOLEAN
 			-- Is `a_token' valid to use in a path?
 		local
 			l_brace_index: INTEGER
@@ -157,14 +157,35 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 
 end

@@ -40,6 +40,11 @@
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf" readonly="false"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false" use_application_options="true"/>
+		<library name="services" location="$EIFFEL_SRC\framework\services\services.ecf" readonly="false">
+			<class_option class="HELP_PROVIDER_I">
+				<warning name="vwab" enabled="false"/>
+			</class_option>
+		</library>
 		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander.ecf" readonly="false" use_application_options="true"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="false"/>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="dotnet_loader" uuid="06DF248D-6B7F-4EC5-BB4E-25ACCA9C7FF7" library_target="default">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="dotnet_loader" uuid="06DF248D-6B7F-4EC5-BB4E-25ACCA9C7FF7" library_target="default">
 	<target name="default">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true">
+		<option warning="error">
 		</option>
 		<external_cflag value="-D_WIN32_DCOM">
 			<condition>

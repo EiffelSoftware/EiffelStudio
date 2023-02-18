@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "API to Manage the update of EiffelStudio releases"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature -- API
 		local
 			l_beta_release: ES_UPDATE_RELEASE
 			l_stable_release: ES_UPDATE_RELEASE
-			l_final: STRING
+			l_final: IMMUTABLE_STRING_8
 		do
 			l_beta_release := latest_release_by_platform ({ES_UPDATE_CONSTANTS}.beta_channel, a_platform)
 			l_stable_release := latest_release_by_platform ({ES_UPDATE_CONSTANTS}.stable_channel, a_platform)
@@ -136,7 +136,7 @@ feature {NONE} -- Retrieve URL
 			l_http_response: STRING_8
 			l_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
 			l_body: detachable READABLE_STRING_8
-			l_url: STRING_8
+			l_url: READABLE_STRING_8
 		do
 			l_ctx := ctx
 			if l_ctx = Void then
@@ -183,7 +183,7 @@ feature {NONE} -- Retrieve URL
 					Result /= Void
 				loop
 					if
-						attached {JSON_OBJECT} ic.item as l_jo and then
+						attached {JSON_OBJECT} ic as l_jo and then
 						attached l_jo.string_item ("platform") as j_platform and then
 						attached l_jo.string_item ("filename") as j_filename and then
 						attached l_jo.string_item ("href") as j_link and then
@@ -208,7 +208,7 @@ feature {NONE} -- Retrieve URL
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

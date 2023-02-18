@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Represents a code model version, for template versioning.
 	]"
@@ -36,10 +36,9 @@ feature {NONE} -- Initialization
 			a_version_attached: attached a_version
 			a_version: is_valid_version (a_version)
 		do
-			create version.make_from_string (deafult_version)
-			set_version (a_version.as_string_8)
+			create version.make_from_string (a_version.to_string_8)
 		ensure
-			version_set: version ~ a_version
+			version_set: version.same_string_general (a_version)
 		end
 
 feature -- Access
@@ -73,14 +72,16 @@ feature -- Query
 	is_valid_version (a_version: READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if a raw version number is a valid version number for Current.
 			--
-			-- `a_version': A version string to determin validity.
+			-- `a_version': A version string to check.
 			-- `Result': True if the version string is valid; False otherwise.
 		require
 			a_version_attached: attached a_version
 		do
-			Result := not a_version.is_empty
+			Result := not a_version.is_empty and then a_version.is_valid_as_string_8
 		ensure
+			instance_free: class
 			not_a_version_is_empty: Result implies not a_version.is_empty
+			is_encoding_correct: Result implies a_version.is_valid_as_string_8
 		end
 
 	is_compatible_with (a_other: CODE_VERSION): BOOLEAN
@@ -133,13 +134,13 @@ feature -- Output
 	out: STRING
 			-- <Precursor>
 		do
-			Result := version.as_string_8
+			Result := version
 		end
 
 	debug_output: STRING
 			-- <Precursor>
 		do
-			Result := out
+			Result := version
 		end
 
 feature -- Constants
@@ -151,7 +152,7 @@ invariant
 	version_attached: attached version
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

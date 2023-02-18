@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		General purpose utilized for use with XML-RPC.
 	]"
@@ -17,7 +17,7 @@ feature -- Access
 
 feature -- Query
 
-	full_method_name (a_name: READABLE_STRING_8; a_delegate: XRPC_DELEGATE): STRING
+	full_method_name (a_name: READABLE_STRING_8; a_delegate: XRPC_DELEGATE): STRING_32
 			-- Retrieves the full name of a method call, using the supplied delegate.
 			--
 			-- `a_name': A method name.
@@ -28,7 +28,7 @@ feature -- Query
 			not_a_name_is_empty: not a_name.is_empty
 			a_delegate_attached: attached a_delegate
 		local
-			l_prefix: detachable IMMUTABLE_STRING_8
+			l_prefix: detachable IMMUTABLE_STRING_32
 		do
 			l_prefix := a_delegate.namespace
 			if attached l_prefix and then not l_prefix.is_empty then
@@ -41,7 +41,7 @@ feature -- Query
 			end
 		end
 
-	split_method_name (a_name: READABLE_STRING_8): TUPLE [name: STRING; namespace: detachable STRING]
+	split_method_name (a_name: READABLE_STRING_32): TUPLE [name: STRING_32; namespace: detachable STRING_32]
 			-- Splits a full method name into its [namespace.]name parts.
 			--
 			-- `a_name': The full method name.
@@ -51,7 +51,7 @@ feature -- Query
 			not_a_name_is_empty: not a_name.is_empty
 		local
 			l_count, i: INTEGER
-			l_string: STRING
+			l_string: STRING_32
 		do
 			l_count := a_name.count
 			i := a_name.last_index_of ('.', a_name.count)
@@ -59,7 +59,7 @@ feature -- Query
 				l_string := a_name.string
 				Result := [l_string.substring (i + 1, l_count), l_string.substring (1, i - 1)]
 			else
-				Result := [create {STRING}.make_from_string (a_name), Void]
+				Result := [create {STRING_32}.make_from_string (a_name), Void]
 			end
 		ensure
 			result_attached: attached Result
@@ -69,7 +69,7 @@ feature -- Query
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

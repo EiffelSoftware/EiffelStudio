@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dotnet debug value associated with Reference value"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -396,23 +396,23 @@ feature -- Once request
 					--|FIXME: Handle Unicode
 				if l_once_data /= Void then
 					if not l_once_data.called then
-						Result := error_value (a_feat.name_32.as_string_8 , "Not yet called")
+						Result := error_value (a_feat.name_32 , "Not yet called")
 					elseif l_once_data.exc /= Void then
-						Result := exception_value (a_feat.name_32.as_string_8, "Exception occurred", debug_value_from_icdv (l_once_data.exc, Void))
+						Result := exception_value (a_feat.name_32, "Exception occurred", debug_value_from_icdv (l_once_data.exc, Void))
 					else
 						if l_once_data.res /= Void then
 							Result := debug_value_from_icdv (l_once_data.res, a_feat.type.base_class)
-							Result.set_name (a_feat.name_32.as_string_8)
+							Result.set_name (a_feat.name_32)
 						end
 					end
 				else
-					Result := error_value (a_feat.name_32.as_string_8 , "Could not retrieve information")
+					Result := error_value (a_feat.name_32 , "Could not retrieve information")
 				end
 			end
 
 			debug ("DEBUGGER_TRACE")
 				print ("- " + a_feat.written_class.name_in_upper + " ")
-				print (">>" + a_feat.name_32.as_string_8 + " Result /= Void =? " + (Result /= Void).out + "%N")
+				print (">>" + a_feat.name_32 + " Result /= Void =? " + (Result /= Void).out + "%N")
 			end
 		end
 
@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 	internal_dynamic_class_type: like dynamic_class_type;
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

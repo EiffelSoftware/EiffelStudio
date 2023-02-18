@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Base64 encoder for encoding/decoding eiffel {STRING} objects to and from Base64.
 	]"
@@ -42,7 +42,7 @@ feature -- Conversion
 			not_a_data_is_empty: not a_data.is_empty
 			a_data_is_valid_base64_data: is_valid_base64_data (a_data)
 		do
-			create Result.make (1, require_buffer_count (a_data))
+			create Result.make_filled (0, 1, require_buffer_count (a_data))
 			decode64_to_buffer (a_data, Result)
 		ensure
 			result_attached: attached Result
@@ -51,8 +51,8 @@ feature -- Conversion
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

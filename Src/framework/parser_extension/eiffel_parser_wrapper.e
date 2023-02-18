@@ -97,7 +97,7 @@ feature -- Basic operation
 				across
 					a_formals as f
 				loop
-					a_parser.formal_parameters.extend (f.item.formal)
+					a_parser.formal_parameters.extend (f.formal)
 				end
 			end
 			parse (a_parser, u.utf_32_string_to_utf_8_string_8 (a_text), a_ignore_errors, a_context_class)
@@ -141,7 +141,7 @@ feature -- Basic operation
 				across
 					a_formals as f
 				loop
-					a_parser.formal_parameters.extend (f.item.formal)
+					a_parser.formal_parameters.extend (f.formal)
 				end
 			end
 			parse_with_option (a_parser, u.utf_32_string_to_utf_8_string_8 (a_text), a_options, a_ignore_errors, a_context_class)
@@ -237,9 +237,9 @@ feature {NONE} -- Basic operations
 			not_has_error: not has_error
 		end
 
-;note
+note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

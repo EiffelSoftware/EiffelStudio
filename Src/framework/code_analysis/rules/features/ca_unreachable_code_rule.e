@@ -92,10 +92,10 @@ feature {NONE} -- Rule Checking
 					done
 				loop
 					if is_unreachable then
-						create_violation (instructions, i.target_index)
+						create_violation (instructions, @ i.target_index)
 						done := True
 					else
-						i.item.process (Current)
+						i.process (Current)
 					end
 				end
 			else
@@ -180,12 +180,12 @@ feature {NONE} -- Rule Checking
 				across l as e loop
 					is_unreachable := next_is_unreachable
 					if next_is_unreachable then
-						create_violation (l, e.target_index)
+						create_violation (l, @ e.target_index)
 					else
-						e.item.expr.process (Current)
-						next_is_unreachable := next_is_unreachable or is_unreachable or is_expr_true (e.item.expr)
-						if attached e.item.compound as c then
-							if is_unreachable or else is_expr_false (e.item.expr) then
+						e.expr.process (Current)
+						next_is_unreachable := next_is_unreachable or is_unreachable or is_expr_true (e.expr)
+						if attached e.compound as c then
+							if is_unreachable or else is_expr_false (e.expr) then
 								create_violation (c, 1)
 							else
 								c.process (Current)

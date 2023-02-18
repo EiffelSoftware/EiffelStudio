@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="xml-rpc" uuid="5B1618D6-1216-4BEF-817F-C83473B9FC0B" library_target="xml-rpc">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="xml-rpc" uuid="5B1618D6-1216-4BEF-817F-C83473B9FC0B" library_target="xml-rpc">
 	<target name="xml-rpc">
 		<root all_classes="true"/>
 		<file_rule>
@@ -7,7 +7,7 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true">
+		<option warning="warning">
 		</option>
 		<capability>
 			<void_safety support="transitional"/>

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Factory for generating XML-RPC response objects from various kinds of other objects.
 	]"
@@ -79,7 +79,7 @@ feature -- Factory
 			create Result.make (a_code, error_codes.message (a_code))
 		end
 
-	new_response_from_error_code_and_message (a_code: INTEGER; a_message: READABLE_STRING_8): XRPC_FAULT_RESPONSE
+	new_response_from_error_code_and_message (a_code: INTEGER; a_message: READABLE_STRING_32): XRPC_FAULT_RESPONSE
 			-- Creates a new response object from a XML-RPC error code (specific to this library) and a
 			-- human readable error message.
 			--
@@ -92,7 +92,7 @@ feature -- Factory
 			not_a_message_is_empty: not a_message.is_empty
 		local
 			l_stock_message: STRING
-			l_message: STRING
+			l_message: STRING_32
 		do
 			l_stock_message := error_codes.message (a_code)
 			create l_message.make (l_stock_message.count + a_message.count + 2)
@@ -111,13 +111,13 @@ feature -- Factory
 			-- `a_exception': The exception to create a response object for.
 			-- `Result': The fault response object.
 		do
-			create Result.make ({XRPC_ERROR_CODES}.e_code_internal_error & a_exception.code, a_exception.meaning)
+			create Result.make ({XRPC_ERROR_CODES}.e_code_internal_error & a_exception.code, a_exception.tag)
 		ensure
 			result_attached: attached Result
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

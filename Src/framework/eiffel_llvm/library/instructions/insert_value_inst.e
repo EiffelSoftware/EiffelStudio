@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {INSERT_VALUE_INST}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,7 +36,7 @@ feature {NONE}
 		do
 			fixme ("Initialize the ArrayRef directly.")
 			create idx_vector.make
-			across idx as idx_item loop idx_vector.push_back (idx_item.item) end
+			across idx as idx_item loop idx_vector.push_back (idx_item) end
 
 			create array.make_from_vector (idx_vector)
 			item := make_list_external (agg.item, val.item, array.item)
@@ -51,7 +49,7 @@ feature {NONE}
 		do
 			fixme ("Initialize the ArrayRef directly.")
 			create idx_vector.make
-			across idx as idx_item loop idx_vector.push_back (idx_item.item) end
+			across idx as idx_item loop idx_vector.push_back (idx_item) end
 
 			create array.make_from_vector (idx_vector)
 			item := make_list_name_external (agg.item, val.item, array.item, name.item)

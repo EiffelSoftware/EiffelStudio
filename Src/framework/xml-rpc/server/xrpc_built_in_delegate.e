@@ -1,7 +1,4 @@
-note
-	description: "[
-
-	]"
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -18,7 +15,7 @@ inherit
 
 feature -- Access
 
-	frozen namespace: IMMUTABLE_STRING_8
+	frozen namespace: IMMUTABLE_STRING_32
 			-- <Precursor>
 		once
 			Result := "system"
@@ -42,14 +39,14 @@ feature -- Query
 
 feature {NONE} -- Factory
 
-	new_method_agents: HASH_TABLE [ROUTINE, READABLE_STRING_8]
+	new_method_agents: HASH_TABLE [ROUTINE, READABLE_STRING_32]
 			-- <Precursor>
 		do
 			create Result.make (0)
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

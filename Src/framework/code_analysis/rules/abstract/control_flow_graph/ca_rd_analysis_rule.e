@@ -1,6 +1,7 @@
 note
 	description: "A rule that performs a Reaching Definitions analysis."
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,10 +36,10 @@ feature -- CFG Node Visitor
 				-- count this as an assignment.
 			if current_feature.locals /= Void then
 				across current_feature.locals as l_locals loop
-					across l_locals.item.id_list as l_id_list loop
+					across l_locals.id_list as l_id_list loop
 						create l_init_set.make
 						l_init_set.extend (0)
-						rd_entry.at (a_cfg.start_node.label).extend (l_init_set, l_id_list.item)
+						rd_entry.at (a_cfg.start_node.label).extend (l_init_set, l_id_list)
 					end
 				end
 			end

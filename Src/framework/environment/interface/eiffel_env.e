@@ -2444,7 +2444,7 @@ feature -- Existing installations
 				across
 					lst as ic
 				loop
-					s := ic.item
+					s := ic
 					if s.is_valid_as_string_8 then
 
 					end
@@ -2469,7 +2469,7 @@ feature -- Existing installations
 			across
 				lst as ic
 			loop
-				s := ic.item
+				s := ic
 				if s.starts_with (l_prod_name) then
 					v := s.tail (s.count - l_prod_name.count - 1)
 				else
@@ -2497,8 +2497,8 @@ feature {NONE} -- Helper
 			Result := u.file_path_exists (p)
 		end
 
-;note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+note
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

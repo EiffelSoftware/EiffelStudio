@@ -128,11 +128,11 @@ feature -- Basic operation
 					l_done
 				loop
 					if l_first_word = Void then
-						l_first_word := ic.item
+						l_first_word := ic
 					end
-					w := ft.string_width (ic.item)
+					w := ft.string_width (ic)
 					if w < l_remaining_width then
-						Result.append (ic.item)
+						Result.append (ic)
 						l_remaining_width := l_remaining_width - w
 					else
 						l_done := True
@@ -221,11 +221,11 @@ feature {NONE} -- Line analysis
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: a_line.is_empty = Result.is_empty
-			result_contains_valid_items: across Result as ic all not ic.item.is_empty end
+			result_contains_valid_items: across Result as ic all not ic.is_empty end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -229,12 +229,12 @@ feature -- Analysis interface
 			create l_rules_checker.make
 			create l_rules_to_check.make
 			across rules as l_rules loop
-				l_rules.item.clear_violations
-				if is_rule_checkable (l_rules.item) then
-					l_rules_to_check.extend (l_rules.item)
+				l_rules.clear_violations
+				if is_rule_checkable (l_rules) then
+					l_rules_to_check.extend (l_rules)
 						-- Here we only prepare standard rules. The rule checking task will iterate again
 						-- through the rules and run the analysis on the enabled rules.
-					if attached {CA_STANDARD_RULE} l_rules.item as l_std_rule then
+					if attached {CA_STANDARD_RULE} l_rules as l_std_rule then
 						l_std_rule.prepare_checking (l_rules_checker)
 					end
 				end
@@ -273,7 +273,7 @@ feature -- Analysis interface
 				eiffel_universe.groups as l_groups
 			loop
 					-- Only load top-level clusters, as the others will be loaded recursively afterwards.
-				if attached {CLUSTER_I} l_groups.item as l_cluster and then l_cluster.parent_cluster = Void then
+				if attached {CLUSTER_I} l_groups as l_cluster and then l_cluster.parent_cluster = Void then
 					add_cluster (l_cluster)
 				end
 			end
@@ -288,13 +288,13 @@ feature -- Analysis interface
 
 			if a_cluster.classes /= Void then
 				across a_cluster.classes as ic loop
-					add_class (ic.item)
+					add_class (ic)
 				end
 			end
 
 			if a_cluster.sub_clusters /= Void then
 				across a_cluster.sub_clusters as ic loop
-					add_cluster (ic.item)
+					add_cluster (ic)
 				end
 			end
 		end
@@ -306,7 +306,7 @@ feature -- Analysis interface
 		do
 			if a_group.classes /= Void then
 				across a_group.classes as ic loop
-					add_class (ic.item)
+					add_class (ic)
 				end
 			end
 		end
@@ -317,7 +317,7 @@ feature -- Analysis interface
 			system_wide_check := False
 
 			across a_classes as l_classes loop
-				add_class (l_classes.item)
+				add_class (l_classes)
 			end
 		end
 
@@ -346,22 +346,22 @@ feature -- Analysis interface
 		do
 				-- Disable all rules.
 			across rules as ic loop
-				ic.item.is_enabled.set_value (False)
+				ic.is_enabled.set_value (False)
 			end
 
 			across a_preferences as ic loop
-				if rules.has_key (ic.item.rule_id) then
-					l_full_preference_name := rules.found_item.full_preference_name (ic.item.preference_name)
+				if rules.has_key (ic.rule_id) then
+					l_full_preference_name := rules.found_item.full_preference_name (ic.preference_name)
 					l_preference := preferences.get_preference (l_full_preference_name)
 
 					if attached l_preference then
-						l_preference.set_value_from_string (ic.item.preference_value)
+						l_preference.set_value_from_string (ic.preference_value)
 					else
 						output_actions.call ([ca_messages.preference_not_found (l_full_preference_name)])
 					end
 
 				else
-					output_actions.call ([ca_messages.rule_not_found (ic.item.rule_id)])
+					output_actions.call ([ca_messages.rule_not_found (ic.rule_id)])
 				end
 			end
 		end
@@ -440,15 +440,15 @@ feature {NONE} -- Implementation
 			l_csv_writer.put_new_line
 
 			across rules as l_rules loop
-				across l_rules.item.violations as l_v loop
+				across l_rules.violations as l_v loop
 						-- Check the ignore list.
-					if is_violation_valid (l_v.item) then
+					if is_violation_valid (l_v) then
 							-- Make sure a list for this class exists in the hash table:
-						rule_violations.put (create {SORTED_TWO_WAY_LIST [CA_RULE_VIOLATION]}.make, l_v.item.affected_class)
+						rule_violations.put (create {SORTED_TWO_WAY_LIST [CA_RULE_VIOLATION]}.make, l_v.affected_class)
 							-- Add the violation.
-						rule_violations.at (l_v.item.affected_class).extend (l_v.item)
+						rule_violations.at (l_v.affected_class).extend (l_v)
 							-- Log it.
-						l_v.item.add_csv_line (l_csv_writer)
+						l_v.add_csv_line (l_csv_writer)
 					end
 				end
 			end
@@ -559,27 +559,27 @@ feature {NONE} -- Class-wide Options (From Indexing Clauses)
 			l_item: STRING_32
 		do
 			across a_clause as ic loop
-				if attached ic.item.tag as l_tag then
+				if attached ic.tag as l_tag then
 					if l_tag.name_32.same_string_general ("ca_ignore") then
 							-- Class wants to ignore certain rules.
-						across ic.item.index_list as l_list loop
-							l_item := l_list.item.string_value_32
+						across ic.index_list as l_list loop
+							l_item := l_list.string_value_32
 							l_item.prune_all ('"')
 							l_item.to_upper
 							a_ignoredby.extend (l_item)
 						end
 					elseif l_tag.name_32.is_equal ("ca_only") then
 							-- Class wants to check only certain rules.
-						across ic.item.index_list as l_list loop
-							l_item := l_list.item.string_value_32
+						across ic.index_list as l_list loop
+							l_item := l_list.string_value_32
 							l_item.prune_all ('"')
 							l_item.to_upper
 							a_check_only.extend (l_item)
 						end
 					elseif l_tag.name_32.is_equal ("ca_library") then
 							-- Class has information on whether it is a library class.
-						if not ic.item.index_list.is_empty then
-							l_item := ic.item.index_list.first.string_value_32
+						if not ic.index_list.is_empty then
+							l_item := ic.index_list.first.string_value_32
 							l_item.to_lower
 							l_item.prune_all ('"')
 							if l_item.is_equal ("true") then
@@ -607,7 +607,7 @@ invariant
 	--	law_of_non_contradiction: one class must not be both a library_class and a nonlibrary_class
 
 note
-	copyright:	"Copyright (c) 2014-2017, Eiffel Software"
+	copyright:	"Copyright (c) 2014-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

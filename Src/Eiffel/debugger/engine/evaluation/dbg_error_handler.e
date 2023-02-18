@@ -165,22 +165,13 @@ feature -- Error notification: expression error
 		end
 
 	notify_error_list_expression_and_tag (a_error_list: detachable LIST [ERROR])
-		local
-			l_error: ERROR
-			l_cursor: CURSOR
 		do
-			if a_error_list /= Void then
-				l_cursor := a_error_list.cursor
-				from
-					a_error_list.start
-				until
-					a_error_list.after
+			if attached a_error_list then
+				across
+					a_error_list as l
 				loop
-					l_error := a_error_list.item
-					notify_error_expression_error (l_error)
-					a_error_list.forth
+					notify_error_expression_error (l.item)
 				end
-				a_error_list.go_to (l_cursor)
 			end
 		end
 
@@ -319,10 +310,11 @@ feature -- Error notification : exception error
 		do
 			notify_error_exception (Debugger_names.cst_error_evaluation_failed_with_internal_exception)
 			create em
-			if attached em.last_exception as e then
-				if attached e.trace as l_trace then
-					notify_error_exception (l_trace)
-				end
+			if
+				attached em.last_exception as e and then
+				attached e.trace as l_trace
+			then
+				notify_error_exception (l_trace)
 			end
 		end
 
@@ -339,12 +331,9 @@ feature -- Query
 
 	short_text_from_errors: STRING_32
 			-- Short text from errors
-		local
-			details: DBG_ERROR
 		do
 			if not error_list.is_empty then
-				details := error_list.first
-				Result := details.tag
+				Result := error_list.first.tag
 			end
 		end
 
@@ -352,7 +341,6 @@ feature -- Query
 			-- Full text from errors
 		local
 			details: DBG_ERROR
-			l_code: INTEGER
 			l_tag, l_msg: STRING_32
 			s: STRING_32
 		do
@@ -364,7 +352,6 @@ feature -- Query
 				error_list.after
 			loop
 				details := error_list.item
-				l_code := details.code
 				l_tag := details.tag
 				l_msg := details.msg
 				if l_tag /= Void then
@@ -472,7 +459,7 @@ invariant
 	error_list_attached: error_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

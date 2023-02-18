@@ -67,7 +67,7 @@ feature -- Status report
 				across
 					lst as c
 				loop
-					if attached c.item as l_c_item then
+					if attached c as l_c_item then
 						Result.append (l_c_item.debug_output)
 					else
 						Result.append ("Void")
@@ -85,7 +85,7 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

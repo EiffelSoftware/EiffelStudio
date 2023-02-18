@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="compiler_encoding" uuid="EDEC05E0-7B16-4762-BD5A-D95B14E812BB" library_target="compiler_encoding">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="compiler_encoding" uuid="EDEC05E0-7B16-4762-BD5A-D95B14E812BB" library_target="compiler_encoding">
 	<target name="compiler_encoding">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" namespace="EiffelSoftware.Language">
+		<option warning="error" namespace="EiffelSoftware.Language">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>

@@ -797,8 +797,8 @@ feature
 			across
 				l_as.aliases as ic
 			loop
-				safe_process (l_as.keyword_at (match_list, ic.item.alias_keyword_index))
-				safe_process (ic.item.alias_name)
+				safe_process (l_as.keyword_at (match_list, ic.alias_keyword_index))
+				safe_process (ic.alias_name)
 			end
 			if l_as.convert_keyword_index > 0 then
 				safe_process (l_as.convert_keyword (match_list))
@@ -1534,7 +1534,7 @@ feature{NONE} -- Implementation
 						l_count := l_sep_list.count
 					end
 				loop
-					l_index := id_as_index.item
+					l_index := id_as_index
 					if match_list.valid_index (l_index) then
 						l_leaf := match_list.i_th (l_index)
 							-- Note that we do not set the `name_id' for `l_id_as' since it will require
@@ -1560,7 +1560,7 @@ feature{NONE} -- Implementation
 	ca_ignore: "CA033", "CA033: too large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

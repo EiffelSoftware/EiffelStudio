@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Terminal text style flags to use with {TERMINAL}.
 	]"
@@ -79,12 +79,6 @@ feature -- Status report
 
 	is_valid_value (n: NATURAL_8): BOOLEAN
 			-- <Precursor>
-		local
-			l_default: NATURAL_8
-			l_mask: NATURAL_8
-			l_members: like members
-			i, nb: INTEGER
-			l_assert: BOOLEAN
 		do
 			Result := members.has (n) or else (0x1F & internal_value) = internal_value
 		end
@@ -134,7 +128,7 @@ invariant
 	is_valid_value: is_valid_value (internal_value)
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -191,7 +191,6 @@ feature -- Application status
 			c, oc: CLASS_C
 			f: E_FEATURE
 			cs: CALL_STACK_ELEMENT
-			stack_num: INTEGER
 			ccs: EIFFEL_CALL_STACK
 		do
 			if not appstatus.is_stopped then
@@ -258,8 +257,7 @@ feature -- Application status
 				end
 				ccs := appstatus.current_call_stack
 				if not ccs.is_empty then
-					stack_num := debugger_manager.application.current_execution_stack_number
-					cs := ccs.i_th (stack_num)
+					cs := ccs.i_th (debugger_manager.application.current_execution_stack_number)
 					append_arguments (cs, st)
 					append_locals (cs, st)
 					append_stack (ccs, st)
@@ -517,7 +515,7 @@ feature {NONE} -- append_to implementation
 			l_items: DEBUG_VALUE_LIST
 			l_cursor: like {DEBUG_VALUE_LIST}.new_cursor
 			dc: CLASS_C
-			n: STRING
+			n: like {ABSTRACT_SPECIAL_VALUE}.name
 			add: DBG_ADDRESS
 		do
 --| fixme : what about character_32 ?
@@ -886,7 +884,7 @@ feature {NONE} -- Constants
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {IRON_REPOSITORY_CONFIGURATION_FILE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -69,7 +67,7 @@ feature -- Status
 			until
 				Result
 			loop
-				Result := ic.item.is_same_repository (repo)
+				Result := ic.is_same_repository (repo)
 			end
 		end
 
@@ -81,7 +79,7 @@ feature -- Status
 			until
 				Result
 			loop
-				Result := a_uri.same_string (ic.item.location_string)
+				Result := a_uri.same_string (ic.location_string)
 			end
 		end
 
@@ -150,7 +148,7 @@ feature -- Operation
 				across
 					repositories as ic
 				loop
-					f.put_string (ic.item.location_string)
+					f.put_string (ic.location_string)
 					f.put_new_line
 				end
 				f.close
@@ -158,7 +156,7 @@ feature -- Operation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

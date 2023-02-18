@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			across
 				execution_environment.starting_environment as c
 			loop
-				tb.force (c.item, c.key)
+				tb.force (c, @ c.key)
 			end
 		end
 
@@ -76,7 +76,7 @@ feature -- Access
 				across
 					table as l_c
 				loop
-					l_list.extend (l_c.key)
+					l_list.extend (@ l_c.key)
 				end
 
 				Result := l_list
@@ -285,7 +285,7 @@ invariant
 	table_compare_objects: table.object_comparison
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

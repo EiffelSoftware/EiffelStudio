@@ -278,7 +278,7 @@ feature {NONE} -- Checking the rule
 					actual_arguments := a.new_cursor
 				loop
 					if attached t.base_class as b then
-						check_array_type (actual_arguments.item, formal_argument.item.evaluated_type_in_descendant (c,b,current_feature).instantiation_in (t, b.class_id))
+						check_array_type (actual_arguments.item, formal_argument.evaluated_type_in_descendant (c,b,current_feature).instantiation_in (t, b.class_id))
 					end
 					actual_arguments.forth
 				end
@@ -336,7 +336,7 @@ feature {NONE} -- Checking the rule
 					from
 						v := expressions.new_cursor
 					loop
-						check_array_type (v.item, g.item)
+						check_array_type (v.item, g)
 						v.forth
 					end
 				end
@@ -349,7 +349,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	author: "Alexander Kogtenkov"
-	copyright:	"Copyright (c) 2018, Eiffel Software"
+	copyright:	"Copyright (c) 2018-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

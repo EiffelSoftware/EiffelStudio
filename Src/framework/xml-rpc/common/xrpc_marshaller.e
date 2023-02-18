@@ -1,7 +1,4 @@
-note
-	description: "[
-
-	]"
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -409,7 +406,7 @@ feature -- Basic operations: To Eiffel
 			a_value_attached: a_value /= Void
 			a_value_is_valid: a_value.is_valid
 		local
-			l_string: STRING
+			l_string: STRING_32
 		do
 			if a_type = xrpc_string_type then
 					-- No marshalling needed.
@@ -428,9 +425,10 @@ feature -- Basic operations: To Eiffel
 				then
 					Result := l_string.as_string_32
 				elseif a_type = immutable_string_8_type then
-					create {IMMUTABLE_STRING_8} Result.make_from_string (l_string)
+					create {IMMUTABLE_STRING_8} Result.make_from_string
+						({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_string))
 				elseif a_type = immutable_string_8_type then
-					create {IMMUTABLE_STRING_32} Result.make_from_string_8 (l_string)
+					create {IMMUTABLE_STRING_32} Result.make_from_string (l_string)
 				else
 						-- Unknown string
 					check should_never_happen: False end
@@ -777,7 +775,7 @@ feature -- Basic operations: From Eiffel
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

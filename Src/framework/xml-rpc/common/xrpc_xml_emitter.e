@@ -208,7 +208,7 @@ feature {NONE} -- Basic operations: Formatting
 			end
 		end
 
-	append_value (a_value_name: READABLE_STRING_8; a_value: READABLE_STRING_8; a_buffer: STRING)
+	append_value (a_value_name: READABLE_STRING_8; a_value: READABLE_STRING_32; a_buffer: STRING)
 			-- Appends a value declaration to the buffer.
 			--
 			-- `a_value_name': The name of the value type.
@@ -220,7 +220,7 @@ feature {NONE} -- Basic operations: Formatting
 			a_value_attached: attached a_value
 			a_buffer_attached: attached a_buffer
 		local
-			l_value: STRING
+			l_value: STRING_32
 			l_trail_new_line: BOOLEAN
 		do
 			append_opening_tag ({XRPC_CONSTANTS}.value_name, a_buffer, True)
@@ -241,12 +241,12 @@ feature {NONE} -- Basic operations: Formatting
 						l_value.prune_all_trailing ('%N')
 					end
 					l_value.replace_substring_all ("%N", "%N" + create {STRING}.make_filled (' ', (indents * 2).as_integer_32))
-					a_buffer.append (l_value)
+					a_buffer.append ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_value))
 					if l_trail_new_line then
 						a_buffer.append_character ('%N')
 					end
 				else
-					a_buffer.append (a_value)
+					a_buffer.append ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_value))
 				end
 			end
 
@@ -387,7 +387,7 @@ invariant
 	xml_attached: attached xml
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

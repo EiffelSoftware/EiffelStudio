@@ -53,9 +53,9 @@ feature {NONE} -- Implementation
 
 					-- Get all locals.
 				across l_locals as l_local_dec loop
-					if attached l_local_dec.item.type as local_type then
-						across l_local_dec.item.id_list as l_id loop
-							all_locals.extend ([l_id.item, local_type], l_local_dec.item.item_name_32 (l_id.target_index))
+					if attached l_local_dec.type as local_type then
+						across l_local_dec.id_list as l_id loop
+							all_locals.extend ([l_id, local_type], l_local_dec.item_name_32 (@ l_id.target_index))
 						end
 					end
 				end

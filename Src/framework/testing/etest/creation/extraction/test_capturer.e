@@ -192,14 +192,16 @@ feature -- Basic operations
 			l_feature := a_cse.routine
 			if l_feature /= Void then
 				create l_type.make_from_string (a_cse.current_object_value.dump_value.generating_type_representation (True))
-				create l_element.make (l_feature, l_type)
+				create l_element.make (l_feature, {UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_type))
 				if not l_element.is_creation_procedure then
 					l_dbg_value := a_cse.current_object_value
 					if l_dbg_value /= Void then
 						compute_string_representation (l_dbg_value, 0)
 						l_value := last_value
 						if l_value /= Void then
-							l_element.add_operand (l_value, l_type)
+							l_element.add_operand
+								({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_value),
+								{UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_type))
 						else
 							l_abort := True
 						end
@@ -371,7 +373,7 @@ feature {NONE} -- Basic operations
 		local
 			l_dbg_value: ABSTRACT_DEBUG_VALUE
 			l_value: like last_value
-			l_name: STRING
+			l_name: like {ABSTRACT_DEBUG_VALUE}.name
 			i: INTEGER
 		do
 			from
@@ -456,7 +458,7 @@ invariant
 	capturing_equals_object_queue_attached: is_capturing = (object_queue /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

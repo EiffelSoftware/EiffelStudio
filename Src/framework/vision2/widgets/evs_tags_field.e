@@ -324,7 +324,7 @@ feature -- event
 						-- Sorted list of tags.
 					l_provider.tags as t
 				loop
-					s := t.item
+					s := t
 					check s /= Void end --| the tags provider contains valid tags
 					if category_mode then
 						tup := category_name_tag (s)
@@ -579,10 +579,10 @@ feature {NONE} -- Implementation
 				across
 					arr as c
 				loop
-					if not c.is_first then
+					if not @ c.is_first then
 						t.append ({STRING_32} ", ")
 					end
-					t.append (c.item)
+					t.append (c)
 				end
 			end
 			internal_set_text (t)
@@ -648,7 +648,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

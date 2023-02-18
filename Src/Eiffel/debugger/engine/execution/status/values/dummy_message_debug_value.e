@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dummy debug value, named but no more information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,14 +21,14 @@ create {DBG_EVALUATOR, RECV_VALUE, ATTR_REQUEST, CALL_STACK_ELEMENT, DEBUG_VALUE
 
 feature {NONE} -- Initialization
 
-	make_with_name (a_name: STRING)
+	make_with_name (a_name: like name)
 			-- Create current
 		do
 			name := a_name
 			display_kind := kind
 		end
 
-	make_with_details (a_name: STRING; a_message: like message; a_kind: like display_kind)
+	make_with_details (a_name: like name; a_message: like message; a_kind: like display_kind)
 			-- Create current
 		do
 			make_with_name (a_name)
@@ -80,7 +80,8 @@ feature -- Access
 		do
 			s := display_message
 			if s /= Void then
-				Result := Debugger_manager.Dump_value_factory.new_manifest_string_value (display_message.as_string_8, dynamic_class)
+				Result := Debugger_manager.Dump_value_factory.new_manifest_string_value
+					({UTF_CONVERTER}.string_32_to_utf_8_string_8 (display_message), dynamic_class)
 				Result.invalidate_value
 			end
 		end
@@ -131,7 +132,7 @@ feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {IRON_CLIENT_DB}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -80,13 +78,13 @@ feature -- Access
 			across
 				lst as c
 			loop
-				create l_inst_info.make_with_file (c.item)
+				create l_inst_info.make_with_file (c)
 				if attached l_inst_info.package as l_package then
 					l_unordered_result.force (l_package)
 				else
 						-- Backward compatibility
 					if
-						attached file_content (c.item) as s and then
+						attached file_content (c) as s and then
 						attached repo_package_from_json_string (s) as l_package
 					then
 						l_unordered_result.force (l_package)
@@ -106,7 +104,7 @@ feature -- Access
 				until
 					l_unordered_result.after
 				loop
-					if ic.item.is_same_repository (l_unordered_result.item.repository) then
+					if ic.is_same_repository (l_unordered_result.item.repository) then
 						Result.force (l_unordered_result.item)
 						l_unordered_result.remove
 					else
@@ -122,7 +120,7 @@ feature -- Access
 				across
 					l_unordered_result as ic
 				loop
-					Result.force (ic.item)
+					Result.force (ic)
 				end
 			end
 			debug ("iron_api")
@@ -150,16 +148,16 @@ feature -- Access
 				lst as c
 			loop
 				if
-					attached repo_package_identifier_from_json_string (file_content (c.item)) as l_package_id and then
+					attached repo_package_identifier_from_json_string (file_content (c)) as l_package_id and then
 					l_package_id.is_case_insensitive_equal (a_package_name)
 				then
-					create l_inst_info.make_with_file (c.item)
+					create l_inst_info.make_with_file (c)
 					if attached l_inst_info.package as l_package then
 						l_unordered_result.force (l_package)
 					else
 							-- Backward compatibility
 						if
-							attached file_content (c.item) as s and then
+							attached file_content (c) as s and then
 							attached repo_package_from_json_string (s) as l_package
 						then
 							l_unordered_result.force (l_package)
@@ -178,7 +176,7 @@ feature -- Access
 				until
 					l_unordered_result.after or Result /= Void
 				loop
-					if ic.item.is_same_repository (l_unordered_result.item.repository) then
+					if ic.is_same_repository (l_unordered_result.item.repository) then
 						Result := l_unordered_result.item
 						l_unordered_result.remove
 					else
@@ -207,10 +205,10 @@ feature -- Access
 			across
 				repositories as ic
 			loop
-				fp := layout.repository_packages_data_index (ic.item)
+				fp := layout.repository_packages_data_index (ic)
 				create f.make_with_path (fp)
 				if f.exists and then f.is_access_readable then
-					l_repo_uri := ic.item.location_string
+					l_repo_uri := ic.location_string
 					f.open_read
 					from
 						f.read_line_thread_aware
@@ -237,14 +235,14 @@ feature -- Access
 								-- Package name
 							l_name := utf.utf_8_string_8_to_string_32 (s)
 
-							if across Result as result_ic some result_ic.item.is_identified_by (l_name) end then
+							if across Result as result_ic some result_ic.is_identified_by (l_name) end then
 									-- Conflict, but still listed, order matters
 							end
 
-							p := layout.repository_packages_data_folder (ic.item).extended (l_name)
+							p := layout.repository_packages_data_folder (ic).extended (l_name)
 							pif := pif_fac.new_package_file (p)
 							if pif.exists and then not pif.has_error then
-								l_package := pif.to_package (ic.item)
+								l_package := pif.to_package (ic)
 								Result.force (l_package)
 							end
 						end
@@ -320,20 +318,20 @@ feature -- Change
 			across
 				a_repo.available_packages as ic
 			loop
-				pif := pif_fac.new_package_file (dp.extended (ic.item.identifier))
+				pif := pif_fac.new_package_file (dp.extended (ic.identifier))
 				pif.reset
-				pif.load_package (ic.item)
+				pif.load_package (ic)
 				pif.remove ("_json")
 				pif.save
 
-				f.put_string (utf.string_32_to_utf_8_string_8 (ic.item.identifier))
+				f.put_string (utf.string_32_to_utf_8_string_8 (ic.identifier))
 				f.put_new_line
 				across
-					ic.item.associated_paths as maps_ic
+					ic.associated_paths as maps_ic
 				loop
 					f.put_character ('%T')
 
-					f.put_string (a_repo.location_string + maps_ic.item)
+					f.put_string (a_repo.location_string + maps_ic)
 					f.put_new_line
 				end
 			end
@@ -380,7 +378,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

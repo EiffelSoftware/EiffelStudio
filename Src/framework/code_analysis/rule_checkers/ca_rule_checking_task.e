@@ -1,6 +1,6 @@
 ﻿note
 	description: "Asynchronous task that checks a set of classes using a list of rules."
-	author: "Stefan Zurfluh", "Eiffel Software"
+	author: "Stefan Zurfluh", "Eiffel Software", "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 				across rules as l_rules loop
 						-- Set the context already here. For any further
 						-- class only update the info in the context.
-					l_rules.item.set_current_context (context)
+					l_rules.set_current_context (context)
 				end
 			end
 		end
@@ -105,8 +105,8 @@ feature -- From ROTA
 						-- If rule is non-standard then it will not be checked by l_rules_checker.
 						-- We will have the rule check the current class here:
 					if
-						l_rules.item.is_enabled.value
-						and then attached {CA_CFG_RULE} l_rules.item as l_cfg_rule
+						l_rules.is_enabled.value
+						and then attached {CA_CFG_RULE} l_rules as l_cfg_rule
 					then
 						l_cfg_rule.check_class (c)
 					end

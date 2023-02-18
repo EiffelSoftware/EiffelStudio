@@ -45,7 +45,7 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 			result_contains_usable_items: across Result as l_registration all
-					attached {USABLE_I} l_registration.item as l_usable implies l_usable.is_interface_usable
+					attached {USABLE_I} l_registration as l_usable implies l_usable.is_interface_usable
 				end
 			result_consistent: Result = registrations
 		end
@@ -200,8 +200,8 @@ feature -- Events
 			result_consistent: Result = registration_activated_event
 		end
 
-;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+note
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,7 +1,4 @@
-note
-	description: "[
-
-	]"
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -30,7 +27,7 @@ feature -- Access
 	dispatcher: detachable XRPC_SERVER_DISPATCHER assign set_dispatcher
 			-- Dispatcher the APIs are managed by.
 
-	namespace: detachable IMMUTABLE_STRING_8
+	namespace: detachable IMMUTABLE_STRING_32
 			-- Optional prefix for the call delegate's API method.
 			--|Note: This is not used internally, it is used by the dispatch server to route calls.
 		do
@@ -40,7 +37,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	method_table: HASH_TABLE [ROUTINE, READABLE_STRING_8]
+	method_table: HASH_TABLE [ROUTINE, READABLE_STRING_32]
 			-- Table of XML-RPC method calls.
 			--
 			-- key: A API method name generated from `method_table_key'.
@@ -92,7 +89,7 @@ feature -- Status report
 			dispatcher_attached: Result implies attached dispatcher
 		end
 
-	has_method (a_name: READABLE_STRING_8): BOOLEAN
+	has_method (a_name: READABLE_STRING_32): BOOLEAN
 			-- Determines if the delegate can respond to the supplied method name.
 			--
 			-- `a_name': Name of the method to retrieve
@@ -126,7 +123,7 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	method alias "[]" (a_name: READABLE_STRING_8): ROUTINE
+	method alias "[]" (a_name: READABLE_STRING_32): ROUTINE
 			-- Retrieves an API method.
 			--
 			-- `a_name': Name of the method to retrieve
@@ -151,7 +148,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	method_table_key (a_api: READABLE_STRING_8): READABLE_STRING_8
+	method_table_key (a_api: READABLE_STRING_32): READABLE_STRING_32
 			-- Retrieves an API method key for look up in the method table `method_table'.
 			--
 			-- `a_key': API method name to generate a key for.
@@ -170,7 +167,7 @@ feature {NONE} -- Query
 
 feature {XRPC_SERVER_DISPATCHER} -- Action handlers
 
-	on_before_call (a_name: READABLE_STRING_8; a_args: detachable TUPLE)
+	on_before_call (a_name: READABLE_STRING_32; a_args: detachable TUPLE)
 			-- Called prior to executing one of the registered methods in the API.
 			--
 			-- `a_name': The name of the method to be called.
@@ -188,7 +185,7 @@ feature {XRPC_SERVER_DISPATCHER} -- Action handlers
 			is_initialized: is_initialized
 		end
 
-	on_after_call (a_name: READABLE_STRING_8; a_args: detachable TUPLE; a_response: detachable XRPC_RESPONSE)
+	on_after_call (a_name: READABLE_STRING_32; a_args: detachable TUPLE; a_response: detachable XRPC_RESPONSE)
 			-- Called after executing one of the registered methods in the API.
 			--
 			-- `a_name': The name of the method that was just called.
@@ -204,7 +201,7 @@ feature {XRPC_SERVER_DISPATCHER} -- Action handlers
 
 feature {NONE} -- Factory
 
-	new_method_agents: HASH_TABLE [ROUTINE, READABLE_STRING_8]
+	new_method_agents: HASH_TABLE [ROUTINE, READABLE_STRING_32]
 			-- Creates a new table of method agents.
 			-- XML-RPC method agents may use either Eiffel types or XML-RPC types for arguments and
 			-- results. XML-RPC agents may be either a procedure or function using the following supported
@@ -231,7 +228,7 @@ feature {NONE} -- Implementation
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

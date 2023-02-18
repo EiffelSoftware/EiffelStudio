@@ -57,11 +57,11 @@ feature {NONE} -- Implementation
 		do
 			across system.classes as l_class loop
 				if
-					attached l_class.item
-					and then not l_class.item.actual_type.has_formal_generic
+					attached l_class
+					and then not l_class.actual_type.has_formal_generic
 					and then not Result
-					and then l_class.item.actual_type.conform_to(current_context.checking_class, a_t1)
-					and then l_class.item.actual_type.conform_to(current_context.checking_class, a_t2)
+					and then l_class.actual_type.conform_to(current_context.checking_class, a_t1)
+					and then l_class.actual_type.conform_to(current_context.checking_class, a_t2)
 				then
 					Result := True
 				end

@@ -63,9 +63,9 @@ feature {NONE} -- Visitor
 					l_feature_names as f
 				loop
 						-- Skip the feature name we are removing.
-					if not f.item.visual_name_32.is_equal (feature_name) then
+					if not f.visual_name_32.is_equal (feature_name) then
 						l_new_feature_names.append (", ")
-						l_new_feature_names.append (f.item.visual_name_32)
+						l_new_feature_names.append (f.visual_name_32)
 					end
 				end
 					-- Remove the first comma.

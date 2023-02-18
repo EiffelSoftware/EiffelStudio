@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {IRON_CATALOG_API}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -56,7 +54,7 @@ feature -- Access: repositories
 				repositories as ic
 			loop
 				if
-					attached {IRON_WORKING_COPY_REPOSITORY} ic.item as wc_repo and then
+					attached {IRON_WORKING_COPY_REPOSITORY} ic as wc_repo and then
 					not wc_repo.exists
 				then
 					if Result = Void then
@@ -111,7 +109,7 @@ feature -- Repository registration
 				across
 					repo.available_packages as ic
 				loop
-					uninstall_package (ic.item)
+					uninstall_package (ic)
 				end
 				catalog.unregister_repository (a_uri)
 			end
@@ -132,9 +130,9 @@ feature -- Access: package
 				repositories as repo_ic
 			loop
 				across
-					repo_ic.item.available_packages as ic
+					repo_ic.available_packages as ic
 				loop
-					Result.force (ic.item)
+					Result.force (ic)
 				end
 			end
 		end
@@ -209,7 +207,7 @@ feature -- Operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

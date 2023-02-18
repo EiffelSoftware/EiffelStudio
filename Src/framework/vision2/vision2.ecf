@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="framework_vision2" uuid="438FCC87-E3CF-49F3-8846-0DE554C74231" library_target="framework_vision2">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="framework_vision2" uuid="438FCC87-E3CF-49F3-8846-0DE554C74231" library_target="framework_vision2">
 	<target name="framework_vision2">
 		<description>Vision2 library Extended</description>
 		<root all_classes="true"/>
@@ -20,7 +20,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</file_rule>
-		<option>
+		<option warning="warning">
 			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

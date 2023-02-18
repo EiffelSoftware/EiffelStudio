@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {JSON_TO_IRON_FACTORY}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,7 +26,7 @@ feature -- Access
 					across
 						j_packages.array_representation as c
 					loop
-						if attached {JSON_OBJECT} c.item as j_package then
+						if attached {JSON_OBJECT} c as j_package then
 							if attached json_object_to_package (j_package, repo, l_version) as p then
 								Result.force (p)
 							end
@@ -173,7 +171,7 @@ feature {NONE} -- Implementation
 					across
 						j_paths.array_representation as c
 					loop
-						if attached {JSON_STRING} c.item as js then
+						if attached {JSON_STRING} c as js then
 							Result.associated_paths.force (js.item)
 						end
 					end
@@ -182,7 +180,7 @@ feature {NONE} -- Implementation
 					across
 						j_tags.array_representation as c
 					loop
-						if attached {JSON_STRING} c.item as js then
+						if attached {JSON_STRING} c as js then
 							Result.tags.force (js.unescaped_string_32)
 						end
 					end
@@ -191,8 +189,8 @@ feature {NONE} -- Implementation
 					across
 						j_notes as ic
 					loop
-						k := ic.key.unescaped_string_32
-						if attached {JSON_STRING} ic.item as js then
+						k := @ ic.key.unescaped_string_32
+						if attached {JSON_STRING} ic as js then
 							Result.put (js.unescaped_string_32, k)
 						else
 								-- FIXME: should we also include links (represented as JSON objects)?
@@ -203,7 +201,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A XML-RPC struct {XRPC_STRUCT} member.
 	]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: READABLE_STRING_8)
+	make (a_name: READABLE_STRING_32)
 			-- Initializes a struct member with a name.
 			--
 			-- `a_name': Name of the member.
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			name_set: name.same_string (a_name)
 		end
 
-	make_with_value (a_name: READABLE_STRING_8; a_value: like value)
+	make_with_value (a_name: READABLE_STRING_32; a_value: like value)
 			-- Initializes a struct member with a name and value.
 			--
 			-- `a_name': Name of the member.
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: IMMUTABLE_STRING_8
+	name: IMMUTABLE_STRING_32
 			-- Member name.
 
 	value: XRPC_VALUE assign set_value
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			create Result.make_from_string ("name=" + name)
@@ -111,7 +111,7 @@ invariant
 	name_attached: name /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

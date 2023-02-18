@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="base" uuid="A4086E4A-689F-430D-AC40-7365C8B444C3" library_target="base">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="base" uuid="A4086E4A-689F-430D-AC40-7365C8B444C3" library_target="base">
 	<description>Eiffel Base</description>
 	<target name="base">
 		<description>FreeELKS: Library of reusable components for Eiffel.
@@ -52,7 +52,7 @@
 	<target name="base_dotnet" extends="base">
 		<setting name="msil_generation" value="true"/>
 		<capability>
-			<concurrency support="thread" use="thread"/>
+			<concurrency support="thread"/>
 		</capability>
 	</target>
 </system>

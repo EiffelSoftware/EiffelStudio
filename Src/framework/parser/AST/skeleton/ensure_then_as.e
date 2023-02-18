@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make (a: like assertions; c: BOOLEAN; k_as, l_as: like then_keyword)
 			-- Create new ENSURE_THEN AST node with marking it as a class postcondition iff `c` is `True`.
 		require
-			consistent_assertions: c = (attached a and then across a as p some p.item.is_class end)
+			consistent_assertions: c = (attached a and then across a as p some p.is_class end)
 		do
 			ensure_make (a, c, k_as)
 			if l_as /= Void then
@@ -83,7 +83,7 @@ feature -- Roundtrip/Token
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

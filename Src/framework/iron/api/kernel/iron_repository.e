@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {IRON_REPOSITORY}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -58,8 +56,8 @@ feature -- Query
 			until
 				Result /= Void
 			loop
-				if a_id.is_case_insensitive_equal (p.item.id) then
-					Result := p.item
+				if a_id.is_case_insensitive_equal (p.id) then
+					Result := p
 				end
 			end
 		end
@@ -72,7 +70,7 @@ feature -- Query
 			across
 				available_packages as p
 			loop
-				l_package := p.item
+				l_package := p
 				if l_package.is_identified_by (a_name) then
 					Result.force (l_package)
 				end
@@ -97,12 +95,12 @@ feature -- Query
 					Result /= Void
 				loop
 					across
-						p.item.associated_paths as pn
+						p.associated_paths as pn
 					until
 						Result /= Void
 					loop
-						if s.starts_with (pn.item) then
-							Result := p.item
+						if s.starts_with (pn) then
+							Result := p
 						end
 					end
 				end
@@ -140,7 +138,7 @@ feature {IRON_EXPORTER} -- Change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

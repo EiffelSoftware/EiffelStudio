@@ -81,11 +81,11 @@ feature {NONE} -- From {CA_CFG_RULE}
 			Precursor (a_class, a_feature)
 				-- Iterate through all assignments in search for dead assignments.
 			across assignment_nodes as l_assigns loop
-				if attached {ASSIGN_AS} l_assigns.item.instruction as l_assign then
+				if attached {ASSIGN_AS} l_assigns.instruction as l_assign then
 					l_assigned_id := extract_assigned (l_assign.target)
 					if
 						l_assigned_id /= -1 and then
-						not lv_exit.at (l_assigns.item.label).has (l_assigned_id) and then
+						not lv_exit.at (l_assigns.label).has (l_assigned_id) and then
 							-- There is no good replacement for assignments of detachable expressions to a variable,
 							-- because, in such cases, the assignment "target := source" cannot be replaced with "source.do_nothing".
 						current_context.checking_class.lace_class.is_void_safe_conformance and then
@@ -99,11 +99,11 @@ feature {NONE} -- From {CA_CFG_RULE}
 							<<agent {TEXT_FORMATTER}.process_local_text (l_assign.target, l_assign.target.access_name_32)>>,
 							l_assign.target.index)
 					end
-				elseif attached {CREATION_AS} l_assigns.item.instruction as l_creation then
+				elseif attached {CREATION_AS} l_assigns.instruction as l_creation then
 					l_assigned_id := extract_assigned (l_creation.target)
 					if
 						l_assigned_id /= -1 and then
-						not lv_exit.at (l_assigns.item.label).has (l_assigned_id)
+						not lv_exit.at (l_assigns.label).has (l_assigned_id)
 					then
 						put_violation
 							(locale.translation_in_context ("Local {1} is not read after initialization by creation instruction.", once "code_analyzer.violation"),

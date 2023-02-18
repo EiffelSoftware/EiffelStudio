@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="framework_testing" uuid="CA1FED3E-E1FB-41B3-B89E-0A1BF754CC5D" library_target="framework_testing">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="framework_testing" uuid="CA1FED3E-E1FB-41B3-B89E-0A1BF754CC5D" library_target="framework_testing">
 	<target name="framework_testing">
 		<root all_classes="true"/>
 		<file_rule>
@@ -33,6 +33,11 @@
 		<library name="parser_extension" location="$EIFFEL_SRC\framework\parser_extension\parser_extension.ecf"/>
 		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+		<library name="services" location="$EIFFEL_SRC\framework\services\services.ecf">
+			<class_option class="HELP_PROVIDER_I">
+				<warning name="vwab" enabled="false"/>
+			</class_option>
+		</library>
 		<library name="tagging" location="$EIFFEL_SRC\framework\tagging\tagging.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
@@ -41,6 +46,7 @@
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<cluster name="engine" location=".\" recursive="true">
 			<option namespace="Testing">
+				<warning name="obsolete_feature" value="all"/>
 			</option>
 			<file_rule>
 				<exclude>/spec$</exclude>

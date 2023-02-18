@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A code token to represent a replacable code identifier.
 	]"
@@ -80,17 +80,15 @@ feature -- Basic operations
 		require
 			a_table_attached: attached a_table
 		local
-			l_value: CODE_SYMBOL_VALUE
 			l_id: STRING_32
 		do
 			l_id := text
 			if a_table.has_id (l_id) then
 					-- Fetch value from the symbol table
-				l_value := a_table.item (l_id)
-				internal_printable_text := l_value.value
+				internal_printable_text := a_table.item (l_id).value
 			else
 					-- Use the ID
-				internal_printable_text := text
+				internal_printable_text := l_id
 			end
 		end
 
@@ -109,7 +107,11 @@ feature -- Output
 		do
 			create Result.make (10)
 			Result.append ("${")
-			Result.append (text.as_string_8)
+			if attached {READABLE_STRING} text as t then
+				Result.append (t)
+			else
+				Result.append ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (text))
+			end
 			Result.append_character ('}')
 		end
 
@@ -119,7 +121,7 @@ feature {NONE} -- Internal implementation cache
 			-- Mutable version of `printable_text'.	
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

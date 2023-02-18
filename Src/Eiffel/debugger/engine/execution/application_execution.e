@@ -624,7 +624,7 @@ feature -- Remote access to Exceptions
 
 feature -- Debuggee: runtime
 
-	debugger_type_string_evaluation (a_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): STRING
+	debugger_type_string_evaluation (a_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): STRING_32
 			-- Get the `generating_type' as STRING by evaluation on the debuggee
 		require
 			a_value_attached: a_value /= Void
@@ -658,8 +658,8 @@ feature -- Debuggee: evaluation
 					attached a_other_value.value as l_other_value
 				then
 					Result := rto.tilda_equal_evaluation (l_value, l_other_value, error_handler)
-				elseif attached error_handler as err then
-					err.notify_error_evaluation_report_to_support (Void)
+				elseif attached error_handler then
+					error_handler.notify_error_evaluation_report_to_support (Void)
 				end
 			end
 		end
@@ -675,8 +675,8 @@ feature -- Debuggee: evaluation
 					attached a_other_value.value as l_other_value
 				then
 					Result := rto.is_equal_evaluation (l_value, l_other_value, error_handler)
-				elseif attached error_handler as err then
-					err.notify_error_evaluation_report_to_support (Void)
+				elseif attached error_handler then
+					error_handler.notify_error_evaluation_report_to_support (Void)
 				end
 			end
 		end
@@ -692,8 +692,8 @@ feature -- Debuggee: evaluation
 					attached a_other_value.value as l_other_value
 				then
 					Result := rto.equal_sign_evaluation (l_value, l_other_value, error_handler)
-				elseif attached error_handler as err then
-					err.notify_error_evaluation_report_to_support (Void)
+				elseif attached error_handler then
+					error_handler.notify_error_evaluation_report_to_support (Void)
 				end
 			end
 		end
@@ -1035,11 +1035,8 @@ feature -- Assertion change
 
 	disable_assertion_check
 			-- Send a message to the application to disable assertion checking
-		local
-			b: BOOLEAN
 		do
-			b := impl_check_assert (False)
-			last_assertion_check_stack.extend (b)
+			last_assertion_check_stack.extend (impl_check_assert (False))
 		end
 
 	restore_assertion_check
@@ -1132,13 +1129,13 @@ feature -- Query
 		deferred
 		end
 
-	object_internal_info (a_value: DUMP_VALUE): detachable SPECIAL [TUPLE [name: STRING; value: STRING]]
+	object_internal_info (a_value: DUMP_VALUE): detachable SPECIAL [TUPLE [name: STRING_32; value: STRING_32]]
 			-- Get the `generating_type' as STRING by evaluation on the debuggee
 		require
 			a_value_attached: a_value /= Void
 		local
 			i,p: INTEGER
-			s,n,v: STRING
+			s,n,v: STRING_32
 		do
 			if a_value.is_void then
 				Result := Void
@@ -1368,7 +1365,7 @@ feature {NONE} -- fake
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

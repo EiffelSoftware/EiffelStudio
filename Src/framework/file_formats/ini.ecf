@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="ini" uuid="8FA88F5C-08AE-40DC-8563-BF566E0B3C96" library_target="ini">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="ini" uuid="8FA88F5C-08AE-40DC-8563-BF566E0B3C96" library_target="ini">
 	<target name="ini">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true">
+		<option warning="error">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="ini" location="ini\" recursive="true"/>

@@ -164,7 +164,7 @@ feature {NONE} -- Special childrens
 			l_att_icd_debug_value: ICOR_DEBUG_VALUE
 			l_att_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
 			l_error_debug_value: DUMMY_MESSAGE_DEBUG_VALUE
-			l_att_name: STRING
+			l_att_name: STRING_32
 			l_error_message: STRING
 			l_is_static: BOOLEAN
 		do
@@ -336,7 +336,7 @@ feature -- Properties
 			-- Value info of object.
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

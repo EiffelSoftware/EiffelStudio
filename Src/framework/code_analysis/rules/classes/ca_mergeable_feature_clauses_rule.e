@@ -106,7 +106,7 @@ feature {NONE} -- Rule checking
 			across
 				a_comments as ic
 			loop
-				l_adjusted_comment := ic.item.content_32
+				l_adjusted_comment := ic.content_32
 				l_adjusted_comment.adjust
 				Result.append_string (l_adjusted_comment)
 			end
@@ -127,7 +127,7 @@ feature {NONE} -- Rule checking
 				across
 					l_inner_clients as cs
 				loop
-					l_client_list.extend (cs.item.name_32)
+					l_client_list.extend (cs.name_32)
 				end
 				;(create {QUICK_SORTER [READABLE_STRING_GENERAL]}.make
 					(create {STRING_COMPARATOR}.make)).sort (l_client_list)
@@ -135,7 +135,7 @@ feature {NONE} -- Rule checking
 				across
 					l_client_list as ic
 				loop
-					Result.append (ic.item + {STRING_32} " ")
+					Result.append (ic + {STRING_32} " ")
 				end
 			end
 		end

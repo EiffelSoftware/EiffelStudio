@@ -1,6 +1,7 @@
 note
 	description: "Performs a fixed point iteration backwards through the CFG."
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -33,13 +34,13 @@ feature -- Iteration
 				l_bfs_nodes.is_empty
 			loop
 				across l_bfs_nodes.item.in_edges as l_ins loop
-					l_label := l_ins.item.label
+					l_label := l_ins.label
 
-					worklist.put ([l_ins.item, l_bfs_nodes.item])
+					worklist.put ([l_ins, l_bfs_nodes.item])
 
 					if not l_visited.has (l_label) then
 						l_visited.extend (l_label)
-						l_bfs_nodes.extend (l_ins.item)
+						l_bfs_nodes.extend (l_ins)
 					end
 				end
 				l_bfs_nodes.remove
@@ -57,7 +58,7 @@ feature -- Iteration
 						-- The visitor requests another pass on this edge
 						-- so again we will add it to the worklist.
 					across l_current_node.in_edges as l_ins loop
-						worklist.put ([l_ins.item, l_current_node])
+						worklist.put ([l_ins, l_current_node])
 					end
 				end
 				worklist.remove

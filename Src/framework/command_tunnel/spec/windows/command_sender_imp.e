@@ -18,10 +18,9 @@ inherit
 
 feature -- Operation
 
-	send_command (a_string, a_key: attached STRING)
+	send_command (a_string, a_key: STRING_32)
 			-- Send `a_string' as command to receiver processes.
 		local
-			l_string_to_send: STRING
 			l_wel_string: WEL_STRING
 			l_copydata: POINTER
 		do
@@ -30,8 +29,7 @@ feature -- Operation
 			if not a_string.is_empty then
 					-- We add an `ise_command' constants as prefix of the real string sent
 					-- to avoid messages send by other unknown processes.
-				l_string_to_send := {COMMAND_CONSTANTS}.ise_command + a_string
-				create l_wel_string.make (l_string_to_send)
+				create l_wel_string.make ({COMMAND_CONSTANTS}.ise_command + a_string)
 				l_copydata := c_new_copydatastruct (l_wel_string.item, l_wel_string.bytes_count)
 				last_copydata := l_copydata
 				if not l_copydata.is_default_pointer then
@@ -42,10 +40,9 @@ feature -- Operation
 			end
 		end
 
-	send_command_process (a_string, a_key: attached STRING; a_process_id: INTEGER)
+	send_command_process (a_string, a_key: STRING_32; a_process_id: INTEGER)
 			-- Send `a_string' as command to receiver process of `a_process_id' with `a_key'.
 		local
-			l_string_to_send: STRING
 			l_wel_string: WEL_STRING
 			l_copydata: POINTER
 		do
@@ -55,8 +52,7 @@ feature -- Operation
 			if not a_string.is_empty then
 					-- We add an `ise_command' constants as prefix of the real string sent
 					-- to avoid messages sent by other unknown processes.
-				l_string_to_send := {COMMAND_CONSTANTS}.ise_command + a_string
-				create l_wel_string.make (l_string_to_send)
+				create l_wel_string.make ({COMMAND_CONSTANTS}.ise_command + a_string)
 				l_copydata := c_new_copydatastruct (l_wel_string.item, l_wel_string.bytes_count)
 				last_copydata := l_copydata
 				last_process := a_process_id
@@ -76,7 +72,7 @@ feature {NONE} -- Access
 	last_command_reached: BOOLEAN
 			-- <precursor>
 
-	last_key: detachable STRING
+	last_key: detachable STRING_32
 
 	last_copydata: POINTER
 
@@ -91,7 +87,7 @@ feature {NONE} -- Implementation
 			a_wel_string: WEL_STRING
 			l_length: INTEGER
 			nb: INTEGER
-			l_string: STRING
+			l_string: STRING_32
 		do
 			Result := True
 			l_length := cwin_get_window_text_length (hwnd)
@@ -100,9 +96,7 @@ feature {NONE} -- Implementation
 				create a_wel_string.make_empty (l_length)
 				nb := cwin_get_window_text (hwnd, a_wel_string.item, l_length)
 				l_string := a_wel_string.substring (1, nb)
-					-- |Fixeme: Information loss when converting to STRING_8.
-				l_string := l_string.to_string_8
-				if attached {STRING} last_key as lt_key and then last_copydata /= default_pointer and then lt_key.is_equal (l_string) then
+				if attached last_key as lt_key and then last_copydata /= default_pointer and then lt_key.is_equal (l_string) then
 						-- If the receiver return True, it means that the receiver handles the message.
 						-- Window enumerating will stop.
 					Result := not {WEL_API}.send_message_result_boolean (hwnd, {WEL_WM_CONSTANTS}.WM_COPYDATA, default_pointer, last_copydata)
@@ -118,12 +112,11 @@ feature {NONE} -- Implementation
 			a_wel_string: WEL_STRING
 			l_length: INTEGER
 			nb: INTEGER
-			l_string: STRING
+			l_string: STRING_32
 			l_hwnd_process_id: INTEGER
-			l_thread_id: INTEGER
 		do
 			Result := True
-			l_thread_id := cwin_get_window_thread_process_id (hwnd, $l_hwnd_process_id)
+			cwin_get_window_thread_process_id (hwnd, $l_hwnd_process_id).do_nothing
 			if l_hwnd_process_id = last_process then
 				l_length := cwin_get_window_text_length (hwnd)
 				if l_length > 0 then
@@ -131,9 +124,7 @@ feature {NONE} -- Implementation
 					create a_wel_string.make_empty (l_length)
 					nb := cwin_get_window_text (hwnd, a_wel_string.item, l_length)
 					l_string := a_wel_string.substring (1, nb)
-						-- |Fixeme: Information loss when converting to STRING_8.
-					l_string := l_string.to_string_8
-					if attached {STRING} last_key as lt_key and then last_copydata /= default_pointer and then lt_key.is_equal (l_string) then
+					if attached last_key as lt_key and then last_copydata /= default_pointer and then lt_key.is_equal (l_string) then
 						last_command_handled := {WEL_API}.send_message_result_boolean (hwnd, {WEL_WM_CONSTANTS}.WM_COPYDATA, default_pointer, last_copydata)
 							-- The window of the process has been found, stop enumerating.
 						last_command_reached := True
@@ -196,7 +187,7 @@ feature {NONE} -- C functions
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

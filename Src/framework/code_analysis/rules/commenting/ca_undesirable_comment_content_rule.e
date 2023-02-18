@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			create l_regex_string.make_empty
 
 			across bad_words_list.value_as_list_of_text as c loop
-				if attached c.item as word then
+				if attached c as word then
 					l_regex_string.append (word)
 					l_regex_string.append_character ('|')
 				end
@@ -131,7 +131,7 @@ feature {NONE} -- Preferences
 			consistent_defaults:
 				attached default_words_value.split (';') as l and then
 				l.count = Result.count and then
-				across l as w all w.item ~ default_words_list.i_th (w.cursor_index) end
+				across l as w all w ~ default_words_list.i_th (@ w.cursor_index) end
 		end
 
 	preference_option_name_case_sensitivity: STRING
@@ -171,12 +171,12 @@ feature {NONE} -- Rule checking
 				across
 					l_comments as l_comment
 				loop
-					if r.matches (l_comment.item.content_32) then
+					if r.matches (l_comment.content_32) then
 						create l_violation.make_with_rule (Current)
-						l_violation.set_location (create {LOCATION_AS}.make (l_comment.item.line, l_comment.item.column, 0, 0, 0, 0, 0))
-						l_violation.long_description_info.extend (l_comment.item.content_32)
+						l_violation.set_location (create {LOCATION_AS}.make (l_comment.line, l_comment.column, 0, 0, 0, 0, 0))
+						l_violation.long_description_info.extend (l_comment.content_32)
 
-						if attached {BREAK_AS} current_context.matchlist.item_by_position (l_comment.item.position) as l_break then
+						if attached {BREAK_AS} current_context.matchlist.item_by_position (l_comment.position) as l_break then
 							create l_fix.make_with_break_and_regex (current_context.checking_class, l_break, r)
 							l_violation.fixes.extend (l_fix)
 						end

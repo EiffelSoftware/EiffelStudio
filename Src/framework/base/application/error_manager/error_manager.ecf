@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="error_manager" uuid="746ECF4D-37BA-4F27-B62B-8FF7D938648A" library_target="error_manager">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="error_manager" uuid="746ECF4D-37BA-4F27-B62B-8FF7D938648A" library_target="error_manager">
 	<target name="error_manager">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" namespace="EiffelSoftware.Framework">
+		<option warning="error" namespace="EiffelSoftware.Framework">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>

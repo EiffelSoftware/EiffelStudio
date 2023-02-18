@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "[
 		{EC_TAG_TREE_NODE} representing clusters in an Eiffel project.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,19 +27,19 @@ feature {NONE} -- Implementation
 		do
 			if attached {EC_TAG_TREE_NODE [G, CONF_CLUSTER]} parent as l_parent then
 				if attached l_parent.item (a_project) as l_cluster then
-					Result := l_cluster.target.clusters.item (name.as_string_8)
+					Result := l_cluster.target.clusters.item (name)
 				end
 			elseif attached {EC_TAG_TREE_NODE [G, CONF_LIBRARY]} parent as l_parent then
 				if attached l_parent.item (a_project) as l_library then
-					Result := l_library.library_target.clusters.item (name.as_string_8)
+					Result := l_library.library_target.clusters.item (name)
 				end
 			end
 			if Result = Void then
-				Result := a_project.project.universe.cluster_of_name (name.as_string_8)
+				Result := a_project.project.universe.cluster_of_name (name)
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

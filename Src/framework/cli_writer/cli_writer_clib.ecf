@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="cli_writer_clib" uuid="950ABC95-2EDD-4348-901E-FA55B636F4D7" library_target="clib">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="cli_writer_clib" uuid="950ABC95-2EDD-4348-901E-FA55B636F4D7" library_target="clib">
 	<target name="clib">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
+		<option warning="error">
+		</option>
 		<external_include location="$(EIFFEL_SRC)\framework\cli_writer\Clib">
 			<condition>
 				<platform value="windows"/>

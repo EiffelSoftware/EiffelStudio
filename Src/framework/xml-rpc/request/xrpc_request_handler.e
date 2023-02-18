@@ -85,7 +85,7 @@ feature -- Basic operations
 			a_dispatcher_attached: attached a_dispatcher
 		local
 			l_parser: like parser
-			l_name: STRING
+			l_name: STRING_32
 			l_params: detachable CHAIN [XRPC_VALUE]
 			retried: BOOLEAN
 		do
@@ -127,7 +127,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	dispatch_call (a_dispatcher: XRPC_SERVER_DISPATCHER; a_name: READABLE_STRING_8; a_params: detachable CHAIN [XRPC_VALUE]): detachable XRPC_RESPONSE
+	dispatch_call (a_dispatcher: XRPC_SERVER_DISPATCHER; a_name: READABLE_STRING_32; a_params: detachable CHAIN [XRPC_VALUE]): detachable XRPC_RESPONSE
 			-- Dispatches a call to a server and traps any other erronous conditions prior to execution.
 			---
 			-- `a_dispatcher': The dispatch server to perform the call on.
@@ -169,7 +169,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

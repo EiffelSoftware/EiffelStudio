@@ -1,4 +1,4 @@
-note
+﻿note
 	description: ".NET breakpoint"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -73,7 +73,7 @@ feature -- comparison
 
 feature -- Access assertion
 
-	is_lower_case (a_string: STRING): BOOLEAN
+	is_lower_case (a_string: STRING_32): BOOLEAN
 			-- is `a_string' in lower case
 			-- used in assertion
 		require
@@ -159,7 +159,7 @@ feature -- debug output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -190,4 +190,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFNET_BREAKPOINT
+end

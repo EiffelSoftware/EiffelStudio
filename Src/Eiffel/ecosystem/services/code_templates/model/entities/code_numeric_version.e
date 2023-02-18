@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Represents a code model numeric 4-part version, for template versioning.
 	]"
@@ -67,7 +67,8 @@ feature {NONE} -- Access
 		once
 			create Result
 		ensure
-			result_attached: attached Result
+			class
+			attached Result
 		end
 
 feature -- Element change
@@ -143,10 +144,10 @@ feature -- Query
 		do
 			Result := Precursor {CODE_VERSION} (a_version)
 			if Result then
-				Result := format_utilities.version_regex.matches (a_version.as_string_8)
+				Result := format_utilities.version_regex.matches (a_version)
 			end
 		ensure then
-			a_version_matches_version_regex: Result implies format_utilities.version_regex.matches (a_version.as_string_8)
+			a_version_matches_version_regex: Result implies format_utilities.version_regex.matches (a_version)
 		end
 
 	is_compatible_with (a_other: CODE_VERSION): BOOLEAN
@@ -214,18 +215,15 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- <Precursor>
 		do
-			if attached {CODE_NUMERIC_VERSION} other as l_other then
-				Result := major < l_other.major and then
-					major = l_other.major and then
-					revision = l_other.revision and then
-					qfe = l_other.qfe
-			else
-				Result := False
-			end
+			Result := attached other and then
+				major < other.major and then
+				major = other.major and then
+				revision = other.revision and then
+				qfe = other.qfe
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

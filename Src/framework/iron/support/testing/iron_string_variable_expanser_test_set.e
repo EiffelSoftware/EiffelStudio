@@ -41,35 +41,35 @@ feature -- Test routines
 			env.put (l_test_value_4, l_test_var_4)
 
 			across env as ic loop
-				execution_environment.put (ic.item, ic.key)
+				execution_environment.put (ic, @ ic.key)
 			end
 
 			across env as ic loop
-				k := ic.key.as_string_32
+				k := @ ic.key.as_string_32
 
 				s := "c:\foo\bar\$"+ k +"\blabla"
 				exp.expand_string_32 (s, agent env.item)
-				assert ("replaced", s.same_string ({STRING_32} "c:\foo\bar\"+ ic.item +"\blabla"))
+				assert ("replaced", s.same_string ({STRING_32} "c:\foo\bar\"+ ic +"\blabla"))
 
 				s := "c:\foo\bar\${"+ k +"}\blabla"
 				exp.expand_string_32 (s, agent env.item)
-				assert ("replaced", s.same_string ({STRING_32} "c:\foo\bar\"+ ic.item +"\blabla"))
+				assert ("replaced", s.same_string ({STRING_32} "c:\foo\bar\"+ ic +"\blabla"))
 
 				s := "c:\foo\bar\$("+ k +")\blabla"
 				exp.expand_string_32 (s, agent env.item)
-				assert ("replaced", s.same_string ({STRING_32} "c:\foo\bar\"+ ic.item +"\blabla"))
+				assert ("replaced", s.same_string ({STRING_32} "c:\foo\bar\"+ ic +"\blabla"))
 
 				s := "$"+ k +"\blabla"
 				exp.expand_string_32 (s, agent env.item)
-				assert ("replaced", s.same_string (ic.item +"\blabla"))
+				assert ("replaced", s.same_string (ic +"\blabla"))
 
 				s := "blabla/$"+ k
 				exp.expand_string_32 (s, agent env.item)
-				assert ("replaced", s.same_string ({STRING_32} "blabla/" + ic.item))
+				assert ("replaced", s.same_string ({STRING_32} "blabla/" + ic))
 
 				s := "$" + k + "/bla${"+ k + "}bla/$"+ k
 				exp.expand_string_32 (s, agent env.item)
-				assert ("replaced", s.same_string (ic.item + "/bla" + ic.item + "bla/" + ic.item))
+				assert ("replaced", s.same_string (ic + "/bla" + ic + "bla/" + ic))
 
 			end
 		end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Used to prepare and format output of ICOR_DEBUG_VALUE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -171,110 +171,71 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 		end
 
 	prepared_icor_debug_value_as_boolean (a_data: ICOR_DEBUG_VALUE): BOOLEAN
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_boolean (0)
+			Result := value_data_pointer (a_data).read_boolean (0)
 		end
 
 	prepared_icor_debug_value_as_character (a_data: ICOR_DEBUG_VALUE): CHARACTER
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_character (0)
+			Result := value_data_pointer (a_data).read_character (0)
 		end
 
 	prepared_icor_debug_value_as_natural_8 (a_data: ICOR_DEBUG_VALUE): NATURAL_8
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_natural_8 (0)
+			Result := value_data_pointer (a_data).read_natural_8 (0)
 		end
 
 	prepared_icor_debug_value_as_natural_16 (a_data: ICOR_DEBUG_VALUE): NATURAL_16
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_natural_16 (0)
+			Result := value_data_pointer (a_data).read_natural_16 (0)
 		end
 
 	prepared_icor_debug_value_as_natural_32 (a_data: ICOR_DEBUG_VALUE): NATURAL_32
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_natural_32 (0)
+			Result := value_data_pointer (a_data).read_natural_32 (0)
 		end
 
 	prepared_icor_debug_value_as_natural_64 (a_data: ICOR_DEBUG_VALUE): NATURAL_64
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_natural_64 (0)
+			Result := value_data_pointer (a_data).read_natural_64 (0)
 		end
 
 	prepared_icor_debug_value_as_integer_8 (a_data: ICOR_DEBUG_VALUE): INTEGER_8
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_integer_8 (0)
+			Result := value_data_pointer (a_data).read_integer_8 (0)
 		end
 
 	prepared_icor_debug_value_as_integer_16 (a_data: ICOR_DEBUG_VALUE): INTEGER_16
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_integer_16 (0)
+			Result := value_data_pointer (a_data).read_integer_16 (0)
 		end
 
 	prepared_icor_debug_value_as_integer_32 (a_data: ICOR_DEBUG_VALUE): INTEGER -- INTEGER_32
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_integer_32 (0)
+			Result := value_data_pointer (a_data).read_integer_32 (0)
 		end
 
 	prepared_icor_debug_value_as_integer_64 (a_data: ICOR_DEBUG_VALUE): INTEGER_64
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_integer_64 (0)
+			Result := value_data_pointer (a_data).read_integer_64 (0)
 		end
 
 	prepared_icor_debug_value_as_real (a_data: ICOR_DEBUG_VALUE): REAL
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_real_32 (0)
+			Result := value_data_pointer (a_data).read_real_32 (0)
 		end
 
 	prepared_icor_debug_value_as_double (a_data: ICOR_DEBUG_VALUE): DOUBLE
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_real_64 (0)
+			Result := value_data_pointer (a_data).read_real_64 (0)
 		end
 
 	prepared_icor_debug_value_as_pointer (a_data: ICOR_DEBUG_VALUE): POINTER
-		local
-			l_mp: MANAGED_POINTER
 		do
-			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_pointer (0)
+			Result := value_data_pointer (a_data).read_pointer (0)
 		end
 
-	prepared_icor_debug_value_as_reference_to_string (a_data: ICOR_DEBUG_VALUE): STRING
+	prepared_icor_debug_value_as_reference_to_string (a_data: ICOR_DEBUG_VALUE): STRING_32
 		local
 			l_type: INTEGER
 
@@ -284,7 +245,6 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_reference: ICOR_DEBUG_REFERENCE_VALUE
 
 			l_found_value: BOOLEAN
-			l_result_string: STRING
 			l_icd_class: ICOR_DEBUG_CLASS
 		do
 			l_type := a_data.type
@@ -292,8 +252,8 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			--| Now start getting info
 
 			l_found_value := False
-			l_result_string := "TypeID ["+ l_type.out +"]::" + cor_element_type_to_string (l_type)
-			l_result_string.prepend_string ("[" + a_data.item.out +"] :: ")
+			Result := "TypeID ["+ l_type.out +"]::" + cor_element_type_to_string (l_type)
+			Result.prepend_string ("[" + a_data.item.out +"] :: ")
 
 				--| At this point the argument
 				--| of this feature is already ref-stripped and out of any box.
@@ -302,7 +262,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			if not l_found_value then
 				l_string := a_data.query_interface_icor_debug_string_value
 				if a_data.last_call_succeed then
-					l_result_string := get_string_value (l_string)
+					Result := get_string_value (l_string)
 					l_found_value := True
 					l_string.clean_on_dispose
 					l_string := Void
@@ -313,9 +273,9 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			if not l_found_value then
 				l_array := a_data.query_interface_icor_debug_array_value
 				if a_data.last_call_succeed then
-					l_result_string.append_string ("<<ARRAY>>")
-					l_result_string.append_string (" rank=" + l_array.get_rank.out)
-					l_result_string.append_string (" count=" + l_array.get_count.out)
+					Result.append_string ("<<ARRAY>>")
+					Result.append_string (" rank=" + l_array.get_rank.out)
+					Result.append_string (" count=" + l_array.get_count.out)
 					l_found_value := True
 					l_array.clean_on_dispose
 					l_array := Void
@@ -326,19 +286,19 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 					--| Check if OBJECT |--
 				l_object := a_data.query_interface_icor_debug_object_value
 				if a_data.last_call_succeed then
-					l_result_string.append_string ("<<OBJECT>>")
+					Result.append_string ("<<OBJECT>>")
 					l_icd_class := l_object.get_class
 					if l_icd_class /= Void then
-						l_result_string.append_string (" class token = 0x" + l_icd_class.token.to_hex_string)
+						Result.append_string (" class token = 0x" + l_icd_class.token.to_hex_string)
 					else
-						l_result_string.append_string (" neutred (no class info) ")
+						Result.append_string (" neutred (no class info) ")
 					end
 
 					l_found_value := True
 					l_object.clean_on_dispose
 					l_object := Void
 				else
-					l_result_string.append_string ("<<OBJECT-ERROR:" + a_data.last_error_code_id + ">>")
+					Result.append_string ("<<OBJECT-ERROR:" + a_data.last_error_code_id + ">>")
 				end
 			end
 
@@ -349,9 +309,9 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 
 				l_reference := a_data.query_interface_icor_debug_reference_value
 				if a_data.last_call_succeed then
-					l_result_string.append_string ("<<REFERENCE>>")
+					Result.append_string ("<<REFERENCE>>")
 					if l_reference.is_null then
-						l_result_string := " IsNull"
+						Result := " IsNull"
 						l_found_value := True
 						l_reference.clean_on_dispose
 						l_reference := Void
@@ -361,12 +321,11 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 
 				--| Looks like we've got a bad object here... |--
 			if not l_found_value then
-				l_result_string.append_string ("<<VALUE-ERROR::Unknown>>")
+				Result.append_string ("<<VALUE-ERROR::Unknown>>")
 				check
 					l_found_value
 				end
 			end
-			Result:= l_result_string
 		end
 
 feature -- Dereferenced to Value
@@ -476,7 +435,7 @@ feature -- internal Status
 	last_strip_references_call_succeed: BOOLEAN
 			-- does last call to strip_references succeed ?
 		do
-			Result := (last_strip_references_call_success = 0)
+			Result := last_strip_references_call_success = 0
 		end
 
 feature {NONE} -- preparing
@@ -670,7 +629,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -683,22 +642,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

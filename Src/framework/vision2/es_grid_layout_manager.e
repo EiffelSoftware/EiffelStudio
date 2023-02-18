@@ -257,7 +257,7 @@ feature -- Access
 							until
 								r > grid.row_count
 							loop
-								if attached {like layout} lst_curs.item as t then
+								if attached {like layout} lst_curs as t then
 									process_row_layout_restoring (grid.row (r), t)
 								end
 								r := r + grid.row (r).subrow_count_recursive + 1
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 				across
 					lst as lst_curs
 				loop
-					if attached lst_curs.item as x then
+					if attached lst_curs as x then
 						reset_recorded_values_from (x)
 					end
 				end
@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 								until
 									r > a_row.subrow_count or l_done
 								loop
-									if attached {like layout} lst_curs.item as t and then t.is_visible_row then
+									if attached {like layout} lst_curs as t and then t.is_visible_row then
 										process_row_layout_restoring (a_row.subrow (r), t)
 										l_done := True --| "first visible row's group found"
 									end
@@ -549,7 +549,7 @@ feature {NONE} -- Implementation
 								until
 									r > a_row.subrow_count
 								loop
-									if attached {like layout} lst_curs.item as t and then not t.is_visible_row then
+									if attached {like layout} lst_curs as t and then not t.is_visible_row then
 										process_row_layout_restoring (a_row.subrow (r), t)
 									end
 									r := r + 1
@@ -681,7 +681,7 @@ feature {NONE} -- Debugging
 				across
 					tu_lst as tu_lst_curs
 				loop
-					if attached {like layout} tu_lst_curs.item as tu then
+					if attached {like layout} tu_lst_curs as tu then
 						Result.append_string (grid_layout_output (tu, off + "  "))
 					end
 				end
@@ -711,7 +711,7 @@ feature {NONE} -- Agent
 			-- row and old value
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -90,7 +90,7 @@ feature -- Access
 				across
 					Current as ic
 				loop
-					Result.put_character (ic.item, i)
+					Result.put_character (ic, i)
 					i := i + 1
 				end
 			end
@@ -157,8 +157,8 @@ feature -- Output
 			Result := as_string_8
 		end
 
-;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+note
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -133,7 +133,7 @@ feature {DBG_EXPRESSION_EVALUATOR} -- Variables preparation
 
 feature -- Output
 
-	exception_error_message (e: EXCEPTION_DEBUG_VALUE): STRING
+	exception_error_message (e: EXCEPTION_DEBUG_VALUE): READABLE_STRING_32
 			-- Exception error message from `e'
 		require
 			e_attached: e /= Void
@@ -744,7 +744,7 @@ invariant
 	dbg_handler_attached: dbg_error_handler /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

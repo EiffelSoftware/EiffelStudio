@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="threading" uuid="290B4136-9F21-49A3-9883-54C60C71A592" library_target="threading">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="threading" uuid="290B4136-9F21-49A3-9883-54C60C71A592" library_target="threading">
 	<target name="threading">
 		<description>Augments the threading library.</description>
 		<root all_classes="true"/>
@@ -19,6 +19,8 @@
 				<concurrency excluded_value="thread"/>
 			</condition>
 		</file_rule>
+		<option warning="error">
+		</option>
 		<capability>
 			<concurrency support="scoop" use="thread"/>
 		</capability>

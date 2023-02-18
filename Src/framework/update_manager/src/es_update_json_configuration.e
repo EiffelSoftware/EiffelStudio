@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Provide access to json configuration"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,7 +48,7 @@ feature -- Access
 			end
 		end
 
-	service_root: STRING_8
+	service_root: READABLE_STRING_8
 			-- Root uri.
 		do
 			Result := internal_service_uri
@@ -87,11 +87,11 @@ feature {NONE} -- JSON implementation
 			create Result.make_with_string (a_string)
 		end
 
-	internal_service_uri: STRING_8
+	internal_service_uri: READABLE_STRING_8
 			-- Update service URI.
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

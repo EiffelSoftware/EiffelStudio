@@ -104,7 +104,7 @@ feature {NONE} -- AST Visitor
 			if attached creation_procedures as ps then
 				across ps as ic loop
 					if
-						attached a_clause.feature_with_name (ic.item.feature_name.name_id) as l_feature and then
+						attached a_clause.feature_with_name (ic.feature_name.name_id) as l_feature and then
 						not attached l_feature.body.arguments
 					then
 						has_creation_procedure_with_no_args := True

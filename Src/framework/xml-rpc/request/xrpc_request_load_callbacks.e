@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	method_name: STRING
+	method_name: STRING_32
 			-- Name of the method to call.
 
 feature {NONE} -- Basic operations
@@ -96,7 +96,7 @@ feature {NONE} -- Constants: States
 	t_method_name: NATURAL_8 = 0xA1
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

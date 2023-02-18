@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Command sender implemtation interface."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -10,13 +10,13 @@ deferred class
 
 feature -- Action
 
-	send_command (a_string, a_key: attached STRING)
+	send_command (a_string, a_key: STRING_32)
 			-- Send `a_string' as command to receiver processes.
 			-- `a_key' to identify receiver.
 		deferred
 		end
 
-	send_command_process (a_string, a_key: attached STRING; a_process_id: INTEGER)
+	send_command_process (a_string, a_key: STRING_32; a_process_id: INTEGER)
 			-- Send `a_string' as command to receiver process of `a_process_id' with `a_key'.
 		deferred
 		end
@@ -34,7 +34,7 @@ feature -- Querry
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -58,11 +58,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

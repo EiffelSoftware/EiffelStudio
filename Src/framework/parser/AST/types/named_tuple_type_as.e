@@ -70,7 +70,7 @@ feature -- Status
 				across
 					generics as g
 				all
-					g.item.type.is_fixed
+					g.type.is_fixed
 				end
 		end
 
@@ -232,7 +232,7 @@ invariant
 		not parameters.arguments.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

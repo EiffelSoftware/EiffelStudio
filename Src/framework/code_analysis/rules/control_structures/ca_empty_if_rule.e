@@ -65,7 +65,7 @@ feature {NONE} -- Rule Checking
 		do
 			if
 				not attached a.compound and then
-				(attached a.elsif_list as es implies across es as e all not attached e.item.compound end) and then
+				(attached a.elsif_list as es implies across es as e all not attached e.compound end) and then
 				(a.else_keyword_index > 0 implies not attached a.else_part)
 			then
 					-- All parts of the conditional instruction are empty, it can be removed completely.

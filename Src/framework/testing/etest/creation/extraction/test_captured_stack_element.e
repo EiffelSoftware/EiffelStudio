@@ -1,9 +1,8 @@
-note
+﻿note
 	description: "[
 		Objects representing a call stack element, referring to the feature called in the specific
 		element and its attributes and objects.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,13 +37,13 @@ feature -- Access
 	type: STRING
 			-- Dynamic type for `called_feature'
 
-	operands: LIST [STRING]
+	operands: LIST [STRING_32]
 			-- Operands needed to invoce `called_feature'
 		do
 			Result := internal_operands
 		end
 
-	types: LIST [STRING]
+	types: LIST [STRING_32]
 			-- Types for `operands'
 		do
 			Result := internal_types
@@ -52,10 +51,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_operands: ARRAYED_LIST [STRING]
+	internal_operands: ARRAYED_LIST [STRING_32]
 			-- Internal storage for `operands'
 
-	internal_types: ARRAYED_LIST [STRING]
+	internal_types: ARRAYED_LIST [STRING_32]
 			-- Internal storage for `types'
 
 feature -- Status report
@@ -86,7 +85,7 @@ feature -- Status report
 
 feature {TEST_CAPTURER} -- Element change
 
-	add_operand (a_operand: STRING; a_type: STRING)
+	add_operand (a_operand: STRING_32; a_type: STRING_32)
 			-- Add `a_operand' to `operands'.
 		require
 			not_complete: not are_operands_complete
@@ -96,7 +95,7 @@ feature {TEST_CAPTURER} -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -110,9 +110,9 @@ feature {NONE} -- Rule Checking
 					from
 						j := 1
 					until
-						j > l_args.item.id_list.count
+						j > l_args.id_list.count
 					loop
-						arg_names.extend (l_args.item.item_name (j))
+						arg_names.extend (l_args.item_name (j))
 						args_used.extend (False)
 						n_arguments := n_arguments + 1
 						j := j + 1

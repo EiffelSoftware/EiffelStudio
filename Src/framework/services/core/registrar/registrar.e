@@ -70,7 +70,7 @@ feature -- Access
 			else
 				create l_list.make_default
 				across registrations as l_cursor loop
-					l_concealer := l_cursor.item
+					l_concealer := l_cursor
 					check l_concealer_attached: l_concealer /= Void end
 					if l_concealer.is_revealed then
 						l_object := l_concealer.object
@@ -418,7 +418,7 @@ invariant
 	table_attached: table /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

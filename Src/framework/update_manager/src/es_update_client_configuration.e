@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Provide access to configuration options"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,7 +48,7 @@ feature -- Access
 			Result := json_configuration.connection_timeout
 		end
 
-	service_root: STRING_8
+	service_root: READABLE_STRING_8
 			-- Root uri to drive the interaction.
 		do
 			Result := json_configuration.service_root
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

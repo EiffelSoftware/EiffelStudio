@@ -1,8 +1,7 @@
 note
-	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	SUGGESTIVE_WINDOW
@@ -213,11 +212,11 @@ feature {NONE} -- Initialization
 				across
 					l_activators as ic
 				loop
-					create s.make_filled (ic.key, 1)
+					create s.make_filled (@ ic.key, 1)
 					create cb.make_with_text (s)
 					cb.set_tooltip ({STRING_32} "Suggestions appears when '"+ s +"' as typed")
 					cb.enable_select
-					if not ic.item then
+					if not ic then
 						cb.set_tooltip (cb.tooltip + ".%N The character will be removed.")
 					end
 					hb.extend (cb)
@@ -229,7 +228,7 @@ feature {NONE} -- Initialization
 								else
 									i_settings.unregister_suggestion_activator_character (d.char)
 								end
-							end(cb, [ic.key, ic.item], a_settings)
+							end(cb, [@ ic.key, ic], a_settings)
 						)
 				end
 			end
@@ -242,12 +241,5 @@ feature -- Access
 		do
 			Result := <<"Orange", "Pineapple", "Apple", "Ananas", "Banana", "Peach", "Pear", "Kiwi", "Watermelon", "Lemon", "Lime", "Blueberry", "Blackberry", "Raspberry">>
 		end
-
-feature -- Change
-
-feature {NONE} -- Implementation
-
-invariant
---	invariant_clause: True
 
 end

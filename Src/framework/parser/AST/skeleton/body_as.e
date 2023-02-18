@@ -1,5 +1,5 @@
 ﻿note
-	description	: "Abstract description of the body of an Eiffel feature."
+	description: "Abstract description of the body of an Eiffel feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -250,7 +250,7 @@ feature -- Access
 				until
 					distance <= 0
 				loop
-					id_list := type_declaration.item.id_list
+					id_list := type_declaration.id_list
 					if distance > id_list.count then
 							-- There are more declaration lists to go, skip this one.
 						distance := distance - id_list.count
@@ -381,7 +381,7 @@ feature {BODY_AS, FEATURE_AS} -- Replication
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

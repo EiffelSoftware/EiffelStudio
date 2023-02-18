@@ -145,7 +145,7 @@ feature -- Conversion
 				across
 					l_tags.split (',') as ic
 				loop
-					t := ic.item
+					t := ic
 					t.adjust
 					Result.tags.force (t)
 				end
@@ -170,13 +170,13 @@ feature -- Conversion
 				notes as ic
 			loop
 				if
-					ic.key.same_string ("title")
-					or ic.key.same_string ("description")
-					or ic.key.same_string ("tags")
+					@ ic.key.same_string ("title")
+					or @ ic.key.same_string ("description")
+					or @ ic.key.same_string ("tags")
 				then
 						-- Already stored in attributes
 				else
-					Result.put (ic.item, ic.key)
+					Result.put (ic, @ ic.key)
 				end
 			end
 		end
@@ -207,7 +207,7 @@ feature -- Conversion
 				if not s.is_empty then
 					s.append_character (',')
 				end
-				s.append (ic.item)
+				s.append (ic)
 			end
 			if s.is_empty then
 				notes.remove ("tags")
@@ -219,10 +219,10 @@ feature -- Conversion
 					l_items as ic
 				loop
 					if
-						attached ic.item as l_item and then
-						not notes.has (ic.key)
+						attached ic as l_item and then
+						not notes.has (@ ic.key)
 					then
-						notes.force (l_item, ic.key)
+						notes.force (l_item, @ ic.key)
 					end
 				end
 			end
@@ -287,10 +287,10 @@ feature -- Storage
 					ops as ic
 				loop
 					Result.append_string ("%T")
-					Result.append_string (utf.string_32_to_utf_8_string_8 (ic.item.name.to_string_32))
+					Result.append_string (utf.string_32_to_utf_8_string_8 (ic.name.to_string_32))
 					Result.append_string (" = ")
 
-					s := ic.item.instruction
+					s := ic.instruction
 					utf8 := utf.string_32_to_utf_8_string_8 (s)
 
 					if s.has ('%N') then
@@ -313,9 +313,9 @@ feature -- Storage
 					projs as ic
 				loop
 					Result.append_string ("%T")
-					Result.append_string (utf.string_32_to_utf_8_string_8 (ic.item.name.to_string_32))
+					Result.append_string (utf.string_32_to_utf_8_string_8 (ic.name.to_string_32))
 					Result.append_string (" = %"")
-					Result.append_string (utf.string_32_to_utf_8_string_8 (ic.item.relative_iri))
+					Result.append_string (utf.string_32_to_utf_8_string_8 (ic.relative_iri))
 					Result.append_string ("%"%N")
 				end
 			end
@@ -324,9 +324,9 @@ feature -- Storage
 				notes as ic
 			loop
 				Result.append_string ("%T")
-				Result.append_string (utf.string_32_to_utf_8_string_8 (ic.key.to_string_32))
+				Result.append_string (utf.string_32_to_utf_8_string_8 (@ ic.key.to_string_32))
 				Result.append_string (": ")
-				s := ic.item.to_string_32
+				s := ic.to_string_32
 				utf8 := utf.string_32_to_utf_8_string_8 (s)
 				if s.has ('%N') then
 					Result.append ("%"[%N")
@@ -364,7 +364,7 @@ feature -- Storage
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,7 +2,6 @@
 	description: "[
 		Objects that print source code for extracted test sets.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,7 +29,8 @@ inherit
 			on_object_capture
 		end
 
-	UT_STRING_FORMATTER
+	CHARACTER_ROUTINES
+--	UT_STRING_FORMATTER
 		export
 			{NONE} all
 		end
@@ -124,7 +124,7 @@ feature {TEST_CAPTURER} -- Events
 			l_feat: E_FEATURE
 			l_name: READABLE_STRING_32
 			l_count: NATURAL
-			l_list: LIST [STRING]
+			l_list: LIST [STRING_32]
 			i: INTEGER
 		do
 			l_feat := a_stack_element.called_feature
@@ -173,7 +173,7 @@ feature {TEST_CAPTURER} -- Events
 						stream.put_string ("an_arg")
 						stream.put_integer (i)
 						stream.put_string (": ")
-						stream.put_string (l_list.item_for_iteration)
+						stream.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_list.item_for_iteration))
 						l_list.forth
 						i := i + 1
 						if not l_list.after then
@@ -258,7 +258,7 @@ feature {TEST_CAPTURER} -- Events
 				stream.put_line (",")
 			end
 			stream.put_string ("[{")
-			stream.put_string (a_object.type)
+			stream.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_object.type))
 
 			l_long_string := a_object.is_string and then a_object.string.count > max_string_length
 			if l_long_string then
@@ -273,7 +273,7 @@ feature {TEST_CAPTURER} -- Events
 				put_manifest_string (a_object.string)
 			elseif a_object.is_string then
 				stream.put_character ('"')
-				put_eiffel_string (stream.output_stream, a_object.string)
+				stream.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (eiffel_string_32 (a_object.string)))
 				stream.put_character ('"')
 				stream.put_line ("")
 			elseif a_object.has_attributes then
@@ -347,7 +347,7 @@ feature {NONE} -- Output
 			stream.put_line ("")
 		end
 
-	put_manifest_string (a_string: STRING)
+	put_manifest_string (a_string: STRING_32)
 		local
 			i: INTEGER
 		do
@@ -357,13 +357,14 @@ feature {NONE} -- Output
 				i > a_string.count
 			loop
 				stream.put_character ('%%')
-				put_eiffel_string (stream.output_stream, a_string.substring (i, (i + max_string_length - 1).min (a_string.count)))
+				stream.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8
+					(eiffel_string_32 (a_string.substring (i, (i + max_string_length - 1).min (a_string.count)))))
 				stream.put_line ("%%")
 				i := i + max_string_length
 			end
 		end
 
-	put_attributes (a_table: HASH_TABLE [STRING, STRING])
+	put_attributes (a_table: HASH_TABLE [STRING, STRING_32])
 		do
 			from
 				a_table.start
@@ -371,7 +372,7 @@ feature {NONE} -- Output
 				a_table.after
 			loop
 				stream.put_character ('"')
-				stream.put_string (a_table.key_for_iteration)
+				stream.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_table.key_for_iteration))
 				stream.put_string ("%",  ")
 				put_value (a_table.item_for_iteration)
 				a_table.forth
@@ -408,15 +409,15 @@ feature {NONE} -- Output
 			end
 		end
 
-	put_value (a_value: STRING)
+	put_value (a_value: STRING_32)
 		do
 			if a_value.is_natural then
 				stream.put_character ('"')
 				stream.put_character ('#')
-				stream.put_string (a_value)
+				stream.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_value))
 				stream.put_character ('"')
 			else
-				stream.put_string (a_value)
+				stream.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_value))
 			end
 		end
 
@@ -427,7 +428,7 @@ feature {NONE} -- Constants
 	extracted_ancestor_name: STRING = "EQA_EXTRACTED_TEST_SET"
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

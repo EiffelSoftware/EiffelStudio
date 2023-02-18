@@ -1,7 +1,4 @@
-note
-	description: "[
-
-	]"
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -11,7 +8,7 @@ frozen class
 	XRPC_STRING
 
 inherit
-	XRPC_INTEGRAL_VALUE [STRING]
+	XRPC_INTEGRAL_VALUE [STRING_32]
 
 create
 	make
@@ -20,8 +17,8 @@ create {XRPC_LOAD_CALLBACKS}
 	make_from_string
 
 convert
-	make ({STRING}),
-	value: {STRING}
+	make ({STRING_32}),
+	value: {STRING_32}
 
 feature -- Access
 
@@ -33,7 +30,7 @@ feature -- Access
 
 feature {NONE} -- Element change
 
-	set_value_from_string (a_string: READABLE_STRING_8)
+	set_value_from_string (a_string: READABLE_STRING_32)
 			-- <Precursor>
 		do
 			create value.make_from_string (a_string)
@@ -49,7 +46,7 @@ feature -- Basic operations: Visitor
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

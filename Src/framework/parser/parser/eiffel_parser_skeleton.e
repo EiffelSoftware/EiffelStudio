@@ -750,7 +750,7 @@ feature {NONE} -- Scopes
 			across
 				identifiers as identifier
 			loop
-				scope_identifiers.put (identifier.item, scope_kind_argument)
+				scope_identifiers.put (identifier, scope_kind_argument)
 			end
 		end
 
@@ -760,7 +760,7 @@ feature {NONE} -- Scopes
 			across
 				identifiers as identifier
 			loop
-				scope_identifiers.put (identifier.item, scope_kind_local)
+				scope_identifiers.put (identifier, scope_kind_local)
 			end
 		end
 
@@ -800,8 +800,8 @@ feature {NONE} -- Scopes
 				until
 					Result /= scope_kind_unknown
 				loop
-					if s.item.identifier = i then
-						Result := s.item.identifier_kind
+					if s.identifier = i then
+						Result := s.identifier_kind
 					end
 				end
 			end
@@ -1432,7 +1432,7 @@ note
 		"CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

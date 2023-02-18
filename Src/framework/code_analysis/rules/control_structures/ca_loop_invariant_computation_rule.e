@@ -77,8 +77,8 @@ feature {NONE} -- Rule Checking
 			-- Get all locals.
 			if attached a_feature.body.as_routine as l_routine and then attached l_routine.locals as l_locals then
 				across l_locals as l_local_dec loop
-					across l_local_dec.item.id_list as l_id loop
-						locals_assign.put (0, l_local_dec.item.item_name (l_local_dec.item.id_list.index_of (l_id.item, 1)))
+					across l_local_dec.id_list as l_id loop
+						locals_assign.put (0, l_local_dec.item_name (l_local_dec.id_list.index_of (l_id, 1)))
 					end
 				end
 			end
@@ -96,8 +96,8 @@ feature {NONE} -- Rule Checking
 
 				-- Remove locals that have 2 or more assignments.
 				across locals_assign as l_local loop
-					if l_local.item >= 2 then
-						locals_assign.force (0, l_local.key)
+					if l_local >= 2 then
+						locals_assign.force (0, @ l_local.key)
 					end
 				end
 
@@ -124,9 +124,9 @@ feature {NONE} -- Rule Checking
 		do
 			-- Create violations and reset attributes for the next loop.
 			across locals_assign as l_local loop
-				if l_local.item > 0 then
-					create_violation (loop_body.at (assign_instr.at (l_local.key)), a_loop)
-					locals_assign.force (0, l_local.key)
+				if l_local > 0 then
+					create_violation (loop_body.at (assign_instr.at (@ l_local.key)), a_loop)
+					locals_assign.force (0, @ l_local.key)
 				end
 			end
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Register of action to process external command other process."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_key (a_key: attached STRING)
+	make_key (a_key: STRING)
 			-- Initialization
 		do
 			key := a_key
@@ -22,12 +22,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	external_command_action: detachable FUNCTION [STRING, BOOLEAN]
+	external_command_action: detachable FUNCTION [READABLE_STRING_32, BOOLEAN]
 			-- Function to be called when command is received.
 			-- Return True to claim that the command can be handled.
 
-	key: attached STRING
-			-- The key to identify current
+	key: STRING
+			-- The key to identify current.
 
 feature -- Element change
 
@@ -52,8 +52,6 @@ feature {NONE} -- Implementation
 
 	implementation: detachable COMMAND_RECEIVER_I
 
-feature {NONE} -- Implementation
-
 	create_implementation
 			-- Create implementation
 		do
@@ -63,7 +61,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

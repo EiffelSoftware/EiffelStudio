@@ -6,6 +6,7 @@
 			(all lowercase, begin with 'l_', no trailing or two consecutive underscores).
 		]"
 	author: "Paolo Antonucci"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -117,11 +118,11 @@ feature {NONE} -- Rule checking
 				across
 					a_routine_as.locals as locals
 				loop
-					l_construct_list := locals.item.id_list.id_list
+					l_construct_list := locals.id_list.id_list
 					across
 						l_construct_list as l_id
 					loop
-						l_leaf := current_context.matchlist.at (l_id.item)
+						l_leaf := current_context.matchlist.at (l_id)
 						l_variable_name := l_leaf.text_32 (current_context.matchlist)
 						if not is_valid_local_variable_name (l_variable_name) then
 							create l_viol.make_with_rule (Current)

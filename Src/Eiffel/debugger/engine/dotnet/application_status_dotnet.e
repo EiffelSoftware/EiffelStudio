@@ -161,7 +161,7 @@ feature -- Thread info
 			end
 		end
 
-	thread_name	(a_id: like current_thread_id): STRING
+	thread_name	(a_id: like current_thread_id): STRING_32
 		local
 			dbg_info: EIFNET_DEBUGGER_INFO
 		do
@@ -278,7 +278,7 @@ feature {APPLICATION_EXECUTION_DOTNET} -- Constants
 			-- Key used to fetch exception other info for IL type name
 
 ;note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

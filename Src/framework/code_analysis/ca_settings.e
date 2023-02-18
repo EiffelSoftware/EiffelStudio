@@ -1,6 +1,6 @@
 ﻿note
 	description: "Manages the settings for Code Analysis."
-	author: "Stefan Zurfluh, Eiffel Software"
+	author: "Stefan Zurfluh, Eiffel Software", "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -57,19 +57,19 @@ feature {CA_CODE_ANALYZER} -- Initialization
 
 			across a_rules as l_rules loop
 				l_enabled := l_factory.new_boolean_preference_value (l_manager,
-					l_rules.item.preference_option_name_enable,
-					l_rules.item.is_enabled_by_default)
-				l_enabled.set_default_value (l_rules.item.is_enabled_by_default.out)
-				l_enabled.set_description (l_rules.item.description)
-				l_rules.item.set_is_enabled_preference (l_enabled)
+					l_rules.preference_option_name_enable,
+					l_rules.is_enabled_by_default)
+				l_enabled.set_default_value (l_rules.is_enabled_by_default.out)
+				l_enabled.set_description (l_rules.description)
+				l_rules.set_is_enabled_preference (l_enabled)
 
 				l_score := l_factory.new_integer_preference_value (l_manager,
-					l_rules.item.preference_option_name_severity,
-					l_rules.item.default_severity_score)
-				l_score.set_default_value (l_rules.item.default_severity_score.out)
+					l_rules.preference_option_name_severity,
+					l_rules.default_severity_score)
+				l_score.set_default_value (l_rules.default_severity_score.out)
 				l_score.set_validation_agent (agent validate_severity_score)
 				l_score.set_description (ca_messages.severity_score_description)
-				l_rules.item.set_severity_score_preference (l_score)
+				l_rules.set_severity_score_preference (l_score)
 			end
 		end
 

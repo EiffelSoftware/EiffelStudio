@@ -18,6 +18,7 @@
 			an option is not called then the class assumes the default value for this option.
 		]"
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -121,7 +122,7 @@ feature -- Visitor
 			if attached a_feature.body.arguments as l_args_1 then
 				n := 0
 				across l_args_1 as l_args_2 loop
-					n := n + l_args_2.item.id_list.count
+					n := n + l_args_2.id_list.count
 				end
 
 				if n > n_arguments_threshold.value then

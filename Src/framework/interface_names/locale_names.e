@@ -403,15 +403,15 @@ feature -- Access
 			across
 				a_list_of_id as c
 			loop
-				k := c.item.as_lower
+				k := c.as_lower
 				if attached l_locales.item (k) as l_found_item then
 					l_displayed_name := l_found_item
 				elseif attached l_langs.item (k) as l_found_item then
 					l_displayed_name := l_found_item
 				else
-					l_displayed_name := c.item.as_string_32
+					l_displayed_name := c.as_string_32
 				end
-				Result.force (l_displayed_name, c.item)
+				Result.force (l_displayed_name, c)
 				i := i + 1
 			end
 		ensure
@@ -419,7 +419,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

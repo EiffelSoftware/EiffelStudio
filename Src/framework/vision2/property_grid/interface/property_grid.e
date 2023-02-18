@@ -219,8 +219,8 @@ feature -- Update
 			across
 				a_store as s
 			loop
-				if attached sections.item (s.key) as l_section and then l_section.is_expandable then
-					if s.item then
+				if attached sections.item (@ s.key) as l_section and then l_section.is_expandable then
+					if s then
 						l_section.expand
 					else
 						l_section.collapse
@@ -240,7 +240,7 @@ feature -- Update
 			across
 				sections as s
 			loop
-				l_section := s.item
+				l_section := s
 				from
 					cnt := l_section.subrow_count
 					i := 1
@@ -444,7 +444,7 @@ invariant
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {FILE_SUGGESTION_PROVIDER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,14 +33,14 @@ feature -- Access
 		do
 			if a_cancel_request /= Void then
 				across data (a_expression) as l_data until a_cancel_request.item (Void) loop
-					create l_item.make (l_data.item.text)
-					l_item.set_displayed_text (l_data.item.displayed_text)
+					create l_item.make (l_data.text)
+					l_item.set_displayed_text (l_data.displayed_text)
 					a_callback.call ([l_item])
 				end
 			else
 				across data (a_expression) as l_data loop
-					create l_item.make (l_data.item.text)
-					l_item.set_displayed_text (l_data.item.displayed_text)
+					create l_item.make (l_data.text)
+					l_item.set_displayed_text (l_data.displayed_text)
 					a_callback.call ([l_item])
 				end
 			end
@@ -89,7 +87,7 @@ feature -- Access
 				across
 					l_entries as ic
 				loop
-					p := ic.item
+					p := ic
 					if p.is_current_symbol or p.is_parent_symbol then
 					else
 						if s.is_whitespace or else p.name.starts_with_general (s) then
@@ -134,7 +132,7 @@ feature -- Status Report
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

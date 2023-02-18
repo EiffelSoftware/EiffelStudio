@@ -31,11 +31,11 @@ feature -- Query
 		do
 			if a_cancel_request /= Void then
 				across data as l_data until a_cancel_request.item (Void) loop
-					a_callback.call ([create {LABEL_SUGGESTION_ITEM}.make (l_data.item)])
+					a_callback.call ([create {LABEL_SUGGESTION_ITEM}.make (l_data)])
 				end
 			else
 				across data as l_data loop
-					a_callback.call ([create {LABEL_SUGGESTION_ITEM}.make (l_data.item)])
+					a_callback.call ([create {LABEL_SUGGESTION_ITEM}.make (l_data)])
 				end
 			end
 			if a_termination /= Void then
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

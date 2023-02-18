@@ -1,7 +1,4 @@
-note
-	description: "[
-
-	]"
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -33,7 +30,7 @@ feature -- Access
 
 feature {NONE} -- Element change
 
-	set_value_from_string (a_string: READABLE_STRING_8)
+	set_value_from_string (a_string: READABLE_STRING_32)
 			-- <Precursor>
 		local
 			l_valid: BOOLEAN
@@ -56,7 +53,7 @@ feature -- Basic operations: Visitor
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

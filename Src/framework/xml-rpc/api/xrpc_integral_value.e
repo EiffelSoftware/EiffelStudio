@@ -1,7 +1,4 @@
-note
-	description: "[
-
-	]"
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -28,7 +25,7 @@ feature {NONE} -- Initialization
 			value_set: value ~ a_value
 		end
 
-	make_from_string (a_value: READABLE_STRING_8)
+	make_from_string (a_value: READABLE_STRING_32)
 			-- Initializes the value with a raw string value.
 			--
 			-- `a_value': The raw string value.
@@ -65,7 +62,7 @@ feature {NONE} -- Element change
 			value_set: value ~ a_value
 		end
 
-	set_value_from_string (a_string: READABLE_STRING_8)
+	set_value_from_string (a_string: READABLE_STRING_32)
 			-- Sets the value from a string.
 			--
 			-- `a_string': The string value to attempt to set `value' from.
@@ -83,7 +80,7 @@ invariant
 	is_scalar: is_integral
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

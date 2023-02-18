@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Comand recevier implementation"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -53,18 +53,15 @@ feature {NONE} -- Implementation
 	execute (argument: ANY)
 			-- Execute the command with `argument'.
 		local
-			l_wel_string: WEL_STRING
-			l_string: STRING
+			l_string: STRING_32
 			l_result: BOOLEAN
 		do
 			if
 				attached message_window as msg_win and then
 				attached message_information as msg and then
-				attached {FUNCTION [STRING, BOOLEAN]} interface.external_command_action as lt_action
+				attached interface.external_command_action as lt_action
 			then
-				l_wel_string := command_string (msg.l_param)
-					-- |Fixme: Causes information loss doing as_string_8.
-				l_string := l_wel_string.string.as_string_8
+				l_string := command_string (msg.l_param).string
 				if not l_string.is_empty and then l_string.starts_with ({COMMAND_CONSTANTS}.ise_command) then
 					l_string.remove_head ({COMMAND_CONSTANTS}.ise_command.count)
 					l_result := lt_action.item ([l_string])
@@ -110,12 +107,12 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
-	interface: attached COMMAND_RECEIVER;
+	interface: COMMAND_RECEIVER;
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

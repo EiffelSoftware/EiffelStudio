@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Abstract notion of value during the execution of the application."
@@ -71,7 +71,7 @@ feature -- Properties
 	is_attribute: BOOLEAN;
 			-- Is current value an attribute
 
-	name: STRING
+	name: STRING_32
 			-- Name of attribute or argument or local
 
 	is_external_type: BOOLEAN
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			Result := Eiffel_system.any_class.compiled_class
 		end
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- <Precursor>
 		do
 			create Result.make_empty
@@ -275,12 +275,12 @@ feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 
 invariant
 
-	non_void_name: name /= Void;
+	non_void_name: name /= Void
 	valid_attribute: is_attribute implies e_class /= Void
 	valid_dynamic_class: attached dynamic_class as cl implies not cl.is_deferred
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -311,4 +311,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ABSTRACT_DEBUG_VALUE
+end

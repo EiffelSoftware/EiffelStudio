@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that control the debugger session"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -75,7 +75,7 @@ feature -- Debug Operation
 				Eiffel_system.system.msil_generation_type.same_string_general ("dll")
 			then
 				warning (debugger_names.m_no_debugging_for_dll_system)
-			elseif (not manager.application_is_executing) then
+			elseif not manager.application_is_executing then
 					--| Application is not running |--
 				if
 					Eiffel_project.initialized and then
@@ -220,7 +220,7 @@ feature -- Attach
 				Eiffel_system.system.msil_generation_type.same_string_general ("dll")
 			then
 				warning (debugger_names.m_no_debugging_for_dll_system)
-			elseif (not manager.application_is_executing) then
+			elseif not manager.application_is_executing then
 					--| Application is not running |--
 				if
 					Eiffel_project.initialized and then
@@ -561,11 +561,8 @@ feature {NONE} -- Implementation
 
 	directory_exists (a_dirname: PATH): BOOLEAN
 			-- Is directory named `a_dirname' exists ?
-		local
-			d: DIRECTORY
 		do
-			create d.make_with_path (a_dirname)
-			Result := d.exists
+			Result := (create {DIRECTORY}.make_with_path (a_dirname)).exists
 		end
 
 feature -- Environment related
@@ -650,19 +647,18 @@ feature -- Environment related
 
 	environment_variables_to_string_8 (env32: HASH_TABLE [STRING_32, STRING_32]): HASH_TABLE [STRING, STRING]
 			-- String representation of the Environment variables
-		local
-			k,v: STRING_32
 		do
-			if env32 /= Void then
+			if attached env32 then
 				create Result.make (env32.count)
 				from
 					env32.start
 				until
 					env32.after
 				loop
-					k := env32.key_for_iteration
-					v := env32.item_for_iteration
-					if k /= Void and v /= Void then --| let's be careful ...
+					if
+						attached env32.key_for_iteration as k and then
+						attached env32.item_for_iteration as v
+					then
 						Result.force (v.as_string_8, k.as_string_8)
 					end
 					env32.forth
@@ -677,7 +673,7 @@ invariant
 	manager_not_void: manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

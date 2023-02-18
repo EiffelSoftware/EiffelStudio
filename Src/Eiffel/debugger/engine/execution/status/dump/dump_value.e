@@ -206,7 +206,7 @@ feature {DUMP_VALUE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR, APPLICATION_EXECUT
 
 feature {NONE} -- Dotnet specific
 
-	dotnet_value_class_name: STRING
+	dotnet_value_class_name: STRING_32
 			-- Class name for the dotnet value
 		require
 			is_dotnet_system
@@ -386,15 +386,17 @@ feature -- Status report
 			--| `output_value' = "This is a string"
 		do
 			Result := output_value (True).twin
-			if (type /= Type_manifest_string or type /= Type_manifest_string_32) and has_formatted_output then
-				if attached formatted_output as fo then
-					Result.append_character (' ')
-					Result.append_character ('=')
-					Result.append_character (' ')
-					Result.append_character ('%"')
-					Result.append (fo)
-					Result.append_character ('%"')
-				end
+			if
+				(type /= Type_manifest_string or type /= Type_manifest_string_32) and
+				has_formatted_output and then
+				attached formatted_output as fo
+			then
+				Result.append_character (' ')
+				Result.append_character ('=')
+				Result.append_character (' ')
+				Result.append_character ('%"')
+				Result.append (fo)
+				Result.append_character ('%"')
 			end
 			debug ("debug_recv")
 				print ("Output is ")
@@ -552,7 +554,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 
 			l_count: INTEGER
 			s8_c, s32_c, sc: detachable CLASS_C
-			l_area_name, l_count_name, l_area_lower_name: detachable READABLE_STRING_8
+			l_area_name, l_count_name, l_area_lower_name: detachable READABLE_STRING_32
 			l_area_lower_value: INTEGER
 			l_slice_max: INTEGER
 			comp_data: DEBUGGER_DATA_FROM_COMPILER
@@ -587,9 +589,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 								--| we have to test the 2 cases : STRING and STRING_32
 
 							f := sc.feature_with_name (area_name).ancestor_version (l_dynamic_class)
-							l_area_name := f.name_32.as_string_8
+							l_area_name := f.name_32
 							f := sc.feature_with_name (count_name).ancestor_version (l_dynamic_class)
-							l_count_name := f.name_32.as_string_8
+							l_count_name := f.name_32
 
 								--| And also manage the IMMUTABLE_STRING_8 and _32 !
 							s8_c := comp_data.immutable_string_8_class_c
@@ -604,7 +606,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 							if sc /= Void then
 								f := sc.feature_with_name (area_lower_name).ancestor_version (l_dynamic_class)
 								if f /= Void then
-									l_area_lower_name := f.name_32.as_string_8
+									l_area_lower_name := f.name_32
 								end
 							end
 
@@ -633,22 +635,20 @@ feature {DUMP_VALUE} -- string_representation Implementation
 									area_attribute := cv_spec
 									done := count_attribute /= Void and (l_area_lower_name = Void or else area_lower_attribute /= Void)
 								end
-							else
-								if count_attribute = Void or area_lower_attribute = Void then
-									if attached {DEBUG_BASIC_VALUE [INTEGER]} l_attributes_item as int_value then
-										if count_attribute = Void and then int_value.name.is_equal (l_count_name) then
-											count_attribute := int_value
-											done := area_attribute /= Void and (l_area_lower_name = Void or else area_lower_attribute /= Void)
-										elseif
-											l_area_lower_name /= Void and then area_lower_attribute = Void and then
-											int_value.name.is_equal (l_area_lower_name)
-										then
-											area_lower_attribute := int_value
-											done := area_attribute /= Void and count_attribute /= Void
-										end
-									end
+							elseif
+								(count_attribute = Void or area_lower_attribute = Void) and then
+								attached {DEBUG_BASIC_VALUE [INTEGER]} l_attributes_item as int_value
+							then
+								if count_attribute = Void and then int_value.name.is_equal (l_count_name) then
+									count_attribute := int_value
+									done := area_attribute /= Void and (l_area_lower_name = Void or else area_lower_attribute /= Void)
+								elseif
+									l_area_lower_name /= Void and then area_lower_attribute = Void and then
+									int_value.name.is_equal (l_area_lower_name)
+								then
+									area_lower_attribute := int_value
+									done := area_attribute /= Void and count_attribute /= Void
 								end
-								
 							end
 							l_attributes_cursor.forth
 						end
@@ -708,17 +708,18 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		local
 			l_feat: FEATURE_I
 		do
-			if debugger_manager.safe_application_is_stopped then
-				if dynamic_class /= Void then
-					l_feat := debug_output_feature_i (dynamic_class)
-					if
-						l_feat /= Void and then
-						attached classic_feature_result_value_on_current (l_feat, dynamic_class) as l_final_result_value and then
-						not l_final_result_value.is_void
-					then
-						Result := l_final_result_value.classic_string_representation (min, max)
-						last_string_representation_length := l_final_result_value.last_string_representation_length
-					end
+			if
+				debugger_manager.safe_application_is_stopped and then
+				attached dynamic_class
+			then
+				l_feat := debug_output_feature_i (dynamic_class)
+				if
+					l_feat /= Void and then
+					attached classic_feature_result_value_on_current (l_feat, dynamic_class) as l_final_result_value and then
+					not l_final_result_value.is_void
+				then
+					Result := l_final_result_value.classic_string_representation (min, max)
+					last_string_representation_length := l_final_result_value.last_string_representation_length
 				end
 			end
 		end
@@ -841,7 +842,7 @@ feature -- Action
 			utf: UTF_CONVERTER
 		do
 			last_classic_send_value_succeed := True
-			inspect (type)
+			inspect type
 			when Type_manifest_string then
 				s8 := value_string.to_string_8
 				value_string_c := s8.to_c
@@ -1211,7 +1212,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

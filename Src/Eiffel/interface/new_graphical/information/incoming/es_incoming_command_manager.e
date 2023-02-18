@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Process external command other processes."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -30,23 +30,23 @@ feature {NONE} -- Initialization
 
 feature -- Action
 
-	external_command_action_handler (a_string: STRING): BOOLEAN
+	external_command_action_handler (a_string: READABLE_STRING_32): BOOLEAN
 			-- Action to handle `a_string' as an external command
 			-- Return `True' to claim the command will be handled.
 		local
-			l_condition_module, l_condition: STRING
-			l_action_module, l_action: STRING
+			l_condition_module, l_condition: STRING_32
+			l_action_module, l_action: STRING_32
 		do
 			command_receiver_callback.reset
 			if a_string /= Void and then not a_string.is_empty then
 				if protocol_regex.recognizes (a_string) then
 						-- 1. Module
 					extract_regex.match (a_string)
-					l_action_module := extract_regex.captured_substring (1)
+					l_action_module := extract_regex.unicode_captured_substring (1)
 						-- 2. Action or the condition
 					extract_regex.next_match
 					if extract_regex.match_count > 1 then
-						l_action := extract_regex.captured_substring (1)
+						l_action := extract_regex.unicode_captured_substring (1)
 
 							-- 3. module
 						extract_regex.next_match
@@ -55,12 +55,12 @@ feature -- Action
 							l_condition_module := l_action_module
 							l_condition := l_action
 
-							l_action_module := extract_regex.captured_substring (1)
+							l_action_module := extract_regex.unicode_captured_substring (1)
 
 								-- 4. Action
 							extract_regex.next_match
 							if extract_regex.match_count > 1 then
-								l_action := extract_regex.captured_substring (1)
+								l_action := extract_regex.unicode_captured_substring (1)
 								if l_condition_module /= Void and l_condition /= Void and l_action_module /= Void and l_action /= Void then
 									command_receiver_callback.on_condition_found (l_condition_module, l_condition)
 									command_receiver_callback.on_action_found (l_action_module, l_action)
@@ -137,7 +137,7 @@ invariant
 	command_receiver_callback_attached: command_receiver_callback /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -167,7 +167,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

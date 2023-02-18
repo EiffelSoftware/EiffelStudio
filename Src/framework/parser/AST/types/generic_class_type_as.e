@@ -55,7 +55,7 @@ feature -- Status
 				across
 					internal_generics as g
 				all
-					g.item.is_fixed
+					g.is_fixed
 				end
 		end
 
@@ -116,8 +116,8 @@ feature -- Conveniences
 			from
 				Result.append (" [")
 			loop
-				Result.append (g.item.dump)
-				if not g.is_last then
+				Result.append (g.dump)
+				if not @ g.is_last then
 					Result.append (", ")
 				end
 			end
@@ -128,7 +128,7 @@ invariant
 	internal_generics_not_void: internal_generics /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

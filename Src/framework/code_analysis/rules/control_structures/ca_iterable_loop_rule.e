@@ -130,7 +130,7 @@ feature {NONE} -- Rule checking
 					a as l_instr
 				loop
 					if
-						attached {INSTR_CALL_AS} l_instr.item as l_call and then
+						attached {INSTR_CALL_AS} l_instr as l_call and then
 						attached {NESTED_EXPR_AS} l_call.call as l_nested_call and then
 						attached {EXPR_CALL_AS} l_nested_call.target as c and then
 						attached {ACCESS_FEAT_AS} c.call as f and then
@@ -170,8 +170,8 @@ feature {NONE} -- Rule checking
 			until
 				attached Result
 			loop
-				if attached l.item.cursor as c and then c.is_case_insensitive_equal (variable) then
-					Result := l.item
+				if attached l.cursor as c and then c.is_case_insensitive_equal (variable) then
+					Result := l
 				end
 			end
 		end

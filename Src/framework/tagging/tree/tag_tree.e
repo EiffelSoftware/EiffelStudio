@@ -23,7 +23,6 @@
 						-> item3
 
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -210,7 +209,7 @@ feature -- Basic operations
 			from
 				l_formatter := formatter
 			loop
-				l_tag := ts.item
+				l_tag := ts
 				if l_formatter.is_prefix (a_prefix, l_tag) then
 					Result.force (l_formatter.suffix (a_prefix, l_tag))
 				end
@@ -288,7 +287,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

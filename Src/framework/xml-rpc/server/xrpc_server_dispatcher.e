@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A registeration server to register call delegate objects. Once registered calls may be routed
 		through the dispatcher to the approrate call delegate object.
@@ -80,7 +80,7 @@ feature -- Status report
 
 feature -- Query
 
-	delegate_for_method (a_name: READABLE_STRING_8): detachable TUPLE [delegate: XRPC_DELEGATE; name: READABLE_STRING_8]
+	delegate_for_method (a_name: READABLE_STRING_32): detachable TUPLE [delegate: XRPC_DELEGATE; name: READABLE_STRING_32]
 			-- Attempts to locate a responding delegate for a given method name.
 			--
 			-- `a_name': A method name to retrieve a responding delegate for.
@@ -91,9 +91,9 @@ feature -- Query
 		local
 			l_delegates: ARRAYED_LIST [XRPC_DELEGATE]
 			l_cursor: CURSOR
-			l_parts: TUPLE [name: STRING; namespace: detachable STRING]
-			l_namespace: detachable READABLE_STRING_8
-			l_name: READABLE_STRING_8
+			l_parts: TUPLE [name: STRING_32; namespace: detachable STRING_32]
+			l_namespace: detachable READABLE_STRING_32
+			l_name: READABLE_STRING_32
 		do
 			l_delegates := delegates
 			l_cursor := l_delegates.cursor
@@ -222,7 +222,7 @@ feature -- Extension
 
 feature -- Basic operations
 
-	call (a_name: READABLE_STRING_8; a_args: detachable ARRAY [XRPC_VALUE]): detachable XRPC_RESPONSE
+	call (a_name: READABLE_STRING_32; a_args: detachable ARRAY [XRPC_VALUE]): detachable XRPC_RESPONSE
 			-- Calls a method found on one of the registered call delegates.
 			--
 			-- `a_name': Full name of the method to call on the dispatcher.
@@ -269,7 +269,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	frozen call_internal (a_delegate: XRPC_DELEGATE; a_name: READABLE_STRING_8; a_args: detachable ARRAY [XRPC_VALUE]): detachable XRPC_RESPONSE
+	frozen call_internal (a_delegate: XRPC_DELEGATE; a_name: READABLE_STRING_32; a_args: detachable ARRAY [XRPC_VALUE]): detachable XRPC_RESPONSE
 			-- Performs argument object marshalling and call delegation to a method on a given call delegate.
 			-- When the call returns a value, fault or otherwise, the result will be attached. All other
 			-- exception cases will raise an exception.
@@ -364,7 +364,7 @@ invariant
 	has_built_ins: has (built_ins)
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

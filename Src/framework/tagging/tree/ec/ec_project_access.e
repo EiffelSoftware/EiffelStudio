@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "[
 		Objects that provide an Eiffel project to {ES_TAG_TREE_NODE}.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -59,7 +58,7 @@ feature -- Status setting
 
 feature -- Element retrival
 
-	class_from_name (a_name: STRING; a_group: detachable CONF_GROUP): detachable CLASS_I
+	class_from_name (a_name: READABLE_STRING_32; a_group: detachable CONF_GROUP): detachable CLASS_I
 			-- Try to retrieve {CLASS_I} instance for given class name, optionally the cluster in which the
 			-- class exists can be provided.
 			--
@@ -103,7 +102,7 @@ feature -- Element retrival
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

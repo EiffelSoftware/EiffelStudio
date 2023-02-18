@@ -76,7 +76,7 @@ feature {NONE} -- AST Visit
 			across
 				a_break.extract_comment as l_comment_line
 			loop
-				if attached l_comment_line.item as l_comment and then l_comment.content_32 /= Void then
+				if attached l_comment_line as l_comment and then l_comment.content_32 /= Void then
 					search_todo (l_comment)
 				end
 			end

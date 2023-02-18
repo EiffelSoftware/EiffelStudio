@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {IRON_INSTALLATION_API}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -75,8 +73,8 @@ feature -- Access
 				until
 					Result /= Void
 				loop
-					if p.item.is_identified_by (a_package_name) then
-						Result := p.item
+					if p.is_identified_by (a_package_name) then
+						Result := p
 					end
 				end
 			end
@@ -112,8 +110,8 @@ feature -- Access
 			across
 				installed_packages as ic
 			loop
-				p := ic.item
-				if across l_repositories as repo_ic some p.repository.is_same_repository (repo_ic.item) end then
+				p := ic
+				if across l_repositories as repo_ic some p.repository.is_same_repository (repo_ic) end then
 						-- Ok
 				else
 						-- no associated registered repository !!
@@ -227,7 +225,7 @@ feature -- Query
 				until
 					Result /= Void
 				loop
-					l_package := ic.item
+					l_package := ic
 					l_repo_uri_string := l_package.repository.location_string
 					if a_uri.starts_with (l_repo_uri_string) then
 						across
@@ -235,7 +233,7 @@ feature -- Query
 						until
 							Result /= Void -- order matters
 						loop
-							l_package_full_path := l_repo_uri_string + path_ic.item
+							l_package_full_path := l_repo_uri_string + path_ic
 							if a_uri.same_string (l_package_full_path) then
 								Result := l_package.identifier
 							end
@@ -254,7 +252,7 @@ feature -- Query
 					until
 						Result /= Void -- order matters
 					loop
-						l_package := ic.item
+						l_package := ic
 						if l_package.is_identified_by (l_package_name) then
 							Result := l_package.identifier
 						end
@@ -281,7 +279,7 @@ feature -- Query
 			until
 				Result
 			loop
-				Result := a_package.is_same_package (ic.item)
+				Result := a_package.is_same_package (ic)
 			end
 			if Result then
 					-- Also check that package is really installed on disk!
@@ -304,8 +302,8 @@ feature -- Query
 			until
 				Result /= Void
 			loop
-				if ic.item.is_identified_by (l_identifier) then
-					Result := ic.item
+				if ic.is_identified_by (l_identifier) then
+					Result := ic
 				end
 			end
 			if Result /= Void and then p.is_same_package (Result) then
@@ -334,7 +332,7 @@ feature -- Query
 				across
 					l_scanner.items as ic
 				loop
-					s := ic.item.name
+					s := ic.name
 					s.remove_head (p_name.count + 1)
 					Result.force (create {PATH}.make_from_string (s))
 				end
@@ -387,8 +385,8 @@ feature -- Installed package
 			until
 				Result /= Void
 			loop
-				if a_id.is_case_insensitive_equal (p.item.id) then
-					Result := p.item
+				if a_id.is_case_insensitive_equal (p.id) then
+					Result := p
 				end
 			end
 		end
@@ -403,7 +401,7 @@ feature -- Installed package
 			across
 				installed_packages as p
 			loop
-				l_package := p.item
+				l_package := p
 				if l_package.is_identified_by (a_name) then
 					Result.force (l_package)
 				end
@@ -441,16 +439,16 @@ feature -- Installed package
 					until
 						Result /= Void
 					loop
-						l_loc := p.item.repository.location_string
+						l_loc := p.repository.location_string
 						if l_uri_string.starts_with (l_loc) then
 							s := l_uri_string.substring (l_loc.count + 1, l_uri_string.count)
 							across
-								p.item.associated_paths as pn
+								p.associated_paths as pn
 							until
 								Result /= Void
 							loop
-								if s.starts_with (pn.item) then
-									Result := p.item
+								if s.starts_with (pn) then
+									Result := p
 								end
 							end
 						end
@@ -510,20 +508,20 @@ feature -- Local path
 				until
 					l_package /= Void
 				loop
-					l_loc := p.item.repository.location_string
+					l_loc := p.repository.location_string
 					if l_uri.starts_with (l_loc) then
 						s := l_uri.substring (l_loc.count + 1, l_uri.count)
 						across
-							p.item.associated_paths as pn
+							p.associated_paths as pn
 						until
 							l_package /= Void
 						loop
-							l_pn_item := pn.item
+							l_pn_item := pn
 							if
 								s.starts_with (l_pn_item) and then
 								(s.count = l_pn_item.count or else s.item (l_pn_item.count + 1) = '/')
 							then
-								l_package := p.item
+								l_package := p
 								r.wipe_out
 								r.append (s.substring (l_pn_item.count + 1, s.count))
 							end
@@ -574,7 +572,7 @@ invariant
 	available_packages /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

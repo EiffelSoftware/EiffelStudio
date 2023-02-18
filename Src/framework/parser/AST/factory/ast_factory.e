@@ -1541,11 +1541,11 @@ feature -- Access
 			alias_list_not_empty: attached a_alias_list implies not a_alias_list.is_empty
 			has_alias_name:
 				attached a_alias_list implies
-				across a_alias_list as a all not a.item.alias_name.value_32.is_empty end
+				across a_alias_list as a all not a.alias_name.value_32.is_empty end
 			no_alias_duplicates:
 				attached a_alias_list implies
 				across a_alias_list as x all across a_alias_list as y all
-					x.item.alias_name.value_32.same_string (y.item.alias_name.value_32) implies x.target_index = y.target_index
+					x.alias_name.value_32.same_string (y.alias_name.value_32) implies @ x.target_index = @ y.target_index
 				end end
 		do
 			if feature_name /= Void and then a_alias_list /= Void and then not a_alias_list.is_empty then
@@ -2237,7 +2237,7 @@ note
 		"CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

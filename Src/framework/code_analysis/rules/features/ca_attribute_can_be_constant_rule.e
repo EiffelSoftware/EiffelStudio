@@ -6,7 +6,6 @@
 			by every creation procedure but not assigned
 			by any other routine can be made constant.
 		]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -82,9 +81,9 @@ feature {NONE} -- Feature Visitor for Violation Check
 			across
 				current_context.checking_class.written_in_features as l_feat
 			loop
-				if l_feat.item.is_attribute and not l_feat.item.is_constant then
-					attributes.put (Void, l_feat.item.name_32)
-					unassigned_attributes.extend (l_feat.item.name_32)
+				if l_feat.is_attribute and not l_feat.is_constant then
+					attributes.put (Void, l_feat.name_32)
+					unassigned_attributes.extend (l_feat.name_32)
 				end
 			end
 		end
@@ -179,8 +178,8 @@ feature {NONE} -- Feature Visitor for Violation Check
 			-- will always have been assigned the same values in every assignment and can be made constant.
 		do
 			across attributes as l_key loop
-				if not unassigned_attributes.has (l_key.key) then
-					create_violation (current_context.checking_class.feature_with_name_32 (l_key.key), l_key.item.string_value_32)
+				if not unassigned_attributes.has (@ l_key.key) then
+					create_violation (current_context.checking_class.feature_with_name_32 (@ l_key.key), l_key.string_value_32)
 				end
 			end
 

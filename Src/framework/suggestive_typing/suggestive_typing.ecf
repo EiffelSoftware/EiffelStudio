@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="framework_suggestive_typing" uuid="AA9A518B-693E-4EC7-B5AA-C0DDEF2A0170" library_target="framework_suggestive_typing">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="framework_suggestive_typing" uuid="AA9A518B-693E-4EC7-B5AA-C0DDEF2A0170" library_target="framework_suggestive_typing">
 	<target name="framework_suggestive_typing">
 		<description>Suggestive typing based on Vision2 library</description>
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option>
+		<option warning="warning">
 			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="fmwk_utilities" location="..\utilities\utilities.ecf"/>
+		<library name="framework_vision2" location="..\vision2\vision2.ecf"/>
 		<library name="interface_names" location="..\interface_names\interface_names.ecf"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
-		<library name="framework_vision2" location="..\vision2\vision2.ecf"/>
 		<cluster name="fmwk_suggestive_typing" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/testing$</exclude>

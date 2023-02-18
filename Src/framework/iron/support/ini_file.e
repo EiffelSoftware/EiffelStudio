@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {INI_FILE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -65,8 +63,8 @@ feature -- Access
 			across
 				data as ic
 			loop
-				if attached ic.item as l_item then
-					s := ic.key
+				if attached ic as l_item then
+					s := @ ic.key
 					if s.count > n and then s.starts_with (a_name) and then s[n+1] = '[' then
 						i := s.index_of (']', n + 1)
 						if i > 0 then
@@ -134,15 +132,15 @@ feature -- Basic operation
 			across
 				data as c
 			loop
-				if attached c.item as v then
-					Result.append_string (utf.utf_32_string_to_utf_8_string_8 (c.key))
+				if attached c as v then
+					Result.append_string (utf.utf_32_string_to_utf_8_string_8 (@ c.key))
 					Result.append_character (':')
 					s8 := utf.utf_32_string_to_utf_8_string_8 (v)
 					s8.replace_substring_all ("%N", "%N+") -- Support for multi-line value.
 					Result.append_string (s8)
 				else
 					Result.append_string ("#")
-					Result.append_string (utf.utf_32_string_to_utf_8_string_8 (c.key))
+					Result.append_string (utf.utf_32_string_to_utf_8_string_8 (@ c.key))
 					Result.append_character (':')
 				end
 				Result.append_string ("%N")
@@ -217,7 +215,7 @@ feature {NONE} -- Implementation
 	data: STRING_TABLE [detachable READABLE_STRING_32]
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

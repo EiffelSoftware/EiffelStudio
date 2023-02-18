@@ -1,6 +1,7 @@
 ﻿note
 	description: "Represents an Inspect block in the CFG."
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,7 +32,7 @@ feature {NONE} -- Initialization
 			end
 			create intervals.make_filled (n_when_branches)
 			across a_intervals as l_intervals loop
-				intervals.put_i_th (l_intervals.item, l_intervals.cursor_index)
+				intervals.put_i_th (l_intervals, @ l_intervals.cursor_index)
 			end
 			expression := a_expr
 			label := a_label

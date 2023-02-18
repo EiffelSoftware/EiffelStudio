@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="service_help_providers" uuid="1AFA5810-F6F8-483F-A4BA-280E4E74252C" library_target="service_help_providers">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="service_help_providers" uuid="1AFA5810-F6F8-483F-A4BA-280E4E74252C" library_target="service_help_providers">
 	<target name="service_help_providers">
 		<description>A service to display context sensitive help from an application.</description>
 		<root all_classes="true"/>
@@ -22,6 +22,8 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</file_rule>
+		<option warning="error">
+		</option>
 		<capability>
 			<concurrency support="none"/>
 		</capability>

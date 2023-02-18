@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Utilities for parsing and formatting strings found in a code template file.
 	]"
@@ -12,7 +12,7 @@ class
 
 feature -- Parsing
 
-	parse_version (a_version: READABLE_STRING_GENERAL; a_factory: CODE_FACTORY): CODE_VERSION
+	parse_version (a_version: READABLE_STRING_32; a_factory: CODE_FACTORY): CODE_VERSION
 			-- Parses a code version string and creates a new code version.
 			--
 			-- `a_version': Version string to parse and create a version for.
@@ -23,8 +23,7 @@ feature -- Parsing
 			not_a_version_is_empty: not a_version.is_empty
 			a_factory_attached: attached a_factory
 		local
-			l_version: STRING
-			l_parts: LIST [STRING]
+			l_parts: LIST [READABLE_STRING_32]
 			l_part: STRING_32
 			l_ver: NATURAL_16
 			l_major: NATURAL_16
@@ -33,10 +32,9 @@ feature -- Parsing
 			l_qfe: NATURAL_16
 			l_count, i, j: INTEGER
 		do
-			l_version := a_version.as_string_8
-			if version_regex.matches (l_version) then
+			if version_regex.matches (a_version) then
 					-- Valid numeric version, extract version parts
-				l_parts := l_version.split ('.')
+				l_parts := a_version.split ('.')
 				from
 					i := 1
 					l_count := l_parts.count
@@ -106,7 +104,7 @@ feature {CODE_VERSION} -- Access
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

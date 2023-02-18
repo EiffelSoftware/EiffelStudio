@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A base token for implementing tokens located in a tokenized code template token list.
 	]"
@@ -68,13 +68,18 @@ feature -- Output
 	out: STRING
 			-- <Precursor>
 		do
-			Result := text
+			Result :=
+				if attached {STRING} text as t then
+					t
+				else
+					{UTF_CONVERTER}.string_32_to_utf_8_string_8 (text)
+				end
 		end
 
-	debug_output: STRING
+	debug_output: READABLE_STRING_32
 			-- <Precursor>
 		do
-			Result := out
+			Result := text
 		end
 
 invariant
@@ -82,7 +87,7 @@ invariant
 	text_is_valid_text: is_valid_text (text)
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

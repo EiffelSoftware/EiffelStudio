@@ -67,7 +67,7 @@ feature -- Query
 			across
 				literals as l
 			loop
-				l_lit := l.item
+				l_lit := l
 				if a_ignore_case then
 					l_equal := l_lit.name.is_case_insensitive_equal (a_name)
 				else
@@ -95,7 +95,7 @@ feature -- Query
 			until
 				attached Result
 			loop
-				l_lit := l.item
+				l_lit := l
 				if a_ignore_case then
 					l_equal := l_lit.name.is_case_insensitive_equal (a_name)
 				else
@@ -122,7 +122,7 @@ feature -- Query
 			across
 				named_properties as p
 			loop
-				l_prop := p.item
+				l_prop := p
 				if attached l_prop.name as n then
 					if a_ignore_case then
 						l_equal := n.is_case_insensitive_equal (a_name)
@@ -154,7 +154,7 @@ feature -- Query
 			until
 				attached Result
 			loop
-				l_prop := p.item
+				l_prop := p
 				if attached l_prop.name as n then
 					if a_ignore_case then
 						l_equal := n.is_case_insensitive_equal (a_name)
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			across
 				l_properties as p
 			loop
-				l_property := p.item
+				l_property := p
 				if l_property.is_default_property /= a_named then
 					l_result.extend (l_property)
 				end
@@ -204,7 +204,7 @@ invariant
 	literals_attached: literals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

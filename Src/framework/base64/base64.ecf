@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="base64" uuid="0A52E0A4-229A-4520-AEDB-84113DB6412B" library_target="base64">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="base64" uuid="0A52E0A4-229A-4520-AEDB-84113DB6412B" library_target="base64">
 	<description>Base64 encoding/decoding facilities.</description>
 	<target name="base64">
 		<root all_classes="true"/>
@@ -9,7 +9,7 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/tests$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library">
+		<option warning="error" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

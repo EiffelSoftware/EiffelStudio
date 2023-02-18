@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="tagging-ev" uuid="60CD4EFD-E6DA-4CDC-8E2F-C58D937F7F6F" library_target="tagging-ev">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="tagging-ev" uuid="60CD4EFD-E6DA-4CDC-8E2F-C58D937F7F6F" library_target="tagging-ev">
 	<target name="tagging-ev">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Framework">
+		<option warning="error" namespace="EiffelSoftware.Framework">
 		</option>
 		<capability>
 			<concurrency support="none"/>

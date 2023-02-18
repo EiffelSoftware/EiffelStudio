@@ -1,7 +1,4 @@
-note
-	description: "[
-
-	]"
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -27,7 +24,7 @@ feature {NONE} -- Initailization
 
 feature -- Access
 
-	names: ARRAY [READABLE_STRING_8]
+	names: ARRAY [READABLE_STRING_32]
 			-- Names of all the members in the struct.
 		do
 			Result := internal_members.current_keys
@@ -73,7 +70,7 @@ feature -- Status report
 
 feature -- Query
 
-	item alias "[]" (a_name: READABLE_STRING_8): XRPC_VALUE
+	item alias "[]" (a_name: READABLE_STRING_32): XRPC_VALUE
 			-- Retrieve a value from a member name.
 			--
 			-- `a_name': The name of member to retrieve the value for.
@@ -92,7 +89,7 @@ feature -- Query
 
 feature -- Status report
 
-	has_member (a_name: READABLE_STRING_8): BOOLEAN
+	has_member (a_name: READABLE_STRING_32): BOOLEAN
 			-- Detemines if the struct has a member.
 			--
 			-- `a_name': Name of the member.
@@ -108,7 +105,7 @@ feature -- Status report
 
 feature -- Extension
 
-	put (a_value: XRPC_VALUE; a_name: READABLE_STRING_8)
+	put (a_value: XRPC_VALUE; a_name: READABLE_STRING_32)
 			-- Sets a new value in the struct.
 			--
 			-- `a_value': The new member value.
@@ -120,7 +117,7 @@ feature -- Extension
 		local
 			l_members: like internal_members
 			l_member: detachable XRPC_MEMBER
-			l_name: STRING
+			l_name: STRING_32
 		do
 			l_name := a_name.string
 			l_members := internal_members
@@ -163,7 +160,7 @@ feature -- Basic operations: Visitor
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_members: HASH_TABLE [XRPC_MEMBER, READABLE_STRING_8]
+	internal_members: HASH_TABLE [XRPC_MEMBER, READABLE_STRING_32]
 			-- Mutable version of `members'
 
 invariant
@@ -172,7 +169,7 @@ invariant
 	is_complex: is_complex
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

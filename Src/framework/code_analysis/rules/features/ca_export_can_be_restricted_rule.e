@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 				current_context.checking_class.written_in_features as l_feat
 			loop
 					-- Only check features that are exported
-				if not l_feat.item.export_status.is_none then
+				if not l_feat.export_status.is_none then
 					from
 						l_clients.start
 						l_has_clients_outside_hierarchy := False
@@ -58,14 +58,14 @@ feature {NONE} -- Implementation
 					loop
 						if
 							not l_clients.item.inherits_from (current_context.checking_class)
-							and then l_feat.item.callers_32 (l_clients.item, 0) /= Void
+							and then l_feat.callers_32 (l_clients.item, 0) /= Void
 						then
 							l_has_clients_outside_hierarchy := True
 						elseif
-							l_feat.item.callers_32 (l_clients.item, 0) /= Void
-							and then not has_qualified_calls (l_feat.item, l_clients.item)
+							l_feat.callers_32 (l_clients.item, 0) /= Void
+							and then not has_qualified_calls (l_feat, l_clients.item)
 						then
-							create_violation (l_feat.item.ast)
+							create_violation (l_feat.ast)
 						end
 
 						l_clients.forth

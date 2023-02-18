@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="iron_catalog_api" uuid="3FFE8BB2-86D0-4EAD-86FC-9A860E4E6E84" library_target="iron_catalog_api">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="iron_catalog_api" uuid="3FFE8BB2-86D0-4EAD-86FC-9A860E4E6E84" library_target="iron_catalog_api">
 	<target name="iron_catalog_api">
 		<root all_classes="true"/>
 		<file_rule>
@@ -7,7 +7,7 @@
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true">
+		<option warning="error">
 		</option>
 		<capability>
 			<concurrency support="thread"/>

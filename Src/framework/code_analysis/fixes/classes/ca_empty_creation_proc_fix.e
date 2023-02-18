@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 			feature_to_remove.remove_text (match_list)
 
 			across parsed_class.creators as l_create_as loop
-				process_create (l_create_as.item)
+				process_create (l_create_as)
 			end
 		end
 
@@ -46,8 +46,8 @@ feature {NONE} -- Implementation
 			create l_new_feature_names.make_empty
 
 			across a_create_as.feature_list as l_feature loop
-				if not feature_to_remove.feature_names.has (l_feature.item) then
-					l_new_feature_names.append ("%T" + l_feature.item.visual_name + ",%N")
+				if not feature_to_remove.feature_names.has (l_feature) then
+					l_new_feature_names.append ("%T" + l_feature.visual_name + ",%N")
 				end
 			end
 

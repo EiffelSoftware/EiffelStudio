@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "[
 		Representation of an debugee object that was captured by {EIFFEL_TEST_CAPTURER}.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,7 +30,7 @@ feature -- Access
 			--
 			-- Note: Currently this is just a counter increasing for each object.
 
-	type: STRING
+	type: STRING_32
 			-- Full type name of captured object
 
 	items: LIST [STRING]
@@ -46,7 +45,7 @@ feature -- Access
 		do
 		end
 
-	attributes: HASH_TABLE [STRING, STRING]
+	attributes: HASH_TABLE [STRING, STRING_32]
 			-- Attribues captured from original object
 			--
 			-- keys: Atttribute names
@@ -60,7 +59,7 @@ feature -- Access
 		do
 		end
 
-	string: STRING
+	string: STRING_32
 			-- Content of original string object
 		require
 			is_string: is_string
@@ -103,7 +102,7 @@ feature -- Status setting
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

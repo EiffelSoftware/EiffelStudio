@@ -170,7 +170,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 				from
 					create Result.make (4)
 				loop
-					if attached {STRING_AS} l.item as s then
+					if attached {STRING_AS} l as s then
 						Result.extend (s.value_32)
 					end
 				end
@@ -217,9 +217,9 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 					across
 						l_list as l
 					loop
-						if attached {STRING_AS} l.item as l_string then
+						if attached {STRING_AS} l as l_string then
 							Result.extend (l_string.value)
-						elseif attached {ID_AS} l.item as l_id then
+						elseif attached {ID_AS} l as l_id then
 							Result.extend (l_id.name)
 						end
 					end
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 					from
 						create Result.make (list.count)
 					loop
-						if attached {CUSTOM_ATTRIBUTE_AS} l.item as ca then
+						if attached {CUSTOM_ATTRIBUTE_AS} l as ca then
 							Result.extend (ca)
 						end
 					end
@@ -439,9 +439,9 @@ feature {NONE} -- Implementation
 				across
 					i.index_list as l
 				loop
-					if attached {STRING_AS} l.item as s then
+					if attached {STRING_AS} l as s then
 						Result.append (s.value)
-						if not l.is_last and s /= Void then
+						if not @ l.is_last and s /= Void then
 							Result.append (", ")
 						end
 					end
@@ -459,8 +459,8 @@ feature {NONE} -- Implementation
 					Result
 				loop
 					Result :=
-						(attached {STRING_AS} l.item as s and then s.value.is_case_insensitive_equal (a_value)) or else
-						(attached {ID_AS} l.item as id and then id.name.is_case_insensitive_equal (a_value))
+						(attached {STRING_AS} l as s and then s.value.is_case_insensitive_equal (a_value)) or else
+						(attached {ID_AS} l as id and then id.name.is_case_insensitive_equal (a_value))
 				end
 			end
 		end
@@ -477,10 +477,10 @@ feature {NONE} -- Implementation
 					Result
 				loop
 					tag_value :=
-						if attached {STRING_AS} l.item as s then s.value
-						elseif attached {ID_AS} l.item as id then id.name
+						if attached {STRING_AS} l as s then s.value
+						elseif attached {ID_AS} l as id then id.name
 						else once "" end
-					Result := across values as v some v.item.is_case_insensitive_equal (tag_value) end
+					Result := across values as v some v.is_case_insensitive_equal (tag_value) end
 				end
 			end
 		end
@@ -530,7 +530,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

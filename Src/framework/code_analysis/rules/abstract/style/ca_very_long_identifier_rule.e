@@ -79,13 +79,13 @@ feature {NONE} -- Rule checking
 					from
 						j := 1
 					until
-						j > ic.item.id_list.count
+						j > ic.id_list.count
 					loop
-						l_name := ic.item.item_name (j)
+						l_name := ic.item_name (j)
 						l_count := l_name.count
 						if l_count > l_max and then is_no_counter (l_name) then
 							create l_viol.make_with_rule (Current)
-							l_viol.set_location (ic.item.start_location)
+							l_viol.set_location (ic.start_location)
 							l_viol.long_description_info.extend (l_name)
 							l_viol.long_description_info.extend (l_max)
 							violations.extend (l_viol)
@@ -110,13 +110,13 @@ feature {NONE} -- Rule checking
 					from
 						j := 1
 					until
-						j > ic.item.id_list.count
+						j > ic.id_list.count
 					loop
-						l_name := ic.item.item_name (j)
+						l_name := ic.item_name (j)
 						l_count := l_name.count
 						if l_count > l_max and then is_no_counter (l_name) then
 							create l_viol.make_with_rule (Current)
-							l_viol.set_location (ic.item.start_location)
+							l_viol.set_location (ic.start_location)
 							l_viol.long_description_info.extend (l_name)
 							l_viol.long_description_info.extend (l_max)
 							violations.extend (l_viol)

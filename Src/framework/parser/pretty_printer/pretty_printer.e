@@ -583,7 +583,7 @@ feature {NONE} -- List processing
 					across
 						l_ids as x
 					loop
-						l_index := x.item
+						l_index := x
 						if match_list.valid_index (l_index) then
 							l_leaf := match_list.i_th (l_index)
 								-- Note that we do not set the `name_id' for `l_id_as' since it will require
@@ -727,7 +727,7 @@ feature {CLASS_AS} -- Process leafs
 				across
 					l_text as c
 				loop
-					if c.item = {CHARACTER_32} '%N' then
+					if c = {CHARACTER_32} '%N' then
 						print_new_line
 					end
 				end
@@ -1117,8 +1117,8 @@ feature {CLASS_AS} -- Inheritance
 			across
 				l_as.aliases as ic
 			loop
-				safe_process_and_print (l_as.keyword_at (match_list, ic.item.alias_keyword_index), " ", " ")
-				safe_process (ic.item.alias_name)
+				safe_process_and_print (l_as.keyword_at (match_list, ic.alias_keyword_index), " ", " ")
+				safe_process (ic.alias_name)
 			end
 			if l_as.convert_keyword_index > 0 then
 				safe_process_and_print (l_as.convert_keyword (match_list), " ", "")
@@ -2486,7 +2486,7 @@ note
 	ca_ignore: "CA033", "CA033: very large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

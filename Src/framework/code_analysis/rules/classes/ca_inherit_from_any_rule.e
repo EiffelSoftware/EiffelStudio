@@ -126,7 +126,7 @@ feature {NONE} -- Rule checking
 			renames.wipe_out
 			if attached a_parent.renaming as l_renamings then
 				across l_renamings as l_rename loop
-					renames.extend (l_rename.item.old_name, l_rename.item.new_name.visual_name)
+					renames.extend (l_rename.old_name, l_rename.new_name.visual_name)
 				end
 			end
 		end

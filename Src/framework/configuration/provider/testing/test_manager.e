@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {TEST_MANAGER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,11 +15,7 @@ feature -- Access
 			m: ES_LIBRARY_PROVIDER_SERVICE
 			iron_prov: ES_LIBRARY_IRON_PROVIDER
 			deliv_prov: ES_LIBRARY_LOCAL_PROVIDER
-			iron_packages_prov: ES_LIBRARY_IRON_PACKAGE_PROVIDER
 			index_prov: ES_LIBRARY_INDEX_PROVIDER
-
-			precomp_local_prov: ES_PRECOMPILE_LIBRARY_LOCAL_PROVIDER
-			precomp_iron_prov: ES_PRECOMPILE_LIBRARY_IRON_PROVIDER
 			tgt: CONF_TARGET
 		do
 			create m.make (2)
@@ -89,7 +83,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

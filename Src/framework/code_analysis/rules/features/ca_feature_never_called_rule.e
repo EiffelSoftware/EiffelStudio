@@ -9,7 +9,6 @@
 			
 			An attribute that never gets assigned will always keep its default value.
 		]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -59,14 +58,14 @@ feature {NONE} -- Feature Visitor for Violation Check
 				until
 					has_callers or l_clients.after
 				loop
-					if l_feat.item.callers_32 (l_clients.item, 0) /= Void then
+					if l_feat.callers_32 (l_clients.item, 0) /= Void then
 						has_callers := True
 					end
 					l_clients.forth
 				end
 
 				if not has_callers then
-					create_violation (l_feat.item)
+					create_violation (l_feat)
 				end
 			end
 		end

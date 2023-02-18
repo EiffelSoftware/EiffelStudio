@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {DBG_RT_PROXY}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -44,7 +43,7 @@ feature {NONE} -- Implementation: Evaluation
 
 feature {NONE} -- Implementation: helper
 
-	one_arg_resulting_string_evaluation (a_featname: STRING; a_value: DUMP_VALUE; min,max: INTEGER; a_error_handler: detachable DBG_ERROR_HANDLER): detachable STRING
+	one_arg_resulting_string_evaluation (a_featname: STRING; a_value: DUMP_VALUE; min,max: INTEGER; a_error_handler: detachable DBG_ERROR_HANDLER): detachable STRING_32
 		require
 			a_value_attached: a_value /= Void
 		local
@@ -61,10 +60,8 @@ feature {NONE} -- Implementation: helper
 				else
 					Result := dv.truncated_string_representation (min, max)
 				end
-			else
-				if a_error_handler /= Void then
-					a_error_handler.notify_error_evaluation_report_to_support (Void)
-				end
+			elseif attached a_error_handler then
+				a_error_handler.notify_error_evaluation_report_to_support (Void)
 			end
 		end
 
@@ -137,7 +134,7 @@ invariant
 	dump_value_factory_attached: dump_value_factory /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

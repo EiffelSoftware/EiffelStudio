@@ -216,7 +216,7 @@ feature {NONE} -- AST Visitor
 			create l_intervals.make
 			if a_inspect.case_list /= Void then
 				across a_inspect.case_list as l_cases loop
-					l_intervals.extend (l_cases.item.interval)
+					l_intervals.extend (l_cases.interval)
 				end
 			end
 			create l_inspect_block.make_complete (a_inspect.switch, l_intervals,

@@ -1,8 +1,8 @@
 note
-	description : "Objects that represent an iron package"
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "Objects that represent an iron package"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	IRON_PACKAGE
@@ -143,7 +143,7 @@ feature -- Access
 				across
 					l_paths.first.split ('/') as ic
 				loop
-					Result.add_unencoded_path_segment (ic.item)
+					Result.add_unencoded_path_segment (ic)
 				end
 			else
 				Result.add_unencoded_path_segment (identifier)
@@ -186,7 +186,7 @@ feature -- Access
 					associated_paths as c
 				loop
 					Result.append_string_general (repository.location_string)
-					Result.append_string_general (c.item)
+					Result.append_string_general (c)
 					Result.append_character (' ')
 				end
 			end
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

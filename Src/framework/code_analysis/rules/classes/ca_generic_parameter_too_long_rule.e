@@ -34,18 +34,18 @@ feature {NONE} -- Implementation
 
 					-- First iteration to get all the single character parameters.
 				across l_generics as l_generic_decl loop
-					if l_generic_decl.item.name.name_32.count = 1 then
-						first_chars.extend (l_generic_decl.item.name.name_8.at (1))
+					if l_generic_decl.name.name_32.count = 1 then
+						first_chars.extend (l_generic_decl.name.name_8.at (1))
 					end
 				end
 
 					-- Second iteration to construct the violations.
 				across l_generics as l_generic_decl loop
-					if l_generic_decl.item.name.name_32.count > 1 then
-						if not first_chars.has (l_generic_decl.item.name.name_8.at (1)) then
-							create_violation (l_generic_decl.item.name.name_32)
+					if l_generic_decl.name.name_32.count > 1 then
+						if not first_chars.has (l_generic_decl.name.name_8.at (1)) then
+							create_violation (l_generic_decl.name.name_32)
 						else
-							create_violation_without_fix (l_generic_decl.item.name.name_32)
+							create_violation_without_fix (l_generic_decl.name.name_32)
 						end
 					end
 				end
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 				l_fixes := fixes_for_char.at (a_name.at (1))
 
 				across l_fixes as l_another_fix loop
-					l_violation.fixes.extend (l_another_fix.item)
+					l_violation.fixes.extend (l_another_fix)
 				end
 
 				l_fixes.extend (l_fix)

@@ -9,6 +9,7 @@
 			causing the class invariant or postconditions of make not to hold anymore.
 		]"
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -87,11 +88,11 @@ feature {NONE} -- AST Visitor
 		do
 			if creation_procedures /= Void then
 				across creation_procedures as ic loop
-					l_feature := a_clause.feature_with_name (ic.item.feature_name.name_id)
+					l_feature := a_clause.feature_with_name (ic.feature_name.name_id)
 					if l_feature /= Void then
 						if attached a_clause.clients as l_clients then
 							across l_clients.clients as l_class_list loop
-								if not l_class_list.item.name_32.is_equal ("NONE") then
+								if not l_class_list.name_32.is_equal ("NONE") then
 										-- The feature is exported to something.
 									l_exported := True
 								end

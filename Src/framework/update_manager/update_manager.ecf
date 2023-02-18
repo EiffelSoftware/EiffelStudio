@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="update_manager" uuid="B018F118-5BDB-4BB8-B68D-565560AF3467" library_target="update_manager">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="update_manager" uuid="B018F118-5BDB-4BB8-B68D-565560AF3467" library_target="update_manager">
 	<target name="update_manager">
 		<root all_classes="true"/>
+		<option warning="error">
+		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="dead_code_removal" value="all"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>

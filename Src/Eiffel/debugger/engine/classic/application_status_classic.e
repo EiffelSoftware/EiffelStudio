@@ -1,8 +1,6 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -132,7 +130,7 @@ feature -- Values
 
 feature -- Threads related access
 
-	thread_name (id: like current_thread_id): STRING
+	thread_name (id: like current_thread_id): STRING_32
 			-- Thread name.
 		do
 			--| Classic does not provide feature for that purpose
@@ -145,7 +143,7 @@ feature -- Threads related access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -176,4 +174,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class APPLICATION_STATUS_CLASSIC
+end

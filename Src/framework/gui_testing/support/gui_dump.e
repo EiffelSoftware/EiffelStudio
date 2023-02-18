@@ -1,6 +1,5 @@
-note
-	description:
-		"Facilities to dump a GUI tree to file or the standard output"
+﻿note
+	description: "Facilities to dump a GUI tree to file or the standard output"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -204,7 +203,7 @@ feature {NONE} -- Implementation
 			print_text ("%N")
 		end
 
-	print_line (a_text: STRING)
+	print_line (a_text: STRING_32)
 			--
 		do
 			print_indentation
@@ -212,22 +211,22 @@ feature {NONE} -- Implementation
 			print_new_line
 		end
 
-	print_text (a_text: STRING)
+	print_text (a_text: READABLE_STRING_32)
 			--
 		local
 			a_file: PLAIN_TEXT_FILE
 		do
 			if dump_file_name = Void then
-				io.put_string (a_text)
+				io.put_string_32 (a_text)
 			else
 				create a_file.make_open_append (dump_file_name)
-				a_file.put_string (a_text)
+				a_file.put_string_32 (a_text)
 				a_file.close
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
 			Eiffel Software

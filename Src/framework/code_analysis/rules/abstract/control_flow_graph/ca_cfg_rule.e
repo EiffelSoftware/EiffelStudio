@@ -1,6 +1,7 @@
 note
 	description: "A rule that operates on the Control Flow Graphs of features."
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,7 +35,7 @@ feature -- Rule Checking
 			-- Checks `a_class'.
 		do
 			across a_class.written_in_features as l_features loop
-				check_feature (a_class, l_features.item)
+				check_feature (a_class, l_features)
 			end
 		end
 

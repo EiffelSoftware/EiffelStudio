@@ -7,6 +7,7 @@
 			by any other class) can be transformed into a local variable.
 		]"
 	author: "Stefan Zurfluh, Eiffel Software"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -49,7 +50,7 @@ feature {NONE} -- Rule checking
 			loop
 
 					-- Only look at attributes.
-				if l_feat.item.is_attribute then
+				if l_feat.is_attribute then
 					from
 						l_has_clients := False
 						l_clients.start
@@ -60,7 +61,7 @@ feature {NONE} -- Rule checking
 						if
 							l_clients.item.name.is_equal (current_context.checking_class.name)
 								-- `callers_32' retrieves not only callers but also assigners and creators.
-							and then l_feat.item.callers_32 (l_clients.item, 0) /= Void
+							and then l_feat.callers_32 (l_clients.item, 0) /= Void
 						then
 							l_has_clients := True
 						end
@@ -71,10 +72,10 @@ feature {NONE} -- Rule checking
 					if
 						not l_has_clients
 						and then l_clients.has (current_context.checking_class)
-						and then attached l_feat.item.callers_32 (current_context.checking_class, 0) as l_c
+						and then attached l_feat.callers_32 (current_context.checking_class, 0) as l_c
 						and then l_c.count = 1
 					then
-						create_violation (l_feat.item, l_c.first)
+						create_violation (l_feat, l_c.first)
 					end
 				end
 			end

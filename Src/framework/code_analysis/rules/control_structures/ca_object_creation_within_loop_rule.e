@@ -69,7 +69,7 @@ feature {NONE} -- Rule Checking
 		do
 			if attached a_loop.compound as l_body then
 				across l_body as l_instruction loop
-					if attached {CREATION_AS} l_instruction.item as l_creation then
+					if attached {CREATION_AS} l_instruction as l_creation then
 						create l_violation.make_with_rule (Current)
 						l_violation.set_location (l_creation.start_location)
 

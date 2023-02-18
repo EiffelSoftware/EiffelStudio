@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			across
 				l_as as c
 			loop
-				c.item.process (Current)
+				c.process (Current)
 			end
 		end
 
@@ -949,7 +949,7 @@ note
 	ca_ignore: "CA033", "CA033: too large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

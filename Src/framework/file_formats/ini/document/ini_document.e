@@ -58,7 +58,7 @@ feature -- Query
 			across
 				sections as s
 			loop
-				l_sect := s.item
+				l_sect := s
 				if a_ignore_case then
 					l_equal := l_sect.label.is_case_insensitive_equal (a_name)
 				else
@@ -105,7 +105,7 @@ feature -- Query
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

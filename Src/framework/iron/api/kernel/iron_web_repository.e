@@ -1,5 +1,4 @@
 note
-	description: "Summary description for {IRON_WEB_REPOSITORY}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -61,7 +60,7 @@ feature {NONE} -- Initialization
 					lst as c
 				loop
 					l_path.append_character ('/')
-					l_path.append (c.item)
+					l_path.append (c)
 				end
 			end
 			create l_uri.make_from_string (a_uri.string)
@@ -155,7 +154,7 @@ invariant
 	location_no_trailing_slash: not location.path.ends_with ("/")
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

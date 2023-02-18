@@ -20,7 +20,7 @@ feature -- Formatting
 
 	format (a_str: READABLE_STRING_GENERAL; a_args: TUPLE): STRING_8
 			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to
-			-- and object's value at `a_args [i]`.
+			-- and object's value at `a_args [i]`. (Result uses UTF-8 encoding.)
 			--
 			-- Example:
 			--     format ("Hello there {1}", ["Mr. Dobbs"])
@@ -34,13 +34,14 @@ feature -- Formatting
 			--     format ("He}}llo there {{", ["Mr. Dobbs"])
 			-- Yields:
 			--     He}llo there {
+		obsolete "Use `format_unicode` instead. [2023-05-31]"
 		require
 			a_str_attached: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
 			a_args_attached: a_args /= Void
 			not_a_args_is_empty: not a_args.is_empty
 		do
-			Result := format_unicode (a_str, a_args).as_string_8
+			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (format_unicode (a_str, a_args))
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -153,13 +154,14 @@ feature -- Formatting
 			-- `a_str': The string to ellipse.
 			-- `a_max_len': A string's maximum length, after which ellipsing will be performed.
 			-- `Result': An ellipsed string or a copy of the original string.
+		obsolete "Use `ellipse_unicode` instead. [2023-05-31]"
 		require
 			a_str_attached: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
 			a_max_len_big_enough: a_max_len > 3
 		do
-			Result := a_str.as_string_8
-			if Result ~ a_str then
+			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_str)
+			if Result = a_str then
 				Result := Result.twin
 			end
 			if Result.count > a_max_len then
@@ -182,15 +184,15 @@ feature -- Formatting
 		require
 			a_str_attached: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
-			a_max_len_big_enough: a_max_len > 3
+			a_max_len_big_enough: a_max_len > 1
 		do
 			Result := a_str.as_string_32
-			if Result ~ a_str then
+			if Result = a_str then
 				Result := Result.twin
 			end
 			if Result.count > a_max_len then
-				Result.keep_head (a_max_len - 3)
-				Result.append (once "...")
+				Result.keep_head (a_max_len - 1)
+				Result.append_character ('…')
 			end
 		ensure
 			result_attached: Result /= Void
@@ -204,13 +206,14 @@ feature -- Formatting
 			--
 			-- `a_str': A string to tabbify.
 			-- `a_tab_chars': Number of space characters in a tab.
-			-- `Result': A tabbified string.
+			-- `Result': A tabbified string (in UTF-8 encoding).
+		obsolete "Use `tabbify_unicode` instead. [2023-05-31]"
 		require
 			a_str_attached: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
 			a_tab_chars_positive: a_tab_chars > 0
 		do
-			Result := tabbify_unicode (a_str, a_tab_chars).as_string_8
+			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (tabbify_unicode (a_str, a_tab_chars))
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -276,7 +279,7 @@ feature {NONE} -- Symbols
 			-- Index close character
 
 ;note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

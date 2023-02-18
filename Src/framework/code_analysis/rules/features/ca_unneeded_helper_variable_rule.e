@@ -77,11 +77,11 @@ feature {NONE} -- Rule checking
 			l_viol: CA_RULE_VIOLATION
 		do
 			across suspected_variables as l_suspects loop
-				if locals_usage [l_suspects.item] = 2 then
+				if locals_usage [l_suspects] = 2 then
 						-- 2 usages: 1 assignment and 1 read.
 					create l_viol.make_with_rule (Current)
-					l_viol.set_location (location [l_suspects.item])
-					l_viol.long_description_info.extend (l_suspects.item.name_32)
+					l_viol.set_location (location [l_suspects])
+					l_viol.long_description_info.extend (l_suspects.name_32)
 					violations.extend (l_viol)
 				end
 			end

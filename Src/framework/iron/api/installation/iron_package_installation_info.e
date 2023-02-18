@@ -224,7 +224,7 @@ feature -- Conversion
 					across
 						j_paths.array_representation as c
 					loop
-						if attached {JSON_STRING} c.item as js then
+						if attached {JSON_STRING} c as js then
 							Result.associated_paths.force (js.item)
 						end
 					end
@@ -233,7 +233,7 @@ feature -- Conversion
 					across
 						j_tags.array_representation as c
 					loop
-						if attached {JSON_STRING} c.item as js then
+						if attached {JSON_STRING} c as js then
 							Result.tags.force (js.unescaped_string_32)
 						end
 					end
@@ -242,8 +242,8 @@ feature -- Conversion
 					across
 						j_links as c
 					loop
-						if attached {JSON_STRING} c.item as js then
-							Result.put (js.unescaped_string_32, {STRING_32} "link["+ c.key.unescaped_string_32 +"]")
+						if attached {JSON_STRING} c as js then
+							Result.put (js.unescaped_string_32, {STRING_32} "link["+ @ c.key.unescaped_string_32 +"]")
 						end
 					end
 				end
@@ -251,8 +251,8 @@ feature -- Conversion
 					across
 						j_notes as c
 					loop
-						if attached {JSON_STRING} c.item as js then
-							Result.put (js.unescaped_string_32, c.key.unescaped_string_32)
+						if attached {JSON_STRING} c as js then
+							Result.put (js.unescaped_string_32, @ c.key.unescaped_string_32)
 						end
 					end
 				end
@@ -272,9 +272,9 @@ feature {NONE} -- Helpers
 				until
 					Result /= Void
 				loop
-					if ic.item.is_current_symbol or ic.item.is_parent_symbol then
-					elseif attached ic.item.extension as e and then e.is_case_insensitive_equal_general ("iron") then
-						Result := p.extended_path (ic.item)
+					if ic.is_current_symbol or ic.is_parent_symbol then
+					elseif attached ic.extension as e and then e.is_case_insensitive_equal_general ("iron") then
+						Result := p.extended_path (ic)
 					end
 				end
 			end
@@ -310,7 +310,7 @@ feature {NONE} -- Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

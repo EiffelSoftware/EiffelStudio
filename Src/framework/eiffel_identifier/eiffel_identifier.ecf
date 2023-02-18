@@ -5,7 +5,7 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option>
+		<option warning="error">
 			<assertions/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

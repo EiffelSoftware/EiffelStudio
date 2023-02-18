@@ -87,7 +87,7 @@ feature -- Update
 			across
 				method_locations as l
 			loop
-				md_emit.set_method_rva (l.key, top_rva + l.item)
+				md_emit.set_method_rva (@ l.key, top_rva + l)
 			end
 		ensure
 			is_closed: is_closed
@@ -303,7 +303,7 @@ invariant
 	method_locations_not_void: method_locations /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

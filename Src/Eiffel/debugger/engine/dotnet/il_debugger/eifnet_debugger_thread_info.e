@@ -1,4 +1,4 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -83,7 +83,6 @@ feature -- Access
 			l_info: EIFNET_DEBUG_VALUE_INFO
 			r: INTEGER
 			p: POINTER
-			s32: STRING_32
 			extform: EIFNET_DEBUG_EXTERNAL_FORMATTER
 		do
 			if not thread_details_fetched then
@@ -109,9 +108,8 @@ feature -- Access
 										)
 						l_icdov.clean_on_dispose
 						if l_name_icd /= Void then
-							s32 := extform.system_string_value_to_string (l_name_icd)
-							if s32 /= Void then
-								thread_name := s32.as_string_8
+							if attached extform.system_string_value_to_string (l_name_icd) as s32 then
+								thread_name := s32
 							end
 							l_name_icd.clean_on_dispose
 						end
@@ -199,11 +197,8 @@ feature -- Change
 			--		maybe later, we'll do it here
 		require
 			stepper_not_null: p /= Default_pointer
-		local
-			s: ICOR_DEBUG_STEPPER
 		do
-			create s.make_by_pointer (p)
-			pending_steppers.put (s, p)
+			pending_steppers.put (create {ICOR_DEBUG_STEPPER}.make_by_pointer (p), p)
 		end
 
 	has_icd_stepper (p: POINTER): BOOLEAN
@@ -250,7 +245,7 @@ feature -- Properties
 			Result := Result + thread_id
 		end
 
-	thread_name: STRING
+	thread_name: STRING_32
 
 	thread_priority: INTEGER
 
@@ -274,7 +269,7 @@ feature -- Disposable
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

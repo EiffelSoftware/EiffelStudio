@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {DOTNET_HOST}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -83,7 +81,7 @@ feature -- Access
 				across
 					s.split ('%N') as ic
 				loop
-					line := ic.item
+					line := ic
 					i := line.index_of (' ', 1)
 					if i > 0 then
 						s := line.substring (1, i - 1)

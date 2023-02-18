@@ -52,8 +52,8 @@ feature {NONE} -- Implementation
 			then
 					-- Get all locals.
 				across l_locals as l_local_dec loop
-					across l_local_dec.item.id_list as l_id loop
-						all_locals.extend (l_local_dec.item.item_name (l_local_dec.item.id_list.index_of (l_id.item, 1)))
+					across l_local_dec.id_list as l_id loop
+						all_locals.extend (l_local_dec.item_name (l_local_dec.id_list.index_of (l_id, 1)))
 					end
 				end
 			end

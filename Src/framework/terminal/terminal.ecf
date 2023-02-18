@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="terminal" uuid="4A585495-218C-4639-A04F-F7D58CF3CC3B" library_target="terminal">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="terminal" uuid="4A585495-218C-4639-A04F-F7D58CF3CC3B" library_target="terminal">
 	<description>Supports manipulation of a Linux terminal, such as cursor movement and colorization.</description>
 	<target name="terminal">
 		<root all_classes="true"/>
@@ -9,7 +9,7 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/tests$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library">
+		<option warning="error" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(EIFFEL_SRC)/framework/terminal/spec/include"/>

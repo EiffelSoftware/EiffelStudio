@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Status information about the running application - current routine,%
@@ -6,7 +6,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class APPLICATION_STATUS
 
@@ -420,7 +420,7 @@ feature -- Access: Thread related
 
 	all_thread_ids_count: INTEGER
 
-	thread_name (id: like current_thread_id): STRING
+	thread_name (id: like current_thread_id): STRING_32
 		do
 		end
 
@@ -829,7 +829,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

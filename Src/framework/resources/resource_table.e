@@ -153,7 +153,7 @@ feature -- Access
 					create Result.make_empty
 					pos := 1
 				loop
-					Result.force (l.item, pos)
+					Result.force (l, pos)
 					pos := pos + 1
 				end
 			end
@@ -189,7 +189,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

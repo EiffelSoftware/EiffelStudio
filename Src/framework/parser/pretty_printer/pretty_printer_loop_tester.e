@@ -102,7 +102,7 @@ feature {NONE} -- Visitor
 				across a as c loop
 					is_message := False
 					is_target := False
-					safe_process (c.item)
+					safe_process (c)
 				end
 			end
 			is_target := old_is_target
@@ -165,7 +165,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	author: "Alexander Kogtenkov"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

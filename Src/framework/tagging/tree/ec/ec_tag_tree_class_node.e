@@ -2,7 +2,6 @@ note
 	description: "[
 		{EC_TAG_TREE_NODE} representing Eiffel classes.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,14 +30,14 @@ feature {NONE} -- Implementation
 			if attached {EC_TAG_TREE_NODE [G, CONF_CLUSTER]} parent as l_parent then
 				l_group := l_parent.item (a_project)
 			end
-			Result := a_project.class_from_name (name.as_string_8, l_group)
+			Result := a_project.class_from_name (name, l_group)
 			if Result /= Void then
 				Result := Result.actual_class
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

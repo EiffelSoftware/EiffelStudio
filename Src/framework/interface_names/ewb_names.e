@@ -173,7 +173,7 @@ feature -- Access
 					s.append_character (',')
 					s.append_character (' ')
 				end
-				s.append (ic.item)
+				s.append (ic)
 			end
 
 			Result := locale.formatted_string (locale.translation ("The following Iron packages [$1] will be automatically installed%Nbecause of the -stop/-batch option.%N"), [s])
@@ -268,7 +268,7 @@ feature -- Errors
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

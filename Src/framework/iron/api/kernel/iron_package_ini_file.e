@@ -83,7 +83,7 @@ feature -- Conversion
 				across
 					l_tags.split (',') as ic
 				loop
-					Result.tags.force (ic.item)
+					Result.tags.force (ic)
 				end
 			end
 			create l_path_uri.make_from_path (path)
@@ -115,7 +115,7 @@ feature -- Conversion
 				if not s.is_empty then
 					s.append_character (',')
 				end
-				s.append (ic.item)
+				s.append (ic)
 			end
 			ini.put (s, "tags")
 		end
@@ -152,7 +152,7 @@ feature -- Storage
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

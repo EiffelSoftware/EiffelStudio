@@ -1,6 +1,4 @@
-note
-	description: "Objects that ..."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -219,20 +217,13 @@ feature -- Access
 			-- make a object item initialized to `value'
 		require
 			(addr /= Void and then not addr.is_void) implies a_dtype /= Void
-		local
-			dvnet: DUMP_VALUE_DOTNET
-			dtype: CLASS_C
-			scp_pid: NATURAL_16
 		do
 			if debugger_manager.is_dotnet_project then
-				create dvnet.make_empty (debugger_manager)
-				Result := dvnet
+				create {DUMP_VALUE_DOTNET} Result.make_empty (debugger_manager)
 			else
 				create Result.make_empty (debugger_manager)
 			end
-			dtype := a_dtype
-			scp_pid := a_scp_pid
-			Result.set_object_value (addr, dtype, scp_pid)
+			Result.set_object_value (addr, a_dtype, a_scp_pid)
 			init_value (Result)
 		ensure
 			Result_attached: Result /= Void
@@ -349,7 +340,7 @@ invariant
 	debugger_manager_not_void: debugger_manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

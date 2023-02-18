@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {IRON_CATALOG}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -84,7 +82,7 @@ feature -- Access: packages
 			until
 				Result /= Void
 			loop
-				Result := c.item.package_associated_with_id (a_id)
+				Result := c.package_associated_with_id (a_id)
 			end
 		end
 
@@ -99,7 +97,7 @@ feature -- Access: packages
 			until
 				Result /= Void
 			loop
-				Result := c.item.package_associated_with_uri (a_uri)
+				Result := c.package_associated_with_uri (a_uri)
 			end
 		end
 
@@ -111,7 +109,7 @@ feature -- Access: packages
 			across
 				repositories as ic
 			loop
-				if attached ic.item.packages_associated_with_name (a_name) as lst then
+				if attached ic.packages_associated_with_name (a_name) as lst then
 					Result.append (lst)
 				end
 			end
@@ -157,7 +155,7 @@ feature -- Package operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

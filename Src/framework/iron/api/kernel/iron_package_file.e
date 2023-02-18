@@ -54,7 +54,7 @@ feature -- Access
 				across
 					l_segments as ic
 				loop
-					t := ic.item
+					t := ic
 					t.adjust
 					Result.force (t)
 				end
@@ -111,7 +111,7 @@ feature -- Change
 					if not s.is_empty then
 						s.append_character (',')
 					end
-					s.append (ic.item)
+					s.append (ic)
 				end
 				put (s, "tags")
 			end
@@ -193,7 +193,7 @@ feature -- Change
 			until
 				l_proj /= Void
 			loop
-				l_proj := ic.item
+				l_proj := ic
 				if
 					a_proj_name.is_case_insensitive_equal_general (l_proj.name) and then
 					a_relative_iri.is_case_insensitive_equal_general (l_proj.relative_iri)
@@ -251,7 +251,7 @@ feature -- Change
 			until
 				l_op /= Void
 			loop
-				l_op := ic.item
+				l_op := ic
 				if
 					a_setup_name.is_case_insensitive_equal (l_op.name) and then
 					a_instruction.is_case_insensitive_equal (l_op.instruction)
@@ -318,7 +318,7 @@ feature -- Helper
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

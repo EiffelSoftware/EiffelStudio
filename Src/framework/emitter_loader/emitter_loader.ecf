@@ -5,6 +5,8 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
+		<option warning="error">
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf"/>
 		<library name="consumer_interface" location="$EIFFEL_SRC\dotnet\consumer_interface\consumer_interface.ecf" readonly="false"/>

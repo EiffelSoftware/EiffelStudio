@@ -1,7 +1,7 @@
-note
-	description : "Objects that represents the RT_EXTENSION object"
-	date        : "$Date$"
-	revision    : "$Revision$"
+﻿note
+	description: "Objects that represents the RT_EXTENSION object"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DBG_RT_EXTENSION_PROXY
@@ -107,7 +107,7 @@ feature -- Remote Invocation: Debuggee evaluation
 			Result := two_args_resulting_boolean_evaluation (equal_sign_evaluation_feature_name, a_value, a_other_value, error_handler)
 		end
 
-	debugger_type_string_evaluation (a_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): detachable STRING
+	debugger_type_string_evaluation (a_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): detachable STRING_32
 			-- Get the `generating_type' as STRING by evaluation on the debuggee
 		require
 			a_value_is_not_void: a_value /= Void and then not a_value.is_void
@@ -115,7 +115,7 @@ feature -- Remote Invocation: Debuggee evaluation
 			Result := one_arg_resulting_string_evaluation (debugger_type_string_evaluation_feature_name, a_value, 0,0, error_handler)
 		end
 
-	object_runtime_info_string_evaluation (a_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): detachable STRING
+	object_runtime_info_string_evaluation (a_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): detachable STRING_32
 			-- Get the `object_runtime_info' as STRING by evaluation on the debuggee
 		require
 			a_value_is_not_void: a_value /= Void and then not a_value.is_void
@@ -190,7 +190,7 @@ invariant
 	value_attached: value /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

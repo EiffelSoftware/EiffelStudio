@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {FILES_WITH_EXTENSION_DIRECTORY_ITERATOR}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -74,7 +72,7 @@ feature -- Change
 			across
 				a_names as ic
 			loop
-				l_excluded_directory_names.force (ic.item)
+				l_excluded_directory_names.force (ic)
 			end
 		end
 
@@ -110,7 +108,7 @@ feature -- Status
 		do
 			if attached excluded_directory_names as lst then
 				if attached dn.entry as e then
-					Result := across lst as ic some e.name.same_string_general (ic.item) end
+					Result := across lst as ic some e.name.same_string_general (ic) end
 				end
 			end
 		end
@@ -133,7 +131,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

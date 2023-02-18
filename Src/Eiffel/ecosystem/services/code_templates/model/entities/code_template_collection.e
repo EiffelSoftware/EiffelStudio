@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A collection of actual code templates for a given code template definition.
 	]"
@@ -53,7 +53,7 @@ feature -- Query
 			result_is_unversioned: not attached {CODE_VERSIONED_TEMPLATE} Result
 		end
 
-	applicable_item_with_version (a_version: STRING): detachable CODE_TEMPLATE
+	applicable_item_with_version (a_version: STRING_32): detachable CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template, given a string version.
 			--
 			-- `a_version': Version to find the most applicable template with.
@@ -109,17 +109,13 @@ feature -- Query
 					end
 					check gobo_memory_leak: l_cursor.off end
 
-					if not l_versioned_templates.is_empty then
-						from l_versioned_templates.start until l_versioned_templates.after loop
-							if attached l_versioned_templates.item_for_iteration as l_next_template then
-								if l_next_template.is_compatible_with (a_version) then
-									if not attached l_versioned_template or else l_next_template.version > l_versioned_template.version then
-										l_versioned_template := l_next_template
-									end
-								end
-							end
-
-							l_versioned_templates.forth
+					across l_versioned_templates as t loop
+						if
+							attached t as l_next_template and then
+							l_next_template.is_compatible_with (a_version) and then
+							(not attached l_versioned_template or else l_next_template.version > l_versioned_template.version)
+						then
+							l_versioned_template := l_next_template
 						end
 					end
 
@@ -143,7 +139,7 @@ feature -- Visitor
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

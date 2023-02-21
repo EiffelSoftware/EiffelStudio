@@ -36,6 +36,15 @@ feature {NONE} -- Initialization
 			i := cp_raiser
 			a := cp_adder
 			r := cp_remover
+			if cp_raiser /= Void then
+				cp_raiser.set_associated_entity (Current)
+			end
+			if cp_adder /= Void then
+				cp_adder.set_associated_entity (Current)
+			end
+			if cp_remover /= Void then
+				cp_remover.set_associated_entity (Current)
+			end
 		ensure
 			dotnet_name_set: dotnet_name = dn
 			raiser_set: raiser = cp_raiser

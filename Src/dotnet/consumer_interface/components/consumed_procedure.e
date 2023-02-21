@@ -122,12 +122,22 @@ feature -- Element change
 			end
 		end
 
+	set_associated_entity (a_entity: detachable CONSUMED_ENTITY)
+		do
+			ae := a_entity
+		end
+
 feature -- Access
 
 	arguments: ARRAY [CONSUMED_ARGUMENT]
 			-- Feature arguments
 		do
 			Result := a
+		end
+
+	associated_entity: detachable CONSUMED_ENTITY
+		do
+			Result := ae
 		end
 
 feature -- Status report
@@ -145,6 +155,9 @@ feature {NONE} -- Access
 
 	q: like dotnet_eiffel_name;
 			-- Internal data for `dotnet_eiffel_name'.
+
+	ae: like associated_entity;
+			-- Internal data for `associated_entity`
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

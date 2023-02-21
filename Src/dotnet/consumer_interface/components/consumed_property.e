@@ -46,6 +46,13 @@ feature {NONE} -- Initialization
 
 			g := cp_getter
 			s := cp_setter
+
+			if cp_getter /= Void then
+				cp_getter.set_associated_entity (Current)
+			end
+			if cp_setter /= Void then
+				cp_setter.set_associated_entity (Current)
+			end
 		ensure
 			dotnet_name_set: dotnet_name = dn
 			getter_set: getter = cp_getter
@@ -71,6 +78,12 @@ feature {CONSUMER_ACCESS} -- Initialization
 
 			g := cp_getter
 			s := cp_setter
+			if cp_getter /= Void then
+				cp_getter.set_associated_entity (Current)
+			end
+			if cp_setter /= Void then
+				cp_setter.set_associated_entity (Current)
+			end
 		ensure
 			dotnet_name_set: dotnet_name = dn
 			getter_set: getter = cp_getter

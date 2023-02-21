@@ -60,7 +60,7 @@ feature -- Conversion
 			n, i: INTEGER
 			tb: HASH_TABLE [detachable ANY, STRING_8]
 		do
-			a_html.append ("<div")
+			a_html.append ("<div class=%"pager%"")
 			a_html.append_character ('>')
 			nb := ((upper - lower) // step).to_integer_32 + 1
 			if nb > 1 then

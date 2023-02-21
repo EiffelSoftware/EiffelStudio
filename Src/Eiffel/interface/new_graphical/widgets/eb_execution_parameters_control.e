@@ -976,16 +976,19 @@ feature {NONE} -- Queries
 		do
 			create Result.make (5)
 			if not a_profile.arguments.is_empty then
-				Result.append ("%"" + a_profile.arguments + "%"")
+				Result.append_character ('%%')
+				Result.append (a_profile.arguments)
+				Result.append_character ('%%')
 			end
 			if not a_profile.working_directory.is_empty then
-				Result.append (" ")
+				Result.append_character (' ')
 				Result.append (interface_names.l_cwd (params.working_directory))
 			end
 			if a_profile.environment_variables /= Void and then not a_profile.environment_variables.is_empty then
-				Result.append (" (")
+				Result.append_character (' ')
+				Result.append_character ('(')
 				Result.append (interface_names.l_variable_count (a_profile.environment_variables.count))
-				Result.append (")")
+				Result.append_character (')')
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -1862,7 +1865,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

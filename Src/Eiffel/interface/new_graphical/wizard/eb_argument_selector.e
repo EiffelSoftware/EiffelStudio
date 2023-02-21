@@ -75,7 +75,7 @@ feature -- Access
 			-- Button to remove `Current' from its container.
 			-- Does nothing until `set_remove_procedure' gets called.
 
-	code: STRING
+	code: STRING_32
 			-- Generated code.
 		do
 			create Result.make (10)

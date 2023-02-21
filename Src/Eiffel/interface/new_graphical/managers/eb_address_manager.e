@@ -328,7 +328,7 @@ feature -- Access
 	cluster_label_text: STRING
 			-- Name of the class as it appears in the cluster label.
 		do
-			if cluster_label /= Void and then not cluster_label.text.is_equal (default_cluster_name) then
+			if cluster_label /= Void and then not cluster_label.text.same_string (default_cluster_name) then
 				Result := cluster_label.text
 			end
 		end
@@ -336,7 +336,7 @@ feature -- Access
 	class_label_text: STRING
 			-- Name of the class as it appears in the class label.
 		do
-			if class_label /= Void and then not class_label.text.is_equal (default_class_name) then
+			if class_label /= Void and then not class_label.text.same_string (default_class_name) then
 				Result := class_label.text
 			end
 		end
@@ -344,7 +344,7 @@ feature -- Access
 	feature_label_text: STRING
 			-- Name of the class as it appears in the feature label.
 		do
-			if feature_label /= Void and then not feature_label.text.is_equal (default_feature_name) then
+			if feature_label /= Void and then not feature_label.text.same_string (default_feature_name) then
 				Result := feature_label.text
 			end
 		end
@@ -774,11 +774,34 @@ feature -- Updating
 
 	update_colors
 			-- Update the colors for the address manager labels
+		local
+			bg: EV_COLOR
 		do
 			if mode then
 				cluster_label.set_foreground_color (preferences.editor_data.cluster_text_color)
 				class_label.set_foreground_color (preferences.editor_data.class_text_color)
 				feature_label.set_foreground_color (preferences.editor_data.feature_text_color)
+
+				set_background_color_if_needed (cluster_label, preferences.editor_data.cluster_background_color)
+				set_background_color_if_needed (class_label, preferences.editor_data.class_background_color)
+				set_background_color_if_needed (feature_label, preferences.editor_data.feature_background_color)
+			end
+		end
+
+	set_background_color_if_needed (lab: EV_LABEL; bg: EV_COLOR)
+			-- Set background color `bg` to `lab`,
+			-- but only if `bg` and `lab.background_color` really differs
+			-- note: this is mostly to support dark theme.
+		local
+			r,g,b: REAL_64
+			c1: EV_COLOR
+		do
+			c1 := lab.background_color
+			r := (c1.red_16_bit - bg.red_16_bit).abs / {EV_COLOR}.max_16_bit
+			g := (c1.green_16_bit - bg.green_16_bit).abs / {EV_COLOR}.max_16_bit
+			b := (c1.blue_16_bit - bg.blue_16_bit).abs / {EV_COLOR}.max_16_bit
+			if (r + g + b) / 3 > 0.5 then
+				lab.set_background_color (bg)
 			end
 		end
 
@@ -1870,7 +1893,7 @@ feature {NONE} -- open new class
 			clist: CLASS_C_SERVER
 			l_class: CLASS_C
 			i: INTEGER
-			ccname: STRING
+			ccname: STRING_32
 		do
 			current_typed_class := Void
 			if Workbench.is_universe_ready and enable_feature_complete then
@@ -1883,7 +1906,7 @@ feature {NONE} -- open new class
 					i > clist.upper or current_typed_class /= Void
 				loop
 					l_class := clist.item (i)
-					if l_class /= Void and then l_class.name.is_equal (ccname) then
+					if l_class /= Void and then ccname.same_string (l_class.name) then
 						current_typed_class := l_class
 					end
 					i := i + 1
@@ -2772,7 +2795,7 @@ feature {NONE} -- Choice Positioning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

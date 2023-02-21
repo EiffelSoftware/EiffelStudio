@@ -1066,7 +1066,8 @@ feature {NONE} -- Dynamic item filling
 					if bp.has_condition then
 						t.append_character ('%N')
 						t.append_string_general (interface_names.l_condition)
-						t.append_string (": " + bp.condition.text)
+						t.append_string_general (": ")
+						t.append_string (bp.condition.text)
 					end
 					if bp.has_when_hits_action then
 						t.append_character ('%N')
@@ -1381,7 +1382,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Row highlight background color.
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

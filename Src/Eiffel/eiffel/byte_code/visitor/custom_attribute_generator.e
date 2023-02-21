@@ -70,7 +70,6 @@ feature -- Code generation
 			l_tuple_const: ARRAYED_LIST [TUPLE [STRING_B, EXPR_B]]
 			l_ctor_token: INTEGER
 			l_creation_class: CLASS_C
-			l_type: CL_TYPE_A
 		do
 			cil_generator := a_code_generator
 
@@ -681,7 +680,7 @@ invariant
 	is_dotnet_compilation: system.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

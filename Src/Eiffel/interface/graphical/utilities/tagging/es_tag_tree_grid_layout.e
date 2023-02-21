@@ -111,7 +111,7 @@ feature {EC_TAG_TREE_NODE} -- Basic operations
 		do
 			if attached a_node.item (project_access) as l_feature then
 				last_pixmap := pixmap_from_e_feature (l_feature)
-				token_writer.add_feature (l_feature, a_node.name.as_string_8)
+				token_writer.add_feature (l_feature, a_node.name)
 			else
 				last_pixmap := pixmaps.icon_pixmaps.feature_routine_icon
 				process_ec_node (a_node)
@@ -123,7 +123,7 @@ feature {EC_TAG_TREE_NODE} -- Basic operations
 		do
 			if attached a_node.item (project_access) as l_library then
 				last_pixmap := pixmap_from_group (l_library)
-				token_writer.add_group (l_library, a_node.name.as_string_8)
+				token_writer.add_group (l_library, a_node.name)
 			else
 				last_pixmap := pixmaps.icon_pixmaps.folder_library_icon
 				process_ec_node (a_node)
@@ -135,7 +135,7 @@ feature {EC_TAG_TREE_NODE} -- Basic operations
 		do
 			if attached a_node.item (project_access) as l_cluster then
 				last_pixmap := pixmap_from_group (l_cluster)
-				token_writer.add_group (l_cluster, a_node.name.as_string_8)
+				token_writer.add_group (l_cluster, a_node.name)
 			else
 				last_pixmap := pixmaps.icon_pixmaps.folder_cluster_icon
 				process_ec_node (a_node)
@@ -147,7 +147,7 @@ feature {EC_TAG_TREE_NODE} -- Basic operations
 		do
 			if attached a_node.item (project_access) as l_override then
 				last_pixmap := pixmap_from_group (l_override)
-				token_writer.add_group (l_override, a_node.name.as_string_8)
+				token_writer.add_group (l_override, a_node.name)
 			else
 				last_pixmap := pixmaps.icon_pixmaps.folder_override_cluster_icon
 				process_ec_node (a_node)
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 	process_ec_node (a_node: EC_TAG_TREE_NODE [G, ANY])
 			-- Process {EC_TAG_TREE_NODE}.
 		do
-			token_writer.process_basic_text (a_node.name.as_string_8)
+			token_writer.process_basic_text (a_node.name)
 		end
 
 	process_token (a_token: READABLE_STRING_GENERAL): STRING
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

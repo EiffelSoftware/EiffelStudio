@@ -7,6 +7,8 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/tests$</exclude>
 		</file_rule>
+		<option warning="error">
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
 			<condition>

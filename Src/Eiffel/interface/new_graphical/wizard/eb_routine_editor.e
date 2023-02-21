@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			Result.append_character ('%N')
 		end
 
-	ensure_code: STRING
+	ensure_code: STRING_32
 			-- Code for postcondition.
 		do
 			Result := code_for_contract_list (ensure_list, "ensure")
@@ -383,7 +383,7 @@ feature {NONE} -- Implementation
 			argument_removed: not argument_list.has (arg)
 		end
 
-	on_body_change (new_body: STRING)
+	on_body_change (new_body: READABLE_STRING_GENERAL)
 			-- User selected different routine body type.
 		do
 			body_type_label.set_text (new_body)

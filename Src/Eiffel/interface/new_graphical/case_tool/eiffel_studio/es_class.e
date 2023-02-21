@@ -416,7 +416,7 @@ feature -- Element change
 						graph.remove_node (Current)
 					end
 				else
-					if not class_i.name.is_equal (name) then
+					if not class_i.name.same_string (name) then
 						-- should never happen (see above)
 						set_name (class_i.name)
 					end
@@ -696,7 +696,7 @@ feature {NONE} -- Implementation
 	internal_code_generator: CLASS_TEXT_MODIFIER
 			-- Code generator returned by `code_generator'.
 
-	class_i_by_name (a_name: STRING): detachable CLASS_I
+	class_i_by_name (a_name: READABLE_STRING_GENERAL): detachable CLASS_I
 			-- Return class with `a_name'.
 			-- `Void' if not in system.
 		local
@@ -720,7 +720,7 @@ feature {NONE} -- Implementation
 				until
 					l_nodes.after or else Result /= Void
 				loop
-					if attached {ES_CLASS} l_nodes.item as l_item and then l_item.name.same_string (a_name) then
+					if attached {ES_CLASS} l_nodes.item as l_item and then l_item.name.same_string_general (a_name) then
 						Result := l_item.class_i
 					end
 					l_nodes.forth

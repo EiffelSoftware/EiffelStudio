@@ -58,7 +58,7 @@ feature -- Access
 			a_indents_non_negative: a_indents >= 0
 		local
 			l_cursor: CURSOR
-			l_eol: EDITOR_TOKEN_EOL
+			l_stop: BOOLEAN
 			l_start: BOOLEAN
 			l_lines: like lines
 			l_tokens: LIST [EDITOR_TOKEN]
@@ -106,11 +106,11 @@ feature -- Access
 
 			if not Result.is_empty then
 					-- Ensures no blank lines at the end of the text
-				l_eol ?= Result.last
-				from Result.finish until Result.before or l_eol = Void loop
-					l_eol ?= Result.item
-					if l_eol /= Void then
+				from Result.finish until Result.before or l_stop loop
+					if attached {EDITOR_TOKEN_EOL} Result.item as l_eol then
 						Result.remove
+					else
+						l_stop := True
 					end
 					if not Result.before then
 						Result.back

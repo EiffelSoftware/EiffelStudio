@@ -185,7 +185,7 @@ feature -- Basic operation
 			end
 		end
 
-	get_logs_range: detachable TUPLE [lower_revision, upper_revision: STRING]
+	get_logs_range: detachable TUPLE [lower_revision, upper_revision: STRING_32]
 		do
 			console_log ("get_logs_range")
 
@@ -347,7 +347,7 @@ feature -- Status report
 
 	last_error: NATURAL_8
 
-	last_error_message: detachable STRING
+	last_error_message: detachable READABLE_STRING_32
 
 	last_error_occurred: BOOLEAN
 		do
@@ -356,7 +356,7 @@ feature -- Status report
 				or xmlrpc_client.last_answer_is_fault
 		end
 
-	last_error_to_string: STRING
+	last_error_to_string: STRING_32
 		do
 			create Result.make_from_string (error_message (last_error))
 			if attached last_error_message as m then
@@ -367,17 +367,17 @@ feature -- Status report
 			end
 		end
 
-	error_message (a_error: like last_error): STRING
+	error_message (a_error: like last_error): STRING_32
 		do
 			inspect a_error
 			when err_invalid_account then
-				Result := "Invalid account for " + username
+				Result := {STRING_32} "Invalid account for " + username
 			when err_connection_trouble then
-				Result := "Trouble during connection"
+				Result := {STRING_32} "Trouble during connection"
 			when err_trouble_during_remote_call then
-				Result := "Trouble during remote call"
+				Result := {STRING_32} "Trouble during remote call"
 			else
-				Result := "Error [" + a_error.out + "] occurred"
+				Result := {STRING_32} "Error [" + a_error.out + {STRING_32} "] occurred"
 			end
 		end
 

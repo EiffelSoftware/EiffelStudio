@@ -27,13 +27,11 @@ feature {NONE} -- Initialization
 			is_deferred := a_consumed.is_deferred or a_consumed.is_interface
 			is_frozen := a_consumed.is_frozen
 			is_expanded := a_consumed.is_expanded
-			if a_class /= Void and a_class.compiled_class /= Void then
+			if a_class /= Void and then attached a_class.compiled_class as cl_c then
 					-- This is a compiled class so we save the CLASS_C for use in formatting.
-				class_c := a_class.compiled_class
-				class_i ?= a_class
-			else
-				class_i ?= a_class
+				class_c := cl_c
 			end
+			class_i := {like class_i} / a_class
 			set_current_class_only (a_local_features_only)
 			initialize (a_consumed)
 		ensure
@@ -140,13 +138,9 @@ feature {NONE} -- Initialization
 		require
 			entity_not_void: a_entity /= Void
 			entity_valid: a_entity.is_property_or_event
-		local
-			l_property: CONSUMED_PROPERTY
-			l_event: CONSUMED_EVENT
 		do
 			if a_entity.is_property then
-				l_property ?= a_entity
-				if l_property /= Void then
+				if attached {CONSUMED_PROPERTY} a_entity as l_property then
 					if l_property.is_public then
 						if l_property.setter /= Void then
 							property_setting_features.extend (l_property.setter)
@@ -164,8 +158,7 @@ feature {NONE} -- Initialization
 					end
 				end
 			elseif a_entity.is_event then
-				l_event ?= a_entity
-				if l_event /= Void then
+				if attached {CONSUMED_EVENT} a_entity as l_event then
 					if l_event.is_public then
 						if l_event.adder /= Void then
 							events_features.extend (l_event.adder)
@@ -589,7 +582,7 @@ invariant
 	ancestors_not_void: ancestors /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

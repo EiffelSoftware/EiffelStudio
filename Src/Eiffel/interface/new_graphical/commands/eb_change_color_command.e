@@ -73,7 +73,6 @@ feature {NONE} -- Implementation
 	execute_with_cluster_stone (a_stone: CLUSTER_FIGURE_STONE)
 			-- Colorize all classes in `a_stone'.
 		local
-			cf: BON_CLASS_FIGURE
 			class_list: ARRAYED_LIST [BON_CLASS_FIGURE]
 			old_color_table, new_color_table: STRING_TABLE [EV_COLOR]
 			es_class: ES_CLASS
@@ -95,8 +94,7 @@ feature {NONE} -- Implementation
 				l_nodes.after
 			loop
 				es_class := l_nodes.item
-				cf ?= tool.world.figure_from_model (es_class)
-				if cf /= Void then
+				if attached {BON_CLASS_FIGURE} tool.world.figure_from_model (es_class) as cf then
 					new_color_table.put (change_color_dialog.color, cf.model.name_32)
 					old_color_table.put (cf.background_color, cf.model.name_32)
 					class_list.extend (cf)
@@ -114,11 +112,8 @@ feature {NONE} -- Implementation
 			-- Create a development window and process `a_stone'.
 		require
 			a_stone_not_void: a_stone /= Void
-		local
-			cf: BON_CLASS_FIGURE
 		do
-			cf ?= a_stone.source
-			if cf /= Void then
+			if attached {BON_CLASS_FIGURE} a_stone.source as cf then
 				create change_color_dialog
 				change_color_dialog.set_color (cf.background_color)
 				change_color_dialog.show_modal_to_window (tool.develop_window.window)

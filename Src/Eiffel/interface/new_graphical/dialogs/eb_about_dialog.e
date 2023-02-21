@@ -182,6 +182,19 @@ feature -- Initialization
 			extend (vbox)
 			set_default_push_button (ok_button)
 			set_default_cancel_button (ok_button)
+
+				-- Show hidden debug menu
+			eiffel_image.pointer_button_release_actions.extend (agent (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER; a_count: CELL [INTEGER])
+					do
+						if a_count.item = 1 then
+							if not preferences.development_window_data.estudio_dbg_menu_enabled_preference.value then
+								preferences.development_window_data.estudio_dbg_menu_enabled_preference.set_value (True)
+							end
+						else
+							a_count.replace (a_count.item - 1)
+						end
+					end(?,?,?,?,?,?,?,?,create {CELL [INTEGER]}.put (10))
+				)
 		end
 
 feature {NONE} -- Implementation
@@ -341,7 +354,7 @@ feature {NONE} -- Constant strings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

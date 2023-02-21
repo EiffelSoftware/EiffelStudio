@@ -99,7 +99,7 @@ feature -- Status report
 			t: STRING
 		do
 			t := name_field.text
-			Result := t /= Void and then not t.is_empty
+			Result := attached name_field.text as t Void and then not t.is_empty
 		end
 
 feature -- Status setting

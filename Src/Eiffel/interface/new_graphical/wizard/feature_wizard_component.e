@@ -24,7 +24,7 @@ inherit
 
 feature -- Factory
 
-	new_label (a_text: STRING): EV_LABEL
+	new_label (a_text: READABLE_STRING_GENERAL): EV_LABEL
 			-- Create new label with `a_text'.
 		do
 			create Result.make_with_text (a_text)
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 			-- Number of pixels used to indent widgets.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

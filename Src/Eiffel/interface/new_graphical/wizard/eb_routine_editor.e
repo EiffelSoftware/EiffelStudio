@@ -182,7 +182,7 @@ feature -- Access
 
 	i_th_argument (i: INTEGER): EB_ARGUMENT_SELECTOR
 		do
-			Result ?= argument_list.i_th (i)
+			Result := {like i_th_argument}.attempted (argument_list.i_th (i))
 		end
 
 	do_button, once_button, deferred_button, external_button: EV_RADIO_BUTTON
@@ -212,13 +212,15 @@ feature {NONE} -- Implementation
 				until
 					argument_list.after
 				loop
-					asc ?= argument_list.item
-					check
-						asc_not_void: asc /= Void
-					end
-					Result.append (asc.code)
-					if not argument_list.islast then
-						Result.append ("; ")
+					if attached {EB_ARGUMENT_SELECTOR} argument_list.item as asc then
+						Result.append (asc.code)
+						if not argument_list.islast then
+							Result.append ("; ")
+						end
+					else
+						check
+							asc_not_void: False
+						end
 					end
 					argument_list.forth
 				end
@@ -286,8 +288,6 @@ feature {NONE} -- Implementation
 
 	code_for_contract_list (a_list: EV_BOX; a_keyword: STRING_32): STRING_32
 			-- Code for contract list `a_list' for keyword `a_keyword'.
-		local
-			cs: detachable EB_CONTRACT_SELECTOR
 		do
 			create Result.make (10)
 			if a_list.count > 1 then
@@ -298,9 +298,10 @@ feature {NONE} -- Implementation
 				until
 					a_list.after
 				loop
-					cs ?= a_list.item
-					if cs /= Void then
-						Result.append ("%T%T%T" + cs.code + "%N")
+					if attached {EB_CONTRACT_SELECTOR} a_list.item as cs then
+						Result.append ("%T%T%T")
+						Result.append (cs.code)
+						Result.append_character ('%N')
 					end
 					a_list.forth
 				end
@@ -407,7 +408,7 @@ feature {EB_FEATURE_EDITOR} -- Access
 	ensure_field: EV_TEXT_FIELD;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

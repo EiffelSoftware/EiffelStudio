@@ -61,7 +61,7 @@ feature -- Element change
 		do
 			client_type := a_type
 			if a_type /= Void then
-				feature_clause_selector.export_field.extend (create {EV_LIST_ITEM}.make_with_text (a_type.name))
+				feature_clause_selector.export_field.extend (create {EV_LIST_ITEM}.make_with_text (a_type.name_32))
 			end
 		end
 
@@ -70,7 +70,7 @@ feature -- Element change
 		do
 			supplier_type := a_type
 			if a_type /= Void and then a_type /= client_type then
-				feature_clause_selector.export_field.extend (create {EV_LIST_ITEM}.make_with_text (a_type.name))
+				feature_clause_selector.export_field.extend (create {EV_LIST_ITEM}.make_with_text (a_type.name_32))
 			end
 		end
 
@@ -275,7 +275,7 @@ feature {EV_ANY} -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

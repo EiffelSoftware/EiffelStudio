@@ -3,8 +3,6 @@
 	<target name="services">
 		<description>Service framework library for building service-based applicatsion.</description>
 		<root all_classes="true"/>
-		<option warning="error">
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>

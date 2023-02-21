@@ -136,7 +136,7 @@ feature -- Access
 	item: detachable EVS_GRID_SEARCHABLE_ITEM
 			-- Item at current position
 		do
-			Result ?= grid_wrapper.grid_item (x_internal, y_internal)
+			Result := {like item} / grid_wrapper.grid_item (x_internal, y_internal)
 		end
 
 	item_column_index: INTEGER
@@ -156,7 +156,7 @@ feature -- Access
 		require
 			a_unsortable_list_attached: a_unsortable_list /= Void
 		do
-			create {ARRAYED_LIST [EVS_GRID_COORDINATED]}Result.make (a_unsortable_list.count)
+			create {ARRAYED_LIST [EVS_GRID_COORDINATED]} Result.make (a_unsortable_list.count)
 			from
 				a_unsortable_list.start
 			until

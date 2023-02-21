@@ -584,7 +584,7 @@ feature -- Virtual grid
 		require
 			position_valid: is_position_valid (a_column, a_row)
 		do
-			Result ?= grid_item_function.item ([a_column, a_row])
+			Result := {like grid_item} / grid_item_function.item ([a_column, a_row])
 		end
 
 	item_text_function: detachable FUNCTION [TUPLE [a_item: EV_GRID_ITEM], like selection]

@@ -99,7 +99,7 @@ feature {NONE} -- Object stone
 				if attached object_name as ostn then
 					cl := l_rel_obj_line.object_dynamic_class
 					if cl /= Void then
-						feat := cl.feature_with_name (ostn)
+						feat := cl.feature_with_name_32 (ostn)
 						if feat /= Void then
 								--| Note: `l_rel_obj_line.object_address' can be Void
 							create fost.make (l_rel_obj_line.object_address, feat)
@@ -315,7 +315,7 @@ invariant
 	object_not_void: object /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

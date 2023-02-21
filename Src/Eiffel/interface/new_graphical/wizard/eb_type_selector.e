@@ -406,7 +406,7 @@ feature {EB_FEATURE_EDITOR, EB_CREATE_CLASS_DIALOG, EB_TYPE_SELECTOR, EB_INHERIT
 				if a_supplier_type /= Void then
 						-- Used when selecting inheritance via the diagram tool.
 					selector.wipe_out
-					selector.set_text (a_supplier_type.name)
+					selector.set_text (a_supplier_type.name_32)
 					selector.disable_sensitive
 				end
 					-- Detachable types not valid for inheritance.
@@ -455,13 +455,13 @@ feature {EB_FEATURE_EDITOR, EB_CREATE_CLASS_DIALOG, EB_TYPE_SELECTOR, EB_INHERIT
 			create l_list.make (2 + initial_strings.count)
 
 			if a_client_type /= Void and then a_supplier_type /= Void then
-				l_str := a_supplier_type.name.string
+				l_str := a_supplier_type.name_32.string
 				if generics_count (l_str) > 0 then
 					l_str.append (" [..]")
 				end
 				l_list.extend (l_str)
 				if a_client_type /= a_supplier_type then
-					l_str := a_client_type.name.string
+					l_str := a_client_type.name_32.string
 					if generics_count (l_str) > 0 then
 						l_str.append (" [..]")
 					end
@@ -486,7 +486,7 @@ feature {EV_ANY} -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

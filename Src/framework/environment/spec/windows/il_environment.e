@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 			end
 			across l_list as l_sdk loop
 				create l_path.make_from_string_general ("hkey_local_machine\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\Windows\")
-				l_path.append_string (l_sdk.item)
+				l_path.append_string (l_sdk)
 				Result.extend (l_path)
 				create l_path.make_from_string (l_path)
 				l_path.append_string ("\WinSDK-NetFx")

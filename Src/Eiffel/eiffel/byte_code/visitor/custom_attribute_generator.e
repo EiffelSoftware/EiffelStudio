@@ -75,8 +75,9 @@ feature -- Code generation
 			cil_generator := a_code_generator
 
 			cb := a_ca.creation_expr
-			l_type ?= cb.type
-			l_creation_class := l_type.base_class
+			check attached {CL_TYPE_A} cb.type as l_cb_type then
+				l_creation_class := l_cb_type.base_class
+			end
 			l_tuple_const := a_ca.named_arguments
 
 			param := cb.call.parameters
@@ -98,12 +99,15 @@ feature -- Code generation
 				end
 			end
 			if l_extension = Void then
-				l_type ?= cb.type
-				if count = 0 then
-						-- Use default constructor
-					l_ctor_token := cil_generator.constructor_token (l_type.associated_class_type (a_code_generator.current_class_type.type).implementation_id)
+				if attached {CL_TYPE_A} cb.type as l_type then
+					if count = 0 then
+							-- Use default constructor
+						l_ctor_token := cil_generator.constructor_token (l_type.associated_class_type (a_code_generator.current_class_type.type).implementation_id)
+					else
+						l_ctor_token := cil_generator.inherited_constructor_token (l_type.associated_class_type (a_code_generator.current_class_type.type).implementation_id, cb.call.feature_id)
+					end
 				else
-					l_ctor_token := cil_generator.inherited_constructor_token (l_type.associated_class_type (a_code_generator.current_class_type.type).implementation_id, cb.call.feature_id)
+					check is_cl_type_a: False end
 				end
 			end
 
@@ -677,7 +681,7 @@ invariant
 	is_dotnet_compilation: system.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

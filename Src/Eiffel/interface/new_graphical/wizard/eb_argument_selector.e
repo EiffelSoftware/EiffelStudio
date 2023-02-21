@@ -77,12 +77,9 @@ feature -- Access
 
 	code: STRING
 			-- Generated code.
-		local
-			t: STRING
 		do
-			t := name_field.text
 			create Result.make (10)
-			if not t.is_empty then
+			if attached name_field.text as t and then not t.is_empty then
 				Result.append (t)
 				Result.append (": ")
 				Result.append (type_selector.code)
@@ -110,11 +107,8 @@ feature -- Status setting
 
 	remove_semicolon
 			-- Remove the semicolon label at the end of `Current'.
-		local
-			lbl: EV_LABEL
 		do
-			lbl ?= last
-			if lbl /= Void then
+			if attached {EV_LABEL} last as lbl then
 				prune (lbl)
 			end
 		end

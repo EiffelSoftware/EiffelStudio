@@ -182,7 +182,7 @@ feature -- Access
 
 	i_th_argument (i: INTEGER): EB_ARGUMENT_SELECTOR
 		do
-			Result := {like i_th_argument}.attempted (argument_list.i_th (i))
+			Result := {like i_th_argument} / (argument_list.i_th (i))
 		end
 
 	do_button, once_button, deferred_button, external_button: EV_RADIO_BUTTON
@@ -202,8 +202,6 @@ feature {NONE} -- Implementation
 
 	arguments_code: STRING_32
 			-- Arguments as text. Empty if no arguments.
-		local
-			asc: EB_ARGUMENT_SELECTOR
 		do
 			create Result.make (10)
 			if not argument_list.is_empty then

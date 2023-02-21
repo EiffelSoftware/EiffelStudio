@@ -95,11 +95,8 @@ feature -- Status report
 
 	valid_content: BOOLEAN
 			-- Is user input valid for code generation?
-		local
-			t: STRING
 		do
-			t := name_field.text
-			Result := attached name_field.text as t Void and then not t.is_empty
+			Result := attached name_field.text as t and then not t.is_empty
 		end
 
 feature -- Status setting
@@ -152,7 +149,7 @@ feature {EV_ANY} -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

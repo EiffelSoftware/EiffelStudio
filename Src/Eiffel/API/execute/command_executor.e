@@ -48,7 +48,7 @@ feature -- Command Execution
 		end
 
 	execute_with_args_and_working_directory_and_environment (appl_name: READABLE_STRING_GENERAL; args: READABLE_STRING_GENERAL; working_directory: detachable PATH;
-				envir: HASH_TABLE [STRING, STRING])
+				envir: HASH_TABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL])
 			-- Execute external command `appl_name' with following arguments and working_directory.
 		require
 			appl_name_not_void: appl_name /= Void
@@ -124,7 +124,7 @@ feature -- Compiler specific calls
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

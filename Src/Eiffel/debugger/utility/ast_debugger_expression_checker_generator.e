@@ -333,11 +333,9 @@ feature {NONE} -- Type checking
 		require
 			an_exp_not_void: an_exp /= Void
 		local
-			l_exp_call: EXPR_CALL_AS
 			l_instr_as: INSTR_CALL_AS
 			errlst: LIST [ERROR]
 			errcur: CURSOR
-			l_vkcn_error: VKCN
 			l_has_vkcn_error: BOOLEAN
 			l_error_level: NATURAL_32
 		do
@@ -353,16 +351,14 @@ feature {NONE} -- Type checking
 				until
 					errlst.after or l_has_vkcn_error
 				loop
-					l_vkcn_error ?= errlst.item
-					l_has_vkcn_error := l_vkcn_error /= Void
+					l_has_vkcn_error := attached {VKCN} errlst.item
 					errlst.forth
 				end
 				errlst.go_to (errcur)
 
 					--| If any VKCN .. then let's try to check it as an instruction
 				if l_has_vkcn_error then
-					l_exp_call ?= an_exp
-					if l_exp_call /= Void then
+					if attached {EXPR_CALL_AS} an_exp as l_exp_call then
 						error_handler.wipe_out
 						create l_instr_as.initialize (l_exp_call.call)
 						expression_or_instruction_type_check_and_code (a_feature, l_instr_as)
@@ -510,7 +506,6 @@ feature {NONE} -- Implementation
 			-- If not valid, raise a compiler error and return Void.
 		local
 			l_type: TYPE_A
-			l_class_type: CLASS_TYPE_AS
 			l_vtct: VTCT
 			l_vd29: VD29
 			l_classes: LIST [CLASS_I]
@@ -532,8 +527,7 @@ feature {NONE} -- Implementation
 					fixme ("2006-09-14: Is it correct to try to find the correct context ? Need more testing with class renaming. (Asked by Manu)")
 				end
 					-- Check about dependencies
-				l_class_type ?= a_type
-				if l_class_type /= Void then
+				if attached {CLASS_TYPE_AS} a_type as l_class_type then
 					l_classes := universe.classes_with_name (l_class_type.class_name.name)
 					if l_classes.count = 1 then
 						l_cl := l_classes.first
@@ -647,7 +641,7 @@ feature {INSPECT_CONTROL} -- AST modification
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

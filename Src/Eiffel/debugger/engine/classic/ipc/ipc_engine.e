@@ -83,7 +83,7 @@ feature -- Launching
 					cmd := safe_path (ise_ecdbgd_path.name)
 
 					debug ("ipc")
-						io.put_string ("Launching ecdbgd : " + cmd.as_string_8 + " (timeout=" + ise_timeout.out + ") %N")
+						io.put_string ("Launching ecdbgd : " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (cmd) + " (timeout=" + ise_timeout.out + ") %N")
 					end
 					r := launch_ec_daemon (ise_ecdbgd_path, "ecdbgd")
 					ec_dbg_launched := (r = 1)
@@ -359,7 +359,7 @@ feature {NONE} -- Externals
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

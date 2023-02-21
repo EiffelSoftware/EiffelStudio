@@ -323,7 +323,6 @@ feature -- Start Operation
 			f: RAW_FILE
 			make_f: RAW_FILE
 			system_name: STRING
-			env8: like environment_variables_to_string_8
 			env32: like environment_variables_updated_with
 			launch_it: BOOLEAN
 		do
@@ -362,16 +361,12 @@ feature -- Start Operation
 					if launch_it then
 						env32 := environment_variables_updated_with (param.environment_variables, False)
 						env32.force (project_location.workbench_path.name, {STRING_32} "MELT_PATH")
-						env8 := environment_variables_to_string_8 (env32)
-						check
-							env8_not_void: env8 /= Void
-						end
 						create cmd_exec
 						cmd_exec.execute_with_args_and_working_directory_and_environment (
 									safe_path (appl_name.name),
 									param.arguments,
 									param.working_directory,
-									env8
+									env32
 								)
 					end
 				end
@@ -385,7 +380,7 @@ feature -- Start Operation
 			f: RAW_FILE
 			make_f: RAW_FILE
 			system_name: STRING
-			env8: like environment_variables_to_string_8
+			env32: like environment_variables_updated_with
 			launch_it: BOOLEAN
 		do
 			if Eiffel_project.initialized and then Eiffel_project.system_defined then
@@ -422,12 +417,12 @@ feature -- Start Operation
 					end
 					if launch_it then
 						create cmd_exec
-						env8 := environment_variables_to_string_8 (environment_variables_updated_with (param.environment_variables, True))
+						env32 := environment_variables_updated_with (param.environment_variables, True)
 						cmd_exec.execute_with_args_and_working_directory_and_environment (
 									safe_path (appl_name.name),
 									param.arguments,
 									param.working_directory,
-									env8
+									env32
 								)
 					end
 				end
@@ -643,29 +638,6 @@ feature -- Environment related
 			end
 		ensure
 			Result_not_void_unless_unchanged: Result = Void implies (return_void_if_unchanged and (env = Void or else env.is_empty))
-		end
-
-	environment_variables_to_string_8 (env32: HASH_TABLE [STRING_32, STRING_32]): HASH_TABLE [STRING, STRING]
-			-- String representation of the Environment variables
-		do
-			if attached env32 then
-				create Result.make (env32.count)
-				from
-					env32.start
-				until
-					env32.after
-				loop
-					if
-						attached env32.key_for_iteration as k and then
-						attached env32.item_for_iteration as v
-					then
-						Result.force (v.as_string_8, k.as_string_8)
-					end
-					env32.forth
-				end
-			end
-		ensure
-			Result = Void implies env32 = Void
 		end
 
 invariant

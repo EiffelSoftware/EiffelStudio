@@ -21,14 +21,14 @@ create {DBG_EVALUATOR, RECV_VALUE, ATTR_REQUEST, CALL_STACK_ELEMENT, DEBUG_VALUE
 
 feature {NONE} -- Initialization
 
-	make_with_name (a_name: like name)
+	make_with_name (a_name: READABLE_STRING_GENERAL)
 			-- Create current
 		do
-			name := a_name
+			name := a_name.to_string_32
 			display_kind := kind
 		end
 
-	make_with_details (a_name: like name; a_message: like message; a_kind: like display_kind)
+	make_with_details (a_name: READABLE_STRING_GENERAL; a_message: like message; a_kind: like display_kind)
 			-- Create current
 		do
 			make_with_name (a_name)

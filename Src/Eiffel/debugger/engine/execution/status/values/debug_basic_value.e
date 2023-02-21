@@ -68,70 +68,94 @@ feature -- Access
 	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		local
-			uint8val: NATURAL_8_REF
-			uint16val: NATURAL_16_REF
-			uint32val: NATURAL_32_REF
-			uint64val: NATURAL_64_REF
-
-			int8val: INTEGER_8_REF
-			int16val: INTEGER_16_REF
-			int32val: INTEGER_REF
-			int64val: INTEGER_64_REF
-
-			realval: REAL_REF
-			dblval: DOUBLE_REF
-			cval: CHARACTER_REF
-			ptrval: POINTER_REF
-			bval: BOOLEAN_REF
-			wcval: WIDE_CHARACTER_REF
 			d_fact: DUMP_VALUE_FACTORY
 		do
 			d_fact := Debugger_manager.Dump_value_factory
 			inspect sk_type
 			when sk_uint8   then
-				uint8val ?= value
-				Result := d_fact.new_natural_8_value (uint8val.item, Dynamic_class)
+				if attached {NATURAL_8_REF} value as uint8val then
+					Result := d_fact.new_natural_8_value (uint8val.item, Dynamic_class)
+				else
+					check is_uint8: False end
+				end
 			when sk_uint16  then
-				uint16val ?= value
-				Result := d_fact.new_natural_16_value (uint16val.item, Dynamic_class)
+				if attached {NATURAL_16_REF} value as uint16val then
+					Result := d_fact.new_natural_16_value (uint16val.item, Dynamic_class)
+				else
+					check is_uint16: False end
+				end
 			when sk_uint32  then
-				uint32val ?= value
-				Result := d_fact.new_natural_32_value (uint32val.item, Dynamic_class)
+				if attached {NATURAL_32_REF} value as uint32val then
+					Result := d_fact.new_natural_32_value (uint32val.item, Dynamic_class)
+				else
+					check is_uint32: False end
+				end
 			when sk_uint64  then
-				uint64val ?= value
-				Result := d_fact.new_natural_64_value (uint64val.item, Dynamic_class)
-
+				if attached {NATURAL_64_REF} value as uint64val then
+					Result := d_fact.new_natural_64_value (uint64val.item, Dynamic_class)
+				else
+					check is_uint64: False end
+				end
 			when sk_int8    then
-				int8val ?= value
-				Result := d_fact.new_integer_8_value (int8val.item, Dynamic_class)
+				if attached {INTEGER_8_REF} value as int8val then
+					Result := d_fact.new_integer_8_value (int8val.item, Dynamic_class)
+				else
+					check is_int8: False end
+				end
 			when sk_int16   then
-				int16val ?= value
-				Result := d_fact.new_integer_16_value (int16val.item, Dynamic_class)
+				if attached {INTEGER_16_REF} value as int16val then
+					Result := d_fact.new_integer_16_value (int16val.item, Dynamic_class)
+				else
+					check is_int16: False end
+				end
 			when sk_int32   then
-				int32val ?= value
-				Result := d_fact.new_integer_32_value (int32val.item, Dynamic_class)
+				if attached {INTEGER_32_REF} value as int32val then
+					Result := d_fact.new_integer_32_value (int32val.item, Dynamic_class)
+				else
+					check is_int32: False end
+				end
 			when sk_int64   then
-				int64val ?= value
-				Result := d_fact.new_integer_64_value (int64val.item, Dynamic_class)
-
+				if attached {INTEGER_64_REF} value as int64val then
+					Result := d_fact.new_integer_64_value (int64val.item, Dynamic_class)
+				else
+					check is_int64: False end
+				end
 			when sk_bool    then
-				bval ?= value
-				Result := d_fact.new_boolean_value (bval.item, Dynamic_class)
+				if attached {BOOLEAN_REF} value as bval then
+					Result := d_fact.new_boolean_value (bval.item, Dynamic_class)
+				else
+					check is_bool: False end
+				end
 			when sk_char8    then
-				cval ?= value
-				Result := d_fact.new_character_value (cval.item, Dynamic_class)
+				if attached {CHARACTER_8_REF} value as cval then
+					Result := d_fact.new_character_value (cval.item, Dynamic_class)
+				else
+					check is_char8: False end
+				end
 			when sk_char32   then
-				wcval ?= value
-				Result := d_fact.new_character_32_value (wcval.item, Dynamic_class)
+				if attached {CHARACTER_32_REF} value as wcval then
+					Result := d_fact.new_character_32_value (wcval.item, Dynamic_class)
+				else
+					check is_char32: False end
+				end
 			when sk_real32  then
-				realval ?= value
-				Result := d_fact.new_real_32_value (realval.item, Dynamic_class)
+				if attached {REAL_32_REF} value as real32val then
+					Result := d_fact.new_real_32_value (real32val.item, Dynamic_class)
+				else
+					check is_real32: False end
+				end
 			when sk_real64  then
-				dblval ?= value
-				Result := d_fact.new_real_64_value (dblval.item, Dynamic_class)
+				if attached {REAL_64_REF} value as real64val then
+					Result := d_fact.new_real_64_value (real64val.item, Dynamic_class)
+				else
+					check is_real64: False end
+				end
 			when sk_pointer then
-				ptrval ?= value
-				Result := d_fact.new_pointer_value (ptrval.item, Dynamic_class)
+				if attached {POINTER_REF} value as ptrval then
+					Result := d_fact.new_pointer_value (ptrval.item, Dynamic_class)
+				else
+					check is_pointer: False end
+				end
 			else
 				check known_type: False	end
 			end
@@ -226,7 +250,7 @@ invariant
 	dynamic_class_not_void: dynamic_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

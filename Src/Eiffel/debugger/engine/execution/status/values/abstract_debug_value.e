@@ -244,13 +244,15 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_empty
 			if attached name as n then
-				Result.append ("name=" + n)
+				Result.append ({STRING_32} "name=")
+				Result.append (n)
 			end
 			if address = Void or else address.is_void then
-				Result.append (" Is_Void")
+				Result.append ({STRING_32} " Is_Void")
 			end
 			if attached dynamic_class as cl then
-				Result.append (" type=" + cl.name_in_upper)
+				Result.append ({STRING_32} " type=")
+				Result.append (cl.name_in_upper)
 			end
 		end
 

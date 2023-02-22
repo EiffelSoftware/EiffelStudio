@@ -48,6 +48,8 @@
 			<fileset directory="." include="@(**/*.dll)"/>
 		</delete>
 		<exec executable="dotnet clean -c Release runtime_core.csproj" />
+		<delete directory="obj" />
+		<delete directory="bin" />
 	</target>
 
 	<target name="clobber" depend="clean" />

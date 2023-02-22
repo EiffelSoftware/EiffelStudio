@@ -195,9 +195,12 @@ namespace EiffelSoftware.Runtime
 				// Use non-reflection-only routine.
 				return a_provider.GetCustomAttributes(a_type, false);
 			}
-#elif NET
+#elif NET5_0_OR_GREATER
 			IList<CustomAttributeData> attributes = CustomAttributeData.GetCustomAttributes(a_type);
-			return attributes.ToArray();
+			CustomAttributeData[] list = new CustomAttributeData[attributes.Count];
+			attributes.CopyTo(list, 0);
+			return list;
+			//return Enumerable.Range(0, attributes.Count).Select(i => attributes[i]).ToArray();
 #else
 			return a_provider.GetCustomAttributes(a_type, false);
 #endif

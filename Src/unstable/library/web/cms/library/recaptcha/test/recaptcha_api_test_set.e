@@ -56,7 +56,7 @@ feature -- Test routines
 
 feature {NONE} -- Implementation
 
-	has_error (l_captcha: RECAPTCHA_API; a_error: READABLE_STRING_32): BOOLEAN
+	has_error (l_captcha: RECAPTCHA_API; a_error: READABLE_STRING_8): BOOLEAN
 		do
 			if attached l_captcha.errors as l_errors then
 				l_errors.compare_objects

@@ -39,7 +39,7 @@
 	</target>
 	<target name="compile_core" >
 		<echo message="- Compile .Net 6.0 Eiffel runtime" />
-		<exec executable="dotnet build -c Release runtime_core.csproj" />
+		<exec executable="dotnet build -c Release runtime_core.csproj --restore --no-incremental" />
 		<exec executable="dotnet publish -c Release runtime_core.csproj" />
 	</target>
 	<target name="clean" >

@@ -143,15 +143,15 @@ feature -- dragging
 	origin_text: STRING_32
 			-- Text of the feature
 		local
-			temp: STRING
+			temp: like origin_text
 		do
 			if e_feature /= Void then
-				Result := "-- Version from class: "
-				Result.append (e_feature.written_class.name_in_upper)
+				Result := {STRING_32} "-- Version from class: "
+				Result.append_string_general (e_feature.written_class.name_in_upper)
 			else
 				Result := feature_name.twin
 			end
-			Result.append ("%N%N%T")
+			Result.append_string_general ("%N%N%T")
 
 			temp := Precursor {CLASSC_STONE}
 
@@ -164,7 +164,7 @@ feature -- dragging
 					Result.append (temp)
 				end
 			end
-			Result.append ("%N")
+			Result.append_character ('%N')
 		end
 
 	file_name: like {ERROR}.file_name
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			-- Line number of `internal_start_position'.
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

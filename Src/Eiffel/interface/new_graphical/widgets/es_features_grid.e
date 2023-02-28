@@ -774,11 +774,16 @@ feature {NONE} -- Event handler
 			loop
 				l_parent := a_parent_list.item
 				l_parent_text := l_parent.type.text_32 (a_match_list)
-
-				l_parent_cname := l_parent.type.class_name.text_32 (a_match_list).as_string_8 -- Class name is ASCII compatible.
-				if Workbench.universe_defined then
-					l_parent_class_i := universe.class_named (l_parent_cname, a_class.group)
+				l_parent_class_i := Void
+				if
+					attached l_parent.type.class_name.text_32 (a_match_list) as l_parent_cname32 and then
+					l_parent_cname32.is_valid_as_string_8
+				then
+					if Workbench.universe_defined then
+						l_parent_class_i := universe.class_named (l_parent_cname32.to_string_8, a_class.group)
+					end
 				end
+
 				l_row := extended_parent_item_subrow (Result, l_parent, l_parent_class_i, l_parent_text, a_class)
 				if a_expanded and l_row.is_expandable then
 					l_row.expand

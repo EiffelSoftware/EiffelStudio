@@ -111,7 +111,7 @@ feature {NONE} -- Query
 			l_fn: detachable STRING_32
 			l_conf_target: CONF_TARGET
 			l_ver: STRING_8
-			l_target: STRING_8
+			l_target: STRING_32
 			l_workbench: detachable WORKBENCH_I
 			l_window_id: NATURAL_32
 			l_extension: detachable STRING_32
@@ -626,7 +626,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

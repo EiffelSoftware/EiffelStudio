@@ -259,7 +259,7 @@ feature -- Initialization
 			view_name_not_empty: not cd.current_view.is_empty
 		local
 			current_index: INTEGER
-			current_views: LINKED_LIST [STRING]
+			current_views: LINKED_LIST [READABLE_STRING_GENERAL]
 			cg: ES_CLASS_GRAPH
 		do
 			cg := cd.model
@@ -283,12 +283,12 @@ feature -- Initialization
 			sb_supplier.set_value (supplier_depth)
 			view_selector.select_actions.block
 			current_views := cd.available_views
-			if not current_views.has (cd.current_view) then
+			if current_views_index_of (current_views, cd.current_view) < 0 then
 				current_views.extend (cd.current_view)
 			end
 			view_selector.set_strings (current_views)
 			view_selector.set_text (cd.current_view)
-			current_index := current_views.index_of (cd.current_view, 1)
+			current_index := current_views_index_of (current_views, cd.current_view)
 			view_selector.select_actions.resume
 			view_selector.i_th (current_index).enable_select
 		ensure
@@ -306,7 +306,7 @@ feature -- Initialization
 			view_name_not_empty: not cd.current_view.is_empty
 		local
 			current_index: INTEGER
-			current_views: LINKED_LIST [STRING]
+			current_views: LINKED_LIST [READABLE_STRING_GENERAL]
 			cg: ES_CLUSTER_GRAPH
 		do
 			cg := cd.model
@@ -316,12 +316,12 @@ feature -- Initialization
 			sb_subcluster.set_value (subcluster_depth)
 			view_selector.select_actions.block
 			current_views := cd.available_views
-			if not current_views.has (cd.current_view) then
+			if current_views_index_of (current_views, cd.current_view) < 0 then
 				current_views.extend (cd.current_view)
 			end
 			view_selector.set_strings (current_views)
 			view_selector.set_text (cd.current_view)
-			current_index := current_views.index_of (cd.current_view, 1)
+			current_index := current_views_index_of (current_views, cd.current_view)
 			view_selector.select_actions.resume
 			view_selector.i_th (current_index).enable_select
 		ensure
@@ -377,6 +377,26 @@ feature -- Status report
 
 	is_for_class_view: BOOLEAN
 			-- Has `Current' been created through `make_for_class_view'?
+
+feature {NONE} -- Helpers
+
+	current_views_index_of (a_current_views: ITERABLE [READABLE_STRING_GENERAL]; a_view: READABLE_STRING_GENERAL): INTEGER
+			-- Index of `a_view` in `a_current_views` if found, otherwise `-1`
+		local
+			i: INTEGER
+		do
+			Result := -1
+			across
+				a_current_views as ic
+			until
+				Result > 0
+			loop
+				i := i + 1
+				if a_view.same_string (ic.item) then
+					Result := i
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -461,7 +481,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

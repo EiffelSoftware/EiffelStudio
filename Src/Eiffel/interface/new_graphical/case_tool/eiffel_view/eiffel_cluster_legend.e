@@ -135,7 +135,6 @@ feature {NONE} -- Implementation
 			-- Build `cluster_color_table'.
 		local
 			l_nodes: LIST [EG_LINKABLE_FIGURE]
-			bcf: BON_CLASS_FIGURE
 		do
 			from
 				l_nodes := display_world.flat_classes
@@ -143,8 +142,7 @@ feature {NONE} -- Implementation
 			until
 				l_nodes.after
 			loop
-				bcf ?= l_nodes.item
-				if bcf /= Void and then bcf.is_show_requested then
+				if attached {BON_CLASS_FIGURE} l_nodes.item as bcf and then bcf.is_show_requested then
 					include_bon_class (bcf)
 				end
 				l_nodes.forth
@@ -161,45 +159,41 @@ feature {NONE} -- Implementation
 			rec: EV_MODEL_RECTANGLE
 			txt: EV_MODEL_TEXT
 		do
-			from
-				cluster_color_table.start
-				i := 0
-			until
-				cluster_color_table.after
+			i := 0
+			across
+				cluster_color_table as tb_ic
 			loop
-				colors := cluster_color_table.item_for_iteration
+				colors := tb_ic.item
 
 				if colors.count = 1 then
 					l_color := colors.first.color
 				else
-					from
-						max := 0
-						colors.start
-					until
-						colors.after
+					max := 0
+					across
+						colors as col_ic
 					loop
-						if colors.item.user_count > max then
-							max := colors.item.user_count
-							l_color := colors.item.color
+						if col_ic.item.user_count > max then
+							max := col_ic.item.user_count
+							l_color := col_ic.item.color
 						end
-						colors.forth
 					end
 				end
 
 				create l_cluster_entry
-					create rec.make_with_positions (0, 2, 30, 18)
-					rec.set_background_color (l_color)
+				create rec.make_with_positions (0, 2, 30, 18)
+				rec.set_background_color (l_color)
+
 				l_cluster_entry.extend (rec)
-					create txt.make_with_text (cluster_color_table.key_for_iteration)
-					txt.set_point_position (35, 2)
+				create txt.make_with_text (tb_ic.key)
+				txt.set_point_position (35, 2)
+
 				l_cluster_entry.extend (txt)
 				l_cluster_entry.set_point_position (point_x, point_y + i * 20)
-				l_cluster_entry.set_pebble_function (agent cluster_pebble (cluster_color_table.key_for_iteration))
+				l_cluster_entry.set_pebble_function (agent cluster_pebble (tb_ic.key))
 				l_cluster_entry.set_accept_cursor (cursors.cur_cluster)
 				l_cluster_entry.set_deny_cursor (cursors.cur_x_cluster)
 				extend (l_cluster_entry)
 
-				cluster_color_table.forth
 				i := i + 1
 			end
 		end
@@ -209,7 +203,7 @@ feature {NONE} -- Implementation
 		require
 			a_class_not_void: a_class /= Void
 		local
-			cluster_name: STRING
+			cluster_name: READABLE_STRING_32
 			colors: ARRAYED_LIST [TUPLE [color: EV_COLOR; user_count: INTEGER]]
 		do
 			cluster_name := a_class.model.class_i.group.name
@@ -270,7 +264,7 @@ feature {NONE} -- Implementation
 			pin_button.set_point_position (border.point_b_x - 43, border.point_a_y + 1)
 		end
 
-	cluster_pebble (cluster_name: STRING): CLUSTER_STONE
+	cluster_pebble (cluster_name: READABLE_STRING_GENERAL): CLUSTER_STONE
 			-- Return stone for cluster with `cluster_name' if any.
 		local
 			cluster_i: CLUSTER_I
@@ -291,9 +285,8 @@ feature {NONE} -- Implementation
 			-- User pressed `colorize_button'.
 		local
 			class_list: ARRAYED_LIST [BON_CLASS_FIGURE]
-			old_color_table, new_color_table: HASH_TABLE [EV_COLOR, STRING]
+			old_color_table, new_color_table: STRING_TABLE [EV_COLOR]
 			l_nodes: LIST [EG_LINKABLE_FIGURE]
-			bcf: BON_CLASS_FIGURE
 			colors: ARRAYED_LIST [TUPLE [color: EV_COLOR; user_count: INTEGER]]
 			new_color: EV_COLOR
 			color_nr: INTEGER
@@ -319,8 +312,7 @@ feature {NONE} -- Implementation
 				until
 					l_nodes.after
 				loop
-					bcf ?= l_nodes.item
-					if bcf /= Void then
+					if attached {BON_CLASS_FIGURE} l_nodes.item as bcf then
 						colors := cluster_color_table.item (bcf.model.class_i.group.name)
 						if colors = Void then
 							new_color := color_with_number (color_nr)
@@ -334,8 +326,8 @@ feature {NONE} -- Implementation
 						check
 							new_color_not_void: new_color /= Void
 						end
-						new_color_table.put (new_color, bcf.model.name)
-						old_color_table.put (bcf.background_color, bcf.model.name)
+						new_color_table.put (new_color, bcf.model.name_32)
+						old_color_table.put (bcf.background_color, bcf.model.name_32)
 						class_list.extend (bcf)
 					end
 					l_nodes.forth
@@ -347,7 +339,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	change_color_all (classes: LIST [BON_CLASS_FIGURE]; color_table: HASH_TABLE [EV_COLOR, STRING])
+	change_color_all (classes: LIST [BON_CLASS_FIGURE]; color_table: STRING_TABLE [EV_COLOR])
 			-- Change color of `classes' according to `color_table'.
 		require
 			classes_exist: classes /= Void
@@ -362,7 +354,7 @@ feature {NONE} -- Implementation
 				classes.after
 			loop
 				cf := classes.item
-				c := color_table.item (classes.item.model.name)
+				c := color_table.item (classes.item.model.name_32)
 				if c /= Void then
 					change_font (classes.item, c)
 					cf.set_background_color (c)
@@ -503,7 +495,7 @@ feature {NONE} -- Implementation
 	internal_colorize_button: like colorize_button
 			-- Implementation of `colorize_button'.
 
-	cluster_color_table: HASH_TABLE [ARRAYED_LIST [TUPLE [color: EV_COLOR; user_count: INTEGER]], STRING]
+	cluster_color_table: STRING_TABLE [ARRAYED_LIST [TUPLE [color: EV_COLOR; user_count: INTEGER]]]
 			-- Table of cluster names and list of colors of classes of cluster with cluster
 			-- name and how many classes in the cluster have this color.
 
@@ -535,7 +527,7 @@ feature {NONE} -- Implementation pin
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

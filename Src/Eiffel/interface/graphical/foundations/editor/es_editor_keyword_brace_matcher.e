@@ -100,7 +100,7 @@ feature {NONE} -- Status report
 		local
 			l_next: detachable like next_text_token
 			l_prev: detachable like previous_text_token
-			l_image: like {EDITOR_TOKEN}.image
+			l_image: like {EDITOR_TOKEN}.wide_image
 		do
 			if attached {EDITOR_TOKEN_KEYWORD} a_token as l_keyword then
 				l_image := l_keyword.wide_image
@@ -138,7 +138,7 @@ feature {NONE} -- Status report
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

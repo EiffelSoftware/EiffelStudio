@@ -45,14 +45,14 @@ feature {NONE} -- Initialization
 				file.read_line
 				entry := analyse_line (file.last_string)
 				if entry /= Void then
-					if entry.name.is_equal ("name") then
+					if entry.name.same_string ("name") then
 						set_name (entry.value)
-					elseif entry.name.is_equal ("description") then
+					elseif entry.name.same_string ("description") then
 						set_description (wrap_word (entry.value, 70))
-					elseif entry.name.is_equal ("location") then
+					elseif entry.name.same_string ("location") then
 						location := eiffel_layout.new_project_wizards_path.extended (entry.value)
-					elseif entry.name.is_equal ("platform") then
-						target_platform := entry.value.as_lower
+					elseif entry.name.same_string ("platform") then
+						target_platform := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (entry.value).as_lower
 					end
 				end
 			end
@@ -75,7 +75,7 @@ feature -- Access
 	target_platform_supported: BOOLEAN
 			-- Is the target platform supported by the current platform?
 		do
-			Result := target_platform.is_equal ("all") or else target_platform.is_case_insensitive_equal (eiffel_layout.platform_abstraction)
+			Result := target_platform.same_string ("all") or else target_platform.is_case_insensitive_equal (eiffel_layout.platform_abstraction)
 		end
 
 feature -- Status Setting
@@ -122,7 +122,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

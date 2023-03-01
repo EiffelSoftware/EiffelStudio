@@ -87,7 +87,7 @@ feature -- Properties
 			Result := pixmaps.icon_pixmaps.tool_config_icon
 		end
 
-	name: STRING
+	name: STRING_GENERAL
 			-- Name of the command.
 		do
 			Result := "Execution_parameters"
@@ -114,7 +114,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

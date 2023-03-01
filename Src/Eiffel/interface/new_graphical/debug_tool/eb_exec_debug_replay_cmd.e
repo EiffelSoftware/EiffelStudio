@@ -135,7 +135,7 @@ feature {NONE} -- Attributes
 			end
 		end
 
-	name: STRING
+	name: STRING_GENERAL
 			-- Name of the command.
 
 	menu_name: STRING_GENERAL
@@ -187,7 +187,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

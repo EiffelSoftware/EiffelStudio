@@ -100,7 +100,7 @@ feature -- Execution
 
 feature -- Access
 
-	name: STRING
+	name: STRING_GENERAL
 			-- <Precursor>
 		do
 			Result := command_name
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

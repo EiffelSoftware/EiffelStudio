@@ -94,10 +94,10 @@ feature -- Access
 			Result := tool.title
 		end
 
-	name: STRING
+	name: STRING_GENERAL
 			-- Name to be displayed.
 		do
-			Result := (create {INTERNAL}).type_name (tool)
+			Result := (create {INTERNAL}).type_name_32 (tool)
 			if tool.edition > 1 then
 				Result.append (":" + tool.edition.out)
 			end
@@ -240,7 +240,7 @@ invariant
 	tool_attached: not is_recycled implies tool /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

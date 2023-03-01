@@ -175,7 +175,7 @@ feature {NONE} -- Implemetation
 					end
 					if not l_error and then target_name /= Void then
 						if l_target /= Void then
-							l_error := not l_target.name.is_case_insensitive_equal (target_name)
+							l_error := not l_target.name.is_case_insensitive_equal_general (target_name)
 						else
 								-- Get target from the system.
 							l_conf_system.targets.search (target_name)
@@ -187,7 +187,7 @@ feature {NONE} -- Implemetation
 									until
 										l_all_libs.after or l_found
 									loop
-										if target_name.is_case_insensitive_equal (l_all_libs.item_for_iteration.name) then
+										if l_all_libs.item_for_iteration.name.is_case_insensitive_equal_general (target_name) then
 											l_found := True
 										end
 										l_all_libs.forth
@@ -240,7 +240,7 @@ invariant
 	project_found_implies_project_not_void: project_found implies (found_project /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

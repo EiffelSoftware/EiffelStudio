@@ -1195,7 +1195,7 @@ feature {NONE} -- Action handlers
 			l_eiffel_info: MEM_INFO
 			l_c_info: MEM_INFO
 			l_all_info: MEM_INFO
-			l_content: STRING
+			l_content: STRING_32
 		do
 			if memory_stats_text.is_displayed then
 					-- Fetch stats
@@ -1207,26 +1207,26 @@ feature {NONE} -- Action handlers
 				create l_content.make (1024)
 				l_content.append ("Eiffel Memory Statistics:%N")
 				l_content.append ("---------------------------------%N")
-				l_content.append ("Total    : " + memory_stat (l_eiffel_info.total) + "%N")
-				l_content.append ("Used     : " + memory_stat (l_eiffel_info.used) + "%N")
-				l_content.append ("Overhead : " + memory_stat (l_eiffel_info.overhead) + "%N")
-				l_content.append ("Available: " + memory_stat (l_eiffel_info.free) + "%N")
+				l_content.append ({STRING_32} "Total    : " + memory_stat (l_eiffel_info.total) + "%N")
+				l_content.append ({STRING_32} "Used     : " + memory_stat (l_eiffel_info.used) + "%N")
+				l_content.append ({STRING_32} "Overhead : " + memory_stat (l_eiffel_info.overhead) + "%N")
+				l_content.append ({STRING_32} "Available: " + memory_stat (l_eiffel_info.free) + "%N")
 				l_content.append ("---------------------------------%N%N")
 
 				l_content.append ("C Memory Statistics:%N")
 				l_content.append ("---------------------------------%N")
-				l_content.append ("Total    : " + memory_stat (l_c_info.total) + "%N")
-				l_content.append ("Used     : " + memory_stat (l_c_info.used) + "%N")
-				l_content.append ("Overhead : " + memory_stat (l_c_info.overhead) + "%N")
-				l_content.append ("Available: " + memory_stat (l_c_info.free) + "%N")
+				l_content.append ({STRING_32} "Total    : " + memory_stat (l_c_info.total) + "%N")
+				l_content.append ({STRING_32} "Used     : " + memory_stat (l_c_info.used) + "%N")
+				l_content.append ({STRING_32} "Overhead : " + memory_stat (l_c_info.overhead) + "%N")
+				l_content.append ({STRING_32} "Available: " + memory_stat (l_c_info.free) + "%N")
 				l_content.append ("---------------------------------%N%N")
 
 				l_content.append ("Total Memory Statistics:%N")
 				l_content.append ("---------------------------------%N")
-				l_content.append ("Total    : " + memory_stat (l_all_info.total) + "%N")
-				l_content.append ("Used     : " + memory_stat (l_all_info.used) + "%N")
-				l_content.append ("Overhead : " + memory_stat (l_all_info.overhead) + "%N")
-				l_content.append ("Available: " + memory_stat (l_all_info.free) + "%N")
+				l_content.append ({STRING_32} "Total    : " + memory_stat (l_all_info.total) + "%N")
+				l_content.append ({STRING_32} "Used     : " + memory_stat (l_all_info.used) + "%N")
+				l_content.append ({STRING_32} "Overhead : " + memory_stat (l_all_info.overhead) + "%N")
+				l_content.append ({STRING_32} "Available: " + memory_stat (l_all_info.free) + "%N")
 				l_content.append ("---------------------------------")
 
 				ev_application.do_once_on_idle (agent memory_stats_text.set_text (l_content))
@@ -1576,7 +1576,7 @@ invariant
 	filter_update_timer_attached: is_initialized and not is_recycled implies filter_update_timer /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

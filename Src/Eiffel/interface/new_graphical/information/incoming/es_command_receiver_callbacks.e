@@ -602,7 +602,7 @@ feature {NONE} -- EIS implementation
 						until
 							l_arrayed_targets.after or Result /= Void
 						loop
-							if l_target_name.is_case_insensitive_equal (l_arrayed_targets.item_for_iteration.name) then
+							if l_target_name.is_case_insensitive_equal_general (l_arrayed_targets.item_for_iteration.name) then
 								Result := l_arrayed_targets.item_for_iteration
 							end
 							l_arrayed_targets.forth

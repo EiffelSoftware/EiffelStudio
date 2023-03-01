@@ -584,7 +584,7 @@ feature {NONE} -- Implementation note
 			end
 		end
 
-	notes_on_threads: HASH_TABLE [STRING, POINTER]
+	notes_on_threads: HASH_TABLE [READABLE_STRING_GENERAL, POINTER]
 			-- Notes attached to thread
 
 feature {NONE} -- Implementation, cosmetic
@@ -647,7 +647,7 @@ feature {NONE} -- Constants
 	col_note_index: 	INTEGER = 4
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

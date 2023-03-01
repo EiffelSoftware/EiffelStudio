@@ -424,7 +424,7 @@ feature {NONE} -- Execution
 
 feature -- Access
 
-	name: STRING
+	name: STRING_GENERAL
 			-- <Precursor>
 		do
 			Result := command_name

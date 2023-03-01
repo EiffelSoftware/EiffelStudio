@@ -1625,7 +1625,7 @@ feature {NONE} -- Stack grid implementation
 			l_same_name: BOOLEAN
 			l_breakindex_info: STRING
 			l_obj_address_info: STRING
-			l_extra_info: STRING
+			l_extra_info: READABLE_STRING_32
 			glab: EV_GRID_LABEL_ITEM
 			glabp: EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
 			app_exec: APPLICATION_EXECUTION
@@ -1722,7 +1722,8 @@ feature {NONE} -- Stack grid implementation
 				l_tooltip.append (interface_names.l_break_index_is (l_breakindex_info))
 				l_tooltip.append (interface_names.l_address_is (l_obj_address_info))
 				if l_extra_info /= Void then
-					l_tooltip.append ("%N    + " + l_extra_info)
+					l_tooltip.append ("%N    + ")
+					l_tooltip.append (l_extra_info)
 				end
 
 					--| Fill columns
@@ -2477,7 +2478,7 @@ feature {NONE} -- Implementation, cosmetic
 
 
 ;note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

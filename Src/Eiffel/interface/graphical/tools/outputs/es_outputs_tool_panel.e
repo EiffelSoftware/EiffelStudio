@@ -506,7 +506,7 @@ feature {NONE} -- Basic operations
 			create l_file.make_with_path (a_file_path)
 			l_file.open_write
 			l_text := a_output.text_from_window (develop_window)
-			l_file.put_string (l_text)
+			l_file.put_string_32 (l_text)
 			l_file.flush
 			l_file.close
 		rescue
@@ -991,7 +991,7 @@ feature {NONE} -- Internationalization
 	tt_show_modified_output_1: STRING = "Show the modified $1 output"
 
 ;note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -165,15 +165,14 @@ feature {NONE} -- Implementation
 			Result := v
 		end
 
-	set_shape (a_shape: STRING)
+	set_shape (a_shape: READABLE_STRING_GENERAL)
 			-- Set shape according to `s'.
 		require
 			not_void: a_shape /= Void
 		local
-			s: STRING
+			s: READABLE_STRING_GENERAL
 		do
-			s := a_shape.string
-			s.to_lower
+			s := a_shape.as_lower
 			if
 				s.same_string ("i") or
 				s.same_string ("italic")
@@ -187,15 +186,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_weight (s: STRING)
+	set_weight (s: READABLE_STRING_GENERAL)
 			-- Set `weight' according to `s'.
 		require
 			not_void: s /= Void
 		local
-			s1: STRING
+			s1: READABLE_STRING_GENERAL
 		do
-			s1 := s.string
-			s1.to_lower
+			s1 := s.as_lower
 			if s1.same_string ("thin") then
 				weight := weight_thin
 			elseif s1.same_string ("regular") then
@@ -207,15 +205,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_family (s: STRING)
+	set_family (s: READABLE_STRING_GENERAL)
 			-- Set `family' according to `s'.
 		require
 			not_void: s /= Void
 		local
-			s1: STRING
+			s1: READABLE_STRING_GENERAL
 		do
-			s1 := s.string
-			s1.to_lower
+			s1 := s.as_lower
 			if s1.same_string ("screen") then
 				family := family_screen
 			elseif s1.same_string ("roman") then
@@ -229,7 +226,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_height (s: STRING)
+	set_height (s: READABLE_STRING_GENERAL)
 			-- Set `height' according to `s'
 		require
 			not_void: s /= Void
@@ -246,7 +243,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

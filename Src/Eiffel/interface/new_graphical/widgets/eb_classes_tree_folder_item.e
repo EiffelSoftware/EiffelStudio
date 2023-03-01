@@ -172,7 +172,6 @@ feature -- Status setting
 	add_class (a_class: CLASS_I)
 			-- Add `a_class' to `Current' at its right place.
 		local
-			conv_class_item: EB_CLASSES_TREE_CLASS_ITEM
 			found: BOOLEAN
 			new_class: EB_CLASSES_TREE_CLASS_ITEM
 			l_name: STRING_32
@@ -182,8 +181,7 @@ feature -- Status setting
 			until
 				found or else after
 			loop
-				conv_class_item ?= item
-				if conv_class_item /= Void then
+				if attached {EB_CLASSES_TREE_CLASS_ITEM} item as conv_class_item then
 					if conv_class_item.data >= a_class then
 						found := True
 					else
@@ -230,7 +228,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 	 load
 			-- Load the classes and the sub_clusters of `data'.
 		local
-			subfolders: SORTABLE_ARRAY [STRING]
+			subfolders: SORTABLE_ARRAY [READABLE_STRING_32]
 			classes: DS_LIST [CLASS_I]
 			l_subfolder: EB_CLASSES_TREE_FOLDER_ITEM
 			a_class: EB_CLASSES_TREE_CLASS_ITEM
@@ -238,7 +236,6 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			i, up: INTEGER
 			l_set: LIST [STRING_32]
 			l_hash_set: DS_HASH_SET [READABLE_STRING_32]
-			cluster: CLUSTER_I
 			group: CONF_GROUP
 			l_sub_path: IMMUTABLE_STRING_32
 			l_fr: CONF_FILE_RULE
@@ -262,8 +259,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 
 				-- if we are a recursive cluster show subfolders
 			group := data.actual_group
-			cluster ?= group
-			if cluster /= Void and then cluster.is_recursive then
+			if attached {CLUSTER_I} group as cluster and then cluster.is_recursive then
 				l_set := u.directory_names (group.location.build_path (path, "").name)
 				if l_set /= Void then
 					create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING_32]})
@@ -402,13 +398,11 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					until
 						l_agents.after
 					loop
-						a_class ?= item
-						if a_class /= Void then
-							a_class.add_double_click_action (l_agents.item)
+						if attached {EB_CLASSES_TREE_CLASS_ITEM} item as cl then
+							cl.add_double_click_action (l_agents.item)
 						else
-							l_subfolder ?= item
-							if l_subfolder /= Void then
-								l_subfolder.add_double_click_action_to_classes (l_agents.item)
+							if attached {EB_CLASSES_TREE_FOLDER_ITEM} l_subfolder as sf then
+								sf.add_double_click_action_to_classes (l_agents.item)
 							end
 						end
 						l_agents.forth
@@ -419,8 +413,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					until
 						l_agents.after
 					loop
-						l_subfolder ?= item
-						if l_subfolder /= Void then
+						if attached {EB_CLASSES_TREE_FOLDER_ITEM} l_subfolder as sf then
 							l_subfolder.add_double_click_action_to_cluster (l_agents.item)
 						end
 						l_agents.forth
@@ -431,14 +424,11 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					until
 						l_agents.after
 					loop
-						a_class ?= item
-						if a_class /= Void then
-							a_class.add_single_click_action (l_agents.item)
-						else
-							l_subfolder ?= item
-							if l_subfolder /= Void then
-								l_subfolder.add_single_click_action_to_classes (l_agents.item)
-							end
+
+						if attached {EB_CLASSES_TREE_CLASS_ITEM} item as cl then
+							cl.add_single_click_action (l_agents.item)
+						elseif attached {EB_CLASSES_TREE_FOLDER_ITEM} l_subfolder as sf then
+							l_subfolder.add_single_click_action_to_classes (l_agents.item)
 						end
 						l_agents.forth
 					end
@@ -448,8 +438,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					until
 						l_agents.after
 					loop
-						l_subfolder ?= item
-						if l_subfolder /= Void then
+						if attached {EB_CLASSES_TREE_FOLDER_ITEM} l_subfolder as sf then
 							l_subfolder.add_single_click_action_to_cluster (l_agents.item)
 						end
 						l_agents.forth
@@ -509,9 +498,6 @@ feature -- Interactivity
 
 	associate_textable_with_classes (textable: EV_TEXT_COMPONENT)
 			-- Recursively associate `textable' with sub-classes so they can write their names in `textable'.
-		local
-			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
-			conv_class: EB_CLASSES_TREE_CLASS_ITEM
 		do
 			associated_textable := textable
 
@@ -520,12 +506,12 @@ feature -- Interactivity
 			until
 				after
 			loop
-				conv_folder ?= item
-				if conv_folder /= Void then
+				if attached {EB_CLASSES_TREE_FOLDER_ITEM} item as conv_folder then
 					conv_folder.associate_textable_with_classes (textable)
-				else
-					conv_class ?= item
+				elseif attached {EB_CLASSES_TREE_CLASS_ITEM} item as conv_class then
 					conv_class.set_associated_textable (textable)
+				else
+					check either_folder_or_class: False end
 				end
 				forth
 			end
@@ -533,9 +519,6 @@ feature -- Interactivity
 
 	associate_with_window (a_window: EB_STONABLE)
 			-- Recursively associate `a_window' with sub-classes so they can call `set_stone' on `a_window'.
-		local
-			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
-			conv_class: EB_CLASSES_TREE_CLASS_ITEM
 		do
 			Precursor (a_window)
 			from
@@ -543,12 +526,12 @@ feature -- Interactivity
 			until
 				after
 			loop
-				conv_folder ?= item
-				if conv_folder /= Void then
+				if attached {EB_CLASSES_TREE_FOLDER_ITEM} item as conv_folder then
 					conv_folder.associate_with_window (a_window)
-				else
-					conv_class ?= item
+				elseif attached {EB_CLASSES_TREE_CLASS_ITEM} item as conv_class then
 					conv_class.associate_with_window (a_window)
+				else
+					check either_folder_or_class: False end
 				end
 				forth
 			end
@@ -556,9 +539,6 @@ feature -- Interactivity
 
 	add_double_click_action_to_classes (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add `p' recursively to the list of actions associated with a double click in child classes.
-		local
-			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
-			conv_class: EB_CLASSES_TREE_CLASS_ITEM
 		do
 			classes_double_click_agents.extend (p)
 
@@ -567,14 +547,10 @@ feature -- Interactivity
 			until
 				after
 			loop
-				conv_folder ?= item
-				if conv_folder /= Void then
+				if attached {EB_CLASSES_TREE_FOLDER_ITEM} item as conv_folder then
 					conv_folder.add_double_click_action_to_classes (p)
-				else
-					conv_class ?= item
-					if conv_class /= Void then
-						conv_class.add_double_click_action (p)
-					end
+				elseif attached {EB_CLASSES_TREE_CLASS_ITEM} item as conv_class then
+					conv_class.add_double_click_action (p)
 				end
 				forth
 			end
@@ -583,8 +559,6 @@ feature -- Interactivity
 	add_double_click_action_to_cluster (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add `p' recursively to the list of actions associated with a double click in child clusters.
 		local
-			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
-			l_cluster: EB_SORTED_CLUSTER
 			l_group: CONF_GROUP
 		do
 			cluster_double_click_agents.extend (p)
@@ -594,14 +568,13 @@ feature -- Interactivity
 			until
 				after
 			loop
-				conv_folder ?= item
-				if conv_folder /= Void then
-					l_cluster ?= conv_folder.data
-					if l_cluster /= Void then
-						l_group := l_cluster.actual_group
-						if l_group /= Void and then (l_group.is_cluster or l_group.is_library) then
-							conv_folder.add_double_click_action_to_cluster (p)
-						end
+				if
+					attached {EB_CLASSES_TREE_FOLDER_ITEM} item as conv_folder and then
+				 	attached {EB_SORTED_CLUSTER} conv_folder.data as l_cluster
+				 then
+					l_group := l_cluster.actual_group
+					if l_group /= Void and then (l_group.is_cluster or l_group.is_library) then
+						conv_folder.add_double_click_action_to_cluster (p)
 					end
 				end
 				forth
@@ -611,9 +584,6 @@ feature -- Interactivity
 
 	add_single_click_action_to_classes (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add `p' recursively to the list of actions associated with a single click in child classes.
-		local
-			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
-			conv_class: EB_CLASSES_TREE_CLASS_ITEM
 		do
 			classes_single_click_agents.extend (p)
 
@@ -622,14 +592,10 @@ feature -- Interactivity
 			until
 				after
 			loop
-				conv_folder ?= item
-				if conv_folder /= Void then
+				if attached {EB_CLASSES_TREE_FOLDER_ITEM} item as conv_folder then
 					conv_folder.add_single_click_action_to_classes (p)
-				else
-					conv_class ?= item
-					if conv_class /= Void then
-						conv_class.add_single_click_action (p)
-					end
+				elseif attached {EB_CLASSES_TREE_CLASS_ITEM} item as conv_class then
+					conv_class.add_single_click_action (p)
 				end
 				forth
 			end
@@ -638,8 +604,6 @@ feature -- Interactivity
 	add_single_click_action_to_cluster (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add `p' recursively to the list of actions associated with a single click in child clusters.
 		local
-			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
-			l_cluster: EB_SORTED_CLUSTER
 			l_group: CONF_GROUP
 		do
 			cluster_single_click_agents.extend (p)
@@ -649,14 +613,13 @@ feature -- Interactivity
 			until
 				after
 			loop
-				conv_folder ?= item
-				if conv_folder /= Void then
-					l_cluster ?= conv_folder.data
-					if l_cluster /= Void then
-						l_group := l_cluster.actual_group
-						if l_group /= Void and then (l_group.is_cluster or l_group.is_library) then
-							conv_folder.add_single_click_action_to_cluster (p)
-						end
+				if
+					attached {EB_CLASSES_TREE_FOLDER_ITEM} item as conv_folder and then
+		 			attached {EB_SORTED_CLUSTER} conv_folder.data as l_cluster
+		 		then
+					l_group := l_cluster.actual_group
+					if l_group /= Void and then (l_group.is_cluster or l_group.is_library) then
+						conv_folder.add_single_click_action_to_cluster (p)
 					end
 				end
 				forth
@@ -778,27 +741,32 @@ feature {NONE} -- Implementation
 			-- Generate tooltip text for `data' and `path'.
 		local
 			l_as: CONF_ASSEMBLY
-			l_phys_as: CONF_PHYSICAL_ASSEMBLY
 			l_lib: CONF_LIBRARY
 		do
 			create Result.make_empty
 			if data.is_assembly then
 				l_as := data.actual_assembly
 				if l_as.classes_set then
-					l_phys_as ?= l_as.physical_assembly
-					Result.append (physical_assembly_tooltip_text (l_phys_as))
+					if attached {CONF_PHYSICAL_ASSEMBLY} l_as.physical_assembly as l_phys_as then
+						Result.append (physical_assembly_tooltip_text (l_phys_as))
+					else
+						check is_physical_assembly: False end
+					end
 				end
 				Result.append (data.actual_group.location.evaluated_path.name)
 			elseif data.is_physical_assembly then
-				l_phys_as ?= data.actual_group
-				Result.append (physical_assembly_tooltip_text (l_phys_as))
-				Result.append (data.actual_group.location.evaluated_path.name)
+				if attached {CONF_PHYSICAL_ASSEMBLY} data.actual_group as l_phys_as then
+					Result.append (physical_assembly_tooltip_text (l_phys_as))
+					Result.append (data.actual_group.location.evaluated_path.name)
+				else
+					check is_physical_assembly: False end
+				end
 			elseif data.is_library then
 				l_lib := data.actual_library
 				if l_lib.library_target /= Void then
-					Result.append (l_lib.library_target.system.name+"%N")
+					Result.append (l_lib.library_target.system.name + "%N")
 				else
-					Result.append (l_lib.name+"%N")
+					Result.append (l_lib.name + "%N")
 				end
 				Result.append (data.actual_group.location.evaluated_path.name)
 			elseif data.is_cluster then
@@ -822,17 +790,12 @@ feature {NONE} -- Implementation
 
 	droppable (a_pebble: ANY): BOOLEAN
 			-- Can user drop `a_pebble' on `Current'?
-		local
-			cs: CLASSI_STONE
-			fs: FEATURE_STONE
 		do
 				-- we can only drop on clusters
 			if data.is_cluster then
-				cs ?= a_pebble
-				if cs /= Void then
+				if attached {CLASSI_STONE} a_pebble as cs then
 						-- Some class stone was selected.
-					fs ?= a_pebble
-					Result := fs = Void
+					Result := not attached {FEATURE_STONE} a_pebble
 				end
 			end
 		end
@@ -846,40 +809,40 @@ feature {NONE} -- Implementation
 			l_group: EB_SORTED_CLUSTER
 			l_agents: like classes_double_click_agents
 		do
-				from
-					a_groups.start
-				until
-					a_groups.after
-				loop
-					l_group := a_groups.item_for_iteration
-					a_folder := create_folder_item (l_group)
+			from
+				a_groups.start
+			until
+				a_groups.after
+			loop
+				l_group := a_groups.item_for_iteration
+				a_folder := create_folder_item (l_group)
 
-					a_folder.associate_with_window (associated_window)
-					if associated_textable /= Void then
-						a_folder.associate_textable_with_classes (associated_textable)
-					end
-
-					l_agents := classes_double_click_agents
-					from
-						l_agents.start
-					until
-						l_agents.after
-					loop
-						a_folder.add_double_click_action_to_classes (l_agents.item)
-						l_agents.forth
-					end
-					l_agents := classes_single_click_agents
-					from
-						l_agents.start
-					until
-						l_agents.after
-					loop
-						a_folder.add_single_click_action_to_classes (l_agents.item)
-						l_agents.forth
-					end
-					extend (a_folder)
-					a_groups.forth
+				a_folder.associate_with_window (associated_window)
+				if associated_textable /= Void then
+					a_folder.associate_textable_with_classes (associated_textable)
 				end
+
+				l_agents := classes_double_click_agents
+				from
+					l_agents.start
+				until
+					l_agents.after
+				loop
+					a_folder.add_double_click_action_to_classes (l_agents.item)
+					l_agents.forth
+				end
+				l_agents := classes_single_click_agents
+				from
+					l_agents.start
+				until
+					l_agents.after
+				loop
+					a_folder.add_single_click_action_to_classes (l_agents.item)
+					l_agents.forth
+				end
+				extend (a_folder)
+				a_groups.forth
+			end
 		end
 
 	print_name
@@ -938,7 +901,7 @@ invariant
 	sub_elements_imply_initialized: not path.is_empty implies data.is_initialized
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

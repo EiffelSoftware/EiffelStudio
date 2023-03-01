@@ -72,7 +72,7 @@ feature -- Access
 	menu_name: STRING_GENERAL
 			-- Name as it appears in menus.
 
-	name: STRING_GENERAL
+	name: STRING_32
 			-- Name to be displayed.
 
 	pixmap: EV_PIXMAP

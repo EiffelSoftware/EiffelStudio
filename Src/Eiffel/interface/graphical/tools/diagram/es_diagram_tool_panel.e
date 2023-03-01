@@ -483,7 +483,6 @@ feature {NONE} -- Initialization
 			-- Display "View" menu.
 		local
 			view_menu: EV_MENU
-			l_list: LIST [STRING]
 			menu_item: EV_MENU_ITEM
 		do
 			create view_menu
@@ -496,20 +495,16 @@ feature {NONE} -- Initialization
 				delete_view_cmd.disable_sensitive
 			end
 			view_menu.extend (create {EV_MENU_SEPARATOR})
-			from
-				l_list := world.available_views
-				l_list.start
-			until
-				l_list.after
+			across
+				world.available_views as ic
 			loop
-				create menu_item.make_with_text_and_action (l_list.item, agent select_view (l_list.item))
+				create menu_item.make_with_text_and_action (ic.item, agent select_view (ic.item))
 				view_menu.extend (menu_item)
-				l_list.forth
 			end
 			view_menu.show_at (view_menu_button, 0, view_menu_button.height)
 		end
 
-	select_view (a_name: STRING)
+	select_view (a_name: READABLE_STRING_GENERAL)
 			-- Select `a_name' as the current view and switch to that view.
 		do
 			view_selector.set_text (a_name)
@@ -1911,7 +1906,7 @@ feature {NONE} -- Events
 
 feature {EB_DELETE_VIEW_COMMAND} -- View selector
 
-	remove_view (a_name: STRING)
+	remove_view (a_name: READABLE_STRING_GENERAL)
 			-- Delete view of `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -2481,7 +2476,7 @@ invariant
 	shortcut_table_not_void: shortcut_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

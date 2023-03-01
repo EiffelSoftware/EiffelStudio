@@ -159,10 +159,10 @@ feature -- Access
 	generics_color: EV_COLOR
 			-- Color for generics.
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			Result := model.name
+			Result := model.name_32
 		end
 
 	xml_node_name: STRING
@@ -978,7 +978,7 @@ invariant
 	generics_label_not_void: generics_label /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

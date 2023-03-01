@@ -128,7 +128,7 @@ feature -- Status
 
 feature {EB_DIAGRAM_HTML_GENERATOR} -- Load view
 
-	change_view (view_name: STRING; f: RAW_FILE)
+	change_view (view_name: READABLE_STRING_GENERAL; f: RAW_FILE)
 			-- Change view to `view_name' load from file `f' without saving `Current'.
 		require
 			f_closed: f.is_closed
@@ -1219,7 +1219,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

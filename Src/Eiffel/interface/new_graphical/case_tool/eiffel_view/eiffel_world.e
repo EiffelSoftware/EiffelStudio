@@ -1259,8 +1259,8 @@ feature {NONE} -- Implementation
 				if
 					attached {ES_ITEM} ic.item as eiffel_item and then
 					not eiffel_item.is_needed_on_diagram and then
-					(not attached {ES_ITEM} l_links.item.source as e_source or else e_source.is_needed_on_diagram) and then
-					(not attached {ES_ITEM} l_links.item.target as e_target = Void or else e_target.is_needed_on_diagram)
+					(not attached {ES_ITEM} ic.item.source as e_source or else e_source.is_needed_on_diagram) and then
+					(not attached {ES_ITEM} ic.item.target as e_target or else e_target.is_needed_on_diagram)
 				then
 					eiffel_item.enable_needed_on_diagram
 				end

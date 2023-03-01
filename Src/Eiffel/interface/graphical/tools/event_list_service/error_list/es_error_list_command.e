@@ -89,7 +89,7 @@ feature -- Access
 			result_consistent: Result = Result
 		end
 
-	name: STRING_GENERAL
+	name: STRING_32
 			-- Name of the command. Use to store the command in the
 			-- preferences.
 		do

@@ -94,7 +94,7 @@ feature -- Access
 			Result := tool.title
 		end
 
-	name: STRING_GENERAL
+	name: STRING_32
 			-- Name to be displayed.
 		do
 			Result := (create {INTERNAL}).type_name_32 (tool)

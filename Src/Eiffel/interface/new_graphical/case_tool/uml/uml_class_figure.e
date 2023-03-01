@@ -262,7 +262,6 @@ feature -- Store/Retrive
 			-- Xml element representing `Current's state.
 		local
 			xqueries, xcommands, xsection: like xml_element
-			l_item: FEATURE_SECTION_VIEW
 			i, nb: INTEGER
 			l_expanded_sections: ARRAYED_LIST [FEATURE_SECTION_VIEW]
 		do
@@ -274,8 +273,10 @@ feature -- Store/Retrive
 			until
 				i > nb
 			loop
-				l_item ?= queries.i_th (i)
-				if l_item.is_expanded and then not l_item.feature_section.features.is_empty then
+				if
+					attached {FEATURE_SECTION_VIEW} queries.i_th (i) as l_item and then
+					l_item.is_expanded and then not l_item.feature_section.features.is_empty
+				then
 					create xsection.make (xqueries, "SECTION", xml_namespace)
 					xsection.add_attribute ("NAME", xml_namespace, l_item.feature_section.first_feature_name)
 					xqueries.put_last (xsection)
@@ -291,8 +292,10 @@ feature -- Store/Retrive
 			until
 				i > nb
 			loop
-				l_item ?= commands.i_th (i)
-				if l_item.is_expanded and then not l_item.feature_section.features.is_empty then
+				if
+					attached {FEATURE_SECTION_VIEW} commands.i_th (i) as l_item and then
+					l_item.is_expanded and then not l_item.feature_section.features.is_empty
+				then
 					create xsection.make (xqueries, "SECTION", xml_namespace)
 					xsection.add_attribute ("NAME", xml_namespace, l_item.feature_section.first_feature_name)
 					xcommands.put_last (xsection)
@@ -321,9 +324,6 @@ feature -- Store/Retrive
 	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
-			xqueries, xcommands, l_item: like xml_element
-			l_cursor: XML_COMPOSITE_CURSOR
-			sname: STRING
 			fsv: FEATURE_SECTION_VIEW
 		do
 			node.forth
@@ -334,38 +334,32 @@ feature -- Store/Retrive
 				model.disable_needed_on_diagram
 			end
 
-			xqueries ?= node.item_for_iteration
-			node.forth
-			from
-				l_cursor := xqueries.new_cursor
-				l_cursor.start
-			until
-				l_cursor.after
-			loop
-				l_item ?= l_cursor.item
-				sname := l_item.attribute_by_name ("NAME").value
-				fsv := query_section_view_with_first_feature_name (sname)
-				if fsv /= Void then
-					fsv.expand
+			if attached {like xml_element} node.item_for_iteration as xqueries then
+				node.forth
+				across
+					xqueries as q_ic
+				loop
+					if attached {like xml_element} q_ic.item as l_item then
+						fsv := query_section_view_with_first_feature_name (l_item.attribute_by_name ("NAME").value)
+						if fsv /= Void then
+							fsv.expand
+						end
+					end
 				end
-				l_cursor.forth
 			end
 
-			xcommands ?= node.item_for_iteration
-			node.forth
-			from
-				l_cursor := xcommands.new_cursor
-				l_cursor.start
-			until
-				l_cursor.after
-			loop
-				l_item ?= l_cursor.item
-				sname := l_item.attribute_by_name ("NAME").value
-				fsv := command_section_view_with_first_feature_name (sname)
-				if fsv /= Void then
-					fsv.expand
+			if attached {like xml_element} node.item_for_iteration as xcommands then
+				node.forth
+				across
+					xcommands as c_ic
+				loop
+					if attached {like xml_element} c_ic.item as l_item then
+						fsv := command_section_view_with_first_feature_name (l_item.attribute_by_name ("NAME").value)
+						if fsv /= Void then
+							fsv.expand
+						end
+					end
 				end
-				l_cursor.forth
 			end
 			update_positions
 			request_update
@@ -406,13 +400,13 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 			queries.search (fsv)
 			if not queries.after then
 				from
-					l_item ?= queries.item
+					l_item := {EV_MODEL_GROUP} / queries.item
 					pos := l_item.point_y + l_item.bounding_box.height
 					queries.forth
 				until
 					queries.after
 				loop
-					l_item ?= queries.item
+					l_item := {EV_MODEL_GROUP} / queries.item
 					l_item.set_point_position (queries.point_x, pos)
 					pos := pos + l_item.bounding_box.height
 					queries.forth
@@ -423,7 +417,7 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 				until
 					commands.after
 				loop
-					l_item ?= commands.item
+					l_item := {EV_MODEL_GROUP} / commands.item
 					l_item.set_point_position (commands.point_x, pos)
 					pos := pos + l_item.bounding_box.height
 					commands.forth
@@ -432,13 +426,13 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 				from
 					commands.start
 					commands.search (fsv)
-					l_item ?= commands.item
+					l_item := {EV_MODEL_GROUP} / commands.item
 					pos := l_item.point_y + l_item.bounding_box.height
 					commands.forth
 				until
 					commands.after
 				loop
-					l_item ?= commands.item
+					l_item := {EV_MODEL_GROUP} / commands.item
 					l_item.set_point_position (commands.point_x, pos)
 					pos := pos + l_item.bounding_box.height
 					commands.forth
@@ -500,36 +494,38 @@ feature {NONE} -- Implementation
 	expanded_sections: ARRAYED_LIST [FEATURE_SECTION]
 			-- Expanded sections.
 
-	query_section_view_with_first_feature_name (a_name: STRING): FEATURE_SECTION_VIEW
+	query_section_view_with_first_feature_name (a_name: READABLE_STRING_GENERAL): FEATURE_SECTION_VIEW
 			-- Return feature section view with first feature name `a_name' if any.
-		local
-			l_item: FEATURE_SECTION_VIEW
 		do
 			from
 				queries.start
 			until
 				queries.after or else Result /= Void
 			loop
-				l_item ?= queries.item
-				if not l_item.feature_section.features.is_empty and then l_item.feature_section.first_feature_name.is_equal (a_name) then
+				if
+					attached {FEATURE_SECTION_VIEW} queries.item as l_item and then
+					not l_item.feature_section.features.is_empty and then
+					a_name.same_string (l_item.feature_section.first_feature_name)
+				then
 					Result := l_item
 				end
 				queries.forth
 			end
 		end
 
-	command_section_view_with_first_feature_name (a_name: STRING): FEATURE_SECTION_VIEW
+	command_section_view_with_first_feature_name (a_name: READABLE_STRING_GENERAL): FEATURE_SECTION_VIEW
 			-- Return feature section view with name `a_name' if any.
-		local
-			l_item: FEATURE_SECTION_VIEW
 		do
 			from
 				commands.start
 			until
 				commands.after or else Result /= Void
 			loop
-				l_item ?= commands.item
-				if not l_item.feature_section.features.is_empty and then l_item.feature_section.first_feature_name.is_equal (a_name) then
+				if
+					attached {FEATURE_SECTION_VIEW} commands.item as l_item and then
+					not l_item.feature_section.features.is_empty and then
+					a_name.same_string (l_item.feature_section.first_feature_name)
+				then
 					Result := l_item
 				end
 				commands.forth
@@ -538,33 +534,29 @@ feature {NONE} -- Implementation
 
 	set_queries_commands
 			-- Set `queries' and `commands' according to `model'.`feature_clause_list'.
-		local
-			l_item: FEATURE_SECTION_VIEW
 		do
 			if model.is_compiled then
 				create expanded_sections.make (0)
 				expanded_sections.compare_objects
-				from
-					queries.start
-				until
-					queries.after
+				across
+					queries as q_ic
 				loop
-					l_item ?= queries.item
-					if l_item.is_expanded then
+					if
+						attached {FEATURE_SECTION_VIEW} q_ic.item as l_item and then
+						l_item.is_expanded
+					then
 						expanded_sections.extend (l_item.feature_section)
 					end
-					queries.forth
 				end
-				from
-					commands.start
-				until
-					commands.after
+				across
+					commands as c_ic
 				loop
-					l_item ?= commands.item
-					if l_item.is_expanded then
+					if
+						attached {FEATURE_SECTION_VIEW} c_ic.item as l_item and then
+						l_item.is_expanded
+					then
 						expanded_sections.extend (l_item.feature_section)
 					end
-					commands.forth
 				end
 				build_queries_commands_list
 				set_queries
@@ -1015,7 +1007,7 @@ invariant
 	border_positive: border >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

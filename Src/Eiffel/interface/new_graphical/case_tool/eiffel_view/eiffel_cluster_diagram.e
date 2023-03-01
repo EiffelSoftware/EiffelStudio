@@ -350,12 +350,10 @@ feature {NONE} -- Implementation
 
 	on_class_drop (a_stone: CLASSI_STONE)
 			-- `a_stone' was dropped on `Current'
-		local
-			l_class_fig_stone: CLASSI_FIGURE_STONE
 		do
 			if a_stone.is_valid then
 				is_dropped_on_diagram := True
-				if attached {CLASSI_FIGURE_STONE} a_stone as l_class_fig_stone /= Void then
+				if attached {CLASSI_FIGURE_STONE} a_stone as l_class_fig_stone then
 					move_class (l_class_fig_stone.source, context_editor.pointer_position.x, context_editor.pointer_position.y)
 				else
 					add_to_diagram (a_stone.class_i)

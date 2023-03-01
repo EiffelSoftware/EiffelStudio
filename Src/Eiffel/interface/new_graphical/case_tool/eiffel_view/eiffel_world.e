@@ -109,11 +109,23 @@ feature -- Access
 	model: ES_GRAPH
 			-- Model for `Current'.
 
-	current_view: STRING
+	current_view: IMMUTABLE_STRING_32
 			-- Name of Current view.
 
-	available_views: LINKED_LIST [STRING]
+	available_views: LINKED_LIST [READABLE_STRING_GENERAL]
 			-- All the views described in `Current' ead file.
+
+	has_available_view (a_view_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Has view `a_view_name` in `available_views` ?
+		do
+			across
+				available_views as ic
+			until
+				Result
+			loop
+				Result := a_view_name.same_string (a_view_name)
+			end
+		end
 
 	default_view_name: STRING
 			-- Name for the default view.
@@ -123,14 +135,14 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	uml_views (file_name: STRING): LIST [STRING]
+	uml_views (file_name: READABLE_STRING_GENERAL): LIST [READABLE_STRING_GENERAL]
 			-- All views in `file_name' which are uml views.
 		require
 			file_name_not_void: file_name /= Void
 		local
 			diagram_input: XML_DOCUMENT
 			a_cursor: XML_COMPOSITE_CURSOR
-			view_name: STRING
+			view_name: READABLE_STRING_GENERAL
 		do
 			create {ARRAYED_LIST [STRING]} Result.make (0)
 			diagram_input := Xml_routines.deserialize_document (file_name)
@@ -157,16 +169,16 @@ feature -- Access
 			end
 		end
 
-	bon_views (file_name: PATH): LIST [STRING]
+	bon_views (file_name: PATH): LIST [READABLE_STRING_GENERAL]
 			-- All views in `file_name' which are bon views.
 		require
 			file_name_not_void: file_name /= Void
 		local
 			diagram_input: XML_DOCUMENT
 			a_cursor: XML_COMPOSITE_CURSOR
-			view_name: STRING
+			view_name: READABLE_STRING_GENERAL
 		do
-			create {ARRAYED_LIST [STRING]} Result.make (0)
+			create {ARRAYED_LIST [READABLE_STRING_GENERAL]} Result.make (0)
 			diagram_input := Xml_routines.deserialize_document_with_path (file_name)
 			if diagram_input /= Void then
 				check
@@ -181,7 +193,7 @@ feature -- Access
 					if attached {like xml_element} a_cursor.item as l_node then
 						if l_node.has_same_name (once "VIEW") then
 							view_name := l_node.attribute_by_name (once "NAME").value
-							if l_node.attribute_by_name (once "IS_UML").value.is_equal (once "False") then
+							if l_node.attribute_by_name (once "IS_UML").value.same_string (once "False") then
 								Result.extend (view_name)
 							end
 						end
@@ -400,7 +412,6 @@ feature -- Element change.
 			-- Apply right angles to all LINK_FIGUREs in the world.
 		local
 			l_edges: ARRAYED_LIST [EG_LINK_FIGURE]
-			l_item: EIFFEL_LINK_FIGURE
 			i, nb: INTEGER
 		do
 			if context_editor = Void or else context_editor.force_directed_layout.is_stopped then
@@ -412,8 +423,7 @@ feature -- Element change.
 				until
 					i > nb
 				loop
-					l_item ?= l_edges.i_th (i)
-					if l_item /= Void then
+					if attached {EIFFEL_LINK_FIGURE} l_edges.i_th (i) as l_item then
 						l_item.apply_right_angles
 					end
 					i := i + 1
@@ -425,7 +435,6 @@ feature -- Element change.
 			-- Remove all edges in links.
 		local
 			l_edges: ARRAYED_LIST [EG_LINK_FIGURE]
-			l_item: EIFFEL_LINK_FIGURE
 			i, nb: INTEGER
 		do
 			from
@@ -435,8 +444,7 @@ feature -- Element change.
 			until
 				i > nb
 			loop
-				l_item ?= l_edges.i_th (i)
-				if l_item /= Void then
+				if attached {EIFFEL_LINK_FIGURE} l_edges.i_th (i) as l_item then
 					l_item.reset
 				end
 				i := i + 1
@@ -475,7 +483,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Legend
 
 feature -- Store/Retrive
 
-	remove_view (name: STRING)
+	remove_view (name: READABLE_STRING_GENERAL)
 			-- Remove any reference to view named `name' in the .xml file.
 			-- Switch to view default_view_name.
 		require
@@ -503,24 +511,24 @@ feature -- Store/Retrive
 			end
 			context_editor.projector.full_project
 		ensure
-			default_view_restored: current_view.is_equal (default_view_name)
+			default_view_restored: current_view.same_string (default_view_name)
 		end
 
-	set_current_view (name: STRING)
+	set_current_view (name: READABLE_STRING_GENERAL)
 			-- Set `current_view' to `name'.
 		require
 			name_not_void: name /= Void
 		do
 			current_view := name
-			if not available_views.has (name) then
+			if not has_available_view (name) then
 				available_views.extend (name)
 			end
 		ensure
 			set: current_view = name
-			name_is_available: available_views.has (name)
+			name_is_available: has_available_view (name)
 		end
 
-	retrieve_view (name: STRING)
+	retrieve_view (name: READABLE_STRING_GENERAL)
 			-- Assign `name' to `current_view' and retrieve corresponding settings.
 		require
 			name_not_void: name /= Void
@@ -545,11 +553,11 @@ feature -- Store/Retrive
 					retrieve (f)
 				end
 			end
-			if not available_views.has (name) then
+			if not has_available_view (name) then
 				available_views.extend (name)
 			end
 		ensure
-			name_assigned: current_view.is_equal (name)
+			name_assigned: current_view.same_string (name)
 		end
 
 	store (ptf: RAW_FILE)
@@ -605,7 +613,7 @@ feature -- Store/Retrive
 		local
 			diagram_input: XML_DOCUMENT
 			a_cursor: XML_COMPOSITE_CURSOR
-			view_name: STRING
+			view_name: READABLE_STRING_GENERAL
 		do
 			available_views.wipe_out
 			diagram_input := Xml_routines.deserialize_document_with_path (f.path)
@@ -628,7 +636,7 @@ feature -- Store/Retrive
 					a_cursor.forth
 				end
 			end
-			if not available_views.has (default_view_name) then
+			if not has_available_view (default_view_name) then
 				available_views.extend (default_view_name)
 			end
 		end
@@ -640,7 +648,7 @@ feature -- Store/Retrive
 			view_input: like xml_element
 			a_cursor: XML_COMPOSITE_CURSOR
 			nb_of_tags: INTEGER
-			view_name: STRING
+			view_name: READABLE_STRING_GENERAL
 			l_name_str, l_view_str: STRING
 		do
 			diagram_input := Xml_routines.deserialize_document_with_path (f.path)
@@ -661,7 +669,7 @@ feature -- Store/Retrive
 						if l_node.has_same_name (l_view_str) then
 							view_name := l_node.attribute_by_name (l_name_str).value
 							available_views.extend (view_name)
-							if view_input = Void or else l_node.attribute_by_name (l_name_str).value.is_equal (current_view) then
+							if view_input = Void or else l_node.attribute_by_name (l_name_str).value.same_string (current_view) then
 								view_input := l_node
 							end
 						end
@@ -811,12 +819,8 @@ feature {NONE} -- Statistic
 			-- Update statistic
 		local
 			l_classes: like classes
-			l_node: EIFFEL_CLASS_FIGURE
 			l_clusters: like clusters
-			l_cluster: EIFFEL_CLUSTER_FIGURE
 			l_links: like links
-			l_cs_link: EIFFEL_CLIENT_SUPPLIER_FIGURE
-			l_i_link: EIFFEL_INHERITANCE_FIGURE
 			nr_of_classes: INTEGER
 			nr_of_clusters: INTEGER
 			nr_of_client_supplier_links: INTEGER
@@ -850,8 +854,7 @@ feature {NONE} -- Statistic
 			until
 				l_classes.after
 			loop
-				l_node ?= l_classes.item
-				if l_node /= Void and then l_node.is_show_requested then
+				if attached {EIFFEL_CLASS_FIGURE} l_classes.item as l_node and then l_node.is_show_requested then
 					nr_of_classes := nr_of_classes + 1
 				end
 				l_classes.forth
@@ -863,8 +866,7 @@ feature {NONE} -- Statistic
 			until
 				l_clusters.after
 			loop
-				l_cluster ?= l_clusters.item
-				if l_cluster /= Void and then l_cluster.is_show_requested then
+				if attached {EIFFEL_CLUSTER_FIGURE} l_clusters.item as l_cluster and then l_cluster.is_show_requested then
 					nr_of_clusters := nr_of_clusters + 1
 				end
 				l_clusters.forth
@@ -877,12 +879,10 @@ feature {NONE} -- Statistic
 			until
 				l_links.after
 			loop
-				l_i_link ?= l_links.item
-				if l_i_link /= Void and then l_i_link.is_show_requested then
+				if attached {EIFFEL_INHERITANCE_FIGURE} l_links.item as l_i_link and then l_i_link.is_show_requested then
 					nr_of_inheritance_links := nr_of_inheritance_links + 1
 				end
-				l_cs_link ?= l_links.item
-				if l_cs_link /= Void and then l_cs_link.is_show_requested then
+				if attached {EIFFEL_CLIENT_SUPPLIER_FIGURE} l_links.item as l_cs_link and then l_cs_link.is_show_requested then
 					nr_of_client_supplier_links := nr_of_client_supplier_links + 1
 				end
 				l_links.forth
@@ -978,22 +978,14 @@ feature {NONE} -- Implementation
 
 	figure_added (a_figure: EG_FIGURE)
 			-- `a_figure' was added to the view.
-		local
-			bon_fig: BON_FIGURE
-			cs_fig: EIFFEL_CLIENT_SUPPLIER_FIGURE
-			i_fig: EIFFEL_INHERITANCE_FIGURE
-			c_fig: EIFFEL_CLUSTER_FIGURE
-			bc_fig: EIFFEL_CLASS_FIGURE
 		do
 			Precursor {EG_FIGURE_WORLD} (a_figure)
 			if not is_high_quality then
-				bon_fig ?= a_figure
-				if bon_fig /= Void then
+				if attached {BON_FIGURE} a_figure as bon_fig then
 					bon_fig.disable_high_quality
 				end
 			end
-			cs_fig ?= a_figure
-			if cs_fig /= Void then
+			if attached {EIFFEL_CLIENT_SUPPLIER_FIGURE} a_figure as cs_fig then
 				if not is_labels_shown then
 					cs_fig.hide_label
 				end
@@ -1004,103 +996,72 @@ feature {NONE} -- Implementation
 				if is_right_angles then
 					cs_fig.apply_right_angles
 				end
-			else
-				i_fig ?= a_figure
-				if i_fig /= Void then
-					if not is_inheritance_links_shown then
-						i_fig.hide
-						i_fig.disable_sensitive
-					end
-					if is_right_angles then
-						i_fig.apply_right_angles
-					end
-				else
-					c_fig ?= a_figure
-					if c_fig /= Void then
-						if not is_cluster_shown then
-							c_fig.disable_shown
-						end
-					else
-						bc_fig ?= a_figure
-						if is_legend_shown and then bc_fig /= Void then
-							cluster_legend.update
-							bring_to_front (cluster_legend)
-						end
-					end
+			elseif attached {EIFFEL_INHERITANCE_FIGURE} a_figure as i_fig then
+				if not is_inheritance_links_shown then
+					i_fig.hide
+					i_fig.disable_sensitive
 				end
+				if is_right_angles then
+					i_fig.apply_right_angles
+				end
+			elseif attached {EIFFEL_CLUSTER_FIGURE} a_figure as c_fig then
+				if not is_cluster_shown then
+					c_fig.disable_shown
+				end
+			elseif
+				is_legend_shown and then
+				attached {EIFFEL_CLASS_FIGURE} a_figure as bc_fig
+			then
+				cluster_legend.update
+				bring_to_front (cluster_legend)
 			end
 		end
 
 	set_high_quality (b: BOOLEAN)
 			-- Set all BON_FIGUREs in `world' to high quality if `b', low quality otherwise.
-		local
-			bon_fig: BON_FIGURE
-			figs: LIST [EG_FIGURE]
 		do
-			figs := clusters
-			from
-				figs.start
-			until
-				figs.after
+			across
+				clusters as ic
 			loop
-				bon_fig ?= figs.item
-				if bon_fig /= Void then
+				if attached {BON_FIGURE} ic.item as bon_fig then
 					if b then
 						bon_fig.enable_high_quality
 					else
 						bon_fig.disable_high_quality
 					end
 				end
-				figs.forth
 			end
-			figs := links
-			from
-				figs.start
-			until
-				figs.after
+			across
+				links as ic
 			loop
-				bon_fig ?= figs.item
-				if bon_fig /= Void then
+				if attached {BON_FIGURE} ic.item as bon_fig then
 					if b then
 						bon_fig.enable_high_quality
 					else
 						bon_fig.disable_high_quality
 					end
 				end
-				figs.forth
 			end
-			figs := classes
-			from
-				figs.start
-			until
-				figs.after
+			across
+				classes as ic
 			loop
-				bon_fig ?= figs.item
-				if bon_fig /= Void then
+				if attached {BON_FIGURE} ic.item as bon_fig then
 					if b then
 						bon_fig.enable_high_quality
 					else
 						bon_fig.disable_high_quality
 					end
 				end
-				figs.forth
 			end
 		end
 
 	set_label_shown (b: BOOLEAN)
 			-- Show labels if `b', hide otherwise.
-		local
-			l_links: like links
-			cs_link: EIFFEL_CLIENT_SUPPLIER_FIGURE
 		do
-			from
-				l_links := links
-				l_links.start
-			until
-				l_links.after
+			across
+				links as ic
 			loop
-				cs_link ?= l_links.item
-				if cs_link /= Void then
+				if attached {EIFFEL_CLIENT_SUPPLIER_FIGURE} ic.item as cs_link then
 					if b then
 						if not cs_link.is_label_shown then
 							cs_link.show_label
@@ -1111,24 +1072,19 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				l_links.forth
 			end
 		end
 
 	set_client_supplier_links_shown (b: BOOLEAN)
 			-- Show client supplier links in `links' if `b', hide otherwise.
-		local
-			l_links: like links
-			cs_link: EIFFEL_CLIENT_SUPPLIER_FIGURE
 		do
-			from
-				l_links := links
-				l_links.start
-			until
-				l_links.after
+			across
+				links as ic
 			loop
-				cs_link ?= l_links.item
-				if cs_link /= Void and then cs_link.model.is_needed_on_diagram then
+				if
+					attached {EIFFEL_CLIENT_SUPPLIER_FIGURE} ic.item as cs_link and then
+					cs_link.model.is_needed_on_diagram
+				then
 					if b then
 						cs_link.show
 						cs_link.enable_sensitive
@@ -1137,24 +1093,19 @@ feature {NONE} -- Implementation
 						cs_link.disable_sensitive
 					end
 				end
-				l_links.forth
 			end
 		end
 
 	set_inheritance_links_shown (b: BOOLEAN)
 			-- Show inheritance links in `links' if `b', hide otherwise.
-		local
-			l_links: like links
-			i_link: EIFFEL_INHERITANCE_FIGURE
 		do
-			from
-				l_links := links
-				l_links.start
-			until
-				l_links.after
+			across
+				links as ic
 			loop
-				i_link ?= l_links.item
-				if i_link /= Void and then i_link.model.is_needed_on_diagram then
+				if
+					attached {EIFFEL_INHERITANCE_FIGURE} ic.item as i_link and then
+					i_link.model.is_needed_on_diagram
+				then
 					if b then
 						i_link.show
 						i_link.enable_sensitive
@@ -1163,55 +1114,38 @@ feature {NONE} -- Implementation
 						i_link.disable_sensitive
 					end
 				end
-				l_links.forth
 			end
 		end
 
 	set_is_cluster_shown (b: BOOLEAN)
 			-- Show clusters in `clusters' if `b', hide otherwise.
-		local
-			l_clusters: like clusters
-			l_item: EIFFEL_CLUSTER_FIGURE
 		do
-			from
-				l_clusters := clusters
-				l_clusters.start
-			until
-				l_clusters.after
+			across
+				clusters as ic
 			loop
-				l_item ?= l_clusters.item
-				if l_item /= Void then
+				if attached {EIFFEL_CLUSTER_FIGURE} ic.item as l_item then
 					if b then
 						l_item.enable_shown
 					else
 						l_item.disable_shown
 					end
 				end
-				l_clusters.forth
 			end
 		end
 
 	set_is_anchor_shown (b: BOOLEAN)
 			-- Show all anchors of linkable figures if `b'.
-		local
-			bcf: BON_CLASS_FIGURE
-			l_classes: like classes
 		do
-			from
-				l_classes := classes
-				l_classes.start
-			until
-				l_classes.after
+			across
+				classes as ic
 			loop
-				bcf ?= l_classes.item
-				if bcf /= Void then
+				if attached {BON_CLASS_FIGURE} ic.item as bcf then
 					if b then
 						bcf.show_anchor
 					else
 						bcf.hide_anchor
 					end
 				end
-				l_classes.forth
 			end
 		end
 
@@ -1318,29 +1252,18 @@ feature {NONE} -- Implementation
 
 	enable_all_links (a_linkable: EG_LINKABLE)
 			-- Enable is_neede_on_diagram for all links in `a_linkable'.
-		local
-			l_links: LIST [EG_LINK]
-			eiffel_item: ES_ITEM
-			e_source, e_target: ES_ITEM
 		do
-			from
-				l_links := a_linkable.links
-				l_links.start
-			until
-				l_links.after
+			across
+				a_linkable.links as ic
 			loop
-				eiffel_item ?= l_links.item
-				e_source ?= l_links.item.source
-				e_target ?= l_links.item.target
 				if
-					eiffel_item /= Void and then
+					attached {ES_ITEM} ic.item as eiffel_item and then
 					not eiffel_item.is_needed_on_diagram and then
-					(e_source = Void or else e_source.is_needed_on_diagram) and then
-					(e_target = Void or else e_target.is_needed_on_diagram)
+					(not attached {ES_ITEM} l_links.item.source as e_source or else e_source.is_needed_on_diagram) and then
+					(not attached {ES_ITEM} l_links.item.target as e_target = Void or else e_target.is_needed_on_diagram)
 				then
 					eiffel_item.enable_needed_on_diagram
 				end
-				l_links.forth
 			end
 		end
 
@@ -1360,14 +1283,13 @@ feature {NONE} -- Implementation
 			l_selected_figures: like selected_figures
 			l_item: EG_FIGURE
 			i, nb, l_index: INTEGER
-			cf: EG_CLUSTER_FIGURE
-			l_linkable: EG_LINKABLE_FIGURE
 			l_links: ARRAYED_LIST [EG_LINK_FIGURE]
-			e_c_fig: EIFFEL_CLASS_FIGURE
 			l_edge_list: LIST [EG_EDGE]
 		do
-			cf ?= figure
-			if cf = Void and then not selected_figures.is_empty then
+			if
+				not attached {EG_CLUSTER_FIGURE} figure and then
+				not selected_figures.is_empty
+			then
 				check
 					when_figures_selected_move_only_a_selected_figure: selected_figures.has (figure)
 				end
@@ -1380,8 +1302,7 @@ feature {NONE} -- Implementation
 				loop
 					l_item := l_selected_figures.i_th (i)
 					if l_item /= figure then
-						l_linkable ?= l_item
-						if l_linkable /= Void then
+						if attached {EG_LINKABLE_FIGURE} l_item as l_linkable then
 							l_linkable.set_is_fixed (True)
 							l_links := l_linkable.internal_links
 							if not is_right_angles and then l_links /= Void and then l_links.count > 0 then
@@ -1416,8 +1337,7 @@ feature {NONE} -- Implementation
 						end
 						l_item.set_point_position (l_item.point_x + ax, l_item.point_y + ay)
 					end
-					e_c_fig ?= l_item
-					if e_c_fig /= Void then
+					if attached {EIFFEL_CLASS_FIGURE} l_item as e_c_fig then
 						if is_right_angles and not context_editor.is_force_directed_used then
 							e_c_fig.apply_right_angles
 						end
@@ -1426,8 +1346,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				if is_right_angles and not context_editor.is_force_directed_used then
-					e_c_fig ?= figure
-					if e_c_fig /= Void then
+					if attached {EIFFEL_CLASS_FIGURE} figure as e_c_fig then
 						e_c_fig.apply_right_angles
 					end
 				end

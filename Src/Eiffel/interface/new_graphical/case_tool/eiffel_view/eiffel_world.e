@@ -910,7 +910,7 @@ feature {NONE} -- Statistic
 
 feature {NONE} -- Implementation
 
-	remove_view_from_file (ptf: RAW_FILE; a_name: STRING)
+	remove_view_from_file (ptf: RAW_FILE; a_name: READABLE_STRING_GENERAL)
 			-- Remove view named `a_name' in `ptf'.
 		require
 			file_not_void: ptf /= Void
@@ -946,12 +946,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_view_with_name (f: RAW_FILE; a_name: STRING): BOOLEAN
+	has_view_with_name (f: RAW_FILE; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `f' contain a view with name `a_name'?
 		local
 			diagram_input: XML_DOCUMENT
 			a_cursor: XML_COMPOSITE_CURSOR
-			view_name: STRING
+			view_name: READABLE_STRING_GENERAL
 		do
 			diagram_input := Xml_routines.deserialize_document_with_path (f.path)
 			if diagram_input /= Void then
@@ -967,7 +967,7 @@ feature {NONE} -- Implementation
 					if attached {like xml_element} a_cursor.item as l_node then
 						if l_node.has_same_name (once "VIEW") then
 							view_name := l_node.attribute_by_name (once "NAME").value
-							Result := view_name.is_equal (a_name)
+							Result := view_name.same_string (a_name)
 						end
 					end
 					a_cursor.forth
@@ -1473,7 +1473,7 @@ invariant
 	available_views_compare_objects: available_views.object_comparison
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

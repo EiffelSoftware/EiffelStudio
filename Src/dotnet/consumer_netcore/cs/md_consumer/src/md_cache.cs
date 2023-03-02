@@ -33,15 +33,30 @@ namespace md_consumer
                 return res;
             }
         }
+        public bool has_non_unique_entries()
+        {
+            foreach(var ca in assemblies)
+            {
+                foreach (var i in assemblies) {
+                    if (ca != i && ca.same_as (i)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
         public void add_assembly (CONSUMED_ASSEMBLY a)
         {
+            //Debug.Assert(!has_assembly(a), "not has assembly");
             assemblies.Add(a);
             is_dirty = true;
+            //Debug.Assert(!has_non_unique_entries(), "Unique entries!");
         }
         public void remove_assembly (CONSUMED_ASSEMBLY a)
         {
             assemblies.Remove(a);
             is_dirty = true;
+            //Debug.Assert(!has_non_unique_entries(), "Unique entries!");
         }   
         public void update_assembly (CONSUMED_ASSEMBLY a)
         {
@@ -59,6 +74,7 @@ namespace md_consumer
             if (!found) {
             	//DEBUG: Debug.Assert(found, "Assembly not found to be updated");
             }
+            //Debug.Assert(!has_non_unique_entries(), "Unique entries!");
         }
     }
     public class CACHE_COMMON
@@ -442,7 +458,11 @@ namespace md_consumer
                     i = l_mapping.last_index() + 1;
                     var n = c.fullname;
                     if (n != null) {
-                        l_mapping.record_assembly_mapping (i, n);
+                        if (l_mapping.is_assembly_mapped(n)) {  
+                            // FIXME: why ? conflict between current App Assembly (.Net version)  and the one currently inspected?
+                        } else {
+                            l_mapping.record_assembly_mapping (i, n);
+                        }
                     }
                 }
             }

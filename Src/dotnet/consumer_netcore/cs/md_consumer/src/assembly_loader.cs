@@ -151,24 +151,30 @@ namespace md_consumer
             // Console.WriteLine("load_assembly: " + location);
             Assembly? assembly = assembly = loaded_assembly(location);
             if (assembly == null) {
-                string runtime_dir = RuntimeEnvironment.GetRuntimeDirectory();
-
                 try {
                     // Get the array of runtime assemblies.
                     // This will allow us to at least inspect types depending only on BCL.
                     // Create MetadataLoadContext that can resolve assemblies using the created list.
                     MetadataLoadContext? mlc = md_context;
                     if (mlc == null) {
-                        string[] runtimeAssemblies = Directory.GetFiles(RuntimeEnvironment.GetRuntimeDirectory(), "*.dll");
-
                         // Create the list of assembly paths consisting of runtime assemblies and the input file.
-                        var paths = new List<string>(runtimeAssemblies);
+                        List<string> paths;
                         var dirs = new List<string>(1);
 
                         if (locations != null && locations.Count > 0) {
+                            paths = new List<string>(locations.Count);
                             foreach (string loc in locations) {
                                 register_resolver_path (loc, paths, dirs);
                             }
+                        } else {
+                            paths = new List<string>(1);
+                        } 
+                        if (dirs.Count == 0) {
+                            register_resolver_path (RuntimeEnvironment.GetRuntimeDirectory(), paths, dirs);
+                            // string[] runtimeAssemblies = Directory.GetFiles(RuntimeEnvironment.GetRuntimeDirectory(), "*.dll");
+                            // foreach (string loc in runtimeAssemblies) {
+                            //     register_resolver_path (loc, paths, dirs);
+                            // }
                         }
                         if (!paths.Contains(location)) {
                             register_resolver_path (location, paths, dirs);
@@ -267,7 +273,12 @@ namespace md_consumer
         public override Assembly? Resolve(MetadataLoadContext context, AssemblyName assemblyName)
         {
             // Console.WriteLine("Search " + assemblyName.Name);
-            Assembly? res = base.Resolve(context, assemblyName);
+            Assembly? res = null;
+            try {
+                res = base.Resolve(context, assemblyName);
+            } catch { //(System.IO.FileLoadException ex) {
+                res = null;
+            }
             if (res == null) {
                 string? fn = null;
                 string n = assemblyName.ToString();

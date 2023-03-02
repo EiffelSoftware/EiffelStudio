@@ -155,7 +155,7 @@ namespace EifMdConsumer
         {
             Console.WriteLine(String.Format(@"
 Eiffel Assembly Metadata ""Consumer"" - Version: {0}
-Copyright Eiffel Software 2006-2022. All Rights Reserved.
+Copyright Eiffel Software 2006-2023. All Rights Reserved.
 ", Program.version));
         }
         static protected void display_help() 
@@ -172,10 +172,10 @@ OPTIONS:
              <assembly>: Path to a valid .NET assembly
    -g      : Forces consumer to ignore all types in added assemblies. (Optional)
    -i      : Add a lookup reference path for dependency resolution. (Optional)
-             <path>: A location on disk
    -sdk    : Add a SDK location for dependency resolution. (Optional)
              <path>: A directory location on disk
    -runtime: Add a runtime location for dependency resolution. (Optional)
+             <path>: A dll location on disk
              <path>: A directory location on disk
    -v      : Display verbose output. (Optional)
    -o      : Location of Eiffel assembly cache to perform operations on. (Optional)

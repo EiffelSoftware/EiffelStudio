@@ -59,6 +59,9 @@ namespace md_consumer
         }
         public void record_assembly_mapping (int index, string a_full_name)
         {
+            // Require
+            //Debug.Assert(!is_assembly_mapped(a_full_name), "Not yet recorded!");
+
             // Console.WriteLine("# " + index + ": " + a_full_name);
             assembly_mapping_table.Add(a_full_name, index);
         }

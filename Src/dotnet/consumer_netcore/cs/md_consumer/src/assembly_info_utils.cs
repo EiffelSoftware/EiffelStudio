@@ -53,13 +53,6 @@ namespace md_consumer
                     writer.WriteEndArray();
                 }
 
-                string runtime_dir = RuntimeEnvironment.GetRuntimeDirectory();
-                writer.WritePropertyName("runtime");
-                writer.WriteStringValue(runtime_dir.ToString());
-
-                // writer.WritePropertyName("LD_LIBRARY_PATH");
-                // writer.WriteStringValue(Environment.GetEnvironmentVariable("LD_LIBRARY_PATH"));
-
                 writer.WriteBoolean("success", true);
                 writer.WriteEndObject();
                 writer.Flush();

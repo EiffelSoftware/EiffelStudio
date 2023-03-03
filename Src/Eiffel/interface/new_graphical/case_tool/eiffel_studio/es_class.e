@@ -416,14 +416,14 @@ feature -- Element change
 						graph.remove_node (Current)
 					end
 				else
-					if not class_i.name.same_string (name) then
+					if not class_i.name.same_string_general (name_32) then
 						-- should never happen (see above)
-						set_name (class_i.name)
+						set_name_32 (class_i.name)
 					end
 					set_is_root_class(system.root_creators.there_exists (
 						agent (a_root: SYSTEM_ROOT): BOOLEAN
 							do
-								Result := a_root.root_class.name.is_equal (class_i.name)
+								Result := a_root.root_class.name.same_string (class_i.name)
 							end))
 					c := class_c
 					if c /= Void then
@@ -720,7 +720,7 @@ feature {NONE} -- Implementation
 				until
 					l_nodes.after or else Result /= Void
 				loop
-					if attached {ES_CLASS} l_nodes.item as l_item and then l_item.name.same_string_general (a_name) then
+					if attached {ES_CLASS} l_nodes.item as l_item and then a_name.same_string (l_item.name_32) then
 						Result := l_item.class_i
 					end
 					l_nodes.forth

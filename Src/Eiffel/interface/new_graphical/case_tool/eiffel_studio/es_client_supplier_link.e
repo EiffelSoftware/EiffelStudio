@@ -99,19 +99,19 @@ feature -- Element change
 	set_name_from_feature_as_list (a_feature_as_list: LIST [FEATURE_AS])
 			-- Set full name for `Current' based on `a_feature_as_list'.
 		local
-			a_name: STRING
+			a_name: STRING_32
 		do
 			a_name := full_name (a_feature_as_list.first)
-			a_name.replace_substring_all ("[", "[ ")
-			a_name.replace_substring_all (" " + supplier.class_i.name, " ...")
-			if a_name.substring (a_name.count - 4, a_name.count).is_equal (": ...") then
-				a_name.replace_substring_all (": ...", "")
+			a_name.replace_substring_all ({STRING_32} "[", {STRING_32} "[ ")
+			a_name.replace_substring_all ({STRING_32} " " + supplier.class_i.name, {STRING_32} " ...")
+			if a_name.substring (a_name.count - 4, a_name.count).same_string ({STRING_32} ": ...") then
+				a_name.replace_substring_all ({STRING_32} ": ...", {STRING_32} "")
 			end
 			if a_feature_as_list.count > 1 then
-				a_name.append (", ...")
+				a_name.append_string_general (", ...")
 			end
-			a_name.replace_substring_all ("[ ", "[")
-			set_name (a_name)
+			a_name.replace_substring_all ({STRING_32} "[ ", {STRING_32} "[")
+			set_name_32 (a_name)
 			is_aggregated := is_expanded (a_feature_as_list.first)
 		end
 
@@ -138,7 +138,7 @@ invariant
 	features_not_void: features /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

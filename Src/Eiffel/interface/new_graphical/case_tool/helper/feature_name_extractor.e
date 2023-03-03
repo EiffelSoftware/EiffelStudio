@@ -64,7 +64,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	full_name_compiled (a_feature: E_FEATURE): STRING
+	full_name_compiled (a_feature: E_FEATURE): STRING_32
 			-- Full name of `a_feature' (i.e. "feature_name (foo: FOO): LIST [FOO, BAR [FOO2]]")
 		require
 			a_feature_not_void: a_feature /= Void
@@ -74,7 +74,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	full_name (a_feature: FEATURE_AS): STRING
+	full_name (a_feature: FEATURE_AS): STRING_32
 			-- Full name of `a_feature' (i.e. "feature_name: LIST [FOO, BAR [FOO2]]")
 			-- without parameters.
 		require
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

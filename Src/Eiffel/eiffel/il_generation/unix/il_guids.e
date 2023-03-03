@@ -1,43 +1,37 @@
 note
-	description: "Shared object that knows to generate IL code."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Predefined GUIDs"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SHARED_IL_CODE_GENERATOR
+	IL_GUIDS
 
-feature -- IL generator object
+feature -- Access
 
-	il_generator: IL_CODE_GENERATOR
-			-- To generate IL code. So far we only support CIL.
+	language_guid: CIL_GUID
+			-- Language guid used to identify our language when debugging.
 		once
-			Result := cil_generator
+			create Result.make (0xE1FFE11E, 0x8195, 0x490C,
+				{ARRAY [NATURAL_8]} <<0x87, 0xEE, 0xA7, 0x13, 0x30, 0x1A, 0x67, 0x0C>>)
 		ensure
-			class
+			language_guid_not_void: language_guid /= Void
 		end
 
-	cil_generator: CIL_CODE_GENERATOR
-			-- Generator for CIL code
+	vendor_guid: CIL_GUID
+			-- Vendor guid used to identify us when debugging.
 		once
-				-- We keep both `INTERFACE_xx' and `SINGLE_xx' in
-				-- our system for the moment in case we need to
-				-- switch back to either one or the other.
-			create {SINGLE_IL_CODE_GENERATOR} Result.make
-			create {INTERFACE_IL_CODE_GENERATOR} Result.make
+			create Result.make (0xE1FFE10E, 0x9424, 0x485F,
+				{ARRAY [NATURAL_8]} <<0x82, 0x64, 0xD4, 0xA7, 0x26, 0xC1, 0x62, 0xE7>>)
 		ensure
-			class
+			vendor_guid_not_void: vendor_guid /= Void
 		end
 
-feature -- IL label factory
-
-	il_label_factory: IL_LABEL_FACTORY
-			-- To create `label' in IL code.
+	document_type_guid: CIL_GUID
+			-- Document type guid.
 		once
-			create Result.make
+			create Result.make_empty
 		ensure
-			class
+			document_type_guid_not_void: document_type_guid /= Void
 		end
 
 note

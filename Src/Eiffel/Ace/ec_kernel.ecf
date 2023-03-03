@@ -129,6 +129,11 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
+		<library name="il_emitter" location="$EIFFEL_SRC\unstable\library\dotnet\il_emitter\il_emitter.ecf">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</library>
 		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.ecf">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -156,6 +161,18 @@
 			</file_rule>
 			<file_rule>
 				<exclude>/il_generation/unix$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/byte_code/visitor/windows$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/byte_code/visitor/unix$</exclude>
 				<condition>
 					<platform value="windows"/>
 				</condition>

@@ -113,13 +113,11 @@ feature {NONE} -- Implementation
 		local
 			l_generics: ARRAYED_LIST [TYPE_A]
 			i, nb: INTEGER
-			formal: FORMAL_A
 		do
-			formal ?= a_type
-			if formal = Void then
-				Result := a_type.base_class.name_in_upper.twin
-			else
+			if attached {FORMAL_A} a_type as formal then
 				Result := formal.dump
+			else
+				Result := a_type.base_class.name_in_upper.twin
 			end
 
 			l_generics := a_type.generics
@@ -147,12 +145,10 @@ feature {NONE} -- Implementation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			ct: CLASS_TYPE_AS
 			g: TYPE_LIST_AS
 		do
 			Result := ""
-			ct ?= a_type
-			if ct /= Void then
+			if attached {CLASS_TYPE_AS} a_type as ct then
 				Result.append (supplier_name (class_i_by_name (ct.class_name.name_8)))
 				g := ct.generics
 				if g /= Void then

@@ -120,16 +120,16 @@ feature {NONE} -- Implementation
 	is_expanded (a_feature: FEATURE_AS): BOOLEAN
 			-- Is `a_feature' declared `expanded'?
 		local
-			ct: CLASS_TYPE_AS
 			type_as_class: CLASS_I
 		do
-			ct ?= a_feature.body.type
-			Result := ct /= Void and then ct.is_expanded
-			if not Result and then ct /= Void then
-				fixme ("Remove usage of `System.any_class' to search for ct's base class.")
-				type_as_class := clickable_info.associated_eiffel_class (System.any_class, ct)
-				if type_as_class /= Void and then type_as_class.is_compiled then
-					Result := type_as_class.compiled_class.is_expanded
+			if attached {CLASS_TYPE_AS} a_feature.body.type as ct then
+				Result := ct.is_expanded
+				if not Result then
+					fixme ("Remove usage of `System.any_class' to search for ct's base class.")
+					type_as_class := clickable_info.associated_eiffel_class (System.any_class, ct)
+					if type_as_class /= Void and then type_as_class.is_compiled then
+						Result := type_as_class.compiled_class.is_expanded
+					end
 				end
 			end
 		end

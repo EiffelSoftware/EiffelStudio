@@ -199,7 +199,7 @@ feature -- Setting
 			is_displaying_suppliers_set: is_displaying_suppliers = b
 		end
 
-	prepare_for_supplier_view (a_name_of_starting_element: STRING)
+	prepare_for_supplier_view (a_name_of_starting_element: READABLE_STRING_GENERAL)
 			-- Prepare for display supplier dependency.
 			-- `a_name_of_starting_element' is the name displayed in referenced class column.
 		require
@@ -216,7 +216,7 @@ feature -- Setting
 			is_displaying_suppliers: is_displaying_suppliers
 		end
 
-	prepare_for_client_view (a_name_of_starting_element: STRING)
+	prepare_for_client_view (a_name_of_starting_element: READABLE_STRING_GENERAL)
 			-- Prepare for display client dependency.
 			-- `a_name_of_starting_element' is the name displayed in referenced class column.
 		do
@@ -261,23 +261,31 @@ feature{NONE} -- Actions
 			-- is collapsed indicated by False value of `a_expanded'.
 		require
 			a_row_attached: a_row /= Void
-		local
-			l_referencer_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
-			l_referenced_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
-			l_referenced_class: QL_CLASS
-			l_referencer_class: QL_CLASS
 		do
-			l_referencer_row ?= a_row.data
-			if l_referencer_row /= Void then
+			if attached {EB_CLASS_BROWSER_DEPENDENCY_ROW} a_row.data as l_referencer_row then
 				if a_expanded and then l_referencer_row.is_lazy_expandable and then not l_referencer_row.has_been_expanded then
 					l_referencer_row.set_is_expanded (a_expanded)
-					l_referencer_class ?= l_referencer_row.item
-					check a_row.parent_row /= Void end
-					l_referenced_row ?= a_row.parent_row.data
-					check l_referenced_row /= Void end
-					l_referenced_class ?= l_referenced_row.item
-					check l_referenced_class /= Void and then l_referencer_class /= Void end
-					bind_feature_rows (l_referencer_row.row_node, l_referenced_class, l_referencer_class)
+					if
+						attached {QL_CLASS} l_referencer_row.item as l_referencer_class
+					then
+						if
+							attached a_row.parent_row as pr and then
+							attached {EB_CLASS_BROWSER_DEPENDENCY_ROW} pr.data as l_referenced_row
+						then
+							if
+								attached {QL_CLASS} l_referenced_row.item as l_referenced_class
+							then
+								bind_feature_rows (l_referencer_row.row_node, l_referenced_class, l_referencer_class)
+							else
+								check has_referenced_class: False end
+							end
+						else
+							check a_row.parent_row /= Void end
+							check has_referenced_row: False end
+						end
+					else
+						check has_referencer_class: False end
+					end
 				else
 					l_referencer_row.set_is_expanded (a_expanded)
 				end
@@ -381,7 +389,6 @@ feature -- Notification
 	provide_result
 			-- Provide result displayed in Current view.
 		local
-			l_cluster_stone: CLUSTER_STONE
 			l_item_from_stone: like domain_item_from_stone
 		do
 			set_has_grid_been_binded_for_current_data (False)
@@ -389,8 +396,7 @@ feature -- Notification
 			if l_item_from_stone /= Void and then l_item_from_stone.is_valid then
 				starting_element_group := domain_item_from_stone (starting_element).group
 			end
-			l_cluster_stone ?= starting_element
-			is_starting_element_folder := l_cluster_stone /= Void and then (l_cluster_stone.path /= Void and then not l_cluster_stone.path.is_empty)
+			is_starting_element_folder := attached {CLUSTER_STONE} starting_element as l_cluster_stone and then (l_cluster_stone.path /= Void and then not l_cluster_stone.path.is_empty)
 
 			retrieve_classes_in_starting_element
 			data_hierarchy := Void
@@ -428,8 +434,6 @@ feature -- Sorting
 			a_row_attached: a_row /= Void
 			b_row_attached: b_row /= Void
 		local
-			l_a_group: QL_GROUP
-			l_b_group: QL_GROUP
 			l_a_index: INTEGER
 			l_b_index: INTEGER
 		do
@@ -442,18 +446,19 @@ feature -- Sorting
 				end
 			else
 				if a_order = topology_order then
-					l_a_group ?= a_row.item
-					l_b_group ?= b_row.item
-					check
-						l_a_group /= Void
-						l_b_group /= Void
-					end
-					l_a_index := index_of_group (l_a_group)
-					l_b_index := index_of_group (l_b_group)
-					if l_a_index /= l_b_index then
-						Result := l_a_index < l_b_index
+					if
+						attached {QL_GROUP} a_row.item as l_a_group and then
+						attached {QL_GROUP} b_row.item as l_b_group
+					then
+						l_a_index := index_of_group (l_a_group)
+						l_b_index := index_of_group (l_b_group)
+						if l_a_index /= l_b_index then
+							Result := l_a_index < l_b_index
+						else
+							Result := name_tester (a_row, b_row, ascending_order)
+						end
 					else
-						Result := name_tester (a_row, b_row, ascending_order)
+						check False end
 					end
 				else
 					Result := name_tester (a_row, b_row, a_order)
@@ -626,7 +631,7 @@ feature{NONE} -- Grid binding
 			l_rows: LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
 			l_grid_row: EV_GRID_ROW
 			l_starting_column: INTEGER
-			l_row, l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
+			l_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
 			l_grid_has_been_binded_for_current_data: BOOLEAN
 			l_post_row_bind_action: PROCEDURE [EV_GRID_ROW]
 			l_row_count: INTEGER
@@ -662,8 +667,7 @@ feature{NONE} -- Grid binding
 
 							-- Expand rows.
 						if l_grid_has_been_binded_for_current_data then
-							l_dependency_row ?= a_level.data
-							if l_dependency_row /= Void then
+							if attached {EB_CLASS_BROWSER_DEPENDENCY_ROW} a_level.data as l_dependency_row then
 								if l_dependency_row.is_expanded then
 									a_base_row.expand
 								end
@@ -775,7 +779,7 @@ feature{NONE} -- Grid binding
 			try_auto_resize_grid (<<[100, 200, feature_list_column], [100, 500, position_column]>>, False)
 		end
 
-	add_trailer (a_class: QL_CLASS; a_pixmap: EV_PIXMAP; a_text: STRING; a_grid_item: EB_GRID_EDITOR_TOKEN_ITEM)
+	add_trailer (a_class: QL_CLASS; a_pixmap: EV_PIXMAP; a_text: READABLE_STRING_32; a_grid_item: EB_GRID_EDITOR_TOKEN_ITEM)
 			-- Add trailer into `a_grid_item' to display information of `a_class'.	
 			-- The trailer will display pixmap given by `a_pixmap' with tooltip saying `a_text' + name of `a_class'.
 		require
@@ -810,8 +814,6 @@ feature{NONE} -- Grid binding
 			l_starting_element_group: QL_GROUP
 			l_classes: LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
 			l_classes_from_starting_element: like classes_in_starting_element
-			l_group: QL_GROUP
-			l_class: QL_CLASS
 			l_new_class_count: INTEGER
 			l_new_class: BOOLEAN
 			l_is_group_equal: BOOLEAN
@@ -838,75 +840,87 @@ feature{NONE} -- Grid binding
 				until
 					l_groups.after
 				loop
-					l_group ?= l_groups.item_for_iteration.data.item
-					check l_group /= Void end
-					l_is_group_equal := l_group.is_equal (l_starting_element_group)
-					if not l_is_group_equal then
-						if not l_starting_element_group.is_library then
-							l_used_in_library := l_starting_element_group.group.target.system.lowest_used_in_library
-							if l_used_in_library /= Void then
-								l_is_group_equal := l_group.group = l_used_in_library
+					if attached {QL_GROUP} l_groups.item_for_iteration.data.item as l_group then
+						l_is_group_equal := l_group.is_equal (l_starting_element_group)
+						if not l_is_group_equal then
+							if not l_starting_element_group.is_library then
+								l_used_in_library := l_starting_element_group.group.target.system.lowest_used_in_library
+								if l_used_in_library /= Void then
+									l_is_group_equal := l_group.group = l_used_in_library
+								end
 							end
 						end
-					end
-					if not l_is_group_equal then
-						l_groups.item_for_iteration.data.set_should_current_row_be_displayed (True)
-						if categorize_folder_button.is_selected then
-							mark_display_in_rows (l_groups.item_for_iteration.children, 3, True)
+						if not l_is_group_equal then
+							l_groups.item_for_iteration.data.set_should_current_row_be_displayed (True)
+							if categorize_folder_button.is_selected then
+								mark_display_in_rows (l_groups.item_for_iteration.children, 3, True)
+							else
+								mark_display_in_rows (l_groups.item_for_iteration.children, 2, True)
+							end
 						else
-							mark_display_in_rows (l_groups.item_for_iteration.children, 2, True)
-						end
-					else
-						l_classes_from_starting_element := classes_in_starting_element
-						if categorize_folder_button.is_selected then
-							l_folders := l_groups.item_for_iteration.children
-							l_cursor := l_folders.new_cursor
-							l_folder_count := 0
-							from
-								l_cursor.start
-							until
-								l_cursor.after
-							loop
-								l_classes := l_cursor.item.children
-								l_new_class_count := 0
+							l_classes_from_starting_element := classes_in_starting_element
+							if categorize_folder_button.is_selected then
+								l_folders := l_groups.item_for_iteration.children
+								l_cursor := l_folders.new_cursor
+								l_folder_count := 0
 								from
+									l_cursor.start
+								until
+									l_cursor.after
+								loop
+									l_classes := l_cursor.item.children
+									l_new_class_count := 0
+									from
+										l_classes.start
+									until
+										l_classes.after
+									loop
+										if attached {QL_CLASS} l_classes.item_for_iteration.data.item as l_class then
+											l_new_class := not l_classes_from_starting_element.has (l_class)
+											if l_new_class then
+												l_new_class_count := l_new_class_count + 1
+											end
+										else
+											check False end
+											l_new_class := False
+										end
+										l_classes.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class)
+										l_classes.forth
+									end
+									l_cursor.item.data.set_should_current_row_be_displayed (l_new_class_count > 0)
+									if l_new_class_count > 0 then
+										l_folder_count := l_folder_count + 1
+									end
+									l_cursor.forth
+								end
+								l_groups.item_for_iteration.data.set_should_current_row_be_displayed (l_folder_count > 0)
+							else
+								from
+									l_classes := l_groups.item_for_iteration.children
+									l_new_class_count := 0
 									l_classes.start
 								until
 									l_classes.after
 								loop
-									l_class ?= l_classes.item_for_iteration.data.item
-									l_new_class := not l_classes_from_starting_element.has (l_class)
-									l_classes.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class)
-									if l_new_class then
-										l_new_class_count := l_new_class_count + 1
+									if attached {QL_CLASS} l_classes.item_for_iteration.data.item as l_class then
+										l_new_class := not l_classes_from_starting_element.has (l_class)
+										l_classes.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class)
+										if l_new_class then
+											l_new_class_count := l_new_class_count + 1
+										end
+									else
+										check False end
+										l_new_class := False
 									end
+									l_classes.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class)
 									l_classes.forth
 								end
-								l_cursor.item.data.set_should_current_row_be_displayed (l_new_class_count > 0)
-								if l_new_class_count > 0 then
-									l_folder_count := l_folder_count + 1
-								end
-								l_cursor.forth
+								l_groups.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class_count > 0)
 							end
-							l_groups.item_for_iteration.data.set_should_current_row_be_displayed (l_folder_count > 0)
-						else
-							from
-								l_classes := l_groups.item_for_iteration.children
-								l_new_class_count := 0
-								l_classes.start
-							until
-								l_classes.after
-							loop
-								l_class ?= l_classes.item_for_iteration.data.item
-								l_new_class := not l_classes_from_starting_element.has (l_class)
-								l_classes.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class)
-								if l_new_class then
-									l_new_class_count := l_new_class_count + 1
-								end
-								l_classes.forth
-							end
-							l_groups.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class_count > 0)
 						end
+
+					else
+						check is_group: False end
 					end
 					l_groups.forth
 				end
@@ -1050,14 +1064,12 @@ feature{NONE} -- Implementation
 		local
 			l_grid_item: EV_GRID_ITEM
 			l_grid_row: EV_GRID_ROW
-			l_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
 		do
 			l_grid_item := a_item.grid_item
 			check l_grid_item /= Void end
 			l_grid_row := l_grid_item.row
 			check l_grid_row /= Void end
-			l_row ?= l_grid_row.data
-			if l_row /= Void then
+			if attached {EB_CLASS_BROWSER_DEPENDENCY_ROW} l_grid_row.data as l_row then
 				l_row.expand_parent_row_recursively (l_grid_row)
 			end
 			grid.remove_selection
@@ -1170,9 +1182,9 @@ feature{NONE} -- Implementation
 			l_referenced_class_level: EB_TREE_NODE [QL_ITEM]
 			l_referencer_class_level: EB_TREE_NODE [QL_ITEM]
 			l_folder_level: EB_TREE_NODE [QL_ITEM]
-			l_class_table: HASH_TABLE [LINKED_LIST [QL_CLASS], STRING]
+			l_class_table: STRING_TABLE [LINKED_LIST [QL_CLASS]]
 			l_class_list: LINKED_LIST [QL_CLASS]
-			l_path: STRING
+			l_path: STRING_32
 			l_path_item: QL_ITEM
 			l_class: CONF_CLASS
 		do
@@ -1297,7 +1309,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	categorized_feature_table (a_class: QL_CLASS): HASH_TABLE [HASH_TABLE [QL_FEATURE, STRING], QL_CLASS]
+	categorized_feature_table (a_class: QL_CLASS): HASH_TABLE [STRING_TABLE [QL_FEATURE], QL_CLASS]
 			-- For a class `a_class', return its categorized feature table.
 			-- Value of the returned table is a table of features indexed by feature name.
 			-- Key of that value is the written class where features in value is written.
@@ -1306,40 +1318,42 @@ feature{NONE} -- Implementation
 		require
 			a_class_attached: a_class /= Void
 		local
-			l_feature_domain: QL_FEATURE_DOMAIN
 			l_feature: QL_FEATURE
-			l_invariant: QL_INVARIANT
 			l_class: QL_CLASS
-			l_feat_name_table: HASH_TABLE [QL_FEATURE, STRING]
+			l_feat_name_table: STRING_TABLE [QL_FEATURE]
 		do
 			create Result.make (10)
-			from
-				l_feature_domain ?= a_class.wrapped_domain.new_domain (create {QL_FEATURE_DOMAIN_GENERATOR}.make (Void, True))
-				l_feature_domain.start
-			until
-				l_feature_domain.after
-			loop
-				l_feature := l_feature_domain.item
-				if l_feature.is_invariant_feature then
-					l_invariant ?= l_feature
-					if l_invariant.written_class.class_id = l_invariant.class_c.class_id then
-							-- For immediate invariant
-						l_class ?= l_invariant.parent
+			if attached {QL_FEATURE_DOMAIN} a_class.wrapped_domain.new_domain (create {QL_FEATURE_DOMAIN_GENERATOR}.make (Void, True)) as l_feature_domain then
+				from
+					l_feature_domain.start
+				until
+					l_feature_domain.after
+				loop
+					l_feature := l_feature_domain.item
+					if l_feature.is_invariant_feature then
+						if attached {QL_INVARIANT} l_feature as l_invariant then
+							if l_invariant.written_class.class_id = l_invariant.class_c.class_id then
+									-- For immediate invariant
+								l_class := {QL_CLASS} / l_invariant.parent
+							else
+									-- For inherited invariant
+								l_class := query_class_item_from_class_c (l_invariant.written_class)
+							end
+						else
+							check is_invariant_feature: False end
+						end
 					else
-							-- For inherited invariant
-						l_class := query_class_item_from_class_c (l_invariant.written_class)
+						l_class := {QL_CLASS} / l_feature.parent
 					end
-				else
-					l_class ?= l_feature.parent
-				end
 
-				l_feat_name_table := Result.item (l_class)
-				if l_feat_name_table = Void then
-					create l_feat_name_table.make (30)
-					Result.put (l_feat_name_table, l_class)
+					l_feat_name_table := Result.item (l_class)
+					if l_feat_name_table = Void then
+						create l_feat_name_table.make (30)
+						Result.put (l_feat_name_table, l_class)
+					end
+					l_feat_name_table.put (l_feature, l_feature.name)
+					l_feature_domain.forth
 				end
-				l_feat_name_table.put (l_feature, l_feature.name)
-				l_feature_domain.forth
 			end
 		ensure
 			result_attached: Result /= Void
@@ -1386,16 +1400,14 @@ feature{NONE} -- Implementation
 			a_supplier_class_valid: a_supplier_class /= Void and then a_supplier_class.is_compiled
 			a_client_class_valid: a_client_class /= Void and then a_client_class.is_compiled
 		local
-			l_supplier_features: QL_FEATURE_DOMAIN
-			l_client_features: QL_FEATURE_DOMAIN
 			l_client_feature: QL_FEATURE
 			l_supplier_feature: QL_FEATURE
 			l_feature_generator: QL_FEATURE_DOMAIN_GENERATOR
 			l_caller_list: SORTED_LIST [STRING]
 			l_invariant_name: STRING
 			l_invariant_feature_name: STRING
-			l_name_table: HASH_TABLE [HASH_TABLE [QL_FEATURE, STRING], QL_CLASS]
-			l_feat_name_table: HASH_TABLE [QL_FEATURE, STRING]
+			l_name_table: HASH_TABLE [STRING_TABLE [QL_FEATURE], QL_CLASS]
+			l_feat_name_table: STRING_TABLE [QL_FEATURE]
 			l_list: DS_LIST [QL_FEATURE]
 			l_clients_of_supplier_class: DS_HASH_SET [CLASS_C]
 			l_class_c: CLASS_C
@@ -1407,50 +1419,50 @@ feature{NONE} -- Implementation
 			l_invariant_feature_name := "invariant"
 			l_clients_of_supplier_class := client_class_set (a_supplier_class.class_c)
 			l_name_table := categorized_feature_table (a_client_class)
-			l_client_features ?= a_client_class.wrapped_domain.new_domain (l_feature_generator)
-
-			from
-				l_supplier_features ?= a_supplier_class.wrapped_domain.new_domain (l_feature_generator)
-				l_supplier_features.start
-			until
-				l_supplier_features.after
-			loop
-				l_supplier_feature := l_supplier_features.item
-				if l_supplier_feature.is_real_feature then
-					from
-						l_name_table.start
-					until
-						l_name_table.after
-					loop
-						l_class_c := l_name_table.key_for_iteration.class_c
-						if l_clients_of_supplier_class.has (l_class_c) then
-							l_caller_list := l_supplier_feature.e_feature.callers (l_class_c, 0)
-							if l_caller_list /= Void then
-								l_feat_name_table := l_name_table.item_for_iteration
-								from
-									l_caller_list.start
-								until
-									l_caller_list.after
-								loop
-									if l_caller_list.item.is_equal (l_invariant_name) then
-										l_client_feature := l_feat_name_table.item (l_invariant_feature_name)
-									else
-										l_client_feature := l_feat_name_table.item (l_caller_list.item)
-									end
-									if l_client_feature /= Void then
-										l_list := Result.item (l_client_feature)
-										if l_list = Void then
-											create {DS_ARRAYED_LIST [QL_FEATURE]} l_list.make (10)
-											Result.put (l_list, l_client_feature)
+--			l_client_features := {QL_FEATURE_DOMAIN / a_client_class.wrapped_domain.new_domain (l_feature_generator)
+			if attached {QL_FEATURE_DOMAIN} a_supplier_class.wrapped_domain.new_domain (l_feature_generator) as l_supplier_features then
+				from
+					l_supplier_features.start
+				until
+					l_supplier_features.after
+				loop
+					l_supplier_feature := l_supplier_features.item
+					if l_supplier_feature.is_real_feature then
+						from
+							l_name_table.start
+						until
+							l_name_table.after
+						loop
+							l_class_c := l_name_table.key_for_iteration.class_c
+							if l_clients_of_supplier_class.has (l_class_c) then
+								l_caller_list := l_supplier_feature.e_feature.callers (l_class_c, 0)
+								if l_caller_list /= Void then
+									l_feat_name_table := l_name_table.item_for_iteration
+									from
+										l_caller_list.start
+									until
+										l_caller_list.after
+									loop
+										if l_caller_list.item.is_equal (l_invariant_name) then
+											l_client_feature := l_feat_name_table.item (l_invariant_feature_name)
+										else
+											l_client_feature := l_feat_name_table.item (l_caller_list.item)
 										end
-										l_list.force_last (l_supplier_feature)
-									end
+										if l_client_feature /= Void then
+											l_list := Result.item (l_client_feature)
+											if l_list = Void then
+												create {DS_ARRAYED_LIST [QL_FEATURE]} l_list.make (10)
+												Result.put (l_list, l_client_feature)
+											end
+											l_list.force_last (l_supplier_feature)
+										end
 
-									l_caller_list.forth
+										l_caller_list.forth
+									end
 								end
 							end
+							l_name_table.forth
 						end
-						l_name_table.forth
 					end
 				end
 				l_supplier_features.forth
@@ -1483,7 +1495,7 @@ feature{NONE} -- Implementation
 			Precursor
 		end
 
-	referenced_class_column_name (a_relation_name: STRING_GENERAL; a_name_of_starting_element: STRING_GENERAL): STRING_GENERAL
+	referenced_class_column_name (a_relation_name: READABLE_STRING_GENERAL; a_name_of_starting_element: READABLE_STRING_GENERAL): STRING_GENERAL
 			-- Name of referenced class column in dependency view.
 			-- `a_relation_name' is "client" or "supplier", and `a_name_of_starting_element' is the name of the target/group/folder/class where
 			-- the relation is investigated.
@@ -1506,11 +1518,8 @@ feature{NONE} -- Implementation
 
 	expand_row_recursively (a_row: EV_GRID_ROW)
 			-- Expand `a_row' recursively.
-		local
-			l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
 		do
-			l_dependency_row ?= a_row.data
-			if l_dependency_row = Void or else not (l_dependency_row.is_lazy_expandable and then not l_dependency_row.has_been_expanded) then
+			if not attached {EB_CLASS_BROWSER_DEPENDENCY_ROW} a_row.data as l_dependency_row or else not (l_dependency_row.is_lazy_expandable and then not l_dependency_row.has_been_expanded) then
 				Precursor (a_row)
 			end
 		end
@@ -1531,7 +1540,6 @@ feature{NONE} -- Implementation
 		local
 			l_criterion: QL_CLASS_CRITERION
 			l_generator: QL_CLASS_DOMAIN_GENERATOR
-			l_class_domain: QL_CLASS_DOMAIN
 		do
 			if is_displaying_suppliers then
 				create {QL_CLASS_ANCESTOR_RELATION_CRI} l_criterion.make (b_class.wrapped_domain, {QL_CLASS_ANCESTOR_RELATION_CRI}.ancestor_type)
@@ -1539,9 +1547,12 @@ feature{NONE} -- Implementation
 				create {QL_CLASS_DESCENDANT_RELATION_CRI} l_criterion.make (b_class.wrapped_domain, {QL_CLASS_DESCENDANT_RELATION_CRI}.descendant_type)
 			end
 			create l_generator.make (l_criterion, True)
-			l_class_domain ?= system_target_domain.new_domain (l_generator)
-			l_class_domain.compare_objects
-			Result := l_class_domain.has (a_class)
+			if attached {QL_CLASS_DOMAIN} system_target_domain.new_domain (l_generator) as l_class_domain then
+				l_class_domain.compare_objects
+				Result := l_class_domain.has (a_class)
+			else
+				check is_class_domain: False end
+			end
 		end
 
 	normal_referenced_button_internal: like normal_referenced_button
@@ -1663,7 +1674,6 @@ feature{NONE} -- Implementation/Stone
 		local
 			l_rows: LIST [EV_GRID_ROW]
 			l_grid_row: EV_GRID_ROW
-			l_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
 			l_index: INTEGER
 		do
 			l_rows := grid.selected_rows
@@ -1678,8 +1688,7 @@ feature{NONE} -- Implementation/Stone
 							end
 					)
 				then
-					l_row ?= l_grid_row.data
-					if l_row /= Void then
+					if attached {EB_CLASS_BROWSER_DEPENDENCY_ROW} l_grid_row.data as l_row then
 						if not l_row.is_stone_set then
 							l_row.set_grid_item_stone
 						end
@@ -1689,7 +1698,7 @@ feature{NONE} -- Implementation/Stone
 						end
 					else
 						if l_grid_row.index = 1 then
-							Result ?= l_grid_row.item (1)
+							Result := {like item_to_put_in_editor} / l_grid_row.item (1)
 						end
 					end
 				end
@@ -1697,7 +1706,7 @@ feature{NONE} -- Implementation/Stone
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

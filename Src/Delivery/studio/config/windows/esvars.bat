@@ -2,7 +2,7 @@
 
 REM Locate the registry key location. This is the only place where the scripts needs to be changed
 REM from version to version.
-set RegKeyPath=HKEY_LOCAL_MACHINE\SOFTWARE\ISE\Eiffel_23.02
+set RegKeyPath=HKEY_LOCAL_MACHINE\SOFTWARE\ISE\Eiffel_23.03
 
 FOR /F "tokens=2* delims=	 " %%A IN ('REG QUERY "%RegKeyPath%" /v ISE_EIFFEL') DO SET ISE_EIFFEL=%%B
 FOR /F "tokens=2* delims=	 " %%A IN ('REG QUERY "%RegKeyPath%" /v ISE_PLATFORM') DO SET ISE_PLATFORM=%%B

@@ -55,7 +55,7 @@ feature -- Comparison
 			l_other := other.item
 			Result := l_item = l_other
 			if not Result then
-				Result := l_item /= Void and then l_item.equals (l_other)
+				Result := l_item /= Void and then l_item.equals_object (l_other)
 			end
 		end
 

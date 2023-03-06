@@ -483,19 +483,23 @@ feature -- Status report
 		require
 			directory_exists: exists
 		local
-			pa: FILE_IO_PERMISSION
+			fs: FILE_STREAM
 			di: DIRECTORY_INFO
-			retried: BOOLEAN
+			retried: INTEGER
 		do
-			if not retried then
+			if retried = 0 then
 				create di.make (internal_name.to_cil)
-				create pa.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.Read,
-					di.full_name)
-				pa.demand
+				create fs.make (di.full_name, {FILE_MODE}.open, {FILE_ACCESS}.Read)
+				Result := fs.can_read
+				fs.dispose
+			elseif retried = 1 and fs /= Void then
+				fs.dispose
+				Result := False
+			else
+				Result := False
 			end
-			Result := not retried
 		rescue
-			retried := True
+			retried := retried + 1
 			retry
 		end
 
@@ -504,20 +508,23 @@ feature -- Status report
 		require
 			directory_exists: exists
 		local
-			pa: FILE_IO_PERMISSION
+			fs: FILE_STREAM
 			di: DIRECTORY_INFO
-			retried: BOOLEAN
+			retried: INTEGER
 		do
-			if not retried then
+			if retried = 0 then
 				create di.make (internal_name.to_cil)
-				create pa.make_from_access_and_path (
-					{FILE_IO_PERMISSION_ACCESS}.path_discovery,
-					di.full_name)
-				pa.demand
+				create fs.make (di.full_name, {FILE_MODE}.open, {FILE_ACCESS}.Read)
+				Result := fs.can_seek
+				fs.dispose
+			elseif retried = 1 and fs /= Void then
+				fs.dispose
+				Result := False
+			else
+				Result := False
 			end
-			Result := not retried
 		rescue
-			retried := True
+			retried := retried + 1
 			retry
 		end
 
@@ -526,19 +533,23 @@ feature -- Status report
 		require
 			directory_exists: exists
 		local
-			pa: FILE_IO_PERMISSION
+			fs: FILE_STREAM
 			di: DIRECTORY_INFO
-			retried: BOOLEAN
+			retried: INTEGER
 		do
-			if not retried then
+			if retried = 0 then
 				create di.make (internal_name.to_cil)
-				create pa.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.write,
-					di.full_name)
-				pa.demand
+				create fs.make (di.full_name, {FILE_MODE}.open, {FILE_ACCESS}.Write)
+				Result := fs.can_write
+				fs.dispose
+			elseif retried = 1 and fs /= Void then
+				fs.dispose
+				Result := False
+			else
+				Result := False
 			end
-			Result := not retried
 		rescue
-			retried := True
+			retried := retried + 1
 			retry
 		end
 

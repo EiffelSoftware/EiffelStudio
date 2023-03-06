@@ -4,19 +4,19 @@
 	<description>
 		description: "Eiffel's unstable libraries compilation"
 	</description>
-	
+
 	<target name="help">
 		<echo message="usage:"/>
 		<echo message=" geant compile"/>
 		<echo message=" geant clean"/>
 		<echo message=" geant clobber"/>
 	</target>
-	
+
 	<target name="compile" >
 		<echo message="- Compile unstable library" />
 		<geant target="_build_tpl_" arguments="compile" />
 	</target>
-	
+
 	<target name="clean" >
 		<echo message="- Clean unstable library" />
 		<geant target="_build_tpl_" arguments="clean" />
@@ -30,6 +30,7 @@
 	<target name="_build_tpl_" >
 		<argument name="_target_name" />
 		<geant target="${_target_name}" dir="library/persistency/database/sqlite3" file="build.eant" reuse_variables="true" />
+		<geant target="${_target_name}" dir="library/dotnet/il_emitter" file="build.eant" reuse_variables="true" />
 	</target>
-	
+
 </project>

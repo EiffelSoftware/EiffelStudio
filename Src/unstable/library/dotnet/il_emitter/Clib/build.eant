@@ -13,10 +13,14 @@
 	</target>
 
 	<target name="compile" >
+		<echo message="- Compile [IL Emitter] CLib" />
 		<exec executable="finish_freezing -library" />
 	</target>
 
 	<target name="clean" >
+		<echo message="- Clean [IL Emitter] CLib" />
+		<delete directory="C\spec\${ISE_PLATFORM}" if="${is_windows}"/>
+		<delete directory="C/spec/${ISE_PLATFORM}" unless="${is_windows}"/>
 	</target>
 
 	<target name="clobber" depend="clean" />

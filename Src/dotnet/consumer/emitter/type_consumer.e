@@ -782,7 +782,11 @@ feature {NONE} -- Implementation
 							i := 2
 							nb := args.count
 						until
-							not l_reserved.has (name) or i > nb
+							i > nb
+							-- `or not l_reserved.has (name)`
+							-- FIXME For now, append all argument names.
+							--	see how to improve Eiffel to select feature in inheritance clause
+							--	passing signature, instead of relying on argument names !							
 						loop
 							if i > 1 then
 								name.append ("_and_")

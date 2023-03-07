@@ -2,7 +2,7 @@
 
 INIT_DIR=`pwd`
 
-if [ $# -le 1 ]; then 
+if [ $# -le 1 ]; then
 	echo Usage: compile_libraries platform location
 	exit 1
 fi
@@ -19,7 +19,7 @@ if [ -d $2/library/cURL ]; then
 	remtrace cURL
 	cd $2/library/cURL/Clib
 	default_make
-fi 
+fi
 remtrace net
 cd $2/library/net/Clib
 default_make
@@ -41,6 +41,12 @@ fi
 if [ -d $2/examples/base/beep/Clib ]; then
 	remtrace beep example
 	cd $2/examples/base/beep/Clib
+	default_make
+fi
+
+# Compile IL Emitter Clib implementation
+if [ -d $2/unstable/library/dotnet/il_emitter/Clib ]; then
+	cd $2/unstable/library/dotnet/il_emitter/Clib
 	default_make
 fi
 

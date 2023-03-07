@@ -1122,15 +1122,6 @@ namespace md_consumer
 			}
         }
 
-		// private Type? Void_type() {
-        //     Type? res = Type.GetType("System.Void");
-        //     if (res != null) {
-        //         return res;
-        //     } else {
-        //         Debug.Assert(false, "from documentation");
-        //         return null;
-        //     }
-        // }
 		private bool is_Void_type(Type? t) 
 		{
 			if (t == null) {
@@ -1138,9 +1129,37 @@ namespace md_consumer
 			} else {
 				Type? vt = Type.GetType("System.Void");
 				if (vt != null) {
-					string? aqn = t.AssemblyQualifiedName;
-					return aqn != null && aqn.Equals(vt.AssemblyQualifiedName);
-				} else if (t.FullName != null && t.FullName.Equals("System.Void")) {
+					string? s1 = t.AssemblyQualifiedName;
+					string? s2 = vt.AssemblyQualifiedName;
+					if (s1 != null && s2 != null) {
+						if (s1.Equals(s2)) {
+							return true;
+						} else {
+							// FIXME: check how to remain in the same .Net version.
+							// Compare the typename, the culture, but not the Version
+							// to be able to consume Assembly of .Net version different from the one used
+							// to compile the current tool (nemdc).
+							s1 = vt.FullName;
+							s2 = t.FullName;
+							// Compare type name
+							if (s1 != null && s1.Equals (s2)) {
+								// Then compare assembly name
+								AssemblyName? a1 = vt.Assembly.GetName();
+								AssemblyName? a2 = t.Assembly.GetName();
+								if (a1 != null && a2 != null) {
+									if (a1.Name != null && a1.Name.Equals (a2.Name)) {
+										return a1.CultureName != null && a1.CultureName.Equals(a2.CultureName);
+									} else {
+										return false;
+									}
+								}
+							} else {
+								return false;
+							}
+						}
+					}
+				}
+				if (t.FullName != null && t.FullName.Equals("System.Void")) {
 					return true;
 				} else {
 					Debug.Assert(vt != null, "from documentation");
@@ -1151,10 +1170,14 @@ namespace md_consumer
 		private CONSUMED_REFERENCED_TYPE? integer_type()
 			// -- Referenced type of `System.Int32'.
 		{
-            return referenced_type_from_type(typeof(System.Int32));
-        }
+			Type? t = Type.GetType("System.Int32");
+			if (t == null) {
+				t = typeof(System.Int32);
+			}
+			return referenced_type_from_type(t);
+		}
 
-        public bool is_property_or_event(MethodInfo info)
+		public bool is_property_or_event(MethodInfo info)
 		{
 			bool res=false;
 			string dn = info.Name;

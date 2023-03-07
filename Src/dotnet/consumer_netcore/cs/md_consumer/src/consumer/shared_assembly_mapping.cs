@@ -41,6 +41,28 @@ namespace md_consumer
                 }
             }
         }
+        public int assembly_index(AssemblyName an, bool is_strict=true)
+        {
+			// FIXME: check how to remain in the same .Net version.
+			// Get assembly index for AssemblyName `an`, comparing only the assembly name
+			// (ignoring the version value)
+            string fn = an.FullName;
+            if (fn != null && assembly_mapping_table.ContainsKey(fn)) {
+                return assembly_mapping_table[fn];
+            } else if (!is_strict) {
+                string? tn = an.Name;
+                if (tn != null) {
+                    tn = tn + ",";
+                    foreach(KeyValuePair<string, int> e in assembly_mapping_table) {
+                        string k = e.Key;
+                        if (k.StartsWith(tn)) {
+                            return e.Value;
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
         public int assembly_index(Assembly a)
         {
             return assembly_index(a.FullName);
@@ -94,8 +116,15 @@ namespace md_consumer
                 string? l_name = t.FullName;
 
                 if (l_full_name != null && l_name != null) {
+                    int id = -1;
                     if (is_assembly_mapped (l_full_name)) {
-                        int id = assembly_index(l_full_name);
+                        id = assembly_index(l_full_name);
+                    } else {
+                        // Could be a version conflict, try to search based on assembly name (ignoring version, ...).
+                        AssemblyName an = l_assembly.GetName();
+                        id = assembly_index(an, false);
+                    }
+                    if (id >= 0) {
                         if (t.IsArray) {
                             Type? l_type = t.GetElementType();
                             if (l_type != null) {

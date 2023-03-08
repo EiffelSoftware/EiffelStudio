@@ -2,7 +2,7 @@
 
 INIT_DIR=`pwd`
 
-if [ $# -eq 0 ]; then 
+if [ $# -eq 0 ]; then
 	echo Usage: compile_exes platform
 	exit 1
 fi
@@ -127,18 +127,18 @@ safe_md $INSTALL_DIR/tools/spec/$ISE_PLATFORM
 safe_md $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin
 
 
-cp C/run-time/lib*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
+cp C/run-time/lib*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libmtfinalized.a
 mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libmtwkbench.a
 mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libfinalized.a
 mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libwkbench.a
-cp C/run-time/lib*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
+cp C/run-time/lib*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 fullrf $EXPORT_DIR/runtimes/libebench.a
 cp C/run-time/*.h $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 cp C/run-time/eif_stack.decl $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 cp C/run-time/eif_stack.interface $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 cp C/config.sh $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
-	
+
 
 remtrace "Put x2c in the new delivery"
 # It should already have been compiled by the configure of the run-time.
@@ -158,6 +158,18 @@ fi
 bunzip2 -c libs.tar.bz2 | tar -xf -
 if [ ! -d library ]; then
 	remtrace No library directory
+	CANCEL
+fi
+
+remtrace Extract the Eiffel dotnet unstable libraries
+cd $EXPORT_DIR
+if [ ! -f dotnet-unstable-libs.tar.bz2 ]; then
+	remtrace 'No.tar.bz2 for the dotnet unstable library directory'
+	CANCEL
+fi
+bunzip2 -c dotnet-unstable-libs.tar.bz2 | tar -xf -
+if [ ! -d unstable/library/dotnet ]; then
+	remtrace No dotnet unstable library directory
 	CANCEL
 fi
 
@@ -190,7 +202,7 @@ fi
 # In the following calls we do not source the script because on some platforms you cannot
 # pass arguments to the sourced script, instead we execute it.
 cd $EXPORT_DIR
-./compile_c_library $ISE_PLATFORM $EXPORT_DIR 
+./compile_c_library $ISE_PLATFORM $EXPORT_DIR
 cd $EXPORT_DIR
 ./compile_c_library $ISE_PLATFORM $INSTALL_DIR
 
@@ -258,6 +270,7 @@ if [ ! -z "$INCLUDE_GTK3" ]; then
 fi
 
 remtrace Standard batch edition
+cd $EXPORT_DIR/bin
 cp ecb_std.tar.bz2 ecb.tar.bz2
 untgz_ccode ecb
 bzip2 ecb
@@ -280,6 +293,7 @@ if [ -z "$MULTIPLE_EDITIONS" ]; then
 else
 	if [ ! -z "$INCLUDE_GTK2" ]; then
 		remtrace Enterprise edition - gtk2
+		cd $EXPORT_DIR/bin
 		cp ec_gtk2_ent.tar.bz2 ec.tar.bz2
 		untgz_ccode ec $should_cancel
 		if [ -f ec ]; then
@@ -290,6 +304,7 @@ else
 
 	if [ ! -z "$INCLUDE_GTK3" ]; then
 		remtrace Enterprise edition - gtk3
+		cd $EXPORT_DIR/bin
 		cp ec_gtk3_ent.tar.bz2 ec.tar.bz2
 		untgz_ccode ec $should_cancel
 		if [ -f ec ]; then
@@ -299,6 +314,7 @@ else
 	fi
 
 	remtrace Enterprise batch edition
+	cd $EXPORT_DIR/bin
 	cp ecb_ent.tar.bz2 ecb.tar.bz2
 	untgz_ccode ecb
 	bzip2 ecb
@@ -306,6 +322,7 @@ else
 
 	if [ ! -z "$INCLUDE_GTK2" ]; then
 		remtrace Branded edition - gtk2
+		cd $EXPORT_DIR/bin
 		cp ec_gtk2_branded.tar.bz2 ec.tar.bz2
 		untgz_ccode ec $should_cancel
 		if [ -f ec ]; then
@@ -315,6 +332,7 @@ else
 	fi
 	if [ ! -z "$INCLUDE_GTK3" ]; then
 		remtrace Branded edition - gtk3
+		cd $EXPORT_DIR/bin
 		cp ec_gtk3_branded.tar.bz2 ec.tar.bz2
 		untgz_ccode ec $should_cancel
 		if [ -f ec ]; then
@@ -324,6 +342,7 @@ else
 	fi
 
 	remtrace Branded batch edition
+	cd $EXPORT_DIR/bin
 	cp ecb_branded.tar.bz2 ecb.tar.bz2
 	untgz_ccode ecb
 	bzip2 ecb

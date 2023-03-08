@@ -23,7 +23,9 @@ fi
 if [ ! "$DEFAULT_ORIGO_SVN_ROOT" ]; then
 	DEFAULT_ORIGO_SVN_ROOT=https://svn.eiffel.com/eiffelstudio
 fi
-DEFAULT_ORIGO_SVN=$DEFAULT_ORIGO_SVN_ROOT/trunk
+if [ ! "$DEFAULT_ORIGO_SVN" ]; then
+	DEFAULT_ORIGO_SVN=$DEFAULT_ORIGO_SVN_ROOT/trunk
+fi
 # This section is commented out be cause it won't work on non-bash shell
 # we use the other one while waiting for a better solution
 #if [ ! "$ORIGO_SVN_REVISION" ]; then

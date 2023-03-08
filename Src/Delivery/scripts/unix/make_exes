@@ -98,8 +98,6 @@ move esbuilder.tar.bz2 $EXPORT_DIR/esbuilder
 
 if [ ! "$NO_NEW_EC" ]; then
 	safe_md $EXPORT_DIR/bin
-	remtrace Recompile EiffelStudio
-	remtrace Standard edition
 	if [ ! -d $FINALIZATION_DIR ]; then
 		md $FINALIZATION_DIR
 	fi
@@ -109,6 +107,8 @@ if [ ! "$NO_NEW_EC" ]; then
 	cd $FINALIZATION_DIR
 	copy $EIFFEL_SRC/Eiffel/Ace/ec.ecf ec.ecf
 	clean_project
+
+	remtrace Recompile EiffelStudio
 
 	if [ ! -z "$INCLUDE_GTK2" ]; then
 		remtrace Standard EiffelStudio edition - gtk2

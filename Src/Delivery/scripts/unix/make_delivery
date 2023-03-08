@@ -85,7 +85,7 @@ fi
 md $INSTALL_DIR
 cd $INSTALL_DIR
 remtrace studio
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/studio studio 
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/studio studio
 fullrd studio/bitmaps/src
 fullrd studio/bitmaps/png/icons_16x16.png
 fullrd studio/bitmaps/png/small_12x12.png
@@ -158,15 +158,15 @@ remtrace precomp
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
 cd $INSTALL_DIR/precomp/spec
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/platform platform 
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/platform platform
 
 remtrace C_library
 safe_md $INSTALL_DIR/C_library
 cd $INSTALL_DIR/C_library
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/curl curl 
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/curl curl
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/libpng libpng
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/zlib zlib 
-safe_md openssl 
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/zlib zlib
+safe_md openssl
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/openssl/clibs_openssl.ecf openssl
 cd $INSTALL_DIR
 remtrace root
@@ -241,7 +241,7 @@ if [ ! "$NO_COMPILE" ]; then
 		rm -f $INSTALL_DIR/studio/spec/unix/finish_freezing
 		mv -f tmp $INSTALL_DIR/studio/spec/unix/finish_freezing
 
-		chmod +x $INSTALL_DIR/studio/spec/unix/finish_freezing 
+		chmod +x $INSTALL_DIR/studio/spec/unix/finish_freezing
 
 		# update tools
 		chmod +x $INSTALL_DIR/tools/spec/unix/estudio-*
@@ -329,19 +329,24 @@ if [ ! "$NO_INSTALL" ]; then
 		pax -w -f libs.tar library
 		bzip2 libs.tar
 		move libs.tar.bz2 $EXPORT_DIR
+
+		remtrace Eiffel dotnet unstable libraries
+		pax -w -f dotnet-unstable-libs.tar unstable/library/dotnet
+		bzip2 dotnet-unstable-libs.tar
+		move dotnet-unstable-libs.tar.bz2 $EXPORT_DIR
 	fi
 	remtrace The delivery itself
 	cd $INSTALL_DIR
 	pax -w -f delivery.tar *
 	bzip2 delivery.tar
 	move delivery.tar.bz2 $EXPORT_DIR
-	
+
 	cd $INIT_DIR
 	copy compile* $EXPORT_DIR
 	copy make_images $EXPORT_DIR
 	copy make_cd_image $EXPORT_DIR
 	copy set_aliases $EXPORT_DIR
- 
+
 	# Scripts for building unix layout/packages
 	copy make_unix_layout $EXPORT_DIR
 	copy make_debian_package $EXPORT_DIR

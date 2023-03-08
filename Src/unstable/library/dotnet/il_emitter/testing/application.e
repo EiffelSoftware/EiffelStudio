@@ -49,7 +49,8 @@ feature -- Initialization
 --			(create {TEST_9}).test;
 --			(create {TEST_9}).test;
 --			(create {TEST_10}).test;
-			(create {TEST_11}).test;
+--			(create {TEST_11}).test;
+			test_random
 
 		end
 
@@ -741,38 +742,83 @@ feature -- GUID
 		local
 			l_mp: MANAGED_POINTER
 		do
-			create l_mp.make (16)
-			c_create_guid (l_mp.item)
-			a_guid.make_from_array (l_mp.read_array (0, 16))
+--			create l_mp.make (16)
+--			c_create_guid (l_mp.item)
+--			a_guid.make_from_array (l_mp.read_array (0, 16))
 		end
 
-	c_create_guid (a_guid: POINTER)
-		external "C++ inline use <random>, <random>, <array>, <algorithm>, <functional>"
-		alias
-			"{
-			std::array<unsigned char, 128 / 8> rnd;
+	test_random
+		local
+			l_random:RANDOM
+			l_data1: NATURAL_32
+			l_data2: NATURAL_16
+			l_data3: NATURAL_16
+			l_data4: ARRAY [NATURAL_8]
+			l_seed: INTEGER
+			l_time: TIME
+			l_guid: CIL_GUID
+			l_val:NATURAL_8
+			cil_guid: ARRAY[NATURAL_8]
+		do
+			create l_time.make_now
+		    l_seed := l_time.hour
+      		l_seed := l_seed * 60 + l_time.minute
+      		l_seed := l_seed * 60 + l_time.second
+     		l_seed := l_seed * 1000 + l_time.milli_second
 
-		    std::uniform_int_distribution<int> distribution(0, 0xff);
-		    // note that this whole thing will fall apart if the C++ lib uses
-		    // a prng with constant seed for the random_device implementation.
-		    // that shouldn't be a problem on OS we are interested in.
-		    std::random_device dev;
-		    std::mt19937 engine(dev());
-		    auto generator = std::bind(distribution, engine);
+     		-- make (data1: NATURAL_32; data2, data3: NATURAL_16; data4: ARRAY [NATURAL_8])
 
-		    std::generate(rnd.begin(), rnd.end(), generator);
+			create l_random.set_seed (l_seed)
+			l_random.start
 
-		    // make it a valid version 4 (random) GUID
-		    // remember that on windows GUIDs are native endianness so this may need
-		    // work if you port it
-		    rnd[7 /*6*/] &= 0xf;
-		    rnd[7 /*6*/] |= 0x40;
-		    rnd[9 /*8*/] &= 0x3f;
-		    rnd[9 /*8*/] |= 0x80;
+			l_data1 := l_random.item.to_natural_32
+			l_random.forth
 
-		    memcpy($a_guid, rnd.data(), rnd.size());
-			}"
+			l_data2 := ((l_random.item.to_natural_32 \\  {NATURAL_16}.max_value) + 1).to_natural_16
+			l_random.forth
+
+			l_data3 := ((l_random.item.to_natural_32 \\  {NATURAL_16}.max_value) + 1).to_natural_16
+			l_random.forth
+
+			l_data4 := {ARRAY [NATURAL_8]} << 0,0,0,0,0,0,0,0 >>
+
+			across 1 |..| 8 as i loop
+				l_val := ((l_random.item.to_natural_32 \\  {NATURAL_8}.max_value) + 1).to_natural_8
+				l_data4 [i] := l_val
+				l_random.forth
+			end
+
+			create l_guid.make (l_data1, l_data2, l_data3, l_data4)
+			print (l_guid.to_array_natural_8)
 		end
+
+--	c_create_guid (a_guid: POINTER)
+--		external "C++ inline use <random>, <random>, <array>, <algorithm>, <functional>"
+--		alias
+--			"{
+--			std::array<unsigned char, 128 / 8> rnd;
+
+--		    std::uniform_int_distribution<int> distribution(0, 0xff);
+--		    // note that this whole thing will fall apart if the C++ lib uses
+--		    // a prng with constant seed for the random_device implementation.
+--		    // that shouldn't be a problem on OS we are interested in.
+--		    std::random_device dev;
+--		    std::mt19937 engine(dev());
+--		    auto generator = std::bind(distribution, engine);
+
+--		    std::generate(rnd.begin(), rnd.end(), generator);
+
+--		    // make it a valid version 4 (random) GUID
+--		    // remember that on windows GUIDs are native endianness so this may need
+--		    // work if you port it
+--		    rnd[7 /*6*/] &= 0xf;
+--		    rnd[7 /*6*/] |= 0x40;
+--		    rnd[9 /*8*/] &= 0x3f;
+--		    rnd[9 /*8*/] |= 0x80;
+
+--		    memcpy($a_guid, rnd.data(), rnd.size());
+--			}"
+--		end
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"

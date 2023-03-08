@@ -103,15 +103,17 @@ feature -- Definition: creation
 
 	define_assembly (a_name: STRING_32; a_assembly_info: CIL_MD_ASSEMBLY_INFO; a_snk_file: STRING_32): CIL_ASSEMBLY_DEF
 			-- Define a new assembly.
+		local
+			l_assembly_ref: CIL_ASSEMBLY_DEF
 		do
-			create Result.make (a_name, False, create {ARRAY [NATURAL_8]}.make_filled (0, 1, 8))
-			pe_lib.assembly_refs.force (Result)
-			check assembly_added: Result = pe_lib.working_assembly end
-			Result.set_snk_file (a_snk_file)
-			Result.set_major (a_assembly_info.major)
-			Result.set_minor (a_assembly_info.minor)
-			Result.set_revision (a_assembly_info.revision)
-			Result.set_build (a_assembly_info.build)
+			create l_assembly_ref.make (a_name, False, create {ARRAY [NATURAL_8]}.make_filled (0, 1, 8))
+			pe_lib.assembly_refs.force (l_assembly_ref)
+			pe_lib.working_assembly.set_snk_file (a_snk_file)
+			pe_lib.working_assembly.set_major (a_assembly_info.major)
+			pe_lib.working_assembly.set_minor (a_assembly_info.minor)
+			pe_lib.working_assembly.set_revision (a_assembly_info.revision)
+			pe_lib.working_assembly.set_build (a_assembly_info.build)
+			Result := pe_lib.working_assembly
 		end
 
 	define_type (a_name: STRING_32; a_flags: CIL_QUALIFIERS; a_object: CIL_CLASS): CIL_CLASS

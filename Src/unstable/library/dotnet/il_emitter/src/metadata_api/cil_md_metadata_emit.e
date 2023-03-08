@@ -63,8 +63,7 @@ feature {NONE}
 			-- Create a unide GUID.
 			--| The module version identifier.
 		do
-			create module_guid.make_filled (0, 1, 16)
-			pe_writer.create_guid (module_guid)
+			module_GUID := pe_writer.create_guid
 			guid_index := pe_writer.hash_guid (module_guid)
 		end
 

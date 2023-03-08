@@ -956,7 +956,7 @@ feature {NONE} -- Output Implementation
 					l_file_name := l_file_name.substring (1, l_pos)
 				end
 				l_name_index := l_pe_writer.hash_string (l_file_name)
-				l_pe_writer.create_guid (module_guid)
+				module_guid := l_pe_writer.create_guid
 				l_guid_index := l_pe_writer.hash_guid (module_guid)
 
 				create {PE_MODULE_TABLE_ENTRY} l_table.make_with_data (l_name_index, l_guid_index)

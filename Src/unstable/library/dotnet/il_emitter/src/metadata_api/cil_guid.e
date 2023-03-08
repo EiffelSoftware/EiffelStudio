@@ -130,6 +130,14 @@ feature -- Comparison
 			Result := internal_item.is_equal (other.internal_item)
 		end
 
+feature -- Convertion
+
+	to_array_natural_8: ARRAY [NATURAL_8]
+			-- Guid as a byte array.
+		do
+			create Result.make_from_array (internal_item.read_array (0, 16))
+		end
+
 feature -- Duplication
 
 	copy (other: like Current)

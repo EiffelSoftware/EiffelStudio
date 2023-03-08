@@ -640,15 +640,10 @@ feature -- Various Operations
 			param_attribute_type_set: param_attribute_type = a_param_attribute_type
 		end
 
-	create_guid (a_guid: ARRAY [NATURAL_8])
-		local
-			l_mp: MANAGED_POINTER
+	create_guid: ARRAY [NATURAL_8]
+			-- Create a new GUID as a byte array
 		do
-				-- At the moment this code uses a C++ wrapper.
-				-- double check how to use UUID.
-			create l_mp.make (16)
-			c_create_guid (l_mp.item)
-			a_guid.make_from_array (l_mp.read_array (0, 16))
+			Result := new_random_guid
 		end
 
 	next_table_index (a_table: INTEGER): NATURAL
@@ -1963,34 +1958,50 @@ feature {NONE} -- Helper features
 			end
 		end
 
-feature {NONE} -- C++ externals
 
-	c_create_guid (a_guid: POINTER)
-		external "C++ inline use <random>, <array>, <algorithm>, <functional>"
-		alias
-			"{
-			std::array<unsigned char, 128 / 8> rnd;
+	new_random_guid: ARRAY [NATURAL_8]
+			-- Create a random GUID.
+		local
+			l_random:RANDOM
+			l_data1: NATURAL_32
+			l_data2: NATURAL_16
+			l_data3: NATURAL_16
+			l_data4: ARRAY [NATURAL_8]
+			l_seed: INTEGER
+			l_time: TIME
+			l_val:NATURAL_8
+			l_guid: CIL_GUID
+		do
+			create l_time.make_now
+		    l_seed := l_time.hour
+      		l_seed := l_seed * 60 + l_time.minute
+      		l_seed := l_seed * 60 + l_time.second
+     		l_seed := l_seed * 1000 + l_time.milli_second
 
-		    std::uniform_int_distribution<int> distribution(0, 0xff);
-		    // note that this whole thing will fall apart if the C++ lib uses
-		    // a prng with constant seed for the random_device implementation.
-		    // that shouldn't be a problem on OS we are interested in.
-		    std::random_device dev;
-		    std::mt19937 engine(dev());
-		    auto generator = std::bind(distribution, engine);
 
-		    std::generate(rnd.begin(), rnd.end(), generator);
+			create l_random.set_seed (l_seed)
+			l_random.start
 
-		    // make it a valid version 4 (random) GUID
-		    // remember that on windows GUIDs are native endianness so this may need
-		    // work if you port it
-		    rnd[7 /*6*/] &= 0xf;
-		    rnd[7 /*6*/] |= 0x40;
-		    rnd[9 /*8*/] &= 0x3f;
-		    rnd[9 /*8*/] |= 0x80;
+			l_data1 := l_random.item.to_natural_32
+			l_random.forth
 
-		    memcpy($a_guid, rnd.data(), rnd.size());
-			}"
+			l_data2 := ((l_random.item.to_natural_32 \\  {NATURAL_16}.max_value) + 1).to_natural_16
+			l_random.forth
+
+			l_data3 := ((l_random.item.to_natural_32 \\  {NATURAL_16}.max_value) + 1).to_natural_16
+			l_random.forth
+
+			l_data4 := {ARRAY [NATURAL_8]} << 0,0,0,0,0,0,0,0 >>
+
+			across 1 |..| 8 as i loop
+				l_val := ((l_random.item.to_natural_32 \\  {NATURAL_8}.max_value) + 1).to_natural_8
+				l_data4 [i] := l_val
+				l_random.forth
+			end
+
+			create l_guid.make (l_data1, l_data2, l_data3, l_data4)
+			Result := l_guid.to_array_natural_8
 		end
+
 
 end

@@ -356,7 +356,7 @@ feature {NONE} -- Implementation: preparation
 	prepare
 			-- Prepare test generation
 		local
-			l_file_name: FILE_NAME
+			l_file_name: PATH
 			l_file: KL_TEXT_OUTPUT_FILE_32
 			l_error_handler: AUT_ERROR_HANDLER
 		do
@@ -366,10 +366,8 @@ feature {NONE} -- Implementation: preparation
 			l_error_handler := error_handler
 
 			create l_file_name.make_from_string (output_dirname)
-			l_file_name.extend ("log")
-			l_file_name.set_file_name ("error")
-			l_file_name.add_extension ("log")
-			create l_file.make (l_file_name)
+			l_file_name := l_file_name.extended ("log").extended ("error").appended_with_extension("log")
+			create l_file.make_with_path (l_file_name)
 			l_file.recursive_open_write
 			if l_file.is_open_write then
 				output_file := l_file
@@ -484,7 +482,7 @@ feature {NONE} -- Constants
 			-- Maximal number of test routines in a single class
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

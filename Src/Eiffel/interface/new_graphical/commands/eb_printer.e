@@ -10,6 +10,8 @@ class
 	EB_PRINTER
 
 inherit
+	EIFFEL_LAYOUT
+	
 	EB_CONSTANTS
 
 	ES_SHARED_PROMPT_PROVIDER
@@ -154,7 +156,7 @@ feature -- Basic operations
 				sent_txt.prune_all ('%R')
 				sent_txt.replace_substring_all ("%N", "%R%N")
 					-- Generate the file we put the text in.
-				create file.make_open_temporary_with_prefix ("eb_printer")
+				create file.make_open_temporary_with_prefix (eiffel_layout.temporary_path.extended ("eb_printer-").name)
 				file.put_string (sent_txt)
 				file.close
 					-- Generate the actual command line.
@@ -221,7 +223,7 @@ feature {NONE} -- Implementation: graphical interface
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -10,6 +10,7 @@ class
 	EB_PRINTER_IMP
 
 inherit
+	EIFFEL_LAYOUT
 
 	EB_CONSTANTS
 
@@ -63,9 +64,9 @@ feature {EB_PRINTER} -- Basic operations
 			options_set: interface.context /= Void
 			do_not_print_to_file: not interface.context.output_to_file
 		local
-			cmd: STRING
-			name: STRING
-			fn: FILE_NAME
+			cmd: STRING_32
+			name: STRING_32
+			fn: PATH
 			file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
 			wd: EV_WARNING_DIALOG
@@ -75,10 +76,10 @@ feature {EB_PRINTER} -- Basic operations
 				cmd := "lp -d "
 				name := interface.context.printer_name
 				cmd.append (name)
-				
+
 					-- Generate the file we put the text in.
-				create fn.make_temporary_name
-				create file.make (fn)
+				create file.make_open_temporary_with_prefix (eiffel_layout.temporary_path.extended ("eb_printer-").name)
+				fn := file.path
 				if file.exists then
 					file.open_write
 				else
@@ -92,16 +93,16 @@ feature {EB_PRINTER} -- Basic operations
 				sent_text.replace_substring_all ("%N", "%R%N")
 				file.put_string (sent_text)
 				file.close
-				
+
 					-- Launch the print session.
 				cmd.append_character (' ')
-				cmd.append (fn)
+				cmd.append (fn.name)
 				(create {EXECUTION_ENVIRONMENT}).launch (cmd)
 			else
 				if fn = Void then
-					create fn.make_from_string ("")
+					create fn.make_empty
 				end
-				create wd.make_with_text (Warning_messages.w_Not_writable (fn))
+				create wd.make_with_text (Warning_messages.w_Not_writable (fn.name))
 				wd.show_modal_to_window (window_manager.last_focused_window.window)
 			end
 		rescue
@@ -144,7 +145,7 @@ invariant
 	valid_interface: interface /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -157,22 +158,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_PRINTER_IMP

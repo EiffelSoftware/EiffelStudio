@@ -40,7 +40,7 @@ else
 	MULTIPLE_EDITIONS=""
 fi
 remtrace Compile C code of the libraries
-remtrace \"A tout seigneur tout honneur\", let\'s start with the run-time
+remtrace "\"A tout seigneur tout honneur\", let's start with the run-time"
 if [ ! -f c.tar.bz2 ]; then
 	remtrace 'No.tar.bz2 for the C directory'
 	CANCEL
@@ -161,16 +161,15 @@ if [ ! -d library ]; then
 	CANCEL
 fi
 
-remtrace Extract the Eiffel dotnet unstable libraries
+remtrace Extract the Eiffel other libraries
 cd $EXPORT_DIR
-if [ ! -f dotnet-unstable-libs.tar.bz2 ]; then
-	remtrace 'No.tar.bz2 for the dotnet unstable library directory'
+if [ ! -f other-libs.tar.bz2 ]; then
+	remtrace 'No.tar.bz2 for the other libraries directory'
 	CANCEL
 fi
-bunzip2 -c dotnet-unstable-libs.tar.bz2 | tar -xf -
+bunzip2 -c other-libs.tar.bz2 | tar -xf -
 if [ ! -d unstable/library/dotnet ]; then
 	remtrace No dotnet unstable library directory
-	CANCEL
 fi
 
 remtrace Recompile quick_finalize

@@ -118,9 +118,9 @@ exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/control eweasel/control
 fullrf $INSTALL_DIR/eweasel/INSTALL
 
 remtrace esbuilder
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/esbuilder esbuilder 
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/esbuilder esbuilder
 remtrace vision2_demo
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/vision2_demo vision2_demo 
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/vision2_demo vision2_demo
 remtrace examples
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples examples
 cd examples
@@ -330,10 +330,11 @@ if [ ! "$NO_INSTALL" ]; then
 		bzip2 libs.tar
 		move libs.tar.bz2 $EXPORT_DIR
 
-		remtrace Eiffel dotnet unstable libraries
-		pax -w -f dotnet-unstable-libs.tar unstable/library/dotnet
-		bzip2 dotnet-unstable-libs.tar
-		move dotnet-unstable-libs.tar.bz2 $EXPORT_DIR
+		remtrace Eiffel other needed libraries
+			# for now, the il_emitter, but include any required Clib when needed
+		pax -w -f other-libs.tar unstable/library/dotnet
+		bzip2 other-libs.tar
+		move other-libs.tar.bz2 $EXPORT_DIR
 	fi
 	remtrace The delivery itself
 	cd $INSTALL_DIR

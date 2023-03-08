@@ -30,7 +30,7 @@ fi
 # we use the other one while waiting for a better solution
 #if [ ! "$ORIGO_SVN_REVISION" ]; then
 #	mkdir -p /tmp/eiffelstudio_revision
-#	svn checkout --config-option config:miscellany:use-commit-times=yes $DEFAULT_ORIGO_SVN_ROOT/revision /tmp/eiffelstudio_revision	
+#	svn checkout --config-option config:miscellany:use-commit-times=yes $DEFAULT_ORIGO_SVN_ROOT/revision /tmp/eiffelstudio_revision
 #	ORIGO_SVN_REVISION=$(svnversion /tmp/eiffelstudio_revision)
 #fi
 if [ ! "$ORIGO_SVN_REVISION" ]; then
@@ -128,7 +128,7 @@ save_path ()
 {
 TMP_PATH=`pwd`
 }
- 
+
 # Helpers for the script
 # Give some info on what's happening, both in the log and on the screen
 remtrace ()
@@ -151,8 +151,8 @@ CANCEL()
 {
 TERMINATE
 exit 1
-}                                                                                   
- 
+}
+
 # SVN Commands: checkout, export
 co ()
 {
@@ -194,6 +194,8 @@ tgz_ccode ()
 {
 if [ -d EIFGENs/$1/F_code ]; then
 cd EIFGENs/$1
+# To workaround the eventual usage of ECF_CONFIG_PATH, let us replace the full path with relative path from $EIFFEL_SRC
+find F_code -type f -name 'Makefile.SH' -exec sed -i 's+'$EIFFEL_SRC'+\\\$(EIFFEL_SRC)+g' {} \; || echo sed was not found
 pax -w -f F_code.tar F_code >> $INSTALL_LOG
 bzip2 F_code.tar
 mv F_code.tar.bz2 ../../$2
@@ -243,5 +245,5 @@ fi
 testpar ()
 {
 	ls $*
-}                            
+}
 

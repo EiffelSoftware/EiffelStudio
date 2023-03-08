@@ -93,7 +93,7 @@ OBJSDLL = $(OBJS:.o=.pic.o)
 .c.pic.o:
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) -fPIC -o $@ $*.c
 
-all: libpng.a $(LIBSO) pngtest libpng.pc libpng-config
+all: libpng.a $(LIBSO) libpng.pc libpng-config
 
 libpng.a: $(OBJS)
 	$(AR_RC) $@ $(OBJS)

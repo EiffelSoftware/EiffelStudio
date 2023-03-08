@@ -107,7 +107,7 @@ LIBNAME=libpng.lib
 	$(LD) $(LDFLAGS) $*.obj $(LIBNAME) zlib.lib $(NOEHLIB)
 
 ## Major targets
-all: libpng pngtest
+all: libpng
 
 libpng: $(LIBNAME)
 

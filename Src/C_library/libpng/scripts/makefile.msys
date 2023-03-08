@@ -92,7 +92,7 @@ pnglibconf.h: $(PNGLIBCONF_H_PREBUILT)
 .c.o:
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $<
 
-static: libpng.a pngtest$(EXEEXT)
+static: libpng.a
 
 shared: $(LIBSOMAJ)
 	$(CC) -shared -Wl,-soname,$(LIBSOMAJ) -o $(LIBSO)

@@ -83,7 +83,7 @@ OBJSDLL = $(OBJS:.o=.pic.o)
 .c.pic.o:
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) -KPIC -o $@ $*.c
 
-all: libpng.a $(LIBSO) pngtest libpng.pc libpng-config
+all: libpng.a $(LIBSO) libpng.pc libpng-config
 
 include scripts/pnglibconf.mak
 DELETE = $(RM_F)

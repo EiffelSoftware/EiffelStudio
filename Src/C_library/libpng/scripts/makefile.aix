@@ -55,7 +55,7 @@ OBJS =  png.o pngerror.o pngget.o pngmem.o pngpread.o \
 .c.o:
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
 
-all: $(LIBNAME).a pngtest$(E)
+all: $(LIBNAME).a
 
 include scripts/pnglibconf.mak
 REMOVE = $(RM_F)

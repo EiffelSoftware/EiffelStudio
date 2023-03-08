@@ -56,7 +56,7 @@ OBJS = png.o pngset.o pngget.o pngrutil.o pngtrans.o pngwutil.o \
 .c.o:
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
 
-all: libpng.a pngtest
+all: libpng.a
 
 # The standard pnglibconf.h exists as scripts/pnglibconf.h.prebuilt,
 # copy this if the following doesn't work.

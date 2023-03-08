@@ -31,7 +31,7 @@ OBJSL1 = +png$(O) +pngset$(O) +pngget$(O) +pngrutil$(O) +pngtrans$(O)
 OBJSL2 = +pngwutil$(O) +pngmem$(O) +pngpread$(O) +pngread$(O) +pngerror$(O)
 OBJSL3 = +pngwrite$(O) +pngrtran$(O) +pngwtran$(O) +pngrio$(O) +pngwio$(O)
 
-all: libpng$(MODEL).lib pngtest$(E)
+all: libpng$(MODEL).lib
 
 pnglibconf.h: $(PNGLIBCONF_H_PREBUILT)
 	$(CP) $(PNGLIBCONF_H_PREBUILT) $@

@@ -48,7 +48,7 @@ LIBS = libpng$(A) $(ZLIBLIB)/zlib$(A)
 .c$(O):
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $<
 
-all: libpng$(A) pngtest$(E)
+all: libpng$(A)
 
 pnglibconf.h: $(PNGLIBCONF_H_PREBUILT)
 	$(CP) $(PNGLIBCONF_H_PREBUILT) $@

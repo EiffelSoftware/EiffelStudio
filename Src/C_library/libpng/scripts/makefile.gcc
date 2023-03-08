@@ -48,7 +48,7 @@ pnglibconf.h: $(PNGLIBCONF_H_PREBUILT)
 .c.o:
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
 
-static: libpng.a pngtest$(EXEEXT)
+static: libpng.a
 
 shared:
 	@echo This is a generic makefile that cannot create shared libraries.

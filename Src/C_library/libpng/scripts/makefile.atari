@@ -39,7 +39,7 @@ OBJS = $(LBR)(png.o) $(LBR)(pngset.o) $(LBR)(pngget.o) $(LBR)(pngrutil.o)\
 	$(LBR)(pngrtran.o) $(LBR)(pngwtran.o)\
 	$(LBR)(pngmem.o) $(LBR)(pngrio.o) $(LBR)(pngwio.o) $(LBR)(pngpread.o)
 
-all: $(LBR) pngtest.ttp
+all: $(LBR)
 
 .c.o:
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $<

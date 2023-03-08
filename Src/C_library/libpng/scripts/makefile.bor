@@ -115,7 +115,7 @@ LIBNAME=libpng$(MODEL).lib
 
 ## Major targets
 
-all: libpng pngtest
+all: libpng
 
 # try !include scripts\pnglibconf.mak for more options
 pnglibconf.h: $(PNGLIBCONF_H_PREBUILT)

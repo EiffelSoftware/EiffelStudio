@@ -329,14 +329,15 @@ feature -- Sorting
 			row_a_valid: row_a /= Void
 			row_b_valid: row_b /= Void
 		local
-			l_class_a_name: STRING
-			l_class_b_name: STRING
+			l_class_a_name: READABLE_STRING_GENERAL
+			l_class_b_name: READABLE_STRING_GENERAL
 		do
-			l_class_a_name := row_a.class_item.name
-			l_class_b_name := row_b.class_item.name
 			if a_order = topology_order then
 				Result := row_a.class_item.class_c.topological_id < row_b.class_item.class_c.topological_id
 			else
+				l_class_a_name := row_a.class_item.name
+				l_class_b_name := row_b.class_item.name
+
 				if l_class_a_name.is_equal (l_class_b_name) then
 					Result := not row_a.is_collapsed and then row_b.is_collapsed
 				else
@@ -355,17 +356,19 @@ feature -- Sorting
 			class_a_valid: class_a /= Void
 			class_b_valid: class_b /= Void
 		local
-			l_class_a_name: STRING
-			l_class_b_name: STRING
+			l_class_a_name: READABLE_STRING_GENERAL
+			l_class_b_name: READABLE_STRING_GENERAL
 		do
-			l_class_a_name := class_a.name
-			l_class_b_name := class_b.name
 			if current_class_sort_order = topology_order then
 				Result := class_a.class_c.topological_id < class_b.class_c.topological_id
-			elseif current_class_sort_order = ascending_order then
-				Result := l_class_a_name < l_class_b_name
 			else
-				Result := l_class_a_name > l_class_b_name
+				l_class_a_name := class_a.name
+				l_class_b_name := class_b.name
+				if current_class_sort_order = ascending_order then
+					Result := l_class_a_name < l_class_b_name
+				else
+					Result := l_class_a_name > l_class_b_name
+				end
 			end
 		end
 
@@ -825,7 +828,7 @@ feature{NONE} -- Implementation/Stone
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1074,7 +1074,7 @@ feature -- Output: signature
 			end
 		end
 
-	append_arguments_to (s: STRING)
+	append_arguments_to (s: STRING_GENERAL)
 			-- Append arguments to `s'.
 		require
 			s_not_void: s /= Void
@@ -1247,7 +1247,7 @@ note
 	ca_ignore: "CA033", "CA033: very large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

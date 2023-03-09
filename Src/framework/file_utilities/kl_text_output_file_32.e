@@ -12,6 +12,8 @@ inherit
 			make as kl_make
 		export
 			{ANY} path
+		redefine
+			make_with_path
 		end
 
 create
@@ -26,6 +28,13 @@ feature {NONE} -- Initialization
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
 			kl_make ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_name))
+		end
+
+	make_with_path (a_path: PATH)
+			-- <Precursor>
+		do
+			name := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_path.name)
+			Precursor (a_path)
 		end
 
 ;note

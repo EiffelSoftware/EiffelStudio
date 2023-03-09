@@ -5,7 +5,7 @@ note
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,6 +39,8 @@ inherit
 			process_do_function_inline_agent,
 			process_do_procedure_inline_agent,
 			process_equality_expression,
+			process_explicit_convert_from_expression,
+			process_explicit_convert_to_expression,
 			process_expression_address,
 			process_external_function_inline_agent,
 			process_external_procedure_inline_agent,
@@ -49,6 +51,8 @@ inherit
 			process_if_expression,
 			process_infix_cast_expression,
 			process_infix_expression,
+			process_inspect_expression,
+			process_iteration_cursor,
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
@@ -858,19 +862,19 @@ feature {NONE} -- Expression processing
 						a_context.force_last (current_universe_impl.pointer_type)
 					end
 				end
-			elseif l_name.is_iteration_cursor then
+			elseif l_name.is_iteration_item then
 				l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 				l_typed_pointer_class := l_typed_pointer_type.named_base_class
 				if l_typed_pointer_class.actual_class.is_preparsed then
 						-- Class TYPED_POINTER has been found in the universe.
-						-- Use ISE's implementation: the type of '$iteration_cursor' is
-						-- 'TYPED_POINTER [<type-of-iteration-cursor>]'.
-					find_iteration_cursor_type (l_name.iteration_cursor_name, a_context)
+						-- Use ISE's implementation: the type of '$iteration_item' is
+						-- 'TYPED_POINTER [<type-of-iteration-item>]'.
+					find_iteration_item_type (l_name.iteration_item_name, a_context)
 					if not has_fatal_error then
 						a_context.force_last (l_typed_pointer_type)
 					end
 				else
-						-- Use the ETL2 implementation: the type of '$across_cursor' is POINTER.
+						-- Use the ETL2 implementation: the type of '$iteration_item' is POINTER.
 					a_context.force_last (current_universe_impl.pointer_type)
 				end
 			else
@@ -1082,7 +1086,7 @@ feature {NONE} -- Expression processing
 			if had_error then
 				set_fatal_error
 			else
-				if l_result_context_list.count /= 1 then
+				if l_result_context_list.count /= l_old_result_context_list_count + 1 then
 						-- There is no expression such as the types of all other
 						-- expressions conform to its type.
 					l_expression_context := new_context (current_type)
@@ -1201,13 +1205,120 @@ feature {NONE} -- Expression processing
 			a_context.force_last (l_type)
 		end
 
-	find_iteration_cursor_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
+	find_inspect_expression_type (a_expression: ET_INSPECT_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `a_expression' appears.
+			-- It will be altered on exit to represent the type of `a_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_context_not_void: a_context /= Void
+		local
+			l_when_part: ET_WHEN_EXPRESSION
+			i, nb: INTEGER
+			had_error: BOOLEAN
+			l_detachable_any_type: ET_CLASS_TYPE
+			l_expression_context: ET_NESTED_TYPE_CONTEXT
+			l_result_context_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
+			l_old_result_context_list_count: INTEGER
+		do
+			reset_fatal_error (False)
+			l_detachable_any_type := current_system.detachable_any_type
+			l_result_context_list := common_ancestor_type_list
+			l_old_result_context_list_count := l_result_context_list.count
+			if attached a_expression.when_parts as l_when_parts then
+				nb := l_when_parts.count
+				from i := 1 until i > nb loop
+					l_when_part := l_when_parts.item (i)
+					l_expression_context := new_context (current_type)
+					find_expression_type (l_when_part.then_expression, l_expression_context, l_detachable_any_type)
+					if has_fatal_error then
+						had_error := True
+						free_context (l_expression_context)
+					else
+						update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+					end
+					i := i + 1
+				end
+			end
+			if attached a_expression.else_part as l_else_part then
+				l_expression_context := new_context (current_type)
+				find_expression_type (l_else_part.expression, l_expression_context, l_detachable_any_type)
+				if has_fatal_error then
+					had_error := True
+					free_context (l_expression_context)
+				else
+					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+				end
+			end
+			if had_error then
+				set_fatal_error
+			else
+				if l_result_context_list.count = l_old_result_context_list_count then
+						-- Empty list of types. Use "NONE".
+						-- See https://www.eiffel.org/doc/eiffel/Types
+					l_expression_context := new_context (current_type)
+					l_expression_context.force_last (current_system.none_type)
+					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+				elseif l_result_context_list.count /= l_old_result_context_list_count + 1 then
+						-- There is no expression such as the types of all other
+						-- expressions conform to its type.
+					l_expression_context := new_context (current_type)
+					l_expression_context.force_last (current_system.any_type)
+					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
+				end
+				a_context.copy_type_context (l_result_context_list.last)
+			end
+			free_common_ancestor_types (l_result_context_list, l_old_result_context_list_count)
+		end
+
+	find_iteration_cursor_type (a_iteration_cursor: ET_ITERATION_CURSOR; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `a_iteration_cursor' appears.
+			-- It will be altered on exit to represent the type of `a_name'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_iteration_cursor_not_void: a_iteration_cursor /= Void
+			a_context_not_void: a_context /= Void
+		local
+			l_name: ET_IDENTIFIER
+			l_seed: INTEGER
+			l_iteration_component: ET_ITERATION_COMPONENT
+			l_iteration_components: detachable ET_ITERATION_COMPONENT_LIST
+		do
+			reset_fatal_error (False)
+			l_name := a_iteration_cursor.item_name
+			if l_name.is_iteration_item then
+				l_seed := l_name.seed
+			end
+			l_iteration_components := current_closure_impl.iteration_components
+			if l_iteration_components = Void then
+					-- Internal error.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
+			elseif l_seed < 1 or l_seed > l_iteration_components.count then
+					-- Internal error.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
+			else
+				l_iteration_component := l_iteration_components.iteration_component (l_seed)
+				find_expression_type (l_iteration_component.new_cursor_expression, a_context, current_system.detachable_any_type)
+			end
+		end
+
+	find_iteration_item_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_name' appears.
 			-- It will be altered on exit to represent the type of `a_name'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_object_test_local: a_name.is_iteration_cursor
+			a_name_object_test_local: a_name.is_iteration_item
 			a_context_not_void: a_context /= Void
 		local
 			l_seed: INTEGER
@@ -1235,7 +1346,7 @@ feature {NONE} -- Expression processing
 				end
 			else
 				l_iteration_component := l_iteration_components.iteration_component (l_seed)
-				if a_name = l_iteration_component.unfolded_cursor_name or not l_iteration_component.has_item_cursor then
+				if a_name = l_iteration_component.unfolded_cursor_name or l_iteration_component.has_cursor_name then
 					find_expression_type (l_iteration_component.new_cursor_expression, a_context, current_system.detachable_any_type)
 				else
 					find_expression_type (l_iteration_component.cursor_item_expression, a_context, current_system.detachable_any_type)
@@ -1363,6 +1474,7 @@ feature {NONE} -- Expression processing
 			-- "ARRAY [NONE]" does not conform nor convert to it but "ARRAY [ANY]" does.
 			--
 			-- See https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array
+			-- and https://www.eiffel.org/doc/eiffel/Types
 			-- for more details.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -2276,6 +2388,15 @@ feature {NONE} -- Expression processing
 						end
 					else
 						a_context.force_last (l_type)
+					end
+					if current_system.attachment_type_conformance_mode then
+						if not a_context.is_type_attached then
+							if attached {ET_IDENTIFIER} l_name as l_identifier and then l_query.is_stable_attribute and then current_attachment_scope.has_attribute (l_identifier) then
+									-- Even though this attribute has not been declared as attached,
+									-- we can guarantee that at this stage this entity is attached.
+								a_context.force_last (tokens.attached_like_current)
+							end
+						end
 					end
 				end
 			end
@@ -3225,6 +3346,18 @@ feature {ET_AST_NODE} -- Processing
 			find_equality_expression_type (an_expression, current_context)
 		end
 
+	process_explicit_convert_from_expression (an_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			find_convert_from_expression_type (an_expression, current_context)
+		end
+
+	process_explicit_convert_to_expression (an_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			find_convert_to_expression_type (an_expression, current_context)
+		end
+
 	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS)
 			-- Process `an_expression'.
 		do
@@ -3270,8 +3403,8 @@ feature {ET_AST_NODE} -- Processing
 				find_local_variable_type (an_identifier, current_context)
 			elseif an_identifier.is_object_test_local then
 				find_object_test_local_type (an_identifier, current_context)
-			elseif an_identifier.is_iteration_cursor then
-				find_iteration_cursor_type (an_identifier, current_context)
+			elseif an_identifier.is_iteration_item then
+				find_iteration_item_type (an_identifier, current_context)
 			elseif an_identifier.is_feature_name then
 				find_unqualified_call_expression_type (an_identifier, current_context)
 			else
@@ -3301,6 +3434,18 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			find_infix_expression_type (an_expression, current_context)
+		end
+
+	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			find_inspect_expression_type (a_expression, current_context)
+		end
+
+	process_iteration_cursor (a_iteration_cursor: ET_ITERATION_CURSOR)
+			-- Process `a_iteration_cursor'.
+		do
+			find_iteration_cursor_type (a_iteration_cursor, current_context)
 		end
 
 	process_manifest_array (an_expression: ET_MANIFEST_ARRAY)

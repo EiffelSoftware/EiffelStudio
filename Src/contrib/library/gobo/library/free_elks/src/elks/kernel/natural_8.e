@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Integer values coded on 8 bits"
 	external_name: "System.Byte"
 	assembly: "mscorlib"
@@ -72,19 +72,19 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	minus alias "-" (other: NATURAL_8): NATURAL_8
+	minus alias "-" alias "−" (other: NATURAL_8): NATURAL_8
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	product alias "*" (other: NATURAL_8): NATURAL_8
+	product alias "*" alias "×" (other: NATURAL_8): NATURAL_8
 			-- Product by `other'
 		external
 			"built_in"
 		end
 
-	quotient alias "/" (other: NATURAL_8): REAL_64
+	quotient alias "/" alias "÷" (other: NATURAL_8): REAL_64
 			-- Division by `other'
 		external
 			"built_in"
@@ -190,44 +190,44 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	bit_and alias "&" (i: NATURAL_8): NATURAL_8
+	bit_and alias "&" alias "⊗" (i: NATURAL_8): NATURAL_8
 			-- Bitwise and between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_or alias "|" (i: NATURAL_8): NATURAL_8
+	bit_or alias "|" alias "⦶" (i: NATURAL_8): NATURAL_8
 			-- Bitwise or between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_xor (i: NATURAL_8): NATURAL_8
+	bit_xor alias "⊕" (i: NATURAL_8): NATURAL_8
 			-- Bitwise xor between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_not: NATURAL_8
+	bit_not alias "⊝": NATURAL_8
 			-- One's complement of Current.
 		external
 			"built_in"
 		end
 
-	bit_shift_left alias "|<<" (n: INTEGER): NATURAL_8
+	bit_shift_left alias "|<<" alias "⧀" (n: INTEGER): NATURAL_8
 			-- Shift Current from `n' position to left.
 		external
 			"built_in"
 		end
 
-	bit_shift_right alias "|>>" (n: INTEGER): NATURAL_8
+	bit_shift_right alias "|>>" alias "⧁" (n: INTEGER): NATURAL_8
 			-- Shift Current from `n' position to right.
 		external
 			"built_in"
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

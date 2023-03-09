@@ -16,7 +16,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,7 +67,6 @@ feature {NONE} -- Initialization
 			name := a_name
 			make_adapted (a_name, Current)
 			set_kernel_types
-			set_default_class_mapping
 		ensure
 			name_set: name = a_name
 			current_system_set: current_system = a_system
@@ -964,6 +963,9 @@ feature -- Kernel types
 			-- Class type "[attached] STRING_8",
 			-- where '[attached]' is an implicit type mark
 
+	detachable_string_8_type: ET_CLASS_TYPE
+			-- Class type "detachable STRING_8"
+
 	string_32_type: ET_CLASS_TYPE
 			-- Class type "[attached] STRING_32",
 			-- where '[attached]' is an implicit type mark
@@ -1601,6 +1603,7 @@ feature -- Kernel types
 			l_master_class := master_class (l_name)
 			l_master_class.set_marked (True)
 			create string_8_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
+			create detachable_string_8_type.make (tokens.detachable_keyword, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create string_8_convert_feature.make (string_8_type)
 		end
@@ -1803,6 +1806,7 @@ feature -- Kernel types
 			string_type := tokens.unknown_class_type
 			detachable_string_type := tokens.unknown_class_type
 			string_8_type := tokens.unknown_class_type
+			detachable_string_8_type := tokens.unknown_class_type
 			string_8_convert_feature := tokens.unknown_convert_feature
 			string_32_type := tokens.unknown_class_type
 			string_32_convert_feature := tokens.unknown_convert_feature
@@ -1978,10 +1982,34 @@ feature -- Compilation options
 			-- Implicit attachment type mark when a type in a class of the
 			-- current universe is declared with no explicit attachment type mark
 
+	obsolete_iteration_mode: BOOLEAN
+			-- Should the obsolete iteration syntax used?
+			--
+			-- Obsolete iteration syntax uses "is" with direct access to the iteration
+			-- item, or uses "as" with direct access to the iteration cursor.
+			--
+			-- When "true", the following obsolete syntax is used:
+			--     across foo as x loop ... x.item ... x.key ... end
+			--     across foo is x loop ... x ... @x.key ... end
+			--
+			-- When "false" (the default), the following contemporary syntax is used:
+			--     across foo as x loop ... x ... @x.key ... end
+			--			
+			-- Note: the use of "as" instead of "is" for direct access to the iteration
+			-- item has been introduced in ISE 21.11.
+
 	obsolete_routine_type_mode: BOOLEAN
 			-- Should the first generic parameter of routine types (ROUTINE, PROCEDURE, FUNCTION, PREDICATE)
 			-- be ignored?
 			-- Note: the first generic parameter of routine types has been dropped in ISE 15.12.
+
+	use_obsolete_syntax_mode: BOOLEAN
+			-- Should obsolete syntax be used in case of ambiguity?
+			--
+			-- For example, should `@ i` be considered as a call to the unary
+			-- operator `@` with `i` as target (obsolete syntax) or as the
+			-- iteration cursor associated with item `i` in an iteration construct
+			-- such as `across foo as i all @i.key.is_valid end` (standard syntax)?
 
 feature -- Compilation options setting
 
@@ -1993,6 +2021,14 @@ feature -- Compilation options setting
 			implicit_attachment_type_mark := a_type_mark
 		ensure
 			implicit_attachment_type_mark_set: implicit_attachment_type_mark = a_type_mark
+		end
+
+	set_obsolete_iteration_mode (b: BOOLEAN)
+			-- Set `obsolete_iteration_mode' to `b'.
+		do
+			obsolete_iteration_mode := b
+		ensure
+			obsolete_iteration_mode_set: obsolete_iteration_mode = b
 		end
 
 	set_obsolete_routine_type_mode (b: BOOLEAN)
@@ -2840,6 +2876,7 @@ invariant
 	special_detachable_any_type_not_void: special_detachable_any_type /= Void
 	special_identity_type_not_void: special_identity_type /= Void
 	string_8_type_not_void: string_8_type /= Void
+	detachable_string_8_type_not_void: detachable_string_8_type /= Void
 	string_32_type_not_void: string_32_type /= Void
 	system_object_type_not_void: system_object_type /= Void
 	system_object_parents_not_void: system_object_parents /= Void

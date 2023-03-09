@@ -2,7 +2,7 @@ note
 
 	description:
 
-		"Eiffel lists of 'elseif' parts of 'if' expressions"
+		"Eiffel lists of 'elseif' parts in 'if' expressions"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"

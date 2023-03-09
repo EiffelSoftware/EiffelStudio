@@ -21,6 +21,8 @@ inherit
 
 	KL_SHARED_EXCEPTIONS
 
+	KL_SHARED_MEMORY
+
 	KL_SHARED_STANDARD_FILES
 
 	KL_SHARED_FILE_SYSTEM
@@ -53,6 +55,29 @@ feature {NONE} -- Initialization
 			read_command_line
 			build_suite
 			execute
+				-- The test for '$GOBO/library/xslt' crashes from time to time in
+				-- GitHub Actions pipeline under Windows and Linux with a run-time
+				-- panic when using ISE Eiffel (as of 20.11.10.5048) in workbench
+				-- mode just after displaying the test results:
+				--
+				-- xslt: PANIC: Unexpected harmful signal (Segmentation violation) ...
+				--
+				-- xslt: system execution failed.
+				-- Following is the set of recorded exceptions.
+				-- NB: The raised panic may have induced completely inconsistent information:
+				--
+				-- -------------------------------------------------------------------------------
+				-- Class / Object      Routine                Nature of exception           Effect
+				-- -------------------------------------------------------------------------------
+				-- RUN-TIME            root's set-up          Unexpected harmful signal (Segmentation violation):
+				-- <0000000000000000>                         Eiffel run-time panic.        Bye
+				-- -------------------------------------------------------------------------------
+				--
+				-- I suspect that this is happening when the Eiffel runtime is cleaning
+				-- up memory before exit. So turn off garbage collection and force a manual
+				-- exit to avoid this crash.
+			memory.collection_off
+			Exceptions.die (0)
 		end
 
 feature -- Access

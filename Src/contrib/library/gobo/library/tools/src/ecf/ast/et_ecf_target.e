@@ -5,7 +5,7 @@ note
 		"ECF targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -117,7 +117,8 @@ feature -- Access
 			-- External linker flags
 
 	class_mappings: detachable DS_HASH_TABLE [STRING, STRING]
-			-- Class mapping, indexed by new class names in upper-case
+			-- Class mapping, indexed by old class names in upper-case
+			-- (e.g. STRING mapped to STRING_32, old_name = STRING, new_anme = STRING_32)
 			-- (may be Void)
 
 	pre_compile_actions: detachable DS_ARRAYED_LIST [ET_ECF_ACTION]
@@ -173,7 +174,7 @@ feature -- Access
 			no_void_parent: not Result.has_void
 			first: not Result.is_empty implies Result.first = parent
 			last: not Result.is_empty implies Result.last.target = a_other_target
-			path: across Result as l_path all if not l_path.is_first then Result.item (l_path.index - 1) = l_path.item else True end end
+			path: across Result as i_path all if not @i_path.is_first then Result.item (@i_path.index - 1) = i_path else True end end
 		end
 
 feature -- Status setting
@@ -384,7 +385,7 @@ feature -- Basic operations
 
 	fill_universe (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
 			-- Add to `a_universe' the clusters, libraries and .NET assemblies
-			-- of current target,  and recursive its parent target if any, whose
+			-- of current target, and recursively its parent target if any, whose
 			-- conditions satisfy `a_state'.
 		require
 			a_universe_not_void: a_universe /= Void
@@ -514,6 +515,11 @@ feature -- Basic operations
 			if l_value /= Void and then l_value.is_boolean then
 				a_system.set_total_order_on_reals_mode (l_value.to_boolean)
 			end
+				-- "line_generation".
+			l_value := settings.value ({ET_ECF_SETTING_NAMES}.line_generation_setting_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_system.set_line_generation_mode (l_value.to_boolean)
+			end
 		end
 
 	fill_capabilities (a_system: ET_ECF_SYSTEM)
@@ -577,6 +583,11 @@ feature -- Basic operations
 			else
 				a_universe.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark)
 			end
+				-- is_obsolete_iteration.
+			l_value := options.value ({ET_ECF_OPTION_NAMES}.is_obsolete_iteration_option_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_universe.set_obsolete_iteration_mode (l_value.to_boolean)
+			end
 				-- is_obsolete_routine_type.
 			l_value := options.value ({ET_ECF_OPTION_NAMES}.is_obsolete_routine_type_option_name)
 			if l_value /= Void and then l_value.is_boolean then
@@ -591,6 +602,19 @@ feature -- Basic operations
 			end
 		end
 
+	fill_class_mappings (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
+			-- Fill `a_universe' with class mapping information.
+		require
+			a_universe_not_void: a_universe /= Void
+			a_state_not_void: a_state /= Void
+		do
+			if attached class_mappings as l_attached_class_mappings then
+				across l_attached_class_mappings as i_class_mapping loop
+					a_universe.set_class_mapping (create {ET_IDENTIFIER}.make (@i_class_mapping.key), create {ET_IDENTIFIER}.make (i_class_mapping))
+				end
+			end
+		end
+
 	override_settings (a_settings: ET_ECF_SETTINGS)
 			-- Override settings of current target with `a_settings'.
 		require
@@ -598,21 +622,21 @@ feature -- Basic operations
 		local
 			i, nb: INTEGER
 		do
-			across a_settings.primary_settings as l_primary_settings loop
-				if STRING_.same_case_insensitive (l_primary_settings.key, "all_assertions") then
+			across a_settings.primary_settings as i_primary_setting loop
+				if STRING_.same_case_insensitive (@i_primary_setting.key, "all_assertions") then
 					if attached system_config.targets as l_targets then
-						l_targets.do_all (agent {ET_ECF_TARGET}.override_all_assertions (l_primary_settings.item))
+						l_targets.do_all (agent {ET_ECF_TARGET}.override_all_assertions (i_primary_setting))
 					else
-						override_all_assertions (l_primary_settings.item)
+						override_all_assertions (i_primary_setting)
 					end
-				elseif STRING_.same_case_insensitive (l_primary_settings.key, {ET_ECF_SETTING_NAMES}.library_root_setting_name) and attached system_config.targets as l_targets then
+				elseif STRING_.same_case_insensitive (@i_primary_setting.key, {ET_ECF_SETTING_NAMES}.library_root_setting_name) and attached system_config.targets as l_targets then
 					nb := l_targets.count
 					from i := 1 until i > nb loop
-						l_targets.target (i).settings.set_primary_value (l_primary_settings.key, l_primary_settings.item)
+						l_targets.target (i).settings.set_primary_value (@i_primary_setting.key, i_primary_setting)
 						i := i + 1
 					end
 				else
-					settings.set_primary_value (l_primary_settings.key, l_primary_settings.item)
+					settings.set_primary_value (@i_primary_setting.key, i_primary_setting)
 				end
 			end
 		end
@@ -622,11 +646,11 @@ feature -- Basic operations
 		require
 			a_capabilities_not_void: a_capabilities /= Void
 		do
-			across a_capabilities.primary_support_capabilities as l_primary_support_capabilities loop
-				capabilities.set_primary_support_value (l_primary_support_capabilities.key, l_primary_support_capabilities.item)
+			across a_capabilities.primary_support_capabilities as i_primary_support_capability loop
+				capabilities.set_primary_support_value (@i_primary_support_capability.key, i_primary_support_capability)
 			end
-			across a_capabilities.primary_use_capabilities as l_primary_use_capabilities loop
-				capabilities.set_primary_use_value_id (l_primary_use_capabilities.key, l_primary_use_capabilities.item)
+			across a_capabilities.primary_use_capabilities as i_primary_use_capability loop
+				capabilities.set_primary_use_value_id (@i_primary_use_capability.key, i_primary_use_capability)
 			end
 		end
 
@@ -635,8 +659,8 @@ feature -- Basic operations
 		require
 			a_variables_not_void: a_variables /= Void
 		do
-			across a_variables.primary_variables as l_primary_variables loop
-				variables.set_primary_value (l_primary_variables.key, l_primary_variables.item)
+			across a_variables.primary_variables as i_primary_variable loop
+				variables.set_primary_value (@i_primary_variable.key, i_primary_variable)
 			end
 		end
 

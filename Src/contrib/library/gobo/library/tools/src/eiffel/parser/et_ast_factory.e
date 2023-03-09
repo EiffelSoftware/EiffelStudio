@@ -5,7 +5,7 @@
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -662,6 +662,24 @@ feature -- Eiffel keywords
 
 feature -- Eiffel symbols
 
+	new_and_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '∧' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_and_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
+	new_and_then_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '∧…' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_and_then_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
 	new_arrow_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '->' symbol
 		require
@@ -684,6 +702,15 @@ feature -- Eiffel symbols
 			a_scanner_not_void: a_scanner /= Void
 		do
 			Result := tokens.assign_symbol
+		end
+
+	new_at_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
+			-- New '@' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_at
+			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
 	new_bang_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
@@ -805,6 +832,15 @@ feature -- Eiffel symbols
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
+	new_implies_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '⇒' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_implies_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
 	new_le_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '<=' symbol
 		require
@@ -875,6 +911,15 @@ feature -- Eiffel symbols
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
+	new_not_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '¬' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_not_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
 	new_not_equal_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '/=' symbol
 		require
@@ -899,6 +944,24 @@ feature -- Eiffel symbols
 			a_scanner_not_void: a_scanner /= Void
 		do
 			Result := tokens.open_repeat_symbol
+		end
+
+	new_or_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '∨' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_or_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
+	new_or_else_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '∨…' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_or_else_symbol
+			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
 	new_plus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
@@ -991,6 +1054,15 @@ feature -- Eiffel symbols
 			a_scanner_not_void: a_scanner /= Void
 		do
 			create Result.make_times
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
+	new_xor_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
+			-- New '⊻' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_xor_symbol
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1175,13 +1247,13 @@ feature -- AST leaves
 feature -- AST nodes
 
 	new_across_all_expression (a_across: detachable ET_KEYWORD; a_iterable_expression: detachable ET_EXPRESSION;
-		a_as: detachable ET_KEYWORD; a_cursor_name: detachable ET_IDENTIFIER; an_invariant: detachable ET_LOOP_INVARIANTS;
+		a_as: detachable ET_KEYWORD; a_item_name: detachable ET_IDENTIFIER; an_invariant: detachable ET_LOOP_INVARIANTS;
 		an_until_conditional: detachable ET_CONDITIONAL; a_all_conditional: detachable ET_CONDITIONAL;
 		a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
 			-- New across all expression
 		do
-			if a_iterable_expression /= Void and a_cursor_name /= Void and a_all_conditional /= Void then
-				create Result.make_all (a_iterable_expression, a_cursor_name, an_until_conditional, a_all_conditional)
+			if a_iterable_expression /= Void and a_item_name /= Void and a_all_conditional /= Void then
+				create Result.make_all (a_iterable_expression, a_item_name, an_until_conditional, a_all_conditional)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
 				if a_as /= Void then
@@ -1191,14 +1263,14 @@ feature -- AST nodes
 		end
 
 	new_across_instruction (a_across: detachable ET_KEYWORD; a_iterable_expression: detachable ET_EXPRESSION;
-		a_as: detachable ET_KEYWORD; a_cursor_name: detachable ET_IDENTIFIER;
+		a_as: detachable ET_KEYWORD; a_item_name: detachable ET_IDENTIFIER;
 		a_from_compound: detachable ET_COMPOUND; an_invariant: detachable ET_LOOP_INVARIANTS;
 		an_until_conditional: detachable ET_CONDITIONAL; a_loop_compound: detachable ET_COMPOUND;
 		a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_ACROSS_INSTRUCTION
 			-- New across instruction
 		do
-			if a_iterable_expression /= Void and a_cursor_name /= Void then
-				create Result.make (a_iterable_expression, a_cursor_name, a_from_compound, an_until_conditional, a_loop_compound)
+			if a_iterable_expression /= Void and a_item_name /= Void then
+				create Result.make (a_iterable_expression, a_item_name, a_from_compound, an_until_conditional, a_loop_compound)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
 				if a_as /= Void then
@@ -1208,13 +1280,13 @@ feature -- AST nodes
 		end
 
 	new_across_some_expression (a_across: detachable ET_KEYWORD; a_iterable_expression: detachable ET_EXPRESSION;
-		a_as: detachable ET_KEYWORD; a_cursor_name: detachable ET_IDENTIFIER; an_invariant: detachable ET_LOOP_INVARIANTS;
+		a_as: detachable ET_KEYWORD; a_item_name: detachable ET_IDENTIFIER; an_invariant: detachable ET_LOOP_INVARIANTS;
 		an_until_conditional: detachable ET_CONDITIONAL; a_some_conditional: detachable ET_CONDITIONAL;
 		a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
 			-- New across some expression
 		do
-			if a_iterable_expression /= Void and a_cursor_name /= Void and a_some_conditional /= Void then
-				create Result.make_some (a_iterable_expression, a_cursor_name, an_until_conditional, a_some_conditional)
+			if a_iterable_expression /= Void and a_item_name /= Void and a_some_conditional /= Void then
+				create Result.make_some (a_iterable_expression, a_item_name, an_until_conditional, a_some_conditional)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
 				if a_as /= Void then
@@ -1297,11 +1369,39 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_and_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "∧" feature name
+		do
+			if a_string /= Void then
+				create Result.make_and_symbol (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
 	new_alias_and_then_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "and then" feature name
 		do
 			if a_string /= Void then
 				create Result.make_and_then (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
+	new_alias_and_then_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "∧…" feature name
+		do
+			if a_string /= Void then
+				create Result.make_and_then_symbol (a_string)
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
@@ -1425,6 +1525,20 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_implies_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "⇒" feature name
+		do
+			if a_string /= Void then
+				create Result.make_implies_symbol (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
 	new_alias_le_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "<=" feature name
 		do
@@ -1503,6 +1617,20 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_not_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "¬" feature name
+		do
+			if a_string /= Void then
+				create Result.make_not_symbol (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
 	new_alias_or_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "or" feature name
 		do
@@ -1517,11 +1645,39 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_or_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "∨" feature name
+		do
+			if a_string /= Void then
+				create Result.make_or_symbol (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
 	new_alias_or_else_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "or else" feature name
 		do
 			if a_string /= Void then
 				create Result.make_or_else (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
+	new_alias_or_else_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "∨…" feature name
+		do
+			if a_string /= Void then
+				create Result.make_or_else_symbol (a_string)
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
@@ -1592,6 +1748,20 @@ feature -- AST nodes
 		do
 			if a_string /= Void then
 				create Result.make_xor (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
+			end
+		end
+
+	new_alias_xor_symbol_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
+			-- New alias "⊻" feature name
+		do
+			if a_string /= Void then
+				create Result.make_xor_symbol (a_string)
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
@@ -1974,6 +2144,23 @@ feature -- AST nodes
 			create Result.make_with_capacity (nb)
 		end
 
+	new_convert_from_expression (a_source: ET_EXPRESSION; a_convert_feature: ET_CONVERT_FEATURE; a_source_type, a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FROM_EXPRESSION
+			-- New conversion from expresion to convert `a_source' of type `a_source_type' to `a_target_type'
+			-- using `a_convert_feature'
+		require
+			a_source_not_void: a_source /= Void
+			a_convert_feature_not_void: a_convert_feature /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_valid_context: a_source_type.is_valid_context
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_valid_context: a_target_type.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			create Result.make (a_target_type.named_type, a_convert_feature, a_source)
+		ensure
+			new_convert_from_expression_not_void: Result /= Void
+		end
+
 	new_convert_function (a_name: detachable ET_FEATURE_NAME; a_colon: detachable ET_SYMBOL;
 		a_types: detachable ET_TYPE_LIST): detachable ET_CONVERT_FUNCTION
 			-- New convert function
@@ -1990,6 +2177,23 @@ feature -- AST nodes
 			if a_name /= Void and a_types /= Void then
 				create Result.make (a_name, a_types)
 			end
+		end
+
+	new_convert_to_expression (a_source: ET_EXPRESSION; a_convert_feature: ET_CONVERT_FEATURE; a_source_type, a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_TO_EXPRESSION
+			-- New conversion to expresion to convert `a_source' of type `a_source_type' to `a_target_type'
+			-- using `a_convert_feature'
+		require
+			a_source_not_void: a_source /= Void
+			a_convert_feature_not_void: a_convert_feature /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_valid_context: a_source_type.is_valid_context
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_valid_context: a_target_type.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			create Result.make (a_source, a_convert_feature)
+		ensure
+			new_convert_to_expression_not_void: Result /= Void
 		end
 
 	new_convert_types (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_TYPE_LIST
@@ -2509,13 +2713,13 @@ feature -- AST nodes
 		end
 
 	new_for_all_quantifier_expression (a_quantifier_symbol: detachable ET_SYMBOL;
-		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_item_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
 		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL;
 		a_iteration_expression: detachable ET_EXPRESSION): detachable ET_QUANTIFIER_EXPRESSION
 			-- New quantifier expression of the form '∀'
 		do
-			if a_cursor_name /= Void and a_iterable_expression /= Void and a_iteration_expression /= Void then
-				create Result.make_for_all (a_cursor_name, a_iterable_expression, a_iteration_expression)
+			if a_item_name /= Void and a_iterable_expression /= Void and a_iteration_expression /= Void then
+				create Result.make_for_all (a_item_name, a_iterable_expression, a_iteration_expression)
 			end
 		end
 
@@ -2700,6 +2904,16 @@ feature -- AST nodes
 			end
 		end
 
+	new_infix_free_operator_from_symbol (a_symbol: detachable ET_SYMBOL): detachable ET_FREE_OPERATOR
+			-- New binary "<free-operator>" operator
+		do
+			if a_symbol /= Void then
+				create Result.make_infix (a_symbol.text)
+				Result.set_position (a_symbol.line, a_symbol.column)
+				Result.set_break (a_symbol.break)
+			end
+		end
+
 	new_infix_minus_operator (an_operator: detachable ET_SYMBOL_OPERATOR): detachable ET_SYMBOL_OPERATOR
 			-- New binary "-" operator
 		do
@@ -2727,6 +2941,16 @@ feature -- AST nodes
 			end
 		end
 
+	new_inspect_expression (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_EXPRESSION_LIST;
+		an_else_part: detachable ET_CONDITIONAL; an_end: detachable ET_KEYWORD): detachable ET_INSPECT_EXPRESSION
+			-- New inspect expression
+		do
+			if a_conditional /= Void then
+				create Result.make (a_conditional, a_when_parts)
+				Result.set_else_part (an_else_part)
+			end
+		end
+
 	new_inspect_instruction (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_PART_LIST;
 		an_else_compound: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD): detachable ET_INSPECT_INSTRUCTION
 			-- New inspect instruction
@@ -2746,6 +2970,17 @@ feature -- AST nodes
 				create Result.make_with_capacity (a_class, nb)
 				if an_invariant /= Void and then not an_invariant.position.is_null then
 					Result.set_invariant_keyword (an_invariant)
+				end
+			end
+		end
+
+	new_iteration_cursor (a_at_symbol: detachable ET_SYMBOL; a_identifier: detachable ET_IDENTIFIER): detachable ET_ITERATION_CURSOR
+			-- New iteration cursor '@i' expression
+		do
+			if a_identifier /= Void then
+				create Result.make (a_identifier)
+				if a_at_symbol /= Void and then not a_at_symbol.position.is_null then
+					Result.set_at_symbol (a_at_symbol)
 				end
 			end
 		end
@@ -3269,6 +3504,16 @@ feature -- AST nodes
 			end
 		end
 
+	new_prefix_free_operator_from_symbol (a_symbol: detachable ET_SYMBOL): detachable ET_FREE_OPERATOR
+			-- New unary "<free-operator>" operator
+		do
+			if a_symbol /= Void then
+				create Result.make_prefix (a_symbol.text)
+				Result.set_position (a_symbol.line, a_symbol.column)
+				Result.set_break (a_symbol.break)
+			end
+		end
+
 	new_prefix_minus_operator (an_operator: detachable ET_SYMBOL_OPERATOR): detachable ET_SYMBOL_OPERATOR
 			-- New unary "-" operator
 		do
@@ -3364,14 +3609,14 @@ feature -- AST nodes
 		end
 
 	new_repeat_instruction (a_open_repeat_symbol: detachable ET_SYMBOL;
-		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_item_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
 		a_iterable_expression: detachable ET_EXPRESSION;
 		a_bar_symbol: detachable ET_SYMBOL; a_loop_compound: detachable ET_COMPOUND;
 		a_close_repeat_symbol: detachable ET_SYMBOL): detachable ET_REPEAT_INSTRUCTION
 			-- New repeat instruction of the form '⟳ ... ⟲'
 		do
-			if a_cursor_name /= Void and a_iterable_expression /= Void then
-				create Result.make (a_cursor_name, a_iterable_expression, a_loop_compound)
+			if a_item_name /= Void and a_iterable_expression /= Void then
+				create Result.make (a_item_name, a_iterable_expression, a_loop_compound)
 			end
 		end
 
@@ -3466,13 +3711,13 @@ feature -- AST nodes
 		end
 
 	new_there_exists_quantifier_expression (a_quantifier_symbol: detachable ET_SYMBOL;
-		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_item_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
 		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL;
 		a_iteration_expression: detachable ET_EXPRESSION): detachable ET_QUANTIFIER_EXPRESSION
 			-- New quantifier expression of the form '∃'
 		do
-			if a_cursor_name /= Void and a_iterable_expression /= Void and a_iteration_expression /= Void then
-				create Result.make_there_exists (a_cursor_name, a_iterable_expression, a_iteration_expression)
+			if a_item_name /= Void and a_iterable_expression /= Void and a_iteration_expression /= Void then
+				create Result.make_there_exists (a_item_name, a_iterable_expression, a_iteration_expression)
 			end
 		end
 
@@ -3560,6 +3805,25 @@ feature -- AST nodes
 				if a_variant /= Void and then not a_variant.position.is_null then
 					Result.set_variant_keyword (a_variant)
 				end
+			end
+		end
+
+	new_when_expression (a_choices: detachable ET_CHOICE_LIST;
+		a_then_keyword: detachable ET_KEYWORD; a_then_expression: detachable ET_EXPRESSION): detachable ET_WHEN_EXPRESSION
+			-- New 'elseif' part of 'if' expression
+		do
+			if a_choices /= Void and a_then_expression /= Void then
+				create Result.make (a_choices, a_then_expression)
+			end
+		end
+
+	new_when_expression_list (nb: INTEGER): detachable ET_WHEN_EXPRESSION_LIST
+			-- New 'when' expression list with capacity `nb'
+		require
+			nb_positive: nb >= 0
+		do
+			if nb > 0 then
+				create Result.make_with_capacity (nb)
 			end
 		end
 

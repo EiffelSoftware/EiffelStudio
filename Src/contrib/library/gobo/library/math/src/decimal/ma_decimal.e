@@ -17,7 +17,10 @@ inherit
 	KL_NUMERIC
 		rename
 			plus as binary_plus alias "+",
-			minus as binary_minus alias "-"
+			minus as binary_minus alias "-",
+			product as product alias "*" alias "×",
+			quotient as quotient alias "/" alias "÷",
+			opposite as opposite alias "-" alias "−"
 		redefine
 			out,
 			is_equal,

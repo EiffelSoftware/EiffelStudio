@@ -1,5 +1,201 @@
 # Release History
 
+## Version 22.01.09.4 - 9 January 2022
+
+### geant
+
+* Added option `executable` for the tasks `<gec>` and `<ise>` to be
+  able specify the filename (optionally with a pathname) of the Eiffel
+  compiler executable. The default is the executable which can be found
+  in the `PATH`.
+* Added option `exit_code_variable` to the task `<getest>`.
+* Added task `<cat>`, which is similar to `<echo>` except that it writes
+  the content of a file instead of a message.
+* Display Eiffel compilation error message when an error occurred during
+  the compilation of the test harness in task `<getest>`.
+
+### gec
+
+* Added runtime support for attributes with self-initializing code.
+* Added support for the ECF setting `line_generation`, with
+  preprocessor statements `#line` now included in the generated C code.
+* Let the test in `$GOBO/tool/gec/test/tool` run `gecop` with the `gec`
+  executable just built (the executable under test).
+* Added support for once-per-object.
+* Fixed C code generation for creation instruction when the target is 
+  declared of reference type and the creation type is expanded.
+* Fixed C code generation of creation expressions.
+* Fixed C code generation when extracting agent arguments from polymorphic
+  tuple.
+* Improved interoperability with ISE Eiffel when calling routines: for
+  each actual argument in the order listed, first it is evaluated, then
+  converted if needed, and finally if the resulting object has copy
+  semantics it is cloned. This is different from what is specified in 
+  `MUGC` in the ECMA Eiffel standard where the actual arguments are first
+  evaluated and converted (first traversal in step `4`) and then cloned
+  (second traversal in step `5`). So the two traversals in steps `4` and
+  `5` need to be merged into a single traversal.
+* Fixed C code generation when an external routine is of the form
+  `external "C : int | <file.h>` with no argument types in the signature.
+* Implemented copy semantics (reference entities attached to objects of
+  expanded types) in attachments (e.g. assignment and argument passing)
+  and comparisons (`=`, `/=`, `~` and `/~`) as well as in Kernel built-in
+  features (e.g. `ANY.standard_copy` or `ANY.standard_is_equal`).
+
+### gecop
+
+* Made `gecop` multi-threaded. Each thread will run its own set of
+  validation tests independently of the others.
+* Added command-line option `--tool-executable` to specify the 
+  executable filename (optionally with a pathname) of the Eiffel tool
+  to be tested. The default is either `gec`, `gelint`, `ec` which can
+  be found in the `PATH`.
+* Added test cases for semantics rules `MBAS`, `MBRE-1` and `MVOL`.
+  Added some comments about issues in the ECMA Eiffel standard
+  (Reattachment Semantics).
+* Added test cases for semantics rules `MUGC`.
+* Added test cases for rules `M1EE` and `M1IE` exercising the semantics
+  of equality and inequality expressions.
+
+### gedoc
+
+* Added format `descendants` to get the list of descendants classes
+  of a class or of a set of classes.
+
+### gelint
+
+* Let the test in `$GOBO/tool/gelint/test/tool` run `gecop` with the
+  `gelint` executable just built (the executable under test).
+
+### getest
+
+* Changed exit code to `3` in case of an Eiffel compilation error when
+  compiling the test harness.
+
+### Gobo Eiffel Test Library
+
+* Added support for multi-threading where running tests with the
+  class `TS_MULTITHREADED_TEST_SUITE`.
+
+### Gobo Eiffel Tools Library
+
+* Improved processing of conversion expressions.
+* Fixed textual representation of `ET_TUPLE_TYPE` in case of labeled
+  tuples: should use `;` instead of `,` as separator for actual generic
+  parameters (e.g. `"TUPLE [a: A; b: B]"` and not `"TUPLE [a: A, b: B]"`).
+* Fixed the fact that it is valid to have `x.f` where the type of `x` is
+  a formal generic parameter and `f` is a tuple label declared in several
+  constraints `G -> {TUPLE [f: INTEGER], TUPLE [f: INTEGER]}` because the
+  two constraints have the same base type and the labels are at the same
+  position.
+* Disallowed conformance of `B [C]` to `B [D]` when `B` is expanded and
+  `C` and `D` are not the same type. This is to avoid polymorphism when
+  the type of an entity is expanded, as implicitly implied in the rest of
+  the Eiffel language definition.
+* Added support for ECF 1.22.0 and its new option `is_obsolete_iteration`.
+* Fixed default value for ECF option `warning` when converting ECF files
+  to newer versions of ECF.
+* Added support for the notation `@i` to access the iteration cursor of
+  an iteration whose iteration item is `i`, e.g. `∀ i: list ¦ i
+  = @i.index` (1 is at the first position, 2 at the second position, etc.).
+
+### Miscellaneous
+
+* Added test execution in [GitHub Actions](https://github.com/gobo-eiffel/gobo/actions) and [Azure DevOps](https://dev.azure.com/ericb0733/gobo/_build?definitionId=1).
+* Upgraded all ECF files to ECF 1.22.0.
+* Display more progress information when installing the Gobo Eiffel package
+  unless the option `-s` is specified.
+
+## Version 20.05.31.5 - 31 May 2020
+
+### gec
+
+* Added support for class mappings `STRING` -> `STRING_32` and 
+  `CHARACTER` -> `CHARACTER_32` when specified that way in the ECF
+  file. The default is still set to `STRING` -> `STRING_8` and 
+  `CHARACTER` -> `CHARACTER_8` in the FreeELKS ECF file.
+* Added support for new built-in features `generator_8_of_type` and
+  `generating_type_8_of_type` in class `ISE_RUNTIME`.
+
+### gedoc
+
+* Added formats `implicit_converts` to show the list of implicit
+  conversions in the Eiffel classes, and `explicit_converts` to
+  make them explicit in the class text.
+
+### geimage
+
+* New tool which is able to embed an image into an Eiffel class
+  which can then be used in applications using `EiffelVision2`.
+
+### Gobo Eiffel Kernel Library
+
+* Made sure that the library works with both class mappings
+  `STRING` -> `STRING_8` and `STRING` -> `STRING_32`.
+
+### Gobo Eiffel Structure Library
+
+* Made sure that the library works with both class mappings
+  `STRING` -> `STRING_8` and `STRING` -> `STRING_32`.
+
+### Gobo Eiffel Tools Library
+
+* Changed the implementation of class mappings in ECF
+  (`<mapping old_name="..." new_name="..."/>`) so that its behavior
+  matches what is implemented in ISE Eiffel. Note that `gec` and
+  `gelint` do not support class mappings at the cluster level, only
+  at the target level.
+* Improved interoperability with ISE Eiffel by making sure that in
+  void-safe mode the type `attached NONE` conforms to all other types,
+  even expanded types.
+* Fixed bug when looking for duplicates in multiple aliases
+  (e.g. `alias "+" alias "+"`).
+* Added support for new symbolic forms of boolean operators
+  (`∧`, `∨`, `¬`, `⇒`, `⊻`, `∧…`, `∨…`).
+
+## Version 20.03.22.1 - 22 March 2020
+
+### gec
+
+* Added support for new routines in class `IDENTIFIED_ROUTINES`:
+  `eif_current_object_id` and `eif_is_object_id_of_current`.
+
+### Gobo Eiffel Tools Library
+
+* Made sure that alias names with invalid free operators are
+  rejected.
+* Accept the *special symbols* `∀`, `∃`, `⟳`, `⟲` and `¦` (used
+  in symbolic forms of *across loops*) in free operators made up
+  of two or more symbols.
+* Added support for *multi-branch expressions* (of the form
+  `inspect x when 1, 2 then "foo" when 3..5 then "bar" else "gobo" end`).
+
+### Miscellaneous
+
+* Added test execution in [GitLab CI/CD](https://gitlab.com/ebezault/gobo/pipelines).
+
+## Version 20.01.21.1 - 21 January 2020
+
+### gec
+
+* Fixed bugs when generating code for `external "C++"` routines.
+* Do not take into account resource files with extension `.resx`
+  specified in ECF with `<external_resource>` when compiling in
+  non .NET.
+
+### Gobo Eiffel Tools Library
+
+* Fixed bug in Eiffel pretty-printer. The symbol `∃` was printed instead of `~`.
+* Added support for new values `none|current|error` for warning option 
+  `obsolete_feature` in ECF classes as introduced in ECF 1.21.0. 
+  Note that `gec` does not take this option into account.
+* Added support for stable attributes in void-safe mode.
+* Reordered `VFAV` rules to match those of ISE Eiffel. Added a rule
+  for multiple aliases with the same name.
+* Added classes `ET_AGENT_ERROR_HANDLER` and `ET_ECF_AGENT_ERROR_HANDLER`
+  to be able to customize error reporting with agents (i.e. displaying
+  validity error messages on a GUI window instead of on the console).
+
 ## Version 19.11.03.1 - 3 November 2019
 
 ### gedoc

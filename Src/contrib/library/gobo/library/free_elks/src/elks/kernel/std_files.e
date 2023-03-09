@@ -179,7 +179,7 @@ feature -- Element change
 			default_output := output
 		end
 
-	put_character, putchar (c: CHARACTER)
+	put_character, putchar (c: CHARACTER_8)
 			-- Write `c' at end of default output.
 		do
 			standard_default.put_character (c)
@@ -191,6 +191,14 @@ feature -- Element change
 			string_not_void: s /= Void
 		do
 			standard_default.put_string (s)
+		end
+
+	put_string_32 (s: READABLE_STRING_32)
+			-- Write `s' at end of default output.
+		require
+			string_not_void: s /= Void
+		do
+			standard_default.put_string_32 (s)
 		end
 
 	put_real, putreal, put_real_32 (r: REAL_32)
@@ -414,7 +422,7 @@ feature -- Input
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

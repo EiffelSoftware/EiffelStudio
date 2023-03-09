@@ -1,0 +1,6 @@
+Syntax error:
+line 15 column 13 in aa.e
+			a := Current
+			i := a ⟳ 2
+			         ^
+			print ("Failed")

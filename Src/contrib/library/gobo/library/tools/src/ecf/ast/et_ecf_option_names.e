@@ -5,7 +5,7 @@ note
 		"ECF option names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,6 +73,13 @@ feature -- Names
 			-- Values: true|false
 			--
 			-- Note: introduced in ECF 1.3.0.
+
+	is_obsolete_iteration_option_name: STRING = "is_obsolete_iteration"
+			-- Name of option "is_obsolete_iteration"
+			--
+			-- Values: true|false
+			--
+			-- Note: introduced in ECF 1.22.0.
 
 	is_obsolete_routine_type_option_name: STRING = "is_obsolete_routine_type"
 			-- Name of option "is_obsolete_routine_type"
@@ -185,7 +192,11 @@ feature -- Names
 	warning_obsolete_feature_option_name: STRING = "obsolete_feature"
 			-- Name of "warning" option "obsolete_feature"
 			--
-			-- Values: true|false
+			-- Values: none|current|all
+			-- Was: true|false until ECF 1.20.0 included,
+			--      where "false" had the meaning of "none"
+			--      and "true" has the meaning of "current".
+
 
 	warning_old_verbatim_strings_option_name: STRING = "old_verbatim_strings"
 			-- Name of "warning" option "old_verbatim_strings"
@@ -244,12 +255,17 @@ feature -- Values
 	all_option_value: STRING = "all"
 			-- Value "all"
 			--
-			-- Used in "cat_call_detection" and "void_safety".
+			-- Used in "cat_call_detection", "void_safety" and "warning" option "obsolete_feature".
 
 	conformance_option_value: STRING = "conformance"
 			-- Value "conformance"
 			--
 			-- Used in "cat_call_detection" and "void_safety".
+
+	current_option_value: STRING = "current"
+			-- Value "current"
+			--
+			-- Used in "warning" option "obsolete_feature".
 
 	error_option_value: STRING = "error"
 			-- Value "error"
@@ -277,7 +293,8 @@ feature -- Values
 	none_option_value: STRING = "none"
 			-- Value "none"
 			--
-			-- Used in "cat_call_detection", "void_safety" and "warning".
+			-- Used in "cat_call_detection", "void_safety", "warning" and
+			-- "warning" option "obsolete_feature".
 
 	obsolete_option_value: STRING = "obsolete"
 			-- Value "obsolete"

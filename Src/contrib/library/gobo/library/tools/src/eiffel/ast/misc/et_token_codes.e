@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,43 +14,50 @@ class ET_TOKEN_CODES
 
 feature -- Keyword and symbol codes
 
-	infix_div_code: CHARACTER = '%/71/'
-	infix_divide_code: CHARACTER = '%/72/'
-	infix_ge_code: CHARACTER = '%/73/'
-	infix_gt_code: CHARACTER = '%/74/'
-	infix_le_code: CHARACTER = '%/75/'
-	infix_lt_code: CHARACTER = '%/76/'
-	infix_minus_code: CHARACTER = '%/77/'
-	infix_mod_code: CHARACTER = '%/78/'
-	infix_plus_code: CHARACTER = '%/79/'
-	infix_power_code: CHARACTER = '%/80/'
-	infix_times_code: CHARACTER = '%/81/'
-	infix_freeop_code: CHARACTER = '%/82/'
-	infix_dotdot_code: CHARACTER = '%/83/'
-	infix_and_code: CHARACTER = '%/84/'
-	infix_implies_code: CHARACTER = '%/85/'
-	infix_or_code: CHARACTER = '%/86/'
-	infix_xor_code: CHARACTER = '%/87/'
-	infix_and_then_code: CHARACTER = '%/88/'
-	infix_or_else_code: CHARACTER = '%/89/'
-	min_infix_code: CHARACTER = '%/71/'
-	max_infix_code: CHARACTER = '%/89/'
+	infix_div_code: CHARACTER = '%/101/'
+	infix_divide_code: CHARACTER = '%/102/'
+	infix_ge_code: CHARACTER = '%/103/'
+	infix_gt_code: CHARACTER = '%/104/'
+	infix_le_code: CHARACTER = '%/105/'
+	infix_lt_code: CHARACTER = '%/106/'
+	infix_minus_code: CHARACTER = '%/107/'
+	infix_mod_code: CHARACTER = '%/108/'
+	infix_plus_code: CHARACTER = '%/109/'
+	infix_power_code: CHARACTER = '%/110/'
+	infix_times_code: CHARACTER = '%/111/'
+	infix_freeop_code: CHARACTER = '%/112/'
+	infix_dotdot_code: CHARACTER = '%/113/'
+	infix_and_symbol_code: CHARACTER = '%/114/'
+	infix_implies_symbol_code: CHARACTER = '%/115/'
+	infix_or_symbol_code: CHARACTER = '%/116/'
+	infix_xor_symbol_code: CHARACTER = '%/117/'
+	infix_and_then_symbol_code: CHARACTER = '%/118/'
+	infix_or_else_symbol_code: CHARACTER = '%/119/'
+	infix_and_code: CHARACTER = '%/120/'
+	infix_implies_code: CHARACTER = '%/121/'
+	infix_or_code: CHARACTER = '%/122/'
+	infix_xor_code: CHARACTER = '%/123/'
+	infix_and_then_code: CHARACTER = '%/124/'
+	infix_or_else_code: CHARACTER = '%/125/'
+	min_infix_code: CHARACTER = '%/101/'
+	max_infix_code: CHARACTER = '%/125/'
 			-- Infix operator codes
 
-	prefix_not_code: CHARACTER = '%/91/'
-	prefix_minus_code: CHARACTER = '%/92/'
-	prefix_plus_code: CHARACTER = '%/93/'
-	prefix_freeop_code: CHARACTER = '%/94/'
-	min_prefix_code: CHARACTER = '%/91/'
-	max_prefix_code: CHARACTER = '%/94/'
+	prefix_not_code: CHARACTER = '%/131/'
+	prefix_not_symbol_code: CHARACTER = '%/132/'
+	prefix_minus_code: CHARACTER = '%/133/'
+	prefix_plus_code: CHARACTER = '%/134/'
+	prefix_freeop_code: CHARACTER = '%/135/'
+	min_prefix_code: CHARACTER = '%/131/'
+	max_prefix_code: CHARACTER = '%/135/'
 			-- Prefix operator codes
 
-	min_keyword_code: CHARACTER = '%/84/'
-	max_keyword_code: CHARACTER = '%/91/'
+	min_keyword_operator_code: CHARACTER = '%/120/'
+	max_keyword_operator_code: CHARACTER = '%/131/'
 			-- Keyword operator codes
 
-	alias_bracket_code: CHARACTER = '%/100/'
-	alias_parenthesis_code: CHARACTER = '%/99/'
+	alias_bracket_code: CHARACTER = '%/191/'
+	alias_parenthesis_code: CHARACTER = '%/192/'
 			-- Alias operator codes
 
 	across_keyword_code: CHARACTER = '%/1/'
@@ -117,34 +124,35 @@ feature -- Keyword and symbol codes
 	when_keyword_code: CHARACTER = '%/62/'
 			-- Eiffel keyword codes
 
-	arrow_symbol_code: CHARACTER = '%/101/'
-	assign_symbol_code: CHARACTER = '%/102/'
-	assign_attempt_symbol_code: CHARACTER = '%/103/'
-	bang_symbol_code: CHARACTER = '%/104/'
-	bar_symbol_code: CHARACTER = '%/105/'
-	close_repeat_symbol_code: CHARACTER = '%/106/'
-	colon_symbol_code: CHARACTER = '%/107/'
-	comma_symbol_code: CHARACTER = '%/108/'
-	dollar_symbol_code: CHARACTER = '%/109/'
-	dot_symbol_code: CHARACTER = '%/110/'
-	dotdot_symbol_code: CHARACTER = '%/111/'
-	equal_symbol_code: CHARACTER = '%/112/'
-	for_all_symbol_code: CHARACTER = '%/113/'
-	left_array_symbol_code: CHARACTER = '%/114/'
-	left_brace_symbol_code: CHARACTER = '%/115/'
-	left_bracket_symbol_code: CHARACTER = '%/116/'
-	left_parenthesis_symbol_code: CHARACTER = '%/117/'
-	not_equal_symbol_code: CHARACTER = '%/118/'
-	not_tilde_symbol_code: CHARACTER = '%/119/'
-	open_repeat_symbol_code: CHARACTER = '%/120/'
-	question_mark_symbol_code: CHARACTER = '%/121/'
-	right_array_symbol_code: CHARACTER = '%/122/'
-	right_brace_symbol_code: CHARACTER = '%/123/'
-	right_bracket_symbol_code: CHARACTER = '%/124/'
-	right_parenthesis_symbol_code: CHARACTER = '%/125/'
-	semicolon_symbol_code: CHARACTER = '%/126/'
-	there_exists_symbol_code: CHARACTER = '%/127/'
-	tilde_symbol_code: CHARACTER = '%/128/'
+	arrow_symbol_code: CHARACTER = '%/201/'
+	assign_symbol_code: CHARACTER = '%/202/'
+	assign_attempt_symbol_code: CHARACTER = '%/203/'
+	at_symbol_code: CHARACTER = '%/204/'
+	bang_symbol_code: CHARACTER = '%/205/'
+	bar_symbol_code: CHARACTER = '%/206/'
+	close_repeat_symbol_code: CHARACTER = '%/207/'
+	colon_symbol_code: CHARACTER = '%/208/'
+	comma_symbol_code: CHARACTER = '%/209/'
+	dollar_symbol_code: CHARACTER = '%/210/'
+	dot_symbol_code: CHARACTER = '%/211/'
+	dotdot_symbol_code: CHARACTER = '%/212/'
+	equal_symbol_code: CHARACTER = '%/213/'
+	for_all_symbol_code: CHARACTER = '%/214/'
+	left_array_symbol_code: CHARACTER = '%/215/'
+	left_brace_symbol_code: CHARACTER = '%/216/'
+	left_bracket_symbol_code: CHARACTER = '%/217/'
+	left_parenthesis_symbol_code: CHARACTER = '%/218/'
+	not_equal_symbol_code: CHARACTER = '%/219/'
+	not_tilde_symbol_code: CHARACTER = '%/220/'
+	open_repeat_symbol_code: CHARACTER = '%/221/'
+	question_mark_symbol_code: CHARACTER = '%/222/'
+	right_array_symbol_code: CHARACTER = '%/223/'
+	right_brace_symbol_code: CHARACTER = '%/224/'
+	right_bracket_symbol_code: CHARACTER = '%/225/'
+	right_parenthesis_symbol_code: CHARACTER = '%/226/'
+	semicolon_symbol_code: CHARACTER = '%/227/'
+	there_exists_symbol_code: CHARACTER = '%/228/'
+	tilde_symbol_code: CHARACTER = '%/229/'
 			-- Eiffel symbol codes
 
 feature -- Built-in codes
@@ -278,11 +286,13 @@ feature -- Built-in codes
 	builtin_function_item: NATURAL_8 = 2
 			-- Codes for built-in functions from class "FUNCTION"
 
-	builtin_identified_routines_eif_id_object: NATURAL_8 = 1
-	builtin_identified_routines_eif_object_id: NATURAL_8 = 2
+	builtin_identified_routines_eif_current_object_id: NATURAL_8 = 1
+	builtin_identified_routines_eif_id_object: NATURAL_8 = 2
+	builtin_identified_routines_eif_is_object_id_of_current: NATURAL_8 = 3
+	builtin_identified_routines_eif_object_id: NATURAL_8 = 4
 			-- Codes for built-in procedures from class "IDENTIFIED_ROUTINES"
 
-	builtin_identified_routines_eif_object_id_free: NATURAL_8 = 3
+	builtin_identified_routines_eif_object_id_free: NATURAL_8 = 5
 			-- Codes for built-in procedures from class "IDENTIFIED_ROUTINES"
 
 	builtin_integer_n_as_integer_8: NATURAL_8 = 1
@@ -345,61 +355,63 @@ feature -- Built-in codes
 	builtin_ise_runtime_field_static_type_of_type: NATURAL_8 = 17
 	builtin_ise_runtime_field_type_of_type: NATURAL_8 = 18
 	builtin_ise_runtime_generating_type_of_type: NATURAL_8 = 19
-	builtin_ise_runtime_generator_of_type: NATURAL_8 = 20
-	builtin_ise_runtime_generic_parameter_count: NATURAL_8 = 21
-	builtin_ise_runtime_in_assertion: NATURAL_8 = 22
-	builtin_ise_runtime_integer_8_field: NATURAL_8 = 23
-	builtin_ise_runtime_integer_8_field_at: NATURAL_8 = 24
-	builtin_ise_runtime_integer_16_field: NATURAL_8 = 25
-	builtin_ise_runtime_integer_16_field_at: NATURAL_8 = 26
-	builtin_ise_runtime_integer_32_field: NATURAL_8 = 27
-	builtin_ise_runtime_integer_32_field_at: NATURAL_8 = 28
-	builtin_ise_runtime_integer_64_field: NATURAL_8 = 29
-	builtin_ise_runtime_integer_64_field_at: NATURAL_8 = 30
-	builtin_ise_runtime_is_attached_type: NATURAL_8 = 31
-	builtin_ise_runtime_is_copy_semantics_field: NATURAL_8 = 32
-	builtin_ise_runtime_is_expanded: NATURAL_8 = 33
-	builtin_ise_runtime_is_field_expanded_of_type: NATURAL_8 = 34
-	builtin_ise_runtime_is_field_transient_of_type: NATURAL_8 = 35
-	builtin_ise_runtime_is_object_marked: NATURAL_8 = 36
-	builtin_ise_runtime_is_special: NATURAL_8 = 37
-	builtin_ise_runtime_is_special_copy_semantics_item: NATURAL_8 = 38
-	builtin_ise_runtime_is_special_of_expanded: NATURAL_8 = 39
-	builtin_ise_runtime_is_special_of_reference: NATURAL_8 = 40
-	builtin_ise_runtime_is_special_of_reference_or_basic_type: NATURAL_8 = 41
-	builtin_ise_runtime_is_special_of_reference_type: NATURAL_8 = 42
-	builtin_ise_runtime_is_tuple: NATURAL_8 = 43
-	builtin_ise_runtime_is_tuple_type: NATURAL_8 = 44
-	builtin_ise_runtime_natural_8_field: NATURAL_8 = 45
-	builtin_ise_runtime_natural_8_field_at: NATURAL_8 = 46
-	builtin_ise_runtime_natural_16_field: NATURAL_8 = 47
-	builtin_ise_runtime_natural_16_field_at: NATURAL_8 = 48
-	builtin_ise_runtime_natural_32_field: NATURAL_8 = 49
-	builtin_ise_runtime_natural_32_field_at: NATURAL_8 = 50
-	builtin_ise_runtime_natural_64_field: NATURAL_8 = 51
-	builtin_ise_runtime_natural_64_field_at: NATURAL_8 = 52
-	builtin_ise_runtime_new_instance_of: NATURAL_8 = 53
-	builtin_ise_runtime_new_special_of_reference_instance_of: NATURAL_8 = 54
-	builtin_ise_runtime_new_tuple_instance_of: NATURAL_8 = 55
-	builtin_ise_runtime_new_type_instance_of: NATURAL_8 = 56
-	builtin_ise_runtime_object_size: NATURAL_8 = 57
-	builtin_ise_runtime_once_objects: NATURAL_8 = 58
-	builtin_ise_runtime_persistent_field_count_of_type: NATURAL_8 = 59
-	builtin_ise_runtime_pointer_field: NATURAL_8 = 60
-	builtin_ise_runtime_pointer_field_at: NATURAL_8 = 61
-	builtin_ise_runtime_pre_ecma_mapping_status: NATURAL_8 = 62
-	builtin_ise_runtime_raw_reference_field_at: NATURAL_8 = 63
-	builtin_ise_runtime_raw_reference_field_at_offset: NATURAL_8 = 64
-	builtin_ise_runtime_real_32_field: NATURAL_8 = 65
-	builtin_ise_runtime_real_32_field_at: NATURAL_8 = 66
-	builtin_ise_runtime_real_64_field: NATURAL_8 = 67
-	builtin_ise_runtime_real_64_field_at: NATURAL_8 = 68
-	builtin_ise_runtime_reference_field: NATURAL_8 = 69
-	builtin_ise_runtime_reference_field_at: NATURAL_8 = 70
-	builtin_ise_runtime_reference_field_at_offset: NATURAL_8 = 71
-	builtin_ise_runtime_storable_version_of_type: NATURAL_8 = 72
-	builtin_ise_runtime_type_conforms_to: NATURAL_8 = 73
-	builtin_ise_runtime_type_id_from_name: NATURAL_8 = 74
+	builtin_ise_runtime_generating_type_8_of_type: NATURAL_8 = 20
+	builtin_ise_runtime_generator_of_type: NATURAL_8 = 21
+	builtin_ise_runtime_generator_8_of_type: NATURAL_8 = 22
+	builtin_ise_runtime_generic_parameter_count: NATURAL_8 = 23
+	builtin_ise_runtime_in_assertion: NATURAL_8 = 24
+	builtin_ise_runtime_integer_8_field: NATURAL_8 = 25
+	builtin_ise_runtime_integer_8_field_at: NATURAL_8 = 26
+	builtin_ise_runtime_integer_16_field: NATURAL_8 = 27
+	builtin_ise_runtime_integer_16_field_at: NATURAL_8 = 28
+	builtin_ise_runtime_integer_32_field: NATURAL_8 = 29
+	builtin_ise_runtime_integer_32_field_at: NATURAL_8 = 30
+	builtin_ise_runtime_integer_64_field: NATURAL_8 = 31
+	builtin_ise_runtime_integer_64_field_at: NATURAL_8 = 32
+	builtin_ise_runtime_is_attached_type: NATURAL_8 = 33
+	builtin_ise_runtime_is_copy_semantics_field: NATURAL_8 = 34
+	builtin_ise_runtime_is_expanded: NATURAL_8 = 35
+	builtin_ise_runtime_is_field_expanded_of_type: NATURAL_8 = 36
+	builtin_ise_runtime_is_field_transient_of_type: NATURAL_8 = 37
+	builtin_ise_runtime_is_object_marked: NATURAL_8 = 38
+	builtin_ise_runtime_is_special: NATURAL_8 = 39
+	builtin_ise_runtime_is_special_copy_semantics_item: NATURAL_8 = 40
+	builtin_ise_runtime_is_special_of_expanded: NATURAL_8 = 41
+	builtin_ise_runtime_is_special_of_reference: NATURAL_8 = 42
+	builtin_ise_runtime_is_special_of_reference_or_basic_type: NATURAL_8 = 43
+	builtin_ise_runtime_is_special_of_reference_type: NATURAL_8 = 44
+	builtin_ise_runtime_is_tuple: NATURAL_8 = 45
+	builtin_ise_runtime_is_tuple_type: NATURAL_8 = 46
+	builtin_ise_runtime_natural_8_field: NATURAL_8 = 47
+	builtin_ise_runtime_natural_8_field_at: NATURAL_8 = 48
+	builtin_ise_runtime_natural_16_field: NATURAL_8 = 49
+	builtin_ise_runtime_natural_16_field_at: NATURAL_8 = 50
+	builtin_ise_runtime_natural_32_field: NATURAL_8 = 51
+	builtin_ise_runtime_natural_32_field_at: NATURAL_8 = 52
+	builtin_ise_runtime_natural_64_field: NATURAL_8 = 53
+	builtin_ise_runtime_natural_64_field_at: NATURAL_8 = 54
+	builtin_ise_runtime_new_instance_of: NATURAL_8 = 55
+	builtin_ise_runtime_new_special_of_reference_instance_of: NATURAL_8 = 56
+	builtin_ise_runtime_new_tuple_instance_of: NATURAL_8 = 57
+	builtin_ise_runtime_new_type_instance_of: NATURAL_8 = 58
+	builtin_ise_runtime_object_size: NATURAL_8 = 59
+	builtin_ise_runtime_once_objects: NATURAL_8 = 60
+	builtin_ise_runtime_persistent_field_count_of_type: NATURAL_8 = 61
+	builtin_ise_runtime_pointer_field: NATURAL_8 = 62
+	builtin_ise_runtime_pointer_field_at: NATURAL_8 = 63
+	builtin_ise_runtime_pre_ecma_mapping_status: NATURAL_8 = 64
+	builtin_ise_runtime_raw_reference_field_at: NATURAL_8 = 65
+	builtin_ise_runtime_raw_reference_field_at_offset: NATURAL_8 = 66
+	builtin_ise_runtime_real_32_field: NATURAL_8 = 67
+	builtin_ise_runtime_real_32_field_at: NATURAL_8 = 68
+	builtin_ise_runtime_real_64_field: NATURAL_8 = 69
+	builtin_ise_runtime_real_64_field_at: NATURAL_8 = 70
+	builtin_ise_runtime_reference_field: NATURAL_8 = 71
+	builtin_ise_runtime_reference_field_at: NATURAL_8 = 72
+	builtin_ise_runtime_reference_field_at_offset: NATURAL_8 = 73
+	builtin_ise_runtime_storable_version_of_type: NATURAL_8 = 74
+	builtin_ise_runtime_type_conforms_to: NATURAL_8 = 75
+	builtin_ise_runtime_type_id_from_name: NATURAL_8 = 76
 			-- Codes for built-in functions from class "ISE_RUNTIME"
 
 	builtin_ise_runtime_lock_marking: NATURAL_8 = 75

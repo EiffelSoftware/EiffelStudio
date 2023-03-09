@@ -9,7 +9,7 @@ note
 		%are able to recognize '%%N', '%%R%%N' and '%%R' as line separators."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,8 @@ inherit
 
 	PLAIN_TEXT_FILE
 		rename
-			make as old_make,
+			make as old_make_obsolete,
+			make_with_name as old_make,
 			name as string_name,
 			count as old_count,
 			exists as old_exists,
@@ -77,17 +78,17 @@ create
 
 feature -- Access
 
-	last_character: CHARACTER
+	last_character: CHARACTER_8
 			-- Last character read
 
-	last_string: STRING
+	last_string: STRING_8
 			-- Last string read
 			-- (Note: this query always return the same object.
 			-- Therefore a clone should be used if the result
 			-- is to be kept beyond the next call to this feature.
 			-- However `last_string' is not shared between file objects.)
 
-	eol: STRING = "%N"
+	eol: STRING_8 = "%N"
 			-- Line separator
 
 feature -- Input
@@ -101,8 +102,8 @@ feature -- Input
 			-- '%R%N and '%R'.
 		local
 			done: BOOLEAN
-			a_target: STRING
-			c: CHARACTER
+			a_target: STRING_8
+			c: CHARACTER_8
 			is_eof: BOOLEAN
 			has_carriage: BOOLEAN
 		do

@@ -8,9 +8,9 @@
 
 deferred class FILE inherit
 
-	UNBOUNDED [CHARACTER]
+	UNBOUNDED [CHARACTER_8]
 
-	SEQUENCE [CHARACTER]
+	SEQUENCE [CHARACTER_8]
 		undefine
 			prune
 		redefine
@@ -190,7 +190,7 @@ feature -- Initialization
 		local
 			l_fd: INTEGER
 		do
-			set_name (a_prefix + "XXXXXX")
+			set_name (a_prefix.as_string_32 + {STRING_32} "XXXXXX")
 			l_fd := eif_temp_file (internal_name_pointer.item, is_plain_text)
 			make_with_name (buffered_file_info.pointer_to_file_name_32 (internal_name_pointer.item))
 			fd_open_read_write (l_fd)
@@ -221,7 +221,7 @@ feature -- Access
 			name_not_empty: not Result.is_empty
 		end
 
-	item: CHARACTER
+	item: CHARACTER_8
 			-- Current item
 		do
 			read_character
@@ -1030,7 +1030,7 @@ feature -- Iteration
 
 feature -- Element change
 
-	extend (v: CHARACTER)
+	extend (v: like item)
 			-- Include `v' at end.
 		do
 			put_character (v)
@@ -1121,7 +1121,7 @@ feature -- Element change
 			file_ps (file_pointer, p.item + start_pos, nb_bytes)
 		end
 
-	put_character, putchar (c: CHARACTER)
+	put_character, putchar (c: CHARACTER_8)
 			-- Write `c' at current position.
 		do
 			file_pc (file_pointer, c)
@@ -1536,7 +1536,7 @@ feature -- Input
 			bytes_read := file_gss (file_pointer, p.item + start_pos, nb_bytes)
 		end
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
+	read_to_string (a_string: STRING_8; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.
 			-- Return the number of characters actually read.
@@ -1843,7 +1843,7 @@ feature {NONE} -- Implementation
 			"eif_file_fd"
 		end
 
-	file_gc (file: POINTER): CHARACTER
+	file_gc (file: POINTER): CHARACTER_8
 			-- Access the next character
 		external
 			"C blocking signature (FILE *): EIF_CHARACTER use %"eif_file.h%""
@@ -2008,7 +2008,7 @@ feature {NONE} -- Implementation
 	file_tnwl (file: POINTER)
 			-- Print a new-line to `file'.
 		external
-			"C signature (FILE *) use %"eif_file.h%""
+			"C blocking signature (FILE *) use %"eif_file.h%""
 		alias
 			"eif_file_tnwl"
 		end
@@ -2016,7 +2016,7 @@ feature {NONE} -- Implementation
 	file_append (file, from_file: POINTER; length: INTEGER)
 			-- Append a copy of `from_file' to `file'
 		external
-			"C signature (FILE *, FILE *, EIF_INTEGER) use %"eif_file.h%""
+			"C blocking signature (FILE *, FILE *, EIF_INTEGER) use %"eif_file.h%""
 		alias
 			"eif_file_append"
 		end
@@ -2024,7 +2024,7 @@ feature {NONE} -- Implementation
 	file_ps (file: POINTER; a_string: POINTER; length: INTEGER)
 			-- Print `a_string' to `file'.
 		external
-			"C signature (FILE *, char *, EIF_INTEGER) use %"eif_file.h%""
+			"C blocking signature (FILE *, char *, EIF_INTEGER) use %"eif_file.h%""
 		alias
 			"eif_file_ps"
 		end
@@ -2219,7 +2219,7 @@ invariant
 	name_not_empty: not internal_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

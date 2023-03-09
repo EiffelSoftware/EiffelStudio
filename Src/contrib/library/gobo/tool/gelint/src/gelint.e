@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Lint"
 
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,49 +37,81 @@ inherit
 
 create
 
-	execute
+	execute,
+	execute_with_arguments,
+	execute_with_arguments_and_error_handler
 
 feature -- Execution
 
 	execute
-			-- Start 'gelint' execution.
+			-- Start 'gelint' execution, reading arguments from the command-line.
+		do
+			execute_with_arguments (Arguments.to_array)
+			Exceptions.die (exit_code)
+		rescue
+			Exceptions.die (4)
+		end
+
+	execute_with_arguments (a_args: ARRAY [STRING])
+			-- Start 'gelint' execution with arguments `a_args'.
+			-- Set `exit_code'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args as i_arg all i_arg /= Void end
+		local
+			l_error_handler: ET_ERROR_HANDLER
+		do
+			create l_error_handler.make_standard
+			execute_with_arguments_and_error_handler (a_args, l_error_handler)
+		end
+
+	execute_with_arguments_and_error_handler (a_args: ARRAY [STRING]; a_error_handler: ET_ERROR_HANDLER)
+			-- Start 'gelint' execution with arguments `a_args'.
+			-- Set `exit_code'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args as i_arg all i_arg /= Void end
+			a_error_handler_not_void: a_error_handler /= Void
 		local
 			l_filename: STRING
 			l_file: KL_TEXT_INPUT_FILE
 		do
 			Arguments.set_program_name ("gelint")
 				-- For compatibility with ISE's tools, define the environment
-				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
-			ise_variables.set_ise_library_variable
-			create error_handler.make_standard
-			parse_arguments
-			l_filename := ecf_filename
-			create l_file.make (l_filename)
-			l_file.open_read
-			if l_file.is_open_read then
-				last_system := Void
-				parse_ecf_file (l_file)
-				l_file.close
-				if attached last_system as l_last_system then
-					process_system (l_last_system)
-					debug ("stop")
-						std.output.put_line ("Press Enter...")
-						io.read_line
-					end
-					if error_handler.has_eiffel_error then
-						Exceptions.die (2)
-					elseif error_handler.has_internal_error then
-						Exceptions.die (5)
+				-- variables "$ISE_LIBRARY", "$EIFFEL_LIBRARY", "$ISE_PLATFORM"
+				-- and "$ISE_C_COMPILER" if not set yet.
+			ise_variables.set_ise_variables
+			error_handler := a_error_handler
+			parse_arguments (a_args)
+			if exit_code = 0 and then not version_flag.was_found then
+				l_filename := ecf_filename
+				create l_file.make (l_filename)
+				l_file.open_read
+				if l_file.is_open_read then
+					last_system := Void
+					parse_ecf_file (l_file)
+					l_file.close
+					if attached last_system as l_last_system then
+						process_system (l_last_system)
+						debug ("stop")
+							std.output.put_line ("Press Enter...")
+							io.read_line
+						end
+						if error_handler.has_eiffel_error then
+							exit_code := 2
+						elseif error_handler.has_internal_error then
+							exit_code := 5
+						end
+					else
+						exit_code := 3
 					end
 				else
-					Exceptions.die (3)
+					report_cannot_read_error (l_filename)
+					exit_code := 1
 				end
-			else
-				report_cannot_read_error (l_filename)
-				Exceptions.die (1)
 			end
 		rescue
-			Exceptions.die (4)
+			exit_code := 4
 		end
 
 feature -- Access
@@ -315,8 +347,11 @@ feature -- Argument parsing
 	version_flag: AP_FLAG
 			-- Flag for '--version'
 
-	parse_arguments
-			-- Initialize options and parse the command line.
+	parse_arguments (a_args: ARRAY [STRING])
+			-- Initialize options and parse arguments `a_args'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args as i_arg all i_arg /= Void end
 		local
 			l_parser: AP_PARSER
 			l_list: AP_ALTERNATIVE_OPTIONS_LIST
@@ -399,18 +434,18 @@ feature -- Argument parsing
 			create l_list.make (version_flag)
 			l_parser.alternative_options_lists.force_first (l_list)
 				-- Parsing.
-			l_parser.parse_arguments
+			l_parser.parse_array (a_args)
 			if silent_flag.was_found then
 				create {ET_NULL_ERROR_HANDLER} error_handler.make_null
 			end
 			if version_flag.was_found then
 				report_version_number
 				ecf_filename := ""
-				Exceptions.die (0)
+				exit_code := 40
 			elseif l_parser.parameters.count /= 1 then
 				report_usage_message (l_parser)
 				ecf_filename := ""
-				Exceptions.die (1)
+				exit_code := 1
 			else
 				ecf_filename := l_parser.parameters.first
 				set_ise_version (ise_option, l_parser)
@@ -451,7 +486,7 @@ feature -- Argument parsing
 				l_ise_version := Void
 			elseif not attached a_option.parameter as l_parameter then
 				report_usage_message (a_parser)
-				Exceptions.die (1)
+				exit_code := 1
 			elseif STRING_.same_string (l_parameter, ise_latest.out) then
 				l_ise_version := ise_latest
 			else
@@ -469,11 +504,11 @@ feature -- Argument parsing
 						create l_ise_version.make (l_ise_regexp.captured_substring (1).to_integer, l_ise_regexp.captured_substring (3).to_integer, l_ise_regexp.captured_substring (5).to_integer, l_ise_regexp.captured_substring (7).to_integer)
 					else
 						report_usage_message (a_parser)
-						Exceptions.die (1)
+						exit_code := 1
 					end
 				else
 					report_usage_message (a_parser)
-					Exceptions.die (1)
+					exit_code := 1
 				end
 			end
 			ise_version := l_ise_version
@@ -492,8 +527,8 @@ feature -- Argument parsing
 		do
 			if not a_option.parameters.is_empty then
 				create l_override_settings.make
-				across a_option.parameters as l_settings loop
-					if attached l_settings.item as l_setting then
+				across a_option.parameters as i_setting loop
+					if attached i_setting as l_setting then
 						l_definition := l_setting
 						if l_definition.count > 0 then
 							l_index := l_definition.index_of ('=', 1)
@@ -524,8 +559,8 @@ feature -- Argument parsing
 		do
 			if not a_option.parameters.is_empty then
 				create l_override_capabilities.make
-				across a_option.parameters as l_capabilities loop
-					if attached l_capabilities.item as l_capability then
+				across a_option.parameters as i_capability loop
+					if attached i_capability as l_capability then
 						l_definition := l_capability
 						if l_definition.count > 0 then
 							l_index := l_definition.index_of ('=', 1)
@@ -569,8 +604,8 @@ feature -- Argument parsing
 				Execution_environment.set_variable_value ("GOBO_EIFFEL", l_gobo_eiffel)
 			end
 			if not a_option.parameters.is_empty then
-				across a_option.parameters as l_variables loop
-					if attached l_variables.item as l_variable then
+				across a_option.parameters as i_variable loop
+					if attached i_variable as l_variable then
 						l_definition := l_variable
 						if l_definition.count > 0 then
 							l_index := l_definition.index_of ('=', 1)
@@ -624,6 +659,9 @@ feature -- Error handling
 			create l_error.make (a_parser.full_usage_instruction)
 			error_handler.report_error (l_error)
 		end
+
+	exit_code: INTEGER
+			-- Exit code
 
 invariant
 

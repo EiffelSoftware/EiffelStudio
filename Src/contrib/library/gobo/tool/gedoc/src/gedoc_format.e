@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Documentation Format"
 
-	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -401,7 +401,7 @@ feature {NONE} -- Eiffel config file parsing
 	parse_eiffel_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read Eiffel file `a_file' and keep track of it in
 			-- newly created `last_system' if no error occurred.
-			-- If there is not class filters, then add classes found
+			-- If there is no class filters, then add classes found
 			-- in this file to `input_classes'.
 		require
 			a_file_not_void: a_file /= Void
@@ -446,8 +446,6 @@ feature {NONE} -- Processing
 			-- Prepare `a_system' before being processed.
 		require
 			a_system_not_void: a_system /= Void
-		local
-			l_ast_factory: ET_DECORATED_AST_FACTORY
 		do
 			system_processor.error_handler.set_ise
 			system_processor.error_handler.set_verbose (verbose_flag)
@@ -459,16 +457,23 @@ feature {NONE} -- Processing
 			a_system.set_unique_universe_names
 			a_system.set_attachment_type_conformance_mode (False)
 			a_system.set_target_type_attachment_mode (False)
-			a_system.universes_do_all (agent {ET_UNIVERSE}.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark))
-			create l_ast_factory.make
-			l_ast_factory.set_keep_all_comments (True)
-			system_processor.set_ast_factory (l_ast_factory)
+			set_ast_factory
 			if input_classes.is_empty then
 					-- If `input_classes' is not empty, it means that we got them
-					-- from an Eiffel files as input (`parse_eiffel_file'). In that
+					-- from an Eiffel file as input (`parse_eiffel_file'). In that
 					-- case we do not run Degree 6 to get the list of classes.
 				system_processor.compile_degree_6 (a_system)
 			end
+		end
+
+	set_ast_factory
+			-- Configure the AST factory as needed.
+		local
+			l_ast_factory: ET_DECORATED_AST_FACTORY
+		do
+			create l_ast_factory.make
+			l_ast_factory.set_keep_all_comments (True)
+			system_processor.set_ast_factory (l_ast_factory)
 		end
 
 	build_input_classes (a_system: ET_SYSTEM)
@@ -481,9 +486,9 @@ feature {NONE} -- Processing
 				-- Nothing to be done.
 			elseif attached class_filters as l_class_filters and then not l_class_filters.is_empty then
 				create l_input_classes.make (500)
-				across l_class_filters as l_class_wildcards loop
-					l_last_wildcard := l_class_wildcards.item.pattern
-					a_system.add_classes_by_wildcarded_name_recursive (l_class_wildcards.item, l_input_classes)
+				across l_class_filters as i_class_wildcard loop
+					l_last_wildcard := i_class_wildcard.pattern
+					a_system.add_classes_by_wildcarded_name_recursive (i_class_wildcard, l_input_classes)
 				end
 				l_input_classes.remove (a_system.none_type.base_class)
 				if l_input_classes.is_empty and l_last_wildcard /= Void then
@@ -800,8 +805,13 @@ feature -- Error handling
 			a_wildcard_not_void: a_wildcard /= Void
 		local
 			l_error: UT_MESSAGE
+			l_message: STRING
 		do
-			create l_error.make ("No class matches wildcard '" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_wildcard) + "'.")
+			create l_message.make (50)
+			l_message.append_string_general ("No class matches wildcard '")
+			l_message.append_string_general (a_wildcard)
+			l_message.append_string_general ("'.")
+			create l_error.make (l_message)
 			report_error (l_error)
 		ensure
 			has_error: has_error

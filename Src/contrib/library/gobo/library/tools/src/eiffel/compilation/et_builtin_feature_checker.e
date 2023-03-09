@@ -5,7 +5,7 @@ note
 		"Eiffel built-in feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -489,11 +489,13 @@ feature {NONE} -- Built-in validity
 			if builtin_features.found then
 				l_builtin_features := builtin_features.found_item
 			else
-				create l_builtin_features.make_map (3)
+				create l_builtin_features.make_map (5)
 				l_builtin_features.set_key_equality_tester (feature_name_tester)
 				builtin_features.force_last (l_builtin_features, l_builtin_class_code)
 					-- Functions.
+				register_builtin_feature (tokens.eif_current_object_id_feature_name, Void, current_universe.integer_type, tokens.builtin_identified_routines_eif_current_object_id, l_builtin_features)
 				register_builtin_feature (tokens.eif_id_object_feature_name, <<current_universe.integer_type.type>>, current_universe.detachable_any_type, tokens.builtin_identified_routines_eif_id_object, l_builtin_features)
+				register_builtin_feature (tokens.eif_is_object_id_of_current_feature_name, <<current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_identified_routines_eif_is_object_id_of_current, l_builtin_features)
 				register_builtin_feature (tokens.eif_object_id_feature_name, <<current_universe.any_type.type>>, current_universe.integer_type, tokens.builtin_identified_routines_eif_object_id, l_builtin_features)
 					-- Procedures.
 				register_builtin_feature (tokens.eif_object_id_free_feature_name, <<current_universe.integer_type.type>>, Void, tokens.builtin_identified_routines_eif_object_id_free, l_builtin_features)
@@ -637,7 +639,9 @@ feature {NONE} -- Built-in validity
 				register_builtin_feature (tokens.field_static_type_of_type_feature_name, <<current_universe.integer_type.type, current_universe.integer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_field_static_type_of_type, l_builtin_features)
 				register_builtin_feature (tokens.field_type_of_type_feature_name, <<current_universe.integer_type.type, current_universe.integer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_field_type_of_type, l_builtin_features)
 				register_builtin_feature (tokens.generating_type_of_type_feature_name, <<current_universe.integer_type.type>>, current_universe.string_type, tokens.builtin_ise_runtime_generating_type_of_type, l_builtin_features)
+				register_builtin_feature (tokens.generating_type_8_of_type_feature_name, <<current_universe.integer_type.type>>, current_universe.string_8_type, tokens.builtin_ise_runtime_generating_type_8_of_type, l_builtin_features)
 				register_builtin_feature (tokens.generator_of_type_feature_name, <<current_universe.integer_type.type>>, current_universe.string_type, tokens.builtin_ise_runtime_generator_of_type, l_builtin_features)
+				register_builtin_feature (tokens.generator_8_of_type_feature_name, <<current_universe.integer_type.type>>, current_universe.string_8_type, tokens.builtin_ise_runtime_generator_8_of_type, l_builtin_features)
 				register_builtin_feature (tokens.generic_parameter_count_feature_name, <<current_universe.integer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_generic_parameter_count, l_builtin_features)
 				register_builtin_feature (tokens.in_assertion_feature_name, Void, current_universe.boolean_type, tokens.builtin_ise_runtime_in_assertion, l_builtin_features)
 				register_builtin_feature (tokens.integer_8_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.integer_8_type, tokens.builtin_ise_runtime_integer_8_field, l_builtin_features)
@@ -689,7 +693,7 @@ feature {NONE} -- Built-in validity
 				register_builtin_feature (tokens.reference_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.detachable_any_type, tokens.builtin_ise_runtime_reference_field, l_builtin_features)
 				register_builtin_feature (tokens.reference_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.detachable_any_type, tokens.builtin_ise_runtime_reference_field_at, l_builtin_features)
 				register_builtin_feature (tokens.reference_field_at_offset_feature_name, <<current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.any_type, tokens.builtin_ise_runtime_reference_field_at_offset, l_builtin_features)
-				register_builtin_feature (tokens.storable_version_of_type_feature_name, <<current_universe.integer_type.type>>, current_universe.detachable_string_type, tokens.builtin_ise_runtime_storable_version_of_type, l_builtin_features)
+				register_builtin_feature (tokens.storable_version_of_type_feature_name, <<current_universe.integer_type.type>>, current_universe.detachable_string_8_type, tokens.builtin_ise_runtime_storable_version_of_type, l_builtin_features)
 				register_builtin_feature (tokens.type_conforms_to_feature_name, <<current_universe.integer_type.type, current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_type_conforms_to, l_builtin_features)
 				register_builtin_feature (tokens.type_id_from_name_feature_name, <<current_universe.pointer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_type_id_from_name, l_builtin_features)
 					-- Procedures.

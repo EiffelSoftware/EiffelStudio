@@ -4,17 +4,83 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     162 tests
-    # FAILED:     52 tests
+    # Passed:     347 tests
+    # FAILED:     125 tests
     # Aborted:    0 test
-    # Total:      214 tests
+    # Total:      472 tests
 
 Test Results:</br>
+FAIL:  \[[definition/difo1/test\_bar\_2](definition/difo1/test\_bar\_2)\] test\_failed</br>
+FAIL:  \[[definition/difo1/test\_close\_repeat\_2](definition/difo1/test\_close\_repeat\_2)\] test\_failed</br>
+FAIL:  \[[definition/difo1/test\_for\_all\_2](definition/difo1/test\_for\_all\_2)\] test\_failed</br>
+FAIL:  \[[definition/difo1/test\_open\_repeat\_2](definition/difo1/test\_open\_repeat\_2)\] test\_failed</br>
+FAIL:  \[[definition/difo1/test\_there\_exists\_2](definition/difo1/test\_there\_exists\_2)\] test\_failed</br>
+FAIL:  \[[definition/difo1/test\_tilde\_1](definition/difo1/test\_tilde\_1)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_all\_f\_repeated\_1](definition/dlcf3/test\_export\_all\_f\_repeated\_1)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_all\_redeclared\_1](definition/dlcf3/test\_export\_all\_redeclared\_1)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_all\_repeated\_1](definition/dlcf3/test\_export\_all\_repeated\_1)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_f\_redeclared\_1](definition/dlcf3/test\_export\_f\_redeclared\_1)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_f\_repeated\_1](definition/dlcf3/test\_export\_f\_repeated\_1)\] test\_failed</br>
+FAIL:  \[[semantics/m1ee/test\_standard\_is\_equal\_1](semantics/m1ee/test\_standard\_is\_equal\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbas/test\_expanded\_convert\_to\_2](semantics/mbas/test\_expanded\_convert\_to\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre1/test\_conversion\_expanded\_2](semantics/mbre1/test\_conversion\_expanded\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre1/test\_conversion\_expanded\_3](semantics/mbre1/test\_conversion\_expanded\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_call\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_call\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_once\_call\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_once\_call\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_qualified\_attribute\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_qualified\_attribute\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_special\_item\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_special\_item\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_tuple\_item\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_tuple\_item\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_1](semantics/mbre3/test\_copy\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_2](semantics/mbre3/test\_copy\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_special\_1](semantics/mbre3/test\_copy\_special\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_special\_2](semantics/mbre3/test\_copy\_special\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_tuple\_1](semantics/mbre3/test\_copy\_tuple\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_tuple\_2](semantics/mbre3/test\_copy\_tuple\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_manifest\_tuple\_1](semantics/mbre3/test\_manifest\_tuple\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_manifest\_tuple\_2](semantics/mbre3/test\_manifest\_tuple\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_special\_aliased\_resized\_area\_1](semantics/mbre3/test\_special\_aliased\_resized\_area\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_special\_aliased\_resized\_area\_2](semantics/mbre3/test\_special\_aliased\_resized\_area\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_1](semantics/mbre3/test\_twin\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_2](semantics/mbre3/test\_twin\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_special\_1](semantics/mbre3/test\_twin\_special\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_special\_2](semantics/mbre3/test\_twin\_special\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_1](semantics/mbre3/test\_twin\_tuple\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_2](semantics/mbre3/test\_twin\_tuple\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_agent\_closed\_target\_1](semantics/mugc2/test\_agent\_closed\_target\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_agent\_closed\_target\_2](semantics/mugc2/test\_agent\_closed\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_agent\_open\_target\_1](semantics/mugc2/test\_agent\_open\_target\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_agent\_open\_target\_2](semantics/mugc2/test\_agent\_open\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_agent\_open\_target\_3](semantics/mugc2/test\_agent\_open\_target\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_once\_per\_object\_target\_1](semantics/mugc2/test\_once\_per\_object\_target\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_once\_per\_object\_target\_2](semantics/mugc2/test\_once\_per\_object\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_once\_per\_object\_target\_3](semantics/mugc2/test\_once\_per\_object\_target\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_once\_per\_process\_target\_3](semantics/mugc2/test\_once\_per\_process\_target\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_once\_per\_thread\_target\_3](semantics/mugc2/test\_once\_per\_thread\_target\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_4](semantics/mugc2/test\_qualified\_attribute\_target\_4)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_5](semantics/mugc2/test\_qualified\_attribute\_target\_5)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_6](semantics/mugc2/test\_qualified\_attribute\_target\_6)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_7](semantics/mugc2/test\_qualified\_attribute\_target\_7)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_special\_item\_target\_1](semantics/mugc2/test\_special\_item\_target\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_special\_item\_target\_2](semantics/mugc2/test\_special\_item\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_unqualified\_attribute\_target\_2](semantics/mugc2/test\_unqualified\_attribute\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_unqualified\_attribute\_target\_3](semantics/mugc2/test\_unqualified\_attribute\_target\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_unqualified\_attribute\_target\_4](semantics/mugc2/test\_unqualified\_attribute\_target\_4)\] test\_failed</br>
+FAIL:  \[[semantics/mugc5/test\_agent\_closed\_argument\_expanded\_1](semantics/mugc5/test\_agent\_closed\_argument\_expanded\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc5/test\_agent\_closed\_argument\_expanded\_2](semantics/mugc5/test\_agent\_closed\_argument\_expanded\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc5/test\_agent\_closed\_argument\_expanded\_3](semantics/mugc5/test\_agent\_closed\_argument\_expanded\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mugc5/test\_agent\_open\_argument\_expanded\_1](semantics/mugc5/test\_agent\_open\_argument\_expanded\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc5/test\_agent\_open\_argument\_expanded\_2](semantics/mugc5/test\_agent\_open\_argument\_expanded\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc5/test\_agent\_open\_argument\_expanded\_3](semantics/mugc5/test\_agent\_open\_argument\_expanded\_3)\] test\_failed</br>
+FAIL:  \[[semantics/muon1/test\_once\_per\_object\_3](semantics/muon1/test\_once\_per\_object\_3)\] test\_failed</br>
+FAIL:  \[[semantics/muon1/test\_once\_per\_object\_4](semantics/muon1/test\_once\_per\_object\_4)\] test\_failed</br>
+FAIL:  \[[semantics/muon1/test\_once\_per\_object\_5](semantics/muon1/test\_once\_per\_object\_5)\] test\_failed</br>
+FAIL:  \[[semantics/muon1/test\_once\_per\_object\_6](semantics/muon1/test\_once\_per\_object\_6)\] test\_failed</br>
+FAIL:  \[[semantics/muon3/test\_once\_per\_object\_4](semantics/muon3/test\_once\_per\_object\_4)\] test\_failed</br>
+FAIL:  \[[semantics/muon4/test\_once\_per\_object\_2](semantics/muon4/test\_once\_per\_object\_2)\] test\_failed</br>
+FAIL:  \[[semantics/muon4/test\_once\_per\_object\_4](semantics/muon4/test\_once\_per\_object\_4)\] test\_failed</br>
+FAIL:  \[[validity/gvncc4/test1](validity/gvncc4/test1)\] test\_failed</br>
+FAIL:  \[[validity/gvncc4/test2](validity/gvncc4/test2)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test10](validity/vape1/test10)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test11](validity/vape1/test11)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test13](validity/vape1/test13)\] test\_failed</br>
@@ -32,6 +98,8 @@ FAIL:  \[[validity/vape2/test3](validity/vape2/test3)\] test\_failed</br>
 FAIL:  \[[validity/vape2/test4](validity/vape2/test4)\] test\_failed</br>
 FAIL:  \[[validity/vape2/test5](validity/vape2/test5)\] test\_failed</br>
 FAIL:  \[[validity/vape2/test6](validity/vape2/test6)\] test\_failed</br>
+FAIL:  \[[validity/vfav1/test1](validity/vfav1/test1)\] test\_failed</br>
+FAIL:  \[[validity/vfav1/test2](validity/vfav1/test2)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test8](validity/vfav1/test8)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test9](validity/vfav1/test9)\] test\_failed</br>
 FAIL:  \[[validity/vfav2/test11](validity/vfav2/test11)\] test\_failed</br>
@@ -54,6 +122,9 @@ FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_1](validity/vgmc/test\_labeled\_tu
 FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_2](validity/vgmc/test\_labeled\_tuple\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_3](validity/vgmc/test\_labeled\_tuple\_3)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_4](validity/vgmc/test\_labeled\_tuple\_4)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_5](validity/vgmc/test\_labeled\_tuple\_5)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_6](validity/vgmc/test\_labeled\_tuple\_6)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_7](validity/vgmc/test\_labeled\_tuple\_7)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_1](validity/vgmc/test\_parenthesis\_call\_1)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_2](validity/vgmc/test\_parenthesis\_call\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_3](validity/vgmc/test\_parenthesis\_call\_3)\] test\_failed</br>
@@ -61,4 +132,6 @@ FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_4](validity/vgmc/test\_parenthe
 FAIL:  \[[validity/vgmc/test\_qualified\_anchored\_type\_2](validity/vgmc/test\_qualified\_anchored\_type\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_typed\_agent\_1](validity/vgmc/test\_typed\_agent\_1)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_typed\_agent\_2](validity/vgmc/test\_typed\_agent\_2)\] test\_failed</br>
-FAIL:  \[[validity/vgmc/test\_unary\_call\_1](validity/vgmc/test\_unary\_call\_1)\] test\_failed
+FAIL:  \[[validity/vgmc/test\_unary\_call\_1](validity/vgmc/test\_unary\_call\_1)\] test\_failed</br>
+FAIL:  \[[validity/vncc4/test1](validity/vncc4/test1)\] test\_failed</br>
+FAIL:  \[[validity/vncc4/test2](validity/vncc4/test2)\] test\_failed

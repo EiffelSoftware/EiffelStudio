@@ -5,7 +5,7 @@ note
 		"Getest tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2021, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,6 +75,12 @@ feature {NONE} -- Initialization
 			end
 			if has_attribute (Abort_attribute_name) then
 				command.set_abort (boolean_value (Abort_attribute_name))
+			end
+			if has_attribute (Exit_code_variable_attribute_name) then
+				a_value := attribute_value (Exit_code_variable_attribute_name)
+				if a_value.count > 0 then
+					command.set_exit_code_variable_name (a_value)
+				end
 			end
 				-- attributes (TODO: generalize this):
 			attribute_elements := elements_by_name (Attribute_element_name)
@@ -213,6 +219,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for getest 'execution'
 		once
 			Result := "execution"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Exit_code_variable_attribute_name: STRING
+			-- Name of xml attribute exit_code_variable.
+		once
+			Result := "exit_code_variable"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

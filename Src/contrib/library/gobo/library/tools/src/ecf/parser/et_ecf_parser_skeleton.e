@@ -5,7 +5,7 @@ note
 		"ECF parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2260,10 +2260,10 @@ feature {NONE} -- Element change
 				-- When <assertions> is provided but no value is provided, then it's
 				-- as if the default value had explicitly been specified.
 				-- At least that's the way in works in ISE 17.05.
-			across a_default_options.primary_assertions as l_default_assertions loop
-				l_name := l_default_assertions.key
+			across a_default_options.primary_assertions as i_default_assertion loop
+				l_name := @i_default_assertion.key
 				if not attached a_options.primary_assertion_value (l_name) then
-					a_options.set_primary_assertion_value (l_name, l_default_assertions.item)
+					a_options.set_primary_assertion_value (l_name, i_default_assertion)
 				end
 			end
 		end
@@ -2346,15 +2346,15 @@ feature {NONE} -- Element change
 			elseif l_new_name.value.is_empty then
 				error_handler.report_eate_error (attribute_name (l_new_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 			else
-				a_mappings.search (l_new_name.value)
+				a_mappings.search (l_old_name.value)
 				if a_mappings.found then
-					error_handler.report_eatd_error (attribute_name (l_new_name, a_position_table), attribute_value (l_new_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
+					error_handler.report_eatd_error (attribute_name (l_old_name, a_position_table), attribute_value (l_old_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
 				end
-				a_mappings.force_last (l_old_name.value.as_upper, l_new_name.value.as_upper)
+				a_mappings.force_last (l_new_name.value.as_upper, l_old_name.value.as_upper)
 			end
 		ensure
-			no_void_new_class_mapping: not a_mappings.has_void
-			no_void_old_class_mapping: not a_mappings.has_void_item
+			no_void_old_class_mapping: not a_mappings.has_void
+			no_void_new_class_mapping: not a_mappings.has_void_item
 		end
 
 	add_options (a_options: ET_ECF_OPTIONS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
@@ -2523,11 +2523,24 @@ feature {NONE} -- Element change
 			a_target_not_void: a_target /= Void
 		local
 			l_warning_name: STRING
+			l_warning_value: STRING
 		do
 			if not attached a_element.attribute_by_name (xml_name) as l_name then
 				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_name.value.is_empty then
 				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
+			elseif STRING_.same_case_insensitive (l_name.value, {ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name) and then (not attached a_target.system_config.ecf_version as l_ecf_version or else l_ecf_version >= ecf_1_21_0) then
+				if not attached a_element.attribute_by_name (xml_value) as l_value then
+					error_handler.report_eatm_error (xml_value, element_name (a_element, a_position_table), a_target.system_config)
+				elseif l_value.value.is_empty then
+					error_handler.report_eate_error (attribute_name (l_value, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
+				else
+					l_warning_name := l_name.value
+					if attached a_options.primary_warning_value (l_warning_name) then
+-- TODO: warning: several warnings with the same name! (not reported by ISE: use the last one.)
+					end
+					a_options.set_primary_warning_value (l_warning_name, l_value.value)
+				end
 			elseif not attached a_element.attribute_by_name (xml_enabled) as l_enabled then
 				error_handler.report_eatm_error (xml_enabled, element_name (a_element, a_position_table), a_target.system_config)
 			elseif l_enabled.value.is_empty then
@@ -2537,7 +2550,16 @@ feature {NONE} -- Element change
 				if attached a_options.primary_warning_value (l_warning_name) then
 -- TODO: warning: several warnings with the same name! (not reported by ISE: use the last one.)
 				end
-				a_options.set_primary_warning_value (l_warning_name, l_enabled.value)
+				l_warning_value := l_enabled.value
+				if STRING_.same_case_insensitive (l_warning_name, {ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name) then
+						-- Values of "warning" option "obsolete_feature" have changed in ECF 1.21.0.
+					if STRING_.same_case_insensitive (l_warning_value, {ET_ECF_OPTION_NAMES}.false_option_value) then
+						l_warning_value := {ET_ECF_OPTION_NAMES}.none_option_value
+					elseif STRING_.same_case_insensitive (l_warning_value, {ET_ECF_OPTION_NAMES}.true_option_value) then
+						l_warning_value := {ET_ECF_OPTION_NAMES}.current_option_value
+					end
+				end
+				a_options.set_primary_warning_value (l_warning_name, l_warning_value)
 			end
 		end
 

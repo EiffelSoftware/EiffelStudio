@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders where types are pulled from subsets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,14 +31,14 @@ inherit
 			propagate_argument_operand_dynamic_types,
 			propagate_assignment_dynamic_types,
 			propagate_assignment_attempt_dynamic_types,
-			propagate_builtin_actual_argument_dynamic_types,
-			propagate_builtin_formal_argument_dynamic_types,
-			propagate_builtin_result_dynamic_types,
+			propagate_builtin_dynamic_types,
 			propagate_call_agent_result_dynamic_types,
 			propagate_cap_dynamic_types,
 			propagate_creation_dynamic_type,
+			propagate_extended_attribute_result_dynamic_types,
 			propagate_if_expression_dynamic_types,
 			propagate_inline_agent_result_dynamic_types,
+			propagate_inspect_expression_dynamic_types,
 			propagate_like_argument_dynamic_types,
 			propagate_manifest_string_area_dynamic_type,
 			propagate_named_object_test_dynamic_types,
@@ -56,13 +56,9 @@ feature -- Factory
 			-- New dynamic type set
 		do
 			if a_type.is_expanded then
-				if a_type.is_generic then
-					create {ET_DYNAMIC_PULL_TYPE_SET} Result.make (a_type)
-					dynamic_type_set_count := dynamic_type_set_count + 1
-					Result.set_never_void
-				else
-					Result := a_type
-				end
+					-- Note that for expanded types, there is no type other
+					-- than itself that conforms to it.
+				Result := a_type
 			else
 				create {ET_DYNAMIC_PULL_TYPE_SET} Result.make (a_type)
 				dynamic_type_set_count := dynamic_type_set_count + 1
@@ -1141,63 +1137,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_builtin_actual_argument_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE)
-			-- Propagate dynamic types of `a_source_type_set' to the dynamic type set
-			-- of the formal argument at index `a_formal' in `a_callee' when involved
+	propagate_builtin_dynamic_types (a_source_type_set, a_target_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of `a_source_type_set' to `a_target_type_set'
 			-- in built-in feature `current_dynamic_feature'.
 		local
-			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
 		do
-			l_formal_type_set := a_callee.argument_type_set (a_formal)
-			if l_formal_type_set = Void then
-					-- Internal error: it has already been checked somewhere else
-					-- that there was the same number of actual and formal arguments.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif not l_formal_type_set.is_expanded then
+			if not a_target_type_set.is_expanded then
 				create l_attachment.make (a_source_type_set, current_dynamic_feature, current_dynamic_type)
-				l_formal_type_set.put_source (l_attachment, current_dynamic_system)
-			end
-		end
-
-	propagate_builtin_formal_argument_dynamic_types (a_formal: INTEGER; a_target_type_set: ET_DYNAMIC_TYPE_SET)
-			-- Propagate dynamic types of the dynamic type set of the formal argument
-			-- at index `a_formal' in built-in feature `current_dynamic_feature'
-			-- to `a_target_type_set'.
-		local
-			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
-		do
-			l_formal_type_set := current_dynamic_feature.argument_type_set (a_formal)
-			if l_formal_type_set = Void then
-					-- Internal error: it has already been checked somewhere else
-					-- that the number of formal arguments was as expected.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif not a_target_type_set.is_expanded then
-				create l_attachment.make (l_formal_type_set, current_dynamic_feature, current_dynamic_type)
 				a_target_type_set.put_source (l_attachment, current_dynamic_system)
-			end
-		end
-
-	propagate_builtin_result_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_query: ET_DYNAMIC_FEATURE)
-			-- Propagate dynamic types of `a_source_type_set' to the dynamic type set
-			-- of the result of the built-in feature `a_query'.
-		local
-			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
-			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
-		do
-			l_result_type_set := a_query.result_type_set
-			if l_result_type_set = Void then
-					-- Internal error: it is expected that `a_query' is a query.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				if not l_result_type_set.is_expanded then
-					create l_attachment.make (a_source_type_set, current_dynamic_feature, current_dynamic_type)
-					l_result_type_set.put_source (l_attachment, current_dynamic_system)
-				end
 			end
 		end
 
@@ -1250,6 +1198,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	propagate_extended_attribute_result_dynamic_types (a_result_type_set, a_attribute_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of `a_result_type_set' (the dynamic type
+			-- set of the entity 'Result' in the body of the extended attribute
+			-- `current_dynamic_feature') to `a_attribute_type_set' (the dynamic
+			-- type set of this attribute when accessed from other routines).
+		local
+			l_attachment: ET_DYNAMIC_EXTENDED_ATTRIBUTE_RESULT_ATTACHMENT
+		do
+			if not a_attribute_type_set.is_expanded then
+				create l_attachment.make (a_result_type_set, current_dynamic_feature, current_dynamic_type)
+				a_attribute_type_set.put_source (l_attachment, current_dynamic_system)
+			end
+		end
+
 	propagate_if_expression_dynamic_types (a_if_expression: ET_IF_EXPRESSION; a_sub_expression: ET_EXPRESSION; a_source_type_set, a_target_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate dynamic types of `a_source_type_set' (which is the dynamic
 			-- type set of the sub-expressions `a_sub_expression' within `a_if_expression')
@@ -1289,6 +1251,18 @@ feature {NONE} -- Implementation
 					a_result_type_set.put_source (l_result_attachment, current_dynamic_system)
 				end
 			end
+		end
+
+	propagate_inspect_expression_dynamic_types (a_inspect_expression: ET_INSPECT_EXPRESSION; a_sub_expression: ET_EXPRESSION; a_source_type_set, a_target_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of `a_source_type_set' (which is the dynamic
+			-- type set of the sub-expressions `a_sub_expression' within `a_inspect_expression')
+			-- to the dynamic type set `a_target_type_set' (which is the dynamic
+			-- type set of `a_inspect_expression').
+		local
+			l_attachment: ET_DYNAMIC_INSPECT_EXPRESSION_ATTACHMENT
+		do
+			create l_attachment.make (a_source_type_set, a_inspect_expression, a_sub_expression, current_dynamic_feature, current_dynamic_type)
+			a_target_type_set.put_source (l_attachment, current_dynamic_system)
 		end
 
 	propagate_like_argument_dynamic_types (a_call: ET_FEATURE_CALL_EXPRESSION; a_formal_type_set, an_actual_type_set: ET_DYNAMIC_TYPE_SET)

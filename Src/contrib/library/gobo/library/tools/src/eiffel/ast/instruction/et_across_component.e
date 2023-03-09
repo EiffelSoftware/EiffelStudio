@@ -5,7 +5,7 @@ note
 		"Eiffel across components (either across expressions or across instructions)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2012-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2012-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,12 +18,11 @@ inherit
 
 feature -- Status report
 
-	has_item_cursor: BOOLEAN
-			-- Is the across component of the form 'across ... is ...'
-			-- (as opposed to 'across ... as ...')?
-		do
-			Result := as_keyword.is_is
-		end
+	has_cursor_name: BOOLEAN
+			-- Should `item_name' represent the cursor used for the traversal?
+			-- Otherwise it represents the items being traversed.
+			-- True in case of 'across ... as ...' when 'obsolete_iteration_mode'
+			-- is set to True in the surrounding universe, False otherwise.
 
 feature -- Access
 
@@ -66,6 +65,16 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
+		end
+
+feature -- Status setting
+
+	set_has_cursor_name (b: BOOLEAN)
+			-- Set `has_cursor_name' to `b'.
+		do
+			has_cursor_name := b
+		ensure
+			has_cursor_name_set: has_cursor_name = b
 		end
 
 feature -- Setting

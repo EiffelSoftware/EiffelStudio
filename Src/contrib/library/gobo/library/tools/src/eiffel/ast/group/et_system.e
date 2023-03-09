@@ -5,7 +5,7 @@ note
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,7 +64,6 @@ feature {NONE} -- Initialization
 			name := a_name
 			make_adapted (a_name, Current)
 			set_kernel_types
-			set_default_class_mapping
 		end
 
 feature -- Status report
@@ -117,6 +116,9 @@ feature -- Feature seeds
 	copy_seed: INTEGER
 			-- Seed of feature 'copy' in class "ANY"
 
+	twin_seed: INTEGER
+			-- Seed of feature 'twin' in class "ANY"
+
 	is_equal_seed: INTEGER
 			-- Seed of feature 'is_equal' in class "ANY"
 
@@ -141,6 +143,9 @@ feature -- Feature seeds
 	iteration_cursor_forth_seed: INTEGER
 			-- Seed of feature 'forth' in class "ITERATION_CURSOR"
 
+	special_item_seed: INTEGER
+			-- Seed of feature 'item' in class "SPECIAL"
+
 feature -- Feature seeds setting
 
 	set_default_create_seed (a_seed: INTEGER)
@@ -161,6 +166,16 @@ feature -- Feature seeds setting
 			copy_seed := a_seed
 		ensure
 			copy_seed_set: copy_seed = a_seed
+		end
+
+	set_twin_seed (a_seed: INTEGER)
+			-- Set `twin_seed' to `a_seed'.
+		require
+			a_seed_not_negative: a_seed >= 0
+		do
+			twin_seed := a_seed
+		ensure
+			twin_seed_set: twin_seed = a_seed
 		end
 
 	set_is_equal_seed (a_seed: INTEGER)
@@ -241,6 +256,16 @@ feature -- Feature seeds setting
 			iteration_cursor_forth_seed := a_seed
 		ensure
 			iteration_cursor_forth_seed_set: iteration_cursor_forth_seed = a_seed
+		end
+
+	set_special_item_seed (a_seed: INTEGER)
+			-- Set `special_item_seed' to `a_seed'.
+		require
+			a_seed_not_negative: a_seed >= 0
+		do
+			special_item_seed := a_seed
+		ensure
+			special_item_seed_set: special_item_seed = a_seed
 		end
 
 feature -- Class registration
@@ -343,6 +368,10 @@ feature -- Compilation options
 			-- and comparing NaN with another NaN will yield True and not False
 			-- as usually done in IEEE arithmetic?
 
+	line_generation_mode: BOOLEAN
+			-- Should information about positions of constructs in the Eiffel code
+			-- be included in the generated C code (e.g. using #line clauses)?
+
 	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 
@@ -426,6 +455,14 @@ feature -- Compilation options setting
 			total_order_on_reals_mode := b
 		ensure
 			total_order_on_reals_mode_set: total_order_on_reals_mode = b
+		end
+
+	set_line_generation_mode (b: BOOLEAN)
+			-- Set `line_generation_mode' to `b'.
+		do
+			line_generation_mode := b
+		ensure
+			line_generation_mode_set: line_generation_mode = b
 		end
 
 	set_use_boehm_gc (b: BOOLEAN)

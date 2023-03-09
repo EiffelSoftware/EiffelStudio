@@ -174,21 +174,21 @@ feature -- Basic operations
 			Result.set_item (item + other.item)
 		end
 
-	minus alias "-" (other: like Current): like Current
+	minus alias "-" alias "−" (other: like Current): like Current
 			-- Result of subtracting `other'.
 		do
 			create Result
 			Result.set_item (item - other.item)
 		end
 
-	product alias "*" (other: like Current): like Current
+	product alias "*" alias "×" (other: like Current): like Current
 			-- Product by `other'.
 		do
 			create Result
 			Result.set_item (item * other.item)
 		end
 
-	quotient alias "/" (other: like Current): REAL_64
+	quotient alias "/" alias "÷" (other: like Current): REAL_64
 			-- Division by `other'.
 		require
 			other_exists: other /= Void
@@ -410,7 +410,7 @@ feature -- Conversion
 			Result_valid_count: Result.count = {PLATFORM}.Integer_64_bits // 4
 		end
 
-	to_hex_character: CHARACTER
+	to_hex_character: CHARACTER_8
 			-- `item' converted into a hexadecimal character.
 		require
 			in_bounds: 0 <= item and item <= 15
@@ -451,7 +451,7 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	bit_and alias "&" (i: like Current): like Current
+	bit_and alias "&" alias "⊗" (i: like Current): like Current
 			-- Bitwise "and" between `Current' and `i'.
 		require
 			i_not_void: i /= Void
@@ -462,7 +462,7 @@ feature -- Bit operations
 			bitwise_and_not_void: Result /= Void
 		end
 
-	bit_or alias "|" (i: like Current): like Current
+	bit_or alias "|" alias "⦶" (i: like Current): like Current
 			-- Bitwise "or" between `Current' and `i'.
 		require
 			i_not_void: i /= Void
@@ -473,7 +473,7 @@ feature -- Bit operations
 			bitwise_or_not_void: Result /= Void
 		end
 
-	bit_xor (i: like Current): like Current
+	bit_xor alias "⊕" (i: like Current): like Current
 			-- Bitwise "xor" between `Current' and `i'.
 		require
 			i_not_void: i /= Void
@@ -484,7 +484,7 @@ feature -- Bit operations
 			bitwise_xor_not_void: Result /= Void
 		end
 
-	bit_not: like Current
+	bit_not alias "⊝": like Current
 			-- One's complement of `Current'.
 		do
 			create Result
@@ -497,8 +497,8 @@ feature -- Bit operations
 			-- `Current' shifted from `n' position to right if `n' positive,
 			-- to left otherwise.
 		require
-			n_less_or_equal_to_64: n <= 64
-			n_greater_or_equal_to_minus_64: n >= -64
+			n_less_than_64: n < 64
+			n_greater_than_minus_64: n > -64
 		do
 			if n > 0 then
 				Result := bit_shift_right (n).item
@@ -507,11 +507,11 @@ feature -- Bit operations
 			end
 		end
 
-	bit_shift_left alias "|<<" (n: INTEGER): like Current
+	bit_shift_left alias "|<<" alias "⧀" (n: INTEGER): like Current
 			-- `Current' shifted from `n' position to left.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_64: n <= 64
+			n_less_than_64: n < 64
 		do
 			create Result
 			Result.set_item (item.bit_shift_left (n))
@@ -519,11 +519,11 @@ feature -- Bit operations
 			bit_shift_left_not_void: Result /= Void
 		end
 
-	bit_shift_right alias "|>>" (n: INTEGER): like Current
+	bit_shift_right alias "|>>" alias "⧁" (n: INTEGER): like Current
 			-- `Current' shifted from `n' position to right.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_64: n <= 64
+			n_less_than_64: n < 64
 		do
 			create Result
 			Result.set_item (item.bit_shift_right (n))
@@ -537,7 +537,7 @@ feature -- Bit operations
 			n_nonnegative: n >= 0
 			n_less_than_64: n < 64
 		do
-			Result := item & ((1).to_natural_64 |<< n) /= 0
+			Result := item & ({NATURAL_64} 1 |<< n) /= 0
 		end
 
 	frozen set_bit (b: BOOLEAN; n: INTEGER): NATURAL_64
@@ -548,9 +548,9 @@ feature -- Bit operations
 			n_less_than_64: n < 64
 		do
 			if b then
-				Result := item | ((1).to_natural_64 |<< n)
+				Result := item | ({NATURAL_64} 1 |<< n)
 			else
-				Result := item & ((1).to_natural_64 |<< n).bit_not
+				Result := item & ({NATURAL_64} 1 |<< n).bit_not
 			end
 		end
 
@@ -575,7 +575,7 @@ feature -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

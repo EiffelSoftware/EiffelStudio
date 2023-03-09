@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "References to objects containing a unicode character value"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -86,7 +86,7 @@ feature -- Basic routines
 			valid_result: Result |-| item = incr
 		end
 
-	minus alias "-" (decr: NATURAL_32): CHARACTER_32
+	minus alias "-" alias "−" (decr: NATURAL_32): CHARACTER_32
 			-- Subtract `decr' from the code of `item'.
 		require
 			valid_decrement: (item.natural_32_code.to_integer_64 - decr).is_valid_character_32_code
@@ -195,6 +195,25 @@ feature -- Conversion
 			Result := properties.to_lower (item)
 		end
 
+	to_hexa_digit: NATURAL_8
+			-- Convert a hexadecimal unicode digit character to the corresponding numeric value.
+		require
+			is_hexa_digit
+		local
+			mask: NATURAL_8
+		do
+				-- Convert full-width digits to ASCII.
+			Result := ((natural_32_code & 0x7F) + ((natural_32_code & 0x100) |>> 3)).to_natural_8
+				-- Mask out numbers.
+			Result := Result & 0x4F
+				-- Convert hexadecimal digits.
+			mask := ((Result |<< 1).to_integer_8 |>> 7).to_natural_8
+			Result := (Result & mask.bit_not) | ((Result - 55) & mask)
+		ensure
+			range: 0 <= Result and Result < 16
+			value: ("0123456789ABCDEF") [Result + 1] = as_upper or ("０１２３４５６７８９ＡＢＣＤＥＦ") [Result + 1] = as_upper
+		end
+
 feature -- Status report
 
 	is_character_8: BOOLEAN
@@ -275,7 +294,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

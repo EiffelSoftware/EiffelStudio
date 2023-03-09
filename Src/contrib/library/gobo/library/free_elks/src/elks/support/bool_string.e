@@ -1,16 +1,25 @@
-note
+﻿note
 	description: "Packed boolean strings"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	names: packed_booleans;
-	access: index;
-	representation: array;
-	size: fixed;
+	names: packed_booleans
+	access: index
+	representation: array
+	size: fixed
 	date: "$Date$"
 	revision: "$Revision$"
 
-class BOOL_STRING inherit
+class BOOL_STRING
+
+inherit
+
+	ANY
+		redefine
+			copy, is_equal
+		end
+
+inherit {NONE}
 
 	TO_SPECIAL [BOOLEAN]
 		export
@@ -18,11 +27,6 @@ class BOOL_STRING inherit
 			{BOOL_STRING} area
 		redefine
 			item, at, put, valid_index, copy, is_equal
-		end
-
-	ANY
-		redefine
-			copy, is_equal
 		end
 
 create
@@ -39,7 +43,7 @@ feature -- Initialization
 			make_filled_area (False, n)
 		ensure
 			correct_allocation: count = n
-			all_false: across 1 |..| n as i all not item (i.item) end
+			all_false: ∀ i: 1 |..| n ¦ not item (i)
 		end
 
 feature -- Access
@@ -107,7 +111,7 @@ feature -- Element change
 		do
 			area.fill_with (True, 0, count - 1)
 		ensure
-			all_true: across 1 |..| count as i all item (i.item) end
+			all_true: ∀ i: 1 |..| count ¦ item (i)
 		end
 
 	all_false
@@ -115,13 +119,13 @@ feature -- Element change
 		do
 			area.fill_with (False, 0, count - 1)
 		ensure
-			all_false: across 1 |..| count as i all not item (i.item) end
+			all_false: ∀ i: 1 |..| count ¦ not item (i)
 		end
 
 feature -- Basic operations
 
 	conjuncted alias "and" (other: like Current): like Current
-		-- Logical and of 'Current' and `other'
+			-- Logical and of 'Current' and `other'
 		require
 			other_not_void: other /= Void
 			same_size: other.count = count
@@ -157,7 +161,7 @@ feature -- Basic operations
 		end
 
 	disjuncted_exclusive alias "xor" (other: like Current): like Current
-		-- Logical exclusive or of 'Current' and `other'
+			-- Logical exclusive or of 'Current' and `other'
 		require
 			other_not_void: other /= Void
 			same_size: other.count = count
@@ -221,8 +225,8 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

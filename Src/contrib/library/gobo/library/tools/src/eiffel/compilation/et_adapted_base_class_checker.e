@@ -5,7 +5,7 @@ note
 		"Eiffel adapted base class checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -204,16 +204,20 @@ feature -- Validity checking
 											error_handler.report_giaaa_error
 										end
 									elseif l_found_tuple_label_index /= 0 then
-											-- We have two tuple labels with the same name.
-										set_fatal_error
-										if l_seed = 0 then
-											if not feature_flattening_error_only and not class_interface_error_only then
-												error_handler.report_vgmc0d_error (current_class, current_class_impl, a_name, l_found_tuple_label_index, l_found_adapted_base_class, l_tuple_label_index, l_adapted_base_class)
+										if l_found_tuple_label_index /= l_tuple_label_index or not l_found_adapted_base_class.base_type.same_named_type (l_adapted_base_class.base_type, current_class, current_class) then
+												-- We have two tuple labels with the same name.
+												-- This is not considered as an error if this is the same tuple index and
+												-- the constraint types are the same (with the same type marks).
+											set_fatal_error
+											if l_seed = 0 then
+												if not feature_flattening_error_only and not class_interface_error_only then
+													error_handler.report_vgmc0d_error (current_class, current_class_impl, a_name, l_found_tuple_label_index, l_found_adapted_base_class, l_tuple_label_index, l_adapted_base_class)
+												end
+											else
+													-- Internal error: this should not happen when the seed
+													-- has already been successfully determined.
+												error_handler.report_giaaa_error
 											end
-										else
-												-- Internal error: this should not happen when the seed
-												-- has already been successfully determined.
-											error_handler.report_giaaa_error
 										end
 									end
 								else
@@ -249,7 +253,7 @@ feature -- Validity checking
 			current_class_impl := l_old_current_class_impl
 		ensure
 			in_implementation_class: (a_current_class_impl = a_current_class or a_name.seed = 0) implies a_adapted_base_classes.count = 1
-			not_in_implementation_class: (a_current_class_impl /= a_current_class and a_name.seed /= 0) implies across a_adapted_base_classes as l_adapted_base_classes all a_name.is_tuple_label or else (not l_adapted_base_classes.item.base_class.is_none implies l_adapted_base_classes.item.base_class.seeded_feature (a_name.seed) /= Void) end
+			not_in_implementation_class: (a_current_class_impl /= a_current_class and a_name.seed /= 0) implies across a_adapted_base_classes as i_adapted_base_class all a_name.is_tuple_label or else (not i_adapted_base_class.base_class.is_none implies i_adapted_base_class.base_class.seeded_feature (a_name.seed) /= Void) end
 		end
 
 feature -- Type contexts

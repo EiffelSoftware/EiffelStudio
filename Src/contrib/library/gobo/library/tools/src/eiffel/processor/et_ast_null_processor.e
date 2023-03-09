@@ -5,7 +5,7 @@ note
 		"Eiffel AST null processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -457,6 +457,16 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_explicit_convert_from_expression (a_convert_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+		end
+
+	process_explicit_convert_to_expression (a_convert_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+		end
+
 	process_export_list (a_list: ET_EXPORT_LIST)
 			-- Process `a_list'.
 		do
@@ -657,6 +667,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
+			-- Process `a_expression'.
+		do
+		end
+
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
@@ -664,6 +679,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_invariants (a_list: ET_INVARIANTS)
 			-- Process `a_list'.
+		do
+		end
+
+	process_iteration_cursor (a_iteration_cursor: ET_ITERATION_CURSOR)
+			-- Process `a_iteration_cursor'.
 		do
 		end
 
@@ -1114,6 +1134,16 @@ feature {ET_AST_NODE} -- Processing
 
 	process_void (an_expression: ET_VOID)
 			-- Process `an_expression'.
+		do
+		end
+
+	process_when_expression (a_when_part: ET_WHEN_EXPRESSION)
+			-- Process `a_when_part'.
+		do
+		end
+
+	process_when_expression_list (a_list: ET_WHEN_EXPRESSION_LIST)
+			-- Process `a_list'.
 		do
 		end
 

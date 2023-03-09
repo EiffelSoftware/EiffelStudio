@@ -5,7 +5,7 @@ note
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -134,6 +134,18 @@ create
 	make_vfav3f,
 	make_vfav3g,
 	make_vfav4a,
+	make_vfav4b,
+	make_vfav4c,
+	make_vfav4d,
+	make_vfav4e,
+	make_vfav4f,
+	make_vfav4g,
+	make_vfav4h,
+	make_vfav4i,
+	make_vfav4j,
+	make_vfav4k,
+	make_vfav4l,
+	make_vfav5a,
 	make_vffd4a,
 	make_vffd7a,
 	make_vffd7b,
@@ -177,6 +189,7 @@ create
 	make_vhrc1a,
 	make_vhrc2a,
 	make_vjar0a,
+	make_vjar0b,
 	make_vjaw0a,
 	make_vjaw0b,
 	make_vjaw0c,
@@ -205,6 +218,7 @@ create
 	make_voit2c,
 	make_voit2d,
 	make_voit2e,
+	make_voit3a,
 	make_vomb1a,
 	make_vomb2a,
 	make_vomb2b,
@@ -301,6 +315,7 @@ create
 	make_vvok1c,
 	make_vvok2a,
 	make_vvok2b,
+	make_vwab0a,
 	make_vwbe0a,
 	make_vwce0a,
 	make_vweq0a,
@@ -3386,14 +3401,14 @@ feature {NONE} -- Initialization
 	make_veen9a (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Create a new VEEN-9 error: `an_identifier', appearing in `a_feature'
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
-			-- iteration cursor that is used outside of its scope.
+			-- iteration item that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_identifier_not_void: an_identifier /= Void
-			an_identifier_iteration_cursor: an_identifier.is_iteration_cursor
+			an_identifier_iteration_item: an_identifier.is_iteration_item
 			a_feature_not_void: a_feature /= Void
 		do
 			current_class := a_class
@@ -3424,21 +3439,21 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = iteration cursor
+			-- dollar7: $7 = iteration item
 			-- dollar8: $8 = feature name
 		end
 
 	make_veen9b (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER)
 			-- Create a new VEEN-9 error: `an_identifier', appearing in the invariant
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
-			-- iteration cursor that is used outside of its scope.
+			-- iteration item that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_identifier_not_void: an_identifier /= Void
-			an_identifier_iteration_cursor: an_identifier.is_iteration_cursor
+			an_identifier_iteration_item: an_identifier.is_iteration_item
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -3467,7 +3482,7 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = iteration cursor
+			-- dollar7: $7 = iteration item
 		end
 
 	make_vevi0a (a_class, a_class_impl: ET_CLASS; a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
@@ -5519,8 +5534,573 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = constraint base class
 		end
 
-	make_vfav4a (a_class: ET_CLASS; a_alias_name: ET_ALIAS_NAME)
-			-- Create a new VFAV-4 error: `a_alias_name' has a convert mark
+	make_vfav4a (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: `a_feature' has more than once a bracket alias name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4a_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = alias name
+		end
+
+	make_vfav4b (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: `a_feature' has more than once a parenthesis alias name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4b_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4b_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = alias name
+		end
+
+	make_vfav4c (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: `a_feature' has more than once the same unary operator alias name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4c_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4c_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = alias name
+		end
+
+	make_vfav4d (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: `a_feature' has more than once the same binary operator alias name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_infix: a_alias_name.is_infix
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4d_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4d_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = alias name
+		end
+
+	make_vfav4e (a_class: ET_CLASS; a_parent_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: a bracket alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- parent `a_parent_type' of `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_type_not_void: a_parent_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4e_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4e_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			parameters.put (a_parent_type.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = parent base class
+		end
+
+	make_vfav4f (a_class: ET_CLASS; a_parent_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: a parenthesis alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- parent `a_parent_type' of `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_type_not_void: a_parent_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4f_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4f_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			parameters.put (a_parent_type.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = parent base class
+		end
+
+	make_vfav4g (a_class: ET_CLASS; a_parent_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: a unary operator alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- parent `a_parent_type' of `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_type_not_void: a_parent_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4g_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4g_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			parameters.put (a_parent_type.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = parent base class
+		end
+
+	make_vfav4h (a_class: ET_CLASS; a_parent_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: a binary operator alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- parent `a_parent_type' of `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_type_not_void: a_parent_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_infix: a_alias_name.is_infix
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4h_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4h_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (a_alias_name.alias_lower_name, 8)
+			parameters.put (a_parent_type.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = parent base class
+		end
+
+	make_vfav4i (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-4 error: a bracket alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the
+			-- constraint `a_constraint' of formal parameter `a_formal' in
+			-- `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4i_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4i_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vfav4j (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-4 error: a parenthesis alias name appears more than
+			-- once in the second element of the Rename_pair `a_rename' in the
+			-- constraint `a_constraint' of formal parameter `a_formal' in `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4j_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4j_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vfav4k (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-4 error: a unary operator alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the constraint
+			-- `a_constraint' of formal parameter `a_formal' in `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4k_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4k_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vfav4l (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-4 error: a binary operator alias name appears more than once
+			-- in the second element of the Rename_pair `a_rename' in the constraint
+			-- `a_constraint' of formal parameter `a_formal' in `a_class'.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
+			a_alias_name_is_inefix: a_alias_name.is_infix
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav4l_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4l_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vfav5a (a_class: ET_CLASS; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-5 error: `a_alias_name' has a convert mark
 			-- but it is not binary operator alias.
 			--
 			-- ECMA 367-2, 8.5.26 page 43.
@@ -5534,9 +6114,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := a_alias_name.position
-			code := template_code (vfav4a_template_code)
-			etl_code := vfav4_etl_code
-			default_template := default_message_template (vfav4a_default_template)
+			code := template_code (vfav5a_template_code)
+			etl_code := vfav5_etl_code
+			default_template := default_message_template (vfav5a_default_template)
 			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -7533,8 +8113,8 @@ feature {NONE} -- Initialization
 
 	make_vjar0a (a_class, a_class_impl: ET_CLASS; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE)
 			-- Create a new VJAR error: the source expression of `an_assignment' in `a_class_impl'
-			-- does not conform to its target entity when viewed from `one of its descendants
-			-- a_class' (possibly itself).
+			-- does not conform to its target entity when viewed from one of its descendants
+			-- `a_class' (possibly itself).
 			--
 			-- ETL2: p. 311
 		require
@@ -7553,6 +8133,54 @@ feature {NONE} -- Initialization
 			code := template_code (vjar0a_template_code)
 			etl_code := vjar_etl_code
 			default_template := default_message_template (vjar0a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_source_type.to_text, 7)
+			parameters.put (a_target_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = source type
+			-- dollar8: $8 = target type
+		end
+
+	make_vjar0b (a_class, a_class_impl: ET_CLASS; a_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE)
+			-- Create a new VJAR error: the target entity of `a_assignment' in `a_class_impl', and
+			-- viewed from one of its descendants `a_class' (possibly itself), is a stable
+			-- attribute but the source expression is not guaranteed to be attached.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_assignment_not_void: a_assignment /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_is_named_type: a_source_type.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_is_named_type: a_target_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_assignment.source.position
+			code := template_code (vjar0b_template_code)
+			etl_code := vjar_etl_code
+			default_template := default_message_template (vjar0b_default_template)
 			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -8669,7 +9297,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_voit2a (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_feature: ET_FEATURE)
-			-- Create a new VOIT-2 error: The cursor of `a_iteration_component' has the same
+			-- Create a new VOIT-2 error: The iteration item of `a_iteration_component' has the same
 			-- name as `a_feature' in `a_class'.
 			--
 			-- Not in ECMA.
@@ -8681,7 +9309,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_iteration_component.cursor_name.position
+			position := a_iteration_component.item_name.position
 			code := template_code (voit2a_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2a_default_template)
@@ -8691,7 +9319,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.item_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8704,11 +9332,11 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = iteration cursor name
+			-- dollar6: $6 = iteration item name
 		end
 
 	make_voit2b (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; arg: ET_FORMAL_ARGUMENT)
-			-- Create a new VOIT-2 error: The cursor of `a_iteration_component' has
+			-- Create a new VOIT-2 error: The iteration item of `a_iteration_component' has
 			-- the same name as argument `arg' of an enclosing feature or
 			-- inline agent.
 			--
@@ -8721,7 +9349,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_iteration_component.cursor_name.position
+			position := a_iteration_component.item_name.position
 			code := template_code (voit2b_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2b_default_template)
@@ -8731,7 +9359,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.item_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8744,11 +9372,11 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = iteration cursor name
+			-- dollar6: $6 = iteration item name
 		end
 
 	make_voit2c (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_local: ET_LOCAL_VARIABLE)
-			-- Create a new VOIT-2 error: The cursor of `a_iteration_component' has
+			-- Create a new VOIT-2 error: The iteration item of `a_iteration_component' has
 			-- the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
 			--
@@ -8761,7 +9389,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_iteration_component.cursor_name.position
+			position := a_iteration_component.item_name.position
 			code := template_code (voit2c_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2c_default_template)
@@ -8771,7 +9399,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.item_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8784,7 +9412,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = iteration cursor name
+			-- dollar6: $6 = iteration item name
 		end
 
 	make_voit2d (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_object_test: ET_NAMED_OBJECT_TEST)
@@ -8800,7 +9428,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_iteration_component.cursor_name.position
+			position := a_iteration_component.item_name.position
 			code := template_code (voit2d_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2d_default_template)
@@ -8810,7 +9438,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.item_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8823,12 +9451,13 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = iteration cursor name
+			-- dollar6: $6 = iteration item name
 		end
 
 	make_voit2e (a_class: ET_CLASS; a_iteration_component1, a_iteration_component2: ET_ITERATION_COMPONENT)
-			-- Create a new VUOT-1 error: `a_iteration_component1' appears in the scope
-			-- of the cursor of `a_iteration_component2' with the same cursor name.
+			-- Create a new VUOT-2 error: `a_iteration_component1' appears in the scope
+			-- of the iteration item of `a_iteration_component2' with the same iteration 
+			-- item name.
 			--
 			-- Not in ECMA.
 		require
@@ -8839,7 +9468,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_iteration_component1.cursor_name.position
+			position := a_iteration_component1.item_name.position
 			code := template_code (voit2e_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2e_default_template)
@@ -8849,7 +9478,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_iteration_component1.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component1.item_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8862,7 +9491,45 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = iteration cursor name
+			-- dollar6: $6 = iteration item name
+		end
+
+	make_voit3a (a_class: ET_CLASS; a_iteration_cursor: ET_ITERATION_CURSOR)
+			-- Create a new VUOT-3 error: the name appearing in `a_iteration_cursor`
+			-- is not the name of an iteration item.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_iteration_cursor_not_void: a_iteration_cursor /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_iteration_cursor.item_name.position
+			code := template_code (voit3a_template_code)
+			etl_code := voit3_etl_code
+			default_template := default_message_template (voit3a_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_iteration_cursor.item_name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = iteration item name
 		end
 
 	make_vomb1a (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
@@ -13258,6 +13925,50 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = once indexing term
 		end
 
+	make_vwab0a (a_class, a_class_impl: ET_CLASS; a_attribute: ET_EXTENDED_ATTRIBUTE)
+			-- Create a new VWAB warning: the self-initializing code for
+			-- attribute `a_attribute' appearing in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself),
+			-- will never be executed because its type is either detachable
+			-- or expanded.
+			--
+			-- Not in ECMA, only in ISE (as of ISE 20.03.10.3992).
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.position
+			code := template_code (vwab0a_template_code)
+			etl_code := vwab_etl_code
+			default_template := default_message_template (vwab0a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = name of attribute
+		end
+
 	make_vwbe0a (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
 			-- Create a new VWBE error: the boolean expression `an_expression'
 			-- in `a_class_impl' and viewed from one of its descendants
@@ -15788,8 +16499,8 @@ feature {NONE} -- Implementation
 	veen2g_default_template: STRING = "entity 'Result' appears in the body, postcondition or rescue clause of an inline agent whose associated feature is a procedure."
 	veen8a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
 	veen8b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
-	veen9a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an iteration cursor that is used outside of its scope."
-	veen9b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an iteration cursor that is used outside of its scope."
+	veen9a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an iteration item that is used outside of its scope."
+	veen9b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an iteration item that is used outside of its scope."
 	vevi0a_default_template: STRING = "local entity `$7' declared as attached is used before being initialized."
 	vevi0b_default_template: STRING = "entity 'Result' declared as attached is used before being initialized."
 	vevi0c_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of function `$7'."
@@ -15812,8 +16523,8 @@ feature {NONE} -- Implementation
 	vfav1m_default_template: STRING = "`$7' has a binary Operator alias `$8' but `$9' in $10 is not a query with exactly one argument."
 	vfav1n_default_template: STRING = "`$7' has a unary Operator alias `$8' but `$9' in $10 is not a query with no argument."
 	vfav1p_default_template: STRING = "`$7' has an Operator alias `$8' which can be either unary or binary, but `$9' in $10 is not a query with no argument or exactly one argument."
-	vfav1q_default_template: STRING = "unary Operator alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
-	vfav1r_default_template: STRING = "binary Operator alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vfav1q_default_template: STRING = "unary Operator alias `$7' appears on the right-hand-side of more than once rename pair in generic constraint $8."
+	vfav1r_default_template: STRING = "binary Operator alias `$7' appears on the right-hand-side of more than once rename pair in generic constraint $8."
 	vfav1s_default_template: STRING = "`$7' is already the unary Operator alias of feature `$8' in generic constraint $9."
 	vfav1t_default_template: STRING = "`$7' is already the binary Operator alias of feature `$8' in generic constraint $9."
 	vfav2a_default_template: STRING = "feature `$7' has a Bracket alias `$8' but is not a query with at least one argument."
@@ -15821,16 +16532,28 @@ feature {NONE} -- Implementation
 	vfav2c_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same Bracket alias `$8'."
 	vfav2d_default_template: STRING = "features `$7' inherited from $9 and `$10' inherited from $12 have both the same Bracket alias `$8'."
 	vfav2e_default_template: STRING = "`$7' has a Bracket alias `$8' but `$9' in $10 is not a query with at least one argument."
-	vfav2f_default_template: STRING = "Bracket alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vfav2f_default_template: STRING = "Bracket alias `$7' appears on the right-hand-side of more than once rename pair in generic constraint $8."
 	vfav2g_default_template: STRING = "`$7' is already the Bracket alias of feature `$8' in generic constraint $9."
 	vfav3a_default_template: STRING = "feature `$7' has a Parenthesis alias `$8' but is not a feature with at least one argument."
 	vfav3b_default_template: STRING = "features `$7' and `$9' have both the same Parenthesis alias `$8'."
 	vfav3c_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same Parenthesis alias `$8'."
 	vfav3d_default_template: STRING = "features `$7' inherited from $9 and `$10' inherited from $12 have both the same Parenthesis alias `$8'."
 	vfav3e_default_template: STRING = "`$7' has a Parenthesis alias `$8' but `$9' in $10 is not a feature with at least one argument."
-	vfav3f_default_template: STRING = "Parenthesis alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vfav3f_default_template: STRING = "Parenthesis alias `$7' appears on the right-hand-side of more than once rename pair in generic constraint $8."
 	vfav3g_default_template: STRING = "`$7' is already the Parenthesis alias of feature `$8' in generic constraint $9."
-	vfav4a_default_template: STRING = "`$7' has a convert mark but it is not a binary operator alias."
+	vfav4a_default_template: STRING = "Bracket alias `$8' appears more than once in the name of feature `$7'."
+	vfav4b_default_template: STRING = "Parenthesis alias `$8' appears more than once in the name of feature `$7'."
+	vfav4c_default_template: STRING = "unary Operator alias `$8' appears more than once in the name of feature `$7'."
+	vfav4d_default_template: STRING = "binary Operator alias `$8' appears more than once in the name of feature `$7'."
+	vfav4e_default_template: STRING = "Bracket alias `$8' appears more than once for feature `$7' in the Rename clause of parent $9."
+	vfav4f_default_template: STRING = "Parenthesis alias `$8' appears more than once for feature `$7' in the Rename clause of parent $9."
+	vfav4g_default_template: STRING = "unary Operator alias `$8' appears more than once for feature `$7' in the Rename clause of parent $9."
+	vfav4h_default_template: STRING = "binary Operator alias `$8' appears more than once for feature `$7' in the Rename clause of parent $9."
+	vfav4i_default_template: STRING = "Bracket alias `$7' appears more than once on the right-hand-side of the rename pair in generic constraint $8."
+	vfav4j_default_template: STRING = "Parenthesis alias `$7' appears more than once on the right-hand-side of the rename pair in generic constraint $8."
+	vfav4k_default_template: STRING = "unary Operator alias `$7' appears more than once on the right-hand-side of the rename pair in generic constraint $8."
+	vfav4l_default_template: STRING = "binary Operator alias `$7' appears more than once on the right-hand-side of the rename pair in generic constraint $8."
+	vfav5a_default_template: STRING = "`$7' has a convert mark but it is not a binary operator alias."
 	vffd4a_default_template: STRING = "deferred feature `$7' is marked as frozen."
 	vffd7a_default_template: STRING = "feature `$7' is a once funtion but its type contains an anchored type."
 	vffd7b_default_template: STRING = "feature `$7' is a once funtion but its type contains a formal generic parameter."
@@ -15852,8 +16575,8 @@ feature {NONE} -- Implementation
 	vggc2a_default_template: STRING = "`$7' is not the final name of a feature in generic constraint $8."
 	vggc2b_default_template: STRING = "generic constraint $7 is a formal generic parameter and therefore cannot have a rename clause."
 	vggc2c_default_template: STRING = "generic constraint $7 cannot have a rename clause."
-	vggc2d_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than one rename pair in generic constraint $8."
-	vggc2e_default_template: STRING = "feature name `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vggc2d_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than once rename pair in generic constraint $8."
+	vggc2e_default_template: STRING = "feature name `$7' appears on the right-hand-side of more than once rename pair in generic constraint $8."
 	vggc2f_default_template: STRING = "`$7' is already the final name of a feature in generic constraint $8."
 	vggc3a_default_template: STRING = "`$7' is not the final name of a procedure in generic constraint's base class $8."
 	vggc3b_default_template: STRING = "`$7' is not the final name of a procedure in the base class of any of generic constraints $8."
@@ -15872,8 +16595,9 @@ feature {NONE} -- Implementation
 	vhpr2a_default_template: STRING = "conforming inheritance from frozen class $7."
 	vhpr3a_default_template: STRING = "invalid type '$7' in parent clause."
 	vhrc1a_default_template: STRING = "`$7' is not the final name of a feature in $8."
-	vhrc2a_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than one rename pair."
+	vhrc2a_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than once rename pair."
 	vjar0a_default_template: STRING = "the source of the assignment (of type '$7') does not conform nor convert to its target entity (of type '$8')."
+	vjar0b_default_template: STRING = "the target entity of the assignment is a stable attribute but the source (of type '$7') is not attached."
 	vjaw0a_default_template: STRING = "feature `$7' is not an attribute. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0b_default_template: STRING = "`$7' is the name of a formal argument of feature `$8'. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0c_default_template: STRING = "`$7' is the name of a formal argument of an inline agent. A Writable is either a local variable (including Result) or an attribute."
@@ -15896,12 +16620,13 @@ feature {NONE} -- Implementation
 	vmss1a_default_template: STRING = "`$7' is not the final name of a feature inherited from $8."
 	vmss2a_default_template: STRING = "feature name `$7' appears twice in the Select subclause of parent $8."
 	vmss3a_default_template: STRING = "feature name `$7' appears in the Select subclause of parent $8 but is not replicated."
-	voit1a_default_template: STRING = "the type '$7' of the across iterable expression does not conform to any generic derivation of ITERABLE."
-	voit2a_default_template: STRING = "iteration cursor name '$6' is also the final name of a feature."
-	voit2b_default_template: STRING = "iteration cursor name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
-	voit2c_default_template: STRING = "iteration cursor name '$6' is also the name of a local variable of an enclosing feature or inline agent."
-	voit2d_default_template: STRING = "iteration with cursor name '$6' appears in the scope of an object-test local with the same name."
-	voit2e_default_template: STRING = "iteration with cursor name '$6' appears in the scope of another across cursor with the same name."
+	voit1a_default_template: STRING = "the type '$7' of the iterable expression does not conform to any generic derivation of ITERABLE."
+	voit2a_default_template: STRING = "iteration item name '$6' is also the final name of a feature."
+	voit2b_default_template: STRING = "iteration item name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
+	voit2c_default_template: STRING = "iteration item name '$6' is also the name of a local variable of an enclosing feature or inline agent."
+	voit2d_default_template: STRING = "iteration with item name '$6' appears in the scope of an object-test local with the same name."
+	voit2e_default_template: STRING = "iteration with item name '$6' appears in the scope of another iteration item with the same name."
+	voit3a_default_template: STRING = "'$6' appearing in '@$6' is not the name of an iteration item."
 	vomb1a_default_template: STRING = "inspect expression of type '$7' different from INTEGER or CHARACTER."
 	vomb2a_default_template: STRING = "inspect constant of type '$7' different from type '$8' of inspect expression."
 	vomb2b_default_template: STRING = "inspect choice `$7' is not a constant attribute."
@@ -15920,8 +16645,8 @@ feature {NONE} -- Implementation
 	vpir1d_default_template: STRING = "local variable name '$7' in inline agent is also the name of a local variable of an enclosing feature or inline agent."
 	vpir1e_default_template: STRING = "argument name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
 	vpir1f_default_template: STRING = "local variable name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
-	vpir1g_default_template: STRING = "argument name '$7' in inline agent is also the name of an iteration cursor of an enclosing feature or inline agent whose scope contains the inline agent."
-	vpir1h_default_template: STRING = "local variable name '$7' in inline agent is also the name of an iteration cursor of an enclosing feature or inline agent whose scope contains the inline agent."
+	vpir1g_default_template: STRING = "argument name '$7' in inline agent is also the name of an iteration item of an enclosing feature or inline agent whose scope contains the inline agent."
+	vpir1h_default_template: STRING = "local variable name '$7' in inline agent is also the name of an iteration item of an enclosing feature or inline agent whose scope contains the inline agent."
 	vpir3a_default_template: STRING = "inline agents cannot be of the once form."
 	vpir3b_default_template: STRING = "inline agents cannot be of the external form."
 	vqmc1a_default_template: STRING = "boolean constant attribute `$7' is not declared of type BOOLEAN."
@@ -15985,7 +16710,7 @@ feature {NONE} -- Implementation
 	vuot1b_default_template: STRING = "object-test local name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
 	vuot1c_default_template: STRING = "object-test local name '$6' is also the name of a local variable of an enclosing feature or inline agent."
 	vuot1d_default_template: STRING = "object-test with local name '$6' appears in the scope of another object-test local with the same name."
-	vuot1e_default_template: STRING = "object-test with local name '$6' appears in the scope of an iteration cursor with the same name."
+	vuot1e_default_template: STRING = "object-test with local name '$6' appears in the scope of an iteration item with the same name."
 	vuot1f_default_template: STRING = "the scope of object-test with local name '$6' overlaps with the scope of another object-test with the same local name."
 	vuot3a_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the same feature `$7' or in the same inline agent."
 	vuot3b_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the invariant or in the same inline agent."
@@ -15998,6 +16723,7 @@ feature {NONE} -- Implementation
 	vvok1c_default_template: STRING = "indexing once status %"$6%" and %"$7%" cannot be combined."
 	vvok2a_default_template: STRING = "once key %"$6%" is not supported. The supported once keys are %"THREAD%", %"PROCESS%" and %"OBJECT%"."
 	vvok2b_default_template: STRING = "indexing once status %"$6%" is not supported. Use one of the supported once keys %"THREAD%", %"PROCESS%" or %"OBJECT%"."
+	vwab0a_default_template: STRING = "self-initializing code for attribue `$7' will never be executed because its type is either detachable or expanded."
 	vwbe0a_default_template: STRING = "boolean expression of non-BOOLEAN type '$7'."
 	vwce0a_default_template: STRING = "expressions of types '$8' and '$7' in branches of conditional expression do not conform to each other."
 	vweq0a_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms nor converts to the other."
@@ -16098,6 +16824,7 @@ feature {NONE} -- Implementation
 	vfav2_etl_code: STRING = "VFAV-2"
 	vfav3_etl_code: STRING = "VFAV-3"
 	vfav4_etl_code: STRING = "VFAV-4"
+	vfav5_etl_code: STRING = "VFAV-5"
 	vffd4_etl_code: STRING = "VFFD-4"
 	vffd7_etl_code: STRING = "VFFD-7"
 	vhpr1_etl_code: STRING = "VHPR-1"
@@ -16134,6 +16861,7 @@ feature {NONE} -- Implementation
 	vmss3_etl_code: STRING = "VMSS-3"
 	voit1_etl_code: STRING = "VOIT-1"
 	voit2_etl_code: STRING = "VOIT-2"
+	voit3_etl_code: STRING = "VOIT-3"
 	vomb1_etl_code: STRING = "VOMB-1"
 	vomb2_etl_code: STRING = "VOMB-2"
 	vpca1_etl_code: STRING = "VPCA-1"
@@ -16178,6 +16906,7 @@ feature {NONE} -- Implementation
 	vuta2_etl_code: STRING = "VUTA-2"
 	vvok1_etl_code: STRING = "VVOK-1"
 	vvok2_etl_code: STRING = "VVOK-2"
+	vwab_etl_code: STRING = "VWAB"
 	vwbe_etl_code: STRING = "VWBE"
 	vwce_etl_code: STRING = "VWCE"
 	vweq_etl_code: STRING = "VWEQ"
@@ -16340,6 +17069,18 @@ feature {NONE} -- Implementation
 	vfav3f_template_code: STRING = "vfav3f"
 	vfav3g_template_code: STRING = "vfav3g"
 	vfav4a_template_code: STRING = "vfav4a"
+	vfav4b_template_code: STRING = "vfav4b"
+	vfav4c_template_code: STRING = "vfav4c"
+	vfav4d_template_code: STRING = "vfav4d"
+	vfav4e_template_code: STRING = "vfav4e"
+	vfav4f_template_code: STRING = "vfav4f"
+	vfav4g_template_code: STRING = "vfav4g"
+	vfav4h_template_code: STRING = "vfav4h"
+	vfav4i_template_code: STRING = "vfav4i"
+	vfav4j_template_code: STRING = "vfav4j"
+	vfav4k_template_code: STRING = "vfav4k"
+	vfav4l_template_code: STRING = "vfav4l"
+	vfav5a_template_code: STRING = "vfav5a"
 	vffd4a_template_code: STRING = "vffd4a"
 	vffd5a_template_code: STRING = "vffd5a"
 	vffd6a_template_code: STRING = "vffd6a"
@@ -16386,6 +17127,7 @@ feature {NONE} -- Implementation
 	vhrc1a_template_code: STRING = "vhrc1a"
 	vhrc2a_template_code: STRING = "vhrc2a"
 	vjar0a_template_code: STRING = "vjar0a"
+	vjar0b_template_code: STRING = "vjar0b"
 	vjaw0a_template_code: STRING = "vjaw0a"
 	vjaw0b_template_code: STRING = "vjaw0b"
 	vjaw0c_template_code: STRING = "vjaw0c"
@@ -16414,6 +17156,7 @@ feature {NONE} -- Implementation
 	voit2c_template_code: STRING = "voit2c"
 	voit2d_template_code: STRING = "voit2d"
 	voit2e_template_code: STRING = "voit2e"
+	voit3a_template_code: STRING = "voit3a"
 	vomb1a_template_code: STRING = "vomb1a"
 	vomb2a_template_code: STRING = "vomb2a"
 	vomb2b_template_code: STRING = "vomb2b"
@@ -16512,6 +17255,7 @@ feature {NONE} -- Implementation
 	vvok1c_template_code: STRING = "vvok1c"
 	vvok2a_template_code: STRING = "vvok2a"
 	vvok2b_template_code: STRING = "vvok2b"
+	vwab0a_template_code: STRING = "vwab0a"
 	vwbe0a_template_code: STRING = "vwbe0a"
 	vwce0a_template_code: STRING = "vwce0a"
 	vweq0a_template_code: STRING = "vweq0a"

@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,13 +40,9 @@ feature {NONE} -- Initialization
 			queries := empty_features
 			procedures := empty_features
 			create conforming_ancestors.make (a_class.conforming_ancestors.count)
-			if is_expanded then
-				set_alive
-			end
 		ensure
 			base_type_set: base_type = a_type
 			base_class_set: base_class = a_class
-			expanded_type_alive: is_expanded implies is_alive
 		end
 
 feature -- Status report
@@ -54,6 +50,7 @@ feature -- Status report
 	is_alive: BOOLEAN
 			-- Is current type considered alive?
 			-- (e.g. instances of this type may be created)
+
 
 	is_agent_type: BOOLEAN
 			-- Is current type an agent type?
@@ -71,6 +68,27 @@ feature -- Status report
 			-- Is current type a TUPLE type?
 		do
 			-- Result := False
+		end
+
+	is_boolean: BOOLEAN
+			-- Is current type the "BOOLEAN" type in its universe?
+		do
+			Result := base_class.universe.boolean_type.same_named_type (base_type, base_type, base_type)
+		end
+
+	is_self_initializing: BOOLEAN = True
+			-- Is current type self-initializing?
+			--
+			-- It is currently limited to detachable types and expanded types
+			-- in order to match ISE's implementation (as of ISE 20.03.10.3992).
+			-- The ECMA standard says that attached type with 'default_create'
+			-- as creation procedure are also self-initializing (see DEST,
+			-- section 8.19.13, page 106 of ECMA-367 3-36).
+
+	is_attached: BOOLEAN
+			-- Is current type attached?
+		do
+			Result := is_expanded
 		end
 
 	has_static: BOOLEAN
@@ -204,9 +222,8 @@ feature -- Features
 			-- Does current type contain attributes whose types are declared of reference type?
 
 	has_nested_reference_attributes: BOOLEAN
-			-- Does current type contain attributes whose types are declared of reference type,
-			-- or recursively does it contain expanded attributes whose type contains attributes
-			-- of reference type?
+			-- Does current type contain reference attributes or recursively does it contain
+			-- expanded attributes whose type contains reference attributes?
 		local
 			i, nb: INTEGER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -216,9 +233,10 @@ feature -- Features
 			elseif is_basic then
 				Result := False
 			else
-					-- Look at the attributes of the types of expanded attributes, if any.
+					-- Look for reference attributes in the types of
+					-- expanded attributes, if any.
 					--
-					-- We should not have cyclic recursive enclosed expanded objects.
+					-- We should not have cyclic recursive expanded objects.
 					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
 					-- or by another proper handling if ECMA relaxed this rule
 					-- (through the introduction of attached types). But in case
@@ -230,15 +248,8 @@ feature -- Features
 					if attached queries.item (i).result_type_set as l_result_type_set then
 						l_type := l_result_type_set.static_type.primary_type
 						if l_type.is_expanded and then l_type.has_nested_reference_attributes then
-								-- Note that for non-generic expanded types, there is no type other
-								-- than itself that conforms to it. However for generic expanded types,
-								-- other generic derivations of the same generic class may conform to
-								-- it. But it is OK to take only the static type of the expanded attribute
-								-- into account even in that case, and we won't miss any sub-attribute
-								-- of reference types in conforming expanded generic derivations.
-								-- Indeed, if that static type has expanded attributes, then conforming
-								-- generic derivations cannot have these attributes of reference
-								-- type (because no reference type conforms to an expanded type).
+								-- Note that for expanded types, there is no type other
+								-- than itself that conforms to it.
 							Result := True
 							i := nb + 1
 						else
@@ -253,14 +264,165 @@ feature -- Features
 			end
 		end
 
-	has_generic_expanded_attributes: BOOLEAN
-			-- Does current type contain attributes whose types are declared of generic expanded type?
-			-- Note that for non-generic expanded types, there is no type other than itself
-			-- that conforms to it. Therefore we don't need to keep the type-id in its instances.
-			-- However for generic expanded types, other generic derivations of the same generic
-			-- class may conform to it. So as for reference types, we need to keep the type-id
-			-- in its instances. That's why we need to know whether the current type has such
-			-- kind of attributes.
+	has_once_per_object_routines: BOOLEAN
+			-- Does current type contain once-per-object routines?
+
+	has_reference_fields: BOOLEAN
+			-- Does current type contain reference attributes or once-per-object routines?
+			-- Note that there is a reference field (like a pseudo attribute) to store once-per-object data.
+		do
+			Result := has_reference_attributes or has_once_per_object_routines
+		end
+
+	has_nested_reference_fields: BOOLEAN
+			-- Does current type contain reference fields, or recursively does it have
+			-- expanded attributes whose types contain reference fields?
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if has_reference_fields then
+				Result := True
+			elseif is_basic then
+				Result := False
+			else
+					-- Look for reference fields in the types of expanded attributes, if any.
+					--
+					-- We should not have cyclic recursive expanded objects.
+					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
+					-- or by another proper handling if ECMA relaxed this rule
+					-- (through the introduction of attached types). But in case
+					-- such a cyclic recursion has slipped through, we temporarily
+					-- set `has_reference_attributes' to True to break that cycle.
+				has_reference_attributes := True
+				nb := attribute_count
+				from i := 1 until i > nb loop
+					if attached queries.item (i).result_type_set as l_result_type_set then
+						l_type := l_result_type_set.static_type.primary_type
+						if l_type.is_expanded and then l_type.has_nested_reference_fields then
+								-- Note that for expanded types, there is no type other
+								-- than itself that conforms to it.
+							Result := True
+							i := nb + 1
+						else
+							i := i + 1
+						end
+					else
+							-- Should never happen: queries have a result type set.
+						i := i + 1
+					end
+				end
+				has_reference_attributes := False
+			end
+		end
+
+	has_redefined_copy_routine: BOOLEAN
+			-- Is the version of routine 'copy' in current type different
+			-- from the one in class 'ANY'?
+
+	has_nested_custom_standard_copy_routine: BOOLEAN
+			-- Does current type contains fields, or recursively does it have
+			-- expanded attributes which contain fields, which require special
+			-- treatment in the implementation of routine 'standard_copy'?
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if has_once_per_object_routines then
+				Result := True
+			elseif is_basic then
+				Result := False
+			else
+					-- We should not have cyclic recursive expanded objects.
+					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
+					-- or by another proper handling if ECMA relaxed this rule
+					-- (through the introduction of attached types). But in case
+					-- such a cyclic recursion has slipped through, we temporarily
+					-- set `has_once_per_object_routines' to True to break that cycle.
+				has_once_per_object_routines := True
+				nb := attribute_count
+				from i := 1 until i > nb loop
+					if attached queries.item (i).result_type_set as l_result_type_set then
+						l_type := l_result_type_set.static_type.primary_type
+						if l_type.is_expanded then
+							if l_type.has_redefined_copy_routine then
+								Result := True
+								i := nb + 1
+							elseif l_type.has_nested_custom_standard_copy_routine then
+								Result := True
+								i := nb + 1
+							else
+								i := i + 1
+							end
+						elseif l_result_type_set.has_expanded then
+								-- Reference attribute which may be attached to an object with copy semantics.
+							Result := True
+							i := nb + 1
+						else
+							i := i + 1
+						end
+					else
+							-- Should never happen: queries have a result type set.
+						i := i + 1
+					end
+				end
+				has_once_per_object_routines := False
+			end
+		end
+
+	has_redefined_is_equal_routine: BOOLEAN
+			-- Is the version of routine 'is_equal' in current type different
+			-- from the one in class 'ANY'?
+
+	has_nested_custom_standard_is_equal_routine: BOOLEAN
+			-- Does current type contains fields, or recursively does it have
+			-- expanded attributes which contain fields, which require special
+			-- treatment in the implementation of routine 'standard_is_equal'?
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if has_once_per_object_routines then
+				Result := True
+			elseif is_basic then
+				Result := False
+			else
+					-- We should not have cyclic recursive expanded objects.
+					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
+					-- or by another proper handling if ECMA relaxed this rule
+					-- (through the introduction of attached types). But in case
+					-- such a cyclic recursion has slipped through, we temporarily
+					-- set `has_once_per_object_routines' to True to break that cycle.
+				has_once_per_object_routines := True
+				nb := attribute_count
+				from i := 1 until i > nb loop
+					if attached queries.item (i).result_type_set as l_result_type_set then
+						l_type := l_result_type_set.static_type.primary_type
+						if l_type.is_expanded then
+							if l_type.has_redefined_is_equal_routine then
+								Result := True
+								i := nb + 1
+							elseif l_type.has_nested_custom_standard_is_equal_routine then
+								Result := True
+								i := nb + 1
+							else
+								i := i + 1
+							end
+						elseif l_result_type_set.has_expanded then
+								-- Reference attribute which may be attached to an object with copy semantics.
+							Result := True
+							i := nb + 1
+						else
+							i := i + 1
+						end
+					else
+							-- Should never happen: queries have a result type set.
+						i := i + 1
+					end
+				end
+				has_once_per_object_routines := False
+			end
+		end
 
 	queries: ET_DYNAMIC_FEATURE_LIST
 			-- Queries executed at run-time, if any
@@ -297,7 +459,7 @@ feature -- Features
 				if Result.is_attribute then
 					put_attribute (Result, a_system)
 				else
-					queries.force_last (Result)
+					put_function (Result)
 				end
 			end
 		ensure
@@ -330,7 +492,7 @@ feature -- Features
 			else
 				Result := new_dynamic_procedure (a_procedure, a_system)
 				register_feature_seeds (Result, l_procedures_by_seed)
-				procedures.force_last (Result)
+				put_procedure (Result)
 			end
 		ensure
 			dynamic_procedure_not_void: Result /= Void
@@ -364,7 +526,7 @@ feature -- Features
 				if Result.is_attribute then
 					put_attribute (Result, a_system)
 				else
-					queries.force_last (Result)
+					put_function (Result)
 				end
 			end
 		ensure
@@ -395,7 +557,7 @@ feature -- Features
 			elseif attached base_class.seeded_procedure (a_seed) as l_procedure then
 				Result := new_dynamic_procedure (l_procedure, a_system)
 				register_feature_seeds (Result, l_procedures_by_seed)
-				procedures.force_last (Result)
+				put_procedure (Result)
 			end
 		ensure
 			is_procedure: Result /= Void implies Result.is_procedure
@@ -552,7 +714,9 @@ feature {NONE} -- Features
 				queries.force_last (queries.item (attribute_count))
 				queries.put (an_attribute, attribute_count)
 			end
-			if not attached an_attribute.result_type_set as l_result_type_set then
+			if has_reference_attributes then
+				-- Already set.
+			elseif not attached an_attribute.result_type_set as l_result_type_set then
 					-- Should never happen. The precondition says that `an_attribute'
 					-- is a query, an therefore has a result type set.
 				check is_query: False end
@@ -560,8 +724,6 @@ feature {NONE} -- Features
 				l_type := l_result_type_set.static_type.primary_type
 				if not l_type.is_expanded then
 					has_reference_attributes := True
-				elseif l_type.is_generic then
-					has_generic_expanded_attributes := True
 				end
 			end
 			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
@@ -570,7 +732,43 @@ feature {NONE} -- Features
 		ensure
 			one_more: attribute_count = old attribute_count + 1
 			reference_attribute: (attached an_attribute.result_type_set as l_result_type_set and then not l_result_type_set.is_expanded) implies has_reference_attributes
-			generic_expanded_attribute: (attached an_attribute.result_type_set as l_result_type_set and then l_result_type_set.is_expanded and then l_result_type_set.static_type.primary_type.is_generic) implies has_generic_expanded_attributes
+		end
+
+	put_function (a_function: ET_DYNAMIC_FEATURE)
+			-- Add `a_function' to `queries'.
+		require
+			a_function_not_void: a_function /= Void
+			is_function: not a_function.is_attribute
+			is_query: a_function.is_query
+		do
+			queries.force_last (a_function)
+			if not has_once_per_object_routines then
+				has_once_per_object_routines := a_function.is_once_per_object
+			end
+			if a_function.is_is_equal_routine then
+				-- Note: As of EiffelBase 20.11.10.5048, 'is_equal' in classes such as "INTEGER_32"
+				-- is redefined as 'Result := other.item = item' instead of using the built-in version
+				-- from "ANY". This introduces an infinite recursive call. Hence the test for 'is_basic'
+				-- below.
+-- TODO: check that the version of 'is_equal' redefined in basic types is equalivalent to the
+-- built-in one from "ANY.is_equal".
+				has_redefined_is_equal_routine := not a_function.is_builtin_any_is_equal and then not is_basic
+			end
+		end
+
+	put_procedure (a_procedure: ET_DYNAMIC_FEATURE)
+			-- Add `a_procedure' to `procedures'.
+		require
+			a_procedure_not_void: a_procedure /= Void
+			is_procedure: a_procedure.is_procedure
+		do
+			procedures.force_last (a_procedure)
+			if not has_once_per_object_routines then
+				has_once_per_object_routines := a_procedure.is_once_per_object
+			end
+			if a_procedure.is_copy_routine then
+				has_redefined_copy_routine := not a_procedure.is_builtin_any_copy
+			end
 		end
 
 	queries_by_seed: detachable DS_HASH_TABLE [ET_DYNAMIC_FEATURE, INTEGER]
@@ -614,6 +812,7 @@ feature -- Calls
 		do
 			a_call.set_next (query_calls)
 			query_calls := a_call
+			a_call.current_feature.put_query_call (a_call)
 		end
 
 	put_procedure_call (a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL)
@@ -623,6 +822,7 @@ feature -- Calls
 		do
 			a_call.set_next (procedure_calls)
 			procedure_calls := a_call
+			a_call.current_feature.put_procedure_call (a_call)
 		end
 
 feature -- Equality expressions

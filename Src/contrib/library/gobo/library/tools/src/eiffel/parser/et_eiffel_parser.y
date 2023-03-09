@@ -6,7 +6,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -70,6 +70,9 @@ create
 %token <detachable ET_MANIFEST_STRING> E_STRAND E_STROR E_STRXOR E_STRANDTHEN E_STRORELSE
 %token <detachable ET_MANIFEST_STRING> E_STRDOTDOT E_STRBRACKET E_STRPARENTHESIS
 %token <detachable ET_MANIFEST_STRING> E_STRIMPLIES E_STRFREEOP E_STRNOT E_STRING
+%token <detachable ET_MANIFEST_STRING> E_STRANDSYMBOL E_STRORSYMBOL E_STRXORSYMBOL 
+%token <detachable ET_MANIFEST_STRING> E_STRANDTHENSYMBOL E_STRORELSESYMBOL
+%token <detachable ET_MANIFEST_STRING> E_STRIMPLIESSYMBOL E_STRNOTSYMBOL
 %token <detachable ET_REAL_CONSTANT> E_REAL
 %token <detachable ET_RESULT> E_RESULT
 %token <detachable ET_RETRY_INSTRUCTION> E_RETRY
@@ -82,23 +85,27 @@ create
 %token <detachable ET_SYMBOL> '{' '}'
 %token <detachable ET_SYMBOL> '(' ')' ':' ',' ']' '$' '.' '!'
 %token <detachable ET_SYMBOL> E_FOR_ALL E_THERE_EXISTS E_BAR E_OPEN_REPEAT E_CLOSE_REPEAT
+%token <detachable ET_SYMBOL> '@'
 %token <detachable ET_SYMBOL_OPERATOR> '-'
 %token <detachable ET_SYMBOL_OPERATOR> '+'
+%token <detachable ET_SYMBOL_OPERATOR> E_IMPLIES_SYMBOL E_OR_SYMBOL E_OR_ELSE_SYMBOL E_XOR_SYMBOL
+%token <detachable ET_SYMBOL_OPERATOR> E_AND_SYMBOL E_AND_THEN_SYMBOL E_NOT_SYMBOL
 %token <detachable ET_SYMBOL> '=' '~'
 %token <detachable ET_SYMBOL> E_NE E_NOT_TILDE
 %token <detachable ET_SEMICOLON_SYMBOL> ';'
 %token <detachable ET_BRACKET_SYMBOL> '['
 %token <detachable ET_QUESTION_MARK_SYMBOL> '?'
 
-%left E_IMPLIES
-%left E_OR E_XOR
-%left E_AND
+%left E_IMPLIES E_IMPLIES_SYMBOL
+%left E_OR E_XOR E_OR_SYMBOL E_OR_ELSE_SYMBOL E_XOR_SYMBOL
+%left E_AND E_AND_SYMBOL E_AND_THEN_SYMBOL 
 %left '=' E_NE '~' E_NOT_TILDE '<' '>' E_LE E_GE
 %left '+' '-'
 %left '*' '/' E_DIV E_MOD
 %right '^'
-%left E_FREEOP
-%right E_NOT E_OLD
+%left E_FREEOP '@'
+%right E_NOT E_NOT_SYMBOL E_OLD
+%right E_ITERATION_CURSOR_SYMBOL
 
 %type <detachable ET_ACROSS_EXPRESSION> Across_all_expression Across_some_expression Across_expression_header
 %type <detachable ET_ACROSS_INSTRUCTION> Across_instruction_header
@@ -164,6 +171,7 @@ create
 %type <detachable ET_EXPRESSION> Typed_call_expression Untyped_call_expression
 %type <detachable ET_EXPRESSION> Typed_bracket_target Untyped_bracket_target
 %type <detachable ET_EXPRESSION> Binary_expression Non_binary_expression Non_binary_and_typed_expression
+%type <detachable ET_EXPRESSION> Iteration_cursor
 %type <detachable ET_EXPRESSION_ITEM> Expression_comma
 %type <detachable ET_EXTENDED_FEATURE_NAME> Extended_feature_name
 %type <detachable ET_EXTERNAL_ALIAS> External_name_opt
@@ -187,6 +195,7 @@ create
 %type <detachable ET_INDEXING_TERM_ITEM> Index_value_comma
 %type <detachable ET_INDEXING_TERM_LIST> Index_terms
 %type <detachable ET_INLINE_AGENT> Inline_agent Inline_agent_no_actual_arguments
+%type <detachable ET_INSPECT_EXPRESSION> Multi_branch_expression
 %type <detachable ET_INSPECT_INSTRUCTION> Multi_branch
 %type <detachable ET_INSTRUCTION> Instruction Creation_instruction Call_instruction Create_instruction
 %type <detachable ET_INTEGER_CONSTANT> Integer_constant Typed_integer_constant Untyped_integer_constant Signed_integer_constant
@@ -231,11 +240,13 @@ create
 %type <detachable ET_TYPE_ITEM> Type_comma
 %type <detachable ET_TYPE_LIST> Convert_types Convert_type_list
 %type <detachable ET_VARIANT> Variant_clause Variant_clause_opt
+%type <detachable ET_WHEN_EXPRESSION> When_expression
+%type <detachable ET_WHEN_EXPRESSION_LIST> When_expression_list When_expression_list_opt
 %type <detachable ET_WHEN_PART> When_part
 %type <detachable ET_WHEN_PART_LIST> When_list When_list_opt
 %type <detachable ET_WRITABLE> Writable
 
-%expect 104
+%expect 124
 %start Class_declarations
 
 %%
@@ -2131,6 +2142,8 @@ Alias_name_list: Alias_name
 	
 Alias_name: E_ALIAS E_STRNOT Alias_convert_opt
 		{ $$ := ast_factory.new_alias_not_name ($1, $2, $3) }
+	| E_ALIAS E_STRNOTSYMBOL Alias_convert_opt
+		{ $$ := ast_factory.new_alias_not_symbol_name ($1, $2, $3) }
 	| E_ALIAS E_STRPLUS Alias_convert_opt
 		{ $$ := ast_factory.new_alias_plus_name ($1, $2, $3) }
 	| E_ALIAS E_STRMINUS Alias_convert_opt
@@ -2155,16 +2168,28 @@ Alias_name: E_ALIAS E_STRNOT Alias_convert_opt
 		{ $$ := ast_factory.new_alias_ge_name ($1, $2, $3) }
 	| E_ALIAS E_STRAND Alias_convert_opt
 		{ $$ := ast_factory.new_alias_and_name ($1, $2, $3) }
+	| E_ALIAS E_STRANDSYMBOL Alias_convert_opt
+		{ $$ := ast_factory.new_alias_and_symbol_name ($1, $2, $3) }
 	| E_ALIAS E_STRANDTHEN Alias_convert_opt
 		{ $$ := ast_factory.new_alias_and_then_name ($1, $2, $3) }
+	| E_ALIAS E_STRANDTHENSYMBOL Alias_convert_opt
+		{ $$ := ast_factory.new_alias_and_then_symbol_name ($1, $2, $3) }
 	| E_ALIAS E_STROR Alias_convert_opt
 		{ $$ := ast_factory.new_alias_or_name ($1, $2, $3) }
+	| E_ALIAS E_STRORSYMBOL Alias_convert_opt
+		{ $$ := ast_factory.new_alias_or_symbol_name ($1, $2, $3) }
 	| E_ALIAS E_STRORELSE Alias_convert_opt
 		{ $$ := ast_factory.new_alias_or_else_name ($1, $2, $3) }
+	| E_ALIAS E_STRORELSESYMBOL Alias_convert_opt
+		{ $$ := ast_factory.new_alias_or_else_symbol_name ($1, $2, $3) }
 	| E_ALIAS E_STRIMPLIES Alias_convert_opt
 		{ $$ := ast_factory.new_alias_implies_name ($1, $2, $3) }
+	| E_ALIAS E_STRIMPLIESSYMBOL Alias_convert_opt
+		{ $$ := ast_factory.new_alias_implies_symbol_name ($1, $2, $3) }
 	| E_ALIAS E_STRXOR Alias_convert_opt
 		{ $$ := ast_factory.new_alias_xor_name ($1, $2, $3) }
+	| E_ALIAS E_STRXORSYMBOL Alias_convert_opt
+		{ $$ := ast_factory.new_alias_xor_symbol_name ($1, $2, $3) }
 	| E_ALIAS E_STRDOTDOT Alias_convert_opt
 		{ $$ := ast_factory.new_alias_dotdot_name ($1, $2, $3) }
 	| E_ALIAS E_STRFREEOP Alias_convert_opt
@@ -3384,6 +3409,48 @@ Choice_constant: Integer_constant
 
 ------------------------------------------------------------------------------------
 
+Multi_branch_expression: E_INSPECT Expression When_expression_list_opt E_ELSE Expression E_END
+		{ $$ := ast_factory.new_inspect_expression (ast_factory.new_conditional ($1, $2), $3, ast_factory.new_conditional ($4, $5), $6) }
+	| E_INSPECT Expression When_expression_list_opt E_END
+		{ $$ := ast_factory.new_inspect_expression (ast_factory.new_conditional ($1, $2), $3, Void, $4) }
+	;
+
+When_expression_list_opt: -- Empty
+		-- { $$ := Void }
+	| Add_counter When_expression_list
+		{
+			$$ := $2
+			remove_counter
+		}
+	;
+
+When_expression_list: When_expression
+		{
+			$$ := ast_factory.new_when_expression_list (counter_value)
+			if $$ /= Void and attached $1 as l_when_part then
+				$$.put_first (l_when_part)
+			end
+		}
+	| When_expression When_expression_list
+		{
+			$$ := $2
+			if $$ /= Void and attached $1 as l_when_part then
+				$$.put_first (l_when_part)
+			end
+		}
+	;
+
+When_expression: Choices E_THEN Expression
+		{
+			$$ := ast_factory.new_when_expression ($1, $2, $3)
+			if $$ /= Void then
+				increment_counter
+			end
+		}
+	;
+	
+------------------------------------------------------------------------------------
+
 Across_instruction_header: E_ACROSS Expression E_AS Identifier
 		{ $$ := new_across_instruction_header ($1, $2, $3, $4) }
 	| E_ACROSS Expression E_IS Identifier
@@ -3508,6 +3575,8 @@ Untyped_call_chain: Identifier Actuals_opt
 		{ $$ := $1 }
 	| Precursor_expression
 		{ $$ := $1 }
+	| Iteration_cursor
+		{ $$ := $1 }
 	| Untyped_bracket_expression
 		{
 			if system_processor.older_ise_version (ise_5_7_59914) then
@@ -3619,6 +3688,8 @@ Expression: Binary_expression
 
 Binary_expression: Expression E_FREEOP Expression
 		{ $$ := ast_factory.new_infix_expression ($1, ast_factory.new_infix_free_operator ($2), $3) }
+	| Expression '@' Expression
+		{ $$ := ast_factory.new_infix_expression ($1, ast_factory.new_infix_free_operator_from_symbol ($2), $3) }
 	| Expression '+' Expression
 		{ $$ := ast_factory.new_infix_expression ($1, ast_factory.new_infix_plus_operator ($2), $3) }
 	| Expression '-' Expression
@@ -3643,15 +3714,27 @@ Binary_expression: Expression E_FREEOP Expression
 		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
 	| Expression E_AND Expression
 		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
+	| Expression E_AND_SYMBOL Expression
+		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
 	| Expression E_OR Expression
+		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
+	| Expression E_OR_SYMBOL Expression
 		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
 	| Expression E_XOR Expression
 		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
+	| Expression E_XOR_SYMBOL Expression
+		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
 	| Expression E_AND E_THEN Expression %prec E_AND
 		{ $$ := ast_factory.new_infix_expression ($1, ast_factory.new_infix_and_then_operator ($2, $3), $4) }
+	| Expression E_AND_THEN_SYMBOL Expression %prec E_AND
+		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
 	| Expression E_OR E_ELSE Expression %prec E_OR
 		{ $$ := ast_factory.new_infix_expression ($1, ast_factory.new_infix_or_else_operator ($2, $3), $4) }
+	| Expression E_OR_ELSE_SYMBOL Expression %prec E_OR
+		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
 	| Expression E_IMPLIES Expression
+		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
+	| Expression E_IMPLIES_SYMBOL Expression
 		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
 	| Expression '=' Expression
 		{ $$ := ast_factory.new_equality_expression ($1, $2, $3) }
@@ -3691,6 +3774,8 @@ Non_binary_and_typed_expression: Untyped_bracket_target
 		{ $$ := $1 }
 	| Conditional_expression
 		{ $$ := $1 }
+	| Multi_branch_expression
+		{ $$ := $1 }
 	| Manifest_tuple
 		{ $$ := $1 }
 	| E_INTEGER
@@ -3702,6 +3787,8 @@ Non_binary_and_typed_expression: Untyped_bracket_target
 	| '-' Non_binary_expression %prec E_NOT
 		{ $$ := new_prefix_minus_expression ($1, $2) }
 	| E_NOT Non_binary_expression
+		{ $$ := ast_factory.new_prefix_expression ($1, $2) }
+	| E_NOT_SYMBOL Non_binary_expression
 		{ $$ := ast_factory.new_prefix_expression ($1, $2) }
 	| E_FREEOP Non_binary_expression %prec E_NOT
 		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_free_operator ($1), $2) }
@@ -3744,6 +3831,8 @@ Untyped_bracket_target: Untyped_call_expression
 	| Inline_agent
 		{ $$ := $1 }
 	| E_VOID
+		{ $$ := $1 }
+	| Iteration_cursor
 		{ $$ := $1 }
 	| Untyped_character_constant
 		{ $$ := $1 }
@@ -4072,6 +4161,16 @@ Quantifier_expression_header: E_FOR_ALL Identifier ':' Expression E_BAR
 		{ $$ := new_there_exists_quantifier_expression_header ($1, $2, $3, $4, $5) }
 	;
 
+Iteration_cursor: '@' Identifier %prec E_ITERATION_CURSOR_SYMBOL
+		{
+			if current_universe.use_obsolete_syntax_mode then
+				$$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_free_operator_from_symbol ($1), $2)
+			else
+				$$ := new_iteration_cursor ($1, $2)
+			end
+		}
+	;
+
 ------------------------------------------------------------------------------------
 
 Call_agent: E_AGENT Feature_name Agent_actuals_opt
@@ -4283,19 +4382,33 @@ Untyped_manifest_string: E_STRING
 		{ $$ := $1 }
 	| E_STRAND
 		{ $$ := $1 }
+	| E_STRANDSYMBOL
+		{ $$ := $1 }
 	| E_STROR
+		{ $$ := $1 }
+	| E_STRORSYMBOL
 		{ $$ := $1 }
 	| E_STRXOR
 		{ $$ := $1 }
+	| E_STRXORSYMBOL
+		{ $$ := $1 }
 	| E_STRANDTHEN
+		{ $$ := $1 }
+	| E_STRANDTHENSYMBOL
 		{ $$ := $1 }
 	| E_STRORELSE
 		{ $$ := $1 }
+	| E_STRORELSESYMBOL
+		{ $$ := $1 }
 	| E_STRIMPLIES
+		{ $$ := $1 }
+	| E_STRIMPLIESSYMBOL
 		{ $$ := $1 }
 	| E_STRFREEOP
 		{ $$ := $1 }
 	| E_STRNOT
+		{ $$ := $1 }
+	| E_STRNOTSYMBOL
 		{ $$ := $1 }
 	| E_STRDOTDOT
 		{ $$ := $1 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system
-	xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0"
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd"
 	name="free_elks"
 	uuid="E1FFE100-60B0-0001-0001-000000000001"
 	library_target="free_elks"
@@ -10,7 +10,7 @@
 	<description>
 		description: "ECF file for the FreeELKS Library"
 		library: "Gobo Eiffel Kernel Library"
-		copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
+		copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="free_elks">
@@ -20,8 +20,9 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true"/>
 		<mapping old_name="REAL" new_name="REAL_32"/>
+		<mapping old_name="IMMUTABLE_STRING" new_name="IMMUTABLE_STRING_8"/>
+		<mapping old_name="READABLE_STRING" new_name="READABLE_STRING_8"/>
 		<mapping old_name="STRING" new_name="STRING_8"/>
 		<mapping old_name="REAL_REF" new_name="REAL_32_REF"/>
 		<mapping old_name="INTEGER_REF" new_name="INTEGER_32_REF"/>
@@ -33,6 +34,21 @@
 		<mapping old_name="CHARACTER" new_name="CHARACTER_8"/>
 		<mapping old_name="CHARACTER_REF" new_name="CHARACTER_8_REF"/>
 		<mapping old_name="DOUBLE" new_name="REAL_64"/>
+		<external_include location="$(GOBO)/library/free_elks/src/elks/encoding/implementation/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_cflag value="`$GOBO/library/free_elks/src/elks/encoding/implementation/unix/Clib/iconv-config --include_path`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_cflag>
+		<external_linker_flag value="`$(GOBO)/library/free_elks/src/elks/encoding/implementation/unix/Clib/iconv-config --library`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_linker_flag>
 		<cluster name="free_elks" location="./" recursive="true">
 			<file_rule>
 				<exclude>/structures/cursor_tree/compact_cursor_tree.e$</exclude>
@@ -41,7 +57,22 @@
 				<exclude>/structures/cursors/compact_tree_cursor.e$</exclude>
 				<exclude>/structures/cursors/linked_cursor_tree_cursor.e$</exclude>
 				<exclude>/structures/cursors/two_way_cursor_tree_cursor.e$</exclude>
+				<exclude>/elks/encoding$</exclude>
 			</file_rule>
+			<cluster name="encoding" location="$|elks|encoding">
+				<cluster name="implementation" location="$|implementation" hidden="true">
+					<cluster name="windows" location="$|windows" hidden="true">
+						<condition>
+							<platform value="windows"/>
+						</condition>
+					</cluster>
+					<cluster name="unix" location="$|unix" hidden="true">
+						<condition>
+							<platform excluded_value="windows"/>
+						</condition>
+					</cluster>
+				</cluster>
+			</cluster>
 		</cluster>
 	</target>
 </system>

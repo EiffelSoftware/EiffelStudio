@@ -5,7 +5,7 @@
 		"Eiffel lexical symbols"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,6 +31,7 @@ create
 	make_arrow,
 	make_assign,
 	make_assign_attempt,
+	make_at,
 	make_bang,
 	make_bar,
 	make_close_repeat,
@@ -55,6 +56,28 @@ create
 	make_tilde
 
 feature {NONE} -- Initialization
+
+	make_and_symbol
+			-- Create a new '∧' symbol.
+		do
+			code := tokens.infix_and_symbol_code
+			make_leaf
+		ensure
+			is_and_symbol: is_and_symbol
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_and_then_symbol
+			-- Create a new '∧…' symbol.
+		do
+			code := tokens.infix_and_then_symbol_code
+			make_leaf
+		ensure
+			is_and_then_symbol: is_and_then_symbol
+			line_set: line = no_line
+			column_set: column = no_column
+		end
 
 	make_arrow
 			-- Create a new '->' symbol.
@@ -85,6 +108,17 @@ feature {NONE} -- Initialization
 			make_leaf
 		ensure
 			is_assign_attempt: is_assign_attempt
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_at
+			-- Create a new '@' symbol.
+		do
+			code := tokens.at_symbol_code
+			make_leaf
+		ensure
+			is_at: is_at
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -243,6 +277,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_implies_symbol
+			-- Create a new '⇒' symbol.
+		do
+			code := tokens.infix_implies_symbol_code
+			make_leaf
+		ensure
+			is_implies_symbol: is_implies_symbol
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 	make_le
 			-- Create a new '<=' symbol.
 		do
@@ -331,6 +376,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_not_symbol
+			-- Create a new '¬' symbol.
+		do
+			code := tokens.prefix_not_symbol_code
+			make_leaf
+		ensure
+			is_not_symbol: is_not_symbol
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 	make_not_equal
 			-- Create a new '/=' symbol.
 		do
@@ -360,6 +416,28 @@ feature {NONE} -- Initialization
 			make_leaf
 		ensure
 			is_open_repeat: is_open_repeat
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_or_symbol
+			-- Create a new '∨' symbol.
+		do
+			code := tokens.infix_or_symbol_code
+			make_leaf
+		ensure
+			is_or_symbol: is_or_symbol
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_or_else_symbol
+			-- Create a new '∨…' symbol.
+		do
+			code := tokens.infix_or_else_symbol_code
+			make_leaf
+		ensure
+			is_or_else_symbol: is_or_else_symbol
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -485,6 +563,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_xor_symbol
+			-- Create a new '⊻' symbol.
+		do
+			code := tokens.infix_xor_symbol_code
+			make_leaf
+		ensure
+			is_xor_symbol: is_xor_symbol
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 feature -- Access
 
 	text: STRING_8
@@ -492,12 +581,18 @@ feature -- Access
 			-- (using UTF-8 encoding)
 		do
 			inspect code
+			when infix_and_symbol_code then
+				Result := tokens.and_symbol_name
+			when infix_and_then_symbol_code then
+				Result := tokens.and_then_symbol_name
 			when arrow_symbol_code then
 				Result := tokens.arrow_symbol_name
 			when assign_symbol_code then
 				Result := tokens.assign_symbol_name
 			when assign_attempt_symbol_code then
 				Result := tokens.assign_attempt_symbol_name
+			when at_symbol_code then
+				Result := tokens.at_symbol_name
 			when bang_symbol_code then
 				Result := tokens.bang_symbol_name
 			when bar_symbol_code then
@@ -526,6 +621,8 @@ feature -- Access
 				Result := tokens.ge_symbol_name
 			when infix_gt_code then
 				Result := tokens.gt_symbol_name
+			when infix_implies_symbol_code then
+				Result := tokens.implies_symbol_name
 			when infix_le_code then
 				Result := tokens.le_symbol_name
 			when left_array_symbol_code then
@@ -544,12 +641,18 @@ feature -- Access
 				Result := tokens.minus_symbol_name
 			when infix_mod_code then
 				Result := tokens.mod_symbol_name
+			when prefix_not_symbol_code then
+				Result := tokens.not_symbol_name
 			when not_equal_symbol_code then
 				Result := tokens.not_equal_symbol_name
 			when not_tilde_symbol_code then
 				Result := tokens.not_tilde_symbol_name
 			when open_repeat_symbol_code then
 				Result := tokens.open_repeat_symbol_name
+			when infix_or_symbol_code then
+				Result := tokens.or_symbol_name
+			when infix_or_else_symbol_code then
+				Result := tokens.or_else_symbol_name
 			when infix_plus_code then
 				Result := tokens.plus_symbol_name
 			when prefix_plus_code then
@@ -569,11 +672,13 @@ feature -- Access
 			when semicolon_symbol_code then
 				Result := tokens.semicolon_symbol_name
 			when there_exists_symbol_code then
-				Result := tokens.tilde_symbol_name
-			when tilde_symbol_code then
 				Result := tokens.there_exists_symbol_name
+			when tilde_symbol_code then
+				Result := tokens.tilde_symbol_name
 			when infix_times_code then
 				Result := tokens.times_symbol_name
+			when infix_xor_symbol_code then
+				Result := tokens.xor_symbol_name
 			else
 					-- Should never happen.
 				Result := tokens.unknown_name
@@ -587,6 +692,18 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_and_symbol: BOOLEAN
+			-- Is current symbol '∧'?
+		do
+			Result := (code = tokens.infix_and_symbol_code)
+		end
+
+	is_and_then_symbol: BOOLEAN
+			-- Is current symbol '∧…'?
+		do
+			Result := (code = tokens.infix_and_then_symbol_code)
+		end
 
 	is_arrow: BOOLEAN
 			-- Is current symbol '->'?
@@ -604,6 +721,12 @@ feature -- Status report
 			-- Is current symbol '?='?
 		do
 			Result := (code = tokens.assign_attempt_symbol_code)
+		end
+
+	is_at: BOOLEAN
+			-- Is current symbol '@'?
+		do
+			Result := (code = tokens.at_symbol_code)
 		end
 
 	is_bang: BOOLEAN
@@ -690,6 +813,12 @@ feature -- Status report
 			Result := (code = tokens.infix_gt_code)
 		end
 
+	is_implies_symbol: BOOLEAN
+			-- Is current symbol '⇒'?
+		do
+			Result := (code = tokens.infix_implies_symbol_code)
+		end
+
 	is_le: BOOLEAN
 			-- Is current symbol '<='?
 		do
@@ -738,6 +867,12 @@ feature -- Status report
 			Result := (code = tokens.infix_mod_code)
 		end
 
+	is_not_symbol: BOOLEAN
+			-- Is current symbol '¬'?
+		do
+			Result := (code = tokens.prefix_not_symbol_code)
+		end
+
 	is_not_equal: BOOLEAN
 			-- Is current symbol '/='?
 		do
@@ -754,6 +889,18 @@ feature -- Status report
 			-- Is current symbol '⟳'?
 		do
 			Result := (code = tokens.open_repeat_symbol_code)
+		end
+
+	is_or_symbol: BOOLEAN
+			-- Is current symbol '∨'?
+		do
+			Result := (code = tokens.infix_or_symbol_code)
+		end
+
+	is_or_else_symbol: BOOLEAN
+			-- Is current symbol '∨…'?
+		do
+			Result := (code = tokens.infix_or_else_symbol_code)
 		end
 
 	is_plus: BOOLEAN
@@ -820,6 +967,12 @@ feature -- Status report
 			-- Is current symbol '*'?
 		do
 			Result := (code = tokens.infix_times_code)
+		end
+
+	is_xor_symbol: BOOLEAN
+			-- Is current symbol '⊻'?
+		do
+			Result := (code = tokens.infix_xor_symbol_code)
 		end
 
 feature -- Processing

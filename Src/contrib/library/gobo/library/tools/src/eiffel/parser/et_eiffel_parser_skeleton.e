@@ -5,7 +5,7 @@
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1251,35 +1251,36 @@ feature {NONE} -- AST factory
 				if an_end /= Void then
 					Result.set_end_keyword (an_end)
 				end
-					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- We set 'item_name.is_iteration_item' to False when
 					-- parsing within its scope.
-				Result.cursor_name.set_iteration_cursor (True)
+				Result.item_name.set_iteration_item (True)
 			end
 		end
 
 	new_across_expression_header (a_across: detachable ET_KEYWORD; a_iterable_expression: detachable ET_EXPRESSION;
-		a_as: detachable ET_KEYWORD; a_cursor_name: detachable ET_IDENTIFIER): detachable ET_ACROSS_EXPRESSION
+		a_as: detachable ET_KEYWORD; a_item_name: detachable ET_IDENTIFIER): detachable ET_ACROSS_EXPRESSION
 			-- New across expression header
 		local
 			l_last_iteration_components: like last_iteration_components
-			l_cursor_name: ET_IDENTIFIER
+			l_name: ET_IDENTIFIER
 		do
-			Result := ast_factory.new_across_all_expression (a_across, a_iterable_expression, a_as, a_cursor_name, Void, Void, tokens.true_keyword, Void, Void)
+			Result := ast_factory.new_across_all_expression (a_across, a_iterable_expression, a_as, a_item_name, Void, Void, tokens.true_keyword, Void, Void)
 			if Result /= Void then
+				Result.set_has_cursor_name (current_universe.obsolete_iteration_mode and then Result.as_keyword.is_as)
 				l_last_iteration_components := last_iteration_components
 				if l_last_iteration_components = Void then
 					l_last_iteration_components := new_iteration_component_list
 					last_iteration_components := l_last_iteration_components
 				end
 				l_last_iteration_components.force_last (Result)
-					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- We set 'item_name.is_iteration_item' to False when
 					-- parsing within its scope.
-				l_cursor_name := Result.cursor_name
-				l_cursor_name.set_iteration_cursor (False)
-				l_cursor_name.set_seed (l_last_iteration_components.count)
-				l_cursor_name := Result.unfolded_cursor_name
-				l_cursor_name.set_iteration_cursor (True)
-				l_cursor_name.set_seed (l_last_iteration_components.count)
+				l_name := Result.item_name
+				l_name.set_iteration_item (False)
+				l_name.set_seed (l_last_iteration_components.count)
+				l_name := Result.unfolded_cursor_name
+				l_name.set_iteration_item (True)
+				l_name.set_seed (l_last_iteration_components.count)
 			end
 		end
 
@@ -1299,36 +1300,37 @@ feature {NONE} -- AST factory
 				if an_end /= Void then
 					Result.set_end_keyword (an_end)
 				end
-					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- We set 'item_name.is_iteration_item' to False when
 					-- parsing within its scope.
-				Result.cursor_name.set_iteration_cursor (True)
+				Result.item_name.set_iteration_item (True)
 			end
 		end
 
 	new_across_instruction_header (a_across: detachable ET_KEYWORD;
 		a_iterable_expression: detachable ET_EXPRESSION; a_as: detachable ET_KEYWORD;
-		a_cursor_name: detachable ET_IDENTIFIER): detachable ET_ACROSS_INSTRUCTION
+		a_item_name: detachable ET_IDENTIFIER): detachable ET_ACROSS_INSTRUCTION
 			-- New across instruction header
 		local
 			l_last_iteration_components: like last_iteration_components
-			l_cursor_name: ET_IDENTIFIER
+			l_name: ET_IDENTIFIER
 		do
-			Result := ast_factory.new_across_instruction (a_across, a_iterable_expression, a_as, a_cursor_name, Void, Void, Void, Void, Void, Void)
+			Result := ast_factory.new_across_instruction (a_across, a_iterable_expression, a_as, a_item_name, Void, Void, Void, Void, Void, Void)
 			if Result /= Void then
+				Result.set_has_cursor_name (current_universe.obsolete_iteration_mode and then Result.as_keyword.is_as)
 				l_last_iteration_components := last_iteration_components
 				if l_last_iteration_components = Void then
 					l_last_iteration_components := new_iteration_component_list
 					last_iteration_components := l_last_iteration_components
 				end
 				l_last_iteration_components.force_last (Result)
-					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- We set 'item_name.is_iteration_item' to False when
 					-- parsing within its scope.
-				l_cursor_name := Result.cursor_name
-				l_cursor_name.set_iteration_cursor (False)
-				l_cursor_name.set_seed (l_last_iteration_components.count)
-				l_cursor_name := Result.unfolded_cursor_name
-				l_cursor_name.set_iteration_cursor (True)
-				l_cursor_name.set_seed (l_last_iteration_components.count)
+				l_name := Result.item_name
+				l_name.set_iteration_item (False)
+				l_name.set_seed (l_last_iteration_components.count)
+				l_name := Result.unfolded_cursor_name
+				l_name.set_iteration_item (True)
+				l_name.set_seed (l_last_iteration_components.count)
 			end
 		end
 
@@ -1350,9 +1352,9 @@ feature {NONE} -- AST factory
 				if an_end /= Void then
 					Result.set_end_keyword (an_end)
 				end
-					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- We set 'item_name.is_iteration_item' to False when
 					-- parsing within its scope.
-				Result.cursor_name.set_iteration_cursor (True)
+				Result.item_name.set_iteration_item (True)
 			end
 		end
 
@@ -1381,7 +1383,7 @@ feature {NONE} -- AST factory
 				if a_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
 					a_seed := l_last_iteration_components.index_of_name (an_identifier)
 					if a_seed /= 0 then
-						an_identifier.set_iteration_cursor (True)
+						an_identifier.set_iteration_item (True)
 					end
 				end
 				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
@@ -1503,7 +1505,7 @@ feature {NONE} -- AST factory
 				if a_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
 					a_seed := l_last_iteration_components.index_of_name (a_name)
 					if a_seed /= 0 then
-						a_name.set_iteration_cursor (True)
+						a_name.set_iteration_item (True)
 					end
 				end
 				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
@@ -1619,7 +1621,7 @@ feature {NONE} -- AST factory
 				if l_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
 					l_seed := l_last_iteration_components.index_of_name (l_identifier)
 					if l_seed /= 0 then
-						l_identifier.set_iteration_cursor (True)
+						l_identifier.set_iteration_item (True)
 					end
 				end
 				if l_seed = 0 and then attached last_object_tests as l_last_object_tests then
@@ -1636,14 +1638,14 @@ feature {NONE} -- AST factory
 		end
 
 	new_for_all_quantifier_expression_header (a_quantifier_symbol: detachable ET_SYMBOL;
-		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_item_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
 		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL): detachable ET_QUANTIFIER_EXPRESSION
 		 	-- New quantifier expression header of the form '∀'
 		local
 			l_last_iteration_components: like last_iteration_components
-			l_cursor_name: ET_IDENTIFIER
+			l_name: ET_IDENTIFIER
 		do
-			Result := ast_factory.new_for_all_quantifier_expression (a_quantifier_symbol, a_cursor_name, a_colon_symbol, a_iterable_expression, a_bar_symbol, tokens.true_keyword)
+			Result := ast_factory.new_for_all_quantifier_expression (a_quantifier_symbol, a_item_name, a_colon_symbol, a_iterable_expression, a_bar_symbol, tokens.true_keyword)
 			if Result /= Void then
 				l_last_iteration_components := last_iteration_components
 				if l_last_iteration_components = Void then
@@ -1651,14 +1653,14 @@ feature {NONE} -- AST factory
 					last_iteration_components := l_last_iteration_components
 				end
 				l_last_iteration_components.force_last (Result)
-					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- We set 'item_name.is_iteration_item' to False when
 					-- parsing within its scope.
-				l_cursor_name := Result.cursor_name
-				l_cursor_name.set_iteration_cursor (False)
-				l_cursor_name.set_seed (l_last_iteration_components.count)
-				l_cursor_name := Result.unfolded_cursor_name
-				l_cursor_name.set_iteration_cursor (True)
-				l_cursor_name.set_seed (l_last_iteration_components.count)
+				l_name := Result.item_name
+				l_name.set_iteration_item (False)
+				l_name.set_seed (l_last_iteration_components.count)
+				l_name := Result.unfolded_cursor_name
+				l_name.set_iteration_item (True)
+				l_name.set_seed (l_last_iteration_components.count)
 			end
 		end
 
@@ -1672,8 +1674,17 @@ feature {NONE} -- AST factory
 
 	new_invalid_alias_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_FREE_NAME
 			-- New invalid alias feature name
+		local
+			l_position: ET_POSITION
 		do
--- ERROR
+				-- Do not mark this error as a fatal error.
+				-- It will be a fatal error when using this free operator.
+			if a_string /= Void then
+				create {ET_FILE_POSITION} l_position.make (filename, a_string.position.line, a_string.position.column)
+			else
+				l_position := current_position
+			end
+			error_handler.report_syntax_error (filename, l_position)
 			Result := new_alias_free_name (an_alias, a_string, a_convert)
 		end
 
@@ -1729,6 +1740,22 @@ feature {NONE} -- AST factory
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
 			wipe_out_last_iteration_components_stack
+		end
+
+	new_iteration_cursor (a_at_symbol: detachable ET_SYMBOL; a_identifier: detachable ET_IDENTIFIER): detachable ET_ITERATION_CURSOR
+			-- New iteration cursor '@i' expression
+		local
+			l_seed: INTEGER
+		do
+			if a_identifier /= Void then
+				if attached last_iteration_components as l_last_iteration_components then
+					l_seed := l_last_iteration_components.index_of_name (a_identifier)
+					if l_seed /= 0 then
+						a_identifier.set_iteration_item (True)
+					end
+				end
+				Result := ast_factory.new_iteration_cursor (a_at_symbol, a_identifier)
+			end
 		end
 
 	new_like_feature (a_type_mark: detachable ET_TYPE_MARK; a_like: detachable ET_KEYWORD;
@@ -2040,9 +2067,9 @@ feature {NONE} -- AST factory
 			if a_quantifier_expression_header /= Void and a_iteration_expression /= Void then
 				Result := a_quantifier_expression_header
 				Result.set_iteration_expression (a_iteration_expression)
-					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- We set 'item_name.is_iteration_item' to False when
 					-- parsing within its scope.
-				Result.cursor_name.set_iteration_cursor (True)
+				Result.item_name.set_iteration_item (True)
 			end
 		end
 
@@ -2056,22 +2083,22 @@ feature {NONE} -- AST factory
 				if a_close_repeat_symbol /= Void then
 					Result.set_close_repeat_symbol (a_close_repeat_symbol)
 				end
-					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- We set 'item_name.is_iteration_item' to False when
 					-- parsing within its scope.
-				Result.cursor_name.set_iteration_cursor (True)
+				Result.item_name.set_iteration_item (True)
 			end
 		end
 
 	new_repeat_instruction_header (a_open_repeat_symbol: detachable ET_SYMBOL;
-		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_item_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
 		a_iterable_expression: detachable ET_EXPRESSION;
 		a_bar_symbol: detachable ET_SYMBOL): detachable ET_REPEAT_INSTRUCTION
 			-- New repeat instruction header of the form '⟳ ... ⟲'
 		local
 			l_last_iteration_components: like last_iteration_components
-			l_cursor_name: ET_IDENTIFIER
+			l_name: ET_IDENTIFIER
 		do
-			Result := ast_factory.new_repeat_instruction (a_open_repeat_symbol, a_cursor_name, a_colon_symbol, a_iterable_expression, a_bar_symbol, Void, Void)
+			Result := ast_factory.new_repeat_instruction (a_open_repeat_symbol, a_item_name, a_colon_symbol, a_iterable_expression, a_bar_symbol, Void, Void)
 			if Result /= Void then
 				l_last_iteration_components := last_iteration_components
 				if l_last_iteration_components = Void then
@@ -2079,26 +2106,26 @@ feature {NONE} -- AST factory
 					last_iteration_components := l_last_iteration_components
 				end
 				l_last_iteration_components.force_last (Result)
-					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- We set 'item_name.is_iteration_item' to False when
 					-- parsing within its scope.
-				l_cursor_name := Result.cursor_name
-				l_cursor_name.set_iteration_cursor (False)
-				l_cursor_name.set_seed (l_last_iteration_components.count)
-				l_cursor_name := Result.unfolded_cursor_name
-				l_cursor_name.set_iteration_cursor (True)
-				l_cursor_name.set_seed (l_last_iteration_components.count)
+				l_name := Result.item_name
+				l_name.set_iteration_item (False)
+				l_name.set_seed (l_last_iteration_components.count)
+				l_name := Result.unfolded_cursor_name
+				l_name.set_iteration_item (True)
+				l_name.set_seed (l_last_iteration_components.count)
 			end
 		end
 
 	new_there_exists_quantifier_expression_header (a_quantifier_symbol: detachable ET_SYMBOL;
-		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_item_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
 		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL): detachable ET_QUANTIFIER_EXPRESSION
 		 	-- New quantifier expression header of the form '∃'
 		local
 			l_last_iteration_components: like last_iteration_components
-			l_cursor_name: ET_IDENTIFIER
+			l_name: ET_IDENTIFIER
 		do
-			Result := ast_factory.new_there_exists_quantifier_expression (a_quantifier_symbol, a_cursor_name, a_colon_symbol, a_iterable_expression, a_bar_symbol, tokens.true_keyword)
+			Result := ast_factory.new_there_exists_quantifier_expression (a_quantifier_symbol, a_item_name, a_colon_symbol, a_iterable_expression, a_bar_symbol, tokens.true_keyword)
 			if Result /= Void then
 				l_last_iteration_components := last_iteration_components
 				if l_last_iteration_components = Void then
@@ -2106,14 +2133,14 @@ feature {NONE} -- AST factory
 					last_iteration_components := l_last_iteration_components
 				end
 				l_last_iteration_components.force_last (Result)
-					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- We set 'item_name.is_iteration_item' to False when
 					-- parsing within its scope.
-				l_cursor_name := Result.cursor_name
-				l_cursor_name.set_iteration_cursor (False)
-				l_cursor_name.set_seed (l_last_iteration_components.count)
-				l_cursor_name := Result.unfolded_cursor_name
-				l_cursor_name.set_iteration_cursor (True)
-				l_cursor_name.set_seed (l_last_iteration_components.count)
+				l_name := Result.item_name
+				l_name.set_iteration_item (False)
+				l_name.set_seed (l_last_iteration_components.count)
+				l_name := Result.unfolded_cursor_name
+				l_name.set_iteration_item (True)
+				l_name.set_seed (l_last_iteration_components.count)
 			end
 		end
 
@@ -2165,7 +2192,7 @@ feature {NONE} -- AST factory
 				if a_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
 					a_seed := l_last_iteration_components.index_of_name (a_name)
 					if a_seed /= 0 then
-						a_name.set_iteration_cursor (True)
+						a_name.set_iteration_item (True)
 					end
 				end
 				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
@@ -2210,7 +2237,7 @@ feature {NONE} -- AST factory
 				if a_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
 					a_seed := l_last_iteration_components.index_of_name (a_name)
 					if a_seed /= 0 then
-						a_name.set_iteration_cursor (True)
+						a_name.set_iteration_item (True)
 					end
 				end
 				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
@@ -2233,19 +2260,39 @@ feature {NONE} -- AST factory
 	new_writable (a_name: detachable ET_IDENTIFIER): detachable ET_WRITABLE
 			-- New writable
 		local
-			a_seed: INTEGER
+			l_seed: INTEGER
 		do
 			if a_name /= Void then
 				Result := a_name
 				if attached last_local_variables as l_last_local_variables then
-					a_seed := l_last_local_variables.index_of (a_name)
-					if a_seed /= 0 then
-						a_name.set_seed (a_seed)
+					l_seed := l_last_local_variables.index_of (a_name)
+					if l_seed /= 0 then
+						a_name.set_seed (l_seed)
 						a_name.set_local (True)
-						l_last_local_variables.local_variable (a_seed).set_used (True)
+						l_last_local_variables.local_variable (l_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 then
+				if l_seed = 0 and then attached last_formal_arguments as l_last_formal_arguments then
+					l_seed := l_last_formal_arguments.index_of (a_name)
+					if l_seed /= 0 then
+						a_name.set_seed (l_seed)
+						a_name.set_argument (True)
+						l_last_formal_arguments.formal_argument (l_seed).set_used (True)
+					end
+				end
+				if l_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
+					l_seed := l_last_iteration_components.index_of_name (a_name)
+					if l_seed /= 0 then
+						a_name.set_iteration_item (True)
+					end
+				end
+				if l_seed = 0 and then attached last_object_tests as l_last_object_tests then
+					l_seed := l_last_object_tests.index_of_name (a_name)
+					if l_seed /= 0 then
+						a_name.set_object_test_local (True)
+					end
+				end
+				if l_seed = 0 then
 					a_name.set_feature_name (True)
 				end
 			end

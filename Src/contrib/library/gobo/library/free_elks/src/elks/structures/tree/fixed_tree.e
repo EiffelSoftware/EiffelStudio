@@ -22,10 +22,6 @@ class FIXED_TREE [G] inherit
 		end
 
 	TREE [G]
-		rename
-			empty as fl_empty
-		export
-			{NONE} fl_empty
 		undefine
 			child_off, child_after, child_before,
 			child_item
@@ -627,7 +623,7 @@ feature {NONE} -- private access fixed_list
 
 note
 	ca_ignore: "CA024", "CA024: use an across loop instead of a regular one"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

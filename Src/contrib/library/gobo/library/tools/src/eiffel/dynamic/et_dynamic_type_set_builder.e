@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -124,8 +124,25 @@ feature -- Generation
 		do
 			if not a_type.is_alive then
 				a_type.set_alive
-					-- Make sure that feature 'dispose' is alive for reference types.
-				if not a_type.is_expanded then
+				if a_type.is_expanded then
+						-- Make sure that feature 'twin' is alive for expanded types.
+						-- Note that this will make fetaure 'copy' alive as well
+						-- because 'twin' calls 'copy' internally.
+					l_seed := current_system.twin_seed
+					if l_seed > 0 then
+						if attached a_type.seeded_dynamic_query (l_seed, current_dynamic_system) as l_feature then
+							l_feature.set_regular (True)
+						end
+					end
+						-- Make sure that feature 'is_equal' is alive for expanded types.
+					l_seed := current_system.is_equal_seed
+					if l_seed > 0 then
+						if attached a_type.seeded_dynamic_query (l_seed, current_dynamic_system) as l_feature then
+							l_feature.set_regular (True)
+						end
+					end
+				else
+						-- Make sure that feature 'dispose' is alive for reference types.
 					l_seed := current_system.dispose_seed
 					if l_seed > 0 then
 						if attached a_type.seeded_dynamic_procedure (l_seed, current_dynamic_system) as l_feature then
@@ -313,7 +330,7 @@ feature {ET_DYNAMIC_FEATURE} -- Generation
 		end
 
 	alive_conforming_descendants_per_type: detachable DS_HASH_TABLE [like new_dynamic_type_set, ET_DYNAMIC_TYPE]
-			-- Dynamic type set sof all alive types which conform to a given type, indexed by this type.
+			-- Dynamic type sets of all alive types which conform to a given type, indexed by this type.
 			-- All the given types for which `alive_conforming_descendants' has been called are kept and
 			-- updated in this table.
 
@@ -338,6 +355,7 @@ feature {ET_DYNAMIC_FEATURE} -- Generation
 				Result := l_alive_conforming_descendants_per_type.found_item
 			else
 				Result := new_dynamic_type_set (a_type)
+				l_alive_conforming_descendants_per_type.force_last_new (Result, a_type)
 				if Result /= a_type then
 					l_primary_type := a_type.primary_type
 					l_dynamic_types := current_dynamic_system.dynamic_types

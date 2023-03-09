@@ -1,3 +1,7 @@
+[![GitHub Actions](https://github.com/gobo-eiffel/gobo/actions/workflows/github-ci.yml/badge.svg)](https://github.com/gobo-eiffel/gobo/actions/workflows/github-ci.yml)
+[![GitLab CI/CD](https://gitlab.com/ebezault/gobo/badges/master/pipeline.svg?key_text=GitLab+CI/CD&key_width=85)](https://gitlab.com/ebezault/gobo/-/pipelines)
+[![Azure Pipelines](https://dev.azure.com/ericb0733/gobo/_apis/build/status/gobo?branchName=master)](https://dev.azure.com/ericb0733/gobo/_build?definitionId=1&branchName=master)
+
 # Gobo Eiffel Project
 
 One of the main concerns of the *Gobo Eiffel Project* is to provide
@@ -35,13 +39,14 @@ while the official site (for stable releases) is located at
 * Gobo Eiffel XPath Library
 * Gobo Eiffel XSLT Library
 
-and eleven utilities:
+and twelve utilities:
 
 * Gobo Eiffel Ant (geant)
 * Gobo Eiffel Compiler (gec)
 * Gobo Eiffel C Compilation (gecc)
 * Gobo Eiffel Cop (gecop)
 * Gobo Eiffel Doc (gedoc)
+* Gobo Eiffel Image (geimage)
 * Gobo Eiffel Lex (gelex)
 * Gobo Eiffel Lint (gelint)
 * Gobo Eiffel Preprocessor (gepp)
@@ -56,8 +61,8 @@ library classes provided in this package.
 
 The supported Eiffel compilers, in alphabetical order, are:
 
-* Gobo Eiffel Compiler (gec) 19.11.03.1
-* ISE Eiffel 19.05.10.3187 and 19.10.10.3641 (Classic and .NET)
+* Gobo Eiffel Compiler (gec) 21.01.09.4
+* ISE Eiffel 21.11.10.6046 (Classic and .NET)
 
 For more details about the supported Eiffel compilers, please see the file
 [Release_notes.md](./Release_notes.md). 
@@ -125,15 +130,12 @@ appear in this list yet, please
 We will try to provide a bug fix as soon as possible
 (usually within one or two days).
 
-You can also subscribe to the *Gobo Eiffel*
-[mailing list](http://groups.yahoo.com/group/gobo-eiffel/)
-and take part to the discussions or ask your questions there.
-There is another
+There is a
 [mailing list](http://lists.sourceforge.net/lists/listinfo/gobo-eiffel-develop)
 (hosted at SourceForge) for discussions about the features under
 development in the
 [Git repository](https://github.com/gobo-eiffel/gobo)
-on GitHub.
+on GitHub. You can subscribe and take part to the discussions or ask your questions there.
 
 Although the license allows you to do pretty much whatever you want 
 with this software, we would be grateful to get your feedback, 
@@ -150,4 +152,4 @@ are available to help you make the first steps.
 
 ## Authors
 
-Copyright (c) 1997-2019, Eric Bezault and others
+Copyright (c) 1997-2022, Eric Bezault and others

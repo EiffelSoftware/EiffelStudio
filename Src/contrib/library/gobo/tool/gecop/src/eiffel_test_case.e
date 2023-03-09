@@ -4,7 +4,7 @@ note
 
 		"Eiffel standard test cases"
 
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,7 @@ inherit
 	TS_TEST_CASE
 		redefine
 			make_default,
-			tear_down, set_up
+			set_up
 		end
 
 	KL_SHARED_FILE_SYSTEM
@@ -100,23 +100,29 @@ feature -- Test Gobo Eiffel Compiler
 			a_debug: STRING
 			a_geant_filename: STRING
 			l_directory: KL_DIRECTORY
+			l_executable: STRING
 		do
 			if variables.has ("debug") then
 				a_debug := "debug_"
 			else
 				a_debug := ""
 			end
+			if variables.has ("executable") then
+				l_executable := " -D%"GEC_EXECUTABLE=" + variables.value ("executable") + "%""
+			else
+				l_executable := ""
+			end
 			a_geant_filename := geant_filename
 				-- Compile program.
-			execute_shell ("geant -b " + a_geant_filename + " -Dgelint_option=true compile_" + a_debug + "ge" + output1_log)
+			execute_shell ("geant -b %"" + a_geant_filename + "%"" + l_executable + " -Dgelint_option=true compile_" + a_debug + "ge" + output1_log)
 			concat_output1 (agent filter_output_gec)
 				-- Execute program.
-			if file_system.file_exists (program_exe) then
+			if file_system.file_exists (file_system.pathname (testrun_dirname, program_exe)) then
 				execute_shell (program_exe + output2_log)
 				concat_output2
 			end
 				-- Clean.
-			execute_shell ("geant -b " + a_geant_filename + " clobber" + output3_log)
+			execute_shell ("geant -b %"" + a_geant_filename + "%" clobber" + output3_log)
 			concat_output3
 				-- Test.
 			create l_directory.make (program_dirname)
@@ -125,7 +131,7 @@ feature -- Test Gobo Eiffel Compiler
 			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("gec?"), output_log_filename)) then
 				assert ("test_failed", False)
 			else
-				assert ("unknown_test_result", False)
+				assert_known_test_result ("unknown_test_result", False, output_log_filename)
 			end
 		end
 
@@ -140,9 +146,10 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2, a_pattern3: STRING
-			a_regexp1, a_regexp2, a_regexp3: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3, a_pattern4: STRING
+			a_regexp1, a_regexp2, a_regexp3, a_regexp4: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
+			l_first_line: BOOLEAN
 		do
 				-- Compile regexps.
 			a_pattern1 := "BUILD FAILED!"
@@ -160,6 +167,11 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			a_regexp3.compile (a_pattern3)
 			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
 			a_regexp3.optimize
+			a_pattern4 := "(line [0-9]+ column [0-9]+ in )([^\\/]*[\\/])*([a-z][a-z0-9_]*\.e)"
+			create a_regexp4.make
+			a_regexp4.compile (a_pattern4)
+			assert ("cannot compile regexp '" + a_pattern4 + "'", a_regexp4.is_compiled)
+			a_regexp4.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -169,10 +181,14 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 				if in_file.is_open_read then
 					from
 						in_file.read_line
+						l_first_line := True
 					until
 						in_file.end_of_file
 					loop
 						a_line := in_file.last_string
+						if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
+							a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
+						end
 						if a_line.is_empty then
 							l_empty_line := True
 						elseif a_regexp1.recognizes (a_line) then
@@ -189,12 +205,18 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 								out_file.put_new_line
 								l_empty_line := False
 							end
-							out_file.put_line (a_line)
+							if a_regexp4.recognizes (a_line) then
+								out_file.put_line (a_regexp4.captured_substring (1) + a_regexp4.captured_substring (3))
+							else
+								out_file.put_line (a_line)
+							end
 						end
 						a_regexp1.wipe_out
 						a_regexp2.wipe_out
 						a_regexp3.wipe_out
+						a_regexp4.wipe_out
 						in_file.read_line
+						l_first_line := False
 					end
 					in_file.close
 					if l_empty_line then
@@ -217,13 +239,19 @@ feature -- Test gelint
 		local
 			a_debug: STRING
 			l_directory: KL_DIRECTORY
+			l_executable: STRING
 		do
 			if variables.has ("debug") then
 				a_debug := "debug_"
 			else
 				a_debug := ""
 			end
-			execute_shell ("gelint --variable=GOBO_EIFFEL=ge --flat " + ecf_filename + output1_log)
+			if variables.has ("executable") then
+				l_executable := variables.value ("executable")
+			else
+				l_executable := "gelint"
+			end
+			execute_shell (l_executable + " --variable=GOBO_EIFFEL=ge --flat %"" + ecf_filename + "%"" + output1_log)
 			concat_output1 (agent filter_output_gelint)
 				-- Test.
 			create l_directory.make (program_dirname)
@@ -232,7 +260,7 @@ feature -- Test gelint
 			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("(gelint|gec?)"), output_log_filename)) then
 				assert ("test_failed", False)
 			else
-				assert ("unknown_test_result", False)
+				assert_known_test_result ("unknown_test_result", False, output_log_filename)
 			end
 		end
 
@@ -247,9 +275,10 @@ feature {NONE} -- Test gelint
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2: STRING
-			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3: STRING
+			a_regexp1, a_regexp2, a_regexp3: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
+			l_first_line: BOOLEAN
 		do
 				-- Compile regexps.
 			a_pattern1 := "BUILD FAILED!"
@@ -262,6 +291,11 @@ feature {NONE} -- Test gelint
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
 			a_regexp2.optimize
+			a_pattern3 := "(line [0-9]+ column [0-9]+ in )([^\\/]*[\\/])*([a-z][a-z0-9_]*\.e)"
+			create a_regexp3.make
+			a_regexp3.compile (a_pattern3)
+			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
+			a_regexp3.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -271,10 +305,14 @@ feature {NONE} -- Test gelint
 				if in_file.is_open_read then
 					from
 						in_file.read_line
+						l_first_line := True
 					until
 						in_file.end_of_file
 					loop
 						a_line := in_file.last_string
+						if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
+							a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
+						end
 						if a_line.is_empty then
 							l_empty_line := True
 						elseif a_regexp1.recognizes (a_line) then
@@ -288,11 +326,17 @@ feature {NONE} -- Test gelint
 								out_file.put_new_line
 								l_empty_line := False
 							end
-							out_file.put_line (a_line)
+							if a_regexp3.recognizes (a_line) then
+								out_file.put_line (a_regexp3.captured_substring (1) + a_regexp3.captured_substring (3))
+							else
+								out_file.put_line (a_line)
+							end
 						end
 						a_regexp1.wipe_out
 						a_regexp2.wipe_out
+						a_regexp3.wipe_out
 						in_file.read_line
+						l_first_line := False
 					end
 					in_file.close
 					if l_empty_line then
@@ -317,11 +361,21 @@ feature -- Test ISE Eiffel
 			l_dotnet: STRING
 			a_geant_filename: STRING
 			l_directory: KL_DIRECTORY
+			l_executable: STRING
 		do
 			if variables.has ("debug") then
 				a_debug := "debug_"
 			else
 				a_debug := ""
+			end
+			if variables.has ("executable") then
+				l_executable := " -D%"EC_EXECUTABLE=" + variables.value ("executable") + "%""
+			else
+					-- Use 'ecb' by default to run the validation suite.
+					-- It runs faster. The generated EIFGEN is not compatible with 'ec',
+					-- but this is not a problem here since we remove the EIFGEN at the
+					-- end of this test.
+				l_executable := " -DEC_EXECUTABLE=ecb"
 			end
 			if variables.has ("GOBO_DOTNET") or attached Execution_environment.variable_value ("GOBO_DOTNET") as l_variable and then not l_variable.is_empty then
 				l_dotnet := " -DGOBO_DOTNET=true"
@@ -330,15 +384,15 @@ feature -- Test ISE Eiffel
 			end
 			a_geant_filename := geant_filename
 				-- Compile program.
-			execute_shell ("geant -b " + a_geant_filename + l_dotnet + " compile_" + a_debug + "ise" + output1_log)
+			execute_shell ("geant -b %"" + a_geant_filename + "%"" + l_executable + l_dotnet + " compile_" + a_debug + "ise" + output1_log)
 			concat_output1 (agent filter_output_ise)
 				-- Execute program.
-			if file_system.file_exists (program_exe) then
+			if file_system.file_exists (file_system.pathname (testrun_dirname, program_exe)) then
 				execute_shell (program_exe + output2_log)
 				concat_output2
 			end
 				-- Clean.
-			execute_shell ("geant -b " + a_geant_filename + " clobber" + output3_log)
+			execute_shell ("geant -b %"" + a_geant_filename + "%" clobber" + output3_log)
 			concat_output3
 				-- Test.
 			create l_directory.make (program_dirname)
@@ -347,7 +401,7 @@ feature -- Test ISE Eiffel
 			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("ise"), output_log_filename)) then
 				assert ("test_failed", False)
 			else
-				assert ("unknown_test_result", False)
+				assert_known_test_result ("unknown_test_result", False, output_log_filename)
 			end
 		end
 
@@ -365,6 +419,7 @@ feature {NONE} -- Test ISE Eiffel
 			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6, a_pattern7, a_pattern8, a_pattern9, a_pattern10: STRING
 			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6, a_regexp7, a_regexp8, a_regexp9, a_regexp10: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
+			l_first_line: BOOLEAN
 		do
 				-- Compile regexps.
 			a_pattern1 := "BUILD FAILED!"
@@ -426,10 +481,14 @@ feature {NONE} -- Test ISE Eiffel
 				if in_file.is_open_read then
 					from
 						in_file.read_line
+						l_first_line := True
 					until
 						in_file.end_of_file
 					loop
 						a_line := in_file.last_string
+						if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
+							a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
+						end
 						if a_line.is_empty then
 							l_empty_line := True
 						elseif a_regexp1.recognizes (a_line) then
@@ -484,6 +543,7 @@ feature {NONE} -- Test ISE Eiffel
 						a_regexp9.wipe_out
 						a_regexp10.wipe_out
 						in_file.read_line
+						l_first_line := False
 					end
 					in_file.close
 					if l_empty_line then
@@ -510,6 +570,7 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp1, a_regexp2, a_regexp3: RX_PCRE_REGULAR_EXPRESSION
 			done: BOOLEAN
 			has_empty_line: BOOLEAN
+			l_first_line: BOOLEAN
 		do
 				-- Compile regexps.
 			a_pattern1 := "BUILD FAILED!"
@@ -542,11 +603,15 @@ feature {NONE} -- Test ISE Eiffel
 						from
 							done := False
 							in_file.read_line
+							l_first_line := True
 						until
 							done or
 							in_file.end_of_file
 						loop
 							a_line := in_file.last_string
+							if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
+								a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
+							end
 							if a_regexp1.recognizes (a_line) then
 								done := True
 							elseif a_regexp2.matches (a_line) then
@@ -566,6 +631,7 @@ feature {NONE} -- Test ISE Eiffel
 								out_file.put_line (a_line)
 								in_file.read_line
 							end
+							l_first_line := False
 						end
 						if has_empty_line then
 							if not done then
@@ -597,26 +663,29 @@ feature -- Execution
 		local
 			a_testdir: STRING
 		do
+			if attached set_up_mutex as l_mutex then
+				l_mutex.lock
+			end
 			a_testdir := testrun_dirname
-			-- assert (a_testdir + "_not_exists", not file_system.directory_exists (a_testdir))
-			old_cwd := file_system.cwd
 			file_system.recursive_create_directory (a_testdir)
 			assert (a_testdir + "_exists", file_system.directory_exists (a_testdir))
-			file_system.cd (a_testdir)
-		end
-
-	tear_down
-			-- Tear down after a test.
-		do
-			if attached old_cwd as l_old_cwd then
-				file_system.cd (l_old_cwd)
-				-- file_system.recursive_delete_directory (testdir)
-				old_cwd := Void
+			if attached set_up_mutex as l_mutex then
+				l_mutex.unlock
 			end
 		end
 
-	old_cwd: detachable STRING
-			-- Initial current working directory
+feature -- Multi-threading
+
+	set_up_mutex: detachable MUTEX
+			-- Mutex to create directories in `set_up'
+
+	set_set_up_mutex (a_mutex: like set_up_mutex)
+			-- Set `set_up_mutex' to `a_mutex'.
+		do
+			set_up_mutex := a_mutex
+		ensure
+			set_up_mutex_set: set_up_mutex = a_mutex
+		end
 
 feature {NONE} -- Directory and file names
 
@@ -629,20 +698,11 @@ feature {NONE} -- Directory and file names
 			program_name_not_empty: Result.count > 0
 		end
 
-	rule_dirname: STRING
-			-- Name of the directory containing the tests of the rule being tested
-		do
-Result := ""
-		ensure
-			rule_dirname_not_void: Result /= Void
-			rule_dirname_not_empty: Result.count > 0
-		end
-
 	program_dirname: STRING
 			-- Name of program source directory
 
 	program_exe: STRING
-			-- Name of program executable filename
+			-- Name of program executable file
 		do
 			Result := file_system.pathname (file_system.relative_current_directory, program_name + file_system.exe_extension)
 		ensure
@@ -671,51 +731,155 @@ Result := ""
 	testrun_dirname: STRING
 			-- Name of temporary directory where to run the test
 
+feature {NONE} -- Assertions
+
+	assert_known_test_result (a_tag: STRING; a_is_known: BOOLEAN; a_output_filename: STRING)
+			-- Assert that the test result is known.
+			-- `a_is_known' is True when the test result is known.
+			-- `a_output_filename' is the name of the file containing the output of the test.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_output_filename_not_void: a_output_filename /= Void
+		local
+			l_file: KL_TEXT_INPUT_FILE
+			l_output: STRING
+		do
+			assertions.add_assertion
+			if not a_is_known then
+				create l_output.make (512)
+				l_output.append_string (a_tag)
+				l_output.append_string ("%Ntest output:%N----%N")
+				create l_file.make (a_output_filename)
+				l_file.open_read
+				if l_file.is_open_read then
+					from
+						l_file.read_line
+					until
+						l_file.end_of_file
+					loop
+						l_output.append_string (l_file.last_string)
+						l_output.append_character ('%N')
+						l_file.read_line
+					end
+					l_file.close
+				else
+					l_output.append_string ("Cannot read test output file '")
+					l_output.append_string (a_output_filename)
+					l_output.append_string ("%'%N")
+				end
+				l_output.append_string ("----")
+				logger.report_failure (a_tag, l_output)
+				assertions.report_error (l_output)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
 feature {NONE} -- Output logs
 
-	output_log_filename: STRING = "output.log"
+	output_log_filename: STRING
 			-- Test output log filename
+		do
+			Result := file_system.pathname (testrun_dirname, "output.log")
+		ensure
+			output_log_filename_not_void: Result /= Void
+			output_log_filename_not_empty: Result.count > 0
+		end
 
-	output1_log_filename: STRING = "output1.log"
+	output1_log_basename: STRING = "output1.log"
+			-- Compilation output log basename
+
+	output1_log_filename: STRING
 			-- Compilation output log filename
+		do
+			Result := file_system.pathname (testrun_dirname, output1_log_basename)
+		ensure
+			output1_log_filename_not_void: Result /= Void
+			output1_log_filename_not_empty: Result.count > 0
+		end
 
-	error1_log_filename: STRING = "error1.log"
+	error1_log_basename: STRING = "error1.log"
+			-- Compilation error log basename
+
+	error1_log_filename: STRING
 			-- Compilation error log filename
+		do
+			Result := file_system.pathname (testrun_dirname, error1_log_basename)
+		ensure
+			error1_log_filename_not_void: Result /= Void
+			error1_log_filename_not_empty: Result.count > 0
+		end
 
 	output1_log: STRING
 			-- Where and how to redirect compilation output logs
 		once
-			Result := " > " + output1_log_filename + " 2> " + error1_log_filename
+			Result := " > " + output1_log_basename + " 2> " + error1_log_basename
 		ensure
 			output1_log_not_void: Result /= Void
 			output1_log_not_empty: Result.count > 0
 		end
 
-	output2_log_filename: STRING = "output2.log"
-			-- Execution output log filename
+	output2_log_basename: STRING = "output2.log"
+			-- Execution output log basename
 
-	error2_log_filename: STRING = "error2.log"
+	output2_log_filename: STRING
+			-- Execution output log filename
+		do
+			Result := file_system.pathname (testrun_dirname, output2_log_basename)
+		ensure
+			output2_log_filename_not_void: Result /= Void
+			output2_log_filename_not_empty: Result.count > 0
+		end
+
+	error2_log_basename: STRING = "error2.log"
+			-- Execution error log basename
+
+	error2_log_filename: STRING
 			-- Execution error log filename
+		do
+			Result := file_system.pathname (testrun_dirname, error2_log_basename)
+		ensure
+			error2_log_filename_not_void: Result /= Void
+			error2_log_filename_not_empty: Result.count > 0
+		end
 
 	output2_log: STRING
 			-- Where and how to redirect execution output logs
 		once
-			Result := " > " + output2_log_filename + " 2> " + error2_log_filename
+			Result := " > " + output2_log_basename + " 2> " + error2_log_basename
 		ensure
 			output2_log_not_void: Result /= Void
 			output2_log_not_empty: Result.count > 0
 		end
 
-	output3_log_filename: STRING = "output3.log"
-			-- Cleaning output log filename
+	output3_log_basename: STRING = "output3.log"
+			-- Cleaning output log basename
 
-	error3_log_filename: STRING = "error3.log"
+	output3_log_filename: STRING
+			-- Cleaning output log filename
+		do
+			Result := file_system.pathname (testrun_dirname, output3_log_basename)
+		ensure
+			output3_log_filename_not_void: Result /= Void
+			output3_log_filename_not_empty: Result.count > 0
+		end
+
+	error3_log_basename: STRING = "error3.log"
+			-- Cleaning error log basename
+
+	error3_log_filename: STRING
 			-- Cleaning error log filename
+		do
+			Result := file_system.pathname (testrun_dirname, error3_log_basename)
+		ensure
+			error3_log_filename_not_void: Result /= Void
+			error3_log_filename_not_empty: Result.count > 0
+		end
 
 	output3_log: STRING
 			-- Where and how to redirect cleaning output logs
 		once
-			Result := " > " + output3_log_filename + " 2> " + error3_log_filename
+			Result := " > " + output3_log_basename + " 2> " + error3_log_basename
 		ensure
 			output3_log_not_void: Result /= Void
 			output3_log_not_empty: Result.count > 0
@@ -740,6 +904,8 @@ feature {NONE} -- Output logs
 			a_pattern1, a_pattern2: STRING
 			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
 			l_input_filename: STRING
+			l_output2_log_filename: STRING
+			l_first_line: BOOLEAN
 		do
 				-- Compile regexps.
 			a_pattern1 := "<[0-9A-F]{16}>(.*)"
@@ -757,7 +923,8 @@ feature {NONE} -- Output logs
 			out_file.open_append
 			if out_file.is_open_write then
 				from
-					l_input_filename := output2_log_filename
+					l_output2_log_filename := output2_log_filename
+					l_input_filename := l_output2_log_filename
 				until
 					l_input_filename = Void
 				loop
@@ -766,10 +933,14 @@ feature {NONE} -- Output logs
 					if in_file.is_open_read then
 						from
 							in_file.read_line
+							l_first_line := True
 						until
 							in_file.end_of_file
 						loop
 							a_line := in_file.last_string
+							if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
+								a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
+							end
 							if a_regexp1.recognizes (a_line) then
 									-- These are object addresses in exception traces.
 								out_file.put_string ("<XXXXXXXXXXXXXXXX>")
@@ -784,12 +955,13 @@ feature {NONE} -- Output logs
 							a_regexp1.wipe_out
 							a_regexp2.wipe_out
 							in_file.read_line
+							l_first_line := False
 						end
 						in_file.close
 					else
 						assert ("cannot open file '" + l_input_filename + "'", False)
 					end
-					if l_input_filename = output2_log_filename then
+					if l_input_filename = l_output2_log_filename then
 						l_input_filename := error2_log_filename
 					else
 						l_input_filename := Void
@@ -803,9 +975,55 @@ feature {NONE} -- Output logs
 
 	concat_output3
 			-- Concat the logs of the cleaning to 'output.log'.
+		local
+			out_file: KL_TEXT_OUTPUT_FILE
+			in_file: KL_TEXT_INPUT_FILE
+			a_line: STRING
+			l_input_filename: STRING
+			l_output3_log_filename: STRING
+			l_first_line: BOOLEAN
 		do
-			file_system.concat_files (output_log_filename, output3_log_filename)
-			file_system.concat_files (output_log_filename, error3_log_filename)
+				-- Copy files.
+			create out_file.make (output_log_filename)
+			out_file.open_append
+			if out_file.is_open_write then
+				from
+					l_output3_log_filename := output3_log_filename
+					l_input_filename := l_output3_log_filename
+				until
+					l_input_filename = Void
+				loop
+					create in_file.make (l_input_filename)
+					in_file.open_read
+					if in_file.is_open_read then
+						from
+							in_file.read_line
+							l_first_line := True
+						until
+							in_file.end_of_file
+						loop
+							a_line := in_file.last_string
+							if l_first_line and then a_line.starts_with ({UC_UTF8_ROUTINES}.utf8_bom) then
+								a_line := a_line.tail (a_line.count - {UC_UTF8_ROUTINES}.utf8_bom.count)
+							end
+							out_file.put_line (a_line)
+							in_file.read_line
+							l_first_line := False
+						end
+						in_file.close
+					else
+						assert ("cannot open file '" + l_input_filename + "'", False)
+					end
+					if l_input_filename = l_output3_log_filename then
+						l_input_filename := error3_log_filename
+					else
+						l_input_filename := Void
+					end
+				end
+				out_file.close
+			else
+				assert ("cannot open file '" + output_log_filename + "'", False)
+			end
 		end
 
 	output_recognized (a_filename1: STRING; a_directory1: KL_DIRECTORY; a_regexp1: RX_REGULAR_EXPRESSION; a_filename2: STRING): BOOLEAN
@@ -827,6 +1045,7 @@ feature {NONE} -- Output logs
 			done: BOOLEAN
 			l_pattern2: STRING
 			l_regexp2: RX_PCRE_REGULAR_EXPRESSION
+			l_first_line: BOOLEAN
 		do
 			if a_regexp1.recognizes (a_filename1) then
 					-- Compile regexp.
@@ -844,6 +1063,7 @@ feature {NONE} -- Output logs
 					if l_file2.is_open_read then
 						Result := True
 						from
+							l_first_line := True
 						until
 							done
 						loop
@@ -863,6 +1083,10 @@ feature {NONE} -- Output logs
 								done := True
 							elseif l_file1.last_string.same_string (l_file2.last_string) then
 								-- OK
+							elseif l_first_line and then l_file1.last_string.same_string ({UC_UTF8_ROUTINES}.utf8_bom + l_file2.last_string) then
+								-- OK
+							elseif l_first_line and then l_file2.last_string.same_string ({UC_UTF8_ROUTINES}.utf8_bom + l_file1.last_string) then
+								-- OK
 							elseif Execution_environment.interpreted_string (l_file1.last_string).same_string (l_file2.last_string) then
 								-- OK
 							elseif
@@ -877,6 +1101,7 @@ feature {NONE} -- Output logs
 								l_file2.close
 								done := True
 							end
+							l_first_line := False
 						end
 					else
 						l_file1.close
@@ -896,10 +1121,25 @@ feature {NONE} -- Execution
 			a_shell_command_not_void: a_shell_command /= Void
 			a_shell_command_not_empty: a_shell_command.count > 0
 		local
-			a_command: DP_SHELL_COMMAND
+			l_command: DP_SHELL_COMMAND
+			l_command_name: STRING
 		do
-			create a_command.make (a_shell_command)
-			a_command.execute
+			l_command_name := a_shell_command.twin
+			l_command_name.replace_substring_all ("\", "\\")
+			l_command_name.replace_substring_all ("%"", "\%"")
+			l_command_name := "geant -b %"" + execution_buildname + "%" -Dexecutable=%"" + l_command_name + "%" -Ddirectory=%"" + testrun_dirname + "%" execute"
+
+			create l_command.make (l_command_name)
+			l_command.execute
+		end
+
+	execution_buildname: STRING
+			-- Name of geant build file used for execution
+		do
+			Result := file_system.nested_pathname (Execution_environment.interpreted_string ("${GOBO}"), <<"library", "common", "config", "execute.eant">>)
+		ensure
+			execution_buildname_not_void: Result /= Void
+			execution_buildname_not_empty: Result.count > 0
 		end
 
 feature {NONE} -- Regular expressions

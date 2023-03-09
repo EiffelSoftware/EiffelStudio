@@ -4,7 +4,7 @@
 		"C declarations for the Gobo Eiffel runtime."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,11 @@
 #define EIF_DOUBLE EIF_REAL_64
 #endif
 #ifndef GE_ms
+#if EIF_CHARACTER == EIF_CHARACTER_8
 #define GE_ms(s,c) GE_ms8((s),(c))
+#else
+#define GE_ms(s,c) GE_ms32((s),(c))
+#endif
 #endif
 
 #if defined(__USE_POSIX) || defined(__unix__) || defined(_POSIX_C_SOURCE)
@@ -47,6 +51,24 @@
 #include <windows.h>
 #endif
 
+/* See https://sourceforge.net/p/predef/wiki/OperatingSystems/ */
+#if (defined(macintosh) || defined(Macintosh))
+#define EIF_MAC 1
+#define EIF_MACOSX 1
+#endif
+#if (defined(__APPLE__) && defined(__MACH__))
+/* Apparently ISE does not define EIF_MASOSX for Mac OS X >=10.4 (see EXECUTION_ENVIRONMENT.available_cpu_count) */
+#define EIF_MAC 1
+#endif
+
+#if (defined(VMS) || defined(__VMS))
+#define EIF_VMS 1
+#endif
+
+#if (defined(__VXWORKS__) || defined(__vxworks))
+#define EIF_VXWORKS 1
+#endif
+
 #define BYTEORDER 0x1234
 
 #include <stdlib.h>
@@ -55,12 +77,21 @@
 #include <string.h>
 #include <stddef.h>
 
+#define EIF_OS_WINNT 	1
+#define EIF_OS_LINUX 	2
+#define EIF_OS_DARWIN 	4
+#define EIF_OS_VXWORKS	11
+#define EIF_OS_VMS	12
+
 /* Platform definition */
 /* Unix definition */
 #define EIF_IS_UNIX EIF_TRUE
+#define EIF_OS EIF_OS_LINUX
 /* Windows definition */
 #ifdef EIF_WINDOWS
 #define EIF_IS_WINDOWS EIF_TRUE
+#undef EIF_OS
+#define EIF_OS EIF_OS_WINNT
 #undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
 #else
@@ -69,6 +100,8 @@
 /* VMS definition */
 #ifdef EIF_VMS
 #define EIF_IS_VMS EIF_TRUE
+#undef EIF_OS
+#define EIF_OS EIF_OS_VMS
 #undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
 #else
@@ -77,6 +110,8 @@
 /* MAC definition */
 #ifdef EIF_MAC
 #define EIF_IS_MAC EIF_TRUE
+#undef EIF_OS
+#define EIF_OS EIF_OS_DARWIN
 #undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
 #else
@@ -85,6 +120,8 @@
 /* VxWorks definition */
 #ifdef EIF_VXWORKS
 #define EIF_IS_VXWORKS EIF_TRUE
+#undef EIF_OS
+#define EIF_OS EIF_OS_VXWORKS
 #undef EIF_IS_UNIX
 #define EIF_IS_UNIX EIF_FALSE
 #else

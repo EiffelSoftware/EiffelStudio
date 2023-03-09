@@ -34,6 +34,9 @@ create
 create {PART_SORTED_TWO_WAY_LIST}
 	make_sublist
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature -- Element change
 
 	extend (v: like item)
@@ -156,7 +159,7 @@ feature {PART_SORTED_TWO_WAY_LIST} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

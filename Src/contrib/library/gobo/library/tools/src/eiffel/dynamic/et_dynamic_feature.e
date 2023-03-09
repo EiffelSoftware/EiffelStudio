@@ -5,7 +5,7 @@ note
 		"Eiffel features equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,6 +46,8 @@ feature {NONE} -- Initialization
 			static_feature := a_feature
 			target_type := a_target_type
 			dynamic_type_sets := empty_dynamic_type_sets
+			create query_calls.make_map (10)
+			create procedure_calls.make_map (10)
 			if attached {ET_EXTERNAL_ROUTINE} a_feature as l_external_routine then
 				builtin_class_code := l_external_routine.builtin_class_code
 				builtin_feature_code := l_external_routine.builtin_feature_code
@@ -155,6 +157,11 @@ feature {NONE} -- Initialization
 				if a_system.ise_runtime_set_reference_field_feature = Void then
 					a_system.set_ise_runtime_set_reference_field_feature (Current)
 				end
+			end
+			if a_feature.has_seed (a_system.current_system.copy_seed) then
+				is_copy_routine := True
+			elseif a_feature.has_seed (a_system.current_system.is_equal_seed) then
+				is_is_equal_routine := True
 			end
 		ensure
 			static_feature_set: static_feature = a_feature
@@ -295,10 +302,10 @@ feature -- Status report
 			-- Have dynamic type sets of current feature been built?
 
 	is_generated: BOOLEAN
-			-- Has code for current feature been generated?
+			-- Has code for current feature been registered to be generated?
 
 	is_static_generated: BOOLEAN
-			-- Has code for the statically called version of current feature been generated?
+			-- Has code for the statically called version of current feature been registered to be generated?
 
 	is_creation: BOOLEAN
 			-- Is current feature used as a creation procedure?
@@ -385,11 +392,35 @@ feature -- Status report
 			is_once: Result implies is_once
 		end
 
+	is_once_per_thread: BOOLEAN
+			-- Is current feature a once-per-thread routine?
+		do
+			Result := static_feature.is_once_per_thread
+		ensure
+			definition: Result = static_feature.is_once_per_thread
+			is_once: Result implies is_once
+		end
+
+	is_once_per_object: BOOLEAN
+			-- Is current feature a once-per-object routine?
+		do
+			Result := static_feature.is_once_per_object
+		ensure
+			definition: Result = static_feature.is_once_per_object
+			is_once: Result implies is_once
+		end
+
 	is_precursor: BOOLEAN
 			-- Is current feature a precursor?
 		do
 			-- Result := False
 		end
+
+	is_copy_routine: BOOLEAN
+			-- Is current feature the version of 'ANY.copy' in `target_type'?
+
+	is_is_equal_routine: BOOLEAN
+			-- Is current feature the version of 'ANY.is_equal' in `target_type'?
 
 	is_semistrict (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN
 			-- Is current feature semistrict?
@@ -419,7 +450,7 @@ feature -- Status report
 		end
 
 	is_builtin_any_class: BOOLEAN
-			-- Is current feature the built-in feature of class "ANY"?
+			-- Is current feature a built-in feature of class "ANY"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_any_class
 		ensure
@@ -428,7 +459,7 @@ feature -- Status report
 		end
 
 	is_builtin_arguments_32_class: BOOLEAN
-			-- Is current feature the built-in feature of class "ARGUMENTS_32"?
+			-- Is current feature a built-in feature of class "ARGUMENTS_32"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_arguments_32_class
 		ensure
@@ -437,7 +468,7 @@ feature -- Status report
 		end
 
 	is_builtin_boolean_class: BOOLEAN
-			-- Is current feature the built-in feature of class "BOOLEAN"?
+			-- Is current feature a built-in feature of class "BOOLEAN"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_boolean_class
 		ensure
@@ -446,7 +477,7 @@ feature -- Status report
 		end
 
 	is_builtin_boolean_ref_class: BOOLEAN
-			-- Is current feature the built-in feature of class "BOOLEAN_REF"?
+			-- Is current feature a built-in feature of class "BOOLEAN_REF"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_boolean_ref_class
 		ensure
@@ -455,7 +486,7 @@ feature -- Status report
 		end
 
 	is_builtin_character_n_class: BOOLEAN
-			-- Is current feature the built-in feature of classes "CHARACTER_N"?
+			-- Is current feature a built-in feature of classes "CHARACTER_N"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_character_8_class or builtin_class_code = {ET_TOKEN_CODES}.builtin_character_32_class
 		ensure
@@ -464,7 +495,7 @@ feature -- Status report
 		end
 
 	is_builtin_character_n_ref_class: BOOLEAN
-			-- Is current feature the built-in feature of classes "CHARACTER_N_REF"?
+			-- Is current feature a built-in feature of classes "CHARACTER_N_REF"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_character_8_ref_class or builtin_class_code = {ET_TOKEN_CODES}.builtin_character_32_ref_class
 		ensure
@@ -473,7 +504,7 @@ feature -- Status report
 		end
 
 	is_builtin_com_failure_class: BOOLEAN
-			-- Is current feature the built-in feature of class "COM_FAILURE"?
+			-- Is current feature a built-in feature of class "COM_FAILURE"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_com_failure_class
 		ensure
@@ -482,7 +513,7 @@ feature -- Status report
 		end
 
 	is_builtin_exception_manager_class: BOOLEAN
-			-- Is current feature the built-in feature of class "EXCEPTION_MANAGER"?
+			-- Is current feature a built-in feature of class "EXCEPTION_MANAGER"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_exception_manager_class
 		ensure
@@ -491,7 +522,7 @@ feature -- Status report
 		end
 
 	is_builtin_exception_manager_factory_class: BOOLEAN
-			-- Is current feature the built-in feature of class "EXCEPTION_MANAGER_FACTORY"?
+			-- Is current feature a built-in feature of class "EXCEPTION_MANAGER_FACTORY"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_exception_manager_factory_class
 		ensure
@@ -500,7 +531,7 @@ feature -- Status report
 		end
 
 	is_builtin_function_class: BOOLEAN
-			-- Is current feature the built-in feature of class "FUNCTION"?
+			-- Is current feature a built-in feature of class "FUNCTION"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_function_class
 		ensure
@@ -509,7 +540,7 @@ feature -- Status report
 		end
 
 	is_builtin_identified_routines_class: BOOLEAN
-			-- Is current feature the built-in feature of class "IDENTIFIED_ROUTINES"?
+			-- Is current feature a built-in feature of class "IDENTIFIED_ROUTINES"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_identified_routines_class
 		ensure
@@ -518,7 +549,7 @@ feature -- Status report
 		end
 
 	is_builtin_integer_n_class: BOOLEAN
-			-- Is current feature the built-in feature of classes "INTEGER_N" or "NATURAL_N"?
+			-- Is current feature a built-in feature of classes "INTEGER_N" or "NATURAL_N"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_8_class or
 				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_16_class or
@@ -541,7 +572,7 @@ feature -- Status report
 		end
 
 	is_builtin_integer_n_ref_class: BOOLEAN
-			-- Is current feature the built-in feature of classes "INTEGER_N_REF" or "NATURAL_N_REF"?
+			-- Is current feature a built-in feature of classes "INTEGER_N_REF" or "NATURAL_N_REF"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_8_ref_class or
 				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_16_ref_class or
@@ -564,7 +595,7 @@ feature -- Status report
 		end
 
 	is_builtin_ise_exception_manager_class: BOOLEAN
-			-- Is current feature the built-in feature of class "ISE_EXCEPTION_MANAGER"?
+			-- Is current feature a built-in feature of class "ISE_EXCEPTION_MANAGER"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_ise_exception_manager_class
 		ensure
@@ -573,7 +604,7 @@ feature -- Status report
 		end
 
 	is_builtin_ise_runtime_class: BOOLEAN
-			-- Is current feature the built-in feature of class "ISE_RUNTIME"?
+			-- Is current feature a built-in feature of class "ISE_RUNTIME"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_ise_runtime_class
 		ensure
@@ -582,7 +613,7 @@ feature -- Status report
 		end
 
 	is_builtin_memory_class: BOOLEAN
-			-- Is current feature the built-in feature of class "MEMORY"?
+			-- Is current feature a built-in feature of class "MEMORY"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_memory_class
 		ensure
@@ -591,7 +622,7 @@ feature -- Status report
 		end
 
 	is_builtin_platform_class: BOOLEAN
-			-- Is current feature the built-in feature of class "PLATFORM"?
+			-- Is current feature a built-in feature of class "PLATFORM"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_platform_class
 		ensure
@@ -600,7 +631,7 @@ feature -- Status report
 		end
 
 	is_builtin_pointer_class: BOOLEAN
-			-- Is current feature the built-in feature of class "POINTER"?
+			-- Is current feature a built-in feature of class "POINTER"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_pointer_class
 		ensure
@@ -609,7 +640,7 @@ feature -- Status report
 		end
 
 	is_builtin_pointer_ref_class: BOOLEAN
-			-- Is current feature the built-in feature of class "POINTER_REF"?
+			-- Is current feature a built-in feature of class "POINTER_REF"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_pointer_ref_class
 		ensure
@@ -618,7 +649,7 @@ feature -- Status report
 		end
 
 	is_builtin_procedure_class: BOOLEAN
-			-- Is current feature the built-in feature of class "PROCEDURE"?
+			-- Is current feature a built-in feature of class "PROCEDURE"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_procedure_class
 		ensure
@@ -627,7 +658,7 @@ feature -- Status report
 		end
 
 	is_builtin_real_n_class: BOOLEAN
-			-- Is current feature the built-in feature of classes "REAL_N"?
+			-- Is current feature a built-in feature of classes "REAL_N"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_real_32_class or builtin_class_code = {ET_TOKEN_CODES}.builtin_real_64_class
 		ensure
@@ -636,7 +667,7 @@ feature -- Status report
 		end
 
 	is_builtin_real_n_ref_class: BOOLEAN
-			-- Is current feature the built-in feature of classes "REAL_N_REF"?
+			-- Is current feature a built-in feature of classes "REAL_N_REF"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_real_32_ref_class or builtin_class_code = {ET_TOKEN_CODES}.builtin_real_64_ref_class
 		ensure
@@ -645,7 +676,7 @@ feature -- Status report
 		end
 
 	is_builtin_special_class: BOOLEAN
-			-- Is current feature the built-in feature of class "SPECIAL"?
+			-- Is current feature a built-in feature of class "SPECIAL"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_special_class
 		ensure
@@ -654,7 +685,7 @@ feature -- Status report
 		end
 
 	is_builtin_tuple_class: BOOLEAN
-			-- Is current feature the built-in feature of class "TUPLE"?
+			-- Is current feature a built-in feature of class "TUPLE"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_tuple_class
 		ensure
@@ -663,7 +694,7 @@ feature -- Status report
 		end
 
 	is_builtin_type_class: BOOLEAN
-			-- Is current feature the built-in feature of class "TYPE"?
+			-- Is current feature a built-in feature of class "TYPE"?
 		do
 			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_type_class
 		ensure
@@ -687,6 +718,60 @@ feature -- Status report
 		ensure
 			builtin: Result implies is_builtin
 			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_procedure_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_procedure_call)
+		end
+
+	is_builtin_any_copy: BOOLEAN
+			-- Is current feature the built-in feature 'ANY.copy'?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_any_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_any_copy
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_any_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_any_copy)
+		end
+
+	is_builtin_any_is_equal: BOOLEAN
+			-- Is current feature the built-in feature 'ANY.is_equal'?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_any_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_any_is_equal
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_any_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_any_is_equal)
+		end
+
+	is_builtin_ise_runtime_new_tuple_instance_of: BOOLEAN
+			-- Is current feature the built-in feature 'ISE_RUNTIME.new_tuple_instance_of'?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_ise_runtime_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_ise_runtime_new_tuple_instance_of
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_ise_runtime_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_ise_runtime_new_tuple_instance_of)
+		end
+
+	is_builtin_special_item: BOOLEAN
+			-- Is current feature the built-in feature 'SPECIAL.item'?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_special_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_special_item
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_special_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_special_item)
+		end
+
+	is_builtin_special_put: BOOLEAN
+			-- Is current feature the built-in feature 'SPECIAL.put'?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_special_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_special_put
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_special_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_special_put)
+		end
+
+	is_builtin_special_extend: BOOLEAN
+			-- Is current feature the built-in feature 'SPECIAL.extend'?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_special_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_special_extend
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_special_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_special_extend)
 		end
 
 	builtin_class_code: NATURAL_8
@@ -777,6 +862,72 @@ feature -- Status setting
 			regular_set: b implies is_regular
 		end
 
+feature -- Calls
+
+	query_call (a_static_call: ET_CALL_COMPONENT): detachable ET_DYNAMIC_QUALIFIED_QUERY_CALL
+			-- Qualified query call in current feature whose static call is `a_static_call', if any
+		require
+			a_static_call_not_void: a_static_call /= Void
+		do
+			Result := query_calls.value (a_static_call.name)
+		ensure
+			definition: Result = query_calls.value (a_static_call.name)
+		end
+
+	query_calls: DS_HASH_TABLE [ET_DYNAMIC_QUALIFIED_QUERY_CALL, ET_CALL_NAME]
+			-- Qualified query calls called from current feature
+			--
+			-- Use the name of the call as key because for call agents (e.g. 'agent a.f')
+			-- we use a temporary qualified call expression or instruction instead of the
+			-- actual call agent as static call to generate the C code in ET_C_GENERATOR.
+			-- (See ET_C_GENERATOR.print_call_agent_body_declaration.) This is so that
+			-- `query_call' can get the right dynamic call despite the static call object
+			-- being different.
+
+	procedure_call (a_static_call: ET_CALL_COMPONENT): detachable ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
+			-- Qualified procedure call in current feature whose static call is `a_static_call', if any
+		require
+			a_static_call_not_void: a_static_call /= Void
+		do
+			Result := procedure_calls.value (a_static_call.name)
+		ensure
+			definition: Result = procedure_calls.value (a_static_call.name)
+		end
+
+	procedure_calls: DS_HASH_TABLE [ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL, ET_CALL_NAME]
+			-- Qualified procedure calls called from current feature
+			--
+			-- Use the name of the call as key because for call agents (e.g. 'agent a.f')
+			-- we use a temporary qualified call expression or instruction instead of the
+			-- actual call agent as static call to generate the C code in ET_C_GENERATOR.
+			-- (See ET_C_GENERATOR.print_call_agent_body_declaration.) This is so that
+			-- `procedure_call' can get the right dynamic call despite the static call object
+			-- being different.
+
+feature {ET_DYNAMIC_PRIMARY_TYPE} -- Calls
+
+	put_query_call (a_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL)
+			-- Add `a_call' to the list of qualified query calls called from current feature.
+		require
+			a_call_not_void: a_call /= Void
+			a_call_caller: a_call.current_feature = Current
+		do
+			query_calls.force (a_call, a_call.static_call.name)
+		ensure
+			added: query_calls.value (a_call.static_call.name) = a_call
+		end
+
+	put_procedure_call (a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL)
+			-- Add `a_call' to the list of qualified procedure calls called from current feature.
+		require
+			a_call_not_void: a_call /= Void
+			a_call_caller: a_call.current_feature = Current
+		do
+			procedure_calls.force (a_call, a_call.static_call.name)
+		ensure
+			added: procedure_calls.value (a_call.static_call.name) = a_call
+		end
+
 feature -- Output
 
 	debug_output: STRING
@@ -801,5 +952,9 @@ invariant
 	static_feature_not_void: static_feature /= Void
 	target_type_not_void: target_type /= Void
 	dynamic_type_sets_not_void: dynamic_type_sets /= Void
+	query_calls_not_void: query_calls /= Void
+	no_void_query_call: not query_calls.has_void
+	procedure_calls_not_void: procedure_calls /= Void
+	no_void_procedure_call: not procedure_calls.has_void
 
 end

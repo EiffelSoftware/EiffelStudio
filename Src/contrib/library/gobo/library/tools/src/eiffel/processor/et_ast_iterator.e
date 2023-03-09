@@ -5,7 +5,7 @@ note
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.across_keyword.process (Current)
 			an_expression.iterable_expression.process (Current)
 			an_expression.as_keyword.process (Current)
-			an_expression.cursor_name.process (Current)
+			an_expression.item_name.process (Current)
 			if attached an_expression.invariant_part as l_invariant_part then
 				l_invariant_part.process (Current)
 			end
@@ -48,7 +48,7 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.across_keyword.process (Current)
 			an_instruction.iterable_expression.process (Current)
 			an_instruction.as_keyword.process (Current)
-			an_instruction.cursor_name.process (Current)
+			an_instruction.item_name.process (Current)
 			if attached an_instruction.from_compound as l_from_compound then
 				l_from_compound.process (Current)
 			end
@@ -1175,6 +1175,18 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right.process (Current)
 		end
 
+	process_explicit_convert_from_expression (a_convert_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+			a_convert_expression.expression.process (Current)
+		end
+
+	process_explicit_convert_to_expression (a_convert_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+			a_convert_expression.expression.process (Current)
+		end
+
 	process_export_list (a_list: ET_EXPORT_LIST)
 			-- Process `a_list'.
 		local
@@ -1761,6 +1773,19 @@ feature {ET_AST_NODE} -- Processing
 			an_operator.else_keyword.process (Current)
 		end
 
+	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			a_expression.conditional.process (Current)
+			if attached a_expression.when_parts as l_when_parts then
+				l_when_parts.process (Current)
+			end
+			if attached a_expression.else_part as l_else_part then
+				l_else_part.process (Current)
+			end
+			a_expression.end_keyword.process (Current)
+		end
+
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
@@ -1785,6 +1810,13 @@ feature {ET_AST_NODE} -- Processing
 				a_list.item (i).process (Current)
 				i := i + 1
 			end
+		end
+
+	process_iteration_cursor (a_iteration_cursor: ET_ITERATION_CURSOR)
+			-- Process `a_iteration_cursor'.
+		do
+			a_iteration_cursor.at_symbol.process (Current)
+			a_iteration_cursor.item_name.process (Current)
 		end
 
 	process_keyword (a_keyword: ET_KEYWORD)
@@ -2504,7 +2536,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_expression'.
 		do
 			a_expression.quantifier_symbol.process (Current)
-			a_expression.cursor_name.process (Current)
+			a_expression.item_name.process (Current)
 			a_expression.colon_symbol.process (Current)
 			a_expression.iterable_expression.process (Current)
 			a_expression.bar_symbol.process (Current)
@@ -2581,7 +2613,7 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 		do
 			a_instruction.open_repeat_symbol.process (Current)
-			a_instruction.cursor_name.process (Current)
+			a_instruction.item_name.process (Current)
 			a_instruction.colon_symbol.process (Current)
 			a_instruction.iterable_expression.process (Current)
 			a_instruction.bar_symbol.process (Current)
@@ -2869,6 +2901,26 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			process_keyword (an_expression)
+		end
+
+	process_when_expression (a_when_part: ET_WHEN_EXPRESSION)
+			-- Process `a_when_part'.
+		do
+			a_when_part.choices.process (Current)
+			a_when_part.then_keyword.process (Current)
+			a_when_part.then_expression.process (Current)
+		end
+
+	process_when_expression_list (a_list: ET_WHEN_EXPRESSION_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
 		end
 
 	process_when_part (a_when_part: ET_WHEN_PART)

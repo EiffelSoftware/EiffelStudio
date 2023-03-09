@@ -25,7 +25,7 @@
 			<concurrency support="thread" use="thread"/>
 			<void_safety support="all" use="all"/>
 		</capability>
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf" readonly="true">
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
 			</condition>

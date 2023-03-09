@@ -20,16 +20,28 @@ inherit
 			preconditions,
 			reset_preconditions,
 			postconditions,
-			reset_postconditions
+			reset_postconditions,
+			reset_after_interface_checked
 		redefine
 			make,
-			reset_after_interface_checked,
 			obsolete_message,
 			header_break,
 			last_leaf,
 			new_synonym,
 			renamed_feature,
 			process
+		end
+
+	ET_INTERNAL_FEATURE
+		undefine
+			reset,
+			is_attribute,
+			is_transient_attribute,
+			is_stable_attribute,
+			is_prefixable,
+			type
+		redefine
+			obsolete_message
 		end
 
 	ET_EXTENDED_ATTRIBUTE_CLOSURE
@@ -54,23 +66,15 @@ feature {NONE} -- Initialization
 			precursor (a_name, a_type, a_class)
 		end
 
-feature -- Initialization
+feature -- Status report
 
-	reset_after_interface_checked
-			-- Reset current attribute as it was just after its interface was last checked.
+	has_self_initializing_code: BOOLEAN
+			-- Has current attribute code for self-initialization?
+			-- If it has just pre- and postconditions, then we consider
+			-- that it is not a declaration for self-initialization.
 		do
-			if validity_checked then
-				if attached locals as l_locals then
-					l_locals.reset
-				end
-				if attached compound as l_compound then
-					l_compound.reset
-				end
-				if attached rescue_clause as l_rescue_clause then
-					l_rescue_clause.reset
-				end
-			end
-			precursor
+			Result := locals /= Void or else rescue_clause /= Void or else
+				attached compound as l_compound and then l_compound.has_non_null_instruction
 		end
 
 feature -- Access

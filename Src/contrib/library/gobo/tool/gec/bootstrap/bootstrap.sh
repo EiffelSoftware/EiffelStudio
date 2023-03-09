@@ -1,18 +1,16 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
-# copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
+# copyright: "Copyright (c) 2016-2021, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
 
 
-# usage: bootstrap.sh [-v][--thread=N] <c_compiler>
-
-echo "Executing bootstrap.sh..."
+# usage: bootstrap.sh [-v|-s][--thread=N] <c_compiler>
 
 gobo_usage() {
-	echo "usage: bootstrap.sh [-v][--thread=N] <c_compiler>"
+	echo "usage: bootstrap.sh [-v|-s][--thread=N] <c_compiler>"
 	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | clang | cc | icc | tcc | no_c"
 }
 
@@ -23,6 +21,10 @@ do
 	case $1 in
 		-v)
 			VERBOSE=-v
+			shift
+			;;
+		-s)
+			VERBOSE=-s
 			shift
 			;;
 		--thread=*)
@@ -36,6 +38,10 @@ do
 done
 CC=$1
 EIF=ge
+
+if [ "$VERBOSE" != "-s" ]; then
+	echo "Executing bootstrap.sh..."
+fi
 
 if [ "$GOBO" = "" ]; then
 	echo "Environment variable GOBO must be set"
@@ -53,9 +59,10 @@ BOOTSTRAP_DIR=$GOBO/tool/gec/bootstrap
 cd $BIN_DIR
 
 c_compilation() {
-	if [ "$VERBOSE" = "-v" ]; then
+	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 0)..."
 	fi
+	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec9.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec8.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec7.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec6.c
@@ -152,7 +159,7 @@ elif [ "$CC" = "mingw" ]; then
 	CFLAGS=''
 	LFLAGS=''
 	LFLAG_OUT='-o '
-	LLIBS='-lm'
+	LLIBS='-lm -liconv'
 	echo mingw > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "clang" ]; then
@@ -162,7 +169,7 @@ elif [ "$CC" = "clang" ]; then
 	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations'
 	LFLAGS=''
 	LFLAG_OUT='-o '
-	LLIBS='-lm -lpthread'
+	LLIBS='-lm -lpthread -liconv'
 	echo clang > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "cc" ]; then
@@ -201,24 +208,24 @@ fi
 
 if [ "$EIF" = "ge" ]; then
 	cd $BIN_DIR
-	if [ "$VERBOSE" = "-v" ]; then
+	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gecc (bootstrap 1)..."
 	fi
 	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $THREAD_OPTION $GOBO/tool/gecc/src/system.ecf
 	$BIN_DIR/gecc.sh
 	# Compile gec twice to get a bootstrap effect.
-	if [ "$VERBOSE" = "-v" ]; then
+	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 1)..."
 	fi
 	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $THREAD_OPTION $GOBO/tool/gec/src/system.ecf
 	$BIN_DIR/gecc$EXE $THREAD_OPTION gec.sh
-	if [ "$VERBOSE" = "-v" ]; then
+	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 2)..."
 	fi
 	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $THREAD_OPTION $GOBO/tool/gec/src/system.ecf
 	$BIN_DIR/gecc$EXE $THREAD_OPTION gec.sh
 	$STRIP gec$EXE
-	if [ "$VERBOSE" = "-v" ]; then
+	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gecc (bootstrap 2)..."
 	fi
 	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $THREAD_OPTION $GOBO/tool/gecc/src/system.ecf

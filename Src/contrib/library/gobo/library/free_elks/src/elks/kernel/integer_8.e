@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Integer values coded on 8 bits"
 	external_name: "System.SByte"
 	assembly: "mscorlib"
@@ -70,19 +70,19 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	minus alias "-" (other: INTEGER_8): INTEGER_8
+	minus alias "-" alias "−" (other: INTEGER_8): INTEGER_8
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	product alias "*" (other: INTEGER_8): INTEGER_8
+	product alias "*" alias "×" (other: INTEGER_8): INTEGER_8
 			-- Product by `other'
 		external
 			"built_in"
 		end
 
-	quotient alias "/" (other: INTEGER_8): REAL_64
+	quotient alias "/" alias "÷" (other: INTEGER_8): REAL_64
 			-- Division by `other'
 		external
 			"built_in"
@@ -94,7 +94,7 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	opposite alias "-": INTEGER_8
+	opposite alias "-" alias "−": INTEGER_8
 			-- Unary minus
 		external
 			"built_in"
@@ -194,44 +194,44 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	bit_and alias "&" (i: INTEGER_8): INTEGER_8
+	bit_and alias "&" alias "⊗" (i: INTEGER_8): INTEGER_8
 			-- Bitwise and between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_or alias "|" (i: INTEGER_8): INTEGER_8
+	bit_or alias "|" alias "⦶" (i: INTEGER_8): INTEGER_8
 			-- Bitwise or between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_xor (i: INTEGER_8): INTEGER_8
+	bit_xor alias "⊕" (i: INTEGER_8): INTEGER_8
 			-- Bitwise xor between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_not: INTEGER_8
+	bit_not alias "⊝": INTEGER_8
 			-- One's complement of Current.
 		external
 			"built_in"
 		end
 
-	bit_shift_left alias "|<<" (n: INTEGER): INTEGER_8
+	bit_shift_left alias "|<<" alias "⧀" (n: INTEGER): INTEGER_8
 			-- Shift Current from `n' position to left.
 		external
 			"built_in"
 		end
 
-	bit_shift_right alias "|>>" (n: INTEGER): INTEGER_8
+	bit_shift_right alias "|>>" alias "⧁" (n: INTEGER): INTEGER_8
 			-- Shift Current from `n' position to right.
 		external
 			"built_in"
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

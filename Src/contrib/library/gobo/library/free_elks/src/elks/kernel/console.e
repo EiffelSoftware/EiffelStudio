@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "[
 		Commonly used console input and output mechanisms. 
 		This class may be used as ancestor by classes needing its facilities.
@@ -32,6 +32,7 @@ class CONSOLE inherit
 				put_natural, put_natural_8, put_natural_16, put_natural_32, put_natural_64,
 				read_natural, read_natural_8, read_natural_16, read_natural_32, read_natural_64
 		redefine
+			default_encoding, detect_encoding,
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			read_real, read_double, read_character,
 			read_line, read_stream, read_word, next_line,
@@ -75,6 +76,20 @@ feature -- Initialization
 			make_with_name (fn)
 			file_pointer := console_def (2)
 			set_write_mode
+		end
+
+feature -- Encoding
+
+	default_encoding: ENCODING
+			-- <Precursor/>
+		once
+			Result := {SYSTEM_ENCODINGS}.console_encoding
+		end
+		
+	detect_encoding
+			-- <Precursor/>
+		do
+			set_encoding ({SYSTEM_ENCODINGS}.console_encoding)
 		end
 
 feature -- Status report
@@ -254,7 +269,7 @@ feature -- Input
 
 feature -- Output
 
-	put_character, putchar (c: CHARACTER)
+	put_character, putchar (c: CHARACTER_8)
 			-- Write `c' at end of default output.
 		do
 			console_pc (file_pointer, c)
@@ -349,7 +364,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
+	read_to_string (a_string: STRING_8; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.
 			-- Return the number of characters actually read.
@@ -412,7 +427,7 @@ feature {NONE} -- Implementation
 			"C blocking signature (FILE *): EIF_REAL use %"eif_console.h%""
 		end
 
-	console_readchar (file: POINTER): CHARACTER
+	console_readchar (file: POINTER): CHARACTER_8
 			-- Read a character from the console
 		external
 			"C blocking signature (FILE *): EIF_CHARACTER use %"eif_console.h%""
@@ -468,7 +483,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

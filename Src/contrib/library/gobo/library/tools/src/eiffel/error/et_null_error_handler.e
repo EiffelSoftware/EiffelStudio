@@ -5,7 +5,7 @@ note
 		"Null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,6 +71,7 @@ inherit
 			reportable_vfav2_error,
 			reportable_vfav3_error,
 			reportable_vfav4_error,
+			reportable_vfav5_error,
 			reportable_vffd4_error,
 			reportable_vffd7_error,
 			reportable_vgcc1_error,
@@ -107,6 +108,7 @@ inherit
 			reportable_vmss3_error,
 			reportable_voit1_error,
 			reportable_voit2_error,
+			reportable_voit3_error,
 			reportable_vomb1_error,
 			reportable_vomb2_error,
 			reportable_vpca1_error,
@@ -152,6 +154,7 @@ inherit
 			reportable_vuta2_error,
 			reportable_vvok1_error,
 			reportable_vvok2_error,
+			reportable_vwab_error,
 			reportable_vwbe_error,
 			reportable_vwce_error,
 			reportable_vweq_error,
@@ -593,6 +596,13 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vfav5_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VFAV-5 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_vffd4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFFD-4 error be reported when it
 			-- appears in `a_class'?
@@ -840,6 +850,13 @@ feature -- Validity error status
 
 	reportable_voit2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VOIT-2 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_voit3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VOIT-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
@@ -1141,6 +1158,13 @@ feature -- Validity error status
 
 	reportable_vvok2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VVOK-2 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vwab_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VWAB error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

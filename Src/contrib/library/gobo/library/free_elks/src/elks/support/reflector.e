@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-			Access to internal object properties.
-			This class may be used as ancestor by classes needing its facilities.
-		]"
+		Access to internal object properties.
+		This class may be used as ancestor by classes needing its facilities.
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -146,7 +146,7 @@ feature -- Creation
 		ensure
 			instance_free: class
 			dynamic_type_set: attached Result implies Result.generating_type.type_id = type_id
-			values_set: attached Result implies across 1 |..| Result.count as k all Result.item (k.item) = values [k.item - 1] end
+			values_set: attached Result implies ∀ k: 1 |..| Result.count ¦ Result.item (k) = values [k - 1]
 		end
 
 	new_tuple_from_tuple (type_id: INTEGER; source: separate TUPLE): detachable TUPLE
@@ -189,7 +189,7 @@ feature -- Creation
 			instance_free: class
 			dynamic_type_set: attached Result implies Result.generating_type.type_id = type_id
 			object_comparison_set: attached Result implies Result.object_comparison = source.object_comparison
-			values_set: attached Result implies across 1 |..| Result.count as k all Result.item (k.item) = source [k.item] end
+			values_set: attached Result implies ∀ k: 1 |..| Result.count ¦ Result.item (k) = source [k]
 		end
 
 	type_of_type (type_id: INTEGER): TYPE [detachable ANY]
@@ -286,6 +286,16 @@ feature -- Access
 			instance_free: class
 		end
 
+	class_name_8_of_type (type_id: INTEGER): STRING_8
+			-- Name of class associated with dynamic type `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+			Result := {ISE_RUNTIME}.generator_8_of_type (type_id)
+		ensure
+			instance_free: class
+		end
+
 	type_name_of_type (type_id: INTEGER): STRING
 			-- Name of `type_id''s generating type (type of which `type_id'
 			-- is a direct instance).
@@ -293,6 +303,17 @@ feature -- Access
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := {ISE_RUNTIME}.generating_type_of_type (type_id)
+		ensure
+			instance_free: class
+		end
+
+	type_name_8_of_type (type_id: INTEGER): STRING_8
+			-- Name of `type_id''s generating type (type of which `type_id'
+			-- is a direct instance).
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+			Result := {ISE_RUNTIME}.generating_type_8_of_type (type_id)
 		ensure
 			instance_free: class
 		end
@@ -364,6 +385,18 @@ feature -- Access
 		end
 
 	field_name_of_type (i: INTEGER; type_id: INTEGER): STRING
+			-- Name of `i'-th field of dynamic type `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
+			index_large_enough: i >= 1
+			index_small_enought: i <= field_count_of_type (type_id)
+		do
+			create Result.make_from_c ({ISE_RUNTIME}.field_name_of_type (i, type_id))
+		ensure
+			instance_free: class
+		end
+
+	field_name_8_of_type (i: INTEGER; type_id: INTEGER): STRING_8
 			-- Name of `i'-th field of dynamic type `type_id'.
 		require
 			type_id_nonnegative: type_id >= 0
@@ -453,8 +486,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

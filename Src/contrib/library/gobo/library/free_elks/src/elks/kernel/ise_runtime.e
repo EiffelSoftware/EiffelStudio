@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Set of features to access ISE runtime functionality.
 			To be used at your own risk.
@@ -16,9 +16,18 @@ frozen class
 feature -- Feature specific to ISE runtime.
 
 	frozen generator_of_type (a_type_id: INTEGER): STRING
-			-- Name of the generating class of current object
+			-- Name of the generating class of current object.
 		external
 			"built_in static"
+		ensure
+			instance_free: class
+		end
+
+	frozen generator_8_of_type (a_type_id: INTEGER): STRING_8
+			-- Name of the generating class of current object.
+		external
+			"built_in static"
+		alias "generator_of_type"
 		ensure
 			instance_free: class
 		end
@@ -33,6 +42,14 @@ feature -- Feature specific to ISE runtime.
 	frozen generating_type_of_type (a_type_id: INTEGER): STRING
 		external
 			"built_in static"
+		ensure
+			instance_free: class
+		end
+
+	frozen generating_type_8_of_type (a_type_id: INTEGER): STRING_8
+		external
+			"built_in static"
+		alias "generating_type_of_type"
 		ensure
 			instance_free: class
 		end
@@ -96,7 +113,7 @@ feature -- Internal C routines
 			instance_free: class
 		end
 
-	new_instance_of (type_id: INTEGER): ANY
+	frozen new_instance_of (type_id: INTEGER): ANY
 			-- New instance of dynamic `type_id'.
 			-- Note: returned object is not initialized and may
 			-- hence violate its invariant.
@@ -108,7 +125,7 @@ feature -- Internal C routines
 			instance_free: class
 		end
 
-	new_special_of_reference_instance_of (type_id, a_capacity: INTEGER): SPECIAL [detachable ANY]
+	frozen new_special_of_reference_instance_of (type_id, a_capacity: INTEGER): SPECIAL [detachable ANY]
 			-- New instance of dynamic `type_id' that represents
 			-- a SPECIAL which can contain `a_capacity' elements of reference type.
 			-- To create a SPECIAL of basic type, use class SPECIAL directly.	
@@ -118,7 +135,7 @@ feature -- Internal C routines
 			instance_free: class
 		end
 
-	new_tuple_instance_of (type_id: INTEGER): TUPLE
+	frozen new_tuple_instance_of (type_id: INTEGER): TUPLE
 			-- New instance of tuple of type `type_id'.
 			-- Note: returned object is not initialized and may
 			-- hence violate its invariant.
@@ -128,7 +145,7 @@ feature -- Internal C routines
 			instance_free: class
 		end
 
-	new_type_instance_of (type_id: INTEGER): TYPE [detachable ANY]
+	frozen new_type_instance_of (type_id: INTEGER): TYPE [detachable ANY]
 			-- New instance of TYPE for object of type `type_id'.
 		external
  			"built_in static"
@@ -184,7 +201,7 @@ feature -- Internal C routines
 			instance_free: class
 		end
 
-	frozen storable_version_of_type (a_type_id: INTEGER): detachable STRING
+	frozen storable_version_of_type (a_type_id: INTEGER): detachable STRING_8
 		external
 			"built_in static"
 		ensure
@@ -578,7 +595,7 @@ feature -- Internal support
 			instance_free: class
 		end
 
-	is_special_of_reference_type (type_id: INTEGER): BOOLEAN
+	frozen is_special_of_reference_type (type_id: INTEGER): BOOLEAN
 			-- Is type represented by `type_id' represent
 			-- a SPECIAL [XX] where XX is a reference type.
 		external
@@ -587,7 +604,7 @@ feature -- Internal support
 			instance_free: class
 		end
 
-	is_special_of_reference_or_basic_type (type_id: INTEGER): BOOLEAN
+	frozen is_special_of_reference_or_basic_type (type_id: INTEGER): BOOLEAN
 			-- Is type represented by `type_id' represent
 			-- a SPECIAL [XX] where XX is a reference type
 			-- or a basic expanded type (note that user-defined
@@ -598,7 +615,7 @@ feature -- Internal support
 			instance_free: class
 		end
 
-	is_tuple_type (type_id: INTEGER): BOOLEAN
+	frozen is_tuple_type (type_id: INTEGER): BOOLEAN
 			-- Is type represented by `type_id' represent a TUPLE?
 		external
 			"built_in static"
@@ -874,7 +891,7 @@ feature -- Object marking
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

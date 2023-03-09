@@ -377,7 +377,7 @@ feature -- Status report
 						--| Replace this line with the commented line once we solve the nature
 						--| of type instances in a SCOOP context.
 					l_type_id := {ISE_RUNTIME}.dynamic_type (v)
---					l_type_id := v.generating_type.type_id
+						--					l_type_id := v.generating_type.type_id
 					Result := l_reflector.field_conforms_to (l_type_id, generating_type.generic_parameter_type (index).type_id)
 				end
 			end
@@ -813,7 +813,7 @@ feature -- Type queries
 			then
 				Result := True
 			else
-				-- Nothing to do here since Result already initialized to False.
+					-- Nothing to do here since Result already initialized to False.
 			end
 		end
 
@@ -969,7 +969,7 @@ feature -- Concatenation
 			--| warning: this function has poor performance, use it with parsimony.
 		local
 			l_reflector: REFLECTOR
-			i, n1,n2: INTEGER
+			i, n1, n2: INTEGER
 			t1, t2: TYPE [detachable TUPLE]
 			l_type_id: INTEGER
 			l_items: SPECIAL [detachable separate ANY]
@@ -1004,7 +1004,7 @@ feature -- Concatenation
 						l_type_string.append_character (',')
 						l_type_string.append_character (' ')
 					end
-					l_type_string.append (t1.generic_parameter_type (i).name)
+					l_type_string.append (t1.generic_parameter_type (i).out)
 					l_items.force (item (i), i - 1)
 					i := i + 1
 				end
@@ -1016,7 +1016,7 @@ feature -- Concatenation
 				loop
 					l_type_string.append_character (',')
 					l_type_string.append_character (' ')
-					l_type_string.append (t2.generic_parameter_type (i - n1).name)
+					l_type_string.append (t2.generic_parameter_type (i - n1).out)
 					l_items.force (a_other.item (i - n1), i - 1)
 					i := i + 1
 				end
@@ -1036,9 +1036,9 @@ feature -- Concatenation
 		ensure
 			has_expected_count: Result /= Void implies Result.count = count + a_other.count
 			has_expected_items: Result /= Void implies (
-						(across 1 |..| count as ic_1 all Result[ic_1.item] = item (ic_1.item) end) and
-						(across 1 |..| a_other.count as ic_2 all Result[count + ic_2.item] = a_other [ic_2.item] end)
-					)
+					(∀ ic_1: 1 |..| count ¦ Result [ic_1] = item (ic_1)) and
+					(∀ ic_2: 1 |..| a_other.count ¦ Result [count + ic_2] = a_other [ic_2])
+				)
 		end
 
 feature -- Type conversion queries
@@ -1369,7 +1369,7 @@ feature -- Access: lower level
 
 feature {NONE} -- Implementation
 
-	area_name: STRING = "area"
+	area_name: STRING_8 = "area"
 			-- Name of attributes where TUPLE elements were stored.
 
 	is_tuple_uniform (code: like item_code): BOOLEAN
@@ -1415,8 +1415,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

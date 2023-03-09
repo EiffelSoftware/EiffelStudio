@@ -5,7 +5,7 @@
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1273,6 +1273,15 @@ feature -- Feature names
 			dynamic_type_at_offset_feature_name_not_void: Result /= Void
 		end
 
+	eif_current_object_id_feature_name: ET_FEATURE_NAME
+			-- 'eif_current_object_id' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (eif_current_object_id_name)
+		ensure
+			instance_free: class
+			eif_current_object_id_feature_name_not_void: Result /= Void
+		end
+
 	eif_gen_param_id_feature_name: ET_FEATURE_NAME
 			-- 'eif_gen_param_id' feature name
 		once
@@ -1289,6 +1298,15 @@ feature -- Feature names
 		ensure
 			instance_free: class
 			eif_id_object_feature_name_not_void: Result /= Void
+		end
+
+	eif_is_object_id_of_current_feature_name: ET_FEATURE_NAME
+			-- 'eif_is_object_id_of_current' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (eif_is_object_id_of_current_name)
+		ensure
+			instance_free: class
+			eif_is_object_id_of_current_feature_name_not_void: Result /= Void
 		end
 
 	eif_object_id_feature_name: ET_FEATURE_NAME
@@ -1516,6 +1534,15 @@ feature -- Feature names
 			generating_type_of_type_feature_name_not_void: Result /= Void
 		end
 
+	generating_type_8_of_type_feature_name: ET_FEATURE_NAME
+			-- 'generating_type_8_of_type' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (generating_type_8_of_type_name)
+		ensure
+			instance_free: class
+			generating_type_8_of_type_feature_name_not_void: Result /= Void
+		end
+
 	generator_feature_name: ET_FEATURE_NAME
 			-- 'generator' feature name
 		once
@@ -1532,6 +1559,15 @@ feature -- Feature names
 		ensure
 			instance_free: class
 			generator_of_type_feature_name_not_void: Result /= Void
+		end
+
+	generator_8_of_type_feature_name: ET_FEATURE_NAME
+			-- 'generator_8_of_type' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (generator_8_of_type_name)
+		ensure
+			instance_free: class
+			generator_8_of_type_feature_name_not_void: Result /= Void
 		end
 
 	generic_parameter_count_feature_name: ET_FEATURE_NAME
@@ -3892,6 +3928,15 @@ feature -- Symbols
 			symbol_not_void: Result /= Void
 		end
 
+	at_symbol: ET_SYMBOL
+			-- '@' symbol
+		once
+			create Result.make_at
+		ensure
+			instance_free: class
+			symbol_not_void: Result /= Void
+		end
+
 	bang_symbol: ET_SYMBOL
 			-- '!' symbol
 		once
@@ -4966,11 +5011,17 @@ feature -- Keyword and symbol names
 	dynamic_type_at_offset_name: STRING = "dynamic_type_at_offset"
 			-- Name of Eiffel feature 'dynamic_type_at_offset'
 
+	eif_current_object_id_name: STRING = "eif_current_object_id"
+			-- Name of Eiffel feature 'eif_current_object_id'
+
 	eif_gen_param_id_name: STRING = "eif_gen_param_id"
 			-- Name of Eiffel feature 'eif_gen_param_id'
 
 	eif_id_object_name: STRING = "eif_id_object"
 			-- Name of Eiffel feature 'eif_id_object'
+
+	eif_is_object_id_of_current_name: STRING = "eif_is_object_id_of_current"
+			-- Name of Eiffel feature 'eif_is_object_id_of_current'
 
 	eif_object_id_name: STRING = "eif_object_id"
 			-- Name of Eiffel feature 'eif_object_id'
@@ -5047,11 +5098,17 @@ feature -- Keyword and symbol names
 	generating_type_of_type_name: STRING = "generating_type_of_type"
 			-- Name of Eiffel feature 'generating_type_of_type'
 
+	generating_type_8_of_type_name: STRING = "generating_type_8_of_type"
+			-- Name of Eiffel feature 'generating_type_8_of_type'
+
 	generator_name: STRING = "generator"
 			-- Name of Eiffel feature 'generator'
 
 	generator_of_type_name: STRING = "generator_of_type"
 			-- Name of Eiffel feature 'generator_of_type'
+
+	generator_8_of_type_name: STRING = "generator_8_of_type"
+			-- Name of Eiffel feature 'generator_8_of_type'
 
 	generic_parameter_count_name: STRING = "generic_parameter_count"
 			-- Name of Eiffel feature 'generic_parameter_count'
@@ -5798,9 +5855,12 @@ feature -- Keyword and symbol names
 	no_type_mark_name: STRING = ""
 			-- Type mark names
 
+	and_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∧") end
+	and_then_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∧…") end
 	arrow_symbol_name: STRING = "->"
 	assign_symbol_name: STRING = ":="
 	assign_attempt_symbol_name: STRING = "?="
+	at_symbol_name: STRING = "@"
 	bang_symbol_name: STRING = "!"
 	bar_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "¦") end
 	brackets_symbol_name: STRING = "[]"
@@ -5816,6 +5876,7 @@ feature -- Keyword and symbol names
 	for_all_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∀") end
 	ge_symbol_name: STRING = ">="
 	gt_symbol_name: STRING = ">"
+	implies_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⇒") end
 	le_symbol_name: STRING = "<="
 	left_array_symbol_name: STRING = "<<"
 	left_brace_symbol_name: STRING = "{"
@@ -5824,9 +5885,12 @@ feature -- Keyword and symbol names
 	lt_symbol_name: STRING = "<"
 	minus_symbol_name: STRING = "-"
 	mod_symbol_name: STRING = "\\"
+	not_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "¬") end
 	not_equal_symbol_name: STRING = "/="
 	not_tilde_symbol_name: STRING = "/~"
 	open_repeat_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⟳") end
+	or_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∨") end
+	or_else_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∨…") end
 	parentheses_symbol_name: STRING = "()"
 	plus_symbol_name: STRING = "+"
 	power_symbol_name: STRING = "^"
@@ -5839,6 +5903,7 @@ feature -- Keyword and symbol names
 	there_exists_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∃") end
 	tilde_symbol_name: STRING = "~"
 	times_symbol_name: STRING = "*"
+	xor_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⊻") end
 			-- Eiffel symbol names
 
 	unknown_name: STRING = "***unknown_name***"
@@ -5871,9 +5936,15 @@ feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be
 feature -- Alias names
 
 	alias_and_name: STRING = "alias %"and%""
+	alias_and_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"∧%"") end
+	alias_and_then_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"∧…%"") end
 	alias_implies_name: STRING = "alias %"implies%""
+	alias_implies_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"⇒%"") end
 	alias_or_name: STRING = "alias %"or%""
+	alias_or_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"∨%"") end
+	alias_or_else_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"∨…%"") end
 	alias_xor_name: STRING = "alias %"xor%""
+	alias_xor_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"⊻%"") end
 	alias_div_name: STRING = "alias %"//%""
 	alias_divide_name: STRING = "alias %"/%""
 	alias_ge_name: STRING = "alias %">=%""
@@ -5889,6 +5960,7 @@ feature -- Alias names
 	alias_and_then_name: STRING = "alias %"and then%""
 	alias_or_else_name: STRING = "alias %"or else%""
 	alias_not_name: STRING = "alias %"not%""
+	alias_not_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"¬%"") end
 	alias_bracket_name: STRING = "alias %"[]%""
 	alias_parenthesis_name: STRING = "alias %"()%""
 			-- Alias feature names

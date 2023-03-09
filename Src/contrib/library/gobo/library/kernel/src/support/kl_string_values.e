@@ -5,7 +5,7 @@ note
 		"String values that are accessible through keys"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
-	KL_IMPORTED_ANY_ROUTINES
+	UC_CHARACTER_CODES
 		export {NONE} all end
 
 feature -- Conversion
@@ -57,7 +57,7 @@ feature -- Conversion
 			l_name: STRING
 			l_value: detachable STRING
 			i, nb: INTEGER
-			c: CHARACTER
+			c: NATURAL_32
 			has_braces: BOOLEAN
 			stop: BOOLEAN
 		do
@@ -68,11 +68,11 @@ feature -- Conversion
 			until
 				i > nb
 			loop
-				c := a_string.item (i)
+				c := a_string.code (i)
 				i := i + 1
-				if c /= '$' then
-					if c /= '%U' then
-						Result.append_character (c)
+				if c /= Dollar_code then
+					if c /= 0 then
+						Result.append_code (c)
 					else
 						Result := STRING_.appended_substring (Result, a_string, i - 1, i - 1)
 					end
@@ -81,8 +81,8 @@ feature -- Conversion
 						-- Leave it as it is.
 					Result.append_character ('$')
 				else
-					c := a_string.item (i)
-					if c = '$' then
+					c := a_string.code (i)
+					if c = Dollar_code then
 							-- Escaped dollar character.
 						Result.append_character ('$')
 						i := i + 1
@@ -90,7 +90,7 @@ feature -- Conversion
 							-- Found beginning of a variable.
 							-- It is either ${VAR} or $VAR.
 						l_name := STRING_.new_empty_string (a_string, 5)
-						if c = '{' then
+						if c = Left_brace_code then
 							has_braces := True
 								-- Looking for a right brace.
 							from
@@ -99,13 +99,13 @@ feature -- Conversion
 							until
 								i > nb or stop
 							loop
-								c := a_string.item (i)
-								if c = '}' then
+								c := a_string.code (i)
+								if c = Right_brace_code then
 									stop := True
-								elseif c /= '%U' then
-									l_name.append_character (c)
+								elseif c /= 0 then
+									l_name.append_code (c)
 								else
-									check same_type: ANY_.same_types (l_name, a_string) end
+									check same_type: l_name.same_type (a_string) end
 									STRING_.append_substring_to_string (l_name, a_string, i, i)
 								end
 								i := i + 1
@@ -119,10 +119,10 @@ feature -- Conversion
 							until
 								i > nb or stop
 							loop
-								c := a_string.item (i)
+								c := a_string.code (i)
 								inspect c
-								when 'a'..'z', 'A'..'Z', '0'..'9', '_' then
-									l_name.append_character (c)
+								when Lower_a_code .. Lower_z_code, Upper_a_code .. Upper_z_code, Zero_code .. Nine_code, Underscore_code then
+									l_name.append_code (c)
 									i := i + 1
 								else
 									stop := True

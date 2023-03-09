@@ -5,7 +5,7 @@ note
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,6 +68,8 @@ inherit
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
+			process_explicit_convert_from_expression,
+			process_explicit_convert_to_expression,
 			process_expression_address,
 			process_extended_attribute,
 			process_external_function,
@@ -83,6 +85,7 @@ inherit
 			process_if_instruction,
 			process_infix_cast_expression,
 			process_infix_expression,
+			process_inspect_expression,
 			process_inspect_instruction,
 			process_invariants,
 			process_like_feature,
@@ -136,6 +139,8 @@ inherit
 			process_unqualified_call_instruction,
 			process_variant,
 			process_verbatim_string,
+			process_when_expression,
+			process_when_expression_list,
 			process_when_part,
 			process_when_part_list
 		end
@@ -1267,6 +1272,7 @@ feature {ET_AST_NODE} -- Processing
 
 	process_elseif_expression (an_elseif_part: ET_ELSEIF_EXPRESSION)
 			-- Process `an_elseif_part'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			had_error: BOOLEAN
 		do
@@ -1279,6 +1285,7 @@ feature {ET_AST_NODE} -- Processing
 
 	process_elseif_expression_list (a_list: ET_ELSEIF_EXPRESSION_LIST)
 			-- Process `a_list'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			i, nb: INTEGER
 			had_error: BOOLEAN
@@ -1336,6 +1343,20 @@ feature {ET_AST_NODE} -- Processing
 			had_error := has_fatal_error
 			process_expression (an_expression.right)
 			reset_fatal_error (had_error or has_fatal_error)
+		end
+
+	process_explicit_convert_from_expression (an_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_creation_expression (an_expression)
+		end
+
+	process_explicit_convert_to_expression (an_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_qualified_feature_call_expression (an_expression)
 		end
 
 	process_expression (a_expression: ET_EXPRESSION)
@@ -1538,7 +1559,7 @@ feature {ET_AST_NODE} -- Processing
 				-- Do nothing
 			elseif l_name.is_object_test_local then
 				-- Do nothing
-			elseif l_name.is_iteration_cursor then
+			elseif l_name.is_iteration_item then
 				-- Do nothing
 			elseif attached current_class.seeded_procedure (l_seed) as l_procedure then
 					-- This is of the form '$procedure_name'.
@@ -1604,7 +1625,7 @@ feature {ET_AST_NODE} -- Processing
 			l_seed: INTEGER
 			l_iteration_component: ET_ITERATION_COMPONENT
 		do
-			if a_identifier.is_iteration_cursor then
+			if a_identifier.is_iteration_item then
 				l_seed := a_identifier.seed
 				if not attached current_closure_impl.iteration_components as l_iteration_components then
 						-- Internal error.
@@ -1624,8 +1645,9 @@ feature {ET_AST_NODE} -- Processing
 					end
 				else
 					l_iteration_component := l_iteration_components.iteration_component (l_seed)
-					if a_identifier /= l_iteration_component.unfolded_cursor_name and then l_iteration_component.has_item_cursor then
-							-- We are in the case 'across ... is ...' or with quantifiers.
+					if a_identifier /= l_iteration_component.unfolded_cursor_name and then not l_iteration_component.has_cursor_name then
+							-- We are not in the case of 'across ... as ...' with
+							-- 'obsolete_iteration_mode' set to True.
 						process_expression (l_iteration_component.cursor_item_expression)
 					end
 				end
@@ -1634,6 +1656,7 @@ feature {ET_AST_NODE} -- Processing
 
 	process_if_expression (a_expression: ET_IF_EXPRESSION)
 			-- Process `a_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			had_error: BOOLEAN
 		do
@@ -1687,6 +1710,26 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_qualified_feature_call_expression (an_expression)
+		end
+
+	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
+			-- Process `a_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			had_error: BOOLEAN
+		do
+			reset_fatal_error (False)
+			process_expression (a_expression.expression)
+			had_error := has_fatal_error
+			if attached a_expression.when_parts as l_when_parts then
+				process_when_expression_list (l_when_parts)
+				had_error := had_error or has_fatal_error
+			end
+			if attached a_expression.else_part as l_else_part then
+				process_expression (l_else_part.expression)
+				had_error := had_error or has_fatal_error
+			end
+			reset_fatal_error (had_error)
 		end
 
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
@@ -2959,6 +3002,36 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_manifest_string (a_string)
+		end
+
+	process_when_expression (a_when_part: ET_WHEN_EXPRESSION)
+			-- Process `a_when_part'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			had_error: BOOLEAN
+		do
+			reset_fatal_error (False)
+			process_choice_list (a_when_part.choices)
+			had_error := has_fatal_error
+			process_expression (a_when_part.then_expression)
+			reset_fatal_error (had_error or has_fatal_error)
+		end
+
+	process_when_expression_list (a_list: ET_WHEN_EXPRESSION_LIST)
+			-- Process `a_list'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			i, nb: INTEGER
+			had_error: BOOLEAN
+		do
+			reset_fatal_error (False)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				had_error := had_error or has_fatal_error
+				i := i + 1
+			end
+			reset_fatal_error (had_error)
 		end
 
 	process_when_part (a_when_part: ET_WHEN_PART)

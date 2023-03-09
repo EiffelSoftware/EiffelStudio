@@ -7,7 +7,7 @@ note
 			An Eiffel language conformance validation suite.
 		]"
 
-	copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,12 +28,41 @@ inherit
 
 create
 
-	execute
+	execute,
+	execute_with_arguments,
+	execute_with_arguments_and_error_handler
 
 feature -- Execution
 
 	execute
+			-- Start 'gecop' execution, reading arguments from the command-line.
+		do
+			execute_with_arguments (Arguments.to_array)
+			Exceptions.die (exit_code)
+		rescue
+			Exceptions.die (4)
+		end
+
+	execute_with_arguments (a_args: ARRAY [STRING])
+			-- Start 'gecop' execution with arguments `a_args'.
+			-- Set `exit_code'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args as i_arg all i_arg /= Void end
+		local
+			l_error_handler: UT_ERROR_HANDLER
+		do
+			create l_error_handler.make_standard
+			execute_with_arguments_and_error_handler (a_args, l_error_handler)
+		end
+
+	execute_with_arguments_and_error_handler (a_args: ARRAY [STRING]; a_error_handler: UT_ERROR_HANDLER)
 			-- Start 'gecop' execution.
+			-- Set `exit_code'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args as i_arg all i_arg /= Void end
+			a_error_handler_not_void: a_error_handler /= Void
 		local
 			l_validation_directory_name: STRING
 			l_directory: KL_DIRECTORY
@@ -44,68 +73,62 @@ feature -- Execution
 			l_output_stream: KL_STRING_OUTPUT_STREAM
 			l_output_string: STRING
 			l_aggregate, l_diff: BOOLEAN
-			l_filter: detachable RX_PCRE_REGULAR_EXPRESSION
+			l_set_up_mutex: MUTEX
 		do
 			Arguments.set_program_name ("gecop")
 			create error_handler.make_standard
-			parse_arguments
-			if tool_option.was_found and then attached tool_option.parameter as l_tool_name then
-				l_tested_eiffel_tool := l_tool_name
-			else
-				l_tested_eiffel_tool := default_tested_eiffel_tool
-			end
-			if filter_option.was_found and then attached filter_option.parameter as l_filter_pattern and then not l_filter_pattern.is_empty then
-				create l_filter.make
-				if Operating_system.is_windows then
-					l_filter.set_case_insensitive (True)
-				end
-				l_filter.compile (l_filter_pattern)
-				if not l_filter.is_compiled then
-					report_invalid_filter_regexp (l_filter_pattern)
-					l_filter := Void
-					Exceptions.die (1)
-				end
-			end
-			if validation_option.was_found and then attached validation_option.parameter as l_directory_name and then not l_directory_name.is_empty then
-				l_validation_directory_name := l_directory_name
-			else
-				l_validation_directory_name := default_validation_dirname
-			end
-			l_validation_directory_name := Execution_environment.interpreted_string (l_validation_directory_name)
-			create l_directory.make (l_validation_directory_name)
-			l_directory.open_read
-			if l_directory.is_open_read then
-				create l_tester.make_default
-				create l_test_suite.make ("validation", l_tester.variables)
-				l_tester.set_suite (l_test_suite)
-				create l_relative_path.make_default
-				process_directory (l_directory, l_relative_path, l_tested_eiffel_tool, l_filter, l_tester)
-				l_directory.close
-				create l_output_stream.make_empty
-				l_aggregate := not aggregate_option.was_found or else aggregate_option.parameter
-				run_tests (l_tester, l_aggregate, l_output_stream)
-				l_output_string := l_output_stream.string
-				l_output_string := text_to_markdown (l_output_string)
-				l_diff := not diff_option.was_found or else diff_option.parameter
-				if l_diff then
-					report_diff_with_last_run (l_output_string, l_validation_directory_name, l_tested_eiffel_tool)
-				end
-				if keep_testdir_flag.was_found then
-					write_last_run_file (l_output_string, l_tested_eiffel_tool)
+			parse_arguments (a_args)
+			if exit_code = 0 and then not version_flag.was_found then
+				if tool_option.was_found and then attached tool_option.parameter as l_tool_name then
+					l_tested_eiffel_tool := l_tool_name
 				else
-					file_system.recursive_delete_directory (test_dirname)
+					l_tested_eiffel_tool := default_tested_eiffel_tool
 				end
-			else
-				report_cannot_read_directory_error (l_validation_directory_name)
-				Exceptions.die (1)
+				if validation_option.was_found and then attached validation_option.parameter as l_directory_name and then not l_directory_name.is_empty then
+					l_validation_directory_name := l_directory_name
+				else
+					l_validation_directory_name := default_validation_dirname
+				end
+				l_validation_directory_name := Execution_environment.interpreted_string (l_validation_directory_name)
+				create l_directory.make (l_validation_directory_name)
+				l_directory.open_read
+				if l_directory.is_open_read then
+					create l_tester.make_default
+					if tool_executable_option.was_found and then attached tool_executable_option.parameter as l_executable_filename and then not l_executable_filename.is_empty then
+						l_tester.variables.set_value ("executable", l_executable_filename)
+					end
+					create l_test_suite.make ("validation", l_tester.variables)
+					l_tester.set_suite (l_test_suite)
+					create l_relative_path.make_default
+					create l_set_up_mutex.make
+					process_directory (l_directory, l_relative_path, l_tested_eiffel_tool, filter, l_tester, l_set_up_mutex)
+					l_directory.close
+					create l_output_stream.make_empty
+					l_aggregate := not aggregate_option.was_found or else aggregate_option.parameter
+					run_tests (l_tester, l_aggregate, l_output_stream)
+					l_output_string := l_output_stream.string
+					l_output_string := text_to_markdown (l_output_string)
+					l_diff := not diff_option.was_found or else diff_option.parameter
+					if l_diff then
+						report_diff_with_last_run (l_output_string, l_validation_directory_name, l_tested_eiffel_tool)
+					end
+					if keep_testdir_flag.was_found then
+						write_last_run_file (l_output_string, l_tested_eiffel_tool)
+					else
+						file_system.recursive_delete_directory (test_dirname)
+					end
+				else
+					report_cannot_read_directory_error (l_validation_directory_name)
+					exit_code := 1
+				end
 			end
 		rescue
-			Exceptions.die (4)
+			exit_code := 4
 		end
 
 feature {NONE} -- Processing
 
-	process_directory (a_directory: KL_DIRECTORY; a_relative_path: DS_ARRAYED_LIST [STRING]; a_tested_eiffel_tool: STRING; a_filter: detachable RX_REGULAR_EXPRESSION; a_tester: TS_TESTER)
+	process_directory (a_directory: KL_DIRECTORY; a_relative_path: DS_ARRAYED_LIST [STRING]; a_tested_eiffel_tool: STRING; a_filter: detachable RX_REGULAR_EXPRESSION; a_tester: TS_TESTER; a_set_up_mutex: detachable MUTEX)
 			-- Traverse `a_directory' and recursively its subdirectories to find
 			-- test cases to be added to `a_tester' (if matching `a_filter') and
 			-- later run with `a_tested_eiffel_tool'.
@@ -129,7 +152,7 @@ feature {NONE} -- Processing
 			l_test_suite: detachable TS_TEST_SUITE
 			l_test_suite_name: STRING
 			l_root_name: STRING
-			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_comparator: UC_STRING_COMPARATOR
 			l_sorter: DS_QUICK_SORTER [STRING]
 			l_test_dirname: STRING
 		do
@@ -142,7 +165,7 @@ feature {NONE} -- Processing
 				end
 				a_directory.read_entry
 			end
-			create l_comparator.make
+			create l_comparator
 			create l_sorter.make (l_comparator)
 			l_entries.sort (l_sorter)
 			nb := l_entries.count
@@ -177,10 +200,11 @@ feature {NONE} -- Processing
 							create l_test_case.make (l_entry_fullname, l_test_dirname)
 							l_test_case.set_test (l_test_name, agent l_test_case.compile_and_test (a_tested_eiffel_tool))
 							l_test_case.set_variables (a_tester.variables)
+							l_test_case.set_set_up_mutex (a_set_up_mutex)
 							l_test_suite.put_test (l_test_case)
 						end
 					else
-						process_directory (l_subdirectory, a_relative_path, a_tested_eiffel_tool, a_filter, a_tester)
+						process_directory (l_subdirectory, a_relative_path, a_tested_eiffel_tool, a_filter, a_tester, a_set_up_mutex)
 					end
 					a_relative_path.remove_last
 					l_subdirectory.close
@@ -203,6 +227,8 @@ feature {NONE} -- Processing
 			l_test_suite: TS_TEST_SUITE
 			l_has_test_suite: BOOLEAN
 			l_has_test_case: BOOLEAN
+			l_thread_count: INTEGER
+			l_old_test_suite: TS_TEST_SUITE
 		do
 			if a_aggregate then
 				std.output.put_new_line
@@ -210,7 +236,18 @@ feature {NONE} -- Processing
 				std.output.put_line ("Running Test Cases")
 				std.output.put_new_line
 				create l_summary.make
-				a_tester.execute_with_summary (l_summary, std.output)
+				l_summary.set_sort_errors (True)
+				l_thread_count := thread_count
+				if l_thread_count > 1 then
+					l_old_test_suite := a_tester.suite
+					l_test_suite := {TS_TEST_SUITE_FACTORY}.new_test_suite (l_old_test_suite.name, l_old_test_suite.variables, l_thread_count)
+					l_old_test_suite.add_test_cases_to_suite (l_test_suite)
+					a_tester.set_suite (l_test_suite)
+					a_tester.execute_with_summary (l_summary, std.output)
+					a_tester.set_suite (l_old_test_suite)
+				else
+					a_tester.execute_with_summary (l_summary, std.output)
+				end
 					-- Write to `a_output_file'.
 				a_output_file.put_new_line
 				a_output_file.put_line ("Testing " + a_tester.suite.name + "...")
@@ -222,8 +259,8 @@ feature {NONE} -- Processing
 					l_summary.print_errors (a_output_file)
 				end
 			else
-				across a_tester.suite as l_tests loop
-					if attached {TS_TEST_SUITE} l_tests.item as l_suite then
+				across a_tester.suite as i_tests loop
+					if attached {TS_TEST_SUITE} i_tests as l_suite then
 						create l_tester.make_default
 						l_tester.set_suite (l_suite)
 						run_tests (l_tester, False, a_output_file)
@@ -236,9 +273,9 @@ feature {NONE} -- Processing
 					run_tests (a_tester, True, a_output_file)
 				elseif l_has_test_case then
 					create l_test_suite.make (a_tester.suite.name, a_tester.suite.variables)
-					across a_tester.suite as l_tests loop
-						if not attached {TS_TEST_SUITE} l_tests.item then
-							l_test_suite.put_test (l_tests.item)
+					across a_tester.suite as i_tests loop
+						if not attached {TS_TEST_SUITE} i_tests then
+							l_test_suite.put_test (i_tests)
 						end
 					end
 					create l_tester.make_default
@@ -269,7 +306,7 @@ feature {NONE} -- Processing
 				l_output_file.close
 			else
 				report_cannot_write_to_file_error (l_output_filename)
-				Exceptions.die (1)
+				exit_code := 1
 			end
 		end
 
@@ -338,6 +375,9 @@ feature {NONE} -- Processing
 
 feature -- Error handling
 
+	error_handler: UT_ERROR_HANDLER
+			-- Error handler
+
 	report_cannot_read_directory_error (a_dirname: STRING)
 			-- Report that `a_dirname' cannot be
 			-- opened in read mode.
@@ -383,13 +423,38 @@ feature -- Error handling
 			error_handler.report_info (a_message)
 		end
 
-	error_handler: UT_ERROR_HANDLER
-			-- Error handler
+	exit_code: INTEGER
+			-- Exit code
+
+feature -- Access
+
+	thread_count: INTEGER
+			-- Number of threads to be used
+		do
+			Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32
+			if thread_option.was_found then
+				Result := thread_option.parameter
+				if Result <= 0 then
+					Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 + Result
+				end
+			end
+			if Result < 1 or not {PLATFORM}.is_thread_capable then
+				Result := 1
+			end
+		ensure
+			thread_count_not_negative: Result >= 1
+		end
+
+	filter: detachable RX_PCRE_REGULAR_EXPRESSION
+			-- When specified, run only the test cases matching this regexp
 
 feature -- Argument parsing
 
 	tool_option: AP_ENUMERATION_OPTION
 			-- Option for '--tool=<eiffel_tool>'
+
+	tool_executable_option: AP_STRING_OPTION
+			-- Option for '--tool_executable=<executable_filename>'
 
 	validation_option: AP_STRING_OPTION
 			-- Option for '--validation=<directory_name>'
@@ -406,14 +471,21 @@ feature -- Argument parsing
 	keep_testdir_flag: AP_FLAG
 			-- Flag for '--keep-testdir'
 
+	thread_option: AP_INTEGER_OPTION
+			-- Option for '--thread=<thread_count>'
+
 	version_flag: AP_FLAG
 			-- Flag for '--version'
 
-	parse_arguments
-			-- Initialize options and parse the command line.
+	parse_arguments (a_args: ARRAY [STRING])
+			-- Initialize options and parse arguments `a_args'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args as i_arg all i_arg /= Void end
 		local
 			l_parser: AP_PARSER
 			l_list: AP_ALTERNATIVE_OPTIONS_LIST
+			l_filter: like filter
 		do
 			create l_parser.make
 			l_parser.set_application_description ("Gobo Eiffel Cop, an Eiffel language conformance validation suite.")
@@ -431,6 +503,11 @@ feature -- Argument parsing
 			tool_option.extend ("ise_dotnet")
 			tool_option.extend ("ise_dotnet_debug")
 			l_parser.options.force_last (tool_option)
+				-- tool_executable
+			create tool_executable_option.make_with_long_form ("tool-executable")
+			tool_executable_option.set_description ("Executable filename (optionally with a pathname) of Eiffel tool to be tested. (default: gec|gelint|ec in the PATH)")
+			tool_executable_option.set_parameter_description ("filename")
+			l_parser.options.force_last (tool_executable_option)
 				-- validation
 			create validation_option.make_with_long_form ("validation")
 			validation_option.set_description ("Directory containing the Eiffel validation suite. (default: $GOBO/tool/gecop/validation)")
@@ -455,27 +532,48 @@ feature -- Argument parsing
 			create keep_testdir_flag.make_with_long_form ("keep-testdir")
 			keep_testdir_flag.set_description ("Do no delete temporary directory after running the validation suite. (default: delete testdir)")
 			l_parser.options.force_last (keep_testdir_flag)
+				-- thread
+			create thread_option.make_with_long_form ("thread")
+			thread_option.set_description ("Number of threads to be used. Negative numbers -N mean %"number of CPUs - N%". (default: number of CPUs)")
+			thread_option.set_parameter_description ("thread_count")
+			if {PLATFORM}.is_thread_capable then
+				l_parser.options.force_last (thread_option)
+			end
 				-- version
 			create version_flag.make ('V', "version")
 			version_flag.set_description ("Print the version number of gecop and exit.")
 			create l_list.make (version_flag)
 			l_parser.alternative_options_lists.force_last (l_list)
 				-- Parsing.
-			l_parser.parse_arguments
+			l_parser.parse_array (a_args)
 			if version_flag.was_found then
 				report_version_number
-				Exceptions.die (0)
+				exit_code := 0
 			elseif not l_parser.parameters.is_empty then
 				error_handler.report_info_message (l_parser.help_option.full_usage_instruction (l_parser))
-				Exceptions.die (1)
+				exit_code := 1
+			elseif filter_option.was_found and then attached filter_option.parameter as l_filter_pattern and then not l_filter_pattern.is_empty then
+				create l_filter.make
+				if Operating_system.is_windows then
+					l_filter.set_case_insensitive (True)
+				end
+				l_filter.compile (l_filter_pattern)
+				if not l_filter.is_compiled then
+					report_invalid_filter_regexp (l_filter_pattern)
+					exit_code := 1
+				else
+					filter := l_filter
+				end
 			end
 		ensure
 			tool_option_not_void: tool_option /= Void
+			tool_executable_option_not_void: tool_executable_option /= Void
 			validation_option_not_void: validation_option /= Void
 			filter_option_not_void: filter_option /= Void
 			aggregate_option_not_void: aggregate_option /= Void
 			diff_option_not_void: diff_option /= Void
 			keep_testdir_flag_not_void: keep_testdir_flag /= Void
+			thread_option_not_void: thread_option /= Void
 			version_flag_not_void: version_flag /= Void
 		end
 
@@ -515,11 +613,13 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	tool_option_not_void: tool_option /= Void
+	tool_executable_option_not_void: tool_executable_option /= Void
 	validation_option_not_void: validation_option /= Void
 	filter_option_not_void: filter_option /= Void
 	aggregate_option_not_void: aggregate_option /= Void
 	diff_option_not_void: diff_option /= Void
 	keep_testdir_flag_not_void: keep_testdir_flag /= Void
+	thread_option_not_void: thread_option /= Void
 	version_flag_not_void: version_flag /= Void
 
 end

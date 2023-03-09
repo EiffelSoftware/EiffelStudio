@@ -142,17 +142,14 @@ feature -- Actions
 
 	on_pointer_double_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Action to be performed when mouse is double clicked in `grid'
-		local
-			l_grid_item: EV_GRID_ITEM
-			l_row: EB_CLASS_BROWSER_TREE_ROW
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.left then
-				l_grid_item := grid_item_at_position (grid, a_x, a_y)
-				if l_grid_item /= Void then
-					l_row ?= l_grid_item.row.data
-					if l_row /= Void and then l_row.is_collapsed then
-						l_row := first_occurrence (l_row)
-						ensure_visible (l_row.class_grid_item, True)
+				if attached grid_item_at_position (grid, a_x, a_y) as l_grid_item then
+					if
+						attached {EB_CLASS_BROWSER_TREE_ROW} l_grid_item.row.data as l_row and then
+						l_row.is_collapsed
+					then
+						ensure_visible (first_occurrence (l_row).class_grid_item, True)
 					end
 				end
 			end
@@ -413,22 +410,20 @@ feature{NONE} -- Implementation
 	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN)
 			-- Ensure that `a_item' is visible.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
-		local
-			l_grid_item: EV_GRID_ITEM
-			l_grid_row: EV_GRID_ROW
-			l_row: EB_CLASS_BROWSER_TREE_ROW
 		do
-			l_grid_item := a_item.grid_item
-			check l_grid_item /= Void end
-			l_grid_row := l_grid_item.row
-			check l_grid_row /= Void end
-			l_row ?= l_grid_row.data
-			check l_row /= Void end
-			l_row.expand_parent_row_recursively (l_row.grid_row)
-			grid.remove_selection
-			l_grid_row.ensure_visible
-			if a_selected then
-				l_grid_row.enable_select
+			if
+				attached a_item.grid_item as l_grid_item and then
+				attached l_grid_item.row as l_grid_row and then
+				attached {EB_CLASS_BROWSER_TREE_ROW} l_grid_row.data as l_row
+			then
+				l_row.expand_parent_row_recursively (l_row.grid_row)
+				grid.remove_selection
+				l_grid_row.ensure_visible
+				if a_selected then
+					l_grid_row.enable_select
+				end
+			else
+				check False end
 			end
 		end
 
@@ -592,12 +587,14 @@ feature{NONE} -- Implementation
 		require
 			a_row_attached: a_row /= Void
 			a_row_is_collapsed: a_row.is_collapsed
-		local
-			l_row: EB_CLASS_BROWSER_TREE_ROW
 		do
-			l_row ?= grid.row (1).data
-			check l_row /= Void end
-			Result := first_occurrence_internal (l_row, a_row)
+			if attached {EB_CLASS_BROWSER_TREE_ROW} grid.row (1).data as l_row then
+				Result := first_occurrence_internal (l_row, a_row)
+			else
+				check is_tree_row: False end
+				-- FIXME: should not occur, but if it does find better solution.
+				Result := a_row
+			end
 		ensure
 			result_attached: Result /= Void
 			good_result: not Result.is_collapsed
@@ -611,7 +608,6 @@ feature{NONE} -- Implementation
 		local
 			l_row_index: INTEGER
 			l_row_count: INTEGER
-			l_row: EB_CLASS_BROWSER_TREE_ROW
 		do
 			if a_start_row.class_item.conf_class = a_source_row.class_item.conf_class then
 				Result := a_start_row
@@ -623,8 +619,7 @@ feature{NONE} -- Implementation
 					until
 						l_row_index > l_row_count or Result /= Void
 					loop
-						l_row ?= a_start_row.grid_row.subrow (l_row_index).data
-						if l_row /= Void then
+						if attached {EB_CLASS_BROWSER_TREE_ROW} a_start_row.grid_row.subrow (l_row_index).data as l_row then
 							Result := first_occurrence_internal (l_row, a_source_row)
 						end
 						l_row_index := l_row_index + 1

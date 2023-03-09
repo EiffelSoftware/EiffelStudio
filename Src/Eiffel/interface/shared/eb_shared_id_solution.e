@@ -301,7 +301,7 @@ feature  -- Element Change
 
 feature -- ID modification
 
-	substitute_target_uuid (a_id: STRING; a_target_uuid: READABLE_STRING_GENERAL): STRING
+	substitute_target_uuid (a_id: READABLE_STRING_8; a_target_uuid: READABLE_STRING_GENERAL): STRING
 			-- Substitute uuid of `a_id' to `a_target_uuid'.
 		require
 			a_id_not_void: a_id /= Void
@@ -335,7 +335,7 @@ feature -- ID modification
 			end
 		end
 
-	substitute_target_name (a_id: STRING; a_target_name: READABLE_STRING_GENERAL): STRING
+	substitute_target_name (a_id: READABLE_STRING_8; a_target_name: READABLE_STRING_GENERAL): STRING
 			-- Substitute target name of `a_id' to `a_target_name'.
 		require
 			a_id_not_void: a_id /= Void
@@ -373,7 +373,7 @@ feature -- ID modification
 			end
 		end
 
-	substitute_group (a_id: STRING; a_group_name: READABLE_STRING_GENERAL): STRING
+	substitute_group (a_id: READABLE_STRING_8; a_group_name: READABLE_STRING_GENERAL): STRING
 			-- Substitute group name of `a_id' to `a_group_name'.
 		require
 			a_id_not_void: a_id /= Void
@@ -560,10 +560,10 @@ feature {NONE} -- Implementation
 	last_id: STRING
 			-- Last id modified
 
-	last_split_strings: ARRAYED_LIST [STRING]
+	last_split_strings: ARRAYED_LIST [READABLE_STRING_8]
 			-- Last split strings from `last_id'
 
-	split_by_string (a_source_string: STRING; a_separator: STRING): ARRAYED_LIST [STRING]
+	split_by_string (a_source_string: READABLE_STRING_8; a_separator: READABLE_STRING_8): ARRAYED_LIST [READABLE_STRING_8]
 			-- Split a string by a string separator.
 		require
 			a_source_string_attached: a_source_string /= Void
@@ -592,10 +592,10 @@ feature {NONE} -- Implementation
 					check
 						last_character_is_a_separator: a_source_string.substring (j, c).same_string_general (a_separator)
 					end
-					l_list.extend (create {STRING}.make_empty)
+					l_list.extend (create {STRING_8}.make_empty)
 				end
 			else
-				l_list.extend (create {STRING}.make_empty)
+				l_list.extend (create {STRING_8}.make_empty)
 			end
 			Result := l_list
 		ensure

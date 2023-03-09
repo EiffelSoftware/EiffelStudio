@@ -367,8 +367,8 @@ feature {NONE} -- Implementation
 			l_next_active_editors: ARRAYED_LIST [TUPLE [window: EB_DEVELOPMENT_WINDOW; editor: EB_SMART_EDITOR; stone: CLASSI_STONE]]
 			l_prev_window_id, l_window_id: NATURAL_32
 			l_prev_zone_id, l_zone_id: NATURAL_32
-			l_id: detachable STRING
-			l_name: detachable STRING
+			l_id: detachable READABLE_STRING_GENERAL
+			l_name: detachable READABLE_STRING_GENERAL
 			i: INTEGER
 			l_editors_manager: EB_EDITORS_MANAGER
 			l_prev_sd_content: detachable SD_CONTENT
@@ -447,7 +447,10 @@ feature {NONE} -- Implementation
 							l_name := l_line
 							l_id := l_line.substring (1, l_line.count)
 						end
-						if attached exported_class_id_to_class_i (l_id) as l_class_i then
+						if
+							l_id.is_valid_as_string_8 and then
+							attached exported_class_id_to_class_i (l_id.to_string_8) as l_class_i
+						then
 							create l_stone.make (l_class_i)
 							if l_stone /= Void then
 								if l_prev_sd_content /= Void then
@@ -634,7 +637,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

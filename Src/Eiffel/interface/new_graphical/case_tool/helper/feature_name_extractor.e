@@ -50,7 +50,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	full_signature_compiled (a_feature: E_FEATURE): STRING
+	full_signature_compiled (a_feature: E_FEATURE): STRING_32
 			-- Parameter of `a_feature'. (i.e. (foo: LIST [BAR], bar: BAR): INTEGER
 		require
 			a_feature_not_void: a_feature /= Void

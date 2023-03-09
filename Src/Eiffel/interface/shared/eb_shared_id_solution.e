@@ -57,7 +57,7 @@ feature -- Access (Target)
 			result_not_void: Result /= Void
 		end
 
-	target_of_id (a_id: STRING): CONF_TARGET
+	target_of_id (a_id: READABLE_STRING_8): CONF_TARGET
 			-- Target of `a_id'
 		require
 			a_id_not_void: a_id /= Void

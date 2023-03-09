@@ -411,7 +411,7 @@ feature -- ID modification
 			end
 		end
 
-	url_id (a_id: STRING): STRING
+	url_id (a_id: READABLE_STRING_GENERAL): STRING
 			-- URL form of `a_id'.
 		require
 			a_id_not_void: a_id /= Void
@@ -626,7 +626,7 @@ feature {NONE} -- Implementation. Encoding/Decoding
 			Result := escape_char.natural_32_code
 		end
 
-	hex_strings: ARRAY [STRING]
+	hex_strings: ARRAY [STRING_8]
 		once
 			Result := <<
 			    "%%00", "%%01", "%%02", "%%03", "%%04", "%%05", "%%06", "%%07",
@@ -704,7 +704,7 @@ feature {NONE} -- Implementation. Encoding/Decoding
 			result_not_void: Result /= Void
 		end
 
-	decode_string_8 (a_string: STRING): STRING
+	decode_string_8 (a_string: READABLE_STRING_8): STRING
 			-- Decode `a_string' to the original one.
 			-- Hex presentations are converted back to what it was.
 		local
@@ -731,7 +731,7 @@ feature {NONE} -- Implementation. Encoding/Decoding
 			end
 		end
 
-	decode (a_string: STRING): STRING_32
+	decode (a_string: READABLE_STRING_8): STRING_32
 			-- Decode `a_string' to the Unicode original one.
 			-- Hex presentations are converted back to what it was.
 		require
@@ -779,7 +779,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

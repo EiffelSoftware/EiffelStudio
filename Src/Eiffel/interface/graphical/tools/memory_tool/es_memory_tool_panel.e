@@ -1400,7 +1400,7 @@ feature {NONE} -- Memory pruning
 
 				l_warning.recycle
 			else
-				prompts.show_error_prompt ("This object cannot be removed as it's in use by the " + tool_title.as_string_32 + " tool.", Void, Void)
+				prompts.show_error_prompt ({STRING_32} "This object cannot be removed as it's in use by the " + tool_title.as_string_32 + " tool.", Void, Void)
 			end
 		end
 
@@ -1451,7 +1451,7 @@ feature {NONE} -- Memory pruning
 					i := i + 1
 				end
 			else
-				prompts.show_error_prompt ("This object cannot be recycled as it's in use by the " + tool_title.as_string_32 + " tool.", Void, Void)
+				prompts.show_error_prompt ({STRING_32} "This object cannot be recycled as it's in use by the " + tool_title.as_string_32 + " tool.", Void, Void)
 			end
 		ensure
 			a_object_is_recycled: a_object.is_recycled

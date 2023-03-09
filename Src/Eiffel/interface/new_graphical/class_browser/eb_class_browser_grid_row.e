@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	QL_UTILITY
 
 	QL_SHARED
@@ -128,7 +128,7 @@ feature -- General tooltip
 feature{NONE} -- Implementation
 
 	setup_feature_signature_item (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_feature: E_FEATURE; a_text_tokens: LIST [EDITOR_TOKEN];
-								  a_image: STRING; a_tooltip_veto_function: FUNCTION [BOOLEAN];
+								  a_image: STRING_32; a_tooltip_veto_function: FUNCTION [BOOLEAN];
 								  a_comment_agent: FUNCTION [LIST [EDITOR_TOKEN]])
 			-- Setup `a_item' to display information `a_feature' in its full signature form whose text comes from `a_text_tokens'.
 			-- `a_image' is the string used in grid search.
@@ -152,7 +152,7 @@ feature{NONE} -- Implementation
 			a_item.set_general_tooltip (l_tooltip)
 		end
 
-	setup_class_item_with_short_signature (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_class_c: CLASS_C; a_text_tokens: LIST [EDITOR_TOKEN]; a_image: STRING;
+	setup_class_item_with_short_signature (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_class_c: CLASS_C; a_text_tokens: LIST [EDITOR_TOKEN]; a_image: STRING_32;
 										   a_tooltip_veto_function: FUNCTION [BOOLEAN];
 										   a_full_signature_function: FUNCTION [LIST [EDITOR_TOKEN]])
 			-- Setup `a_item' to display information about `a_class_c' in short generic form whose text comes from `a_text_tokens'.
@@ -187,13 +187,12 @@ feature{NONE} -- Implementation
 			a_class_attached: a_class /= Void
 		local
 			l_generic_generator: QL_GENERIC_DOMAIN_GENERATOR
-			l_generic_domain: QL_GENERIC_DOMAIN
 		do
 			Result := browser.should_tooltip_be_displayed
 			if Result then
 				create l_generic_generator.make (generic_criterion_factory.criterion_with_name (query_language_names.ql_cri_has_constraint, []), True)
-				l_generic_domain ?= query_class_item_from_class_c (a_class).wrapped_domain.new_domain (l_generic_generator)
-				Result := not l_generic_domain.is_empty
+				Result := attached {QL_GENERIC_DOMAIN} query_class_item_from_class_c (a_class).wrapped_domain.new_domain (l_generic_generator) as l_generic_domain and then
+					not l_generic_domain.is_empty
 			end
 		end
 
@@ -201,7 +200,7 @@ invariant
 	browser_attached: browser /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -214,22 +213,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

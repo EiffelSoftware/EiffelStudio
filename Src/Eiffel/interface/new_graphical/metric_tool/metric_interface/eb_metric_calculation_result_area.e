@@ -233,7 +233,7 @@ feature -- Result loading
 		require
 			a_metric_attached: a_metric /= Void
 		local
-			l_tooltip: STRING
+			l_tooltip: STRING_32
 			l_value_str: STRING
 		do
 			metric_name_text.set_text (a_metric.name)
@@ -341,12 +341,9 @@ feature{NONE} -- Implementation
 
 	on_show_percentage_changes
 			-- Action to be performed when selection status of `show_percentage_btn' changes
-		local
-			l_double: DOUBLE_REF
 		do
 			if show_percentage_btn.is_sensitive then
-				l_double ?= value_text.data
-				if l_double /= Void then
+				if attached {DOUBLE_REF} value_text.data as l_double then
 					value_text.set_text (metric_value (l_double.item, show_percentage_btn.is_selected))
 				end
 			end
@@ -377,11 +374,8 @@ feature{NONE} -- Implementation
 
 	on_clear_detailed_result
 			-- Action to be performed to clear detailed result
-		local
-			l_domain: QL_DOMAIN
 		do
-			l_domain ?= result_grid.data
-			if l_domain /= Void then
+			if attached {QL_DOMAIN} result_grid.data as l_domain then
 				l_domain.wipe_out
 				result_grid.update (Void, l_domain)
 			end
@@ -437,7 +431,7 @@ invariant
 	result_grid_attached: result_grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

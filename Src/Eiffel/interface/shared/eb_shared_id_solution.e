@@ -116,7 +116,7 @@ feature -- Access (Group)
 			result_not_void: Result /= Void
 		end
 
-	group_of_id (a_id: STRING): CONF_GROUP
+	group_of_id (a_id: READABLE_STRING_8): CONF_GROUP
 			-- Group of `a_id'
 		require
 			a_id_not_void: a_id /= Void
@@ -203,7 +203,7 @@ feature -- Access (Class)
 			result_not_void: Result /= Void
 		end
 
-	class_of_id (a_id: STRING): CONF_CLASS
+	class_of_id (a_id: READABLE_STRING_8): CONF_CLASS
 			-- Class of `a_id'
 		require
 			a_id_not_void: a_id /= Void
@@ -557,7 +557,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	last_id: STRING
+	last_id: READABLE_STRING_8
 			-- Last id modified
 
 	last_split_strings: ARRAYED_LIST [READABLE_STRING_8]

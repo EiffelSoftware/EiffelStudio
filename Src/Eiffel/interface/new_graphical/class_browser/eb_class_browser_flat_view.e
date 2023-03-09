@@ -513,7 +513,7 @@ feature{NONE} -- Drawing
 			l_any_class_id: INTEGER
 			l_feature_from_any_displayed: BOOLEAN
 			l_filter_used: BOOLEAN
-			l_filter_name: STRING
+			l_filter_name: STRING_32
 			l_filter: like filter
 		do
 			l_feature_list := data
@@ -709,7 +709,7 @@ invariant
 	wild_matcher_attached: wild_matcher /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2023, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

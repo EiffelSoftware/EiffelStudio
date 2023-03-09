@@ -117,7 +117,7 @@ feature -- Setting
 			only_search_in_selected_items_disabled: not only_search_in_selected_item
 		end
 
-	set_keyword (a_keyword: STRING)
+	set_keyword (a_keyword: like keyword)
 			-- Set `keyword' with `a_keyword'.
 		require
 			a_keyword_attached: a_keyword /= Void
@@ -130,12 +130,12 @@ feature -- Setting
 				keyword.append (a_keyword)
 			end
 		ensure
-			keyword_set: keyword /= Void and then keyword.is_equal (a_keyword)
+			keyword_set: attached keyword as k and then k.same_string (a_keyword)
 		end
 
 feature -- Access
 
-	keyword: STRING
+	keyword: STRING_32
 			-- Keyword used in `search'
 
 feature -- Status report
@@ -164,7 +164,7 @@ invariant
 	last_result_attached: last_result /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+        copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
         license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

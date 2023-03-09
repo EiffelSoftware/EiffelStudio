@@ -541,7 +541,7 @@ feature{NONE} -- Implementation/Layout
 
 feature{NONE} -- Implementation
 
-	current_keyword: STRING
+	current_keyword: STRING_32
 			-- Current keyword
 		do
 			Result := keyword_field.text
@@ -633,14 +633,15 @@ feature{NONE} -- Implementation
 			textable_not_void: textable /= Void
 			a_stone_not_void: a_stone /= Void
 		local
-			stone_signature: STRING
+			s: STRING_32
 		do
-			if a_stone.stone_signature /= Void then
-				stone_signature := a_stone.stone_signature
-				if stone_signature.has (' ') then
-					stone_signature := stone_signature.substring (1, stone_signature.index_of (' ', 1) - 1)
+			if attached a_stone.stone_signature as l_stone_signature then
+				if l_stone_signature.has (' ') then
+					s := l_stone_signature.substring (1, l_stone_signature.index_of (' ', 1) - 1)
+				else
+					s := l_stone_signature
 				end
-				textable.set_text (stone_signature)
+				textable.set_text (s)
 			end
 		end
 
@@ -650,7 +651,7 @@ invariant
 	delayed_timer_attached: delayed_timer /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2023, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

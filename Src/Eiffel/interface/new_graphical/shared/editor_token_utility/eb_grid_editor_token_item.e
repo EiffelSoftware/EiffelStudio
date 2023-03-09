@@ -446,7 +446,7 @@ feature -- Searchable
 		do
 			Result := image_internal
 			if Result = Void then
-				Result := ""
+				create Result.make_empty
 			end
 		end
 

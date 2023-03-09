@@ -24,7 +24,7 @@ feature -- Search
 			l_search_strategy: like msr_search_strategy
 			l_item: EVS_GRID_SEARCHABLE_ITEM
 			done: BOOLEAN
-			l_image: STRING
+			l_image: STRING_32
 			l_step_count: INTEGER
 		do
 			last_result.wipe_out
@@ -141,7 +141,7 @@ feature{NONE} -- Implementation
 			-- Internal `msr_search_strategy'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

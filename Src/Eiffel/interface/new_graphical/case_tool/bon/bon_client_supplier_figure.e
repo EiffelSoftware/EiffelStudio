@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
 			str: STRING_32
 			sorted_names: SORTED_TWO_WAY_LIST [EV_MODEL_TEXT]
-			signature: STRING
+			signature: STRING_32
 			cur_y: INTEGER
 		do
 			if not is_label_expanded then
@@ -619,9 +619,9 @@ feature {NONE} -- Implementation
 					l_features.after
 				loop
 					signature := model.full_signature (l_features.item)
-					signature.replace_substring_all (model.supplier.name, "...")
-					if signature.substring (signature.count - 4, signature.count).is_equal (": ...") then
-						signature.replace_substring_all (": ...", "")
+					signature.replace_substring_all (model.supplier.name_32, {STRING_32} "...")
+					if signature.substring (signature.count - 4, signature.count).same_string ({STRING_32} ": ...") then
+						signature.replace_substring_all ({STRING_32} ": ...", {STRING_32} "")
 					end
 					l_feature_names := l_features.item.feature_names
 					from
@@ -779,7 +779,7 @@ invariant
 	aggregate_figure_not_void: aggregate_figure /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

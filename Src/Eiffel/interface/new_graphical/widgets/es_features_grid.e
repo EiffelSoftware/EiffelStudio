@@ -758,7 +758,6 @@ feature {NONE} -- Event handler
 		local
 			pix: EV_PIXMAP
 			l_parent: PARENT_AS
-			l_parent_cname: STRING
 			l_parent_text: STRING_32
 			l_parent_class_i: detachable CLASS_I
 			l_row: like extended_new_row

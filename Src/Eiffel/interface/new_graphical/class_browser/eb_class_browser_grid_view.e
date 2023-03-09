@@ -116,7 +116,7 @@ feature -- Setting
 	set_starting_element (a_class: ANY)
 			-- Set `start_class' with `a_class'.
 		do
-			starting_element ?= a_class
+			starting_element := {like starting_element} / a_class
 		end
 
 	enable_tree_node_highlight
@@ -243,17 +243,13 @@ feature -- Navigation
 		require
 			a_row_attached: a_row /= Void
 			a_row_is_parented: a_row.parent /= Void
-		local
-			l_grid_item: EVS_GRID_SEARCHABLE_ITEM
 		do
 			if a_row.is_expandable and then a_row.is_expanded then
 				a_row.collapse
 			else
 				if a_row.parent_row /= Void then
-					l_grid_item ?= a_row.item (1)
 					a_row.disable_select
-					l_grid_item ?= first_non_void_grid_item (a_row.parent_row)
-					if l_grid_item /= Void then
+					if attached {EVS_GRID_SEARCHABLE_ITEM} first_non_void_grid_item (a_row.parent_row) as l_grid_item then
 						ensure_visible (l_grid_item, True)
 					end
 				end
@@ -286,8 +282,6 @@ feature -- Navigation
 		require
 			a_row_attached: a_row /= Void
 			a_row_is_parented: a_row.parent /= Void
-		local
-			l_grid_item: EVS_GRID_SEARCHABLE_ITEM
 		do
 			if a_row.is_expandable then
 				if not a_row.is_expanded then
@@ -295,8 +289,7 @@ feature -- Navigation
 				else
 					if a_row.subrow_count > 0 then
 						a_row.disable_select
-						l_grid_item ?= first_non_void_grid_item (a_row.subrow (1))
-						if l_grid_item /= Void then
+						if attached {EVS_GRID_SEARCHABLE_ITEM} first_non_void_grid_item (a_row.subrow (1)) as l_grid_item then
 							ensure_visible (l_grid_item, True)
 						end
 					end
@@ -410,9 +403,9 @@ feature -- View update
 			a_observable_can_be_void: a_observable = Void
 		local
 		do
-			data ?= a_data
+			data := {like data} / a_data
 			if data = Void then
-				value ?= a_data
+				value := {like value} / a_data
 			end
 			is_up_to_date := False
 			update_view
@@ -456,7 +449,7 @@ feature -- Access
 		deferred
 		end
 
-	starting_element: ANY
+	starting_element: detachable ANY
 			-- Starting element as root of the tree displayed in current browser.
 			-- This is used when a tree view is to be built. And starting element serves as the root of that tree.
 			-- If `starting_element' is Void, don't build tree.
@@ -464,13 +457,10 @@ feature -- Access
 	grid: ES_EDITOR_TOKEN_GRID
 			-- Grid used to display information
 
-	text_of_grid_item (a_item: EV_GRID_ITEM): STRING
+	text_of_grid_item (a_item: EV_GRID_ITEM): STRING_32
 			-- String representation of `a_item'
-		local
-			l_token_item: EB_GRID_EDITOR_TOKEN_ITEM
 		do
-			l_token_item ?= a_item
-			if l_token_item /= Void then
+			if attached {EB_GRID_EDITOR_TOKEN_ITEM} a_item as l_token_item then
 				Result := l_token_item.text
 			end
 		end
@@ -1133,16 +1123,13 @@ feature{NONE} -- Implementation/Stone
 			-- If `a_item' is an editor token item and contains a valid stone, open that stone in editor.
 		require
 			a_item_attached: a_item /= Void
-		local
-			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_stone: STONE
 		do
-			l_editor_token_item ?= a_item
-			if l_editor_token_item /= Void then
-				l_stone := l_editor_token_item.stone
-				if l_stone /= Void and then l_stone.is_valid then
-					development_window.set_stone (l_stone)
-				end
+			if
+				attached {EB_GRID_EDITOR_TOKEN_ITEM} a_item as l_editor_token_item and then
+				attached l_editor_token_item.stone as l_stone and then
+				l_stone.is_valid
+			then
+				development_window.set_stone (l_stone)
 			end
 		end
 
@@ -1150,7 +1137,7 @@ invariant
 	development_window_attached: not is_recycled implies development_window /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2023, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

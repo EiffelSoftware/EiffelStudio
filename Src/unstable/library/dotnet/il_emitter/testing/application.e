@@ -47,9 +47,9 @@ feature -- Initialization
 --			(create {TEST_7}).test;
 --			(create {TEST_8}).test;
 --			(create {TEST_9}).test;
---			(create {TEST_9}).test;
+			(create {TEST_9}).test;
 --			(create {TEST_10}).test;
---			(create {TEST_11}).test;
+			(create {TEST_11}).test;
 			test_random
 
 		end
@@ -331,14 +331,14 @@ feature -- C Byte Array
 			l_special: SPECIAL [NATURAL_8]
 
 		do
-			l_arr := <<0, 0, 0, 0, 0, 0, 0, 0>>
+			l_arr := {ARRAY[NATURAL_8]}<<0, 0, 0, 0, 0, 0, 0, 0>>
 			l_special := l_arr.to_special
 			create l_mp.make_from_array (l_arr)
 			l_mp.put_integer_32 (2147483646, 0)
 			l_arr := l_mp.read_array (0, 8)
 			{BYTE_ARRAY_HELPER}.put_array_integer_32 (l_special, 2147483646, 0)
 
-			l_arr := <<0, 0, 0, 0, 0, 0, 0, 0>>
+			l_arr := {ARRAY[NATURAL_8]}<<0, 0, 0, 0, 0, 0, 0, 0>>
 			{BYTE_ARRAY_HELPER}.put_array_integer_32 (l_arr.to_special, 26, 0)
 		end
 

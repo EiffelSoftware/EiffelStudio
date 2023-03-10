@@ -723,7 +723,7 @@ feature {NONE} -- Helper
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
 
-feature {NONE} -- Metadata Tables
+feature {CIL_PE_FILE} -- Metadata Tables
 
 	tables: SPECIAL [CIL_MD_METADATA_TABLES]
 			--  in-memory metadata tables

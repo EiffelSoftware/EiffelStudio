@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# Update configuration based on existing variables.
+
+if [ ! "$INCLUDE_GUI" = "True" ]; then
+	unset INCLUDE_GUI
+fi
+if [ ! "$NO_DOCUMENTATION" ]; then
+	# Default!
+	NO_DOCUMENTATION="True"
+fi
+
+if [ "$IS_MINIMAL" = "True" ]; then
+	unset INCLUDE_GUI
+	NO_WIZARDS="True"
+	NO_DOCUMENTATION="True"
+	MULTIPLE_EDITIONS=""
+	NO_EXAMPLES="True"
+	NO_EWEASEL="True"
+fi
+
+if [ -z "$INCLUDE_GUI" ]; then
+	unset INCLUDE_GTK2
+	unset INCLUDE_GTK3
+fi
+
+# Reset to empty value is not True
+if [ ! "$INCLUDE_GUI" = "True" ]; then
+	unset INCLUDE_GUI
+fi
+if [ ! "$NO_EWEASEL" = "True" ]; then
+	unset NO_EWEASEL
+fi
+if [ ! "$NO_WIZARDS" = "True" ]; then
+	unset NO_WIZARDS
+fi
+if [ ! "$NO_DOCUMENTATION" = "True" ]; then
+	unset NO_DOCUMENTATION
+fi
+if [ ! "$MULTIPLE_EDITIONS" = "True" ]; then
+	unset MULTIPLE_EDITIONS
+fi
+if [ ! "$NO_EXAMPLES" = "True" ]; then
+	unset NO_EXAMPLES
+fi
+

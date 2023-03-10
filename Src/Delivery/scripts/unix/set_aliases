@@ -4,18 +4,29 @@ if [ ! "$STUDIO_VERSION_MAJOR_MINOR" ]; then
 	STUDIO_VERSION_MAJOR_MINOR=23.03
 fi
 
+if [ -z "$WORKINGDIR" ]; then
+	WORKINGDIR=`pwd`
+fi
+if [ -z "$INIT_DIR" ]; then
+	INIT_DIR=$WORKINGDIR
+fi
+
+if [ -f "$INIT_DIR/set_custom_aliases" ]; then
+	. "$INIT_DIR/set_custom_aliases"
+fi
+
 # File in which the status of the installation generation is logged
-INSTALL_LOG=`pwd`/install.log
+INSTALL_LOG=$WORKINGDIR/install.log
 # File in which the status of the installation compilation is logged
-COMPILE_LOG=`pwd`/compile.log
+COMPILE_LOG=$WORKINGDIR/compile.log
 # Where the new delivery is set up. Warning: this directory is erased!
-INSTALL_DIR=`pwd`/Eiffel_$STUDIO_VERSION_MAJOR_MINOR
+INSTALL_DIR=$WORKINGDIR/Eiffel_$STUDIO_VERSION_MAJOR_MINOR
 # Where the final delivery is set up (local machine). Warning: directory erased too!
-FINAL_INSTALL_DIR=`pwd`/Eiffel_$STUDIO_VERSION_MAJOR_MINOR
+FINAL_INSTALL_DIR=$WORKINGDIR/Eiffel_$STUDIO_VERSION_MAJOR_MINOR
 # Where documentation will be generated
-DOCUMENT_DIR=`pwd`
+DOCUMENT_DIR=$WORKINGDIR
 # Where all.tar.bz2 files should be stored
-EXPORT_DIR=`pwd`/PorterPackage
+EXPORT_DIR=$WORKINGDIR/PorterPackage
 # What tag to use to CVS export everything
 if [ ! "$DEFAULT_ISE_SVN" ]; then
 	DEFAULT_ISE_SVN=svn://$LOGNAME@svn.ise/ise_svn/trunk
@@ -63,12 +74,31 @@ if [ ! "$INCLUDE_GTK2" = "True" ]; then
 	unset INCLUDE_GTK2
 fi
 
+if [ ! "$INCLUDE_GUI" ]; then
+	INCLUDE_GUI="True"
+fi
+
+case "$ISE_PLATFORM" in
+	*-x86)
+		# on x86, no support for GTK >= 3.22
+		unset INCLUDE_GTK3
+		if [ -z "$INCLUDE_GTK2" ]; then
+			unset INCLUDE_GUI
+		fi
+		;;
+	*)
+		;;
+esac
+
+# Update configuration
+. $INIT_DIR/update_config
+
 # Used only when making PorterPackage to checkout the sources
-NEW_EIFFEL_SRC=`pwd`/tmpdev
-NEW_ISE_SRC=`pwd`/tmpdev
-NEW_ISE_LIBRARY=`pwd`/tmpdev
+NEW_EIFFEL_SRC=$WORKINGDIR/tmpdev
+NEW_ISE_SRC=$NEW_EIFFEL_SRC
+NEW_ISE_LIBRARY=$NEW_EIFFEL_SRC
 # The following directory is going to be used to compile the compiler
-FINALIZATION_DIR=`pwd`/finalized
+FINALIZATION_DIR=$WORKINGDIR/finalized
 
 echo > $INSTALL_LOG
 

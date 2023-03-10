@@ -1,79 +1,100 @@
 #!/bin/sh
 
-remtrace Retrieve libraries
 cd $1
 md library
 cd library
-remtrace api_wrapper
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/api_wrapper api_wrapper
-remtrace argument_parser
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/argument_parser argument_parser
-remtrace base
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/base base
-remtrace base_extension
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/base_extension base_extension
-remtrace cocoa
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/cocoa cocoa
-remtrace cURL
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/cURL cURL
-remtrace diff
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/diff diff
-remtrace docking
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/docking docking
-remtrace Eiffel2Java
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/Eiffel2Java Eiffel2Java
-remtrace editor
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/editor editor
-remtrace encoding
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/encoding encoding
-remtrace event
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/event event
-remtrace gobo
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/gobo gobo
-fullrd gobo/svn/work
-remtrace gobo_extension
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/gobo_extension gobo_extension
-remtrace graph
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/graph graph
-remtrace i18n
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/i18n i18n
-remtrace lex
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/lex lex
-remtrace memory_analyzer
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/memory_analyzer memory_analyzer
-remtrace net
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/net net
-remtrace objc_base
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/objc_base objc_base
-remtrace parse
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/parse parse
-remtrace patterns
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/patterns patterns
-remtrace preferences
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/preferences preferences
-remtrace process
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/process process
-remtrace runtime
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/runtime runtime
-remtrace store
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/store store
-remtrace testing
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/testing testing
-remtrace text
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/text text
-remtrace thread
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/thread thread
-remtrace time
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/time time
-remtrace uuid
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/uuid uuid
-remtrace vision2
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/vision2 vision2
-remtrace vision2_extension
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/vision2_extension vision2_extension
-remtrace web
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/web web
-remtrace web_browser
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/web_browser web_browser
-remtrace wel
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/wel wel
+
+if [ ! -z "$IS_MINIMAL" ]; then
+	remtrace Retrieve MINIMAL libraries
+	remtrace base
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/base base
+
+	remtrace argument_parser
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/argument_parser argument_parser
+	remtrace base_extension
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/base_extension base_extension
+	remtrace diff
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/diff diff
+	remtrace process
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/process process
+	remtrace thread
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/thread thread
+	remtrace time
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/time time
+else
+	remtrace Retrieve libraries
+	remtrace api_wrapper
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/api_wrapper api_wrapper
+	remtrace argument_parser
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/argument_parser argument_parser
+	remtrace base
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/base base
+	remtrace base_extension
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/base_extension base_extension
+	remtrace cocoa
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/cocoa cocoa
+	remtrace cURL
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/cURL cURL
+	remtrace diff
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/diff diff
+	remtrace docking
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/docking docking
+	remtrace Eiffel2Java
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/Eiffel2Java Eiffel2Java
+	remtrace editor
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/editor editor
+	remtrace encoding
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/encoding encoding
+	remtrace event
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/event event
+	remtrace gobo
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/gobo gobo
+	fullrd gobo/svn/work
+	remtrace gobo_extension
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/gobo_extension gobo_extension
+	remtrace graph
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/graph graph
+	remtrace i18n
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/i18n i18n
+	remtrace lex
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/lex lex
+	remtrace memory_analyzer
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/memory_analyzer memory_analyzer
+	remtrace net
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/net net
+	remtrace objc_base
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/objc_base objc_base
+	remtrace parse
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/parse parse
+	remtrace patterns
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/patterns patterns
+	remtrace preferences
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/preferences preferences
+	remtrace process
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/process process
+	remtrace runtime
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/runtime runtime
+	remtrace store
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/store store
+	remtrace testing
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/testing testing
+	remtrace text
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/text text
+	remtrace thread
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/thread thread
+	remtrace time
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/time time
+	remtrace uuid
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/uuid uuid
+	remtrace vision2
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/vision2 vision2
+	remtrace vision2_extension
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/vision2_extension vision2_extension
+	remtrace web
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/web web
+	remtrace web_browser
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/web_browser web_browser
+	remtrace wel
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/wel wel
+fi
+

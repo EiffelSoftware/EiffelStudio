@@ -1,19 +1,19 @@
 #!/bin/sh
 
-if [ ! "$ISE_EIFFEL" ]; then
+if [ -z "$ISE_EIFFEL" ]; then
 	echo ISE_EIFFEL not defined. Cannot continue
 	CANCEL
 fi
-if [ ! "$ISE_PLATFORM" ]; then
+if [ -z "$ISE_PLATFORM" ]; then
 	echo ISE_PLATFORM not defined. Cannot continue
 	CANCEL
 fi
-if [ ! "$NO_COMPILE" ]; then
-	if [ ! "$NEW_EIFFEL_SRC" ]; then
+if [ -z "$NO_COMPILE" ]; then
+	if [ -z "$NEW_EIFFEL_SRC" ]; then
 		echo NEW_EIFFEL_SRC not defined. Cannot continue
 		CANCEL
 	fi
-	if [ ! "$FINALIZATION_DIR" ]; then
+	if [ -z "$FINALIZATION_DIR" ]; then
 		echo FINALIZATION_DIR not defined. Cannot continue
 		CANCEL
 	fi
@@ -37,39 +37,66 @@ if [ ! "$INSTALL_DIR" ]; then
 	echo Error: No path specified for the generated delivery
 	CANCEL
 fi
-if [ -d $INSTALL_DIR ]; then
-	echo Warning: $INSTALL_DIR and $NEW_EIFFEL_SRC will be replaced by the installation script, you will lose everything in it
+echo = Current configuration =
+echo ISE_EIFFEL ____ $ISE_EIFFEL
+echo ISE_PLATFORM __ $ISE_PLATFORM
+echo INSTALL_DIR ___ $INSTALL_DIR
+echo EXPORT_DIR ____ $EXPORT_DIR
+echo DOCUMENT_DIR __ $DOCUMENT_DIR
+echo Log file ______ $INSTALL_LOG
+echo = Source location =
+echo Generated revision _ $ORIGO_SVN_REVISION
+echo DEFAULT_ORIGO_SVN __ $DEFAULT_ORIGO_SVN
+echo DEFAULT_ISE_SVN ____ $DEFAULT_ISE_SVN
+echo = Compiler version =
+echo ecb version is _____ $(ecb -version)
+echo = Configuration =
+if [ ! -z "$IS_MINIMAL" ]; then
+	echo "Build MINIMAL version (no gui, no wizard, ...)"
 fi
-echo Current configuration:
-echo ISE_EIFFEL is $ISE_EIFFEL
-echo ISE_PLATFORM is $ISE_PLATFORM
-echo INSTALL_DIR is $INSTALL_DIR
-echo DOCUMENT_DIR is $DOCUMENT_DIR
-echo DEFAULT_ORIGO_SVN is $DEFAULT_ORIGO_SVN
-echo DEFAULT_ISE_SVN is $DEFAULT_ISE_SVN
-echo Log file is $INSTALL_LOG
-echo The revision that will be generated will be $ORIGO_SVN_REVISION
-echo ecb version is:
-ecb -version
-echo -----------------------------
-if [ "$NO_COMPILE" ]; then
+if [ ! -z "$NO_COMPILE" ]; then
 	echo "No compilation will be performed (including EiffelStudio's compilation)"
 fi
-if [ "$NO_NEW_EC" ]; then
+if [ ! -z "$NO_NEW_EC" ]; then
 	echo No new version of EiffelStudio will be compiled
 fi
-if [ "$NO_DOCUMENTATION" ]; then
+if [ ! -z "$NO_DOCUMENTATION" ]; then
 	echo No documentation will be generated
 fi
-if [ "$NO_WIZARDS" ]; then
-	echo Wizards wont be regenerated
+if [ ! -z "$NO_WIZARDS" ]; then
+	echo No wizard will be regenerated
 fi
-if [ "$NO_INSTALL" ]; then
+if [ ! -z "$NO_INSTALL" ]; then
 	echo The delivery will be generated, but not the final installation executable
+fi
+if [ ! -z "$NO_EXAMPLES" ]; then
+	echo No example will be included
 fi
 if [ ! "$NO_INSTALL" -a ! "$NO_COMPILE" -a ! "$NO_DOCUMENTATION" -a ! "$NO_WIZARDS" ]; then
 	echo All components will be recompiled
 fi
+if [ -z "$INCLUDE_GUI" ]; then
+	echo Do NOT build GUI
+else
+	echo GUI settings
+	echo INCLUDE_GUI is set
+	if [ ! -z "$INCLUDE_GTK3" ]; then
+		echo INCLUDE_GTK3 is set
+	fi
+	if [ ! -z "$INCLUDE_GTK2" ]; then
+		echo INCLUDE_GTK2 is set
+	fi
+	echo GTK_DIR=$GTK_DIR
+fi
+if [ -d $INSTALL_DIR ]; then
+	echo -----------------------------
+	echo = Warning =
+	echo The following directories will be replaced by the script:
+	echo - $INSTALL_DIR
+	echo - $NEW_EIFFEL_SRC
+	echo You will lose everything in it
+fi
+echo -----------------------------
 echo Type a key to continue, Ctrl-C to abort
 read usrk
 echo Installation parameters are $ISE_EIFFEL, $ISE_PLATFORM, $INSTALL_DIR, $DOCUMENT_DIR >> $INSTALL_LOG

@@ -20,22 +20,26 @@ if [ -d $2/library/cURL ]; then
 	cd $2/library/cURL/Clib
 	default_make
 fi
-remtrace net
-cd $2/library/net/Clib
-default_make
-mac_ranlib $2/library/net/spec/$ISE_PLATFORM/lib/libnet.a
-remtrace vision2
-# Compile GTK C implementation
-cd $2/library/vision2/Clib
-default_make
-
-if [ ! -z "$INCLUDE_GTK2" ]; then
-	cd $2/library/vision2/implementation/gtk/Clib
+if [ -d $2/library/net ]; then
+	remtrace net
+	cd $2/library/net/Clib
 	default_make
+	mac_ranlib $2/library/net/spec/$ISE_PLATFORM/lib/libnet.a
 fi
-if [ ! -z "$INCLUDE_GTK3" ]; then
-	cd $2/library/vision2/implementation/gtk3/Clib
+if [ -d $2/library/vision2 ]; then
+	remtrace vision2
+	# Compile GTK C implementation
+	cd $2/library/vision2/Clib
 	default_make
+
+	if [ ! -z "$INCLUDE_GTK2" ]; then
+		cd $2/library/vision2/implementation/gtk/Clib
+		default_make
+	fi
+	if [ ! -z "$INCLUDE_GTK3" ]; then
+		cd $2/library/vision2/implementation/gtk3/Clib
+		default_make
+	fi
 fi
 
 if [ -d $2/examples/base/beep/Clib ]; then

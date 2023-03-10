@@ -9,92 +9,105 @@ safe_md $INSTALL_DIR/studio/spec/unix
 safe_md $INSTALL_DIR/studio/spec/unix/bin
 safe_md $INSTALL_DIR/studio/spec/unix/include
 safe_md $INSTALL_DIR/studio/spec/unix/lib
-safe_md $INSTALL_DIR/esbuilder/spec
-safe_md $INSTALL_DIR/esbuilder/spec/unix
-safe_md $INSTALL_DIR/esbuilder/spec/unix/bin
-
-remtrace Getting eweasel source code
-cd $EIFFEL_SRC
-safe_md $EIFFEL_SRC/eweasel
-co -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/source $EIFFEL_SRC/eweasel/source
-remtrace Compiling eweasel
-safe_md $INSTALL_DIR/eweasel
-safe_md $INSTALL_DIR/eweasel/spec
-safe_md $INSTALL_DIR/eweasel/spec/unix
-safe_md $INSTALL_DIR/eweasel/spec/unix/bin
-EWEASEL=$EIFFEL_SRC/eweasel
-export EWEASEL
-cd $EIFFEL_SRC/eweasel/source
-clean_project
-finalize eweasel.ecf eweasel_st
-tgz_ccode eweasel_st eweasel.tar.bz2
-if [ ! -f eweasel.tar.bz2 ]; then
-	echo Could not finalize eweasel
-	CANCEL
+if [ ! -z "$INCLUDE_GUI" ]; then
+	safe_md $INSTALL_DIR/esbuilder/spec
+	safe_md $INSTALL_DIR/esbuilder/spec/unix
+	safe_md $INSTALL_DIR/esbuilder/spec/unix/bin
 fi
-clean_project
-finalize eweasel.ecf eweasel_mt
-tgz_ccode eweasel_mt eweasel-mt.tar.bz2
-if [ ! -f eweasel-mt.tar.bz2 ]; then
-	echo Could not finalize eweasel
-	CANCEL
-fi
-clean_project
-safe_md $EXPORT_DIR/eweasel
-move eweasel.tar.bz2 $EXPORT_DIR/eweasel
-move eweasel-mt.tar.bz2 $EXPORT_DIR/eweasel
-cd $EIFFEL_SRC/eweasel
-tgz source
-move source.tar.bz2 $EXPORT_DIR/eweasel
 
-remtrace Recompile Vision2 Tour
-cd $EIFFEL_SRC
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples/vision2/widget_test vision2_demo
-cd $EIFFEL_SRC/vision2_demo
-safe_md $EXPORT_DIR/vision2_demo
-set -- -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN
-. ./retrieve_build_files >> $INSTALL_LOG 2>&1
-. ./retrieve_flat_short >> $INSTALL_LOG 2>&1
-cd $EIFFEL_SRC/vision2_demo
-clean_project
-finalize vision2_demo.ecf vision2_demo
-tgz_ccode vision2_demo vision2_demo.tar.bz2
-if [ ! -f vision2_demo.tar.bz2 ]; then
-	echo Could not finalize a new Vision2 tour
-	CANCEL
-fi
-clean_project
-move $EIFFEL_SRC/vision2_demo/flatshort $INSTALL_DIR/vision2_demo
-move $EIFFEL_SRC/vision2_demo/tests $INSTALL_DIR/vision2_demo
-move $EIFFEL_SRC/vision2_demo/bitmaps/png/*.png $INSTALL_DIR/vision2_demo/bitmaps/png
-move vision2_demo.tar.bz2 $EXPORT_DIR/vision2_demo
-
-
-remtrace Recompile EiffelBuild
-cd $EIFFEL_SRC/build/Constants
-set -- $EIFFEL_SRC 0000 gb_about_dialog_constants.e
-. $INIT_DIR/set_version.sh
-cd $EIFFEL_SRC/build
-clean_project
-
-
-if [ "$GTK_DIR" = "gtk3" ]; then
-	remtrace Use gtk3 to build EiffelBuild
-	export vision_implementation=gtk3
+if [ -z "$NO_EWEASEL" ]; then
+	remtrace Getting eweasel source code
+	cd $EIFFEL_SRC
+	safe_md $EIFFEL_SRC/eweasel
+	co -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/source $EIFFEL_SRC/eweasel/source
+	remtrace Compiling eweasel
+	safe_md $INSTALL_DIR/eweasel
+	safe_md $INSTALL_DIR/eweasel/spec
+	safe_md $INSTALL_DIR/eweasel/spec/unix
+	safe_md $INSTALL_DIR/eweasel/spec/unix/bin
+	EWEASEL=$EIFFEL_SRC/eweasel
+	export EWEASEL
+	cd $EIFFEL_SRC/eweasel/source
+	clean_project
+	finalize eweasel.ecf eweasel_st
+	tgz_ccode eweasel_st eweasel.tar.bz2
+	if [ ! -f eweasel.tar.bz2 ]; then
+		echo Could not finalize eweasel
+		CANCEL
+	fi
+	clean_project
+	finalize eweasel.ecf eweasel_mt
+	tgz_ccode eweasel_mt eweasel-mt.tar.bz2
+	if [ ! -f eweasel-mt.tar.bz2 ]; then
+		echo Could not finalize eweasel
+		CANCEL
+	fi
+	clean_project
+	safe_md $EXPORT_DIR/eweasel
+	move eweasel.tar.bz2 $EXPORT_DIR/eweasel
+	move eweasel-mt.tar.bz2 $EXPORT_DIR/eweasel
+	cd $EIFFEL_SRC/eweasel
+	tgz source
+	move source.tar.bz2 $EXPORT_DIR/eweasel
 else
-	remtrace Use gtk2 to build EiffelBuild
-	export vision_implementation=gtk2
+	remtrace SKIP eweasel
 fi
-finalize esbuilder.ecf esbuilder
-unset vision_implementation
-tgz_ccode esbuilder esbuilder.tar.bz2
-if [ ! -f esbuilder.tar.bz2 ]; then
-	echo Could not finalize a new EiffelBuild
-	CANCEL
+
+if [ ! -z "$INCLUDE_GUI" ]; then
+	remtrace Recompile Vision2 Tour
+	cd $EIFFEL_SRC
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples/vision2/widget_test vision2_demo
+	cd $EIFFEL_SRC/vision2_demo
+	safe_md $EXPORT_DIR/vision2_demo
+	set -- -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN
+	. ./retrieve_build_files >> $INSTALL_LOG 2>&1
+	. ./retrieve_flat_short >> $INSTALL_LOG 2>&1
+	cd $EIFFEL_SRC/vision2_demo
+	clean_project
+	finalize vision2_demo.ecf vision2_demo
+	tgz_ccode vision2_demo vision2_demo.tar.bz2
+	if [ ! -f vision2_demo.tar.bz2 ]; then
+		echo Could not finalize a new Vision2 tour
+		CANCEL
+	fi
+	clean_project
+	move $EIFFEL_SRC/vision2_demo/flatshort $INSTALL_DIR/vision2_demo
+	move $EIFFEL_SRC/vision2_demo/tests $INSTALL_DIR/vision2_demo
+	move $EIFFEL_SRC/vision2_demo/bitmaps/png/*.png $INSTALL_DIR/vision2_demo/bitmaps/png
+	move vision2_demo.tar.bz2 $EXPORT_DIR/vision2_demo
+
+else
+	remtrace SKIP Vision2 Tour
 fi
-clean_project
-safe_md $EXPORT_DIR/esbuilder
-move esbuilder.tar.bz2 $EXPORT_DIR/esbuilder
+
+if [ ! -z "$INCLUDE_GUI" ]; then
+	remtrace Recompile EiffelBuild
+	cd $EIFFEL_SRC/build/Constants
+	set -- $EIFFEL_SRC 0000 gb_about_dialog_constants.e
+	. $INIT_DIR/set_version.sh
+	cd $EIFFEL_SRC/build
+	clean_project
+
+	if [ "$GTK_DIR" = "gtk3" ]; then
+		remtrace Use gtk3 to build EiffelBuild
+		export vision_implementation=gtk3
+	else
+		remtrace Use gtk2 to build EiffelBuild
+		export vision_implementation=gtk2
+	fi
+	finalize esbuilder.ecf esbuilder
+	unset vision_implementation
+	tgz_ccode esbuilder esbuilder.tar.bz2
+	if [ ! -f esbuilder.tar.bz2 ]; then
+		echo Could not finalize a new EiffelBuild
+		CANCEL
+	fi
+	clean_project
+	safe_md $EXPORT_DIR/esbuilder
+	move esbuilder.tar.bz2 $EXPORT_DIR/esbuilder
+else
+	remtrace SKIP EiffelBuild
+fi
 
 if [ ! "$NO_NEW_EC" ]; then
 	safe_md $EXPORT_DIR/bin
@@ -108,8 +121,6 @@ if [ ! "$NO_NEW_EC" ]; then
 	copy $EIFFEL_SRC/Eiffel/Ace/ec.ecf ec.ecf
 	clean_project
 
-	remtrace Recompile EiffelStudio
-
 	if [ ! -z "$INCLUDE_GTK2" ]; then
 		remtrace Standard EiffelStudio edition - gtk2
 		export vision_implementation=gtk2
@@ -122,6 +133,8 @@ if [ ! "$NO_NEW_EC" ]; then
 		fi
 		clean_project
 		move ec_gtk2.tar.bz2 $EXPORT_DIR/bin/ec_gtk2_std.tar.bz2
+	#else
+		#remtrace SKIP Standard EiffelStudio edition - gtk2
 	fi
 
 	if [ ! -z "$INCLUDE_GTK3" ]; then
@@ -136,6 +149,8 @@ if [ ! "$NO_NEW_EC" ]; then
 		fi
 		clean_project
 		move ec_gtk3.tar.bz2 $EXPORT_DIR/bin/ec_gtk3_std.tar.bz2
+	else
+		remtrace SKIP Standard EiffelStudio edition - gtk3
 	fi
 
 	remtrace Batch version
@@ -173,6 +188,8 @@ if [ ! "$NO_NEW_EC" ]; then
 			fi
 			clean_project
 			move ec_gtk2.tar.bz2 $EXPORT_DIR/bin/ec_gtk2_ent.tar.bz2
+		#else
+			#remtrace SKIP Enterprise EiffelStudio edition - gtk2
 		fi
 		if [ ! -z "$INCLUDE_GTK3" ]; then
 			remtrace Enterprise EiffelStudio edition - gtk3
@@ -186,6 +203,8 @@ if [ ! "$NO_NEW_EC" ]; then
 			fi
 			clean_project
 			move ec_gtk3.tar.bz2 $EXPORT_DIR/bin/ec_gtk3_ent.tar.bz2
+		else
+			remtrace SKIP Enterprise EiffelStudio edition - gtk3
 		fi
 
 		remtrace enterprise Batch version
@@ -202,7 +221,6 @@ if [ ! "$NO_NEW_EC" ]; then
 		clean_project
 		move ecb.tar.bz2 $EXPORT_DIR/bin/ecb_ent.tar.bz2
 
-		remtrace Branded edition
 		cd $FINALIZATION_DIR
 		cd $EIFFEL_SRC/Eiffel/API/constants
 		# save original system_constants.e
@@ -224,6 +242,8 @@ if [ ! "$NO_NEW_EC" ]; then
 			fi
 			clean_project
 			move ec_gtk2.tar.bz2 $EXPORT_DIR/bin/ec_gtk2_branded.tar.bz2
+		#else
+			#remtrace SKIP Branded EiffelStudio edition - gtk2
 		fi
 		if [ ! -z "$INCLUDE_GTK3" ]; then
 			remtrace Branded EiffelStudio edition - gtk3
@@ -237,6 +257,8 @@ if [ ! "$NO_NEW_EC" ]; then
 			fi
 			clean_project
 			move ec_gtk3.tar.bz2 $EXPORT_DIR/bin/ec_gtk3_branded.tar.bz2
+		else
+			remtrace SKIP Branded EiffelStudio edition - gtk3
 		fi
 
 		remtrace branded Batch version
@@ -271,34 +293,43 @@ clean_project
 move quick_finalize.tar.bz2 $EXPORT_DIR/bin
 
 if [ "$MULTIPLE_EDITIONS" ]; then
-	remtrace Compiling CD key validator
-	cd $EIFFEL_SRC/tools
-	exprt $DEFAULT_ISE_SVN/Src/tools/cd_key_validator cd_key_validator 
-	if [ -d cd_key_validator ]; then
-		cd cd_key_validator/eiffel_studio_52
-		clean_project
-		finalize setup.ecf setup
-		tgz_ccode setup setup.tar.bz2
-		if [ ! -f setup.tar.bz2 ]; then
-			echo Could not finalize a new setup
-		else
-			move setup.tar.bz2 $EXPORT_DIR/bin
+	if [ ! -z "$INCLUDE_GUI" ]; then
+		remtrace Compiling CD key validator
+		cd $EIFFEL_SRC/tools
+
+		exprt $DEFAULT_ISE_SVN/Src/tools/cd_key_validator cd_key_validator
+		if [ -d cd_key_validator ]; then
+			cd cd_key_validator/eiffel_studio_52
+			clean_project
+			finalize setup.ecf setup
+			tgz_ccode setup setup.tar.bz2
+			if [ ! -f setup.tar.bz2 ]; then
+				echo Could not finalize a new setup
+			else
+				move setup.tar.bz2 $EXPORT_DIR/bin
+			fi
+			clean_project
 		fi
-		clean_project
+	else
+		remtrace SKIP CD key validator
 	fi
 fi
 
-remtrace Recompile estudio
-cd $EIFFEL_SRC/tools/estudio/config
-clean_project
-finalize estudio.ecf estudio
-tgz_ccode estudio estudio.tar.bz2
-if [ ! -f estudio.tar.bz2 ]; then
-	echo Could not finalize a new estudio
-	CANCEL
+if [ ! -z "$INCLUDE_GUI" ]; then
+	remtrace Recompile estudio
+	cd $EIFFEL_SRC/tools/estudio/config
+	clean_project
+	finalize estudio.ecf estudio
+	tgz_ccode estudio estudio.tar.bz2
+	if [ ! -f estudio.tar.bz2 ]; then
+		echo Could not finalize a new estudio
+		CANCEL
+	fi
+	clean_project
+	move estudio.tar.bz2 $EXPORT_DIR/bin
+else
+	remtrace SKIP estudio
 fi
-clean_project
-move estudio.tar.bz2 $EXPORT_DIR/bin
 
 cd $INIT_DIR
 . ./make_tools
@@ -310,21 +341,11 @@ remtrace geant
 finalize geant.ecf geant
 tgz_ccode geant geant.tar.bz2
 if [ ! -f geant.tar.bz2 ]; then
-    echo Could not finalize a new geant 
+    echo Could not finalize a new geant
     CANCEL
 fi
 clean_project
 move geant.tar.bz2 $EXPORT_DIR/bin
-
-remtrace gec
-finalize gec.ecf gec
-tgz_ccode gec gec.tar.bz2
-if [ ! -f gec.tar.bz2 ]; then
-	echo Could not finalize a new gec
-	CANCEL
-fi
-clean_project
-move gec.tar.bz2 $EXPORT_DIR/bin
 
 remtrace gelex
 finalize gelex.ecf gelex
@@ -336,46 +357,6 @@ fi
 clean_project
 move gelex.tar.bz2 $EXPORT_DIR/bin
 
-remtrace gelint
-finalize gelint.ecf gelint
-tgz_ccode gelint gelint.tar.bz2
-if [ ! -f gelint.tar.bz2 ]; then
-	echo Could not finalize a new gelint
-	CANCEL
-fi
-clean_project
-move gelint.tar.bz2 $EXPORT_DIR/bin
-
-remtrace gepp
-finalize gepp.ecf gepp
-tgz_ccode gepp gepp.tar.bz2
-if [ ! -f gepp.tar.bz2 ]; then
-	echo Could not finalize a new gepp
-	CANCEL
-fi
-clean_project
-move gepp.tar.bz2 $EXPORT_DIR/bin
-
-remtrace getest
-finalize getest.ecf getest
-tgz_ccode getest getest.tar.bz2
-if [ ! -f getest.tar.bz2 ]; then
-	echo Could not finalize a new getest
-	CANCEL
-fi
-clean_project
-move getest.tar.bz2 $EXPORT_DIR/bin
-
-remtrace gexslt
-finalize gexslt.ecf gexslt
-tgz_ccode gexslt gexslt.tar.bz2
-if [ ! -f gexslt.tar.bz2 ]; then
-	echo Could not finalize a new gexslt
-	CANCEL
-fi
-clean_project
-move gexslt.tar.bz2 $EXPORT_DIR/bin
-
 remtrace geyacc
 finalize geyacc.ecf geyacc
 tgz_ccode geyacc geyacc.tar.bz2
@@ -385,3 +366,87 @@ if [ ! -f geyacc.tar.bz2 ]; then
 fi
 clean_project
 move geyacc.tar.bz2 $EXPORT_DIR/bin
+
+if [ -z "$IS_MINIMAL" ]; then
+	remtrace gec
+	finalize gec.ecf gec
+	tgz_ccode gec gec.tar.bz2
+	if [ ! -f gec.tar.bz2 ]; then
+		echo Could not finalize a new gec
+		CANCEL
+	fi
+	clean_project
+	move gec.tar.bz2 $EXPORT_DIR/bin
+
+	remtrace gecc
+	finalize gecc.ecf gecc
+	tgz_ccode gecc gecc.tar.bz2
+	if [ ! -f gecc.tar.bz2 ]; then
+		echo Could not finalize a new gecc
+		CANCEL
+	fi
+	clean_project
+	move gecc.tar.bz2 $EXPORT_DIR/bin
+
+	remtrace gelint
+	finalize gelint.ecf gelint
+	tgz_ccode gelint gelint.tar.bz2
+	if [ ! -f gelint.tar.bz2 ]; then
+		echo Could not finalize a new gelint
+		CANCEL
+	fi
+	clean_project
+	move gelint.tar.bz2 $EXPORT_DIR/bin
+
+	remtrace gepp
+	finalize gepp.ecf gepp
+	tgz_ccode gepp gepp.tar.bz2
+	if [ ! -f gepp.tar.bz2 ]; then
+		echo Could not finalize a new gepp
+		CANCEL
+	fi
+	clean_project
+	move gepp.tar.bz2 $EXPORT_DIR/bin
+
+	remtrace getest
+	finalize getest.ecf getest
+	tgz_ccode getest getest.tar.bz2
+	if [ ! -f getest.tar.bz2 ]; then
+		echo Could not finalize a new getest
+		CANCEL
+	fi
+	clean_project
+	move getest.tar.bz2 $EXPORT_DIR/bin
+
+	remtrace gedoc
+	finalize gedoc.ecf gedoc
+	tgz_ccode gedoc gedoc.tar.bz2
+	if [ ! -f gedoc.tar.bz2 ]; then
+		echo Could not finalize a new gedoc
+		CANCEL
+	fi
+	clean_project
+	move gedoc.tar.bz2 $EXPORT_DIR/bin
+
+	remtrace geimage
+	finalize geimage.ecf geimage
+	tgz_ccode geimage geimage.tar.bz2
+	if [ ! -f geimage.tar.bz2 ]; then
+		echo Could not finalize a new geimage
+		CANCEL
+	fi
+	clean_project
+	move geimage.tar.bz2 $EXPORT_DIR/bin
+
+	remtrace gexslt
+	finalize gexslt.ecf gexslt
+	tgz_ccode gexslt gexslt.tar.bz2
+	if [ ! -f gexslt.tar.bz2 ]; then
+		echo Could not finalize a new gexslt
+		CANCEL
+	fi
+	clean_project
+	move gexslt.tar.bz2 $EXPORT_DIR/bin
+else
+	remtrace SKIP gelint, gepp, gexslt, getest
+fi

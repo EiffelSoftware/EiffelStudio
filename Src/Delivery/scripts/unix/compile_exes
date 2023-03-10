@@ -39,6 +39,21 @@ if [ -f bin/ecb_ent.tar.bz2 ]; then
 else
 	MULTIPLE_EDITIONS=""
 fi
+
+unset INCLUDE_GUI
+if [ -f bin/ec_gtk3_std.tar.bz2 ]; then
+	INCLUDE_GTK3="True"
+	INCLUDE_GUI="True"
+else
+	unset INCLUDE_GTK3
+fi
+if [ -f bin/ec_gtk2_std.tar.bz2 ]; then
+	INCLUDE_GTK2="True"
+	INCLUDE_GUI="True"
+else
+	unset INCLUDE_GTK2
+fi
+
 remtrace Compile C code of the libraries
 remtrace "\"A tout seigneur tout honneur\", let's start with the run-time"
 if [ ! -f c.tar.bz2 ]; then
@@ -214,75 +229,102 @@ cd $EXPORT_DIR
 cd $EXPORT_DIR
 ./compile_other_libraries $ISE_PLATFORM $INSTALL_DIR
 
-remtrace eweasel
-move $INSTALL_DIR/eweasel/spec/unix $INSTALL_DIR/eweasel/spec/$ISE_PLATFORM
-cd $EXPORT_DIR/eweasel
-bunzip2 -c source.tar.bz2 | tar -xf -
-cd $EXPORT_DIR
-. ./compile_eweasel
+if [ -d $EXPORT_DIR/eweasel ]; then
+	remtrace eweasel
+	move $INSTALL_DIR/eweasel/spec/unix $INSTALL_DIR/eweasel/spec/$ISE_PLATFORM
+	cd $EXPORT_DIR/eweasel
+	bunzip2 -c source.tar.bz2 | tar -xf -
+	cd $EXPORT_DIR
+	. ./compile_eweasel
+fi
 
-remtrace Esbuilder
-move $INSTALL_DIR/esbuilder/spec/unix $INSTALL_DIR/esbuilder/spec/$ISE_PLATFORM
-cd $EXPORT_DIR/esbuilder
-untgz_ccode esbuilder
-cp esbuilder $INSTALL_DIR/esbuilder/spec/$ISE_PLATFORM/bin/
+if [ -d "$EXPORT_DIR/esbuilder" ]; then
+	remtrace Esbuilder
+	move $INSTALL_DIR/esbuilder/spec/unix $INSTALL_DIR/esbuilder/spec/$ISE_PLATFORM
+	cd $EXPORT_DIR/esbuilder
+	untgz_ccode esbuilder
+	cp esbuilder $INSTALL_DIR/esbuilder/spec/$ISE_PLATFORM/bin/
+else
+	remtrace SKIP Esbuilder
+fi
 
-remtrace Vision2_demo
-cd $EXPORT_DIR/vision2_demo
-safe_md $INSTALL_DIR/vision2_demo/spec
-safe_md $INSTALL_DIR/vision2_demo/spec/$ISE_PLATFORM
-safe_md $INSTALL_DIR/vision2_demo/spec/$ISE_PLATFORM/bin
-untgz_ccode vision2_demo
-move vision2_demo $INSTALL_DIR/vision2_demo/spec/$ISE_PLATFORM/bin
+if [ -d "$EXPORT_DIR/vision2_demo" ]; then
+	remtrace Vision2_demo
+	cd $EXPORT_DIR/vision2_demo
+	safe_md $INSTALL_DIR/vision2_demo/spec
+	safe_md $INSTALL_DIR/vision2_demo/spec/$ISE_PLATFORM
+	safe_md $INSTALL_DIR/vision2_demo/spec/$ISE_PLATFORM/bin
+	untgz_ccode vision2_demo
+	move vision2_demo $INSTALL_DIR/vision2_demo/spec/$ISE_PLATFORM/bin
+else
+	remtrace SKIP Vision2_demo
+fi
 
-if [ "$MULTIPLE_EDITIONS" ]; then
-	remtrace Recompile CD key validator
-	cd $EXPORT_DIR/bin
-	if [ -f setup.tar.bz2 ]; then
-		untgz_ccode setup
+if [ ! -z "$MULTIPLE_EDITIONS" ]; then
+	if [ ! -z "$INCLUDE_GUI" ]; then
+		remtrace Recompile CD key validator
+		cd $EXPORT_DIR/bin
+		if [ -f setup.tar.bz2 ]; then
+			untgz_ccode setup
+		fi
 	fi
+else
+	remtrace SKIP CD key validator
 fi
 
 remtrace Recompile EiffelStudio
 safe_md $EXPORT_DIR/ecs
 
 if [ ! -z "$INCLUDE_GTK2" ]; then
-	remtrace Standard edition - gtk2
-	cd $EXPORT_DIR/bin
-	cp ec_gtk2_std.tar.bz2 ec.tar.bz2
-	untgz_ccode ec $should_cancel
-	if [ -f ec ]; then
-		bzip2 ec
-		move ec.bz2 $EXPORT_DIR/ecs/ec_gtk2_std.bz2
+	if [ -f $EXPORT_DIR/bin/ec_gtk2_std.tar.bz2 ]; then
+		remtrace Standard EiffelStudio bench edition - gtk2
+		cd $EXPORT_DIR/bin
+		cp ec_gtk2_std.tar.bz2 ec.tar.bz2
+		untgz_ccode ec $should_cancel
+		if [ -f ec ]; then
+			bzip2 ec
+			move ec.bz2 $EXPORT_DIR/ecs/ec_gtk2_std.bz2
+		fi
+	else
+		remtrace SKIP Standard EiffelStudio bench edition - gtk2
 	fi
 fi
 
 if [ ! -z "$INCLUDE_GTK3" ]; then
-	remtrace Standard edition - gtk3
-	cd $EXPORT_DIR/bin
-	cp ec_gtk3_std.tar.bz2 ec.tar.bz2
-	untgz_ccode ec $should_cancel
-	if [ -f ec ]; then
-		bzip2 ec
-		move ec.bz2 $EXPORT_DIR/ecs/ec_gtk3_std.bz2
+	if [ -f $EXPORT_DIR/bin/ec_gtk3_std.tar.bz2 ]; then
+		remtrace Standard EiffelStudio bench edition - gtk3
+		cd $EXPORT_DIR/bin
+		cp ec_gtk3_std.tar.bz2 ec.tar.bz2
+		untgz_ccode ec $should_cancel
+		if [ -f ec ]; then
+			bzip2 ec
+			move ec.bz2 $EXPORT_DIR/ecs/ec_gtk3_std.bz2
+		fi
+	else
+		remtrace SKIP Standard EiffelStudio bench edition - gtk3
 	fi
 fi
 
-remtrace Standard batch edition
-cd $EXPORT_DIR/bin
-cp ecb_std.tar.bz2 ecb.tar.bz2
-untgz_ccode ecb
-bzip2 ecb
-move ecb.bz2 $EXPORT_DIR/ecs/ecb_std.bz2
+if [ -f $EXPORT_DIR/bin/ecb_std.tar.bz2 ]; then
+	remtrace Standard EiffelStudio batch edition
+	cd $EXPORT_DIR/bin
+	cp ecb_std.tar.bz2 ecb.tar.bz2
+	untgz_ccode ecb
+	bzip2 ecb
+	move ecb.bz2 $EXPORT_DIR/ecs/ecb_std.bz2
+else
+	remtrace MISSING Standard EiffelStudio batch edition
+	CANCEL
+fi
 
 if [ -z "$MULTIPLE_EDITIONS" ]; then
-	if [ ! -z "$INCLUDE_GTK2" ]; then
+	if [ -f $EXPORT_DIR/ecs/ec_gtk2_std.tar.bz2 ]; then
 		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk2_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk2
 		chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk2
 		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk2
 	fi
 
-	if [ ! -z "$INCLUDE_GTK3" ]; then
+	if [ -f $EXPORT_DIR/ecs/ec_gtk3_std.tar.bz2 ]; then
 		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk3_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
 		chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
 		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
@@ -290,8 +332,8 @@ if [ -z "$MULTIPLE_EDITIONS" ]; then
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 else
-	if [ ! -z "$INCLUDE_GTK2" ]; then
-		remtrace Enterprise edition - gtk2
+	if [ -f $EXPORT_DIR/bin/ec_gtk2_ent.tar.bz2 ]; then
+		remtrace Enterprise EiffelStudio bench edition - gtk2
 		cd $EXPORT_DIR/bin
 		cp ec_gtk2_ent.tar.bz2 ec.tar.bz2
 		untgz_ccode ec $should_cancel
@@ -299,10 +341,11 @@ else
 			bzip2 ec
 			move ec.bz2 $EXPORT_DIR/ecs/ec_gtk2_ent.bz2
 		fi
+	else
+		remtrace SKIP Enterprise EiffelStudio bench edition - gtk2
 	fi
-
-	if [ ! -z "$INCLUDE_GTK3" ]; then
-		remtrace Enterprise edition - gtk3
+	if [ -f $EXPORT_DIR/bin/ec_gtk3_ent.tar.bz2 ]; then
+		remtrace Enterprise EiffelStudio bench edition - gtk3
 		cd $EXPORT_DIR/bin
 		cp ec_gtk3_ent.tar.bz2 ec.tar.bz2
 		untgz_ccode ec $should_cancel
@@ -310,17 +353,23 @@ else
 			bzip2 ec
 			move ec.bz2 $EXPORT_DIR/ecs/ec_gtk3_ent.bz2
 		fi
+	else
+		remtrace SKIP Enterprise EiffelStudio bench edition - gtk3
 	fi
 
-	remtrace Enterprise batch edition
-	cd $EXPORT_DIR/bin
-	cp ecb_ent.tar.bz2 ecb.tar.bz2
-	untgz_ccode ecb
-	bzip2 ecb
-	move ecb.bz2 $EXPORT_DIR/ecs/ecb_ent.bz2
+	if [ -f $EXPORT_DIR/bin/ecb_ent.tar.bz2 ]; then
+		remtrace Enterprise EiffelStudio batch edition
+		cd $EXPORT_DIR/bin
+		cp ecb_ent.tar.bz2 ecb.tar.bz2
+		untgz_ccode ecb
+		bzip2 ecb
+		move ecb.bz2 $EXPORT_DIR/ecs/ecb_ent.bz2
+	else
+		remtrace SKIP Enterprise EiffelStudio batch edition
+	fi
 
-	if [ ! -z "$INCLUDE_GTK2" ]; then
-		remtrace Branded edition - gtk2
+	if [ -f $EXPORT_DIR/bin/ec_gtk2_branded.tar.bz2 ]; then
+		remtrace Branded EiffelStudio bench edition - gtk2
 		cd $EXPORT_DIR/bin
 		cp ec_gtk2_branded.tar.bz2 ec.tar.bz2
 		untgz_ccode ec $should_cancel
@@ -328,9 +377,11 @@ else
 			bzip2 ec
 			move ec.bz2 $EXPORT_DIR/ecs/ec_gtk2_branded.bz2
 		fi
+	else
+		remtrace SKIP Branded EiffelStudio bench edition - gtk2
 	fi
-	if [ ! -z "$INCLUDE_GTK3" ]; then
-		remtrace Branded edition - gtk3
+	if [ -f $EXPORT_DIR/bin/ec_gtk3_branded.tar.bz2 ]; then
+		remtrace Branded EiffelStudio bench edition - gtk3
 		cd $EXPORT_DIR/bin
 		cp ec_gtk3_branded.tar.bz2 ec.tar.bz2
 		untgz_ccode ec $should_cancel
@@ -338,108 +389,231 @@ else
 			bzip2 ec
 			move ec.bz2 $EXPORT_DIR/ecs/ec_gtk3_branded.bz2
 		fi
+	else
+		remtrace SKIP Branded EiffelStudio bench edition - gtk3
 	fi
 
-	remtrace Branded batch edition
-	cd $EXPORT_DIR/bin
-	cp ecb_branded.tar.bz2 ecb.tar.bz2
-	untgz_ccode ecb
-	bzip2 ecb
-	move ecb.bz2 $EXPORT_DIR/ecs/ecb_branded.bz2
+	if [ -f $EXPORT_DIR/bin/ecb_ent.tar.bz2 ]; then
+		remtrace Branded EiffelStudio batch edition
+		cd $EXPORT_DIR/bin
+		cp ecb_branded.tar.bz2 ecb.tar.bz2
+		untgz_ccode ecb
+		bzip2 ecb
+		move ecb.bz2 $EXPORT_DIR/ecs/ecb_branded.bz2
+	else
+		remtrace SKIP Branded EiffelStudio batch edition
+	fi
 fi
 
-remtrace Recompile estudio
-cd $EXPORT_DIR/bin
-untgz_ccode estudio
-move estudio $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/estudio
+if [ -f "$EXPORT_DIR/bin/estudio.tar.bz2" ]; then
+	remtrace Recompile estudio
+	cd $EXPORT_DIR/bin
+	untgz_ccode estudio
+	move estudio $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/estudio
+else
+	remtrace SKIP estudio
+fi
 
-remtrace Recompile iron
-cd $EXPORT_DIR/bin
-untgz_ccode iron
-move iron $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/iron
+if [ -f "$EXPORT_DIR/bin/iron.tar.bz2" ]; then
+	remtrace Recompile iron
+	cd $EXPORT_DIR/bin
+	untgz_ccode iron
+	move iron $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/iron
+else
+	remtrace MISSING iron
+fi
 
-remtrace Recompile syntax_updater
-cd $EXPORT_DIR/bin
-untgz_ccode syntax_updater
-move syntax_updater $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/syntax_updater
+if [ -f "$EXPORT_DIR/bin/syntax_updater.tar.bz2" ]; then
+	remtrace Recompile syntax_updater
+	cd $EXPORT_DIR/bin
+	untgz_ccode syntax_updater
+	move syntax_updater $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/syntax_updater
+else
+	remtrace SKIP syntax_updater
+fi
 
-remtrace Recompile compile_all
-cd $EXPORT_DIR/bin
-untgz_ccode compile_all
-move compile_all $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/compile_all
+if [ -f "$EXPORT_DIR/bin/compile_all.tar.bz2" ]; then
+	remtrace Recompile compile_all
+	cd $EXPORT_DIR/bin
+	untgz_ccode compile_all
+	move compile_all $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/compile_all
+else
+	remtrace MISSING compile_all
+fi
 
-remtrace Recompile eiffel script tool
-cd $EXPORT_DIR/bin
-untgz_ccode eiffel
-move eiffel $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/eiffel
+if [ -f "$EXPORT_DIR/bin/eiffel.tar.bz2" ]; then
+	remtrace Recompile eiffel script tool
+	cd $EXPORT_DIR/bin
+	untgz_ccode eiffel
+	move eiffel $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/eiffel
+else
+	remtrace MISSING eiffel script tool
+fi
 
-remtrace Recompile wrap_c tool
-cd $EXPORT_DIR/bin
-untgz_ccode wrap_c
-move wrap_c $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/wrap_c
+if [ -f "$EXPORT_DIR/bin/wrap_c.tar.bz2" ]; then
+	remtrace Recompile wrap_c tool
+	cd $EXPORT_DIR/bin
+	untgz_ccode wrap_c
+	move wrap_c $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/wrap_c
+else
+	remtrace SKIP wrap_c tool
+fi
 
-remtrace Recompile Eiffel Image Embedder
-cd $EXPORT_DIR/bin
-untgz_ccode eimgemb
-move eimgemb $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/eimgemb
+if [ -f "$EXPORT_DIR/bin/eimgemb.tar.bz2" ]; then
+	remtrace Recompile Eiffel Image Embedder
+	cd $EXPORT_DIR/bin
+	untgz_ccode eimgemb
+	move eimgemb $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/eimgemb
+else
+	remtrace SKIP Eiffel Image Embedder
+fi
 
-remtrace Recompile Eiffel Echo
-cd $EXPORT_DIR/bin
-untgz_ccode eiffel_echo
-move eiffel_echo $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/eiffel_echo
+if [ -f "$EXPORT_DIR/bin/eiffel_echo.tar.bz2" ]; then
+	remtrace Recompile Eiffel Echo
+	cd $EXPORT_DIR/bin
+	untgz_ccode eiffel_echo
+	move eiffel_echo $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/eiffel_echo
+else
+	remtrace SKIP Eiffel Echo
+fi
 
-remtrace Recompile ace2ecf
-cd $EXPORT_DIR/bin
-untgz_ccode ace2ecf
-move ace2ecf $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/ace2ecf
+if [ -f "$EXPORT_DIR/bin/ace2ecf.tar.bz2" ]; then
+	remtrace Recompile ace2ecf
+	cd $EXPORT_DIR/bin
+	untgz_ccode ace2ecf
+	move ace2ecf $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/ace2ecf
+else
+	remtrace SKIP ace2ecf
+fi
 
 remtrace Compiling Gobo tools
 safe_md $INSTALL_DIR/library/gobo/spec/
 safe_md $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM
 safe_md $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin
 
-remtrace geant
-cd $EXPORT_DIR/bin
-untgz_ccode geant
-move geant $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/geant
+if [ -d "$INSTALL_DIR/contrib/library/gobo/tool/gec/config/c" ]; then
+	if echo "$ISE_PLATFORM" | grep "linux" >/dev/null 2>&1; then
+		DELIV_GOBO_CC=gcc
+	elif echo "$ISE_PLATFORM" | grep "solaris" >/dev/null 2>&1; then
+		DELIV_GOBO_CC=cc
+	elif echo "$ISE_PLATFORM" | grep "openbsd" >/dev/null 2>&1; then
+		DELIV_GOBO_CC=gcc
+	elif echo "$ISE_PLATFORM" | grep "freebsd" >/dev/null 2>&1; then
+		DELIV_GOBO_CC=gcc
+	elif echo "$ISE_PLATFORM" | grep "macosx" >/dev/null 2>&1; then
+		DELIV_GOBO_CC=gcc
+	else
+		DELIV_GOBO_CC=gcc
+	fi
+	remtrace Set default GOBO C compiler to $DELIV_GOBO_CC
+	echo $DELIV_GOBO_CC > $INSTALL_DIR/contrib/library/gobo/tool/gec/config/c/default.cfg
+else
+	remtrace NO gec C config folder at $INSTALL_DIR/contrib/library/gobo/tool/gec/config/c
+fi
 
-remtrace gec
-cd $EXPORT_DIR/bin
-untgz_ccode gec
-move gec $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gec
+if [ -f "$EXPORT_DIR/bin/geant.tar.bz2" ]; then
+	remtrace Recompile geant
+	cd $EXPORT_DIR/bin
+	untgz_ccode geant
+	move geant $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/geant
+else
+	remtrace MISSING geant
+fi
 
-remtrace gelex
-cd $EXPORT_DIR/bin
-untgz_ccode gelex
-move gelex $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gelex
+if [ -f "$EXPORT_DIR/bin/gec.tar.bz2" ]; then
+	remtrace Recompile gec
+	cd $EXPORT_DIR/bin
+	untgz_ccode gec
+	move gec $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gec
+else
+	remtrace SKIP gec
+fi
 
-remtrace gelint
-cd $EXPORT_DIR/bin
-untgz_ccode gelint
-move gelint $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gelint
+if [ -f "$EXPORT_DIR/bin/gecc.tar.bz2" ]; then
+	remtrace Recompile gecc
+	cd $EXPORT_DIR/bin
+	untgz_ccode gecc
+	move gecc $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gecc
+else
+	remtrace SKIP gecc
+fi
 
-remtrace gepp
-cd $EXPORT_DIR/bin
-untgz_ccode gepp
-move gepp $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gepp
+if [ -f "$EXPORT_DIR/bin/gelex.tar.bz2" ]; then
+	remtrace Recompile gelex
+	cd $EXPORT_DIR/bin
+	untgz_ccode gelex
+	move gelex $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gelex
+else
+	remtrace MISSING gelex
+fi
 
-remtrace getest
-cd $EXPORT_DIR/bin
-untgz_ccode getest
-move getest $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/getest
+if [ -f "$EXPORT_DIR/bin/gelint.tar.bz2" ]; then
+	remtrace Recompile gelint
+	cd $EXPORT_DIR/bin
+	untgz_ccode gelint
+	move gelint $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gelint
+else
+	remtrace SKIP gelint
+fi
 
-remtrace gexslt
-cd $EXPORT_DIR/bin
-untgz_ccode gexslt
-move gexslt $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gexslt
+if [ -f "$EXPORT_DIR/bin/gepp.tar.bz2" ]; then
+	remtrace Recompile gepp
+	cd $EXPORT_DIR/bin
+	untgz_ccode gepp
+	move gepp $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gepp
+else
+	remtrace SKIP gepp
+fi
 
-remtrace geyacc
-cd $EXPORT_DIR/bin
-untgz_ccode geyacc
-move geyacc $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/geyacc
+if [ -f "$EXPORT_DIR/bin/gedoc.tar.bz2" ]; then
+	remtrace Recompile gedoc
+	cd $EXPORT_DIR/bin
+	untgz_ccode gedoc
+	move gedoc $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gedoc
+else
+	remtrace SKIP gedoc
+fi
 
-cd $EXPORT_DIR
-. ./compile_wizards
+if [ -f "$EXPORT_DIR/bin/getest.tar.bz2" ]; then
+	remtrace Recompile getest
+	cd $EXPORT_DIR/bin
+	untgz_ccode getest
+	move getest $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/getest
+else
+	remtrace SKIP getest
+fi
+
+if [ -f "$EXPORT_DIR/bin/gexslt.tar.bz2" ]; then
+	remtrace Recompile gexslt
+	cd $EXPORT_DIR/bin
+	untgz_ccode gexslt
+	move gexslt $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gexslt
+else
+	remtrace SKIP gexslt
+fi
+
+if [ -f "$EXPORT_DIR/bin/geyacc.tar.bz2" ]; then
+	remtrace Recompile geyacc
+	cd $EXPORT_DIR/bin
+	untgz_ccode geyacc
+	move geyacc $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/geyacc
+else
+	remtrace MISSING geyacc
+fi
+
+if [ -f "$EXPORT_DIR/bin/geimage.tar.bz2" ]; then
+	remtrace Recompile geimage
+	cd $EXPORT_DIR/bin
+	untgz_ccode geimage
+	move geimage $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/geimage
+else
+	remtrace SKIP geimage
+fi
+
+if [ -f "$EXPORT_DIR/compile_wizards" ]; then
+	cd $EXPORT_DIR
+	. ./compile_wizards
+fi
 
 if [ ! -z "$MULTIPLE_EDITIONS" ]; then
 	fullrf $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/*.a

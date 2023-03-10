@@ -7,7 +7,7 @@ TMP_EIFFEL_SRC=""
 TMP_ISE_SRC=""
 TMP_ISE_LIBRARY=""
 
-. ./set_aliases
+. $INIT_DIR/set_aliases
 echo > $INSTALL_LOG
 
 echo $* > tmpin$$.tmp
@@ -50,9 +50,19 @@ else
 NO_NEW_EC=""
 fi
 
+awk 'index($0, "no_gtk2") != 0 { exit 54 }' tmpin$$.tmp
+if [ $? -eq 54 ] ;  then
+INCLUDE_GTK2=""
+fi
+
 awk 'index($0, "no_gtk3") != 0 { exit 54 }' tmpin$$.tmp
 if [ $? -eq 54 ] ;  then
 INCLUDE_GTK3=""
+fi
+
+awk 'index($0, "no_gui") != 0 { exit 54 }' tmpin$$.tmp
+if [ $? -eq 54 ] ;  then
+INCLUDE_GUI=""
 fi
 
 awk 'index($0, "all") != 0 { exit 54 }' tmpin$$.tmp
@@ -61,7 +71,18 @@ MULTIPLE_EDITIONS="True"
 else
 MULTIPLE_EDITIONS=""
 fi
+
+awk 'index($0, "minimal") != 0 { exit 54 }' tmpin$$.tmp
+if [ $? -eq 54 ] ;  then
+IS_MINIMAL="True"
+else
+unset IS_MINIMAL
+fi
 rm -f tmpin$$.tmp
+
+# Update configuration after taking into account command line arguments
+
+. $INIT_DIR/update_config
 
 cd $INIT_DIR
 remtrace Approximative starting time:
@@ -95,64 +116,72 @@ fullrd studio/spec/win64
 fullrd studio/config/windows
 fullrd studio/lang/po_files
 fullrd studio/lang/script
-fullrd studio/wizards/new_projects/wizard
-fullrf studio/wizards/new_projects/wizard.dsc
-fullrd studio/wizards/new_projects/dotnet
-fullrf studio/wizards/new_projects/dotnet.dsc
-fullrd studio/wizards/new_projects/wel
-fullrf studio/wizards/new_projects/wel.dsc
-remtrace studio ewf wizard
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/help/wizards/ewf/rootdir studio/wizards/new_projects/ewf
-move studio/wizards/new_projects/ewf/ewf.dsc studio/wizards/new_projects/ewf.dsc
-remtrace studio library wizard
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/help/wizards/library/rootdir studio/wizards/new_projects/library
-move studio/wizards/new_projects/library/library.dsc studio/wizards/new_projects/library.dsc
-remtrace studio wrapc wizard
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/help/wizards/wrapc/rootdir studio/wizards/new_projects/wrapc
-move studio/wizards/new_projects/wrapc/wrapc.dsc studio/wizards/new_projects/wrapc.dsc
+if [ -z "$NO_WIZARDS" ]; then
+	fullrd studio/wizards/new_projects/wizard
+	fullrf studio/wizards/new_projects/wizard.dsc
+	fullrd studio/wizards/new_projects/dotnet
+	fullrf studio/wizards/new_projects/dotnet.dsc
+	fullrd studio/wizards/new_projects/wel
+	fullrf studio/wizards/new_projects/wel.dsc
+	remtrace studio ewf wizard
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/help/wizards/ewf/rootdir studio/wizards/new_projects/ewf
+	move studio/wizards/new_projects/ewf/ewf.dsc studio/wizards/new_projects/ewf.dsc
+	remtrace studio library wizard
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/help/wizards/library/rootdir studio/wizards/new_projects/library
+	move studio/wizards/new_projects/library/library.dsc studio/wizards/new_projects/library.dsc
+	remtrace studio wrapc wizard
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/help/wizards/wrapc/rootdir studio/wizards/new_projects/wrapc
+	move studio/wizards/new_projects/wrapc/wrapc.dsc studio/wizards/new_projects/wrapc.dsc
+fi
 
-remtrace eweasel
-exprt -N -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel eweasel
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/bin eweasel/bin
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/control eweasel/control
-fullrf $INSTALL_DIR/eweasel/INSTALL
+if [ -z "$NO_EWEASEL" ]; then
+	remtrace eweasel
+	exprt -N -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel eweasel
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/bin eweasel/bin
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/control eweasel/control
+	fullrf $INSTALL_DIR/eweasel/INSTALL
+fi
 
-remtrace esbuilder
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/esbuilder esbuilder
-remtrace vision2_demo
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/vision2_demo vision2_demo
-remtrace examples
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples examples
-cd examples
-fullrd obsolete
-fullrd eiffeltest
-fullrd iphone
-fullrd libevent
-fullrd math
-fullrd matisse
-fullrd store/matisse
-fullrd old_com
-fullrd old_matisse
-fullrd vision
-fullrd build
-fullrd dotnet
-fullrd ribbon
-fullrd thread/fancy
-fullrd vision2/Boxes
-fullrd vision2/drawing_area
-fullrd vision2/ev_list
-fullrd vision2/fake_event
-fullrd vision2/figure
-fullrd vision2/hello_world
-fullrd vision2/menu
-fullrd vision2/multicolumn_list
-fullrd vision2/pixmap
-fullrd vision2/split_area
-fullrd vision2/test_all_widgets
-fullrd vision2/test_events
-fullrd vision2/tests
-fullrd vision2/tutorial
-fullrd vision2/widget_test
+if [ ! -z "$INCLUDE_GUI" ]; then
+	remtrace esbuilder
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/esbuilder esbuilder
+	remtrace vision2_demo
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/vision2_demo vision2_demo
+fi
+if [ -z "$NO_EXAMPLES" ]; then
+	remtrace examples
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples examples
+	cd examples
+	fullrd obsolete
+	fullrd eiffeltest
+	fullrd iphone
+	fullrd libevent
+	fullrd math
+	fullrd matisse
+	fullrd store/matisse
+	fullrd old_com
+	fullrd old_matisse
+	fullrd vision
+	fullrd build
+	fullrd dotnet
+	fullrd ribbon
+	fullrd thread/fancy
+	fullrd vision2/Boxes
+	fullrd vision2/drawing_area
+	fullrd vision2/ev_list
+	fullrd vision2/fake_event
+	fullrd vision2/figure
+	fullrd vision2/hello_world
+	fullrd vision2/menu
+	fullrd vision2/multicolumn_list
+	fullrd vision2/pixmap
+	fullrd vision2/split_area
+	fullrd vision2/test_all_widgets
+	fullrd vision2/test_events
+	fullrd vision2/tests
+	fullrd vision2/tutorial
+	fullrd vision2/widget_test
+fi
 
 remtrace precomp
 safe_md $INSTALL_DIR/precomp
@@ -252,7 +281,7 @@ if [ ! "$NO_COMPILE" ]; then
 		mv -f tmp $INSTALL_DIR/studio/eifinit/spec/unix/default.xml
 	fi
 
-	if [ "$MULTIPLE_EDITIONS" ]; then
+	if [ ! -z "$MULTIPLE_EDITIONS" ]; then
 		remtrace ISE specific files: enterprise edition
 		cd $EIFFEL_SRC
 		exprt $DEFAULT_ISE_SVN/Src/library/keygen library/keygen
@@ -274,21 +303,28 @@ if [ ! "$NO_COMPILE" ]; then
 	. ./make_exes
 	cd $INIT_DIR
 
-	if [ ! "$NO_WIZARDS" ]; then
-		remtrace Generate the precompilation and the \"new project\" wizards
-		. ./make_wizards
+	if [ -z "$NO_WIZARDS" ]; then
+		if [ ! -z "$INCLUDE_GUI" ]; then
+			remtrace Generate the precompilation and the \"new project\" wizards
+			. ./make_wizards
+		else
+			remtrace SKIP the precompilation and the \"new project\" wizards
+		fi
 		cd $INIT_DIR
 	else
+		remtrace SKIP wizards
 		quick_move -r studio/wizards
 	fi
 
 else
 	remtrace Copy executable files from the old delivery
 	quick_move -r studio/spec
-	quick_move -r studio/wizards
+	if [ -z "$NO_WIZARDS" ]; then
+		quick_move -r studio/wizards
+	fi
 fi
 
-if [ ! "$NO_DOCUMENTATION" ]; then
+if [ -z "$NO_DOCUMENTATION" ]; then
 	remtrace Check out the documentation
 	# When compiling for GTK 1.2, disable the building of the documentation
 	# since on most machine GTK 1.2 is not installed.
@@ -302,10 +338,14 @@ cd $INIT_DIR
 set -- $INSTALL_DIR library $GTK_DIR
 . ./make_libraries
 
-remtrace "Putting unsupported libraries in the delivery (ISE or others)"
-cd $INIT_DIR
-set -- $INSTALL_DIR
-. ./make_other_libraries
+if [ ! -z "$IS_MINIMAL" ]; then
+	remtrace "SKIP Putting unsupported libraries in the delivery (ISE or others)"
+else
+	remtrace "Putting unsupported libraries in the delivery (ISE or others)"
+	cd $INIT_DIR
+	set -- $INSTALL_DIR
+	. ./make_other_libraries
+fi
 
 cd $INIT_DIR
 
@@ -344,9 +384,16 @@ if [ ! "$NO_INSTALL" ]; then
 
 	cd $INIT_DIR
 	copy compile* $EXPORT_DIR
+	if [ ! -z "$NO_EWEASEL" ]; then
+		rm $EXPORT_DIR/compile_eweasel
+	fi
+	#if [ ! -z "$NO_WIZARDS" ]; then
+		#rm $EXPORT_DIR/compile_wizards
+	#fi
 	copy make_images $EXPORT_DIR
 	copy make_cd_image $EXPORT_DIR
 	copy set_aliases $EXPORT_DIR
+	copy update_config $EXPORT_DIR
 
 	# Scripts for building unix layout/packages
 	copy make_unix_layout $EXPORT_DIR
@@ -358,6 +405,7 @@ if [ ! "$NO_INSTALL" ]; then
 
 	# checkout eiffelstudio licenses
 	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/scripts/licensing $EXPORT_DIR/licensing
+		# Update the set_aliases to reset the EXPORT_DIR to current directory
 	cd $EXPORT_DIR
 	rm -f tmp
 	sed -e "s/\/PorterPackage//g" set_aliases > tmp
@@ -368,6 +416,12 @@ if [ ! "$NO_INSTALL" ]; then
 	sed -e "s/^FILE_SVN_REVISION.*$/FILE_SVN_REVISION=$FILE_SVN_REVISION/g" set_aliases > tmp
 	rm -f set_aliases
 	mv -f tmp set_aliases
+	if [ ! -z "$IS_MINIMAL" ]; then
+		echo "#" > set_custom_aliases
+		echo "# Custom variables" >> set_custom_aliases
+		echo "	IS_MINIMAL=$IS_MINIMAL" >> set_custom_aliase
+	fi
+
 	cd $INIT_DIR
 fi
 # Restore environment variables to their original value

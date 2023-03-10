@@ -14,18 +14,6 @@ fi
 clean_project
 move iron.tar.bz2 $EXPORT_DIR/bin
 
-remtrace Recompile syntax_updater
-cd $EIFFEL_SRC/tools/syntax_updater
-clean_project
-finalize syntax_updater.ecf syntax_updater
-tgz_ccode syntax_updater syntax_updater.tar.bz2
-if [ ! -f syntax_updater.tar.bz2 ]; then
-	echo Could not finalize a new syntax_updater
-	CANCEL
-fi
-clean_project
-move syntax_updater.tar.bz2 $EXPORT_DIR/bin
-
 remtrace Recompile compile_all
 cd $EIFFEL_SRC/tools/compile_all
 clean_project
@@ -44,68 +32,83 @@ clean_project
 finalize eiffel_script.ecf eiffel_script
 tgz_ccode eiffel_script eiffel.tar.bz2
 if [ ! -f eiffel.tar.bz2 ]; then
-	echo Could not finalize a new eiffel tool 
+	echo Could not finalize a new eiffel tool
 	CANCEL
 fi
 clean_project
 move eiffel.tar.bz2 $EXPORT_DIR/bin
 
-remtrace Recompile wrap_c tool
-cd $EIFFEL_SRC/tools/wrapc/src/ewg
-clean_project
-finalize system.ecf wrap_c
-tgz_ccode wrap_c wrap_c.tar.bz2
-if [ ! -f wrap_c.tar.bz2 ]; then
-	echo Could not finalize a new wrap_c tool 
-	CANCEL
-fi
-clean_project
-move wrap_c.tar.bz2 $EXPORT_DIR/bin
+if [ -z "$IS_MINIMAL" ]; then
+	remtrace Recompile syntax_updater
+	cd $EIFFEL_SRC/tools/syntax_updater
+	clean_project
+	finalize syntax_updater.ecf syntax_updater
+	tgz_ccode syntax_updater syntax_updater.tar.bz2
+	if [ ! -f syntax_updater.tar.bz2 ]; then
+		echo Could not finalize a new syntax_updater
+		CANCEL
+	fi
+	clean_project
+	move syntax_updater.tar.bz2 $EXPORT_DIR/bin
 
-remtrace Recompile eiffel_image_embedder
-cd $EIFFEL_SRC/tools/eiffel_image_embedder
-clean_project
-finalize eimgemb.ecf eiffel_image_embedder
-tgz_ccode eiffel_image_embedder eimgemb.tar.bz2
-if [ ! -f eimgemb.tar.bz2 ]; then
-	echo Could not finalize a new Eiffel image embedder
-	CANCEL
-fi
-clean_project
-move eimgemb.tar.bz2 $EXPORT_DIR/bin
+	remtrace Recompile wrap_c tool
+	cd $EIFFEL_SRC/tools/wrapc/src/ewg
+	clean_project
+	finalize system.ecf wrap_c
+	tgz_ccode wrap_c wrap_c.tar.bz2
+	if [ ! -f wrap_c.tar.bz2 ]; then
+		echo Could not finalize a new wrap_c tool
+		CANCEL
+	fi
+	clean_project
+	move wrap_c.tar.bz2 $EXPORT_DIR/bin
 
-remtrace Recompile eiffel_echo
-cd $EIFFEL_SRC/tools/eiffel_echo
-clean_project
-finalize eiffel_echo.ecf eiffel_echo
-tgz_ccode eiffel_echo eiffel_echo.tar.bz2
-if [ ! -f eiffel_echo.tar.bz2 ]; then
-	echo Could not finalize a new Eiffel Echo
-	CANCEL
-fi
-clean_project
-move eiffel_echo.tar.bz2 $EXPORT_DIR/bin
+	remtrace Recompile eiffel_image_embedder
+	cd $EIFFEL_SRC/tools/eiffel_image_embedder
+	clean_project
+	finalize eimgemb.ecf eiffel_image_embedder
+	tgz_ccode eiffel_image_embedder eimgemb.tar.bz2
+	if [ ! -f eimgemb.tar.bz2 ]; then
+		echo Could not finalize a new Eiffel image embedder
+		CANCEL
+	fi
+	clean_project
+	move eimgemb.tar.bz2 $EXPORT_DIR/bin
 
-remtrace Recompile po_generation_tool
-cd $EIFFEL_SRC/tools/po_generation_tool
-clean_project
-finalize po_generation_tool.ecf po_generation_tool
-tgz_ccode po_generation_tool po_generation_tool.tar.bz2
-if [ ! -f po_generation_tool.tar.bz2 ]; then
-	echo Could not finalize a new po_generation_tool
-	CANCEL
-fi
-clean_project
-move po_generation_tool.tar.bz2 $EXPORT_DIR/bin
+	remtrace Recompile eiffel_echo
+	cd $EIFFEL_SRC/tools/eiffel_echo
+	clean_project
+	finalize eiffel_echo.ecf eiffel_echo
+	tgz_ccode eiffel_echo eiffel_echo.tar.bz2
+	if [ ! -f eiffel_echo.tar.bz2 ]; then
+		echo Could not finalize a new Eiffel Echo
+		CANCEL
+	fi
+	clean_project
+	move eiffel_echo.tar.bz2 $EXPORT_DIR/bin
 
-remtrace Recompile ace2ecf
-cd $EIFFEL_SRC/tools/ace2ecf
-clean_project
-finalize ace2ecf.ecf ace2ecf
-tgz_ccode ace2ecf ace2ecf.tar.bz2
-if [ ! -f ace2ecf.tar.bz2 ]; then
-	echo Could not finalize a new ace2ecf
-	CANCEL
+	remtrace Recompile po_generation_tool
+	cd $EIFFEL_SRC/tools/po_generation_tool
+	clean_project
+	finalize po_generation_tool.ecf po_generation_tool
+	tgz_ccode po_generation_tool po_generation_tool.tar.bz2
+	if [ ! -f po_generation_tool.tar.bz2 ]; then
+		echo Could not finalize a new po_generation_tool
+		CANCEL
+	fi
+	clean_project
+	move po_generation_tool.tar.bz2 $EXPORT_DIR/bin
+
+	remtrace Recompile ace2ecf
+	cd $EIFFEL_SRC/tools/ace2ecf
+	clean_project
+	finalize ace2ecf.ecf ace2ecf
+	tgz_ccode ace2ecf ace2ecf.tar.bz2
+	if [ ! -f ace2ecf.tar.bz2 ]; then
+		echo Could not finalize a new ace2ecf
+		CANCEL
+	fi
+	clean_project
+	move ace2ecf.tar.bz2 $EXPORT_DIR/bin
 fi
-clean_project
-move ace2ecf.tar.bz2 $EXPORT_DIR/bin
+

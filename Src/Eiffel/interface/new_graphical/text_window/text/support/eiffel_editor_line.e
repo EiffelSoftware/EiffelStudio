@@ -84,16 +84,16 @@ feature -- Initialisation
 
 feature -- Access
 
-	breakpoint_token: EDITOR_TOKEN_BREAKPOINT
+	breakpoint_token: detachable EDITOR_TOKEN_BREAKPOINT
 			-- Token containing the breakpoint information for the line.
 		do
-			Result ?= real_first_token
+			Result := {like breakpoint_token} / real_first_token
 		end
 
-	number_token: EDITOR_TOKEN_LINE_NUMBER
+	number_token: detachable EDITOR_TOKEN_LINE_NUMBER
 			-- Token containing the line number information for the line.
 		do
-			Result ?= real_first_token.next
+			Result := {like number_token} / real_first_token.next
 		end
 
 	content: LIST [EDITOR_TOKEN]
@@ -117,7 +117,7 @@ invariant
 	has_breakpoint_token: breakpoint_token /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

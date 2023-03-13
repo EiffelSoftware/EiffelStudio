@@ -127,7 +127,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			end
 			if a_line <= text_panel.number_of_lines then
 				if attached {EIFFEL_EDITOR_LINE} text_panel.text_displayed.line (a_line) as ln then
-					Result ?= ln.real_first_token.pebble
+					Result := {like breakable_stone_at_line} / ln.real_first_token.pebble
 				end
 			end
 		end
@@ -138,8 +138,6 @@ feature {NONE} -- Implementation
 			-- Update display by drawing `line' onto the `editor_drawing_area' directly at co-ordinates x,y.
 		local
  			curr_token	: EDITOR_TOKEN
- 			line_token  : EDITOR_TOKEN_LINE_NUMBER
- 			bp_token: EDITOR_TOKEN_BREAKPOINT
  			spacer_text: STRING
  			max_chars: INTEGER
  			l_line_numbers_visible: BOOLEAN
@@ -153,8 +151,7 @@ feature {NONE} -- Implementation
  			create spacer_text.make_filled ('0', max_chars - xline.out.count)
 
  				-- Set the correct image for line number
- 			line_token ?= a_line.number_token
-			if line_token /= Void then
+			if attached {EDITOR_TOKEN_LINE_NUMBER} a_line.number_token as line_token then
 				line_token.set_internal_image (spacer_text + xline.out)
 			end
 
@@ -176,21 +173,24 @@ feature {NONE} -- Implementation
  				a_line.after or else not curr_token.is_margin_token
  			loop
 				if curr_token.is_margin_token then
-					bp_token ?= curr_token
-					if bp_token /= Void and then not hidden_breakpoints then
-						bp_token.display (y, margin_area, text_panel)
-					elseif bp_token /= Void then
-						bp_token.hide
+
+					if attached {EDITOR_TOKEN_BREAKPOINT} curr_token as bp_token then
+						if not hidden_breakpoints then
+							bp_token.display (y, margin_area, text_panel)
+						else
+							bp_token.hide
+						end
 					else
-						line_token ?= curr_token
-						if line_token /= Void and then l_line_numbers_visible then
-							if not hidden_breakpoints and then attached {EIFFEL_EDITOR_LINE} a_line as l_line then
-								line_token.display_with_offset (l_line.breakpoint_token.width, y, margin_area, text_panel)
+						if attached {EDITOR_TOKEN_LINE_NUMBER} curr_token as line_token then
+							if l_line_numbers_visible then
+								if not hidden_breakpoints and then attached {EIFFEL_EDITOR_LINE} a_line as l_line then
+									line_token.display_with_offset (l_line.breakpoint_token.width, y, margin_area, text_panel)
+								else
+									line_token.display (y, margin_area, text_panel)
+								end
 							else
-								line_token.display (y, margin_area, text_panel)
+								line_token.hide
 							end
-						elseif line_token /= Void then
-							line_token.hide
 						end
 					end
 				end
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

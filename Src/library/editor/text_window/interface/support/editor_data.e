@@ -302,10 +302,16 @@ feature -- Value
 			Result := operator_background_color_preference.value
 		end
 
-	highlight_color: EV_COLOR
+	highlight_text_color: EV_COLOR
+			-- Text color used to highlight lines
+		do
+			Result := highlight_text_color_preference.value
+		end
+
+	highlight_background_color: EV_COLOR
 			-- Background color used to highlight lines
 		do
-			Result := highlight_color_preference.value
+			Result := highlight_background_color_preference.value
 		end
 
 	cursor_line_highlight_color: EV_COLOR
@@ -465,8 +471,11 @@ feature {ANY} -- Preferences
 	operator_background_color_preference: COLOR_PREFERENCE
 			-- Background color used to display operator
 
-	highlight_color_preference: COLOR_PREFERENCE
-			-- Highlight color
+	highlight_text_color_preference: COLOR_PREFERENCE
+			-- Highlight text color
+
+	highlight_background_color_preference: COLOR_PREFERENCE
+			-- Highlight background color
 
 	cursor_line_highlight_color_preference: COLOR_PREFERENCE
 			-- Cursor line highlight color
@@ -587,8 +596,11 @@ feature {NONE} -- Preference Strings
 	operator_background_color_string: STRING = "editor.general.colors.operator_background_color"
 			-- Background color used to display operator
 
-	highlight_color_string: STRING = "editor.general.colors.highlight_color"
-			-- Highlight color
+	highlight_text_color_string: STRING = "editor.general.colors.highlight_text_color"
+			-- Highlight text color
+
+	highlight_background_color_string: STRING = "editor.general.colors.highlight_background_color"
+			-- Highlight background color
 
 	cursor_line_highlight_color_string: STRING = "editor.general.colors.cursor_line_highlight_color"
 			-- Cursor line highlight color
@@ -656,7 +668,8 @@ feature {NONE} -- Implementation
 			colors.put (number_background_color_preference.value, number_background_color_id)
 			colors.put (operator_text_color_preference.value, operator_text_color_id)
 			colors.put (operator_background_color_preference.value, operator_background_color_id)
-			colors.put (highlight_color_preference.value, highlight_color_id)
+			colors.put (highlight_text_color_preference.value, highlight_text_color_id)
+			colors.put (highlight_background_color_preference.value, highlight_background_color_id)
 			colors.put (cursor_line_highlight_color_preference.value, cursor_line_highlight_color_id)
 			colors.put (link_color_preference.value, link_color_id)
 			colors.put (link_background_color_preference.value, link_background_color_id)
@@ -738,7 +751,8 @@ feature {NONE} -- Implementation
 			operator_background_color_preference := l_manager.new_color_preference_value (l_manager, operator_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			number_text_color_preference := l_manager.new_color_preference_value (l_manager, number_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (128, 0, 255))
 			number_background_color_preference := l_manager.new_color_preference_value (l_manager, number_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			highlight_color_preference := l_manager.new_color_preference_value (l_manager, highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (50, 250, 30))
+			highlight_text_color_preference := l_manager.new_color_preference_value (l_manager, highlight_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			highlight_background_color_preference := l_manager.new_color_preference_value (l_manager, highlight_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (50, 250, 30))
 			cursor_line_highlight_color_preference := l_manager.new_color_preference_value (l_manager, cursor_line_highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 128, 128))
 			link_color_preference := l_manager.new_color_preference_value (l_manager, link_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 255))
 			link_background_color_preference := l_manager.new_color_preference_value (l_manager, link_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
@@ -786,7 +800,8 @@ feature {NONE} -- Implementation
 			number_background_color_preference.change_actions.extend (agent update)
 			operator_text_color_preference.change_actions.extend (agent update)
 			operator_background_color_preference.change_actions.extend (agent update)
-			highlight_color_preference.change_actions.extend (agent update)
+			highlight_text_color_preference.change_actions.extend (agent update)
+			highlight_background_color_preference.change_actions.extend (agent update)
 			cursor_line_highlight_color_preference.change_actions.extend (agent update)
 			use_tab_for_indentation_preference.change_actions.extend (agent update)
 			mouse_wheel_scroll_full_page_preference.change_actions.extend (agent update)
@@ -808,7 +823,7 @@ feature {NONE} -- Implementation
 		attribute end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

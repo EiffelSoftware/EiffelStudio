@@ -69,22 +69,25 @@ feature -- Color ids
 	operator_background_color_id: INTEGER = 20
 			-- Background color used to display operator	
 
-	highlight_color_id: INTEGER = 21
+	highlight_text_color_id: INTEGER = 21
 			-- Background color used to highlight lines
 
-	cursor_line_highlight_color_id: INTEGER = 22
+	highlight_background_color_id: INTEGER = 22
+			-- Background color used to highlight lines
+
+	cursor_line_highlight_color_id: INTEGER = 23
 			-- Background color used to highlight line with cursor in it
 
-	link_color_id: INTEGER = 23
+	link_color_id: INTEGER = 24
 			-- Link color id
 
-	link_background_color_id: INTEGER = 24
+	link_background_color_id: INTEGER = 25
 			-- Background color for links
 
-	mouse_over_link_color_id: INTEGER = 25
+	mouse_over_link_color_id: INTEGER = 26
 			-- Link color when mouse is over
 
-	mouse_over_link_background_color_id: INTEGER = 26
+	mouse_over_link_background_color_id: INTEGER = 27
 			-- Link color when mouse is over
 
 	quoted_feature_text_color_id: INTEGER = 27
@@ -115,7 +118,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

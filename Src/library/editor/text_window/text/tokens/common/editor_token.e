@@ -466,13 +466,17 @@ feature -- Color ids
 
 	text_color_id: INTEGER
 		do
-			Result := normal_text_color_id
+			if is_highlighted then
+				Result := highlight_text_color_id
+			else
+				Result := normal_text_color_id
+			end
 		end
 
 	background_color_id: INTEGER
 		do
 			if is_highlighted then
-				Result := highlight_color_id
+				Result := highlight_background_color_id
 			else
 				Result := normal_background_color_id
 			end
@@ -660,7 +664,7 @@ invariant
 	previous = Void implies position = 0
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -203,7 +203,7 @@ feature -- Status setting
 		do
 			class_names.force_last (a_class_name.as_string_8)
 		ensure
-			added: class_names.there_exists (agent {STRING_8}.same_string (a_class_name))
+			added: across class_names as ic some a_class_name.same_string_general (ic.item) end
 		end
 
 	set_time_out (a_time_out: NATURAL)

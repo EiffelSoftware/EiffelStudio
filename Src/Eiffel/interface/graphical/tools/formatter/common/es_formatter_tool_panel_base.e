@@ -544,11 +544,7 @@ feature{NONE} -- Implementation
 			l_cursor: CURSOR
 			l_formatter: EB_FORMATTER
 			l_generator: TUPLE [displayer_generator: FUNCTION [EB_FORMATTER_DISPLAYER]; displayer_name: STRING]
-			l_browser_formatter: EB_BROWSER_FORMATTER
-			l_editor_formatter: EB_EDITOR_FORMATTER
 			l_displayer: EB_FORMATTER_DISPLAYER
-			l_browser_displayer: EB_FORMATTER_BROWSER_DISPLAYER
-			l_editor_displayer: EB_FORMATTER_EDITOR_DISPLAYER
 		do
 				-- Setup displaysers.
 			l_formatters := a_formatters
@@ -564,13 +560,23 @@ feature{NONE} -- Implementation
 					l_generator := l_formatter.displayer_generator
 					l_displayer := new_displayer (l_generator.displayer_name, l_generator.displayer_generator)
 					if l_formatter.is_browser_formatter then
-						l_browser_displayer ?= l_displayer
-						l_browser_formatter ?= l_formatter
-						l_browser_formatter.set_browser_displayer (l_browser_displayer)
+						if
+							attached {EB_FORMATTER_BROWSER_DISPLAYER} l_displayer as l_browser_displayer and then
+							attached {EB_BROWSER_FORMATTER} l_displayer as l_browser_formatter
+						then
+							l_browser_formatter.set_browser_displayer (l_browser_displayer)
+						else
+							check has_displayer_and_formatter: False end
+						end
 					else
-						l_editor_displayer ?= l_displayer
-						l_editor_formatter ?= l_formatter
-						l_editor_formatter.set_editor_displayer (l_editor_displayer)
+						if
+							attached {EB_FORMATTER_EDITOR_DISPLAYER} l_displayer as l_editor_displayer and then
+							attached {EB_EDITOR_FORMATTER} l_displayer as l_editor_formatter
+						then
+							l_editor_formatter.set_editor_displayer (l_editor_displayer)
+						else
+							check has_displayer_and_formatter: False end
+						end
 					end
 				end
 				l_formatters.forth
@@ -975,7 +981,7 @@ invariant
 	veto_format_function_agent_attached: veto_format_function_agent /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

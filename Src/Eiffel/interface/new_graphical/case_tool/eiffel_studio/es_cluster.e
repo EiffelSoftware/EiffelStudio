@@ -83,7 +83,6 @@ feature -- Access
 			-- `links' that are EIFFEL_ITEMS and are needed_on_diagram.
 		local
 			l_links: like internal_links
-			l_item: ES_ITEM
 		do
 			l_links := internal_links
 			create {ARRAYED_LIST [ES_ITEM]} Result.make (l_links.count)
@@ -92,8 +91,7 @@ feature -- Access
 			until
 				l_links.after
 			loop
-				l_item ?= l_links.item
-				if l_item /= Void and then l_item.is_needed_on_diagram then
+				if attached {ES_ITEM} l_links.item as l_item and then l_item.is_needed_on_diagram then
 					Result.extend (l_item)
 				end
 				l_links.forth
@@ -104,7 +102,6 @@ feature -- Access
 			-- `linkables' that are EIFFEL_ITEMS and are needed_on_diagram.
 		local
 			l_linkables: like linkables
-			l_item: ES_ITEM
 		do
 			l_linkables := linkables
 			create {ARRAYED_LIST [ES_ITEM]} Result.make (l_linkables.count)
@@ -113,8 +110,7 @@ feature -- Access
 			until
 				l_linkables.after
 			loop
-				l_item ?= l_linkables.item
-				if l_item /= Void and then l_item.is_needed_on_diagram then
+				if attached {ES_ITEM} l_linkables.item as l_item and then l_item.is_needed_on_diagram then
 					Result.extend (l_item)
 				end
 				l_linkables.forth
@@ -148,18 +144,12 @@ feature -- Element change
 	synchronize
 			-- Some properties may have changed due to recompilation.
 			-- | Check sub clusters, if not correct, disconnect the relationship.
-		local
-			l_cluster: like Current
-			l_clu: CONF_CLUSTER
-			l_lib: CONF_LIBRARY
 		do
 			if not group.is_valid then
 				graph.remove_all (Current)
 			else
-				l_cluster ?= cluster
-				if l_cluster /= Void then
-					l_clu ?= group
-					if l_clu /= Void then
+				if attached {like Current} cluster as l_cluster then
+					if attached {CONF_CLUSTER} group as l_clu then
 						if l_clu.parent /= l_cluster.group then
 							remove_cluster
 							l_cluster.prune_all (Current)
@@ -168,22 +158,22 @@ feature -- Element change
 							group_id := id_of_group (group)
 						end
 					else
-						l_lib ?= group
-						if l_lib /= Void then
+						if attached {CONF_LIBRARY} group as l_lib then
 							if not l_cluster.group.is_library then
 								remove_cluster
 								l_cluster.prune_all (Current)
+							elseif
+								attached {CONF_LIBRARY} l_cluster.group as l_cluster_lib and then
+								(
+									not l_cluster_lib.library_target.libraries.has_key (group.name) or else
+									l_cluster_lib.library_target.libraries.found_item /= group
+								)
+							then
+								remove_cluster
+								l_cluster.prune_all (Current)
 							else
-								l_lib ?= l_cluster.group
-								if not l_lib.library_target.libraries.has_key (group.name) or else
-									l_lib.library_target.libraries.found_item /= group
-								then
-									remove_cluster
-									l_cluster.prune_all (Current)
-								else
-									set_name_32 (group.name)
-									group_id := id_of_group (group)
-								end
+								set_name_32 (group.name)
+								group_id := id_of_group (group)
 							end
 						end
 					end
@@ -238,7 +228,7 @@ invariant
 	identifier_not_void: group_id /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

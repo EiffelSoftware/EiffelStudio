@@ -69,7 +69,6 @@ feature {NONE} -- Implementation
 	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE)
 			-- arrange `linkables' that are elements of `clusters' at `level'.
 		local
-			bcf: EIFFEL_CLUSTER_FIGURE
 			ew: EIFFEL_WORLD
 			l_max_row_width: INTEGER
 			l_generation_levels: INTEGER
@@ -98,8 +97,7 @@ feature {NONE} -- Implementation
 			end
 			l_max_row_width := maximum_linear_row_width.min (maximum_row_line_width)
 			execute (level, l_generation_levels, l_max_row_width)
-			bcf ?= cluster
-			if bcf /= Void then
+			if attached {EIFFEL_CLUSTER_FIGURE} cluster as bcf then
 				--Speeeeeeeeed Up
 				ew.update
 				bcf.set_to_minimum_size
@@ -117,7 +115,6 @@ feature {NONE} -- Implementation
 			a_clusters_not_void: a_clusters /= Void
 		local
 			i, nb: INTEGER
-			cf: EG_CLUSTER_FIGURE
 			l_item: EG_LINKABLE_FIGURE
 		do
 			from
@@ -128,8 +125,7 @@ feature {NONE} -- Implementation
 			loop
 				l_item := linkables.i_th (i)
 				if l_item.is_show_requested then
-					cf ?= l_item
-					if cf /= Void then
+					if attached {EG_CLUSTER_FIGURE} l_item as cf then
 						a_clusters.extend (cf)
 					else
 						a_classes.extend (l_item)
@@ -277,7 +273,6 @@ feature {NONE} -- Implementation
 		require
 			linkable_not_void: linkable /= Void
 		local
-			bil: EIFFEL_INHERITANCE_FIGURE
 			l_links: ARRAYED_LIST [EG_LINK_FIGURE]
 			i, nb: INTEGER
 			l_has_ancestor, l_has_descendent: BOOLEAN
@@ -289,8 +284,7 @@ feature {NONE} -- Implementation
 			until
 				l_has_ancestor or else i > nb
 			loop
-				bil ?= l_links [i]
-				if bil /= Void then
+				if attached {EIFFEL_INHERITANCE_FIGURE} l_links [i] as bil then
 					if not l_has_descendent and then bil.descendant /= linkable and then bil.descendant.cluster = linkable.cluster then
 						l_has_descendent := True
 					end
@@ -306,7 +300,6 @@ feature {NONE} -- Implementation
 			-- Direct descendants of `r' in same cluster.
 		local
 			l_links: ARRAYED_LIST [EG_LINK_FIGURE]
-			bil: EIFFEL_INHERITANCE_FIGURE
 			i, nb: INTEGER
 			l_item, descendant: EG_LINKABLE_FIGURE
 		do
@@ -324,8 +317,7 @@ feature {NONE} -- Implementation
 				until
 					i > nb
 				loop
-					bil ?= l_links [i]
-					if bil /= Void then
+					if attached {EIFFEL_INHERITANCE_FIGURE} l_links [i] as bil then
 						descendant := bil.descendant
 						if
 							descendant.is_show_requested and then
@@ -510,7 +502,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

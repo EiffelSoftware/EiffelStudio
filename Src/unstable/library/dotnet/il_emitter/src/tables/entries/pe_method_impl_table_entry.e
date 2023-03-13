@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_cls: NATURAL; a_method_body: PE_METHOD_DEF_OR_REF; a_method_dec: PE_METHOD_DEF_OR_REF)
+	make_with_data (a_cls: NATURAL_64; a_method_body: PE_METHOD_DEF_OR_REF; a_method_dec: PE_METHOD_DEF_OR_REF)
 		do
 			create class_.make_with_index (a_cls)
 			method_body := a_method_body

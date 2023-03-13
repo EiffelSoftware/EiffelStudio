@@ -79,8 +79,6 @@ feature -- Access
 	module_index: NATURAL_64
 			-- Index of the GUID
 			-- where it should be located in the metadata tables.
-
-
 feature -- Access
 
 	save_size: INTEGER
@@ -114,7 +112,6 @@ feature -- Save
 		do
 			to_implement ("TODO implement, double check if we really ned it.")
 		end
-
 
 feature {NONE} -- Change tables
 
@@ -280,13 +277,26 @@ feature -- Definition: Access
 			result_valid: Result & Md_mask = Md_member_ref
 		end
 
-	define_module_ref (a_name: STRING_32): INTEGER
-			-- Define a reference to a module of name `a_name'.
+	define_module_ref (a_name: STRING): INTEGER
+			-- Define a new module reference for the given `module_name`.
+			-- Returns the generated token.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
+		local
+			l_name_index: NATURAL_64
+			l_module_ref_entry: PE_MODULE_REF_TABLE_ENTRY
+			l_module_ref_index: NATURAL_64
 		do
-			to_implement ("TODO add implementation")
+				-- Hash the module name and create a new PE_MODULE_REF_TABLE_ENTRY instance.
+			l_name_index := pe_writer.hash_string (a_name)
+			create l_module_ref_entry.make_with_data (l_name_index)
+
+				-- Add the new PE_MODULE_REF_TABLE_ENTRY instance to the metadata tables.
+			l_module_ref_index := add_table_entry (l_module_ref_entry)
+
+				-- Return the generated token.
+			Result := last_token.to_integer_32
 		ensure
 			result_valid: Result & Md_mask = Md_module_ref
 		end
@@ -392,15 +402,29 @@ feature -- Definition: Creation
 			-- To be used to define different type for .NET arrays.
 		require
 			signature_not_void: a_signature /= Void
+		local
+			l_table_type, l_table_row: NATURAL_64
+			l_type_def_entry: PE_TYPE_SPEC_TABLE_ENTRY
+			l_type_def_index: NATURAL_64
+			l_type_signature: NATURAL_64
 		do
-		ensure
-			result_valid: Result & Md_mask = Md_type_spec
-		end
+			l_type_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 
+				-- Create a new PE_TYPE_SPEC_TABLE_ENTRY instance with the given data
+			create l_type_def_entry.make_with_data (l_type_signature)
+
+				-- Add the new PE_TYPE_SPEC_TABLE_ENTRY instance to the metadata tables.
+			l_type_def_index := add_table_entry (l_type_def_entry)
+
+				-- Return the generated token.
+			Result := last_token.to_integer_32
+		ensure
+			result_valid: Result & Md_mask = Md_type_def
+		end
 
 	define_exported_type (type_name: STRING_32; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
-				-- Create a row in ExportedType table.
+			-- Create a row in ExportedType table.
 		require
 			type_name_not_void: type_name /= Void
 			type_name_not_empty: not type_name.is_empty
@@ -425,12 +449,10 @@ feature -- Definition: Creation
 				(file_flags = 0) or
 				(file_flags = {CIL_MD_FILE_FLAGS}.has_no_meta_data)
 		do
-			to_implement("TODO implement")
+			to_implement ("TODO implement")
 		ensure
 			valid_result: Result & Md_mask = Md_file
 		end
-
-
 
 	define_method (method_name: STRING_32; in_class_token: INTEGER; method_flags: INTEGER;
 			a_signature: CIL_MD_METHOD_SIGNATURE; impl_flags: INTEGER): INTEGER
@@ -473,7 +495,6 @@ feature -- Definition: Creation
 			result_valid: Result & Md_mask = Md_method_def
 		end
 
-
 	define_method_impl (in_class_token, method_token, used_method_declaration_token: INTEGER)
 			-- Define a method impl from `used_method_declaration_token' from inherited
 			-- class to method `method_token' defined in `in_class_token'.
@@ -485,14 +506,30 @@ feature -- Definition: Creation
 			used_method_declaration_token_valid:
 				(used_method_declaration_token & Md_mask = Md_method_def) or
 				(used_method_declaration_token & Md_mask = Md_member_ref)
+		local
+			l_table_type, l_table_row: NATURAL_64
+			l_method_impl_entry: PE_METHOD_IMPL_TABLE_ENTRY
+			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_method_body: PE_METHOD_DEF_OR_REF
+			l_method_declaration: PE_METHOD_DEF_OR_REF
+			l_dis: NATURAL_64
 		do
-			to_implement ("TODO Implement")
-		ensure
+				-- Extract table type and row from the in_class_token
+			l_tuple := extract_table_type_and_row (in_class_token)
+
+				-- Get the method body and method declaration from their tokens
+			l_method_body := create_method_def_or_ref (method_token, l_tuple.table_type_index)
+			l_method_declaration := create_method_def_or_ref (used_method_declaration_token, l_tuple.table_type_index)
+
+				-- Create a new PE_METHOD_IMPL_TABLE_ENTRY instance with the given data
+			create l_method_impl_entry.make_with_data (l_tuple.table_row_index, l_method_body, l_method_declaration)
+
+				-- Add the new PE_METHOD_IMPL_TABLE_ENTRY instance to the metadata tables.
+			l_dis := add_table_entry (l_method_impl_entry)
 		end
 
 	define_property (type_token: INTEGER; name: STRING_32; flags: NATURAL_32;
 			signature: CIL_MD_PROPERTY_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER): INTEGER
-
 			-- Define property `name' for a type `type_token'.
 		require
 			valid_type_token: type_token & Md_mask = Md_type_def
@@ -502,10 +539,52 @@ feature -- Definition: Creation
 			signature_not_empty: signature.count > 0
 			setter_token_valid: setter_token & Md_mask = Md_method_def
 			getter_token_valid: getter_token & Md_mask = Md_method_def
+		local
+			l_property: PE_PROPERTY_TABLE_ENTRY
+			l_dis: NATURAL_64
+			l_property_signature: NATURAL_64
+			l_semantics: PE_SEMANTICS
+			l_table: PE_TABLE_ENTRY_BASE
+			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_property_index: NATURAL_64
 		do
-			to_implement ("TODO implement")
-		end
+				-- Compute the signature token
+			l_property_signature := pe_writer.hash_blob (signature.as_array, signature.count.to_natural_64)
 
+			l_property_index := pe_writer.next_table_index ({PE_TABLES}.tproperty.value.to_integer_32)
+
+				-- Create a new PE_PROPERTY_TABLE_ENTRY instance with the given data.
+			create {PE_PROPERTY_TABLE_ENTRY} l_property.make_with_data (
+					flags.to_natural_16,
+					pe_writer.hash_string (name),
+					l_property_signature
+				)
+
+				-- Add the new PE_PROPERTY_TABLE_ENTRY instance to the metadata tables.
+			l_dis := add_table_entry (l_property)
+
+				-- Define the method implementations for the getter and setter, if provided.
+			if getter_token /= 0 then
+				l_tuple := extract_table_type_and_row (getter_token)
+				create l_semantics.make_with_tag_and_index ({PE_SEMANTICS}.property, l_property_index)
+
+				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data
+				({PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, l_tuple.table_type_index, l_semantics)
+				l_dis := add_table_entry (l_table)
+			end
+
+			if setter_token /= 0 then
+				l_tuple := extract_table_type_and_row (setter_token)
+				create l_semantics.make_with_tag_and_index ({PE_SEMANTICS}.property, l_property_index)
+
+				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data
+				({PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_tuple.table_type_index, l_semantics)
+				l_dis := add_table_entry (l_table)
+			end
+
+				-- Return the metadata token for the new property.
+			Result := last_token.to_integer_32
+		end
 
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;
 			import_name: STRING_32; module_ref: INTEGER)
@@ -537,7 +616,6 @@ feature -- Definition: Creation
 			result_valid: Result & Md_mask = Md_param_def
 		end
 
-
 	set_field_marshal (a_token: INTEGER; a_native_type_sig: CIL_MD_NATIVE_TYPE_SIGNATURE)
 			-- Set a particular marshaling for `a_token'. Limited to parameter token for the moment.
 		require
@@ -546,8 +624,6 @@ feature -- Definition: Creation
 		do
 			to_implement ("TODO implement")
 		end
-
-
 
 	define_field (field_name: STRING_32; in_class_token: INTEGER; field_flags: INTEGER; a_signature: CIL_MD_FIELD_SIGNATURE): INTEGER
 			-- Create a new field in class `in_class_token'.
@@ -631,7 +707,6 @@ feature -- Definition: Creation
 			result_valid: Result & Md_mask = Md_string
 		end
 
-
 	define_custom_attribute (owner, constructor: INTEGER; ca: CIL_MD_CUSTOM_ATTRIBUTE): INTEGER
 			-- Define a new token for `ca' applied on token `owner' with using `constructor'
 			-- as creation procedure.
@@ -654,19 +729,15 @@ feature -- Definition: Creation
 			result_valid: Result & Md_mask = Md_custom_attribute
 		end
 
-
 feature -- Constants
 
 	accurate: INTEGER = 0x0000
 	quick: INTEGER = 0x0001
 			-- Value taken from CorSaveSize enumeration in `correg.h'.
-
 feature {NONE} -- Access
 
 	assembly_emitter: CIL_MD_ASSEMBLY_EMIT
 			-- COM interface that knows how to define assemblies.
-
-
 feature {NONE} -- Helper
 
 	extract_table_type_and_row (a_token: INTEGER): TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
@@ -681,6 +752,22 @@ feature {NONE} -- Helper
 				-- 2^ 24 -1 = 16777215
 			l_table_row_index := (a_token & 16777215).to_natural_64
 			Result := [l_table_type_index, l_table_row_index]
+		end
+
+	create_method_def_or_ref (a_token: INTEGER; a_index: NATURAL_64): PE_METHOD_DEF_OR_REF
+		local
+			l_tag: INTEGER
+		do
+			if (a_token & Md_mask = Md_method_def)
+			then
+				l_tag := {PE_METHOD_DEF_OR_REF}.methoddef
+			elseif (a_token & Md_mask = Md_member_ref)
+			then
+				l_tag := {PE_METHOD_DEF_OR_REF}.memberref
+			else
+				l_tag := 0
+			end
+			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
 
 	create_type_def_or_ref (a_token: INTEGER; a_index: NATURAL_64): PE_TYPEDEF_OR_REF

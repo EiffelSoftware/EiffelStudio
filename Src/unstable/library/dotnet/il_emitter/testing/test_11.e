@@ -102,7 +102,7 @@ feature -- Test
 			body.set_local_token (local_token)
 			method_writer.write_current_body
 
-			my_meth := L_emit.define_method ({STRING_32} "test",
+			my_meth := l_emit.define_method ({STRING_32} "test",
 					my_type,
 					{CIL_MD_METHOD_ATTRIBUTES}.Public,
 					sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)

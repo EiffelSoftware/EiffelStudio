@@ -43,6 +43,24 @@ else
 	move gec.exe %STUDIO_DIR%\library\gobo\spec\%ISE_PLATFORM%\bin
 endiff
 
+remtrace gecc
+iff exist %STUDIO_DIR%\library\gobo\spec\%ISE_PLATFORM%\bin\gecc.exe then
+	remtrace gecc is already built
+else
+	finalize gecc.ecf gecc
+	cleanup_eiffel gecc gecc.exe
+	move gecc.exe %STUDIO_DIR%\library\gobo\spec\%ISE_PLATFORM%\bin
+endiff
+
+remtrace gedoc
+iff exist %STUDIO_DIR%\library\gobo\spec\%ISE_PLATFORM%\bin\gedoc.exe then
+	remtrace gedoc is already built
+else
+	finalize gedoc.ecf gedoc
+	cleanup_eiffel gedoc gedoc.exe
+	move gedoc.exe %STUDIO_DIR%\library\gobo\spec\%ISE_PLATFORM%\bin
+endiff
+
 remtrace gelint
 iff exist %STUDIO_DIR%\library\gobo\spec\%ISE_PLATFORM%\bin\gelint.exe then
 	remtrace gelint is already built
@@ -68,6 +86,15 @@ else
 	finalize getest.ecf getest
 	cleanup_eiffel getest getest.exe
 	move getest.exe %STUDIO_DIR%\library\gobo\spec\%ISE_PLATFORM%\bin
+endiff
+
+remtrace geimage
+iff exist %STUDIO_DIR%\library\gobo\spec\%ISE_PLATFORM%\bin\geimage.exe then
+	remtrace geimage is already built
+else
+	finalize geimage.ecf geimage
+	cleanup_eiffel geimage geimage.exe
+	move geimage.exe %STUDIO_DIR%\library\gobo\spec\%ISE_PLATFORM%\bin
 endiff
 
 remtrace gexslt

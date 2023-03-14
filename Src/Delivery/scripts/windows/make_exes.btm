@@ -362,7 +362,7 @@ iff defined NO_REUSE then
 	fullrf %T_EMAKE_STUDIO_FILE%
 endiff
 iff exist %T_EMAKE_STUDIO_FILE% then
-	remtrace Reuse existing finish_freezing
+	remtrace Reuse existing emake
 else
 	cdd %EIFFEL_SRC%\tools\eiffel_make
 	clean_project

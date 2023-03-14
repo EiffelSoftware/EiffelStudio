@@ -175,7 +175,7 @@ iff not defined NO_STANDARD_BUILD then
 		else
 			remtrace Missing Standard license text
 		endiff
-		7z a -t7z %INSTALL_DIR%\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+		7z a -t7z -mx9 -r %INSTALL_DIR%\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% >>& %INSTALL_LOG
 	endiff
 	remtrace Uploading Standard packages online
 	cdd %INSTALL_DIR%\setups\standard
@@ -206,7 +206,7 @@ iff not defined NO_ENTERPRISE_BUILD then
 		else
 			remtrace Missing Enterprise license text
 		endiff
-		7z a -t7z %INSTALL_DIR%\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+		7z a -t7z -mx9 -r %INSTALL_DIR%\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% >>& %INSTALL_LOG
 	endiff
 remtrace Uploading ENT packages online
 	cdd %INSTALL_DIR%\setups\enterprise
@@ -232,7 +232,7 @@ iff not defined NO_ENTERPRISE_BUILD then
 		else
 			remtrace Missing Branded license text
 		endiff
-		7z a -t7z %INSTALL_DIR%\setups\branded\%STUDIO_NAME%_branded_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+		7z a -t7z -mx9 -r %INSTALL_DIR%\setups\branded\%STUDIO_NAME%_branded_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% >>& %INSTALL_LOG
 	endiff
 remtrace Uploading Branded packages online
 	cdd %INSTALL_DIR%\setups\branded

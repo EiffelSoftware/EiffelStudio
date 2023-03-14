@@ -10,10 +10,12 @@ goto menu
 set AUTO_BUILD="True"
 IF "%~2" == "win64" set ISE_PLATFORM=win64
 IF "%~2" == "windows" set ISE_PLATFORM=windows
+
+call %~dp0shutdown_machine.bat cancel
 call %~dp0clean_delivery.bat
 goto make_delivery
 
-call %~dp0shutdown_machine.bat 600
+call %~dp0shutdown_machine.bat 1200
 goto end
 
 :menu

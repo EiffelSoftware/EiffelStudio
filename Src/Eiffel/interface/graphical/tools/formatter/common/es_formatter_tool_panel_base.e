@@ -562,7 +562,7 @@ feature{NONE} -- Implementation
 					if l_formatter.is_browser_formatter then
 						if
 							attached {EB_FORMATTER_BROWSER_DISPLAYER} l_displayer as l_browser_displayer and then
-							attached {EB_BROWSER_FORMATTER} l_displayer as l_browser_formatter
+							attached {EB_BROWSER_FORMATTER} l_formatter as l_browser_formatter
 						then
 							l_browser_formatter.set_browser_displayer (l_browser_displayer)
 						else
@@ -571,7 +571,7 @@ feature{NONE} -- Implementation
 					else
 						if
 							attached {EB_FORMATTER_EDITOR_DISPLAYER} l_displayer as l_editor_displayer and then
-							attached {EB_EDITOR_FORMATTER} l_displayer as l_editor_formatter
+							attached {EB_EDITOR_FORMATTER} l_formatter as l_editor_formatter
 						then
 							l_editor_formatter.set_editor_displayer (l_editor_displayer)
 						else
@@ -666,11 +666,8 @@ feature{NONE} -- Implementation
 
 	window: EV_WINDOW
 			-- Window dialogs can refer to.
-		local
-			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			conv_dev ?= develop_window
-			if conv_dev /= Void then
+			if attached {EB_DEVELOPMENT_WINDOW} develop_window as conv_dev then
 				Result := conv_dev.window
 			else
 				create Result
@@ -711,8 +708,6 @@ feature{NONE} -- Implementation
 		local
 			l_predefind, l_customized: INTEGER
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
-			l_parent: EV_CONTAINER
 		do
 			l_predefind := predefined_formatters.count
 			l_customized := customized_formatters.count
@@ -730,12 +725,11 @@ feature{NONE} -- Implementation
 
 				if not l_items.after then
 					a_tool_bar.prune (l_items.item)
-					l_widget_item ?= l_items.item
-					if l_widget_item /= Void then
-						l_parent := l_widget_item.widget.parent
-						if l_parent /= Void then
-							l_parent.prune (l_widget_item.widget)
-						end
+					if
+						attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.item as l_widget_item and then
+						attached l_widget_item.widget.parent as l_parent
+					then
+						l_parent.prune (l_widget_item.widget)
 					end
 				end
 			end

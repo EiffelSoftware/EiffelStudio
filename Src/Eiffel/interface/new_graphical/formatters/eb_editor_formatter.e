@@ -21,11 +21,11 @@ feature -- Access
 	editor: EB_CLICKABLE_EDITOR
 			-- Output editor.
 		do
-			if displayer /= Void then
-				Result := displayer.editor
+			if attached displayer as d then
+				Result := d.editor
 			end
 		ensure then
-			good_result: displayer /= Void implies Result = displayer.editor
+			good_result: attached displayer as en_disp implies Result = en_disp.editor
 		end
 
 	displayer_generator: TUPLE [any_generator: FUNCTION [like displayer]; name: STRING]
@@ -70,9 +70,6 @@ feature -- Positioning
 
 	go_to_position
 			-- Save manager position and go to position in `editor' if possible.
-		local
-			l_line_stone: LINE_STONE
-			l_feature_stone: FEATURE_STONE
 		do
 			save_manager_position
 			if
@@ -81,12 +78,10 @@ feature -- Positioning
 				stone.pos_container = current and then
 				stone.position > 0
 			then
-				l_line_stone ?= stone
-				if l_line_stone /= Void then
+				if attached {LINE_STONE} stone as l_line_stone then
 					editor.display_line_at_top_when_ready (l_line_stone.line_number, l_line_stone.column_number)
 				else
-					l_feature_stone ?= stone
-					if l_feature_stone /= Void then
+					if attached {FEATURE_STONE} stone as l_feature_stone then
 						editor.display_line_at_top_when_ready (l_feature_stone.line_number, 0)
 					else
 						editor.display_line_at_top_when_ready (1, 0)
@@ -96,7 +91,7 @@ feature -- Positioning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -268,7 +268,7 @@ feature -- Setting
 
 			if l_control_bar /= Void and then l_control_bar.count > 0 then
 				if not tool_bar.has (l_control_bar.first) then
-					clear_control_bar_butons (tool_bar)
+					clear_control_bar_buttons (tool_bar)
 					from
 						l_control_bar.start
 					until
@@ -281,7 +281,7 @@ feature -- Setting
 					tool_bar.compute_minimum_size
 				end
 			else
-				clear_control_bar_butons (tool_bar)
+				clear_control_bar_buttons (tool_bar)
 			end
 		end
 
@@ -701,7 +701,7 @@ feature{NONE} -- Implementation
 	empty_widget_internal: like empty_widget
 			-- Implementation of `empty_widget'
 
-	clear_control_bar_butons (a_tool_bar: SD_GENERIC_TOOL_BAR)
+	clear_control_bar_buttons (a_tool_bar: SD_GENERIC_TOOL_BAR)
 			-- Clear previous `control_bar' buttons from a formatter.
 		require
 			not_void: a_tool_bar /= Void
@@ -722,7 +722,6 @@ feature{NONE} -- Implementation
 				l_items.after
 			loop
 				l_items.forth
-
 				if not l_items.after then
 					a_tool_bar.prune (l_items.item)
 					if

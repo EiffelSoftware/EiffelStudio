@@ -42,23 +42,18 @@ feature -- Access
 			-- Eiffel class name
 
 	assembly_id: INTEGER
-			-- Potential assembly id, for Forwarded types.
+			-- ID of the assembly when current type is declared (see Forwarded types).
 
-	associated_consumed_type: detachable CONSUMED_TYPE
+	assembly: detachable CONSUMED_ASSEMBLY assign set_assembly
+			-- Consumed assembly that contains the forward type declaration.
+			-- It is set in a second step in {CONF_CONSUMER_MANAGER}.build_dependencies.
 
 feature -- Element change
 
---	set_assembly_id (aid: like assembly_id)
---			-- set `assembly_id` with `aid`.
---		do
---			assembly_id := aid
---		ensure
---			assembly_id = aid
---		end
-
-	set_associated_consumed_type (ct: like associated_consumed_type)
+	set_assembly (a: like assembly)
+			-- Set `assembly` to `a`.
 		do
-			associated_consumed_type := ct
+			assembly := a
 		end
 
 feature -- Comparison

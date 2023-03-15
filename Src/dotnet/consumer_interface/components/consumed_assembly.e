@@ -133,6 +133,19 @@ feature -- Access
 			Result := u.string_32_to_utf_8_string_8 (text)
 		end
 
+feature -- Access: computed data
+
+	forwarded_types: detachable ARRAYED_LIST [CONSUMED_FORWARDED_TYPE]
+			-- Consumed information about forwarded types.
+
+feature -- Element change
+
+	set_forwarded_types (lst: detachable ARRAYED_LIST [CONSUMED_FORWARDED_TYPE])
+			-- Set consumed information about forwarded types.
+		do
+			forwarded_types := lst
+		end
+
 feature -- Status Setting
 
 	set_is_consumed (a_consumed: BOOLEAN; a_only_info: BOOLEAN)

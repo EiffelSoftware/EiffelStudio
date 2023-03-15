@@ -346,6 +346,8 @@ feature {NONE} -- Implementation
 		local
 			l_guid: READABLE_STRING_32
 			l_reader: EIFFEL_DESERIALIZER
+			l_fwd_type: CONSUMED_FORWARDED_TYPE
+
 		do
 			l_guid := an_assembly.guid
 
@@ -357,6 +359,20 @@ feature {NONE} -- Implementation
 						-- if it's not the assembly itself
 					if not a.unique_id.same_string (l_guid) then
 						an_assembly.add_dependency (get_physical_assembly (a), @ a.target_index)
+					end
+				end
+
+				if attached an_assembly.consumed_assembly.forwarded_types as l_fwd_types and then not l_fwd_types.is_empty then
+						-- Update information for forwarded types of `an_assembly`.
+					across
+						l_fwd_types as ft
+					loop
+						l_fwd_type := ft
+						if attached an_assembly.dependencies [l_fwd_type.assembly_id] as l_fwd_ass then
+							l_fwd_type.set_assembly (l_fwd_ass.consumed_assembly)
+--							if attached l_fwd_ass.classes [l_fwd_type.eiffel_name] as l_fwd_class then
+--							end
+						end
 					end
 				end
 			else
@@ -371,12 +387,15 @@ feature {NONE} -- Implementation
 			a_assembly_ok: a_assembly /= Void
 		local
 			l_old_dotnet_classes: detachable STRING_TABLE [CONF_CLASS]
+			l_forwarded_types: detachable ARRAYED_LIST [CONSUMED_FORWARDED_TYPE]
 			l_reader: EIFFEL_DESERIALIZER
 			i, cnt: INTEGER
 			l_name, l_dotnet_name: detachable STRING
 			l_pos: INTEGER
 			l_new_classes, l_new_dotnet_classes: STRING_TABLE [CONF_CLASS]
 			l_class: CONF_CLASS_ASSEMBLY
+			aid: INTEGER
+			fwd_ct: CONSUMED_FORWARDED_TYPE
 		do
 			l_reader := {EIFFEL_SERIALIZATION}.deserializer
 
@@ -396,6 +415,7 @@ feature {NONE} -- Implementation
 					-- Add classes.
 				create l_new_classes.make (l_old_dotnet_classes.count)
 				create l_new_dotnet_classes.make (l_old_dotnet_classes.count)
+				check l_forwarded_types = Void end
 				from
 					i := l_types.eiffel_names.lower
 					cnt := l_types.eiffel_names.upper
@@ -413,8 +433,13 @@ feature {NONE} -- Implementation
 						l_name /= Void and then not l_name.is_empty and then
 						l_dotnet_name /= Void
 					then
-						if l_types.assembly_ids.item (i) > 0 then
-							do_nothing -- Ignore forwarded classes...
+						aid := l_types.assembly_ids.item (i)
+						if aid > 0 then
+							create fwd_ct.make (l_dotnet_name, l_name, aid)
+							if l_forwarded_types = Void then
+								create l_forwarded_types.make (cnt)
+							end
+							l_forwarded_types.force (fwd_ct)
 						else
 							l_name.to_upper
 							if attached {CONF_CLASS_ASSEMBLY} l_old_dotnet_classes.item (l_dotnet_name) as l_dotnet_class then
@@ -450,6 +475,10 @@ feature {NONE} -- Implementation
 
 				a_assembly.set_classes (l_new_classes)
 				a_assembly.set_dotnet_classes (l_new_dotnet_classes)
+				if l_forwarded_types /= Void then
+					l_forwarded_types.trim
+				end
+				a_assembly.consumed_assembly.set_forwarded_types (l_forwarded_types)
 			else
 				check deserialisation_failed: not l_reader.successful end
 				add_error (create {CONF_METADATA_CORRUPT})

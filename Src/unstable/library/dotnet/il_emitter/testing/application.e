@@ -47,7 +47,7 @@ feature -- Initialization
 --			(create {TEST_7}).test;
 --			(create {TEST_8}).test;
 --			(create {TEST_9}).test;
-			(create {TEST_9}).test;
+--			(create {TEST_9}).test;
 --			(create {TEST_10}).test;
 			(create {TEST_11}).test;
 			test_random

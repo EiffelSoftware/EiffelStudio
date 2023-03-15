@@ -30,6 +30,7 @@ feature {NONE}
 			initialize_metadata_tables
 			initialize_module
 			initialize_guid
+			initialize_string_heap
 			create assembly_emitter
 				-- we don't initialize the compilation unit since we don't provide the name of it (similar to the COM interface)
 		ensure
@@ -67,6 +68,15 @@ feature {NONE}
 			guid_index := pe_writer.hash_guid (module_guid)
 		end
 
+	initialize_string_heap
+			-- Initialize the heap used to store
+			-- user defined strings
+		do
+				-- TODO double check. how many space we need to reserve?
+				-- TODO check alternatives implementations to improve efficiency.
+			create string_heap.make (10)
+		end
+
 feature -- Access
 
 	module_GUID: ARRAY [NATURAL_8]
@@ -79,6 +89,10 @@ feature -- Access
 	module_index: NATURAL_64
 			-- Index of the GUID
 			-- where it should be located in the metadata tables.
+
+	string_heap: HASH_TABLE [READABLE_STRING_GENERAL, INTEGER]
+			--  metadata table used to store user-defined strings.
+
 feature -- Access
 
 	save_size: INTEGER
@@ -569,7 +583,7 @@ feature -- Definition: Creation
 				create l_semantics.make_with_tag_and_index ({PE_SEMANTICS}.property, l_property_index)
 
 				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data
-				({PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, l_tuple.table_type_index, l_semantics)
+					({PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, l_tuple.table_type_index, l_semantics)
 				l_dis := add_table_entry (l_table)
 			end
 
@@ -578,7 +592,7 @@ feature -- Definition: Creation
 				create l_semantics.make_with_tag_and_index ({PE_SEMANTICS}.property, l_property_index)
 
 				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data
-				({PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_tuple.table_type_index, l_semantics)
+					({PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_tuple.table_type_index, l_semantics)
 				l_dis := add_table_entry (l_table)
 			end
 
@@ -701,8 +715,18 @@ feature -- Definition: Creation
 			-- Define a new token for `str'.
 		require
 			str_not_void: str /= Void
+		local
+			l_result: NATURAL_64
+			l_str: STRING_32
+			l_us_index: NATURAL_64
 		do
-			to_implement ("TODO add implementation")
+				--| add the null character
+			create l_str.make_from_string (str)
+			l_str.append_character ('%U')
+			l_us_index := pe_writer.hash_us (l_str, l_str.count)
+			l_result := l_us_index | ({NATURAL_64} 0x70 |<< 24)
+			Result := l_result.to_integer_32
+			string_heap.force (l_str, Result)
 		ensure
 			result_valid: Result & Md_mask = Md_string
 		end
@@ -743,6 +767,16 @@ feature {NONE} -- Helper
 	extract_table_type_and_row (a_token: INTEGER): TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			-- Given a token `a_token' return a TUPLE with the table_type_index and the
 			-- table_row_index.
+			--| Metadata tokens
+			--| Many CIL instructions are followed by a "metadata token". This is a 4-byte value, that specifies a
+			--| row in a metadata table, or a starting byte offset in the User String heap. The most-significant
+			--| byte of the token specifies the table or heap. For example, a value of 0x02 specifies the TypeDef
+			--| table; a value of 0x70 specifies the User String heap. The value corresponds to the number
+			--| assigned to that metadata table (see Partition II for the full list of tables) or to 0x70 for the User
+			--| String heap. The least-significant 3 bytes specify the target row within that metadata table, or
+			--| starting byte offset within the User String heap. The rows within metadata tables are numbered
+			--| one upwards, whilst offsets in the heap are numbered zero upwards. (So, for example, the
+			--| metadata token with value 0x02000007 specifies row number 7 in the TypeDef table)
 		local
 			l_table_type_index: NATURAL_64
 			l_table_row_index: NATURAL_64

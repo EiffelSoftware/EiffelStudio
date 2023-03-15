@@ -1003,44 +1003,41 @@ feature -- Graphical look
 
 	folder_row_fg_color: EV_COLOR
 		once
-			create Result.make_with_8_bit_rgb (60,60,190)
+			Result := preferences.debug_tool_data.custom_color_preference ("folder_row_fg_color", create {EV_COLOR}.make_with_8_bit_rgb (60, 60, 190)).value
 		end
 
 	message_row_fg_color: EV_COLOR
 		once
-			create Result.make_with_8_bit_rgb (255, 106, 0)
+			Result := preferences.debug_tool_data.custom_color_preference ("message_row_fg_color", create {EV_COLOR}.make_with_8_bit_rgb (255, 106, 0)).value
 		end
 
 	object_folder_row_fg_color: EV_COLOR
 		once
-			create Result.make_with_8_bit_rgb (60,60,190)
+			Result := preferences.debug_tool_data.custom_color_preference ("object_folder_row_fg_color", create {EV_COLOR}.make_with_8_bit_rgb (60, 60, 190)).value
 		end
 
 	slice_row_fg_color: EV_COLOR
 		once
-			create Result.make_with_8_bit_rgb (210, 160, 160)
+			Result := preferences.debug_tool_data.custom_color_preference ("slice_row_fg_color", create {EV_COLOR}.make_with_8_bit_rgb (210, 160, 160)).value
 		end
 
 	disabled_row_fg_color: EV_COLOR
 		once
-			create Result.make_with_8_bit_rgb (190, 190, 190)
+			Result := preferences.debug_tool_data.custom_color_preference ("disabled_row_fg_color", create {EV_COLOR}.make_with_8_bit_rgb (190, 190, 190)).value
 		end
 
 	error_row_fg_color: EV_COLOR
 		once
-			create Result.make_with_8_bit_rgb (190, 130, 130)
+			Result := preferences.debug_tool_data.custom_color_preference ("error_row_fg_color", create {EV_COLOR}.make_with_8_bit_rgb (190, 130, 130)).value
 		end
 
 	Highlight_different_value_bg_color: EV_COLOR
-		local
-			l_colors: ES_COLORS
 		once
-			create l_colors
-			Result := l_colors.grid_different_value_background_color
+			Result := preferences.debug_tool_data.row_highlight_different_value_background_color
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

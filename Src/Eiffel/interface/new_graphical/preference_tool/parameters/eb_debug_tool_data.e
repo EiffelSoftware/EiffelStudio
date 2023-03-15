@@ -132,6 +132,11 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			Result := row_highlight_background_color_preference.value
 		end
 
+	row_highlight_different_value_background_color: EV_COLOR
+		do
+			Result := row_highlight_different_value_background_color_preference.value
+		end
+
 	unsensitive_foreground_color: EV_COLOR
 		do
 			Result := unsensitive_foreground_color_preference.value
@@ -224,6 +229,27 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			Result := auto_export_debugger_profiles_enabled_preference.value
 		end
 
+feature -- Color preference on demand
+
+	custom_color_preference (a_color_name: STRING; dft: EV_COLOR): COLOR_PREFERENCE
+		local
+			l_manager: EB_PREFERENCE_MANAGER
+			l_prefs: like custom_colors_preferences
+		do
+			l_prefs := custom_colors_preferences
+			if attached l_prefs.item (a_color_name) as v then
+				Result := v
+			else
+				create l_manager.make (preferences, "debug_tool")
+				Result := l_manager.new_color_preference_value (l_manager, "debugger.colors.customs." + a_color_name, dft)
+				Result.set_description ("Debug color for %""+ a_color_name +"%"")
+--				Result.set_tag ("theme")
+				l_prefs.put (Result, a_color_name)
+			end
+		end
+
+	custom_colors_preferences: STRING_TABLE [COLOR_PREFERENCE]
+
 feature -- Preference
 
 	edit_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
@@ -245,6 +271,7 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 	number_of_watch_tools_preference: INTEGER_PREFERENCE
 	delay_before_cleaning_objects_grid_preference: INTEGER_PREFERENCE
 	row_highlight_background_color_preference: COLOR_PREFERENCE
+	row_highlight_different_value_background_color_preference: COLOR_PREFERENCE
 	unsensitive_foreground_color_preference: COLOR_PREFERENCE
 	internal_background_color_preference: COLOR_PREFERENCE
 	row_replayable_background_color_preference: COLOR_PREFERENCE
@@ -327,6 +354,7 @@ feature -- Preference Strings
 	grid_background_color_string: STRING = "debugger.colors.grid_background_color"
 	grid_foreground_color_string: STRING = "debugger.colors.grid_foreground_color"
 	row_highlight_background_color_string: STRING = "debugger.colors.row_highlight_background_color"
+	row_highlight_different_value_background_color_string: STRING = "debugger.colors.row_highlight_different_value_background_color"
 	unsensitive_foreground_color_string: STRING = "debugger.colors.unsensitive_foreground_color"
 	internal_background_color_string: STRING = "debugger.colors.internal_background_color"
 	row_replayable_background_color_string: STRING = "debugger.colors.row_replayable_background_color"
@@ -381,6 +409,8 @@ feature {NONE} -- Implementation
 		do
 			create l_manager.make (preferences, "debug_tool")
 
+			create custom_colors_preferences.make (0)
+
 			last_saved_stack_path_preference := l_manager.new_path_preference_value (l_manager, last_saved_stack_path_string, create {PATH}.make_empty)
 			last_saved_stack_path_preference.set_hidden (True)
 			default_expanded_view_size_preference := l_manager.new_integer_preference_value (l_manager, default_expanded_view_size_string, 500)
@@ -394,6 +424,7 @@ feature {NONE} -- Implementation
 			number_of_watch_tools_preference := l_manager.new_integer_preference_value (l_manager, number_of_watch_tools_string, 1)
 			delay_before_cleaning_objects_grid_preference := l_manager.new_integer_preference_value (l_manager, delay_before_cleaning_objects_string, 500)
 			row_highlight_background_color_preference := l_manager.new_color_preference_value (l_manager, row_highlight_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 170))
+			row_highlight_different_value_background_color_preference := l_manager.new_color_preference_value (l_manager, row_highlight_different_value_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 210, 210))
 			unsensitive_foreground_color_preference := l_manager.new_color_preference_value (l_manager, unsensitive_foreground_color_string, create {EV_COLOR}.make_with_8_bit_rgb (150, 150, 150))
 			internal_background_color_preference := l_manager.new_color_preference_value (l_manager, internal_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (180, 150, 150))
 			row_replayable_background_color_preference := l_manager.new_color_preference_value (l_manager, row_replayable_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (205, 230, 255))
@@ -449,6 +480,7 @@ invariant
 	number_of_watch_tools_preference_not_void: number_of_watch_tools_preference /= Void
 	delay_before_cleaning_objects_grid_preference_not_void: delay_before_cleaning_objects_grid_preference /= Void
 	row_highlight_background_color_preference_not_void: row_highlight_background_color_preference /= Void
+	row_highlight_different_value_background_color_preference_not_void: row_highlight_different_value_background_color_preference /= Void
 	unsensitive_foreground_color_preference_not_void: unsensitive_foreground_color_preference /= Void
 	internal_background_color_preference_not_void: internal_background_color_preference /= Void
 	row_replayable_background_color_preference_not_void: row_replayable_background_color_preference /= Void

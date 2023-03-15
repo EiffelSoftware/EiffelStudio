@@ -1,5 +1,6 @@
 # General tools
-RM=del
+RM=rm
+GOBO=$(ISE_EIFFEL)/contrib/library/gobo
 GOBO_BIN=$(ISE_EIFFEL)/library/gobo/spec/$(ISE_PLATFORM)/bin
 #GOBO_BIN=$(EIFFEL_SRC)/contrib/library/gobo/bin
 

@@ -66,9 +66,6 @@ feature -- Access
 	eiffel_name: STRING
 			-- Eiffel class name
 
-	assembly_id: INTEGER
-			-- Potential assembly id, for Forwarded types.
-
 	constructors: detachable ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
 			-- Class constructors
 
@@ -287,14 +284,6 @@ feature -- Element settings
 			constructors := cons
 		ensure
 			constructors_set: constructors = cons
-		end
-
-	set_assembly_id (aid: like assembly_id)
-			-- set `assembly_id` with `aid`.
-		do
-			assembly_id := aid
-		ensure
-			assembly_id = aid
 		end
 
 feature -- Functions used for easy browsing of data from ConsumerWrapper.

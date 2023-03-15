@@ -430,88 +430,102 @@ feature -- Deserialization
 			end
 		end
 
-	consumed_type (j: detachable JSON_VALUE): detachable CONSUMED_TYPE
+	consumed_type (j: detachable JSON_VALUE): detachable ANY
 		local
+			ct: CONSUMED_TYPE
+			fwd_ct: CONSUMED_FORWARDED_TYPE
 			en, dn: JSON_STRING
 			is_inter, is_abstract, is_sealed, is_value_type, is_enumerator: BOOLEAN
 			par: detachable CONSUMED_REFERENCED_TYPE
 			inter: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]
+			l_source_assembly_id: INTEGER
 		do
 			if attached {JSON_OBJECT} j as jo then
 				en := jo.string_item (names.eiffel_name)
 				dn := jo.string_item (names.dotnet_name)
-				is_inter := boolean_item (jo, names.is_interface)
-				is_abstract := boolean_item (jo, names.is_deferred)
-				is_sealed := boolean_item (jo, names.is_frozen)
-				is_value_type := boolean_item (jo, names.is_expanded)
-				is_enumerator := boolean_item (jo, names.is_enum)
+				if en /= Void and dn /= Void then
+					if attached {JSON_NUMBER} jo [names.assembly_id] as j_aid then
+						l_source_assembly_id := j_aid.integer_64_item.to_integer_32
+					else
+						l_source_assembly_id := 0
+					end
 
-				if attached {JSON_OBJECT} jo [names.parent] as j_par then
-					par := consumed_referenced_type (j_par)
-				end
+					is_inter := boolean_item (jo, names.is_interface)
+					is_abstract := boolean_item (jo, names.is_deferred)
+					is_sealed := boolean_item (jo, names.is_frozen)
+					is_value_type := boolean_item (jo, names.is_expanded)
+					is_enumerator := boolean_item (jo, names.is_enum)
+					if attached {JSON_OBJECT} jo [names.parent] as j_par then
+						par := consumed_referenced_type (j_par)
+					end
 
-				if attached {JSON_ARRAY} jo [names.interfaces] as j_interfaces then
-					inter := consumed_referenced_type_list (j_interfaces)
-				else
-					create inter.make (0)
-				end
-
-				if en /= Void and dn /= Void and inter /= Void then
-					if attached {JSON_OBJECT} jo [names.enclosing_type] as j_enc_type then
-						if attached consumed_referenced_type (j_enc_type) as l_enc_type then
-							create {CONSUMED_NESTED_TYPE} Result.make (
+					if attached {JSON_ARRAY} jo [names.interfaces] as j_interfaces then
+						inter := consumed_referenced_type_list (j_interfaces)
+					else
+						create inter.make (0)
+					end
+					if inter /= Void then
+						if attached {JSON_OBJECT} jo [names.enclosing_type] as j_enc_type then
+							if attached consumed_referenced_type (j_enc_type) as l_enc_type then
+								create {CONSUMED_NESTED_TYPE} ct.make (
+										dn.unescaped_string_8, en.unescaped_string_8,
+										is_inter, is_abstract, is_sealed, is_value_type, is_enumerator,
+										par,
+										inter,
+										l_enc_type
+									)
+							else
+								report_error ("Missing enclosing type")
+							end
+						else
+							create {CONSUMED_TYPE} ct.make (
 									dn.unescaped_string_8, en.unescaped_string_8,
 									is_inter, is_abstract, is_sealed, is_value_type, is_enumerator,
 									par,
-									inter,
-									l_enc_type
+									inter
 								)
-						else
-							report_error ("Missing enclosing type")
 						end
 					else
-						create {CONSUMED_TYPE} Result.make (
-								dn.unescaped_string_8, en.unescaped_string_8,
-								is_inter, is_abstract, is_sealed, is_value_type, is_enumerator,
-								par,
-								inter
-							)
+						report_error ("Missing interface information")
 					end
-					if Result /= Void then
+					if ct /= Void then
 							-- Complete the other infos...
-						if attached {JSON_NUMBER} jo [names.assembly_id] as j_aid then
-							Result.set_assembly_id (j_aid.integer_64_item.to_integer_32)
-						end
-
 						if attached {JSON_ARRAY} jo [names.constructors] as j_constructors then
-							Result.set_constructors (consumed_constructors (j_constructors))
+							ct.set_constructors (consumed_constructors (j_constructors))
 						end
 						if attached {JSON_ARRAY} jo [names.functions] as j_functions then
-							Result.set_functions (consumed_functions (j_functions))
+							ct.set_functions (consumed_functions (j_functions))
 						end
 						if attached {JSON_ARRAY} jo [names.procedures] as j_procedures then
-							Result.set_procedures (consumed_procedures (j_procedures))
+							ct.set_procedures (consumed_procedures (j_procedures))
 						end
 						if attached {JSON_ARRAY} jo [names.fields] as j_fields then
-							Result.set_fields (consumed_fields (j_fields))
+							ct.set_fields (consumed_fields (j_fields))
 						end
 						if attached {JSON_ARRAY} jo [names.events] as j_events then
-							Result.set_events (consumed_events (j_events))
+							ct.set_events (consumed_events (j_events))
 						end
 							-- Important to do that at the end.
 						if attached {JSON_ARRAY} jo [names.properties] as j_properties then
-							Result.set_properties (consumed_properties (j_properties))
+							ct.set_properties (consumed_properties (j_properties))
 						end
 --						if attached {JSON_OBJECT} jo [names.associated_reference_type] as j_ass_type then
 --							if attached consumed_referenced_type (j_ass_type) as l_ass_type then
-
 --							end
 --						end
+					end
+					if l_source_assembly_id > 0 then
+						create fwd_ct.make (dn.unescaped_string_8, en.unescaped_string_8, l_source_assembly_id)
+						fwd_ct.set_associated_consumed_type (ct)
+					else
+						Result := ct
 					end
 				else
 					report_error ("Missing eiffel or dotnet name")
 				end
 			end
+		ensure
+			Result /= Void implies attached {CONSUMED_TYPE} Result or attached {CONSUMED_FORWARDED_TYPE} Result
 		end
 
 	consumed_referenced_type (j: detachable JSON_VALUE): detachable CONSUMED_REFERENCED_TYPE

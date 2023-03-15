@@ -163,7 +163,9 @@ feature {NONE} -- Implementation
 	reset_display
 			-- Clear all graphical output.
 		do
-			editor.clear_window
+			if attached editor as ed then
+				ed.clear_window
+			end
 		end
 
 	editable: BOOLEAN
@@ -185,7 +187,7 @@ feature {NONE} -- Implementation
 			-- Exception trace
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

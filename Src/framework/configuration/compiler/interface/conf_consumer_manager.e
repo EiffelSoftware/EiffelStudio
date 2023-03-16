@@ -114,6 +114,7 @@ feature -- Commands
 		local
 			l_retried: BOOLEAN
 			o: like old_assemblies
+			an_assembly: CONF_PHYSICAL_ASSEMBLY
 		do
 			if not l_retried then
 					-- load information from metadata cache, consume if the metadata cache does not yet exist
@@ -157,7 +158,24 @@ feature -- Commands
 				until
 					linear_assemblies.after
 				loop
-					build_dependencies (linear_assemblies.item)
+					an_assembly := linear_assemblies.item
+					build_dependencies (an_assembly)
+					if attached an_assembly.consumed_assembly.forwarded_types as l_fwd_types and then not l_fwd_types.is_empty then
+							-- Update information for forwarded types of `an_assembly`.
+						across
+							l_fwd_types as ft
+						loop
+							if
+								attached ft as l_fwd_type and then
+								attached an_assembly.dependencies [l_fwd_type.assembly_id] as l_fwd_assembly
+							then
+								l_fwd_type.set_assembly (l_fwd_assembly.consumed_assembly)
+									-- TODO: add forwarded classes to the CONF_PHYSICAL_ASSEMBLY  `l_fwd_assembly`
+--								if attached l_fwd_assembly.classes [l_fwd_type.eiffel_name] as l_fwd_class then
+--								end
+							end
+						end
+					end
 					linear_assemblies.forth
 				end
 			end
@@ -346,8 +364,6 @@ feature {NONE} -- Implementation
 		local
 			l_guid: READABLE_STRING_32
 			l_reader: EIFFEL_DESERIALIZER
-			l_fwd_type: CONSUMED_FORWARDED_TYPE
-
 		do
 			l_guid := an_assembly.guid
 
@@ -359,20 +375,6 @@ feature {NONE} -- Implementation
 						-- if it's not the assembly itself
 					if not a.unique_id.same_string (l_guid) then
 						an_assembly.add_dependency (get_physical_assembly (a), @ a.target_index)
-					end
-				end
-
-				if attached an_assembly.consumed_assembly.forwarded_types as l_fwd_types and then not l_fwd_types.is_empty then
-						-- Update information for forwarded types of `an_assembly`.
-					across
-						l_fwd_types as ft
-					loop
-						l_fwd_type := ft
-						if attached an_assembly.dependencies [l_fwd_type.assembly_id] as l_fwd_ass then
-							l_fwd_type.set_assembly (l_fwd_ass.consumed_assembly)
---							if attached l_fwd_ass.classes [l_fwd_type.eiffel_name] as l_fwd_class then
---							end
-						end
 					end
 				end
 			else

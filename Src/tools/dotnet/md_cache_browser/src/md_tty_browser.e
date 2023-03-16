@@ -296,117 +296,109 @@ feature -- Execution
 			io.put_character ('(')
 			io.put_string (t.eiffel_name)
 			io.put_character (')')
-			if t.assembly_id > 0 then
-				io.put_string (" -- from assembly #" + t.assembly_id.out)
-				if attached assembly_name (t.assembly_id) as an then
-					io.put_string (" '" + an + "'")
-				end
-				io.put_new_line
-			else
-				io.put_new_line
-				if a_query.has_entity_filter then
-					if attached t.entities as t_entities and then not t_entities.is_empty then
-						create lst.make (0)
-						across
-							t_entities as i_entity
-						loop
-							e := i_entity
-							if a_query.entity_included (e) then
-									-- Found entity
-								lst.force (e)
-							end
+			io.put_new_line
+			if a_query.has_entity_filter then
+				if attached t.entities as t_entities and then not t_entities.is_empty then
+					create lst.make (0)
+					across
+						t_entities as i_entity
+					loop
+						e := i_entity
+						if a_query.entity_included (e) then
+								-- Found entity
+							lst.force (e)
 						end
 					end
-					if lst /= Void and then not lst.is_empty then
-						io.put_string ("   > Found ")
-						io.put_string (lst.count.out + " entitie(s)")
+				end
+				if lst /= Void and then not lst.is_empty then
+					io.put_string ("   > Found ")
+					io.put_string (lst.count.out + " entitie(s)")
+					io.put_new_line
+					across
+						lst as i_lst
+					loop
+						e := i_lst
+						print ("    * ")
+						display_entity (e, t, True)
+						display_entity_details (e, t)
+						io.put_new_line
+					end
+				end
+			else
+				if False then
+					if not t.ancestors.is_empty then
+						io.put_string ("   > ")
+						io.put_string (t.ancestors.count.out + " ancestor(s)")
 						io.put_new_line
 						across
-							lst as i_lst
+							t.ancestors as l_ancestor
 						loop
-							e := i_lst
 							print ("    * ")
-							display_entity (e, t, True)
-							display_entity_details (e, t)
+							process_referenced_type (l_ancestor)
 							io.put_new_line
 						end
 					end
 				else
-					if False then
-						if not t.ancestors.is_empty then
-							io.put_string ("   > ")
-							io.put_string (t.ancestors.count.out + " ancestor(s)")
-							io.put_new_line
-							across
-								t.ancestors as l_ancestor
-							loop
-								print ("    * ")
-								process_referenced_type (l_ancestor)
-								io.put_new_line
-							end
-						end
-					else
-						if attached t.parent as l_parent then
-							io.put_string ("   > Parent: ")
-							process_referenced_type (l_parent)
-							io.put_new_line
-						end
-						if attached t.interfaces as t_interfaces then
-							io.put_string ("   > ")
-							io.put_string (t_interfaces.count.out + " interface(s)")
-							io.put_new_line
-							across
-								t_interfaces as i
-							loop
-								print ("    * ")
-								process_referenced_type (i)
-								io.put_new_line
-							end
-						end
+					if attached t.parent as l_parent then
+						io.put_string ("   > Parent: ")
+						process_referenced_type (l_parent)
+						io.put_new_line
 					end
-
-					if attached t.entities as t_entities and then not t_entities.is_empty then
+					if attached t.interfaces as t_interfaces then
 						io.put_string ("   > ")
-						io.put_string (t_entities.count.out + " entitie(s)")
+						io.put_string (t_interfaces.count.out + " interface(s)")
 						io.put_new_line
 						across
-							t_entities as e_item
+							t_interfaces as i
 						loop
-							e := e_item
 							print ("    * ")
-							display_entity (e, t, True)
-							display_entity_details (e, t)
+							process_referenced_type (i)
 							io.put_new_line
 						end
 					end
-					io.put_string ("   >")
-					if attached t.constructors as t_constructors then
-						io.put_character (' ')
-	--					io.put_string ("   > ")
-						io.put_string (t_constructors.count.out + " constructor(s)")
-	--					io.put_new_line
-					end
-					if attached t.fields as t_fields then
-						io.put_character (' ')
-	--					io.put_string ("   > ")
-						io.put_string (t_fields.count.out + " field(s)")
-	--					io.put_new_line
-					end
-					if attached t.procedures as t_procedures then
-						io.put_character (' ')
-	--					io.put_string ("   > ")
-						io.put_string (t_procedures.count.out + " procedure(s)")
-	--					io.put_new_line
-					end
-					if attached t.functions as t_functions then
-						io.put_character (' ')
-	--					io.put_string ("   > ")
-						io.put_string (t_functions.count.out + " function(s)")
-	--					io.put_new_line
+				end
+
+				if attached t.entities as t_entities and then not t_entities.is_empty then
+					io.put_string ("   > ")
+					io.put_string (t_entities.count.out + " entitie(s)")
+					io.put_new_line
+					across
+						t_entities as e_item
+					loop
+						e := e_item
+						print ("    * ")
+						display_entity (e, t, True)
+						display_entity_details (e, t)
+						io.put_new_line
 					end
 				end
-				io.put_new_line
+				io.put_string ("   >")
+				if attached t.constructors as t_constructors then
+					io.put_character (' ')
+--					io.put_string ("   > ")
+					io.put_string (t_constructors.count.out + " constructor(s)")
+--					io.put_new_line
+				end
+				if attached t.fields as t_fields then
+					io.put_character (' ')
+--					io.put_string ("   > ")
+					io.put_string (t_fields.count.out + " field(s)")
+--					io.put_new_line
+				end
+				if attached t.procedures as t_procedures then
+					io.put_character (' ')
+--					io.put_string ("   > ")
+					io.put_string (t_procedures.count.out + " procedure(s)")
+--					io.put_new_line
+				end
+				if attached t.functions as t_functions then
+					io.put_character (' ')
+--					io.put_string ("   > ")
+					io.put_string (t_functions.count.out + " function(s)")
+--					io.put_new_line
+				end
 			end
+			io.put_new_line
 		end
 
 	process_referenced_type (rt: CONSUMED_REFERENCED_TYPE)

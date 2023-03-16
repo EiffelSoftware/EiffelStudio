@@ -37,49 +37,24 @@ feature -- Display
 			io.put_character ('(')
 			io.put_string (t.eiffel_name)
 			io.put_character (')')
-			if t.assembly_id > 0 then
-				io.put_string (" -- from assembly #" + t.assembly_id.out)
-				if attached assembly_name (t.assembly_id) as an then
-					io.put_string (" '" + an + "'")
-				end
-				io.put_new_line
-			else
-				io.put_new_line
-				if a_query.has_entity_filter then
-					if attached t.entities as t_entities and then not t_entities.is_empty then
-						create lst.make (0)
-						across
-							t_entities as e
-						loop
-							if a_query.entity_included (e) then
-								lst.force (e)
-							end
-						end
-						if not lst.is_empty then
-							display_parents (t)
-							io.put_string ("   > Found ")
-							io.put_string (lst.count.out + " entitie(s)")
-							io.put_new_line
-							across
-								lst as e
-							loop
-								print ("    * ")
-								display_entity (e, t, True)
-								if a_query.is_full_mode then
-									display_entity_details (e, t)
-								end
-								io.put_new_line
-							end
+			io.put_new_line
+			if a_query.has_entity_filter then
+				if attached t.entities as t_entities and then not t_entities.is_empty then
+					create lst.make (0)
+					across
+						t_entities as e
+					loop
+						if a_query.entity_included (e) then
+							lst.force (e)
 						end
 					end
-				else
-					display_parents (t)
-					if attached t.entities as t_entities and then not t_entities.is_empty then
-						io.put_string ("   > ")
-						io.put_string (t_entities.count.out + " entitie(s)")
+					if not lst.is_empty then
+						display_parents (t)
+						io.put_string ("   > Found ")
+						io.put_string (lst.count.out + " entitie(s)")
 						io.put_new_line
 						across
-							t_entities as e
+							lst as e
 						loop
 							print ("    * ")
 							display_entity (e, t, True)
@@ -89,34 +64,51 @@ feature -- Display
 							io.put_new_line
 						end
 					end
-					io.put_string ("   >")
-					if attached t.constructors as t_constructors then
-						io.put_character (' ')
-	--					io.put_string ("   > ")
-						io.put_string (t_constructors.count.out + " constructor(s)")
-	--					io.put_new_line
-					end
-					if attached t.fields as t_fields then
-						io.put_character (' ')
-	--					io.put_string ("   > ")
-						io.put_string (t_fields.count.out + " field(s)")
-	--					io.put_new_line
-					end
-					if attached t.procedures as t_procedures then
-						io.put_character (' ')
-	--					io.put_string ("   > ")
-						io.put_string (t_procedures.count.out + " procedure(s)")
-	--					io.put_new_line
-					end
-					if attached t.functions as t_functions then
-						io.put_character (' ')
-	--					io.put_string ("   > ")
-						io.put_string (t_functions.count.out + " function(s)")
-	--					io.put_new_line
+				end
+			else
+				display_parents (t)
+				if attached t.entities as t_entities and then not t_entities.is_empty then
+					io.put_string ("   > ")
+					io.put_string (t_entities.count.out + " entitie(s)")
+					io.put_new_line
+					across
+						t_entities as e
+					loop
+						print ("    * ")
+						display_entity (e, t, True)
+						if a_query.is_full_mode then
+							display_entity_details (e, t)
+						end
+						io.put_new_line
 					end
 				end
-				io.put_new_line
+				io.put_string ("   >")
+				if attached t.constructors as t_constructors then
+					io.put_character (' ')
+--					io.put_string ("   > ")
+					io.put_string (t_constructors.count.out + " constructor(s)")
+--					io.put_new_line
+				end
+				if attached t.fields as t_fields then
+					io.put_character (' ')
+--					io.put_string ("   > ")
+					io.put_string (t_fields.count.out + " field(s)")
+--					io.put_new_line
+				end
+				if attached t.procedures as t_procedures then
+					io.put_character (' ')
+--					io.put_string ("   > ")
+					io.put_string (t_procedures.count.out + " procedure(s)")
+--					io.put_new_line
+				end
+				if attached t.functions as t_functions then
+					io.put_character (' ')
+--					io.put_string ("   > ")
+					io.put_string (t_functions.count.out + " function(s)")
+--					io.put_new_line
+				end
 			end
+			io.put_new_line
 		end
 
 	display_parents (t: CONSUMED_TYPE)

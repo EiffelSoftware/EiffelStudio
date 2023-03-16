@@ -167,9 +167,13 @@ feature -- Commands
 						loop
 							if
 								attached ft as l_fwd_type and then
-								attached an_assembly.dependencies [l_fwd_type.assembly_id] as l_fwd_assembly
+								l_fwd_type.assembly = Void and then -- This type was already processed
+								attached an_assembly.dependencies as l_assembly_dependencies and then
+								attached l_assembly_dependencies [l_fwd_type.assembly_id] as l_fwd_assembly
 							then
+									-- TODO: follow the eventual "forwarded type" chain.
 								l_fwd_type.set_assembly (l_fwd_assembly.consumed_assembly)
+								
 									-- TODO: add forwarded classes to the CONF_PHYSICAL_ASSEMBLY  `l_fwd_assembly`
 --								if attached l_fwd_assembly.classes [l_fwd_type.eiffel_name] as l_fwd_class then
 --								end

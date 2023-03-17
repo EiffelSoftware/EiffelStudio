@@ -273,7 +273,12 @@ iff "%HAS_VC_MSC_VC140%" == "True" then
 	cdd %INIT_DIR
 	remtrace Build the C libraries of non-Eiffel Software C libraries for msc_vc140 (%ISE_VC_MSC_VC140%)
 	call espawn -u:%ISE_VC_MSC_VC140% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR% msc_vc140"
+elseiff "%HAS_VC_MSC_VC170%" == "True" then
+	cdd %INIT_DIR
+	remtrace Build the C libraries of non-Eiffel Software C libraries for msc_vc140 (%ISE_VC_MSC_VC170%)
+	call espawn -u:%ISE_VC_MSC_VC170% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR% msc_vc140"
 endiff
+
 cdd %INIT_DIR
 remtrace Build the C libraries of non-Eiffel Software C libraries for mingw
 call compile_c_libraries.btm %STUDIO_DIR% mingw
@@ -289,6 +294,10 @@ iff "%HAS_VC_MSC_VC140%" == "True" then
 	remtrace Build the other C libraries of non-Eiffel Software C libraries for msc_vc140 (%ISE_VC_MSC_VC140%)
 	cdd %INIT_DIR
 	espawn -u:%ISE_VC_MSC_VC140% "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc_vc140"
+elseiff "%HAS_VC_MSC_VC170%" == "True" then
+	remtrace Build the other C libraries of non-Eiffel Software C libraries for msc_vc170 (%ISE_VC_MSC_VC170%)
+	cdd %INIT_DIR
+	espawn -u:%ISE_VC_MSC_VC170% "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc_vc140"
 endiff
 remtrace Build the other C libraries of non-Eiffel Software C libraries for mingw
 cdd %INIT_DIR

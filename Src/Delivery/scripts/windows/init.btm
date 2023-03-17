@@ -57,13 +57,11 @@ else
 	echo HAS_VC_MSC_VC140=%HAS_VC_MSC_VC140%
 	echo set HAS_VC_MSC_VC140=%HAS_VC_MSC_VC140% >> %INIT_DIR%\_cache\init_c_compilers.btm
 
-::	if "%ISE_C_COMPILER_VER%" NEQ "" (
-::		IF /I "%ISE_C_COMPILER_VER%" NEQ "VC100" (
-::			IF /I "%ISE_C_COMPILER_VER%" NEQ "VC140" (
-::				call %INIT_DIR\inc\set_has_c_compiler HAS_C_COMP_VER %ISE_C_COMPILER_VER%
-::			)
-::		)
-::	)
-::	echo HAS_C_COMP_VER=%HAS_C_COMP_VER%
-::	echo set HAS_C_COMP_VER=%HAS_C_COMP_VER% >> %INIT_DIR%\_cache\init_c_compilers.btm
+	set "HAS_VC_MSC_VC170=False"
+	if "%ISE_VC_MSC_VC170%" NEQ "" (
+		call %INIT_DIR\inc\set_has_c_compiler HAS_VC_MSC_VC170 %ISE_VC_MSC_VC170%
+	)
+	echo HAS_VC_MSC_VC170=%HAS_VC_MSC_VC170%
+	echo set HAS_VC_MSC_VC170=%HAS_VC_MSC_VC170% >> %INIT_DIR%\_cache\init_c_compilers.btm
+
 endiff

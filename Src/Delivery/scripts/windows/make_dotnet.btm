@@ -5,12 +5,15 @@ cdd %EIFFEL_SRC
 
 remtrace Compiling .NET runtime
 cd %EIFFEL_SRC%\Eiffel\eiffel\com_il_generation\core\run-time
+geant clobber
 sed -e "s/msbuild runtime.sln/msbuild runtime.sln \/p:Platform=\"Any CPU\" \/p:Configuration=Release /" Makefile > Makefile-release
 
 set TMP_ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER%
 iff "%ISE_C_COMPILER%" EQ "msc_vc140" then
 	iff "%HAS_VC_MSC_VC140%" == "True" then
 		set TMP_ISE_C_COMPILER_VER=vc140
+	elseiff "%HAS_VC_MSC_VC170%" == "True" then
+		set TMP_ISE_C_COMPILER_VER=vc170
 	endiff
 endiff
 espawn -u:%TMP_ISE_C_COMPILER_VER% "%COMSPEC% /c nmake -f Makefile-release msbuild_20"
@@ -46,21 +49,21 @@ else
 endiff
 
 remtrace Compiling Eiffel Metadata Consumer Executable emdc.exe
-iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\emdc.exe then
+iff exist %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\emdc.exe then
 	remtrace emdc tool is already built
 else
 	cdd %EIFFEL_SRC%\dotnet\consumer
 	finalize consumer.ecf emdc
 	cleanup_dotnet_eiffel emdc emdc.exe
 	iff exist libemdc.dll then
-		safe_copy emdc.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
-		safe_copy libemdc.dll %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
+		safe_copy emdc.exe %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
+		safe_copy libemdc.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not compile emdc.exe
 		iff defined REUSE_MDCONSUMER then
 			remtrace REUSE installation MetadataConsumer 
-			safe_copy %ISE_EIFFEL%\tools\spec\%ISE_PLATFORM%\bin\emdc.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
-			safe_copy %ISE_EIFFEL%\tools\spec\%ISE_PLATFORM%\bin\libemdc.dll %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
+			safe_copy %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\emdc.exe %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
+			safe_copy %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\libemdc.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
 		else
 			CANCEL_ON_ERROR
 		endiff

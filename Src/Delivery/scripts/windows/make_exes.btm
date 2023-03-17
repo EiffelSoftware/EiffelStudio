@@ -49,6 +49,9 @@ iff "%ISE_C_COMPILER%" NEQ "msc_vc140" then
 	iff "%HAS_VC_MSC_VC140%" == "True" then
 	  remtrace Compile the run-time for Microsoft (msc_vc140)
 	  espawn -u:%ISE_VC_MSC_VC140% "%COMSPEC% /c %INIT_DIR%\make_runtimes.btm msc_vc140"
+	elseiff "%HAS_VC_MSC_VC170%" == "True" then
+	  remtrace Compile the run-time for Microsoft (msc_vc140)
+	  espawn -u:%ISE_VC_MSC_VC170% "%COMSPEC% /c %INIT_DIR%\make_runtimes.btm msc_vc140"
 	endiff
 endiff
 iff "%ISE_C_COMPILER%" NEQ "msc" then

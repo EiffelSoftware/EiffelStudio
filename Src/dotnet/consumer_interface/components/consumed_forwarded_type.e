@@ -8,6 +8,9 @@ note
 class
 	CONSUMED_FORWARDED_TYPE
 
+inherit
+	DEBUG_OUTPUT
+
 create
 	make
 
@@ -43,10 +46,28 @@ feature -- Access
 
 	assembly_id: INTEGER
 			-- ID of the assembly when current type is declared (see Forwarded types).
+			-- The id is the index of the assembly in the `referenced_assemblies.info` data file.
 
 	assembly: detachable CONSUMED_ASSEMBLY assign set_assembly
 			-- Consumed assembly that contains the forward type declaration.
-			-- It is set in a second step in {CONF_CONSUMER_MANAGER}.build_dependencies.
+			-- It is set in a second step in `{CONF_CONSUMER_MANAGER}.build_assemblies`.
+
+feature -- Status report
+
+	debug_output: STRING_32
+			-- <Precursor>
+		do
+			create Result.make (10)
+			Result.append_string (dotnet_name)
+			Result.append_string_general (" {")
+			Result.append_string (eiffel_name)
+			Result.append_string_general ("} @")
+			if attached assembly as a then
+				Result.append_string (a.name)
+			else
+				Result.append_integer (assembly_id)
+			end
+		end
 
 feature -- Element change
 

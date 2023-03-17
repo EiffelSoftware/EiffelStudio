@@ -15,6 +15,12 @@ inherit
 			out
 		end
 
+	DEBUG_OUTPUT
+		redefine
+			is_equal,
+			out
+		end
+
 create
 	make
 
@@ -133,10 +139,50 @@ feature -- Access
 			Result := u.string_32_to_utf_8_string_8 (text)
 		end
 
+feature -- Status report
+
+	debug_output: READABLE_STRING_GENERAL
+			-- <Precursor>
+		do
+			Result := text
+		end
+
 feature -- Access: computed data
 
 	forwarded_types: detachable ARRAYED_LIST [CONSUMED_FORWARDED_TYPE]
 			-- Consumed information about forwarded types.
+
+	has_forwarded_type (t: CONSUMED_FORWARDED_TYPE): BOOLEAN
+			-- Is forwarded type `t` also a forwarded type for Current assembly?
+		do
+			if attached forwarded_types as l_types then
+				across
+					l_types as i
+				until
+					Result
+				loop
+					if i.dotnet_name.same_string (t.dotnet_name) then
+						Result := True
+					end
+				end
+			end
+		end
+
+	forwarded_type_for_dotnet_name (dn: READABLE_STRING_GENERAL): detachable CONSUMED_FORWARDED_TYPE
+			-- Is forwarded type `t` also a forwarded type for Current assembly?
+		do
+			if attached forwarded_types as l_types then
+				across
+					l_types as i
+				until
+					attached Result
+				loop
+					if dn.same_string (i.dotnet_name) then
+						Result := i
+					end
+				end
+			end
+		end
 
 feature -- Element change
 

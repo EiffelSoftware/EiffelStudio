@@ -8,6 +8,9 @@ note
 class
 	CONSUMED_TYPE
 
+inherit
+	DEBUG_OUTPUT
+
 create
 	make
 
@@ -222,6 +225,14 @@ feature -- Status Setting
 			-- Is .NET type a value type?
 		do
 			Result := internal_flags & Is_expanded_mask = Is_expanded_mask
+		end
+
+feature -- Status report
+
+	debug_output: READABLE_STRING_GENERAL
+			-- <Precursor>
+		do
+			Result := dotnet_name + " {" + eiffel_name + "}"
 		end
 
 feature -- Element settings

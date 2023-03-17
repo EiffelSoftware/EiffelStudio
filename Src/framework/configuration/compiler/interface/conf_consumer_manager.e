@@ -115,6 +115,8 @@ feature -- Commands
 			l_retried: BOOLEAN
 			o: like old_assemblies
 			an_assembly: CONF_PHYSICAL_ASSEMBLY
+			ca: CONSUMED_ASSEMBLY
+			l_chained_forwarded_types: ARRAYED_LIST [CONSUMED_FORWARDED_TYPE]
 		do
 			if not l_retried then
 					-- load information from metadata cache, consume if the metadata cache does not yet exist
@@ -160,6 +162,8 @@ feature -- Commands
 				loop
 					an_assembly := linear_assemblies.item
 					build_dependencies (an_assembly)
+
+						-- Then handle Forwarded types
 					if attached an_assembly.consumed_assembly.forwarded_types as l_fwd_types and then not l_fwd_types.is_empty then
 							-- Update information for forwarded types of `an_assembly`.
 						across
@@ -171,9 +175,15 @@ feature -- Commands
 								attached an_assembly.dependencies as l_assembly_dependencies and then
 								attached l_assembly_dependencies [l_fwd_type.assembly_id] as l_fwd_assembly
 							then
-									-- TODO: follow the eventual "forwarded type" chain.
-								l_fwd_type.set_assembly (l_fwd_assembly.consumed_assembly)
-								
+								ca := l_fwd_assembly.consumed_assembly
+								l_fwd_type.set_assembly (ca)
+								if ca.has_forwarded_type (l_fwd_type) then
+									if l_chained_forwarded_types = Void then
+										create l_chained_forwarded_types.make (1)
+									end
+									l_chained_forwarded_types.force (l_fwd_type)
+								end
+
 									-- TODO: add forwarded classes to the CONF_PHYSICAL_ASSEMBLY  `l_fwd_assembly`
 --								if attached l_fwd_assembly.classes [l_fwd_type.eiffel_name] as l_fwd_class then
 --								end
@@ -181,6 +191,30 @@ feature -- Commands
 						end
 					end
 					linear_assemblies.forth
+				end
+				if l_chained_forwarded_types /= Void then
+						-- Resolve forwarded types chain.
+					across
+						l_chained_forwarded_types as ft
+					loop
+						if attached ft as l_fwd_type then
+							ca := l_fwd_type.assembly
+							if ca /= Void then
+								from
+								until
+									not attached ca.forwarded_type_for_dotnet_name (l_fwd_type.dotnet_name) as f_t
+								loop
+									if attached f_t.assembly as f_ca then
+										ca := f_ca
+										l_fwd_type.set_assembly (f_ca)
+									else
+											-- At this point, all forwarded types should have an associated CONSUMED_ASSEMBLY object.
+										check has_assembly: False end
+									end
+								end
+							end
+						end
+					end
 				end
 			end
 			if attached internal_consumer.item as e then

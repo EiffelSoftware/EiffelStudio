@@ -11,6 +11,11 @@ deferred class
 inherit
 	COMPARABLE
 
+	DEBUG_OUTPUT
+		undefine
+			is_equal
+		end
+
 feature {NONE} -- Initialization
 
 	make (en, dn: STRING; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE)
@@ -126,6 +131,17 @@ feature -- Access
 	is_constructor: BOOLEAN
 			-- Is constructor feature?
 		do
+		end
+
+feature -- Status report
+
+	debug_output: STRING_32
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make_from_string_general (dotnet_name)
+			Result.append (" {")
+			Result.append (eiffel_name)
+			Result.append ("}")
 		end
 
 feature -- Comparison

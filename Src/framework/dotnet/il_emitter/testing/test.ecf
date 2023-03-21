@@ -23,6 +23,7 @@
 				<debug name="debug-cli" enabled="true"/>
 			</option>
 		</library>
+		<library name="il_metadata" location="..\..\il_metadata\il_metadata.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="il_emitter_test" location=".\" recursive="true">
 			<option warning="none" manifest_array_type="mismatch_warning">

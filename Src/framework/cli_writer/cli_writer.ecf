@@ -8,6 +8,7 @@
 		<option warning="error">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="il_metadata" location="$EIFFEL_SRC\framework\dotnet\il_metadata\il_metadata.ecf"/>
 		<library name="cli_writer_clib" location="$EIFFEL_SRC\framework\cli_writer\cli_writer_clib.ecf"/>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>

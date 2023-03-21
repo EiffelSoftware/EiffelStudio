@@ -119,7 +119,7 @@ feature -- IL Generation
 				f := current_class.feature_of_feature_id (fid)
 				uni_string.set (f.property_name, 1, f.property_name.count)
 				property_sig.reset
-				property_sig.set_property_type ({CIL_MD_SIGNATURE_CONSTANTS}.property_sig | {CIL_MD_SIGNATURE_CONSTANTS}.has_current)
+				property_sig.set_property_type ({MD_SIGNATURE_CONSTANTS}.property_sig | {MD_SIGNATURE_CONSTANTS}.has_current)
 				property_sig.set_parameter_count (0)
 				t := result_type_in (f, class_type)
 				if t.is_void then
@@ -127,12 +127,12 @@ feature -- IL Generation
 				end
 				set_signature_type (property_sig, t, class_type)
 				st := current_module.defined_property_setter_token (tid, fid)
-				if st & {CIL_MD_TOKEN_TYPES}.md_method_def = 0 then
-					st := {CIL_MD_TOKEN_TYPES}.md_method_def
+				if st & {MD_TOKEN_TYPES}.md_method_def = 0 then
+					st := {MD_TOKEN_TYPES}.md_method_def
 				end
 				gt := current_module.defined_property_getter_token (tid, fid)
-				if gt & {CIL_MD_TOKEN_TYPES}.md_method_def = 0 then
-					gt := {CIL_MD_TOKEN_TYPES}.md_method_def
+				if gt & {MD_TOKEN_TYPES}.md_method_def = 0 then
+					gt := {MD_TOKEN_TYPES}.md_method_def
 				end
 				pt := md_emit.define_property (ct, uni_string, 0, property_sig, st, gt)
 				if attached f.property_custom_attributes as ca then

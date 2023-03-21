@@ -143,7 +143,7 @@ feature {IL_MODULE} -- Access
 		deferred
 		end
 
-	method_body: CIL_MD_METHOD_BODY
+	method_body: MD_METHOD_BODY
 			-- Body for currently generated routine.
 
 	local_start_offset, local_end_offset: INTEGER
@@ -175,10 +175,10 @@ feature {NONE} -- Access
 	output_file_name: READABLE_STRING_32
 			-- File where assembly is stored.
 
-	md_dispenser: CIL_MD_METADATA_DISPENSER
+	md_dispenser: MD_METADATA_DISPENSER
 			-- Access to MetaData generator.
 
-	md_emit: CIL_MD_METADATA_EMIT
+	md_emit: MD_METADATA_EMIT
 			-- Metadata emitter.
 		do
 			Result := current_module.md_emit
@@ -186,7 +186,7 @@ feature {NONE} -- Access
 			md_emit_not_void: Result /= Void
 		end
 
-	method_writer: CIL_MD_METHOD_WRITER
+	method_writer: MD_METHOD_WRITER
 			-- To store method bodys.
 		do
 			Result := current_module.method_writer
@@ -202,11 +202,11 @@ feature {NONE} -- Access
 			type_count_positive: type_count >= 0
 		end
 
-	done_sig: CIL_MD_FIELD_SIGNATURE
+	done_sig: MD_FIELD_SIGNATURE
 			-- Precomputed signature of `done_token' so that we do not have
 			-- to compute it too often
 
-	exception_sig: CIL_MD_FIELD_SIGNATURE
+	exception_sig: MD_FIELD_SIGNATURE
 			-- Precomputed signature of `exception_token' so that we do not have
 			-- to compute it too often
 		do
@@ -214,34 +214,34 @@ feature {NONE} -- Access
 			Result := sync_sig
 		end
 
-	sync_sig: CIL_MD_FIELD_SIGNATURE
+	sync_sig: MD_FIELD_SIGNATURE
 			-- Precomputed signature of `sync_token' so that we do not have
 			-- to compute it too often
 
-	default_sig: CIL_MD_METHOD_SIGNATURE
+	default_sig: MD_METHOD_SIGNATURE
 			-- Precomputed signature of a feature with no arguments and no return type.
 			-- Used to define default constructors and other features with same signature.
 
-	method_sig: CIL_MD_METHOD_SIGNATURE
+	method_sig: MD_METHOD_SIGNATURE
 			-- Permanent signature for features.
 
-	field_sig: CIL_MD_FIELD_SIGNATURE
+	field_sig: MD_FIELD_SIGNATURE
 			-- Permanent signature for attributes.
 
-	local_sig: CIL_MD_LOCAL_SIGNATURE
+	local_sig: MD_LOCAL_SIGNATURE
 			-- Permanent signature for locals.
 
-	type_sig: CIL_MD_TYPE_SIGNATURE
+	type_sig: MD_TYPE_SIGNATURE
 			-- Permanent signature for types.
 
-	property_sig: CIL_MD_PROPERTY_SIGNATURE
+	property_sig: MD_PROPERTY_SIGNATURE
 			-- Permanent signature for properties.
 
-	boolean_native_signature: CIL_MD_NATIVE_TYPE_SIGNATURE
+	boolean_native_signature: MD_NATIVE_TYPE_SIGNATURE
 			-- Marshaller signature for converting IL boolean to Eiffel C boolean
 		once
 			create Result.make
-			Result.set_native_type ({CIL_MD_SIGNATURE_CONSTANTS}.native_type_i1)
+			Result.set_native_type ({MD_SIGNATURE_CONSTANTS}.native_type_i1)
 		end
 
 	local_types: ARRAYED_LIST [PAIR [TYPE_A, STRING]]
@@ -336,7 +336,7 @@ feature -- Access
 	assertion_level_enum_type_id: INTEGER
 			-- Identifier for class EiffelSoftware.Runtime.Enums.ASSERTION_LEVEL_ENUM.
 
-	public_key: CIL_MD_PUBLIC_KEY
+	public_key: MD_PUBLIC_KEY
 			-- Public key if used of current assembly.
 
 feature -- Settings
@@ -551,7 +551,7 @@ feature -- Generation Structure
 		local
 			-- l_host: CLR_HOST
 		do
-				--| Initialize recording of IL Information used for eStudio .NET debugger			
+				--| Initialize recording of IL Information used for eStudio .NET debugger
 			to_implement ("TODO Add implementation")
 			--Il_debug_info_recorder.start_recording_session (debug_mode)
 
@@ -576,15 +576,15 @@ feature -- Generation Structure
 
 				-- Create signature for `done' and `sync' in once computation.
 			create done_sig.make
-			done_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+			done_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
 			create sync_sig.make
-			sync_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+			sync_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
 				-- Create default signature.
 			create default_sig.make
-			default_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Has_current)
+			default_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			default_sig.set_parameter_count (0)
-			default_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			default_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 				-- Create permanent signature for feature.
 			create method_sig.make
@@ -670,7 +670,7 @@ feature -- Generation Structure
 			-- Generate a class for run-time needs.
 		local
 			l_cur_mod: like current_module
-			helper_emit: CIL_MD_METADATA_EMIT
+			helper_emit: MD_METADATA_EMIT
 			oms_field_cil_token: INTEGER
 			oms_field_eiffel_token,
 			oms_32_field_eiffel_token,
@@ -703,181 +703,181 @@ feature -- Generation Structure
 				start_new_body (current_module.once_string_allocation_routine_token)
 				local_sig.reset
 				local_sig.set_local_count (1)
-				local_sig.add_local_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+				local_sig.add_local_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
 				method_body.set_local_token (helper_emit.define_signature (local_sig))
 				check_body_index_range_label := create_label
 				allocate_for_body_index_label := create_label
 				array_type_token := helper_emit.define_type_ref (create {STRING_32}.make_from_string ("System.Array"), current_module.mscorlib_token)
 					-- Replaced UNI_STRING
 				method_sig.reset
-				method_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.default_sig)
+				method_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.default_sig)
 				method_sig.set_parameter_count (3)
-				method_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
-				method_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_class, array_type_token)
-				method_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_class, array_type_token)
-				method_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+				method_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+				method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, array_type_token)
+				method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, array_type_token)
+				method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
 				array_copy_method_token := helper_emit.define_member_ref (create {STRING_32}.make_from_string ("Copy"), array_type_token, method_sig)
 					-- Replaced UNI_STRING
 
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, oms_field_cil_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_field_cil_token)
+				method_body.put_opcode ({MD_OPCODES}.dup)
 				branch_on_true (check_body_index_range_label)
 
 					-- Create array(s) indexed by body index.
 					-- Remove null from stack top.
-				method_body.put_opcode ({CIL_MD_OPCODES}.pop)
+				method_body.put_opcode ({MD_OPCODES}.pop)
 					-- Create "STRING[][]" and assign it to "oms_eiffel".
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				put_integer_32_constant (1)
-				method_body.put_opcode ({CIL_MD_OPCODES}.add)
+				method_body.put_opcode ({MD_OPCODES}.add)
 				type_sig.reset
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (string_type_id))
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (string_type_id))
 				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, oms_array_type_eiffel_token)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.stsfld, oms_field_eiffel_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_field_eiffel_token)
 					-- Create "STRING_32[][]" and assign it to "oms32_eiffel".
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				put_integer_32_constant (1)
-				method_body.put_opcode ({CIL_MD_OPCODES}.add)
+				method_body.put_opcode ({MD_OPCODES}.add)
 				type_sig.reset
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (string_32_type_id))
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (string_32_type_id))
 				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, oms_array_type_eiffel_token)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.stsfld, oms_32_field_eiffel_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_32_field_eiffel_token)
 					-- Create "IMMUTABLE_STRING_8[][]" and assign it to "omis8_eiffel".
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				put_integer_32_constant (1)
-				method_body.put_opcode ({CIL_MD_OPCODES}.add)
+				method_body.put_opcode ({MD_OPCODES}.add)
 				type_sig.reset
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (immutable_string_8_type_id))
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (immutable_string_8_type_id))
 				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, oms_array_type_eiffel_token)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.stsfld, omis_8_field_eiffel_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, omis_8_field_eiffel_token)
 					-- Create "IMMUTABLE_STRING_32[][]" and assign it to "omis32_eiffel".
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				put_integer_32_constant (1)
-				method_body.put_opcode ({CIL_MD_OPCODES}.add)
+				method_body.put_opcode ({MD_OPCODES}.add)
 				type_sig.reset
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (immutable_string_32_type_id))
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (immutable_string_32_type_id))
 				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, oms_array_type_eiffel_token)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.stsfld, omis_32_field_eiffel_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, omis_32_field_eiffel_token)
 					-- Create "string[][]" and assign it to "oms_cil".
 					-- Leave "string[][]" at stack top.
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				put_integer_32_constant (1)
-				method_body.put_opcode ({CIL_MD_OPCODES}.add)
+				method_body.put_opcode ({MD_OPCODES}.add)
 				type_sig.reset
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
 				oms_array_type_cil_token := helper_emit.define_type_spec (type_sig)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, oms_array_type_cil_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.dup)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.stsfld, oms_field_cil_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_cil_token)
+				method_body.put_opcode ({MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_field_cil_token)
 				branch_to (allocate_for_body_index_label)
 
 				mark_label (check_body_index_range_label)
 					-- Check whether body index fits current body index range.
-				method_body.put_opcode ({CIL_MD_OPCODES}.dup)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldlen)
-				method_body.put_opcode ({CIL_MD_OPCODES}.dup)
-				method_body.put_opcode ({CIL_MD_OPCODES}.stloc_0)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
-				method_body.put_opcode_label ({CIL_MD_OPCODES}.bgt, allocate_for_body_index_label.id)
+				method_body.put_opcode ({MD_OPCODES}.dup)
+				method_body.put_opcode ({MD_OPCODES}.ldlen)
+				method_body.put_opcode ({MD_OPCODES}.dup)
+				method_body.put_opcode ({MD_OPCODES}.stloc_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				method_body.put_opcode_label ({MD_OPCODES}.bgt, allocate_for_body_index_label.id)
 
 					-- Body index is too large. Reallocate array(s).
 					-- All previously stored data have to be preserved.
 					-- Reallocate "string[][]".
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				put_integer_32_constant (1)
-				method_body.put_opcode ({CIL_MD_OPCODES}.add)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, oms_array_type_cil_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.dup)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.stsfld, oms_field_cil_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldloc_0)
+				method_body.put_opcode ({MD_OPCODES}.add)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_cil_token)
+				method_body.put_opcode ({MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_field_cil_token)
+				method_body.put_opcode ({MD_OPCODES}.ldloc_0)
 				method_body.put_static_call (array_copy_method_token, 3, False)
 					-- Reallocate "STRING[][]".
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, oms_field_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				put_integer_32_constant (1)
-				method_body.put_opcode ({CIL_MD_OPCODES}.add)
+				method_body.put_opcode ({MD_OPCODES}.add)
 				type_sig.reset
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (string_type_id))
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (string_type_id))
 				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, oms_array_type_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.dup)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.stsfld, oms_field_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldloc_0)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldloc_0)
 				method_body.put_static_call (array_copy_method_token, 3, False)
 					-- Reallocate "STRING_32[][]".
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, oms_32_field_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_32_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				put_integer_32_constant (1)
-				method_body.put_opcode ({CIL_MD_OPCODES}.add)
+				method_body.put_opcode ({MD_OPCODES}.add)
 				type_sig.reset
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (string_32_type_id))
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (string_32_type_id))
 				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, oms_array_type_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.dup)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.stsfld, oms_32_field_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldloc_0)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_32_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldloc_0)
 				method_body.put_static_call (array_copy_method_token, 3, False)
 					-- Reallocate "IMMUTABLE_STRING_32[][]".
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, omis_32_field_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, omis_32_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				put_integer_32_constant (1)
-				method_body.put_opcode ({CIL_MD_OPCODES}.add)
+				method_body.put_opcode ({MD_OPCODES}.add)
 				type_sig.reset
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (immutable_string_32_type_id))
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (immutable_string_32_type_id))
 				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, oms_array_type_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.dup)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.stsfld, omis_32_field_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldloc_0)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, omis_32_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldloc_0)
 				method_body.put_static_call (array_copy_method_token, 3, False)
 					-- Leave "string[][]" on stack top.
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, oms_field_cil_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_field_cil_token)
 
 				mark_label (allocate_for_body_index_label)
 					-- Create array(s) indexed by manifest string number.
 					-- oms_cil
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_1)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_1)
 				type_sig.reset
-				type_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, helper_emit.define_type_spec (type_sig))
-				method_body.put_opcode ({CIL_MD_OPCODES}.stelem_ref)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, helper_emit.define_type_spec (type_sig))
+				method_body.put_opcode ({MD_OPCODES}.stelem_ref)
 					-- oms_eiffel
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, oms_field_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_1)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, current_module.actual_class_type_token (string_type_id))
-				method_body.put_opcode ({CIL_MD_OPCODES}.stelem_ref)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_1)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, current_module.actual_class_type_token (string_type_id))
+				method_body.put_opcode ({MD_OPCODES}.stelem_ref)
 					-- oms32_eiffel
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, oms_32_field_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_1)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, current_module.actual_class_type_token (string_32_type_id))
-				method_body.put_opcode ({CIL_MD_OPCODES}.stelem_ref)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_32_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_1)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, current_module.actual_class_type_token (string_32_type_id))
+				method_body.put_opcode ({MD_OPCODES}.stelem_ref)
 					-- omis8_eiffel
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, omis_8_field_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_1)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, current_module.actual_class_type_token (immutable_string_8_type_id))
-				method_body.put_opcode ({CIL_MD_OPCODES}.stelem_ref)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, omis_8_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_1)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, current_module.actual_class_type_token (immutable_string_8_type_id))
+				method_body.put_opcode ({MD_OPCODES}.stelem_ref)
 					-- omis32_eiffel
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, omis_32_field_eiffel_token)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_1)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.newarr, current_module.actual_class_type_token (immutable_string_32_type_id))
-				method_body.put_opcode ({CIL_MD_OPCODES}.stelem_ref)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, omis_32_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_1)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, current_module.actual_class_type_token (immutable_string_32_type_id))
+				method_body.put_opcode ({MD_OPCODES}.stelem_ref)
 					-- Done.
 				generate_return (False)
 				method_writer.write_current_body
@@ -886,7 +886,7 @@ feature -- Generation Structure
 			end
 		end
 
-	end_assembly_generation (a_signing: CIL_MD_STRONG_NAME)
+	end_assembly_generation (a_signing: MD_STRONG_NAME)
 			-- Finish creation of current assembly.
 		require
 			a_signing_not_void: a_signing /= Void
@@ -926,19 +926,19 @@ feature -- Generation Structure
 							else
 								l_file_token := define_file (main_module,
 									l_module.module_file_name, l_module.module_name,
-									{CIL_MD_FILE_FLAGS}.Has_meta_data, a_signing)
+									{MD_FILE_FLAGS}.Has_meta_data, a_signing)
 								file_token.put (l_file_token, l_module)
 							end
 
 							l_uni_string.set (l_type.full_il_type_name, 1, l_type.full_il_type_name.count)
 							md_emit.define_exported_type (l_uni_string, l_file_token,
-								l_type.last_type_token, {CIL_MD_TYPE_ATTRIBUTES}.Public).do_nothing
+								l_type.last_type_token, {MD_TYPE_ATTRIBUTES}.Public).do_nothing
 
 							if l_type.implementation_id /= l_type.static_type_id then
 								l_uni_string.set (l_type.full_il_implementation_type_name, 1, l_type.full_il_implementation_type_name.count)
 								md_emit.define_exported_type (l_uni_string, l_file_token,
 									l_type.last_implementation_type_token,
-									{CIL_MD_TYPE_ATTRIBUTES}.Public).do_nothing
+									{MD_TYPE_ATTRIBUTES}.Public).do_nothing
 							end
 
 							if
@@ -947,7 +947,7 @@ feature -- Generation Structure
 							then
 								l_uni_string.seT (l_type.full_il_create_type_name, 1, l_type.full_il_create_type_name.count)
 								md_emit.define_exported_type (l_uni_string, l_file_token,
-									l_type.last_create_type_token, {CIL_MD_TYPE_ATTRIBUTES}.Public).do_nothing
+									l_type.last_create_type_token, {MD_TYPE_ATTRIBUTES}.Public).do_nothing
 							end
 						end
 					end
@@ -985,7 +985,7 @@ feature -- Generation Structure
 			(create {IL_RESOURCE_GENERATOR}.make (main_module, a_resources)).generate
 		end
 
-	define_file (a_module: IL_MODULE; a_file: READABLE_STRING_GENERAL; a_name: STRING; file_flags: INTEGER; a_signing: CIL_MD_STRONG_NAME): INTEGER
+	define_file (a_module: IL_MODULE; a_file: READABLE_STRING_GENERAL; a_name: STRING; file_flags: INTEGER; a_signing: MD_STRONG_NAME): INTEGER
 			-- Add `a_file' of name `a_name' in list of files referenced by `a_module'.
 		require
 			a_module_not_void: a_module /= Void
@@ -995,8 +995,8 @@ feature -- Generation Structure
 				a_name.same_string_general (
 					a_file.substring (a_file.count - a_name.count + 1, a_file.count))
 			file_flags_valid:
-				(file_flags = {CIL_MD_FILE_FLAGS}.Has_meta_data) or
-				(file_flags = {CIL_MD_FILE_FLAGS}.Has_no_meta_data)
+				(file_flags = {MD_FILE_FLAGS}.Has_meta_data) or
+				(file_flags = {MD_FILE_FLAGS}.Has_no_meta_data)
 			a_signing_not_void: a_signing /= Void
 --			a_signing_exists: a_signing.exists -- todo
 		local
@@ -1010,8 +1010,8 @@ feature -- Generation Structure
 			l_uni_string.set (a_name, 1, a_name.count)
 			Result := a_module.md_emit.define_file (l_uni_string, l_hash_res, file_flags)
 		ensure
-			valid_result: Result & {CIL_MD_TOKEN_TYPES}.Md_mask =
-				{CIL_MD_TOKEN_TYPES}.Md_file
+			valid_result: Result & {MD_TOKEN_TYPES}.Md_mask =
+				{MD_TOKEN_TYPES}.Md_file
 		end
 
 	define_assertion_level (class_type: CLASS_TYPE)
@@ -1019,7 +1019,7 @@ feature -- Generation Structure
 		require
 			class_type_not_void: class_type /= Void
 		local
-			l_assert_ca: CIL_MD_CUSTOM_ATTRIBUTE
+			l_assert_ca: MD_CUSTOM_ATTRIBUTE
 			l_type_name: STRING_32
 		do
 			check
@@ -1048,7 +1048,7 @@ feature -- Generation Structure
 		require
 			class_type_not_void: class_type /= Void
 		local
-			l_assert_ca: CIL_MD_CUSTOM_ATTRIBUTE
+			l_assert_ca: MD_CUSTOM_ATTRIBUTE
 			l_type_name: STRING_32
 		do
 			create l_assert_ca.make
@@ -1063,7 +1063,7 @@ feature -- Generation Structure
 				current_module.ise_interface_type_attr_ctor_token, l_assert_ca)
 		end
 
-	end_module_generation (has_root_type: BOOLEAN; a_signing: CIL_MD_STRONG_NAME)
+	end_module_generation (has_root_type: BOOLEAN; a_signing: MD_STRONG_NAME)
 			-- Finish creation of current module.
 		require
 			a_signing_not_void: a_signing /= Void
@@ -1088,7 +1088,7 @@ feature -- Generation Structure
 						l_decl_type.associated_class_type (system.root_class_type (system.root_type).type).implementation_id,
 						root_feat.origin_feature_id)
 						-- Debugger API does not allow to use MethodRef token for user entry point
-					if entry_point_token & {CIL_MD_TOKEN_TYPES}.md_mask = {CIL_MD_TOKEN_TYPES}.md_method_def then
+					if entry_point_token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def then
 						current_module.dbg_writer.set_user_entry_point (entry_point_token)
 					else
 						fixme ("Regenerate root procedure to get MethodDef token or generate a fictious procedure with relevant debug information that will call root procedure.")
@@ -1324,7 +1324,7 @@ feature -- Class info
 			l_field_sig: like field_sig
 			l_type_field_token: INTEGER
 			l_class_token: INTEGER
-			l_ca: CIL_MD_CUSTOM_ATTRIBUTE
+			l_ca: MD_CUSTOM_ATTRIBUTE
 			l_class_name: STRING_32
 			l_meth_attr: INTEGER
 			i, nb: INTEGER
@@ -1411,26 +1411,26 @@ feature -- Class info
 			end
 
 			if is_single_inheritance_implementation or else is_single_class then
-				l_meth_attr := {CIL_MD_METHOD_ATTRIBUTES}.Public |
-					{CIL_MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-					{CIL_MD_METHOD_ATTRIBUTES}.Virtual
+				l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.Virtual
 			else
-				l_meth_attr := {CIL_MD_METHOD_ATTRIBUTES}.Public |
-					{CIL_MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-					{CIL_MD_METHOD_ATTRIBUTES}.Virtual |
-					{CIL_MD_METHOD_ATTRIBUTES}.Final
+				l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.Virtual |
+					{MD_METHOD_ATTRIBUTES}.Final
 			end
 
 				-- Define `____class_name'.
 			l_sig := method_sig
 			l_sig.reset
-			l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_sig.set_parameter_count (0)
-			l_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
 
 			uni_string.set ("____class_name", 1, ("____class_name").count)
 			l_meth_token := md_emit.define_method (uni_string,
-				l_class_token, l_meth_attr, l_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+				l_class_token, l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 			if is_cls_compliant then
 				define_custom_attribute (l_meth_token, current_module.cls_compliant_ctor_token,
@@ -1447,16 +1447,16 @@ feature -- Class info
 				(is_single_inheritance_implementation and (class_type.static_type_id = any_type_id)) or
 				(not is_single_inheritance_implementation and (not is_single_class or else (current_class.has_external_main_parent or class_type.is_expanded)))
 			then
-				l_meth_attr := l_meth_attr | {CIL_MD_METHOD_ATTRIBUTES}.Final
+				l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.Final
 
 					-- Define `$$____type'.
 				l_field_sig := field_sig
 				l_field_sig.reset
-				l_field_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_class,
+				l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 					current_module.ise_generic_type_token)
 				uni_string.set ("$$____type", 1, ("$$____type").count)
 				l_type_field_token := md_emit.define_field (uni_string, l_class_token,
-					{CIL_MD_FIELD_ATTRIBUTES}.Family, l_field_sig)
+					{MD_FIELD_ATTRIBUTES}.Family, l_field_sig)
 
 				if is_cls_compliant then
 					define_custom_attribute (l_type_field_token,
@@ -1465,14 +1465,14 @@ feature -- Class info
 
 					-- Define `____type'.
 				l_sig.reset
-				l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Has_current)
+				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 				l_sig.set_parameter_count (0)
-				l_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_class,
+				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 					current_module.ise_generic_type_token)
 
 				uni_string.set ("____type", 1, ("____type").count)
 				l_meth_token := md_emit.define_method (uni_string,
-					l_class_token, l_meth_attr, l_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+					l_class_token, l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 				if is_cls_compliant then
 					define_custom_attribute (l_meth_token, current_module.cls_compliant_ctor_token,
@@ -1481,25 +1481,25 @@ feature -- Class info
 
 				start_new_body (l_meth_token)
 				generate_current
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldfld, l_type_field_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, l_type_field_token)
 				generate_return (True)
 				method_writer.write_current_body
 
 					-- Define `____standard_twin'
 				l_sig.reset
-				l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Has_current)
+				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 				l_sig.set_parameter_count (0)
-				l_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
 				uni_string.set ("____standard_twin", 1, ("____standard_twin").count)
 				l_meth_token := md_emit.define_method (uni_string,
-					l_class_token, l_meth_attr, l_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+					l_class_token, l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 				start_new_body (l_meth_token)
 					-- If `current_class_type' is expanded, cloning is done by compiler.
 				if not class_type.is_expanded then
 					generate_current
-					method_body.put_call ({CIL_MD_OPCODES}.Call,
+					method_body.put_call ({MD_OPCODES}.Call,
 						current_module.memberwise_clone_token, 0, True)
 					generate_check_cast (Void, class_type.type)
 					generate_return (True)
@@ -1514,14 +1514,14 @@ feature -- Class info
 
 					-- Define `____copy'
 				l_sig.reset
-				l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Has_current)
+				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 				l_sig.set_parameter_count (1)
-				l_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-				l_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+				l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
 				uni_string.set ("____copy", 1, ("____copy").count)
 				l_meth_token := md_emit.define_method (uni_string,
-					l_class_token, l_meth_attr, l_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+					l_class_token, l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 				start_new_body (l_meth_token)
 				generate_current
@@ -1548,14 +1548,14 @@ feature -- Class info
 
 					-- Define `____is_equal'
 				l_sig.reset
-				l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Has_current)
+				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 				l_sig.set_parameter_count (1)
-				l_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
-				l_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+				l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
 				uni_string.set ("____is_equal", 1, ("____is_equal").count)
 				l_meth_token := md_emit.define_method (uni_string,
-					l_class_token, l_meth_attr, l_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+					l_class_token, l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 				start_new_body (l_meth_token)
 				generate_current
@@ -1685,20 +1685,20 @@ feature {NONE} -- SYSTEM_OBJECT features
 					type_i := class_c.actual_type
 				end
 				l_class_token := actual_class_type_token (class_type.implementation_id)
-				l_meth_attr := {CIL_MD_METHOD_ATTRIBUTES}.public |
-					{CIL_MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{CIL_MD_METHOD_ATTRIBUTES}.virtual
+				l_meth_attr := {MD_METHOD_ATTRIBUTES}.public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.virtual
 
 				l_sig := method_sig
 				l_sig.reset
-				l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.has_current)
+				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 				l_sig.set_parameter_count (1)
-				l_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_boolean, 0)
-				l_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_object, 0)
+				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_boolean, 0)
+				l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_object, 0)
 
 				uni_string.set ("Equals", 1, ("Equals").count)
 				l_meth_token := md_emit.define_method (uni_string, l_class_token,
-					l_meth_attr, l_sig, {CIL_MD_METHOD_ATTRIBUTES}.managed)
+					l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.managed)
 
 				start_new_body (l_meth_token)
 				generate_current
@@ -1746,19 +1746,19 @@ feature {NONE} -- SYSTEM_OBJECT features
 		do
 			if System.disposable_descendants.has (class_type.associated_class) then
 				l_class_token := actual_class_type_token (class_type.implementation_id)
-				l_meth_attr := {CIL_MD_METHOD_ATTRIBUTES}.public |
-					{CIL_MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{CIL_MD_METHOD_ATTRIBUTES}.virtual
+				l_meth_attr := {MD_METHOD_ATTRIBUTES}.public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.virtual
 
 				l_sig := method_sig
 				l_sig.reset
-				l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.has_current)
+				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 				l_sig.set_parameter_count (0)
-				l_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
 
 				uni_string.set ("Finalize", 1, ("Finalize").count)
 				l_meth_token := md_emit.define_method (uni_string, l_class_token,
-					l_meth_attr, l_sig, {CIL_MD_METHOD_ATTRIBUTES}.managed)
+					l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.managed)
 
 				l_feat := system.disposable_class.compiled_class.feature_table.
 					item_id ({PREDEFINED_NAMES}.dispose_name_id)
@@ -1814,19 +1814,19 @@ feature {NONE} -- SYSTEM_OBJECT features
 					type_i := class_c.actual_type
 				end
 				l_class_token := actual_class_type_token (class_type.implementation_id)
-				l_meth_attr := {CIL_MD_METHOD_ATTRIBUTES}.public |
-					{CIL_MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{CIL_MD_METHOD_ATTRIBUTES}.virtual
+				l_meth_attr := {MD_METHOD_ATTRIBUTES}.public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.virtual
 
 				l_sig := method_sig
 				l_sig.reset
-				l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.has_current)
+				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 				l_sig.set_parameter_count (0)
-				l_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
 
 				uni_string.set ("GetHashCode", 1, ("GetHashCode").count)
 				l_meth_token := md_emit.define_method (uni_string, l_class_token,
-					l_meth_attr, l_sig, {CIL_MD_METHOD_ATTRIBUTES}.managed)
+					l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.managed)
 
 				start_new_body (l_meth_token)
 				generate_current
@@ -1873,19 +1873,19 @@ feature {NONE} -- SYSTEM_OBJECT features
 					type_i := class_c.actual_type
 				end
 				l_class_token := actual_class_type_token (class_type.implementation_id)
-				l_meth_attr := {CIL_MD_METHOD_ATTRIBUTES}.public |
-					{CIL_MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{CIL_MD_METHOD_ATTRIBUTES}.virtual
+				l_meth_attr := {MD_METHOD_ATTRIBUTES}.public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.virtual
 
 				l_sig := method_sig
 				l_sig.reset
-				l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.has_current)
+				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 				l_sig.set_parameter_count (0)
-				l_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
+				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
 
 				uni_string.set ("ToString", 1, ("ToString").count)
 				l_meth_token := md_emit.define_method (uni_string, l_class_token,
-					l_meth_attr, l_sig, {CIL_MD_METHOD_ATTRIBUTES}.managed)
+					l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.managed)
 
 				start_new_body (l_meth_token)
 
@@ -2226,19 +2226,19 @@ feature -- Features info
 				l_meth_sig.reset
 				l_meth_sig.set_method_type
 					(if l_is_static and not in_interface then
-						{CIL_MD_SIGNATURE_CONSTANTS}.Default_sig
+						{MD_SIGNATURE_CONSTANTS}.Default_sig
 					else
-						{CIL_MD_SIGNATURE_CONSTANTS}.Has_current
+						{MD_SIGNATURE_CONSTANTS}.Has_current
 					end)
 
 				l_meth_sig.set_parameter_count  (l_parameter_count + (l_is_static and not l_is_c_external).to_integer)
 
 				if a_feature_i.is_type_feature then
 					l_meth_sig.set_return_type (
-						{CIL_MD_SIGNATURE_CONSTANTS}.Element_type_class,
+						{MD_SIGNATURE_CONSTANTS}.Element_type_class,
 						current_module.ise_type_token)
 				elseif l_return_type.is_void then
-					l_meth_sig.set_return_type ( {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					l_meth_sig.set_return_type ( {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				else
 					set_method_return_type (l_meth_sig, l_return_type, l_class_type)
 				end
@@ -2260,10 +2260,10 @@ feature -- Features info
 				if not l_is_static and l_is_attribute and not is_override then
 						-- Let's define attribute setter.
 					l_meth_sig.reset
-					l_meth_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Has_current)
+					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 					l_meth_sig.set_parameter_count (1)
 					l_meth_sig.set_return_type (
-						{CIL_MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+						{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 					set_signature_type (l_meth_sig, l_return_type, l_class_type)
 					uni_string.set (setter_prefix + l_name, 1, (setter_prefix + l_name).count)
 					l_setter_token := md_emit.define_member_ref (uni_string,
@@ -2337,7 +2337,7 @@ feature -- Features info
 			l_is_c_external: BOOLEAN
 			l_ca_factory: CUSTOM_ATTRIBUTE_FACTORY
 			l_naming_convention: BOOLEAN
-			l_name_ca: CIL_MD_CUSTOM_ATTRIBUTE
+			l_name_ca: MD_CUSTOM_ATTRIBUTE
 			l_is_attribute_generated_as_field: BOOLEAN
 			-- l_is_field_hidden: BOOLEAN
 			l_declaration_class: CLASS_C
@@ -2352,8 +2352,8 @@ feature -- Features info
 			if is_override then
 				l_feature_name := Override_prefix + l_feature_name + override_counter.next.out
 			end
-			last_property_getter_token := {CIL_MD_TOKEN_TYPES}.md_method_def
-			last_property_setter_token := {CIL_MD_TOKEN_TYPES}.md_method_def
+			last_property_getter_token := {MD_TOKEN_TYPES}.md_method_def
+			last_property_setter_token := {MD_TOKEN_TYPES}.md_method_def
 			l_is_attribute := feat.is_attribute
 			l_is_c_external := feat.is_c_external
 			l_parameter_count := feat.argument_count
@@ -2371,19 +2371,19 @@ feature -- Features info
 				l_meth_sig.reset
 				l_meth_sig.set_method_type
 					(if is_static and not in_interface then
-						{CIL_MD_SIGNATURE_CONSTANTS}.Default_sig
+						{MD_SIGNATURE_CONSTANTS}.Default_sig
 					else
-						{CIL_MD_SIGNATURE_CONSTANTS}.Has_current
+						{MD_SIGNATURE_CONSTANTS}.Has_current
 					end)
 
 				l_meth_sig.set_parameter_count (l_parameter_count + (is_static and not l_is_c_external).to_integer)
 
 				if feat.is_type_feature then
 					l_meth_sig.set_return_type
-						({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_class,
+						({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 						current_module.ise_type_token)
 				elseif l_return_type.is_void then
-					l_meth_sig.set_return_type ( {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					l_meth_sig.set_return_type ( {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				else
 					set_method_return_type (l_meth_sig, l_return_type, signature_declaration_type)
 				end
@@ -2429,16 +2429,16 @@ feature -- Features info
 				if feat.has_property_getter or else feat.has_property_setter then
 						-- Define property.
 					l_meth_sig := method_sig
-					l_meth_attr := {CIL_MD_METHOD_ATTRIBUTES}.Public ⦶
-						{CIL_MD_METHOD_ATTRIBUTES}.Hide_by_signature ⦶
-						{CIL_MD_METHOD_ATTRIBUTES}.Virtual ⦶
-						({CIL_MD_METHOD_ATTRIBUTES}.Abstract ⊗ (- in_interface.to_integer.to_integer_16))
+					l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public ⦶
+						{MD_METHOD_ATTRIBUTES}.Hide_by_signature ⦶
+						{MD_METHOD_ATTRIBUTES}.Virtual ⦶
+						({MD_METHOD_ATTRIBUTES}.Abstract ⊗ (- in_interface.to_integer.to_integer_16))
 					if feat.has_property and then
 						(is_single_class or else in_interface) and then
 						not is_override_or_c_external
 					then
 						l_has_property := True
-						l_meth_attr := l_meth_attr | {CIL_MD_METHOD_ATTRIBUTES}.special_name
+						l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.special_name
 					end
 					if feat.has_property_setter then
 						if is_property_setter_generated (feat, signature_declaration_type) then
@@ -2453,7 +2453,7 @@ feature -- Features info
 								-- Define setter method.
 							prepare_property_setter (feat, current_class_type, l_property_name, l_type_i, signature_declaration_type)
 							l_setter := md_emit.define_method (uni_string, current_class_token,
-								l_meth_attr | {CIL_MD_METHOD_ATTRIBUTES}.New_slot, l_meth_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+								l_meth_attr | {MD_METHOD_ATTRIBUTES}.New_slot, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 							if is_override_or_c_external then
 								last_property_setter_token := l_setter
 							else
@@ -2472,7 +2472,7 @@ feature -- Features info
 							-- Define getter method.
 						prepare_property_getter (feat, current_class_type, l_property_name, l_return_type, signature_declaration_type)
 						l_getter := md_emit.define_method (uni_string, current_class_token,
-							l_meth_attr | {CIL_MD_METHOD_ATTRIBUTES}.New_slot, l_meth_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+							l_meth_attr | {MD_METHOD_ATTRIBUTES}.New_slot, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 						if is_override_or_c_external then
 							last_property_getter_token := l_getter
 						else
@@ -2514,9 +2514,9 @@ feature -- Features info
 						-- The field could be made non-public. But some third-party
 						-- auto-generated code relies on the fact that it is public.
 					-- if l_is_field_hidden and then not Compilation_modes.is_precompiling then
-					-- 	l_field_attr := {CIL_MD_FIELD_ATTRIBUTES}.family_or_assembly
+					-- 	l_field_attr := {MD_FIELD_ATTRIBUTES}.family_or_assembly
 					-- else
-						l_field_attr := {CIL_MD_FIELD_ATTRIBUTES}.public
+						l_field_attr := {MD_FIELD_ATTRIBUTES}.public
 					-- end
 
 					l_meth_token := md_emit.define_field (uni_string, current_class_token,
@@ -2565,37 +2565,37 @@ feature -- Features info
 						current_type_id, feat.feature_id)
 				end
 			else
-				l_meth_attr := {CIL_MD_METHOD_ATTRIBUTES}.Public |
-					{CIL_MD_METHOD_ATTRIBUTES}.Hide_by_signature
+				l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.Hide_by_signature
 
 				if in_interface then
-					l_meth_attr := l_meth_attr | {CIL_MD_METHOD_ATTRIBUTES}.Virtual |
-						{CIL_MD_METHOD_ATTRIBUTES}.Abstract |
-						{CIL_MD_METHOD_ATTRIBUTES}.New_slot
+					l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.Virtual |
+						{MD_METHOD_ATTRIBUTES}.Abstract |
+						{MD_METHOD_ATTRIBUTES}.New_slot
 				else
 					if is_static then
-						l_meth_attr := l_meth_attr | {CIL_MD_METHOD_ATTRIBUTES}.Static
+						l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.Static
 					else
 						l_meth_attr := l_meth_attr ⦶
-							{CIL_MD_METHOD_ATTRIBUTES}.Virtual ⦶
-							({CIL_MD_METHOD_ATTRIBUTES}.New_slot ⊗ (- feat.is_origin.to_integer.to_integer_16)) ⦶
-							({CIL_MD_METHOD_ATTRIBUTES}.Abstract ⊗ (- (feat.is_deferred and not is_empty and not is_override_or_c_external).to_integer.to_integer_16))
+							{MD_METHOD_ATTRIBUTES}.Virtual ⦶
+							({MD_METHOD_ATTRIBUTES}.New_slot ⊗ (- feat.is_origin.to_integer.to_integer_16)) ⦶
+							({MD_METHOD_ATTRIBUTES}.Abstract ⊗ (- (feat.is_deferred and not is_empty and not is_override_or_c_external).to_integer.to_integer_16))
 					end
 				end
 
 				if is_static and l_is_c_external then
 						-- Let's define Pinvoke here.
 					l_meth_token := md_emit.define_method (uni_string, current_class_token,
-						l_meth_attr, l_meth_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed |
-						{CIL_MD_METHOD_ATTRIBUTES}.Preserve_sig)
+						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed |
+						{MD_METHOD_ATTRIBUTES}.Preserve_sig)
 					md_emit.define_pinvoke_map (l_meth_token,
-						{CIL_MD_PINVOKE_CONSTANTS}.Charset_ansi |
-						{CIL_MD_PINVOKE_CONSTANTS}.Stdcall, uni_string,
+						{MD_PINVOKE_CONSTANTS}.Charset_ansi |
+						{MD_PINVOKE_CONSTANTS}.Stdcall, uni_string,
 						current_module.c_module_token)
 				else
 						-- Normal method
 					l_meth_token := md_emit.define_method (uni_string, current_class_token,
-						l_meth_attr, l_meth_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 				end
 
 				if is_cls_compliant and (is_static or feat.is_type_feature) then
@@ -2609,19 +2609,19 @@ feature -- Features info
 
 				if not is_static and l_is_attribute and not is_override_or_c_external then
 						-- Let's define attribute setter.
-					l_meth_attr := {CIL_MD_METHOD_ATTRIBUTES}.Public ⦶
-						{CIL_MD_METHOD_ATTRIBUTES}.Hide_by_signature ⦶
-						{CIL_MD_METHOD_ATTRIBUTES}.Virtual ⦶
-						({CIL_MD_METHOD_ATTRIBUTES}.Abstract ⊗ (- in_interface.to_integer.to_integer_16))
+					l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public ⦶
+						{MD_METHOD_ATTRIBUTES}.Hide_by_signature ⦶
+						{MD_METHOD_ATTRIBUTES}.Virtual ⦶
+						({MD_METHOD_ATTRIBUTES}.Abstract ⊗ (- in_interface.to_integer.to_integer_16))
 
 					l_meth_sig.reset
-					l_meth_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Has_current)
+					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 					l_meth_sig.set_parameter_count (1)
-					l_meth_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 					set_signature_type (l_meth_sig, l_return_type, signature_declaration_type)
 					uni_string.set (setter_prefix + l_name, 1, (setter_prefix + l_name).count)
 					l_setter_token := md_emit.define_method (uni_string, current_class_token,
-						l_meth_attr, l_meth_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 					insert_setter (l_setter_token, current_type_id, feat.feature_id)
 
@@ -2643,7 +2643,7 @@ feature -- Features info
 						-- but it is not needed when it is defined as an instance method.
 					uni_string.set ("Current", 1, ("Current").count)
 					md_emit.define_parameter (l_meth_token, uni_string, j,
-						{CIL_MD_PARAM_ATTRIBUTES}.In).do_nothing
+						{MD_PARAM_ATTRIBUTES}.In).do_nothing
 				end
 
 				if
@@ -2667,7 +2667,7 @@ feature -- Features info
 					loop
 						uni_string.set (l_feat_arg.item_name_32 (i), 1, l_feat_arg.item_name_32 (i).count )
 						md_emit.define_parameter (l_meth_token, uni_string,
-							i + j, {CIL_MD_PARAM_ATTRIBUTES}.In).do_nothing
+							i + j, {MD_PARAM_ATTRIBUTES}.In).do_nothing
 						i := i + 1
 					end
 				end
@@ -2743,7 +2743,7 @@ feature -- Features info
 			void_if_procedure: not feature_i.has_return_value implies Result.is_void
 		end
 
-	set_method_return_type (a_sig: CIL_MD_METHOD_SIGNATURE; a_type: TYPE_A; a_context_type: CLASS_TYPE)
+	set_method_return_type (a_sig: MD_METHOD_SIGNATURE; a_type: TYPE_A; a_context_type: CLASS_TYPE)
 			-- Set `a_type' to return type of `a_sig'.
 		require
 			valid_sig: a_sig /= Void
@@ -2753,7 +2753,7 @@ feature -- Features info
 			current_module.set_method_return_type (a_sig, a_type, a_context_type)
 		end
 
-	set_signature_type (a_sig: CIL_MD_SIGNATURE; a_type: TYPE_A; a_context_type: CLASS_TYPE)
+	set_signature_type (a_sig: MD_SIGNATURE; a_type: TYPE_A; a_context_type: CLASS_TYPE)
 			-- Set `a_type' to return type of `a_sig'.
 		require
 			valid_sig: a_sig /= Void
@@ -2797,7 +2797,7 @@ feature -- Features info
 		do
 			l_meth_sig := method_sig
 			l_meth_sig.reset
-			l_meth_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.has_current)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 			l_meth_sig.set_parameter_count (0)
 			set_signature_type (l_meth_sig, return_type, t)
 			n := property_getter_prefix + property_name
@@ -2823,9 +2823,9 @@ feature -- Features info
 		do
 			l_meth_sig := method_sig
 			l_meth_sig.reset
-			l_meth_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.has_current)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 			l_meth_sig.set_parameter_count (1)
-			l_meth_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
 			set_signature_type (l_meth_sig, return_type, t)
 			n := property_setter_prefix + property_name
 			if s.associated_class.feature_named (n) /= Void then
@@ -2900,10 +2900,10 @@ feature -- IL Generation
 			if not class_c.is_deferred and (attached l_creators implies not l_creators.is_empty) then
 				l_is_generic := class_c.is_generic or else class_c.is_tuple
 				create_name := class_type.full_il_create_type_name
-				l_attributes := {CIL_MD_TYPE_ATTRIBUTES}.Public |
-					{CIL_MD_TYPE_ATTRIBUTES}.Auto_layout |
-					{CIL_MD_TYPE_ATTRIBUTES}.Ansi_class |
-					{CIL_MD_TYPE_ATTRIBUTES}.Is_class
+				l_attributes := {MD_TYPE_ATTRIBUTES}.Public |
+					{MD_TYPE_ATTRIBUTES}.Auto_layout |
+					{MD_TYPE_ATTRIBUTES}.Ansi_class |
+					{MD_TYPE_ATTRIBUTES}.Is_class
 				uni_string.set (create_name, 1, create_name.count)
 				l_type_token := md_emit.define_type (uni_string, l_attributes,
 					current_module.object_type_token, Void)
@@ -2953,7 +2953,7 @@ feature -- IL Generation
 			nb := feat.argument_count
 			l_meth_sig := method_sig
 			l_meth_sig.reset
-			l_meth_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_meth_sig.set_parameter_count (nb + is_generic.to_integer)
 			set_method_return_type (l_meth_sig, current_class_type.type, current_class_type)
 
@@ -2970,7 +2970,7 @@ feature -- IL Generation
 				end
 			end
 			if is_generic then
-				l_meth_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_class,
+				l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 					current_module.ise_generic_type_token)
 			end
 
@@ -2979,13 +2979,13 @@ feature -- IL Generation
 
 			uni_string.set (l_name, 1, l_name.count)
 
-			l_meth_attr := {CIL_MD_METHOD_ATTRIBUTES}.Public |
-				{CIL_MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-				{CIL_MD_METHOD_ATTRIBUTES}.Static
+			l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
+				{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+				{MD_METHOD_ATTRIBUTES}.Static
 
 				-- Normal method
 			l_meth_token := md_emit.define_method (uni_string, current_class_token,
-				l_meth_attr, l_meth_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+				l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 			start_new_body (l_meth_token)
 
@@ -3035,11 +3035,11 @@ feature -- IL Generation
 					end
 				end
 				if current_class_type.is_expanded then
-					method_body.put_call ({CIL_MD_OPCODES}.Call,
+					method_body.put_call ({MD_OPCODES}.Call,
 						feature_token (current_class_type.implementation_id,
 							current_class_type.associated_class.feature_of_rout_id (feat.rout_id_set.first).feature_id), nb, is_once_creation)
 				else
-					method_body.put_call ({CIL_MD_OPCODES}.callvirt,
+					method_body.put_call ({MD_OPCODES}.callvirt,
 						feature_token (current_class_type.type.implemented_type (feat.origin_class_id).static_type_id (Void), feat.origin_feature_id),
 						nb, is_once_creation)
 				end
@@ -3132,7 +3132,7 @@ feature -- IL Generation
 				l_token := attribute_token (a_type_id, code_feature_id)
 				start_new_body (l_meth_token)
 				generate_current
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldfld, l_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, l_token)
 				generate_return (True)
 				method_writer.write_current_body
 
@@ -3142,7 +3142,7 @@ feature -- IL Generation
 				generate_argument (1)
 					-- To verify if it should be `current_class_type' or the one from `a_type_id'.
 				generate_check_cast (Void, result_type_in (feat, current_class_type))
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stfld, l_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, l_token)
 				generate_return (False)
 				method_writer.write_current_body
 			else
@@ -3231,7 +3231,7 @@ feature -- IL Generation
 							l_impl_type_i := argument_actual_type_in (l_impl_feat.arguments.i_th (i), l_impl_type).adapted_in (l_impl_type)
 								-- Ideally a conformance check would possibly remove some unnecessary casts.
 							if not l_impl_type_i.is_expanded and not l_type_i.is_safe_equivalent (l_impl_type_i) then
-								method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Castclass,
+								method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
 									mapped_class_type_token (l_impl_type_i.static_type_id (l_impl_type.type)))
 							end
 						end
@@ -3241,7 +3241,7 @@ feature -- IL Generation
 						feat.has_return_value or else
 						feat.is_once_creation (l_class_type.associated_class)
 					if not feat.is_c_external then
-						method_body.put_call ({CIL_MD_OPCODES}.call, l_token, nb, has_return_value)
+						method_body.put_call ({MD_OPCODES}.call, l_token, nb, has_return_value)
 					else
 						method_body.put_static_call (l_token, nb, has_return_value)
 					end
@@ -3254,7 +3254,7 @@ feature -- IL Generation
 						l_impl_type_i := result_type_in (l_impl_feat, l_impl_type).adapted_in (l_impl_type)
 							-- Ideally a conformance check would possibly remove some unnecessary casts.
 						if not l_type_i.is_expanded and not l_type_i.is_safe_equivalent (l_impl_type_i) then
-							method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Castclass,
+							method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
 								mapped_class_type_token (l_type_i.static_type_id (l_cur_type.type)))
 						end
 					end
@@ -3468,7 +3468,7 @@ feature -- IL Generation
 					generate_load_from_address (type_i)
 				end
 			else
-				method_body.put_call ({CIL_MD_OPCODES}.Call, current_module.memberwise_clone_token, 0, True)
+				method_body.put_call ({MD_OPCODES}.Call, current_module.memberwise_clone_token, 0, True)
 				generate_check_cast (Void, type_i)
 			end
 			generate_return (True)
@@ -3598,7 +3598,7 @@ feature -- IL Generation
 			l_setter_token: INTEGER
 			i, nb: INTEGER
 			l_meth_attr: INTEGER
-			l_meth_sig: CIL_MD_METHOD_SIGNATURE
+			l_meth_sig: MD_METHOD_SIGNATURE
 			l_parent_type_id: INTEGER
 			l_return_type: TYPE_A
 			l_token: like last_non_recorded_feature_token
@@ -3674,7 +3674,7 @@ feature -- IL Generation
 							elseif l_type_i.is_expanded then
 								generate_unmetamorphose (l_type_i)
 							elseif is_verifiable then
-								method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Castclass,
+								method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
 									mapped_class_type_token (l_type_i.static_type_id (l_cur_type.type)))
 							end
 						end
@@ -3686,15 +3686,15 @@ feature -- IL Generation
 				if cur_feat.is_attribute and is_single_class then
 						-- Attribute was already generated as a field, we simply generate a routine to
 						-- perform the MethodImpl.
-					method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldfld, attribute_token (current_type_id,
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, attribute_token (current_type_id,
 						cur_feat.feature_id))
 				elseif current_class_type.is_expanded then
 						-- Call feature directly.
-					method_body.put_call ({CIL_MD_OPCODES}.Call, feature_token (current_type_id,
+					method_body.put_call ({MD_OPCODES}.Call, feature_token (current_type_id,
 						cur_feat.feature_id), nb, cur_feat.has_return_value)
 				else
 						-- Call feature polymorphically.
-					method_body.put_call ({CIL_MD_OPCODES}.Callvirt, feature_token (current_type_id,
+					method_body.put_call ({MD_OPCODES}.Callvirt, feature_token (current_type_id,
 						cur_feat.feature_id), nb, cur_feat.has_return_value)
 				end
 
@@ -3712,7 +3712,7 @@ feature -- IL Generation
 						elseif l_type_i.is_expanded then
 							generate_metamorphose (l_type_i)
 						elseif is_verifiable and not l_parent_arg_type_i.is_expanded then
-							method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Castclass,
+							method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
 								mapped_class_type_token (l_parent_arg_type_i.static_type_id (l_inh_type.type)))
 						end
 					end
@@ -3724,16 +3724,16 @@ feature -- IL Generation
 				md_emit.define_method_impl (current_class_token, l_token,
 					feature_token (l_parent_type_id, inh_feat.feature_id))
 				if cur_feat.is_attribute and then inh_feat.is_attribute then
-					l_meth_attr := {CIL_MD_METHOD_ATTRIBUTES}.Virtual |
-						{CIL_MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-						{CIL_MD_METHOD_ATTRIBUTES}.Private
+					l_meth_attr := {MD_METHOD_ATTRIBUTES}.Virtual |
+						{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+						{MD_METHOD_ATTRIBUTES}.Private
 
 					l_meth_sig := method_sig
 					l_meth_sig.reset
-					l_meth_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Has_current)
+					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 					l_meth_sig.set_parameter_count (1)
 					l_meth_sig.set_return_type (
-						{CIL_MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+						{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 					set_signature_type (l_meth_sig, l_return_type, parent_type)
 
@@ -3742,7 +3742,7 @@ feature -- IL Generation
 						override_counter.next.out).count)
 
 					l_setter_token := md_emit.define_method (uni_string, current_class_token,
-						l_meth_attr, l_meth_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 					start_new_body (l_setter_token)
 					generate_current
@@ -3755,7 +3755,7 @@ feature -- IL Generation
 						l_parent_arg_type_i := result_type_in (l_inh_feat, l_inh_type).adapted_in (l_inh_type)
 							-- Ideally a conformance check would possibly remove some unnecessary casts.
 						if not l_type_i.is_expanded and not l_type_i.is_safe_equivalent (l_parent_arg_type_i) then
-							method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Castclass,
+							method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
 								mapped_class_type_token (l_type_i.static_type_id (l_cur_type.type)))
 						end
 					end
@@ -3764,10 +3764,10 @@ feature -- IL Generation
 					if is_single_class then
 							-- Attribute was already generated as a field, we simply generate a routine to
 							-- perform the MethodImpl on the setter.
-						method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stfld, attribute_token (current_type_id,
+						method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, attribute_token (current_type_id,
 							cur_feat.feature_id))
 					else
-						method_body.put_call ({CIL_MD_OPCODES}.Callvirt,
+						method_body.put_call ({MD_OPCODES}.Callvirt,
 							setter_token (current_type_id, cur_feat.feature_id), 1, False)
 					end
 
@@ -3777,7 +3777,7 @@ feature -- IL Generation
 					md_emit.define_method_impl (current_class_token, l_setter_token,
 						setter_token (l_parent_type_id, inh_feat.feature_id))
 				end
-				if last_property_setter_token /= {CIL_MD_TOKEN_TYPES}.md_method_def then
+				if last_property_setter_token /= {MD_TOKEN_TYPES}.md_method_def then
 						-- Generate property setter implementation.
 					start_new_body (last_property_setter_token)
 					generate_property_setter_body (cur_feat)
@@ -3787,7 +3787,7 @@ feature -- IL Generation
 							current_module.property_setter_token (l_parent_type_id, inh_feat.feature_id))
 					end
 				end
-				if last_property_getter_token /= {CIL_MD_TOKEN_TYPES}.md_method_def then
+				if last_property_getter_token /= {MD_TOKEN_TYPES}.md_method_def then
 						-- Generate property getter implementation.
 					start_new_body (last_property_getter_token)
 					generate_property_getter_body (cur_feat)
@@ -3811,7 +3811,7 @@ feature -- IL Generation
 			if attached {BUILT_IN_EXTENSION_I} a_feature.extension as l_ext then
 				l_method_sig := method_sig
 				l_method_sig.reset
-				l_method_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Default_sig)
+				l_method_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 
 				nb := a_feature.argument_count
 				m := nb
@@ -3826,12 +3826,12 @@ feature -- IL Generation
 					set_method_return_type (l_method_sig, a_feature.type, current_class_type)
 				else
 					l_method_sig.set_return_type (
-						{CIL_MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+						{MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
 				end
 				if m /= nb then
 						-- Call is not static, but the builtin declaration is, so we need to provide
 						-- Current's type to the routine
-					l_method_sig.set_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_object, 0)
+					l_method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_object, 0)
 				end
 				if nb > 0 then
 					from
@@ -3927,9 +3927,9 @@ feature -- IL Generation
 				l_meth_sig := method_sig
 				l_meth_sig.reset
 				if ext_kind = Static_type or ext_kind = Operator_type then
-					l_meth_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Default_sig)
+					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 				else
-					l_meth_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Has_current)
+					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 				end
 
 				if l_parameters_string /= Void then
@@ -3943,7 +3943,7 @@ feature -- IL Generation
 					set_type_in_signature (l_meth_sig, l_return_type, l_context_class_type)
 				else
 					l_meth_sig.set_return_type (
-						{CIL_MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+						{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				end
 
 					-- Set arguments in `l_meth_sig'.
@@ -3998,9 +3998,9 @@ feature -- IL Generation
 				uni_string.set (member_name, 1, member_name.count)
 				l_token := md_emit.define_member_ref (uni_string, l_class_token, l_field_sig)
 				if ext_kind = field_type then
-					method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldfld, l_token)
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, l_token)
 				else
-					method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldsfld, l_token)
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, l_token)
 				end
 			when Set_field_type, Set_static_field_type then
 				l_field_sig := field_sig
@@ -4014,17 +4014,17 @@ feature -- IL Generation
 				uni_string.set (member_name, 1, member_name.count)
 				l_token := md_emit.define_member_ref (uni_string, l_class_token, l_field_sig)
 				if ext_kind = set_field_type then
-					method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stfld, l_token)
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, l_token)
 				else
-					method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stsfld, l_token)
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, l_token)
 				end
 			else
 				l_meth_sig := method_sig
 				l_meth_sig.reset
 				if ext_kind = Static_type or ext_kind = Operator_type then
-					l_meth_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Default_sig)
+					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 				else
-					l_meth_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Has_current)
+					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 				end
 
 				if parameters_string /= Void then
@@ -4037,7 +4037,7 @@ feature -- IL Generation
 				if return_type /= Void then
 					set_type_in_signature (l_meth_sig, return_type, l_context_class_type)
 				else
-					l_meth_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				end
 
 					-- Set arguments in `l_meth_sig'.
@@ -4060,16 +4060,16 @@ feature -- IL Generation
 
 				inspect ext_kind
 				when Creator_call_type then
-					method_body.put_call ({CIL_MD_OPCODES}.Call, l_token, nb, return_type /= Void)
+					method_body.put_call ({MD_OPCODES}.Call, l_token, nb, return_type /= Void)
 				when Static_type, Operator_type then
 					method_body.put_static_call (l_token, nb, return_type /= Void)
 				when Normal_type, Deferred_type then
 					if is_virtual then
 						method_body.put_call (
-							{CIL_MD_OPCODES}.Callvirt, l_token, nb, return_type /= Void)
+							{MD_OPCODES}.Callvirt, l_token, nb, return_type /= Void)
 					else
 						method_body.put_call (
-							{CIL_MD_OPCODES}.Call, l_token, nb, return_type /= Void)
+							{MD_OPCODES}.Call, l_token, nb, return_type /= Void)
 					end
 				when Creator_type then
 					method_body.put_newobj (l_token, nb)
@@ -4117,7 +4117,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_type_in_signature (a_sig: CIL_MD_SIGNATURE; a_type_name: STRING; a_context_type: CLASS_TYPE)
+	set_type_in_signature (a_sig: MD_SIGNATURE; a_type_name: STRING; a_context_type: CLASS_TYPE)
 			-- Set `a_type_name' into `a_sig'. It properly analyzes `a_type_name'
 			-- to detect if it is an array type or a byref.
 		require
@@ -4144,11 +4144,11 @@ feature {NONE} -- Implementation
 			l_type := external_class_mapping.item (l_real_type)
 			if l_is_by_ref then
 				a_sig.set_type (
-					{CIL_MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
+					{MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
 			end
 			if l_is_array then
 				a_sig.set_type (
-					{CIL_MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+					{MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
 			end
 			if l_type /= Void then
 				set_signature_type (a_sig, l_type, a_context_type)
@@ -4156,11 +4156,11 @@ feature {NONE} -- Implementation
 					-- A runtime type.
 				if l_real_type.is_equal (Assertion_level_enum_class_name) then
 					a_sig.set_type (
-						{CIL_MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
+						{MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
 						current_module.external_token_mapping (l_real_type))
 				else
 					a_sig.set_type (
-						{CIL_MD_SIGNATURE_CONSTANTS}.Element_type_class,
+						{MD_SIGNATURE_CONSTANTS}.Element_type_class,
 						current_module.external_token_mapping (l_real_type))
 				end
 			end
@@ -4214,8 +4214,8 @@ feature -- Local saving
 	store_locals (a_meth_token: INTEGER; a_context_type: CLASS_TYPE)
 			-- Store `local_types' into `method_body' for routine `a_meth_token'.
 		require
-			method_token_valid: a_meth_token & {CIL_MD_TOKEN_TYPES}.Md_mask =
-				{CIL_MD_TOKEN_TYPES}.Md_method_def
+			method_token_valid: a_meth_token & {MD_TOKEN_TYPES}.Md_mask =
+				{MD_TOKEN_TYPES}.Md_method_def
 			a_context_type_not_void: a_context_type /= Void
 		do
 			current_module.store_locals (local_types, a_meth_token, a_context_type)
@@ -4226,8 +4226,8 @@ feature -- Local saving
 			-- Generate local information about routine `method_token'.
 		require
 			debug_info_requested: is_debug_info_enabled
-			method_token_valid: a_method_token & {CIL_MD_TOKEN_TYPES}.Md_mask =
-				{CIL_MD_TOKEN_TYPES}.Md_method_def
+			method_token_valid: a_method_token & {MD_TOKEN_TYPES}.Md_mask =
+				{MD_TOKEN_TYPES}.Md_method_def
 			a_context_type_not_void: a_context_type /= Void
 		do
 			current_module.generate_local_debug_info (a_method_token, a_context_type)
@@ -4345,7 +4345,7 @@ feature {NONE} -- Object creation
 		do
 			t.generate_gen_type_il (Current, True)
 			generate_current_as_reference
-			method_body.put_call ({CIL_MD_OPCODES}.callvirt,
+			method_body.put_call ({MD_OPCODES}.callvirt,
 				current_module.ise_get_type_token, 0, True)
 			generic_type_token := actual_class_type_token (generic_type_id)
 			internal_generate_external_call (current_module.ise_runtime_token,
@@ -4353,7 +4353,7 @@ feature {NONE} -- Object creation
 				"evaluated_type", normal_type, <<generic_type_class_name>>,
 				type_class_name, True)
 			if is_verifiable then
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.castclass, generic_type_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.castclass, generic_type_token)
 			end
 		end
 
@@ -4382,7 +4382,7 @@ feature {IL_MODULE} -- Initialization of expanded attributes
 				then
 					duplicate_top
 					create_expanded_object (attribute_type)
-					method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.stfld, attribute_token (class_type.implementation_id, skeleton.item.feature_id))
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.stfld, attribute_token (class_type.implementation_id, skeleton.item.feature_id))
 				end
 				skeleton.forth
 			end
@@ -4415,13 +4415,13 @@ feature -- IL stack managment
 	duplicate_top
 			-- Duplicate top element of IL stack.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Dup)
+			method_body.put_opcode ({MD_OPCODES}.Dup)
 		end
 
 	pop
 			-- Remove top element of IL stack.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Pop)
+			method_body.put_opcode ({MD_OPCODES}.Pop)
 		end
 
 feature -- Variables access
@@ -4429,7 +4429,7 @@ feature -- Variables access
 	generate_current
 			-- Generate access to `Current'.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Ldarg_0)
+			method_body.put_opcode ({MD_OPCODES}.Ldarg_0)
 		end
 
 	generate_current_as_reference
@@ -4448,7 +4448,7 @@ feature -- Variables access
 					-- Special case where we need to cast to EIFFEL_TYPE_INFO
 					-- since all routines of ANY are taking System.Object and not ANY as argument.
 					-- This fixes a verification error when generating the code for {ANY}.generating_type.
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.castclass, current_module.ise_eiffel_type_info_type_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.castclass, current_module.ise_eiffel_type_info_type_token)
 			end
 		end
 
@@ -4478,10 +4478,10 @@ feature -- Variables access
 				(l_class_type.is_generated_as_single_type or l_class_type.is_expanded)
 			then
 				if need_target then
-					method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldfld,
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld,
 						attribute_token (cl_type.implementation_id (current_class_type.type), a_feature_id))
 				else
-					method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldsfld,
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld,
 						attribute_token (cl_type.implementation_id (current_class_type.type), a_feature_id))
 				end
 			else
@@ -4529,9 +4529,9 @@ feature -- Variables access
 			l_opcode: INTEGER_16
 		do
 			if is_virtual then
-				l_opcode := {CIL_MD_OPCODES}.Callvirt
+				l_opcode := {MD_OPCODES}.Callvirt
 			else
-				l_opcode := {CIL_MD_OPCODES}.Call
+				l_opcode := {MD_OPCODES}.Call
 			end
 
 			method_body.put_call (l_opcode, feature_token (a_type_id, a_feature_id), nb,
@@ -4543,7 +4543,7 @@ feature -- Variables access
 
 			-- Generate access to feature of `a_feature_id' in `type_i' with `nb' arguments.
 		do
-			method_body.put_call ({CIL_MD_OPCODES}.Call,
+			method_body.put_call ({MD_OPCODES}.Call,
 				implementation_feature_token (type_i.implementation_id (current_class_type.type), a_feature_id),
 				nb, is_function)
 		end
@@ -4591,7 +4591,7 @@ feature -- Variables access
 	put_type_token (a_type_id: INTEGER)
 			-- Put token associated to `a_type_id' on stack.
 		do
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldtoken,
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldtoken,
 				actual_class_type_token (a_type_id))
 		end
 
@@ -4608,14 +4608,14 @@ feature -- Variables access
 	put_method_token (type_i: TYPE_A; a_feature_id: INTEGER)
 			-- Generate access to feature of `a_feature_id' in `type_i'.
 		do
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldtoken,
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldtoken,
 				feature_token (type_i.static_type_id (current_class_type.type), a_feature_id))
 		end
 
 	put_impl_method_token (type_i: TYPE_A; a_feature_id: INTEGER)
 			-- Generate access to feature of `a_feature_id' in `type_i'.
 		do
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldtoken,
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldtoken,
 				implementation_feature_token (type_i.implementation_id (current_class_type.type), a_feature_id))
 		end
 
@@ -4624,15 +4624,15 @@ feature -- Variables access
 		do
 			inspect
 				n
-			when 0 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldarg_0)
-			when 1 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldarg_1)
-			when 2 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldarg_2)
-			when 3 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldarg_3)
+			when 0 then method_body.put_opcode ({MD_OPCODES}.Ldarg_0)
+			when 1 then method_body.put_opcode ({MD_OPCODES}.Ldarg_1)
+			when 2 then method_body.put_opcode ({MD_OPCODES}.Ldarg_2)
+			when 3 then method_body.put_opcode ({MD_OPCODES}.Ldarg_3)
 			else
 				if n <= 255 then
-					method_body.put_opcode_integer_8 ({CIL_MD_OPCODES}.Ldarg_s, n.to_integer_8)
+					method_body.put_opcode_integer_8 ({MD_OPCODES}.Ldarg_s, n.to_integer_8)
 				else
-					method_body.put_opcode_integer_16 ({CIL_MD_OPCODES}.Ldarg, n.to_integer_16)
+					method_body.put_opcode_integer_16 ({MD_OPCODES}.Ldarg, n.to_integer_16)
 				end
 			end
 		end
@@ -4645,16 +4645,16 @@ feature -- Variables access
 			l_pos := n + result_position
 			inspect
 				l_pos
-			when 0 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldloc_0)
-			when 1 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldloc_1)
-			when 2 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldloc_2)
-			when 3 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldloc_3)
+			when 0 then method_body.put_opcode ({MD_OPCODES}.Ldloc_0)
+			when 1 then method_body.put_opcode ({MD_OPCODES}.Ldloc_1)
+			when 2 then method_body.put_opcode ({MD_OPCODES}.Ldloc_2)
+			when 3 then method_body.put_opcode ({MD_OPCODES}.Ldloc_3)
 			else
 				if l_pos <= 255 then
-					method_body.put_opcode_integer_8 ({CIL_MD_OPCODES}.Ldloc_s,
+					method_body.put_opcode_integer_8 ({MD_OPCODES}.Ldloc_s,
 						l_pos.to_integer_8)
 				else
-					method_body.put_opcode_integer_16 ({CIL_MD_OPCODES}.Ldloc,
+					method_body.put_opcode_integer_16 ({MD_OPCODES}.Ldloc,
 						l_pos.to_integer_16)
 				end
 			end
@@ -4669,7 +4669,7 @@ feature -- Variables access
 				-- refers to the value type implementation for Eiffel generated types,
 				-- and for .NET classes `static_type_id' and `implementation_id' are
 				-- the same.
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Box,
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Box,
 				actual_class_type_token (type_i.implementation_id (current_class_type.type)))
 		end
 
@@ -4678,7 +4678,7 @@ feature -- Variables access
 			-- using an associated external type (if any).
 		do
 				-- See comment in `generate_metamorphose'.
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Box,
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Box,
 				actual_class_type_token (type_i.external_id (current_class_type.type)))
 		end
 
@@ -4731,9 +4731,9 @@ feature -- Addresses
 		do
 			l_pos := n + result_position
 			if l_pos <= 255 then
-				method_body.put_opcode_integer_8 ({CIL_MD_OPCODES}.Ldloca_s, l_pos.to_integer_8)
+				method_body.put_opcode_integer_8 ({MD_OPCODES}.Ldloca_s, l_pos.to_integer_8)
 			else
-				method_body.put_opcode_integer_16 ({CIL_MD_OPCODES}.Ldloca, l_pos.to_integer_16)
+				method_body.put_opcode_integer_16 ({MD_OPCODES}.Ldloca, l_pos.to_integer_16)
 			end
 		end
 
@@ -4741,16 +4741,16 @@ feature -- Addresses
 			-- Generate address of `n'-th argument variable.
 		do
 			if n <= 255 then
-				method_body.put_opcode_integer_8 ({CIL_MD_OPCODES}.Ldarga_s, n.to_integer_8)
+				method_body.put_opcode_integer_8 ({MD_OPCODES}.Ldarga_s, n.to_integer_8)
 			else
-				method_body.put_opcode_integer_16 ({CIL_MD_OPCODES}.Ldarga, n.to_integer_16)
+				method_body.put_opcode_integer_16 ({MD_OPCODES}.Ldarga, n.to_integer_16)
 			end
 		end
 
 	generate_current_address
 			-- Generate address of `Current'.
 		do
-			method_body.put_opcode_integer_8 ({CIL_MD_OPCODES}.Ldarga_s, 0)
+			method_body.put_opcode_integer_8 ({MD_OPCODES}.Ldarga_s, 0)
 		end
 
 	generate_result_address
@@ -4773,7 +4773,7 @@ feature -- Addresses
 				attached cl_type.associated_class_type (current_class_type.type) as l_class_type and then
 				l_class_type.is_generated_as_single_type
 			then
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldflda,
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldflda,
 					attribute_token (cl_type.implementation_id (current_class_type.type), a_feature_id))
 			else
 					-- Attribute are accessed through their feature encapsulation.
@@ -4795,17 +4795,17 @@ feature -- Addresses
 			type_id: INTEGER
 		do
 			if type_i.is_expanded then
-				opcode := {CIL_MD_OPCODES}.ldftn
+				opcode := {MD_OPCODES}.ldftn
 				type_id := type_i.implementation_id (current_class_type.type)
 			else
-				opcode := {CIL_MD_OPCODES}.ldvirtftn
+				opcode := {MD_OPCODES}.ldvirtftn
 				type_id := type_i.static_type_id (current_class_type.type)
 					-- Target object is used to calculate address.
 				if is_last_argument_current then
 						-- Use code sequence that can be verified
 						-- when calling a delegate constructor.
 					generate_check_cast (Void, type_i)
-					method_body.put_opcode ({CIL_MD_OPCODES}.Dup)
+					method_body.put_opcode ({MD_OPCODES}.Dup)
 				else
 					generate_current
 				end
@@ -4817,14 +4817,14 @@ feature -- Addresses
 			-- <Precursor>
 		do
 				-- See comment on `generate_metamorphose' on why we chose `implementation_id'.
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Unbox,
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Unbox,
 				actual_class_type_token (type_i.implementation_id (current_class_type.type)))
 		end
 
 	generate_load_address_as_external (type_i: TYPE_A)
 			-- <Precursor>
 		do
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Unbox,
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Unbox,
 				actual_class_type_token (type_i.external_id (current_class_type.type)))
 		end
 
@@ -4832,36 +4832,36 @@ feature -- Addresses
 			-- <Precursor>
 		do
 			inspect a_type.element_type
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_i)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i1 then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_i1)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i2 then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_i2)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i4 then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_i4)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i8 then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_i8)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u1 then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_u1)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u2 then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_u2)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u4 then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_u4)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u8 then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_u8)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_boolean then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_i1)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_char then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_i2)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_r4 then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_r4)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_r8 then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldind_r8)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_i)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i1 then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_i1)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i2 then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_i2)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i4 then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_i4)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i8 then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_i8)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u1 then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_u1)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u2 then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_u2)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u4 then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_u4)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u8 then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_u8)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_boolean then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_i1)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_char then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_i2)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_r4 then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_r4)
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_r8 then
+				method_body.put_opcode ({MD_OPCODES}.Ldind_r8)
 			else
 					-- See comment on `generate_metamorphose' to see why we
 					-- use `implementation_id'.
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldobj,
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldobj,
 					actual_class_type_token (a_type.implementation_id (current_class_type.type)))
 			end
 		end
@@ -4871,7 +4871,7 @@ feature -- Addresses
 		do
 				-- See comment on `generate_metamorphose' to see why we
 				-- use `implementation_id'.
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldobj,
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldobj,
 				actual_class_type_token (a_type.implementation_id (current_class_type.type)))
 		end
 
@@ -4917,7 +4917,7 @@ feature -- Assignments
 			else
 				l_token := actual_class_type_token (type_i.static_type_id (current_class_type.type))
 			end
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Isinst, l_token)
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Isinst, l_token)
 		end
 
 	generate_is_instance_of (type_i: TYPE_A)
@@ -4943,21 +4943,21 @@ feature -- Assignments
 				else
 					l_token := mapped_class_type_token (type_i.static_type_id (current_class_type.type))
 				end
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Isinst, l_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Isinst, l_token)
 			end
 		end
 
 	generate_is_instance_of_external (type_i: CL_TYPE_A)
 			-- Generate `Isinst' byte code instruction for external variant of the type `type_i'.
 		do
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Isinst, mapped_class_type_token (type_i.external_id (current_class_type.type)))
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Isinst, mapped_class_type_token (type_i.external_id (current_class_type.type)))
 		end
 
 	generate_check_cast (source_type, target_type: TYPE_A)
 			-- Generate `checkcast' byte code instruction.
 		local
 			l_token: INTEGER
-			l_sig: CIL_MD_TYPE_SIGNATURE
+			l_sig: MD_TYPE_SIGNATURE
 			l_target_type: TYPE_A
 		do
 				-- It makes sense to cast if and only if target is not expanded, nor a formal or NONE.
@@ -4981,7 +4981,7 @@ feature -- Assignments
 				else
 					l_token := mapped_class_type_token (l_target_type.static_type_id (current_class_type.type))
 				end
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Castclass, l_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass, l_token)
 			end
 		end
 
@@ -4996,13 +4996,13 @@ feature -- Assignments
 			l_class_type := type_i.associated_class_type (current_class_type.type)
 			if l_class_type.is_generated_as_single_type then
 				method_body.put_opcode_mdtoken
-					(if need_target then {CIL_MD_OPCODES}.Stfld else {CIL_MD_OPCODES}.Stsfld end,
+					(if need_target then {MD_OPCODES}.Stfld else {MD_OPCODES}.Stsfld end,
 						attribute_token (l_class_type.static_type_id, a_feature_id))
 			elseif l_class_type.is_expanded then
-				method_body.put_call ({CIL_MD_OPCODES}.Call,
+				method_body.put_call ({MD_OPCODES}.Call,
 					setter_token (l_class_type.implementation_id, a_feature_id), 1, False)
 			else
-				method_body.put_call ({CIL_MD_OPCODES}.Callvirt,
+				method_body.put_call ({MD_OPCODES}.Callvirt,
 					setter_token (l_class_type.static_type_id, a_feature_id), 1, False)
 			end
 		end
@@ -5018,9 +5018,9 @@ feature -- Assignments
 			end
 			l_class_type := type_i.associated_class_type (current_class_type.type)
 			if not l_class_type.is_generated_as_single_type then
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldobj,
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldobj,
 					actual_class_type_token (attr_type.static_type_id (current_class_type.type)))
-				method_body.put_call ({CIL_MD_OPCODES}.Callvirt,
+				method_body.put_call ({MD_OPCODES}.Callvirt,
 					setter_token (l_class_type.static_type_id, a_feature_id), 1, False)
 			end
 		end
@@ -5029,9 +5029,9 @@ feature -- Assignments
 			-- Generate assignment to `n'-th argument of current feature.
 		do
 			if n <= 255 then
-				method_body.put_opcode_integer_8 ({CIL_MD_OPCODES}.Starg_s, n.to_integer_8)
+				method_body.put_opcode_integer_8 ({MD_OPCODES}.Starg_s, n.to_integer_8)
 			else
-				method_body.put_opcode_integer_16 ({CIL_MD_OPCODES}.Starg, n.to_integer_16)
+				method_body.put_opcode_integer_16 ({MD_OPCODES}.Starg, n.to_integer_16)
 			end
 		end
 
@@ -5043,16 +5043,16 @@ feature -- Assignments
 			l_pos := n + result_position
 			inspect
 				l_pos
-			when 0 then method_body.put_opcode ({CIL_MD_OPCODES}.Stloc_0)
-			when 1 then method_body.put_opcode ({CIL_MD_OPCODES}.Stloc_1)
-			when 2 then method_body.put_opcode ({CIL_MD_OPCODES}.Stloc_2)
-			when 3 then method_body.put_opcode ({CIL_MD_OPCODES}.Stloc_3)
+			when 0 then method_body.put_opcode ({MD_OPCODES}.Stloc_0)
+			when 1 then method_body.put_opcode ({MD_OPCODES}.Stloc_1)
+			when 2 then method_body.put_opcode ({MD_OPCODES}.Stloc_2)
+			when 3 then method_body.put_opcode ({MD_OPCODES}.Stloc_3)
 			else
 				if l_pos <= 255 then
-					method_body.put_opcode_integer_8 ({CIL_MD_OPCODES}.Stloc_s,
+					method_body.put_opcode_integer_8 ({MD_OPCODES}.Stloc_s,
 						l_pos.to_integer_8)
 				else
-					method_body.put_opcode_integer_16 ({CIL_MD_OPCODES}.Stloc,
+					method_body.put_opcode_integer_16 ({MD_OPCODES}.Stloc,
 						l_pos.to_integer_16)
 				end
 			end
@@ -5075,19 +5075,19 @@ feature -- Conversion
 		do
 			inspect
 				type.element_type
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_boolean then convert_to_boolean
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_char then convert_to_character_8
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_r4 then convert_to_real_32
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_r8 then convert_to_real_64
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u1 then convert_to_natural_8
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u2 then convert_to_natural_16
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u4 then convert_to_natural_32
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u8 then convert_to_natural_64
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i then convert_to_native_int
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i1 then convert_to_integer_8
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i2 then convert_to_integer_16
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i4 then convert_to_integer_32
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i8 then convert_to_integer_64
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_boolean then convert_to_boolean
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_char then convert_to_character_8
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_r4 then convert_to_real_32
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_r8 then convert_to_real_64
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u1 then convert_to_natural_8
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u2 then convert_to_natural_16
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u4 then convert_to_natural_32
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u8 then convert_to_natural_64
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i then convert_to_native_int
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i1 then convert_to_integer_8
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i2 then convert_to_integer_16
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i4 then convert_to_integer_32
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i8 then convert_to_integer_64
 			else
 				--check
 				--	False
@@ -5098,67 +5098,67 @@ feature -- Conversion
 	convert_to_native_int
 			-- Convert top of stack into appropriate type.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Conv_i)
+			method_body.put_opcode ({MD_OPCODES}.Conv_i)
 		end
 
 	convert_to_integer_8, convert_to_boolean
 			-- Convert top of stack into appropriate type.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Conv_i1)
+			method_body.put_opcode ({MD_OPCODES}.Conv_i1)
 		end
 
 	convert_to_integer_16, convert_to_character_8
 			-- Convert top of stack into appropriate type.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Conv_i2)
+			method_body.put_opcode ({MD_OPCODES}.Conv_i2)
 		end
 
 	convert_to_integer_32
 			-- Convert top of stack into appropriate type.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Conv_i4)
+			method_body.put_opcode ({MD_OPCODES}.Conv_i4)
 		end
 
 	convert_to_integer_64
 			-- Convert top of stack into appropriate type.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Conv_i8)
+			method_body.put_opcode ({MD_OPCODES}.Conv_i8)
 		end
 
 	convert_to_natural_8
 			-- Convert top of stack into appropriate type.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Conv_u1)
+			method_body.put_opcode ({MD_OPCODES}.Conv_u1)
 		end
 
 	convert_to_natural_16
 			-- Convert top of stack into appropriate type.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Conv_u2)
+			method_body.put_opcode ({MD_OPCODES}.Conv_u2)
 		end
 
 	convert_to_natural_32, convert_to_character_32
 			-- Convert top of stack into appropriate type.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Conv_u4)
+			method_body.put_opcode ({MD_OPCODES}.Conv_u4)
 		end
 
 	convert_to_natural_64
 			-- Convert top of stack into appropriate type.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Conv_u8)
+			method_body.put_opcode ({MD_OPCODES}.Conv_u8)
 		end
 
 	convert_to_real_64
 			-- Convert top of stack into appropriate type.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Conv_r8)
+			method_body.put_opcode ({MD_OPCODES}.Conv_r8)
 		end
 
 	convert_to_real_32
 			-- Convert top of stack into appropriate type.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Conv_r4)
+			method_body.put_opcode ({MD_OPCODES}.Conv_r4)
 		end
 
 feature -- Return statements
@@ -5166,7 +5166,7 @@ feature -- Return statements
 	generate_return (has_return_value: BOOLEAN)
 			-- Generate simple end of routine
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Ret)
+			method_body.put_opcode ({MD_OPCODES}.Ret)
 			if has_return_value then
 					-- We need to remove `1' to the current stack depth since
 					-- we remove the return value from the stack with the `ret'
@@ -5270,24 +5270,24 @@ feature -- Once management
 						if class_constructor_token = 0 then
 							l_method_sig := method_sig
 							l_method_sig.reset
-							l_method_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.default_sig)
+							l_method_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.default_sig)
 							l_method_sig.set_parameter_count (0)
-							l_method_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+							l_method_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
 							uni_string.set (".cctor", 1, (".cctor").count)
 							class_constructor_token := md_emit.define_method (
 								uni_string,
 								current_class_token,
-								{CIL_MD_METHOD_ATTRIBUTES}.private |
-								{CIL_MD_METHOD_ATTRIBUTES}.static |
-								{CIL_MD_METHOD_ATTRIBUTES}.special_name |
-								{CIL_MD_METHOD_ATTRIBUTES}.rt_special_name |
-								{CIL_MD_METHOD_ATTRIBUTES}.hide_by_signature,
+								{MD_METHOD_ATTRIBUTES}.private |
+								{MD_METHOD_ATTRIBUTES}.static |
+								{MD_METHOD_ATTRIBUTES}.special_name |
+								{MD_METHOD_ATTRIBUTES}.rt_special_name |
+								{MD_METHOD_ATTRIBUTES}.hide_by_signature,
 								l_method_sig,
-								{CIL_MD_METHOD_ATTRIBUTES}.il | {CIL_MD_METHOD_ATTRIBUTES}.managed)
+								{MD_METHOD_ATTRIBUTES}.il | {MD_METHOD_ATTRIBUTES}.managed)
 							start_new_body (class_constructor_token)
 						end
 						method_body.put_newobj (constructor_token (current_module.object_type_id), 0)
-						method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.stsfld, sync_token)
+						method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, sync_token)
 					end
 				end
 				feature_table.forth
@@ -5333,7 +5333,7 @@ feature -- Once management
 			uni_string.set (once_done_name (name), 1, once_done_name (name).count)
 			done_token := md_emit.define_field (uni_string,
 				current_class_token,
-				{CIL_MD_FIELD_ATTRIBUTES}.Public | {CIL_MD_FIELD_ATTRIBUTES}.Static,
+				{MD_FIELD_ATTRIBUTES}.Public | {MD_FIELD_ATTRIBUTES}.Static,
 				done_sig)
 			if not feat.is_process_relative then
 				current_module.define_thread_static_attribute (done_token)
@@ -5343,7 +5343,7 @@ feature -- Once management
 			uni_string.set (once_exception_name (name), 1, once_exception_name (name).count)
 			exception_token := md_emit.define_field (uni_string,
 				current_class_token,
-				{CIL_MD_FIELD_ATTRIBUTES}.Public | {CIL_MD_FIELD_ATTRIBUTES}.Static,
+				{MD_FIELD_ATTRIBUTES}.Public | {MD_FIELD_ATTRIBUTES}.Static,
 				exception_sig)
 			if not feat.is_process_relative then
 				current_module.define_thread_static_attribute (exception_token)
@@ -5359,7 +5359,7 @@ feature -- Once management
 				uni_string.set (once_result_name (name), 1, once_result_name (name).count)
 				result_token := md_emit.define_field (uni_string,
 					current_class_token,
-					{CIL_MD_FIELD_ATTRIBUTES}.Public | {CIL_MD_FIELD_ATTRIBUTES}.Static, result_sig)
+					{MD_FIELD_ATTRIBUTES}.Public | {MD_FIELD_ATTRIBUTES}.Static, result_sig)
 				if not feat.is_process_relative then
 					current_module.define_thread_static_attribute (result_token)
 				end
@@ -5374,14 +5374,14 @@ feature -- Once management
 				sync_token := md_emit.define_field (
 					uni_string,
 					current_class_token,
-					{CIL_MD_FIELD_ATTRIBUTES}.Public | {CIL_MD_FIELD_ATTRIBUTES}.Static,
+					{MD_FIELD_ATTRIBUTES}.Public | {MD_FIELD_ATTRIBUTES}.Static,
 					done_sig)
 					-- Generate field to synchronize access to other data fields
 				uni_string.set (once_sync_name (name), 1, once_sync_name (name).count )
 				sync_token := md_emit.define_field (
 					uni_string,
 					current_class_token,
-					{CIL_MD_FIELD_ATTRIBUTES}.Public | {CIL_MD_FIELD_ATTRIBUTES}.Static,
+					{MD_FIELD_ATTRIBUTES}.Public | {MD_FIELD_ATTRIBUTES}.Static,
 					sync_sig)
 			end
 		end
@@ -5405,17 +5405,17 @@ feature -- Once management
 				check has_obj_relative_once_info: l_once_info /= Void end
 
 				uni_string.set (l_once_info.called_name, 1, l_once_info.called_name.count)
-				done_token := md_emit.define_field (uni_string, cl_token, {CIL_MD_FIELD_ATTRIBUTES}.Private, done_sig)
+				done_token := md_emit.define_field (uni_string, cl_token, {MD_FIELD_ATTRIBUTES}.Private, done_sig)
 
 				uni_string.set (l_once_info.exception_name, 1, l_once_info.exception_name.count)
-				exception_token := md_emit.define_field (uni_string, cl_token, {CIL_MD_FIELD_ATTRIBUTES}.Private, exception_sig)
+				exception_token := md_emit.define_field (uni_string, cl_token, {MD_FIELD_ATTRIBUTES}.Private, exception_sig)
 
 				if l_once_info.has_result then
 					l_sig := field_sig
 					l_sig.reset
 					set_signature_type (l_sig, l_once_info.result_type_a, current_class_type)
 					uni_string.set (l_once_info.result_name, 1, l_once_info.result_name.count)
-					result_token := md_emit.define_field (uni_string, cl_token, {CIL_MD_FIELD_ATTRIBUTES}.Private, l_sig)
+					result_token := md_emit.define_field (uni_string, cl_token, {MD_FIELD_ATTRIBUTES}.Private, l_sig)
 				else
 					result_token := 0
 				end
@@ -5513,7 +5513,7 @@ feature -- Once management
 				--    if exception /= Void then
 				--       raise (exception)
 				--    end
-				--    return result -- if required				
+				--    return result -- if required
 
 				-- Initialize once code generation
 			set_once_generation (True)
@@ -5531,12 +5531,12 @@ feature -- Once management
 					--    if not volatile ready then
 					--       try {
 					--          lock (sync)
-				method_body.put_opcode ({CIL_MD_OPCODES}.volatile)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldsfld, ready_token)
+				method_body.put_opcode ({MD_OPCODES}.volatile)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, ready_token)
 				once_ready_label := create_label
 				branch_on_true (once_ready_label)
 				method_body.once_finally_block.set_try_offset (method_body.count)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, sync_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, sync_token)
 				method_body.put_static_call (current_module.define_monitor_method_token ("Enter"), 1, False)
 			end
 
@@ -5546,21 +5546,21 @@ feature -- Once management
 				--       try {
 			if l_once_info /= Void then
 				generate_current
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldfld, done_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldfld, done_token)
 				put_boolean_constant (True)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ceq)
+				method_body.put_opcode ({MD_OPCODES}.ceq)
 			else
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldsfld, done_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, done_token)
 			end
 			once_done_label := create_label
 			branch_on_true (once_done_label)
 			if l_once_info /= Void then
 				generate_current
 				put_boolean_constant (True)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stfld, done_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, done_token)
 			else
 				put_boolean_constant (True)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stsfld, done_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, done_token)
 			end
 			method_body.once_catch_block.set_try_offset (method_body.count)
 		ensure then
@@ -5612,10 +5612,10 @@ feature -- Once management
 				generate_local_assignment (local_number)
 				generate_current
 				generate_local (local_number)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stfld, exception_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, exception_token)
 				-- FIXME:jfiat: should we reset the "result" value? to avoid memory leaks?
 			else
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stsfld, exception_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, exception_token)
 			end
 			if ready_token /= 0 then
 					-- Notify other threads that result is ready:
@@ -5624,8 +5624,8 @@ feature -- Once management
 				check once_ready_label /= Void end
 				is_process_relative := True
 				put_boolean_constant (True)
-				method_body.put_opcode ({CIL_MD_OPCODES}.volatile)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stsfld, ready_token)
+				method_body.put_opcode ({MD_OPCODES}.volatile)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, ready_token)
 			end
 				-- Rethrow exception to make original stack trace available to application
 				-- as otherwise it will be lost
@@ -5637,8 +5637,8 @@ feature -- Once management
 					-- Notify other threads that result is ready:
 					--          volatile ready := True
 				put_boolean_constant (True)
-				method_body.put_opcode ({CIL_MD_OPCODES}.volatile)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stsfld, ready_token)
+				method_body.put_opcode ({MD_OPCODES}.volatile)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, ready_token)
 			end
 
 				-- Close "if not done" block:
@@ -5655,9 +5655,9 @@ feature -- Once management
 				generate_leave_to (once_ready_label)
 				method_body.once_finally_block.set_try_end (method_body.count)
 				method_body.once_finally_block.set_handler_offset (method_body.count)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, sync_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, sync_token)
 				method_body.put_static_call (current_module.define_monitor_method_token ("Exit"), 1, False)
-				method_body.put_opcode ({CIL_MD_OPCODES}.endfinally)
+				method_body.put_opcode ({MD_OPCODES}.endfinally)
 				method_body.once_finally_block.set_handler_end (method_body.count)
 				mark_label (once_ready_label)
 			end
@@ -5669,23 +5669,23 @@ feature -- Once management
 			return_label := create_label
 			if l_once_info /= Void then
 				generate_current
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldfld, exception_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, exception_token)
 				put_void
-				method_body.put_opcode ({CIL_MD_OPCODES}.ceq)
+				method_body.put_opcode ({MD_OPCODES}.ceq)
 				put_boolean_constant (False)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ceq)
+				method_body.put_opcode ({MD_OPCODES}.ceq)
 			else
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldsfld, exception_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, exception_token)
 			end
 			branch_on_false (return_label)
 			if l_once_info /= Void then
 				generate_current
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldfld, exception_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, exception_token)
 			else
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldsfld, exception_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, exception_token)
 			end
 				-- Only System.Exception can be saved. The type saved exception object could be changed to System.Exception.
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Castclass, current_module.system_exception_token)
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass, current_module.system_exception_token)
 			method_body.put_throw
 			mark_label (return_label)
 
@@ -5722,7 +5722,7 @@ feature -- Once management
 		require
 			result_token_set: result_token /= 0
 		do
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldsflda, result_token)
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsflda, result_token)
 		end
 
 	generate_once_result
@@ -5733,9 +5733,9 @@ feature -- Once management
 		do
 			if object_relative_once_generation then
 				generate_current
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldfld, result_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, result_token)
 			else
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldsfld, result_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, result_token)
 			end
 		end
 
@@ -5752,9 +5752,9 @@ feature -- Once management
 				generate_local_assignment (local_number)
 				generate_current
 				generate_local (local_number)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stfld, result_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, result_token)
 			else
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stsfld, result_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, result_token)
 			end
 		end
 
@@ -5771,16 +5771,16 @@ feature -- Once manifest string manipulation
 				allocate_array_label := create_label
 				done_label := create_label
 					-- Check if the array is already allocated.
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, current_module.once_string_field_token (string_type_cil))
-				method_body.put_opcode ({CIL_MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, current_module.once_string_field_token (string_type_cil))
+				method_body.put_opcode ({MD_OPCODES}.dup)
 				branch_on_false (allocate_array_label)
-				method_body.put_opcode ({CIL_MD_OPCODES}.dup)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldlen)
+				method_body.put_opcode ({MD_OPCODES}.dup)
+				method_body.put_opcode ({MD_OPCODES}.ldlen)
 				put_integer_32_constant (byte_context.original_body_index)
-				method_body.put_opcode_label ({CIL_MD_OPCODES}.ble, allocate_array_label.id)
+				method_body.put_opcode_label ({MD_OPCODES}.ble, allocate_array_label.id)
 				put_integer_32_constant (byte_context.original_body_index)
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldelem_ref)
-				method_body.put_opcode ({CIL_MD_OPCODES}.dup)
+				method_body.put_opcode ({MD_OPCODES}.ldelem_ref)
+				method_body.put_opcode ({MD_OPCODES}.dup)
 				branch_on_true (done_label)
 				mark_label (allocate_array_label)
 					-- Array is not allocated.
@@ -5791,7 +5791,7 @@ feature -- Once manifest string manipulation
 					-- Done.
 				mark_label (done_label)
 					-- Remove null from stack top.
-				method_body.put_opcode ({CIL_MD_OPCODES}.pop)
+				method_body.put_opcode ({MD_OPCODES}.pop)
 			end
 		end
 
@@ -5808,23 +5808,23 @@ feature -- Once manifest string manipulation
 			assign_string_label := create_label
 			done_label := create_label
 				-- Check if the string is already created.
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, once_string_field_token)
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, once_string_field_token)
 			put_integer_32_constant (byte_context.original_body_index)
-			method_body.put_opcode ({CIL_MD_OPCODES}.ldelem_ref)
+			method_body.put_opcode ({MD_OPCODES}.ldelem_ref)
 			put_integer_32_constant (number)
-			method_body.put_opcode ({CIL_MD_OPCODES}.ldelem_ref)
-			method_body.put_opcode ({CIL_MD_OPCODES}.dup)
+			method_body.put_opcode ({MD_OPCODES}.ldelem_ref)
+			method_body.put_opcode ({MD_OPCODES}.dup)
 				-- String is already created.
 			branch_on_true (done_label)
 				-- Remove null from stack top.
-			method_body.put_opcode ({CIL_MD_OPCODES}.pop)
+			method_body.put_opcode ({MD_OPCODES}.pop)
 			mark_label (assign_string_label)
 				-- String is not stored in array.
 				-- Let's create it and store.
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldsfld, once_string_field_token)
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, once_string_field_token)
 			put_integer_32_constant (byte_context.original_body_index)
-			method_body.put_opcode ({CIL_MD_OPCODES}.ldelem_ref)
-			method_body.put_opcode ({CIL_MD_OPCODES}.dup)
+			method_body.put_opcode ({MD_OPCODES}.ldelem_ref)
+			method_body.put_opcode ({MD_OPCODES}.dup)
 			put_integer_32_constant (number)
 			if type = string_type_cil then
 				put_system_string_32 (value)
@@ -5839,9 +5839,9 @@ feature -- Once manifest string manipulation
 					put_immutable_manifest_string_8 (value)
 				end
 			end
-			method_body.put_opcode ({CIL_MD_OPCODES}.stelem_ref)
+			method_body.put_opcode ({MD_OPCODES}.stelem_ref)
 			put_integer_32_constant (number)
-			method_body.put_opcode ({CIL_MD_OPCODES}.ldelem_ref)
+			method_body.put_opcode ({MD_OPCODES}.ldelem_ref)
 				-- Done.
 			mark_label (done_label)
 		end
@@ -5856,21 +5856,21 @@ feature -- Array manipulation
 		do
 			if kind = Il_expanded then
 				l_token := actual_class_type_token (a_type_id)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldelema, l_token)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldobj, l_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldelema, l_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldobj, l_token)
 			else
 				inspect kind
-				when Il_i1 then l_opcode := {CIL_MD_OPCODES}.Ldelem_i1
-				when Il_i2 then l_opcode := {CIL_MD_OPCODES}.Ldelem_i2
-				when Il_i4 then l_opcode := {CIL_MD_OPCODES}.Ldelem_i4
-				when Il_i8, Il_u8 then l_opcode := {CIL_MD_OPCODES}.Ldelem_i8
-				when Il_r4 then l_opcode := {CIL_MD_OPCODES}.Ldelem_r4
-				when Il_r8 then l_opcode := {CIL_MD_OPCODES}.Ldelem_r8
-				when Il_ref then l_opcode := {CIL_MD_OPCODES}.Ldelem_ref
-				when Il_i then l_opcode := {CIL_MD_OPCODES}.Ldelem_i
-				when Il_u1 then l_opcode := {CIL_MD_OPCODES}.Ldelem_u1
-				when Il_u2 then l_opcode := {CIL_MD_OPCODES}.Ldelem_u2
-				when Il_u4 then l_opcode := {CIL_MD_OPCODES}.Ldelem_u4
+				when Il_i1 then l_opcode := {MD_OPCODES}.Ldelem_i1
+				when Il_i2 then l_opcode := {MD_OPCODES}.Ldelem_i2
+				when Il_i4 then l_opcode := {MD_OPCODES}.Ldelem_i4
+				when Il_i8, Il_u8 then l_opcode := {MD_OPCODES}.Ldelem_i8
+				when Il_r4 then l_opcode := {MD_OPCODES}.Ldelem_r4
+				when Il_r8 then l_opcode := {MD_OPCODES}.Ldelem_r8
+				when Il_ref then l_opcode := {MD_OPCODES}.Ldelem_ref
+				when Il_i then l_opcode := {MD_OPCODES}.Ldelem_i
+				when Il_u1 then l_opcode := {MD_OPCODES}.Ldelem_u1
+				when Il_u2 then l_opcode := {MD_OPCODES}.Ldelem_u2
+				when Il_u4 then l_opcode := {MD_OPCODES}.Ldelem_u4
 				when Il_expanded then
 				else
 					check
@@ -5884,7 +5884,7 @@ feature -- Array manipulation
 	generate_array_write_preparation (a_type_id: INTEGER)
 			-- Prepare call to `put' from NATIVE_ARRAY in case of expanded elements.
 		do
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldelema,
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldelema,
 				actual_class_type_token (a_type_id))
 		end
 
@@ -5894,18 +5894,18 @@ feature -- Array manipulation
 			l_opcode: INTEGER_16
 		do
 			if kind = il_expanded then
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stobj,
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stobj,
 					actual_class_type_token (a_type_id))
 			else
 				inspect kind
-				when Il_i1, Il_u1 then l_opcode := {CIL_MD_OPCODES}.Stelem_i1
-				when Il_i2, Il_u2 then l_opcode := {CIL_MD_OPCODES}.Stelem_i2
-				when Il_i4, Il_u4 then l_opcode := {CIL_MD_OPCODES}.Stelem_i4
-				when Il_i8, Il_u8 then l_opcode := {CIL_MD_OPCODES}.Stelem_i8
-				when Il_r4 then l_opcode := {CIL_MD_OPCODES}.Stelem_r4
-				when Il_r8 then l_opcode := {CIL_MD_OPCODES}.Stelem_r8
-				when Il_ref then l_opcode := {CIL_MD_OPCODES}.Stelem_ref
-				when Il_i then l_opcode := {CIL_MD_OPCODES}.Stelem_i
+				when Il_i1, Il_u1 then l_opcode := {MD_OPCODES}.Stelem_i1
+				when Il_i2, Il_u2 then l_opcode := {MD_OPCODES}.Stelem_i2
+				when Il_i4, Il_u4 then l_opcode := {MD_OPCODES}.Stelem_i4
+				when Il_i8, Il_u8 then l_opcode := {MD_OPCODES}.Stelem_i8
+				when Il_r4 then l_opcode := {MD_OPCODES}.Stelem_r4
+				when Il_r8 then l_opcode := {MD_OPCODES}.Stelem_r8
+				when Il_ref then l_opcode := {MD_OPCODES}.Stelem_ref
+				when Il_i then l_opcode := {MD_OPCODES}.Stelem_i
 				else
 					check
 						not_reached: False
@@ -5952,10 +5952,10 @@ feature -- Array manipulation
 				generate_binary_operator (il_minus, False)
 				duplicate_top
 				generate_local_assignment (index_variable)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.ldelema, actual_class_type_token (actual_generic.static_type_id))
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldelema, actual_class_type_token (actual_generic.static_type_id))
 				if attached {CL_TYPE_A} array_type.generics.first as cl_type_i then
 					create_expanded_object (cl_type_i)
-					method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.stobj, actual_class_type_token (actual_generic.static_type_id))
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.stobj, actual_class_type_token (actual_generic.static_type_id))
 				else
 					check is_type_expected: False end
 				end
@@ -5970,7 +5970,7 @@ feature -- Array manipulation
 			-- Create a new NATIVE_ARRAY [A] where `a_type_id' corresponds
 			-- to type id of `A'.
 		do
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Newarr,
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Newarr,
 				actual_class_type_token (a_type_id))
 		end
 
@@ -5978,7 +5978,7 @@ feature -- Array manipulation
 			-- Create a new NATIVE_ARRAY [X] where X is a formal type `a_formal'.
 		do
 			a_formal.generate_gen_type_il (Current, True)
-			method_body.put_opcode ({CIL_MD_OPCODES}.ldarg_0)
+			method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 			put_type_token (any_type.implementation_id (Void))
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				generic_conformance_class_name,
@@ -5990,16 +5990,16 @@ feature -- Array manipulation
 	generate_array_count
 			-- Get length of current NATIVE_ARRAY on stack.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Ldlen)
+			method_body.put_opcode ({MD_OPCODES}.Ldlen)
 			convert_to_integer_32
 		end
 
 	generate_array_upper
 			-- Generate call to `count - 1'.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Ldlen)
-			method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_1)
-			method_body.put_opcode ({CIL_MD_OPCODES}.Sub)
+			method_body.put_opcode ({MD_OPCODES}.Ldlen)
+			method_body.put_opcode ({MD_OPCODES}.Ldc_i4_1)
+			method_body.put_opcode ({MD_OPCODES}.Sub)
 		end
 
 	generate_array_lower
@@ -6008,8 +6008,8 @@ feature -- Array manipulation
 		do
 				-- First we pop pushed array as it is not needed and
 				-- then we push `0'.
-			method_body.put_opcode ({CIL_MD_OPCODES}.Pop)
-			method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_0)
+			method_body.put_opcode ({MD_OPCODES}.Pop)
+			method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
 		end
 
 feature -- Exception handling
@@ -6037,7 +6037,7 @@ feature -- Exception handling
 	generate_start_rescue
 			-- Mark beginning of rescue clause.
 		do
-			method_body.put_opcode_label ({CIL_MD_OPCODES}.Leave, rescue_label)
+			method_body.put_opcode_label ({MD_OPCODES}.Leave, rescue_label)
 			method_body.exception_block.set_catch_position (method_body.count)
 			method_body.exception_block.set_type_token (current_module.system_exception_token)
 
@@ -6056,7 +6056,7 @@ feature -- Exception handling
 			-- we generate a `leave' opcode that has the same semantic except that it
 			-- should branch outside the `try-catch' clause.
 		do
-			method_body.put_opcode_label ({CIL_MD_OPCODES}.Leave, a_label.id)
+			method_body.put_opcode_label ({MD_OPCODES}.Leave, a_label.id)
 		end
 
 	generate_end_exception_block
@@ -6065,7 +6065,7 @@ feature -- Exception handling
 			put_boolean_constant (False)
 			method_body.put_static_call (current_module.ise_rethrow_token, 1, False)
 				-- Never invoked, but the CLI standards need this to terminate the catch block.
-			method_body.put_opcode_label ({CIL_MD_OPCODES}.Leave, catch_label)
+			method_body.put_opcode_label ({MD_OPCODES}.Leave, catch_label)
 			method_body.exception_block.set_end_position (method_body.count)
 			method_body.mark_label (rescue_label)
 			method_body.mark_label (catch_label)
@@ -6136,7 +6136,7 @@ feature -- Exception handling
 			generate_local (a_ex_local)
 			put_void
 			l_label := create_label
-			method_body.put_opcode ({CIL_MD_OPCODES}.Ceq)
+			method_body.put_opcode ({MD_OPCODES}.Ceq)
 			branch_on_true (l_label)
 
 				-- Raise old violation
@@ -6250,7 +6250,7 @@ feature -- Assertions
 			end
 
 			l_label := method_body.define_label
-			method_body.put_opcode_label ({CIL_MD_OPCODES}.Brtrue, l_label)
+			method_body.put_opcode_label ({MD_OPCODES}.Brtrue, l_label)
 				-- Before raising the assertion violation we reset `in_assertion' but only
 				-- when it is not a guard because guard do not use `in_assertion'.
 			if assert_type /= in_guard then
@@ -6277,11 +6277,11 @@ feature -- Assertions
 			else
 				uni_string.set (tag ,1, tag.count)
 				l_str_token := md_emit.define_string (uni_string)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldstr, l_str_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, l_str_token)
 			end
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Stsfld,
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld,
 				current_module.ise_assertion_tag_token)
-			method_body.put_opcode_label ({CIL_MD_OPCODES}.Brfalse, failure_block.id)
+			method_body.put_opcode_label ({MD_OPCODES}.Brfalse, failure_block.id)
 		end
 
 	generate_precondition_violation
@@ -6293,7 +6293,7 @@ feature -- Assertions
 			put_boolean_constant (False)
 			generate_set_assertion_status
 			put_integer_32_constant ({EXCEP_CONST}.precondition)
-			method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldsfld,
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld,
 				current_module.ise_assertion_tag_token)
 			method_body.put_static_call (current_module.ise_raise_code_token, 2, False)
 		end
@@ -6307,7 +6307,7 @@ feature -- Assertions
 				put_void
 			else
 				uni_string.set (a_tag, 1, a_tag.count)
-				method_body.put_opcode_mdtoken ({CIL_MD_OPCODES}.Ldstr,
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr,
 					md_emit.define_string (uni_string))
 			end
 			method_body.put_static_call (current_module.ise_raise_code_token, 2, False)
@@ -6324,10 +6324,10 @@ feature -- Assertions
 					-- Generate instance invariant feature even though class invariant is not defined.
 				uni_string.set ("_invariant", 1, ("_invariant").count)
 				l_dotnet_invariant_token := md_emit.define_method (uni_string, current_class_token,
-					{CIL_MD_METHOD_ATTRIBUTES}.Public |
-					{CIL_MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-					{CIL_MD_METHOD_ATTRIBUTES}.Virtual,
-					default_sig, {CIL_MD_METHOD_ATTRIBUTES}.Managed)
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.Virtual,
+					default_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 			end
 			if current_class_type.is_expanded then
 					-- Code for expanded class does not use static features.
@@ -6354,17 +6354,17 @@ feature -- Assertions
 						-- Will be used in descendant.
 					l_sig := method_sig
 					l_sig.reset
-					l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Default_sig)
+					l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 					l_sig.set_parameter_count (1)
-					l_sig.set_return_type ({CIL_MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 					set_signature_type (l_sig, current_class_type.type, current_class_type)
 
 					uni_string.set ("$$_invariant", 1, ("$$_invariant").count)
 					l_invariant_token := md_emit.define_method (uni_string, current_class_token,
-						{CIL_MD_METHOD_ATTRIBUTES}.Public |
-						{CIL_MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-						{CIL_MD_METHOD_ATTRIBUTES}.Static, l_sig,
-						{CIL_MD_METHOD_ATTRIBUTES}.Managed)
+						{MD_METHOD_ATTRIBUTES}.Public |
+						{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+						{MD_METHOD_ATTRIBUTES}.Static, l_sig,
+						{MD_METHOD_ATTRIBUTES}.Managed)
 
 					start_new_body (l_invariant_token)
 					generate_invariant_body (Void)
@@ -6378,7 +6378,7 @@ feature -- Assertions
 					-- Generate invariant feature that calls above static version.
 				start_new_body (l_dotnet_invariant_token)
 				generate_current
-				method_body.put_call ({CIL_MD_OPCODES}.Call, l_invariant_token, 0, False)
+				method_body.put_call ({MD_OPCODES}.Call, l_invariant_token, 0, False)
 				generate_return (False)
 				method_writer.write_current_body
 			end
@@ -6425,7 +6425,7 @@ feature -- Assertions
 						then
 							generate_check_cast (current_class_type.type, cl_type.type)
 						end
-						method_body.put_call ({CIL_MD_OPCODES}.Call, invariant_token (id), 0, False)
+						method_body.put_call ({MD_OPCODES}.Call, invariant_token (id), 0, False)
 					end
 					i := i + 1
 				end
@@ -6456,32 +6456,32 @@ feature -- Constants generation
 		do
 			inspect
 				type.element_type
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_boolean then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_boolean then
 				put_boolean_constant (False)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_char then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_char then
 				put_character_constant ('%U')
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_r8 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_r8 then
 				put_real_64_constant (0.0)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_r4 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_r4 then
 				put_real_32_constant ({REAL_32} 0.0)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u1 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u1 then
 				put_natural_8_constant (0)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u2 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u2 then
 				put_natural_16_constant (0)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u4 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u4 then
 				put_natural_32_constant (0)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u8 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u8 then
 				put_natural_64_constant (0)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i then
 				put_integer_32_constant (0)
 				convert_to_native_int
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i1 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i1 then
 				put_integer_8_constant (0)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i2 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i2 then
 				put_integer_16_constant (0)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i4 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i4 then
 				put_integer_32_constant (0)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i8 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i8 then
 				put_integer_64_constant (0)
 			else
 				put_void
@@ -6491,7 +6491,7 @@ feature -- Constants generation
 	put_void
 			-- Add a Void element on stack.
 		do
-			method_body.put_opcode ({CIL_MD_OPCODES}.Ldnull)
+			method_body.put_opcode ({MD_OPCODES}.Ldnull)
 		end
 
 	put_manifest_string_from_system_string_local (n: INTEGER)
@@ -6571,25 +6571,25 @@ feature -- Constants generation
 		do
 			inspect
 				type.element_type
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_r8 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_r8 then
 				put_real_64_constant (i)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_r4 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_r4 then
 				put_real_32_constant (i)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u1 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u1 then
 				put_natural_8_constant (i.as_natural_8)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u2 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u2 then
 				put_natural_16_constant (i.as_natural_16)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u4 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u4 then
 				put_natural_32_constant (i.as_natural_32)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_u8 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_u8 then
 				put_natural_64_constant (i.as_natural_64)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i1 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i1 then
 				put_integer_8_constant (i)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i2 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i2 then
 				put_integer_16_constant (i)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i4 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i4 then
 				put_integer_32_constant (i)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.Element_type_i8 then
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_i8 then
 				put_integer_64_constant (i)
 			else
 				check
@@ -6605,24 +6605,24 @@ feature -- Constants generation
 		do
 			inspect
 				i
-			when 0 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_0)
-			when 1 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_1)
-			when 2 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_2)
-			when 3 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_3)
-			when 4 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_4)
-			when 5 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_5)
-			when 6 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_6)
-			when 7 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_7)
-			when 8 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_8)
+			when 0 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
+			when 1 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_1)
+			when 2 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_2)
+			when 3 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_3)
+			when 4 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_4)
+			when 5 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_5)
+			when 6 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_6)
+			when 7 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_7)
+			when 8 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_8)
 			else
-				method_body.put_opcode_integer ({CIL_MD_OPCODES}.Ldc_i4, i)
+				method_body.put_opcode_integer ({MD_OPCODES}.Ldc_i4, i)
 			end
 		end
 
 	put_integer_64_constant (i: INTEGER_64)
 			-- Put `i' as INTEGER_64 on IL stack
 		do
-			method_body.put_opcode_integer_64 ({CIL_MD_OPCODES}.Ldc_i8, i)
+			method_body.put_opcode_integer_64 ({MD_OPCODES}.Ldc_i8, i)
 		end
 
 	put_natural_8_constant,
@@ -6633,51 +6633,51 @@ feature -- Constants generation
 			fixme ("Remove conversion to INTEGER_32 after bootstrap.")
 			inspect
 				n.as_integer_32
-			when 0 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_0)
-			when 1 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_1)
-			when 2 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_2)
-			when 3 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_3)
-			when 4 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_4)
-			when 5 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_5)
-			when 6 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_6)
-			when 7 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_7)
-			when 8 then method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_8)
+			when 0 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
+			when 1 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_1)
+			when 2 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_2)
+			when 3 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_3)
+			when 4 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_4)
+			when 5 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_5)
+			when 6 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_6)
+			when 7 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_7)
+			when 8 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_8)
 			else
-				method_body.put_opcode_natural_32 ({CIL_MD_OPCODES}.Ldc_i4, n)
+				method_body.put_opcode_natural_32 ({MD_OPCODES}.Ldc_i4, n)
 			end
 		end
 
 	put_natural_64_constant (n: NATURAL_64)
 			-- Put `n' as NATURAL_64 on IL stack.
 		do
-			method_body.put_opcode_natural_64 ({CIL_MD_OPCODES}.Ldc_i8, n)
+			method_body.put_opcode_natural_64 ({MD_OPCODES}.Ldc_i8, n)
 		end
 
 	put_real_32_constant (r: REAL)
 			-- Put `d' on IL stack.
 		do
-			method_body.put_opcode_real_32 ({CIL_MD_OPCODES}.Ldc_r4, r)
+			method_body.put_opcode_real_32 ({MD_OPCODES}.Ldc_r4, r)
 		end
 
 	put_real_64_constant (d: DOUBLE)
 			-- Put `d' on IL stack.
 		do
-			method_body.put_opcode_real_64 ({CIL_MD_OPCODES}.Ldc_r8, d)
+			method_body.put_opcode_real_64 ({MD_OPCODES}.Ldc_r8, d)
 		end
 
 	put_character_constant (c: CHARACTER)
 			-- Put `c' on IL stack.
 		do
-			method_body.put_opcode_integer ({CIL_MD_OPCODES}.Ldc_i4, c.code)
+			method_body.put_opcode_integer ({MD_OPCODES}.Ldc_i4, c.code)
 		end
 
 	put_boolean_constant (b: BOOLEAN)
 			-- Put `b' on IL stack.
 		do
 			if b then
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldc_i4_1)
+				method_body.put_opcode ({MD_OPCODES}.ldc_i4_1)
 			else
-				method_body.put_opcode ({CIL_MD_OPCODES}.ldc_i4_0)
+				method_body.put_opcode ({MD_OPCODES}.ldc_i4_0)
 			end
 		end
 
@@ -6687,20 +6687,20 @@ feature -- Labels and branching
 			-- Generate a branch instruction to `label' if top of
 			-- IL stack is True.
 		do
-			method_body.put_opcode_label ({CIL_MD_OPCODES}.Brtrue, label.id)
+			method_body.put_opcode_label ({MD_OPCODES}.Brtrue, label.id)
 		end
 
 	branch_on_false (label: IL_LABEL)
 			-- Generate a branch instruction to `label' if top of
 			-- IL stack is False.
 		do
-			method_body.put_opcode_label ({CIL_MD_OPCODES}.Brfalse, label.id)
+			method_body.put_opcode_label ({MD_OPCODES}.Brfalse, label.id)
 		end
 
 	branch_to (label: IL_LABEL)
 			-- Generate a branch instruction to `label'.
 		do
-			method_body.put_opcode_label ({CIL_MD_OPCODES}.Br, label.id)
+			method_body.put_opcode_label ({MD_OPCODES}.Br, label.id)
 		end
 
 	branch_on_condition (comparison: INTEGER_16; label: IL_LABEL)
@@ -6727,7 +6727,7 @@ feature -- Switch instruction
 	put_switch_start (count: INTEGER)
 			-- Generate start of a switch instruction with `count' items.
 		do
-			method_body.put_opcode_integer ({CIL_MD_OPCODES}.switch, count)
+			method_body.put_opcode_integer ({MD_OPCODES}.switch, count)
 			switch_count := count
 		end
 
@@ -6748,88 +6748,88 @@ feature -- Binary operator generation
 			inspect
 				code
 			when il_eq then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ceq)
+				method_body.put_opcode ({MD_OPCODES}.Ceq)
 
 			when il_ne then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ceq)
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_0)
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ceq)
+				method_body.put_opcode ({MD_OPCODES}.Ceq)
+				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
+				method_body.put_opcode ({MD_OPCODES}.Ceq)
 
 			when il_le then
 				if is_unsigned then
-					method_body.put_opcode ({CIL_MD_OPCODES}.cgt_un)
+					method_body.put_opcode ({MD_OPCODES}.cgt_un)
 				else
-					method_body.put_opcode ({CIL_MD_OPCODES}.Cgt)
+					method_body.put_opcode ({MD_OPCODES}.Cgt)
 				end
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_0)
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ceq)
+				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
+				method_body.put_opcode ({MD_OPCODES}.Ceq)
 
 			when il_lt then
 				if is_unsigned then
-					method_body.put_opcode ({CIL_MD_OPCODES}.clt_un)
+					method_body.put_opcode ({MD_OPCODES}.clt_un)
 				else
-					method_body.put_opcode ({CIL_MD_OPCODES}.Clt)
+					method_body.put_opcode ({MD_OPCODES}.Clt)
 				end
 
 			when il_ge then
 				if is_unsigned then
-					method_body.put_opcode ({CIL_MD_OPCODES}.clt_un)
+					method_body.put_opcode ({MD_OPCODES}.clt_un)
 				else
-					method_body.put_opcode ({CIL_MD_OPCODES}.Clt)
+					method_body.put_opcode ({MD_OPCODES}.Clt)
 				end
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_0)
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ceq)
+				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
+				method_body.put_opcode ({MD_OPCODES}.Ceq)
 
 			when il_gt then
 				if is_unsigned then
-					method_body.put_opcode ({CIL_MD_OPCODES}.cgt_un)
+					method_body.put_opcode ({MD_OPCODES}.cgt_un)
 				else
-					method_body.put_opcode ({CIL_MD_OPCODES}.Cgt)
+					method_body.put_opcode ({MD_OPCODES}.Cgt)
 				end
 
 			when il_star then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Mul)
+				method_body.put_opcode ({MD_OPCODES}.Mul)
 
 			when il_power then
 				method_body.put_static_call (current_module.power_method_token, 2, True)
 
 			when il_plus then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Add)
+				method_body.put_opcode ({MD_OPCODES}.Add)
 
 			when il_mod then
 				if is_unsigned then
-					method_body.put_opcode ({CIL_MD_OPCODES}.rem_un)
+					method_body.put_opcode ({MD_OPCODES}.rem_un)
 				else
-					method_body.put_opcode ({CIL_MD_OPCODES}.Rem)
+					method_body.put_opcode ({MD_OPCODES}.Rem)
 				end
 
 			when il_minus then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Sub)
+				method_body.put_opcode ({MD_OPCODES}.Sub)
 
 			when il_div, il_slash then
 				if is_unsigned then
-					method_body.put_opcode ({CIL_MD_OPCODES}.div_un)
+					method_body.put_opcode ({MD_OPCODES}.div_un)
 				else
-					method_body.put_opcode ({CIL_MD_OPCODES}.Div)
+					method_body.put_opcode ({MD_OPCODES}.Div)
 				end
 
 			when il_xor then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Xor_opcode)
+				method_body.put_opcode ({MD_OPCODES}.Xor_opcode)
 
 			when il_or then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Or_opcode)
+				method_body.put_opcode ({MD_OPCODES}.Or_opcode)
 
 			when il_and then
-				method_body.put_opcode ({CIL_MD_OPCODES}.And_opcode)
+				method_body.put_opcode ({MD_OPCODES}.And_opcode)
 
 			when il_shl then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Shl)
+				method_body.put_opcode ({MD_OPCODES}.Shl)
 
 			when il_shr then
 				if is_unsigned then
-					method_body.put_opcode ({CIL_MD_OPCODES}.shr_un)
+					method_body.put_opcode ({MD_OPCODES}.shr_un)
 				else
-					method_body.put_opcode ({CIL_MD_OPCODES}.Shr)
+					method_body.put_opcode ({MD_OPCODES}.Shr)
 				end
 			end
 		end
@@ -6919,8 +6919,8 @@ feature -- Binary operator generation
 			end
 
 			if a_code = il_ne then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_0)
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ceq)
+				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
+				method_body.put_opcode ({MD_OPCODES}.Ceq)
 			end
 		end
 
@@ -6933,11 +6933,11 @@ feature -- Unary operator generation
 			inspect
 				code
 			when il_uplus then -- Nothing to be done here.
-			when il_uminus then method_body.put_opcode ({CIL_MD_OPCODES}.Neg)
+			when il_uminus then method_body.put_opcode ({MD_OPCODES}.Neg)
 			when il_not then
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ldc_i4_0)
-				method_body.put_opcode ({CIL_MD_OPCODES}.Ceq)
-			when il_bitwise_not then method_body.put_opcode ({CIL_MD_OPCODES}.Not_opcode)
+				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
+				method_body.put_opcode ({MD_OPCODES}.Ceq)
+			when il_bitwise_not then method_body.put_opcode ({MD_OPCODES}.Not_opcode)
 			end
 		end
 
@@ -6952,7 +6952,7 @@ feature -- Basic feature
 			l_sig := method_sig
 			l_sig.reset
 
-			l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_sig.set_parameter_count (1)
 			set_method_return_type (l_sig, Character_type, current_class_type)
 			set_signature_type (l_sig, Character_type, current_class_type)
@@ -6977,7 +6977,7 @@ feature -- Basic feature
 			l_sig := method_sig
 			l_sig.reset
 
-			l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_sig.set_parameter_count (1)
 			set_method_return_type (l_sig, Boolean_type, current_class_type)
 			set_signature_type (l_sig, Character_type, current_class_type)
@@ -6999,7 +6999,7 @@ feature -- Basic feature
 			l_sig := method_sig
 			l_sig.reset
 
-			l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_sig.set_parameter_count (1)
 			set_method_return_type (l_sig, Boolean_type, current_class_type)
 			if is_real_32 then
@@ -7026,7 +7026,7 @@ feature -- Basic feature
 			l_sig: like method_sig
 		do
 			create l_sig.make
-			l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_sig.set_parameter_count (1)
 			set_method_return_type (l_sig, type, current_class_type)
 			set_signature_type (l_sig, type, current_class_type)
@@ -7047,7 +7047,7 @@ feature -- Basic feature
 			l_sig := method_sig
 			l_sig.reset
 
-			l_sig.set_method_type ({CIL_MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_sig.set_parameter_count (2)
 			set_method_return_type (l_sig, type, current_class_type)
 			set_signature_type (l_sig, type, current_class_type)
@@ -7063,7 +7063,7 @@ feature -- Basic feature
 	generate_to_string
 			-- Generate call on `ToString'.
 		do
-			method_body.put_call ({CIL_MD_OPCODES}.Callvirt,
+			method_body.put_call ({MD_OPCODES}.Callvirt,
 				current_module.to_string_method_token, 0, True)
 		end
 
@@ -7073,7 +7073,7 @@ feature -- Basic feature
 		do
 			convert_to_integer_32
 			put_integer_32_constant (0x7FFFFFFF)
-			method_body.put_opcode ({CIL_MD_OPCODES}.And_opcode)
+			method_body.put_opcode ({MD_OPCODES}.And_opcode)
 		end
 
 	generate_out (type: TYPE_A)
@@ -7124,7 +7124,7 @@ feature -- Line info
 		end
 
 	put_silent_line_info (n: INTEGER)
-			-- Generate debug information at line `n'.			
+			-- Generate debug information at line `n'.
 			-- But in case of dotnet debugger inside eStudio
 			-- ignore those 'dummy' nope.
 		do
@@ -7444,7 +7444,7 @@ feature {NONE} -- Implementation: generation
 					"set_position",
 					Normal_type, <<integer_32_class_name>>, Void, True)
 			elseif l_type_id = none_type_id then
-					-- Nothing to be done, it is enough to create an instance of NONE_TYPE	
+					-- Nothing to be done, it is enough to create an instance of NONE_TYPE
 			elseif l_type_id = class_type_id then
 					-- Non-generic class.
 				duplicate_top
@@ -7821,7 +7821,7 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 
 feature {CIL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_GENERATOR} -- Custom attribute definition
 
-	define_custom_attribute (token: INTEGER; ctor_token: INTEGER; data: CIL_MD_CUSTOM_ATTRIBUTE)
+	define_custom_attribute (token: INTEGER; ctor_token: INTEGER; data: MD_CUSTOM_ATTRIBUTE)
 			-- Define a custom attribute on `token' using constructor `ctor_token' with
 			-- arguments `data'.
 			-- Same as `md_emit.define_custom_attribute' but we do not care about return type.
@@ -8295,19 +8295,19 @@ note
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

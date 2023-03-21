@@ -8,7 +8,7 @@ class
 
 feature -- Predefined custom attributes
 
-	not_cls_compliant_ca: CIL_MD_CUSTOM_ATTRIBUTE
+	not_cls_compliant_ca: MD_CUSTOM_ATTRIBUTE
 			-- Blob for not CLS compliant attribute
 		once
 			create Result.make
@@ -18,7 +18,7 @@ feature -- Predefined custom attributes
 			not_cls_compliant_ca_not_void: Result /= Void
 		end
 
-	cls_compliant_ca: CIL_MD_CUSTOM_ATTRIBUTE
+	cls_compliant_ca: MD_CUSTOM_ATTRIBUTE
 			-- Blob for CLS compliant attribute
 		once
 			create Result.make
@@ -28,7 +28,7 @@ feature -- Predefined custom attributes
 			cls_compliant_ca_not_void: Result /= Void
 		end
 
-	eiffel_non_consumable_ca: CIL_MD_CUSTOM_ATTRIBUTE
+	eiffel_non_consumable_ca: MD_CUSTOM_ATTRIBUTE
 			-- Blob for non-Eiffel consumable attribute
 		once
 			create Result.make
@@ -38,7 +38,7 @@ feature -- Predefined custom attributes
 			eiffel_non_consumable_ca_not_void: Result /= Void
 		end
 
-	not_com_visible_ca: CIL_MD_CUSTOM_ATTRIBUTE
+	not_com_visible_ca: MD_CUSTOM_ATTRIBUTE
 			-- Blob for not COM Visible attribute.
 		once
 			create Result.make
@@ -48,7 +48,7 @@ feature -- Predefined custom attributes
 			not_com_visible_ca_not_void: Result /= Void
 		end
 
-	empty_ca: CIL_MD_CUSTOM_ATTRIBUTE
+	empty_ca: MD_CUSTOM_ATTRIBUTE
 			-- Blob for custom attributes without argument.
 		once
 			create Result.make
@@ -57,7 +57,7 @@ feature -- Predefined custom attributes
 			empty_ca_not_void: Result /= Void
 		end
 
-	enabled_debuggable_ca: CIL_MD_CUSTOM_ATTRIBUTE
+	enabled_debuggable_ca: MD_CUSTOM_ATTRIBUTE
 			-- Blob for not CLS compliant attribute
 		once
 			create Result.make

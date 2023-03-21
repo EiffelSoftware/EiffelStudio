@@ -83,7 +83,7 @@ feature {NONE} -- Implementation: Access
 	has_root_class: BOOLEAN
 			-- Does current module has a root class specification?
 
-	signing: CIL_MD_STRONG_NAME
+	signing: MD_STRONG_NAME
 			-- Object used for signing assemblies.
 			--| TODO double check if we really need to keep it,
 			--| it seems it optional now.
@@ -101,7 +101,7 @@ feature -- Generation
 			output_file: RAW_FILE
 			l_last_error_msg: STRING
 			l_key_file_name: PATH
-			l_public_key: CIL_MD_PUBLIC_KEY
+			l_public_key: MD_PUBLIC_KEY
 				--TODO this class is still not finished since it depends on STRONG_NAME
 			l_res: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]
 		do

@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (emitter: CIL_MD_METADATA_EMIT; name: STRING_32; full_build: BOOLEAN)
+	make (emitter: MD_METADATA_EMIT; name: STRING_32; full_build: BOOLEAN)
 			-- Create a new SymUnmanagedWriter object using `emitter' in a file `name'.
 		do
 			to_implement ("TODO add implementation")
@@ -110,7 +110,7 @@ feature -- Definition
 			to_implement ("TODO add implementation")
 		end
 
-	define_local_variable (name: STRING_32; pos: INTEGER; signature: CIL_MD_TYPE_SIGNATURE)
+	define_local_variable (name: STRING_32; pos: INTEGER; signature: MD_TYPE_SIGNATURE)
 			-- Define local variable `name' at position `pos' in current method using
 			-- `signature' of current method.
 			--| Replaced UNI_STRING

@@ -166,7 +166,7 @@ feature {NONE} -- Access
 	cil_generator: CIL_CODE_GENERATOR
 			-- Back-end of custom attribute code generator.
 
-	ca_blob: CIL_MD_CUSTOM_ATTRIBUTE
+	ca_blob: MD_CUSTOM_ATTRIBUTE
 			-- Blob used for storing custom attribute.
 
 feature {NONE} -- Setting
@@ -196,7 +196,7 @@ feature {BYTE_NODE} -- Visitors
 
 			if is_target_object then
 					-- Mark the fact it is an array when not a fixed argument
-				ca_blob.put_integer_8 ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_szarray)
+				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_szarray)
 
 					-- Mark the type of elements.
 				insert_field_or_prop_type (l_type)
@@ -394,7 +394,7 @@ feature {BYTE_NODE} -- Visitors
 			if is_target_object then
 					-- Force the type to be a .NET SYSTEM_STRING as `a_node' is
 					-- still considered as being an Eiffel string.
-				ca_blob.put_integer_8 ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_string)
+				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_string)
 			end
 			ca_blob.put_string (a_node.value_32)
 		end
@@ -407,7 +407,7 @@ feature {BYTE_NODE} -- Visitors
 		do
 			check is_constant_expression: a_node.is_constant_expression end
 			if is_target_object then
-				ca_blob.put_integer_8 ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_type)
+				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_type)
 			end
 
 			if a_node.is_dotnet_type then
@@ -493,9 +493,9 @@ feature {NONE} -- Implemention
 
 				-- First mark if it is an attribute or a property.
 			if l_feat.is_attribute then
-				ca_blob.put_integer_8 ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_field)
+				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_field)
 			else
-				ca_blob.put_integer_8 ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_property)
+				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
 			end
 
 			l_type := l_feat.type
@@ -569,57 +569,57 @@ feature {NONE} -- Implemention
 
 			inspect l_element_type
 
-			when {CIL_MD_SIGNATURE_CONSTANTS}.element_type_i1 then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i1 then
 				ca_blob.put_integer_8 (a_int.integer_8_value)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.element_type_i2 then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i2 then
 				ca_blob.put_integer_16 (a_int.integer_16_value)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.element_type_i4 then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i4 then
 				ca_blob.put_integer_32 (a_int.integer_32_value)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.element_type_i8 then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i8 then
 				ca_blob.put_integer_64 (a_int.integer_64_value)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.element_type_u1 then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u1 then
 				ca_blob.put_natural_8 (a_int.natural_8_value)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.element_type_u2 then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u2 then
 				ca_blob.put_natural_16 (a_int.natural_16_value)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.element_type_u4 then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u4 then
 				ca_blob.put_natural_32 (a_int.natural_32_value)
-			when {CIL_MD_SIGNATURE_CONSTANTS}.element_type_u8 then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
 				ca_blob.put_natural_64 (a_int.natural_64_value)
 
-			when {CIL_MD_SIGNATURE_CONSTANTS}.element_type_r4 then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_r4 then
 				inspect a_int.il_element_type
 				when
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_i1,
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_i2,
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_i4,
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_i8
+					{MD_SIGNATURE_CONSTANTS}.element_type_i1,
+					{MD_SIGNATURE_CONSTANTS}.element_type_i2,
+					{MD_SIGNATURE_CONSTANTS}.element_type_i4,
+					{MD_SIGNATURE_CONSTANTS}.element_type_i8
 				then
 					ca_blob.put_real_32 (a_int.integer_64_value.to_real)
 
 				when
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_u1,
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_u2,
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_u4,
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_u8
+					{MD_SIGNATURE_CONSTANTS}.element_type_u1,
+					{MD_SIGNATURE_CONSTANTS}.element_type_u2,
+					{MD_SIGNATURE_CONSTANTS}.element_type_u4,
+					{MD_SIGNATURE_CONSTANTS}.element_type_u8
 				then
 					ca_blob.put_real_32 (a_int.natural_64_value.to_real_32)
 				end
 
-			when {CIL_MD_SIGNATURE_CONSTANTS}.element_type_r8 then
+			when {MD_SIGNATURE_CONSTANTS}.element_type_r8 then
 				inspect a_int.il_element_type
 				when
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_i1,
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_i2,
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_i4,
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_i8
+					{MD_SIGNATURE_CONSTANTS}.element_type_i1,
+					{MD_SIGNATURE_CONSTANTS}.element_type_i2,
+					{MD_SIGNATURE_CONSTANTS}.element_type_i4,
+					{MD_SIGNATURE_CONSTANTS}.element_type_i8
 				then
 					ca_blob.put_real_64 (a_int.integer_64_value.to_double)
 
 				when
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_u1,
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_u2,
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_u4,
-					{CIL_MD_SIGNATURE_CONSTANTS}.element_type_u8
+					{MD_SIGNATURE_CONSTANTS}.element_type_u1,
+					{MD_SIGNATURE_CONSTANTS}.element_type_u2,
+					{MD_SIGNATURE_CONSTANTS}.element_type_u4,
+					{MD_SIGNATURE_CONSTANTS}.element_type_u8
 				then
 					ca_blob.put_real_64 (a_int.natural_64_value.to_real_64)
 				end
@@ -634,18 +634,18 @@ feature {NONE} -- Implemention
 			a_type_not_void: a_type /= Void
 		do
 			if not attached {CL_TYPE_A} a_type as l_cl_type then
-				ca_blob.put_integer_8 ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_boxed)
+				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_boxed)
 			elseif l_cl_type.is_enum then
 				insert_enum_type (l_cl_type)
 			elseif l_cl_type.is_basic then
 				ca_blob.put_integer_8 (l_cl_type.element_type)
 			elseif l_cl_type.class_id = system.system_string_id then
-				ca_blob.put_integer_8 ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_string)
+				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_string)
 			elseif l_cl_type.class_id = system.system_type_id then
-				ca_blob.put_integer_8 ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_type)
+				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_type)
 			elseif l_cl_type.class_id = system.native_array_id then
 					-- Mark the fact it is an array
-				ca_blob.put_integer_8 ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_szarray)
+				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_szarray)
 				check
 					has_generics: l_cl_type.generics /= Void and then
 						l_cl_type.generics.count = 1
@@ -653,7 +653,7 @@ feature {NONE} -- Implemention
 					-- Mark the type of elements.
 				insert_field_or_prop_type (l_cl_type.generics.first)
 			else
-				ca_blob.put_integer_8 ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_boxed)
+				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_boxed)
 			end
 		end
 
@@ -664,7 +664,7 @@ feature {NONE} -- Implemention
 		local
 			l_type_name: STRING_32
 		do
-			ca_blob.put_integer_8 ({CIL_MD_SIGNATURE_CONSTANTS}.element_type_enum)
+			ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_enum)
 			create l_type_name.make_from_string_general (a_cl_type.il_type_name (Void, cil_generator.current_class_type.type))
 			l_type_name.append_character (',')
 			l_type_name.append_character (' ')

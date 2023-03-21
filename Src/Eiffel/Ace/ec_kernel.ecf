@@ -129,7 +129,7 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
-		<library name="il_emitter" location="$EIFFEL_SRC\unstable\library\dotnet\il_emitter\il_emitter.ecf">
+		<library name="il_emitter" location="$EIFFEL_SRC\framework\dotnet\il_emitter\il_emitter.ecf">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>

@@ -54,6 +54,14 @@ feature -- Initialization
 
 		end
 
+	assert (m: READABLE_STRING_GENERAL; cond: BOOLEAN)
+		do
+			if not cond then
+				print (m)
+			end
+			check cond end
+		end
+
 	test
 		local
 			list: LIST [INTEGER]

@@ -88,7 +88,7 @@ feature -- Status
 
 feature -- Access
 
-	emitter: CIL_MD_METADATA_EMIT
+	emitter: MD_METADATA_EMIT
 			-- Meta data emitter, needed for RVA update.
 
 feature -- Constant
@@ -228,7 +228,7 @@ feature -- Access
 			-- right now we don't check duplicates on any of the other streams...
 
 		--tables: LIST [DNL_TABLE]
-	tables: SPECIAL [CIL_MD_METADATA_TABLES]
+	tables: SPECIAL [MD_METADATA_TABLES]
 		do
 			Result := emitter.tables
 		end
@@ -246,7 +246,7 @@ feature -- Access
 
 	rva: PE_POOL
 
-	md_method_writer: detachable CIL_MD_METHOD_WRITER
+	md_method_writer: detachable MD_METHOD_WRITER
 
 feature {NONE} -- Implemenation
 
@@ -440,7 +440,7 @@ feature -- Element change
 			dll_assigned: dll = a_dll
 		end
 
-	set_method_writer (a_md_method_writer: CIL_MD_METHOD_WRITER)
+	set_method_writer (a_md_method_writer: MD_METHOD_WRITER)
 			-- Set md_method_writer with a_md_method_writer.
 		do
 			md_method_writer := a_md_method_writer

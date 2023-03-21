@@ -69,7 +69,7 @@ feature -- Definition: access
 			Result := l_class
 		end
 
-	define_assembly_ref (a_name: STRING_32; a_assembly_info: CIL_MD_ASSEMBLY_INFO; a_public_key: ARRAY [NATURAL_8])
+	define_assembly_ref (a_name: STRING_32; a_assembly_info: MD_ASSEMBLY_INFO; a_public_key: ARRAY [NATURAL_8])
 		require
 			valid_public_key_size: a_public_key.count = 8
 		local
@@ -78,7 +78,7 @@ feature -- Definition: access
 			l_assembly := pe_lib.add_external_assembly (a_name, a_public_key)
 		end
 
-	define_mscorlib_assembly_ref (a_assembly_info: CIL_MD_ASSEMBLY_INFO; a_public_key: ARRAY [NATURAL_8])
+	define_mscorlib_assembly_ref (a_assembly_info: MD_ASSEMBLY_INFO; a_public_key: ARRAY [NATURAL_8])
 			-- Define the mscorlib assembly
 		require
 			valid_public_key_size: a_public_key.count = 8
@@ -101,7 +101,7 @@ feature -- Definition: access
 
 feature -- Definition: creation
 
-	define_assembly (a_name: STRING_32; a_assembly_info: CIL_MD_ASSEMBLY_INFO; a_snk_file: STRING_32): CIL_ASSEMBLY_DEF
+	define_assembly (a_name: STRING_32; a_assembly_info: MD_ASSEMBLY_INFO; a_snk_file: STRING_32): CIL_ASSEMBLY_DEF
 			-- Define a new assembly.
 		local
 			l_assembly_ref: CIL_ASSEMBLY_DEF

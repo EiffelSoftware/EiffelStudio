@@ -18,7 +18,7 @@ feature -- Test
 			cil_dispenser: CIL_DISPENSER
 			cil_emit: CIL_EMIT
 
-			cil_assembly_info: CIL_MD_ASSEMBLY_INFO
+			cil_assembly_info: MD_ASSEMBLY_INFO
 			working_assembly: CIL_ASSEMBLY_DEF
 			cil_type: CIL_CLASS
 			cil_method: CIL_METHOD

@@ -33,33 +33,35 @@ feature -- Visitor
 	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		local
-			c: CL_TYPE_A
 			f: FEATURE_I
 		do
-			c ?= context_type
-			if system.il_generation and then not (c.is_expanded and c.is_basic) then
-					-- We cannot optimize .NET feature calls at this point. See eweasel test#term202
-					-- for an example where trying to optimize is not working properly: the issue is
-					-- that the typing gets confused between inherited context and descendant context
-					-- we do call `{BYTE_CONTEXT}.real_type
-					-- We only optimize external calls on basic expanded type.
-				v.process_external_b (Current)
-			else
-				if not is_static_call and then not context.is_written_context then
-						-- Ensure the feature is not redeclared into attribute or internal routine.
-						-- and if redeclared as an external, make sure it is not redeclared differently.
-					f := c.base_class.feature_of_rout_id (routine_id)
-					if equal (f.extension, extension) then
-						f := Void
-					end
-				end
-				if f = Void then
-						-- Process feature as an external routine.
+			if attached {CL_TYPE_A} context_type as c then
+				if system.il_generation and then not (c.is_expanded and c.is_basic) then
+						-- We cannot optimize .NET feature calls at this point. See eweasel test#term202
+						-- for an example where trying to optimize is not working properly: the issue is
+						-- that the typing gets confused between inherited context and descendant context
+						-- we do call `{BYTE_CONTEXT}.real_type
+						-- We only optimize external calls on basic expanded type.
 					v.process_external_b (Current)
 				else
-						-- Create new byte node and process it instead of the current one.
-					byte_node (f, c.is_separate).process (v)
+					if not is_static_call and then not context.is_written_context then
+							-- Ensure the feature is not redeclared into attribute or internal routine.
+							-- and if redeclared as an external, make sure it is not redeclared differently.
+						f := c.base_class.feature_of_rout_id (routine_id)
+						if equal (f.extension, extension) then
+							f := Void
+						end
+					end
+					if f = Void then
+							-- Process feature as an external routine.
+						v.process_external_b (Current)
+					else
+							-- Create new byte node and process it instead of the current one.
+						byte_node (f, c.is_separate).process (v)
+					end
 				end
+			else
+				check context_type_is_cl_type_a: False end
 			end
 		end
 
@@ -236,7 +238,7 @@ invariant
 	static_if_instance_free: is_instance_free implies is_static_call
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

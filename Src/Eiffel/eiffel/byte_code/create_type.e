@@ -96,7 +96,7 @@ feature -- C code generation
 			l_buffer := context.buffer
 			l_final_mode := not context.workbench_mode
 			l_cl_type := type_to_create
-			l_tuple_type ?= l_cl_type
+			l_tuple_type := {TUPLE_TYPE_A} / l_cl_type
 			l_is_tuple := l_tuple_type /= Void
 
 			if l_final_mode and not l_is_tuple then
@@ -155,8 +155,12 @@ feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a hardcoded creation type
+		local
+			t: CL_TYPE_A
 		do
-			type.make_type_byte_code (ba, True, context.context_class_type.type)
+			t := context.context_class_type.type
+			check has_associated_class_type: type.has_associated_class_type (t) end
+			type.make_type_byte_code (ba, True, t)
 		end
 
 feature -- Generic conformance
@@ -177,16 +181,16 @@ feature -- Generic conformance
 			buffer.put_character (',')
 		end
 
-	type_to_create : CL_TYPE_A
+	type_to_create : detachable CL_TYPE_A
 		do
-			Result ?= type
+			Result := {like type_to_create} / type
 		end
 
 invariant
 	type_not_void: type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

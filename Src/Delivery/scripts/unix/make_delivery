@@ -372,7 +372,7 @@ if [ ! "$NO_INSTALL" ]; then
 
 		remtrace Eiffel other needed libraries
 			# for now, the il_emitter, but include any required Clib when needed
-		pax -w -f other-libs.tar unstable/library/dotnet
+		pax -w -f other-libs.tar framework/dotnet
 		bzip2 other-libs.tar
 		move other-libs.tar.bz2 $EXPORT_DIR
 	fi

@@ -49,9 +49,9 @@ if [ -d $2/examples/base/beep/Clib ]; then
 fi
 
 # Compile IL Emitter Clib implementation
-if [ -d $2/unstable/library/dotnet/il_emitter/Clib ]; then
+if [ -d $2/framework/dotnet/il_emitter/Clib ]; then
 	remtrace IL Emitter Clib
-	cd $2/unstable/library/dotnet/il_emitter/Clib
+	cd $2/framework/dotnet/il_emitter/Clib
 	default_make
 else
 	remtrace IL Emitter Clib: directory not found

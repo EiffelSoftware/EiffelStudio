@@ -298,7 +298,11 @@ feature -- Roundtrip/Text modification
 			a_list_not_void: a_list /= Void
 		do
 			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
-				Result := a_list.valid_append_region (token_region (a_list))
+				if attached token_region (a_list) as r then
+					Result := a_list.valid_append_region (r)
+				else
+					check has_token_region: False end
+				end
 			end
 		end
 
@@ -308,7 +312,11 @@ feature -- Roundtrip/Text modification
 			a_list_not_void: a_list /= Void
 		do
 			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
-				Result := a_list.valid_prepend_region (token_region (a_list))
+				if attached token_region (a_list) as r then
+					Result := a_list.valid_prepend_region (r)
+				else
+					check has_token_region: False end
+				end
 			end
 		end
 
@@ -318,7 +326,11 @@ feature -- Roundtrip/Text modification
 			a_list_not_void: a_list /= Void
 		do
 			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
-				Result := a_list.valid_replace_region (token_region (a_list))
+				if attached token_region (a_list) as r then
+					Result := a_list.valid_replace_region (r)
+				else
+					check has_token_region: False end
+				end
 			end
 		end
 
@@ -328,7 +340,11 @@ feature -- Roundtrip/Text modification
 			a_list_not_void: a_list /= Void
 		do
 			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
-				Result := a_list.valid_remove_region (token_region (a_list))
+				if attached token_region (a_list) as r then
+					Result := a_list.valid_remove_region (r)
+				else
+					check has_token_region: False end
+				end
 			end
 		end
 
@@ -336,12 +352,13 @@ feature -- Roundtrip/Text modification
 			-- Is text of current AST node available?
 		require
 			a_list_not_void: a_list /= Void
-		local
-			r: ERT_TOKEN_REGION
 		do
 			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
-				r := token_region (a_list)
-				Result := a_list.valid_region (r) and then a_list.valid_text_region (r)
+				if attached token_region (a_list) as r then
+					Result := a_list.valid_region (r) and then a_list.valid_text_region (r)
+				else
+					check has_token_region: False end
+				end
 			end
 		end
 
@@ -351,7 +368,11 @@ feature -- Roundtrip/Text modification
 			a_list_not_void: a_list /= Void
 		do
 			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
-				Result :=  a_list.is_text_modified (token_region (a_list))
+				if attached token_region (a_list) as r then
+					Result :=  a_list.is_text_modified (r)
+				else
+					check has_token_region: False end
+				end
 			end
 		end
 
@@ -528,7 +549,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

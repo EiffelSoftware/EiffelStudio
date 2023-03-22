@@ -329,17 +329,19 @@ feature -- Access
 			-- Has the base class exactly the same number of generic
 			-- parameters in its formal generic declarations ?
 		do
-			Result := base_class.generics = Void
+			if attached base_class as cl then
+				Result := cl.generics = Void
+			end
 		end
 
 	error_generics: VTUG
 		do
 				-- We could avoid having this check but the precondition does not tell us
 				-- we can.
-			if base_class /= Void then
+			if attached base_class as cl then
 				create {VTUG2} Result
 				Result.set_type (Current)
-				Result.set_base_class (base_class)
+				Result.set_base_class (cl)
 			end
 		end
 
@@ -1103,7 +1105,7 @@ invariant
 		class_declaration_mark = once_mark
 
 note
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

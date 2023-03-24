@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="cli_writer" uuid="C41AABC0-930E-4CB4-86BC-DEDD73BC7531" library_target="default">
+	<target name="default">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="error">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+			<renaming old_name="MD_STRONG_NAME" new_name="CLI_WRITER_MD_STRONG_NAME"/>
+			<renaming old_name="MD_ASSEMBLY_INFO" new_name="CLI_WRITER_MD_ASSEMBLY_INFO"/>
+			<renaming old_name="MD_EMIT" new_name="CLI_WRITER_MD_EMIT"/>
+			<renaming old_name="MD_DISPENSER" new_name="CLI_WRITER_MD_DISPENSER"/>
+			<renaming old_name="DBG_WRITER" new_name="CLI_WRITER_DBG_WRITER"/>
+			<renaming old_name="DBG_DOCUMENT_WRITER" new_name="CLI_WRITER_DBG_DOCUMENT_WRITER"/>
+			<renaming old_name="CLI_DEBUG_DIRECTORY" new_name="CLI_WRITER_CLI_DEBUG_DIRECTORY"/>
+			<renaming old_name="CLI_PE_FILE" new_name="CLI_WRITER_CLI_PE_FILE"/>
+		</library>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
+		<library name="il_emitter" location="$ISE_LIBRARY\framework\dotnet\il_emitter\il_emitter.ecf">
+			<renaming old_name="MD_DISPENSER" new_name="IL_MD_DISPENSER"/>
+			<renaming old_name="MD_EMIT" new_name="IL_MD_EMIT"/>
+			<renaming old_name="CLI_PE_FILE" new_name="IL_CLI_PE_FILE"/>
+			<renaming old_name="MD_STRONG_NAME" new_name="IL_MD_STRONG_NAME"/>
+			<!--
+			<renaming old_name="DBG_WRITER" new_name="IL_DBG_WRITER"/>
+			<renaming old_name="DBG_DOCUMENT_WRITER" new_name="IL_DBG_DOCUMENT_WRITER"/>
+			<renaming old_name="CLI_DEBUG_DIRECTORY" new_name="IL_CLI_DEBUG_DIRECTORY"/>
+			-->
+		</library>
+		<library name="il_metadata" location="$ISE_LIBRARY\framework\dotnet\il_metadata\il_metadata.ecf"/>
+		<cluster name="src" location=".\src\" recursive="false">
+			<cluster name="cil_writer" location="$|cli_writer\" recursive="true">
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</cluster>
+			<cluster name="il_emitter" location="$|il_emitter\" recursive="true"/>
+			<cluster name="implementation_windows" location="$|implementation\windows\" recursive="true">
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</cluster>
+			<cluster name="implementation_others" location="$|implementation\others\" recursive="true">
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</cluster>
+		</cluster>
+	</target>
+</system>

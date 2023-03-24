@@ -9,6 +9,11 @@ class
 	IL_ENVIRONMENT
 
 inherit
+	IL_ENVIRONMENT_I
+		redefine
+			default_create
+		end
+
 	OPERATING_ENVIRONMENT
 		redefine
 			default_create
@@ -91,8 +96,6 @@ feature -- Access
 					-- number.
 				create Result.make_from_string_general (v1_0)
 			end
-		ensure
-			default_version_not_void: Result /= Void
 		end
 
 	is_dotnet_installed: BOOLEAN
@@ -176,8 +179,6 @@ feature -- Access
 					end
 				end
 			end
-		ensure
-			installed_runtimes_not_void: Result /= Void
 		end
 
 	dotnet_framework_path: detachable PATH

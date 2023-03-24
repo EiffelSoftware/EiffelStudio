@@ -9,6 +9,11 @@ class
 	IL_ENVIRONMENT
 
 inherit
+	IL_ENVIRONMENT_I
+		redefine
+			default_create
+		end
+
 	OPERATING_ENVIRONMENT
 		redefine
 			default_create
@@ -67,8 +72,6 @@ feature -- Access
 			-- Semantic is to take the most recent version of the run-time.
 		do
 			Result := "v1.0"
-		ensure
-			default_version_not_void: Result /= Void
 		end
 
 	is_dotnet_installed: BOOLEAN
@@ -87,8 +90,6 @@ feature -- Access
 			-- All paths of installed versions of .NET runtime indexed by their version names.
 		do
 			create Result.make (0)
-		ensure
-			installed_runtimes_not_void: Result /= Void
 		end
 
 	dotnet_framework_path: detachable PATH

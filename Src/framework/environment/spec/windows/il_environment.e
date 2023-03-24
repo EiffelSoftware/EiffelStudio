@@ -183,8 +183,6 @@ feature -- Access
 
 	dotnet_framework_path: detachable PATH
 			-- Path to .NET Framework of version `version'.
-		require
-			is_dotnet_installed: is_dotnet_installed
 		do
 			Result := installed_runtimes [version]
 		end

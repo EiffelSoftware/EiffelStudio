@@ -52,6 +52,13 @@ feature -- Access
 			installed_runtimes_not_void: Result /= Void
 		end
 
+	dotnet_framework_path: detachable PATH
+			-- Path to .NET Framework of version `version'.
+		require
+			is_dotnet_installed: is_dotnet_installed
+		deferred
+		end
+
 	installed_sdks: STRING_TABLE [PATH]
 			-- All paths of installed versions of .NET SDKs indexed by their version names.
 		deferred

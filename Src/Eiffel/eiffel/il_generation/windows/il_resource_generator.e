@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 
 				-- Add entry in manifest resource table of current module.
 			l_token := a_module.md_emit.define_manifest_resource (
-				create {UNI_STRING}.make (a_name), 0, last_resource_offset, {MD_RESOURCE_FLAGS}.Public)
+				create {NATIVE_STRING}.make (a_name), 0, last_resource_offset, {MD_RESOURCE_FLAGS}.Public)
 			last_resource_offset := last_resource_offset + l_data.count
 		ensure
 			inserted: a_module.resources /= Void
@@ -278,7 +278,7 @@ invariant
 	resources_not_void: resources /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

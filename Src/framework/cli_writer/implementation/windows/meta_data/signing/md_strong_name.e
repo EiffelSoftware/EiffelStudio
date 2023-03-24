@@ -8,6 +8,9 @@
 class
 	MD_STRONG_NAME
 
+inherit
+	MD_STRONG_NAME_I
+
 create
 	make_with_version
 
@@ -79,8 +82,6 @@ feature -- Access
 
 	public_key (a_key_blob: MANAGED_POINTER): detachable MANAGED_POINTER
 			-- Retrieve public portion of key pair `a_key_blob`.
-		require
-			a_key_blob_not_void: a_key_blob /= Void
 		local
 			l_ptr: POINTER
 			l_key_size: INTEGER
@@ -97,8 +98,6 @@ feature -- Access
 
 	public_key_token (a_public_key_blob: MANAGED_POINTER): MANAGED_POINTER
 			-- Retrieve public key token associated with `a_public_key_blob'.
-		require
-			a_public_key_blob_not_void: a_public_key_blob /= Void
 		local
 			l_ptr: POINTER
 			l_key_size: INTEGER
@@ -107,8 +106,6 @@ feature -- Access
 			l_result := strong_name_token_from_public_key (a_public_key_blob.item, a_public_key_blob.count, $l_ptr, $l_key_size)
 			create Result.make_from_pointer (l_ptr, l_key_size)
 			strong_name_free_buffer (l_ptr)
-		ensure
-			public_key_token_not_void: Result /= Void
 		end
 
 	assembly_signature (a_file: UNI_STRING; a_public_private_key: MANAGED_POINTER): MANAGED_POINTER
@@ -137,10 +134,8 @@ feature -- Access
 				a_public_private_key.item, a_public_private_key.count, $Result)
 		end
 
-	hash_of_file (a_file_path: UNI_STRING): MANAGED_POINTER
+	hash_of_file (a_file_path: NATIVE_STRING): MANAGED_POINTER
 			-- Compute hash of `a_file_path' using default algorithm.
-		require
-			a_file_path_not_void: a_file_path /= Void
 		local
 			l_hash: MANAGED_POINTER
 			l_alg_id, l_result, l_size: INTEGER
@@ -313,7 +308,7 @@ invariant
 	runtime_version_not_void: runtime_version /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

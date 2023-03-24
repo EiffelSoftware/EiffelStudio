@@ -36,8 +36,16 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<library name="il_metadata" location="$EIFFEL_SRC\framework\dotnet\il_metadata\il_metadata.ecf"/>
-		<cluster name="src" location=".\src\" recursive="true">
+		<library name="il_metadata" location="$EIFFEL_SRC\framework\dotnet\il_metadata\il_metadata.ecf">
+			<renaming old_name="MD_STRONG_NAME" new_name="MD_STRONG_NAME_I"/>
+			<renaming old_name="MD_EMIT" new_name="MD_EMIT_I"/>
+			<renaming old_name="MD_DISPENSER" new_name="MD_DISPENSER_I"/>
+			<renaming old_name="DBG_WRITER" new_name="DBG_WRITER_I"/>
+			<renaming old_name="DBG_DOCUMENT_WRITER" new_name="DBG_DOCUMENT_WRITER_I"/>
+			<renaming old_name="CLI_DEBUG_DIRECTORY" new_name="CLI_DEBUG_DIRECTORY_I"/>
+			<renaming old_name="CLI_PE_FILE" new_name="CLI_PE_FILE_I"/>
+		</library>
+		<cluster name="il_emitter" location=".\src\" recursive="true">
 		</cluster>
 	</target>
 </system>

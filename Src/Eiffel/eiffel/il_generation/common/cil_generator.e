@@ -1,5 +1,5 @@
-﻿note
-	description: "Special object responsible for generating IL byte code."
+note
+	description: "Special object responsible for generating IL byte code"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -42,6 +42,11 @@ inherit
 		end
 
 	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
+	SHARED_CLI_FACTORY
 		export
 			{NONE} all
 		end
@@ -102,7 +107,6 @@ feature -- Generation
 			l_last_error_msg: STRING
 			l_key_file_name: PATH
 			l_public_key: MD_PUBLIC_KEY
-				--TODO this class is still not finished since it depends on STRONG_NAME
 			l_res: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]
 		do
 			if not retried then
@@ -135,25 +139,25 @@ feature -- Generation
 					assembly_info.set_version (System.msil_version)
 				end
 
---TODO double check how to replace this code.
---				create signing.make_with_version (System.clr_runtime_version)
---				if not signing.exists then
---						-- We cannot continue as incremental recompilation needs access
---						-- to `MD_STRONG_NAME'.
+				signing := md_factory.strong_name (System.clr_runtime_version)
+				if not signing.exists then
+						-- We cannot continue as incremental recompilation needs access
+						-- to `MD_STRONG_NAME'.
+--FIXME: find how to sign with .Net CORE.						
 --					Error_handler.insert_error (create {VIAC})
 --					Error_handler.checksum
---				end
+				end
 
---				check
---					signing_exists: signing.exists
---				end
+				check
+					signing_exists: signing.exists
+				end
 
 					-- Sign assembly if a key was provided.
 				if attached System.msil_key_file_name as l_system_msil_key_file_name then
 					l_key_file_name := l_system_msil_key_file_name
 				end
 
-				if l_key_file_name /= Void then
+				if signing.exists and then l_key_file_name /= Void then
 					create l_public_key.make_from_file (l_key_file_name, signing)
 					if not l_public_key.is_valid then
 						l_public_key := Void

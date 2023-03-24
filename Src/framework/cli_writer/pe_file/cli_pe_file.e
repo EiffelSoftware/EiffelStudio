@@ -14,6 +14,8 @@ inherit
 			{NONE} padding, file_alignment
 		end
 
+	CLI_PE_FILE_I
+
 create
 	make
 
@@ -97,6 +99,12 @@ feature -- Status
 	has_strong_name: BOOLEAN
 			-- Does current have a strong name signature?
 
+	cli_header_has_flag_strong_name_signed: BOOLEAN
+			-- Has CLI Header flag "strong_name_signed" ?
+		do
+			Result := (cli_header.flags & {CLI_HEADER}.strong_name_signed) = {CLI_HEADER}.strong_name_signed
+		end
+
 	has_resources: BOOLEAN
 			-- Does current have some resources attached?
 		do
@@ -137,7 +145,7 @@ feature -- Access
 	method_writer: detachable MD_METHOD_WRITER
 			-- To hold IL code.
 
-	emitter: MD_EMIT
+	emitter: MD_EMIT_I
 			-- Meta data emitter, needed for RVA update.
 
 	import_table: CLI_IMPORT_TABLE
@@ -152,18 +160,12 @@ feature -- Settings
 
 	set_method_writer (m: like method_writer)
 			-- Set `method_writer' to `m'.
-		require
-			m_not_void: m /= Void
 		do
 			method_writer := m
-		ensure
-			method_writer_set: method_writer = m
 		end
 
 	set_entry_point_token (token: INTEGER)
 			-- Set `token' as entry point of current CLI image.
-		require
-			token_not_null: token /= 0
 		do
 			cli_header.set_entry_point_token (token)
 		end
@@ -173,44 +175,24 @@ feature -- Settings
 
 			-- Set `debug_directory' to `a_cli_debug_directory' and `debug_info'
 			-- to `a_debug_info'.
-		require
-			a_cli_debug_directory_not_void: a_cli_debug_directory /= Void
-			a_debug_info_not_void: a_debug_info /= Void
 		do
 			debug_directory := a_cli_debug_directory
 			debug_info := a_debug_info
-		ensure
-			debug_directory_set: debug_directory = a_cli_debug_directory
-			debug_info_set: debug_info = a_debug_info
 		end
 
 	set_public_key (a_key: like public_key; a_signing: like signing)
 			-- Set `public_key' to `a_key'.
-		require
-			key_not_void: a_key /= Void
-			key_valid: a_key.item.count > 0
-			a_signing_not_void: a_signing /= Void
-			a_signing_exists: a_signing.exists
 		do
 			public_key := a_key
 			has_strong_name := True
 			cli_header.add_flags ({CLI_HEADER}.strong_name_signed)
 			signing := a_signing
-		ensure
-			public_key_set: public_key = a_key
-			has_strong_name_set: has_strong_name
-			signing_set: signing = a_signing
-			cli_header_flags_set: (cli_header.flags & {CLI_HEADER}.strong_name_signed) = {CLI_HEADER}.strong_name_signed
 		end
 
 	set_resources (r: like resources)
 			-- Set `resources' with `r'
-		require
-			r_not_void: r /= Void
 		do
 			resources := r
-		ensure
-			resources_set: resources = r
 		end
 
 feature -- Saving
@@ -338,9 +320,6 @@ feature -- Saving
 				l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
 				l_pe_file.close
 			end
-
-		ensure
-			not_is_valid: not is_valid
 		end
 
 feature {NONE} -- Saving
@@ -574,7 +553,7 @@ invariant
 	public_key_not_void: (is_valid and has_strong_name) implies public_key /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	define_assembly_ref (assembly_name: UNI_STRING; assembly_info: MD_ASSEMBLY_INFO;
+	define_assembly_ref (assembly_name: NATIVE_STRING; assembly_info: MD_ASSEMBLY_INFO;
 			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
 		require
 			assembly_name_not_void: assembly_name /= Void
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Definition
 
-	define_assembly (assembly_name: UNI_STRING; assembly_flags: INTEGER;
+	define_assembly (assembly_name: NATIVE_STRING; assembly_flags: INTEGER;
 			assembly_info: MD_ASSEMBLY_INFO; public_key: detachable MD_PUBLIC_KEY): INTEGER
 
 			-- Define a new assembly `assembly_name' with characteristics
@@ -66,7 +66,7 @@ feature -- Definition
 			valid_result: Result > 0
 		end
 
-	define_exported_type (type_name: UNI_STRING; implementation_token: INTEGER;
+	define_exported_type (type_name: NATIVE_STRING; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
 
 				-- Ensure that `type_name' type defined in `implementation_token' with
@@ -81,7 +81,7 @@ feature -- Definition
 			valid_result: Result > 0
 		end
 
-	define_file (file_name: UNI_STRING; hash_value: MANAGED_POINTER;
+	define_file (file_name: NATIVE_STRING; hash_value: MANAGED_POINTER;
 			file_flags: INTEGER): INTEGER
 
 			-- Define a new entry in file table.
@@ -98,7 +98,7 @@ feature -- Definition
 			valid_result: Result > 0
 		end
 
-	define_manifest_resource (resource_name: UNI_STRING; implementation_token: INTEGER
+	define_manifest_resource (resource_name: NATIVE_STRING; implementation_token: INTEGER
 			offset, resource_flags: INTEGER): INTEGER
 
 			-- Define a new entry in manifest resource table.
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,20 +1,20 @@
 note
 	description: "[
-			CIL_METADATA_EMIT represent a set of in-memory metadata tables and creates a unique module version identifier (GUID) for the metadata. 
+			MD_EMIT represents a set of in-memory metadata tables and creates a unique module version identifier (GUID) for the metadata. 
 			The class has the ability to add entries to the metadata tables and define the assembly information in the metadata.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	MD_METADATA_EMIT
+	MD_EMIT
 
 inherit
-
-	MD_TOKEN_TYPES
+	MD_EMIT_I
 
 	REFACTORING_HELPER
 		export {NONE} all end
+
 create
 	make
 
@@ -42,7 +42,7 @@ feature {NONE}
 		do
 			create tables.make_empty ({PE_TABLE_CONSTANTS}.max_tables)
 			across 0 |..| ({PE_TABLE_CONSTANTS}.max_tables - 1) as i loop
-				tables.force ((create {MD_METADATA_TABLES}.make), i)
+				tables.force ((create {MD_TABLES}.make), i)
 			end
 		end
 
@@ -93,14 +93,21 @@ feature -- Access
 	string_heap: HASH_TABLE [READABLE_STRING_GENERAL, INTEGER]
 			--  metadata table used to store user-defined strings.
 
+feature -- Status report
+
+	is_successful: BOOLEAN
+			-- Was last call successful?	
+		do
+			to_implement ("TODO: for now, always return True")
+			Result := True
+		end
+
 feature -- Access
 
 	save_size: INTEGER
 			-- Size of Current emitted assembly in memory if we were to emit it now.
 		do
 			to_implement ("TODO implement, double check if we really need it")
-		ensure
-			result_positive: Result >= 0
 		end
 
 feature -- Save
@@ -118,11 +125,8 @@ feature -- Save
 			valid_result: Result /= Void
 		end
 
-	save (f_name: STRING_32)
+	save (f_name: NATIVE_STRING)
 			-- Save current assembly to file `f_name'.
-		require
-			f_name_not_void: f_name /= Void
-			f_name_not_empty: not f_name.is_empty
 		do
 			to_implement ("TODO implement, double check if we really ned it.")
 		end
@@ -146,62 +150,45 @@ feature {NONE} -- Change tables
 
 feature -- Settings
 
-	set_module_name (a_name: STRING_32)
+	set_module_name (a_name: NATIVE_STRING)
 			-- Set the module name for the compilation unit being emitted.
 		local
 			l_name_index: NATURAL_64
 			n: NATURAL_64
 			l_entry: PE_TABLE_ENTRY_BASE
 		do
-			l_name_index := pe_writer.hash_string (a_name)
+			l_name_index := pe_writer.hash_string (a_name.string)
 			create {PE_MODULE_TABLE_ENTRY} l_entry.make_with_data (l_name_index, guid_index)
 			n := add_table_entry (l_entry)
 		end
 
 	set_method_rva (method_token, rva: INTEGER)
 			-- Set RVA of `method_token' to `rva'.
-		require
-			method_token_valid: method_token & Md_mask = Md_method_def
-			rvas_valid: rva >= 0
 		do
 			to_implement ("TODO implement")
 		end
 
 feature -- Definition: Access
 
-	define_assembly_ref (assembly_name: STRING_32; assembly_info: MD_ASSEMBLY_INFO;
+	define_assembly_ref (assembly_name: NATIVE_STRING; assembly_info: MD_ASSEMBLY_INFO;
 			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
 			-- Add assembly reference information to the metadata tables.
-		require
-			assembly_name_not_void: assembly_name /= Void
-			assembly_name_not_empty: not assembly_name.is_empty
-			assembly_info_not_void: assembly_info /= Void
 		local
 			l_name_index: NATURAL_64
 			l_public_key_token_index: NATURAL_64
 			l_entry: PE_TABLE_ENTRY_BASE
 			l_dis: NATURAL_64
 		do
-			l_name_index := pe_writer.hash_string (assembly_name)
+			l_name_index := pe_writer.hash_string (assembly_name.string)
 			to_implement ("TODO refactor pe_writer.hash_blob")
 			l_public_key_token_index := pe_writer.hash_blob (public_key_token.item.read_array (0, public_key_token.item.count), public_key_token.item.count.to_natural_64)
-			create {PE_ASSEMBLY_REF_TABLE_ENTRY} l_entry.make_with_data ({PE_ASSEMBLY_FLAGS}.PA_none, assembly_info.major, assembly_info.minor, assembly_info.build, assembly_info.revision, l_name_index, l_public_key_token_index)
+			create {PE_ASSEMBLY_REF_TABLE_ENTRY} l_entry.make_with_data ({PE_ASSEMBLY_FLAGS}.PA_none, assembly_info.major_version, assembly_info.minor_version, assembly_info.build_number, assembly_info.revision_number, l_name_index, l_public_key_token_index)
 			l_dis := add_table_entry (l_entry)
 			Result := last_token.to_integer_32
-		ensure
-			valid_result: Result > 0
 		end
 
-	define_type_ref (type_name: STRING_32; resolution_scope: INTEGER): INTEGER
+	define_type_ref (type_name: NATIVE_STRING; resolution_scope: INTEGER): INTEGER
 			-- Adds type reference information to the metadata tables.
-		require
-			type_name_not_void: type_name /= Void
-			type_name_not_empty: not type_name.is_empty
-			resolution_scope_valid:
-				(resolution_scope = 0) or
-				(resolution_scope & Md_mask = Md_module_ref) or
-				(resolution_scope & Md_mask = Md_assembly_ref) or
-				(resolution_scope & Md_mask = Md_type_ref)
 		local
 			l_name_index: NATURAL_64
 			l_entry: PE_TABLE_ENTRY_BASE
@@ -244,23 +231,14 @@ feature -- Definition: Access
 				l_namespace_index := 0
 			end
 
-			l_name_index := pe_writer.hash_string (type_name)
+			l_name_index := pe_writer.hash_string (type_name.string)
 			create {PE_TYPE_REF_TABLE_ENTRY} l_entry.make_with_data (create {PE_RESOLUTION_SCOPE}.make_with_tag_and_index (l_scope, l_tuple.table_row_index), l_name_index, l_namespace_index)
 			l_dis := add_table_entry (l_entry)
 			Result := last_token.to_integer_32
-		ensure
-			result_valid: Result & Md_mask = Md_type_ref
 		end
 
-	define_member_ref (method_name: STRING_32; in_class_token: INTEGER; a_signature: MD_SIGNATURE): INTEGER
+	define_member_ref (method_name: NATIVE_STRING; in_class_token: INTEGER; a_signature: MD_SIGNATURE): INTEGER
 			-- Create reference to member in class `in_class_token'.
-		require
-			method_name_not_void: method_name /= Void
-			method_name_not_empty: not method_name.is_empty
-			in_class_token_valid: in_class_token & Md_mask = Md_type_ref or
-				in_class_token & Md_mask = Md_type_def or
-				in_class_token & md_mask = md_type_spec
-			signature_not_void: a_signature /= Void
 		local
 			l_table_type, l_table_row: NATURAL_64
 			l_member_ref_index: NATURAL_64
@@ -277,7 +255,7 @@ feature -- Definition: Access
 			l_member_ref := create_member_ref (in_class_token, l_tuple.table_type_index)
 
 			l_method_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
-			l_name_index := pe_writer.hash_string (method_name)
+			l_name_index := pe_writer.hash_string (method_name.string)
 
 				-- Create a new PE_MEMBER_REF_TABLE_ENTRY instance with the given data
 			create l_member_ref_entry.make_with_data (l_member_ref, l_name_index, l_method_signature)
@@ -287,23 +265,18 @@ feature -- Definition: Access
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
-		ensure
-			result_valid: Result & Md_mask = Md_member_ref
 		end
 
-	define_module_ref (a_name: STRING): INTEGER
+	define_module_ref (a_name: NATIVE_STRING): INTEGER
 			-- Define a new module reference for the given `module_name`.
 			-- Returns the generated token.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.is_empty
 		local
 			l_name_index: NATURAL_64
 			l_module_ref_entry: PE_MODULE_REF_TABLE_ENTRY
 			l_module_ref_index: NATURAL_64
 		do
 				-- Hash the module name and create a new PE_MODULE_REF_TABLE_ENTRY instance.
-			l_name_index := pe_writer.hash_string (a_name)
+			l_name_index := pe_writer.hash_string (a_name.string)
 			create l_module_ref_entry.make_with_data (l_name_index)
 
 				-- Add the new PE_MODULE_REF_TABLE_ENTRY instance to the metadata tables.
@@ -311,29 +284,21 @@ feature -- Definition: Access
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
-		ensure
-			result_valid: Result & Md_mask = Md_module_ref
 		end
 
 feature -- Definition: Creation
 
-	define_assembly (assembly_name: STRING_32; assembly_flags: INTEGER;
+	define_assembly (assembly_name: NATIVE_STRING; assembly_flags: INTEGER;
 			assembly_info: MD_ASSEMBLY_INFO; public_key: detachable MD_PUBLIC_KEY): INTEGER
 			-- Add assembly metadata information to the metadata tables.
 			--| the public key could be null.
-		require
-			assembly_name_not_void: assembly_name /= Void
-			assembly_name_not_empty: not assembly_name.is_empty
-			assembly_info_not_void: assembly_info /= Void
-			valid_flags: public_key /= Void implies assembly_flags &
-				{MD_ASSEMBLY_FLAGS}.public_key = {MD_ASSEMBLY_FLAGS}.public_key
 		local
 			l_name_index: NATURAL_64
 			l_entry: PE_TABLE_ENTRY_BASE
 			l_public_key_index: NATURAL_64
 			l_dis: NATURAL_64
 		do
-			l_name_index := pe_writer.hash_string (assembly_name)
+			l_name_index := pe_writer.hash_string (assembly_name.string)
 			if public_key /= Void then
 					--l_public_key_index := pe_writer.hash_blob (public_key)
 			else
@@ -342,38 +307,17 @@ feature -- Definition: Creation
 			create {PE_ASSEMBLY_DEF_TABLE_ENTRY} l_entry.make_with_data (assembly_flags, assembly_info.major, assembly_info.minor, assembly_info.build, assembly_info.revision, l_name_index, l_public_key_index)
 			l_dis := add_table_entry (l_entry)
 			Result := last_token.to_integer_32
-		ensure
-			valid_result: Result & Md_mask = Md_assembly
 		end
 
-	define_manifest_resource (resource_name: STRING_32; implementation_token: INTEGER;
+	define_manifest_resource (resource_name: NATIVE_STRING; implementation_token: INTEGER;
 			offset, resource_flags: INTEGER): INTEGER
-
 			-- Define a new assembly.
-		require
-			resource_name_not_void: resource_name /= Void
-			resource_name_not_empty: not resource_name.is_empty
-			valid_flags:
-				(resource_flags & {MD_RESOURCE_FLAGS}.public =
-						{MD_RESOURCE_FLAGS}.public) or
-				(resource_flags & {MD_RESOURCE_FLAGS}.private =
-						{MD_RESOURCE_FLAGS}.private)
 		do
 			to_implement ("TODO add implementation")
-		ensure
-			valid_result: Result & Md_mask = Md_manifest_resource
 		end
 
-	define_type (type_name: STRING_32; flags: INTEGER; extend_token: INTEGER; implements: detachable ARRAY [INTEGER]): INTEGER
+	define_type (type_name: NATIVE_STRING; flags: INTEGER; extend_token: INTEGER; implements: detachable ARRAY [INTEGER]): INTEGER
 			-- Define a new type in the metadata.
-		require
-			type_name_not_void: type_name /= Void
-			type_name_not_empty: not type_name.is_empty
-			extend_token_valid:
-				(extend_token & Md_mask = Md_type_def) or
-				(extend_token & Md_mask = Md_type_ref) or
-				(extend_token & Md_mask = Md_type_spec) or
-				extend_token = 0
 		local
 			l_name_index: NATURAL_64
 			l_namespace_index: NATURAL_64
@@ -384,7 +328,7 @@ feature -- Definition: Creation
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_dis: NATURAL_64
 		do
-			l_name_index := pe_writer.hash_string (type_name)
+			l_name_index := pe_writer.hash_string (type_name.string)
 				-- TODO double check if we need to compute the namespace_index, since we are creating a new type
 				-- we could assume the namespace_index is 0.
 			l_namespace_index := 0
@@ -407,15 +351,11 @@ feature -- Definition: Creation
 					l_dis := add_table_entry (l_entry)
 				end
 			end
-		ensure
-			result_valid: Result & Md_mask = Md_type_def
 		end
 
 	define_type_spec (a_signature: MD_TYPE_SIGNATURE): INTEGER
 			-- Define a new token of TypeSpec for a type represented by `a_signature'.
 			-- To be used to define different type for .NET arrays.
-		require
-			signature_not_void: a_signature /= Void
 		local
 			l_table_type, l_table_row: NATURAL_64
 			l_type_def_entry: PE_TYPE_SPEC_TABLE_ENTRY
@@ -432,52 +372,24 @@ feature -- Definition: Creation
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
-		ensure
-			result_valid: Result & Md_mask = Md_type_def
 		end
 
-	define_exported_type (type_name: STRING_32; implementation_token: INTEGER;
+	define_exported_type (type_name: NATIVE_STRING; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
 			-- Create a row in ExportedType table.
-		require
-			type_name_not_void: type_name /= Void
-			type_name_not_empty: not type_name.is_empty
-			implementation_token_valid:
-				(implementation_token & Md_mask = Md_file) or
-				(implementation_token & Md_mask = Md_exported_type)
-			type_def_token_valid: type_def_token = 0 or (type_def_token & Md_mask = Md_type_def)
 		do
 			to_implement ("TODO add implementation")
-		ensure
-			valid_result: Result & Md_mask = Md_exported_type
 		end
 
-	define_file (file_name: STRING_32; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
+	define_file (file_name: NATIVE_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
 			-- Create a row in File table
-		require
-			file_name_not_void: file_name /= Void
-			file_name_not_empty: not file_name.is_empty
-			hash_value_not_void: hash_value /= Void
-			hash_value_not_empty: hash_value.count > 0
-			valid_file_flags:
-				(file_flags = 0) or
-				(file_flags = {MD_FILE_FLAGS}.has_no_meta_data)
 		do
 			to_implement ("TODO implement")
-		ensure
-			valid_result: Result & Md_mask = Md_file
 		end
 
-	define_method (method_name: STRING_32; in_class_token: INTEGER; method_flags: INTEGER;
+	define_method (method_name: NATIVE_STRING; in_class_token: INTEGER; method_flags: INTEGER;
 			a_signature: MD_METHOD_SIGNATURE; impl_flags: INTEGER): INTEGER
 			-- Create reference to method in class `in_class_token`.
-		require
-			method_name_not_void: method_name /= Void
-			method_name_not_empty: not method_name.is_empty
-			in_class_token_valid: in_class_token & Md_mask = Md_type_ref or
-				in_class_token & Md_mask = Md_type_def or
-				in_class_token & md_mask = md_type_spec
-			signature_not_void: a_signature /= Void
 		local
 			l_table_type, l_table_row: NATURAL_64
 			l_method_def_index: NATURAL_64
@@ -495,7 +407,7 @@ feature -- Definition: Creation
 			l_param_index := a_signature.parameter_count.to_natural_64
 
 			l_method_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
-			l_name_index := pe_writer.hash_string (method_name)
+			l_name_index := pe_writer.hash_string (method_name.string)
 
 				-- Create a new PE_METHOD_DEF_TABLE_ENTRY instance with the given data
 			create l_method_def_entry.make (method_flags, impl_flags, l_name_index, l_method_signature, l_param_index)
@@ -505,21 +417,11 @@ feature -- Definition: Creation
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
-		ensure
-			result_valid: Result & Md_mask = Md_method_def
 		end
 
 	define_method_impl (in_class_token, method_token, used_method_declaration_token: INTEGER)
 			-- Define a method impl from `used_method_declaration_token' from inherited
 			-- class to method `method_token' defined in `in_class_token'.
-		require
-			in_class_token_valid: in_class_token & Md_mask = Md_type_def
-			method_token_valid:
-				(method_token & Md_mask = Md_method_def) or
-				(method_token & Md_mask = Md_member_ref)
-			used_method_declaration_token_valid:
-				(used_method_declaration_token & Md_mask = Md_method_def) or
-				(used_method_declaration_token & Md_mask = Md_member_ref)
 		local
 			l_table_type, l_table_row: NATURAL_64
 			l_method_impl_entry: PE_METHOD_IMPL_TABLE_ENTRY
@@ -542,17 +444,9 @@ feature -- Definition: Creation
 			l_dis := add_table_entry (l_method_impl_entry)
 		end
 
-	define_property (type_token: INTEGER; name: STRING_32; flags: NATURAL_32;
+	define_property (type_token: INTEGER; name: NATIVE_STRING; flags: NATURAL_32;
 			signature: MD_PROPERTY_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER): INTEGER
 			-- Define property `name' for a type `type_token'.
-		require
-			valid_type_token: type_token & Md_mask = Md_type_def
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-			signature_not_void: signature /= Void
-			signature_not_empty: signature.count > 0
-			setter_token_valid: setter_token & Md_mask = Md_method_def
-			getter_token_valid: getter_token & Md_mask = Md_method_def
 		local
 			l_property: PE_PROPERTY_TABLE_ENTRY
 			l_dis: NATURAL_64
@@ -570,7 +464,7 @@ feature -- Definition: Creation
 				-- Create a new PE_PROPERTY_TABLE_ENTRY instance with the given data.
 			create {PE_PROPERTY_TABLE_ENTRY} l_property.make_with_data (
 					flags.to_natural_16,
-					pe_writer.hash_string (name),
+					pe_writer.hash_string (name.string),
 					l_property_signature
 				)
 
@@ -601,51 +495,27 @@ feature -- Definition: Creation
 		end
 
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;
-			import_name: STRING_32; module_ref: INTEGER)
-
+			import_name: NATIVE_STRING; module_ref: INTEGER)
 			-- Further specification of a pinvoke method location defined by `method_token'.
-		require
-			method_token_valid:
-				(method_token & Md_mask = Md_field_def) or
-				(method_token & Md_mask = Md_method_def)
-			import_name_not_void: import_name /= Void
-			import_name_not_empty: not import_name.is_empty
-			module_ref_valid: module_ref & Md_mask = Md_module_ref
 		do
 			to_implement ("TODO implement")
 		end
 
-	define_parameter (in_method_token: INTEGER; param_name: STRING_32;
+	define_parameter (in_method_token: INTEGER; param_name: NATIVE_STRING;
 			param_pos: INTEGER; param_flags: INTEGER): INTEGER
-
 			-- Create a new parameter specification token for method `in_method_token'.
-		require
-			in_method_token_valid: in_method_token & Md_mask = Md_method_def
-			param_name_not_void: param_name /= Void
-			param_name_not_empty: not param_name.is_empty
-			pos_valid: param_pos >= 0
 		do
 			to_implement ("TODO add implementation")
-		ensure
-			result_valid: Result & Md_mask = Md_param_def
 		end
 
 	set_field_marshal (a_token: INTEGER; a_native_type_sig: MD_NATIVE_TYPE_SIGNATURE)
 			-- Set a particular marshaling for `a_token'. Limited to parameter token for the moment.
-		require
-			a_token_valid: a_token & Md_mask = md_param_def
-			a_native_type_sig_not_void: a_native_type_sig /= Void
 		do
 			to_implement ("TODO implement")
 		end
 
-	define_field (field_name: STRING_32; in_class_token: INTEGER; field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER
+	define_field (field_name: NATIVE_STRING; in_class_token: INTEGER; field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER
 			-- Create a new field in class `in_class_token'.
-		require
-			field_name_not_void: field_name /= Void
-			field_name_not_empty: not field_name.is_empty
-			in_class_token_valid: in_class_token & Md_mask = Md_type_def
-			signature_not_void: a_signature /= Void
 		local
 			l_table_type, l_table_row: NATURAL_64
 			l_field_def_index: NATURAL_64
@@ -658,7 +528,7 @@ feature -- Definition: Creation
 			l_tuple := extract_table_type_and_row (in_class_token)
 
 			l_field_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
-			l_name_index := pe_writer.hash_string (field_name)
+			l_name_index := pe_writer.hash_string (field_name.string)
 
 				-- Create a new PE_FIELD_TABLE_ENTRY instance with the given data
 			create l_field_def_entry.make_with_data (field_flags, l_name_index, l_field_signature)
@@ -668,15 +538,11 @@ feature -- Definition: Creation
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
-		ensure
-			result_valid: Result & Md_mask = Md_field_def
 		end
 
 	define_signature (a_signature: MD_LOCAL_SIGNATURE): INTEGER
 			-- Define a new token for `a_signature'. To be used only for
 			-- local signature.
-		require
-			signature_not_void: a_signature /= Void
 		local
 			l_signature_hash: NATURAL_64
 			l_signature_index: NATURAL_64
@@ -688,58 +554,39 @@ feature -- Definition: Creation
 			l_signature_index := add_table_entry (l_signature_entry)
 
 			Result := last_token.to_integer_32
-		ensure
-			result_valid: Result & Md_mask = Md_signature
 		end
 
-	define_string_constant (field_name: STRING_32; in_class_token: INTEGER;
+	define_string_constant (field_name: NATIVE_STRING; in_class_token: INTEGER;
 			field_flags: INTEGER; a_string: STRING): INTEGER
 
 			-- Create a new field in class `in_class_token'.
-		require
-			field_name_not_void: field_name /= Void
-			field_name_not_empty: not field_name.is_empty
-			in_class_token_valid: in_class_token & Md_mask = Md_type_def
-			a_string_not_void: a_string /= Void
 		local
 			l_field_signature: MD_FIELD_SIGNATURE
 			l_uni_str: STRING_32
 		do
 			create l_field_signature.make
 			to_implement ("TODO implement")
-		ensure
-			result_valid: Result & Md_mask = Md_field_def
 		end
 
-	define_string (str: STRING_32): INTEGER
+	define_string (str: NATIVE_STRING): INTEGER
 			-- Define a new token for `str'.
-		require
-			str_not_void: str /= Void
 		local
 			l_result: NATURAL_64
 			l_str: STRING_32
 			l_us_index: NATURAL_64
 		do
 				--| add the null character
-			create l_str.make_from_string (str)
+			create l_str.make_from_string (str.string)
 			l_str.append_character ('%U')
 			l_us_index := pe_writer.hash_us (l_str, l_str.count)
 			l_result := l_us_index | ({NATURAL_64} 0x70 |<< 24)
 			Result := l_result.to_integer_32
 			string_heap.force (l_str, Result)
-		ensure
-			result_valid: Result & Md_mask = Md_string
 		end
 
 	define_custom_attribute (owner, constructor: INTEGER; ca: MD_CUSTOM_ATTRIBUTE): INTEGER
 			-- Define a new token for `ca' applied on token `owner' with using `constructor'
 			-- as creation procedure.
-		require
-			owner_valid: (owner & Md_mask) /= Md_custom_attribute -- Any type of token except mdCustomAttribute is accepted.
-			constructor_valid:
-				(constructor & Md_mask = Md_member_ref) or
-				(constructor & Md_mask = Md_method_def)
-			ca_not_void_implies_not_empty: ca /= Void implies ca.count >= 4
 		local
 			blob: POINTER
 			blob_count: INTEGER
@@ -749,8 +596,6 @@ feature -- Definition: Creation
 				blob_count := ca.count
 			end
 			to_implement ("TODO add implementation")
-		ensure
-			result_valid: Result & Md_mask = Md_custom_attribute
 		end
 
 feature -- Constants
@@ -846,7 +691,7 @@ feature {NONE} -- Helper
 
 feature {CIL_PE_FILE} -- Metadata Tables
 
-	tables: SPECIAL [MD_METADATA_TABLES]
+	tables: SPECIAL [MD_TABLES]
 			--  in-memory metadata tables
 
 	pe_writer: PE_WRITER

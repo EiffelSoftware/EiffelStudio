@@ -4,9 +4,14 @@ note
 	revision: "$Revision$"
 
 class
-	MD_METADATA_DISPENSER
+	MD_DISPENSER
 
-
+inherit
+	MD_DISPENSER_I
+		rename
+			emitter as emit
+		end
+		
 create
 	make
 
@@ -18,8 +23,6 @@ feature -- Scope Definition
 			create emit.make
 		end
 
-
-
-	emit: MD_METADATA_EMIT
+	emit: MD_EMIT
 		-- Emit metadata
 end

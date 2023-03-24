@@ -8,7 +8,16 @@
 		<option warning="error">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="il_metadata" location="$EIFFEL_SRC\framework\dotnet\il_metadata\il_metadata.ecf"/>
+		<library name="il_metadata" location="$EIFFEL_SRC\framework\dotnet\il_metadata\il_metadata.ecf">
+			<renaming old_name="MD_ASSEMBLY_INFO" new_name="MD_ASSEMBLY_INFO_I"/>
+			<renaming old_name="MD_STRONG_NAME" new_name="MD_STRONG_NAME_I"/>
+			<renaming old_name="MD_EMIT" new_name="MD_EMIT_I"/>
+			<renaming old_name="MD_DISPENSER" new_name="MD_DISPENSER_I"/>
+			<renaming old_name="DBG_WRITER" new_name="DBG_WRITER_I"/>
+			<renaming old_name="DBG_DOCUMENT_WRITER" new_name="DBG_DOCUMENT_WRITER_I"/>
+			<renaming old_name="CLI_DEBUG_DIRECTORY" new_name="CLI_DEBUG_DIRECTORY_I"/>
+			<renaming old_name="CLI_PE_FILE" new_name="CLI_PE_FILE_I"/>
+		</library>
 		<library name="cli_writer_clib" location="$EIFFEL_SRC\framework\cli_writer\cli_writer_clib.ecf"/>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>

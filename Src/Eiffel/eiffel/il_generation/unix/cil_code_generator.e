@@ -28,7 +28,7 @@ inherit
 
 	SHARED_IL_CONSTANTS
 
-	SHARED_IL_DEBUG_INFO_RECORDER
+	--SHARED_IL_DEBUG_INFO_RECORDER
 
 	SHARED_WORKBENCH
 		export
@@ -98,6 +98,11 @@ inherit
 		end
 
 	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		end
+
+	SHARED_CLI_FACTORY
 		export
 			{NONE} all
 		end
@@ -175,10 +180,10 @@ feature {NONE} -- Access
 	output_file_name: READABLE_STRING_32
 			-- File where assembly is stored.
 
-	md_dispenser: MD_METADATA_DISPENSER
+	md_dispenser: MD_DISPENSER
 			-- Access to MetaData generator.
 
-	md_emit: MD_METADATA_EMIT
+	md_emit: MD_EMIT
 			-- Metadata emitter.
 		do
 			Result := current_module.md_emit
@@ -247,9 +252,8 @@ feature {NONE} -- Access
 	local_types: ARRAYED_LIST [PAIR [TYPE_A, STRING]]
 			-- To store types of local variables.
 
-	uni_string: STRING_32
+	uni_string: NATIVE_STRING
 			-- Buffer for all Unicode string conversion.
-			--| Replaced UNI_STRING by STRING_32
 
 	is_console_application: BOOLEAN
 			-- Is current a console application?
@@ -286,13 +290,11 @@ feature {NONE} -- Access
 
 feature {NONE} -- Debug info
 
---	dbg_writer: DBG_WRITER
---			-- PDB writer.
---		do
---			Result := current_module.dbg_writer
---		end
--- TODO dbg_writer without using COM interface.
-
+	dbg_writer: DBG_WRITER
+			-- PDB writer.
+		do
+			Result := current_module.dbg_writer
+		end
 
 	dbg_offsets,
 	dbg_start_lines,
@@ -497,7 +499,6 @@ feature -- Cleanup
 			-- Clean recorded debug information.
 		do
 			to_implement ("TODO add implementation")
---			Il_debug_info_recorder.clean_class_type_info_for (a_class_type)
 		end
 
 	cleanup
@@ -567,12 +568,12 @@ feature -- Generation Structure
 			to_implement ("TODO find a way to replace CLR_HOST and CLR_HOST_FACTORY")
 
 				-- Create Unicode string buffer.
-			create uni_string.make (1024)
+			create uni_string.make_empty (1024)
 
 				-- Name of `dll' containing all C externals.
 			create c_module_name.make_from_string ("lib" + a_assembly_name + ".dll")
 
-			create md_dispenser.make
+			md_dispenser := md_factory.dispenser
 
 				-- Create signature for `done' and `sync' in once computation.
 			create done_sig.make
@@ -599,8 +600,7 @@ feature -- Generation Structure
 
 			public_key := a_public_key
 
-			is_debug_info_enabled := debug_mode
-			-- FIXME jfiat [2003/10/10 - 16:41] try without debug_mode, for no pdb info
+			is_debug_info_enabled := debug_mode and False -- FIXME: no dotnet debugging for now
 
 			output_file_name := location.extended (a_file_name).name
 
@@ -670,7 +670,7 @@ feature -- Generation Structure
 			-- Generate a class for run-time needs.
 		local
 			l_cur_mod: like current_module
-			helper_emit: MD_METADATA_EMIT
+			helper_emit: MD_EMIT
 			oms_field_cil_token: INTEGER
 			oms_field_eiffel_token,
 			oms_32_field_eiffel_token,
@@ -707,8 +707,7 @@ feature -- Generation Structure
 				method_body.set_local_token (helper_emit.define_signature (local_sig))
 				check_body_index_range_label := create_label
 				allocate_for_body_index_label := create_label
-				array_type_token := helper_emit.define_type_ref (create {STRING_32}.make_from_string ("System.Array"), current_module.mscorlib_token)
-					-- Replaced UNI_STRING
+				array_type_token := helper_emit.define_type_ref (create {NATIVE_STRING}.make ("System.Array"), current_module.mscorlib_token)
 				method_sig.reset
 				method_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.default_sig)
 				method_sig.set_parameter_count (3)
@@ -716,8 +715,7 @@ feature -- Generation Structure
 				method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, array_type_token)
 				method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, array_type_token)
 				method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
-				array_copy_method_token := helper_emit.define_member_ref (create {STRING_32}.make_from_string ("Copy"), array_type_token, method_sig)
-					-- Replaced UNI_STRING
+				array_copy_method_token := helper_emit.define_member_ref (create {NATIVE_STRING}.make ("Copy"), array_type_token, method_sig)
 
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_field_cil_token)
 				method_body.put_opcode ({MD_OPCODES}.dup)
@@ -890,13 +888,13 @@ feature -- Generation Structure
 			-- Finish creation of current assembly.
 		require
 			a_signing_not_void: a_signing /= Void
---			a_signing_exists: a_signing.exists -- TODO
+			a_signing_exists: a_signing.exists
 		local
 			l_types: like class_types
 			l_type: CLASS_TYPE
 			l_class: CLASS_C
 			i, nb: INTEGER
-			l_uni_string: STRING_32 -- UNI_STRING
+			l_uni_string: NATIVE_STRING
 			l_module: IL_MODULE
 			l_file_token: INTEGER
 		do
@@ -907,7 +905,7 @@ feature -- Generation Structure
 					l_types := System.class_types
 					i := l_types.lower
 					nb := l_types.upper
-					create l_uni_string.make (0)
+					create l_uni_string.make_empty (0)
 				until
 					i > nb
 				loop
@@ -930,12 +928,12 @@ feature -- Generation Structure
 								file_token.put (l_file_token, l_module)
 							end
 
-							l_uni_string.set (l_type.full_il_type_name, 1, l_type.full_il_type_name.count)
+							l_uni_string.set_string (l_type.full_il_type_name)
 							md_emit.define_exported_type (l_uni_string, l_file_token,
 								l_type.last_type_token, {MD_TYPE_ATTRIBUTES}.Public).do_nothing
 
 							if l_type.implementation_id /= l_type.static_type_id then
-								l_uni_string.set (l_type.full_il_implementation_type_name, 1, l_type.full_il_implementation_type_name.count)
+								l_uni_string.set_string (l_type.full_il_implementation_type_name)
 								md_emit.define_exported_type (l_uni_string, l_file_token,
 									l_type.last_implementation_type_token,
 									{MD_TYPE_ATTRIBUTES}.Public).do_nothing
@@ -945,7 +943,7 @@ feature -- Generation Structure
 								not l_class.is_deferred and
 								(attached l_class.creators as cs implies not cs.is_empty)
 							then
-								l_uni_string.seT (l_type.full_il_create_type_name, 1, l_type.full_il_create_type_name.count)
+								l_uni_string.set_string (l_type.full_il_create_type_name)
 								md_emit.define_exported_type (l_uni_string, l_file_token,
 									l_type.last_create_type_token, {MD_TYPE_ATTRIBUTES}.Public).do_nothing
 							end
@@ -998,16 +996,15 @@ feature -- Generation Structure
 				(file_flags = {MD_FILE_FLAGS}.Has_meta_data) or
 				(file_flags = {MD_FILE_FLAGS}.Has_no_meta_data)
 			a_signing_not_void: a_signing /= Void
---			a_signing_exists: a_signing.exists -- todo
+			a_signing_exists: a_signing.exists
 		local
-			l_uni_string: STRING_32 --UNI_STRING
+			l_uni_string: NATIVE_STRING
 			l_hash_res: MANAGED_POINTER
 		do
-			create l_uni_string.make_from_string_general (a_file)
-			to_implement ("TODO add implementation")
---			l_hash_res := a_signing.hash_of_file (l_uni_string)
+			create l_uni_string.make (a_file)
+			l_hash_res := a_signing.hash_of_file (l_uni_string)
 
-			l_uni_string.set (a_name, 1, a_name.count)
+			l_uni_string.set_string (a_name)
 			Result := a_module.md_emit.define_file (l_uni_string, l_hash_res, file_flags)
 		ensure
 			valid_result: Result & {MD_TOKEN_TYPES}.Md_mask =
@@ -1067,7 +1064,7 @@ feature -- Generation Structure
 			-- Finish creation of current module.
 		require
 			a_signing_not_void: a_signing /= Void
---			a_signing_exists: a_signing.exists  --TODO
+			a_signing_exists: a_signing.exists
 		local
 			a_class: CLASS_C
 			root_feat: FEATURE_I
@@ -1078,20 +1075,22 @@ feature -- Generation Structure
 				not is_single_module and then
 				(current_module /= Void and then current_module.is_generated)
 			then
-					-- Mark now entry point for debug information
-				if has_root_type and is_debug_info_enabled and not system.root_creation_name.is_empty then
-					a_class := system.root_type.base_class
-					root_feat := a_class.feature_table.item (system.root_creation_name)
-					l_decl_type := system.root_class_type (system.root_type).type.implemented_type (root_feat.origin_class_id)
+						-- Mark now entry point for debug information
+					if is_debug_info_enabled then
+						if has_root_type and not system.root_creation_name.is_empty then
+						a_class := system.root_type.base_class
+						root_feat := a_class.feature_table.item (system.root_creation_name)
+						l_decl_type := system.root_class_type (system.root_type).type.implemented_type (root_feat.origin_class_id)
 
-					entry_point_token := current_module.implementation_feature_token (
-						l_decl_type.associated_class_type (system.root_class_type (system.root_type).type).implementation_id,
-						root_feat.origin_feature_id)
-						-- Debugger API does not allow to use MethodRef token for user entry point
-					if entry_point_token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def then
-						current_module.dbg_writer.set_user_entry_point (entry_point_token)
-					else
-						fixme ("Regenerate root procedure to get MethodDef token or generate a fictious procedure with relevant debug information that will call root procedure.")
+						entry_point_token := current_module.implementation_feature_token (
+							l_decl_type.associated_class_type (system.root_class_type (system.root_type).type).implementation_id,
+							root_feat.origin_feature_id)
+							-- Debugger API does not allow to use MethodRef token for user entry point
+						if entry_point_token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def then
+							current_module.dbg_writer.set_user_entry_point (entry_point_token)
+						else
+							fixme ("Regenerate root procedure to get MethodDef token or generate a fictious procedure with relevant debug information that will call root procedure.")
+						end
 					end
 				end
 					-- Save module.
@@ -1428,7 +1427,7 @@ feature -- Class info
 			l_sig.set_parameter_count (0)
 			l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
 
-			uni_string.set ("____class_name", 1, ("____class_name").count)
+			uni_string.set_string ("____class_name")
 			l_meth_token := md_emit.define_method (uni_string,
 				l_class_token, l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
@@ -1454,7 +1453,7 @@ feature -- Class info
 				l_field_sig.reset
 				l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 					current_module.ise_generic_type_token)
-				uni_string.set ("$$____type", 1, ("$$____type").count)
+				uni_string.set_string ("$$____type")
 				l_type_field_token := md_emit.define_field (uni_string, l_class_token,
 					{MD_FIELD_ATTRIBUTES}.Family, l_field_sig)
 
@@ -1470,7 +1469,7 @@ feature -- Class info
 				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 					current_module.ise_generic_type_token)
 
-				uni_string.set ("____type", 1, ("____type").count)
+				uni_string.set_string ("____type")
 				l_meth_token := md_emit.define_method (uni_string,
 					l_class_token, l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
@@ -1491,7 +1490,7 @@ feature -- Class info
 				l_sig.set_parameter_count (0)
 				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
-				uni_string.set ("____standard_twin", 1, ("____standard_twin").count)
+				uni_string.set_string ("____standard_twin")
 				l_meth_token := md_emit.define_method (uni_string,
 					l_class_token, l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
@@ -1519,7 +1518,7 @@ feature -- Class info
 				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
-				uni_string.set ("____copy", 1, ("____copy").count)
+				uni_string.set_string ("____copy")
 				l_meth_token := md_emit.define_method (uni_string,
 					l_class_token, l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
@@ -1553,7 +1552,7 @@ feature -- Class info
 				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
 				l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
-				uni_string.set ("____is_equal", 1, ("____is_equal").count)
+				uni_string.set_string ("____is_equal")
 				l_meth_token := md_emit.define_method (uni_string,
 					l_class_token, l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
@@ -1696,7 +1695,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_boolean, 0)
 				l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_object, 0)
 
-				uni_string.set ("Equals", 1, ("Equals").count)
+				uni_string.set_string ("Equals")
 				l_meth_token := md_emit.define_method (uni_string, l_class_token,
 					l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.managed)
 
@@ -1756,7 +1755,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 				l_sig.set_parameter_count (0)
 				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
 
-				uni_string.set ("Finalize", 1, ("Finalize").count)
+				uni_string.set_string ("Finalize")
 				l_meth_token := md_emit.define_method (uni_string, l_class_token,
 					l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.managed)
 
@@ -1824,7 +1823,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 				l_sig.set_parameter_count (0)
 				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
 
-				uni_string.set ("GetHashCode", 1, ("GetHashCode").count)
+				uni_string.set_string ("GetHashCode")
 				l_meth_token := md_emit.define_method (uni_string, l_class_token,
 					l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.managed)
 
@@ -1883,7 +1882,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 				l_sig.set_parameter_count (0)
 				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
 
-				uni_string.set ("ToString", 1, ("ToString").count)
+				uni_string.set_string ("ToString")
 				l_meth_token := md_emit.define_method (uni_string, l_class_token,
 					l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.managed)
 
@@ -2187,7 +2186,7 @@ feature -- Features info
 				end
 			end
 
-			uni_string.set (l_name, 1, l_name.count)
+			uni_string.set_string (l_name)
 
 			if l_is_attribute_generated_as_field then
 					-- Evaluate signature of the field.
@@ -2265,7 +2264,7 @@ feature -- Features info
 					l_meth_sig.set_return_type (
 						{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 					set_signature_type (l_meth_sig, l_return_type, l_class_type)
-					uni_string.set (setter_prefix + l_name, 1, (setter_prefix + l_name).count)
+					uni_string.set_string (setter_prefix + l_name)
 					l_setter_token := md_emit.define_member_ref (uni_string,
 						l_class_token, l_meth_sig)
 
@@ -2493,7 +2492,7 @@ feature -- Features info
 				end
 			end
 
-			uni_string.set (l_name, 1, l_name.count)
+			uni_string.set_string (l_name)
 
 			if l_is_attribute_generated_as_field then
 				l_declaration_class := system.class_of_id
@@ -2619,7 +2618,7 @@ feature -- Features info
 					l_meth_sig.set_parameter_count (1)
 					l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 					set_signature_type (l_meth_sig, l_return_type, signature_declaration_type)
-					uni_string.set (setter_prefix + l_name, 1, (setter_prefix + l_name).count)
+					uni_string.set_string (setter_prefix + l_name)
 					l_setter_token := md_emit.define_method (uni_string, current_class_token,
 						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
@@ -2641,7 +2640,7 @@ feature -- Features info
 						-- Current needs to be generated only for static wrapper of Eiffel
 						-- feature so that metadata consumer can pick the name (e.g. debugger)
 						-- but it is not needed when it is defined as an instance method.
-					uni_string.set ("Current", 1, ("Current").count)
+					uni_string.set_string ("Current")
 					md_emit.define_parameter (l_meth_token, uni_string, j,
 						{MD_PARAM_ATTRIBUTES}.In).do_nothing
 				end
@@ -2652,7 +2651,7 @@ feature -- Features info
 					attached l_return_type and then
 					l_return_type.is_boolean
 				then
-					uni_string.set ("Result", 1, ("Result").count)
+					uni_string.set_string ("Result")
 					l_param_token := md_emit.define_parameter (l_meth_token,
 						uni_string, 0, 0)
 					md_emit.set_field_marshal (l_param_token, boolean_native_signature)
@@ -2665,7 +2664,7 @@ feature -- Features info
 					until
 						i > l_parameter_count
 					loop
-						uni_string.set (l_feat_arg.item_name_32 (i), 1, l_feat_arg.item_name_32 (i).count )
+						uni_string.set_string (l_feat_arg.item_name_32 (i))
 						md_emit.define_parameter (l_meth_token, uni_string,
 							i + j, {MD_PARAM_ATTRIBUTES}.In).do_nothing
 						i := i + 1
@@ -2805,7 +2804,7 @@ feature -- Features info
 					-- Property getter name conflicts with the feature name.
 				n := property_getter_prefix + t.associated_class.name + "." + f.feature_name
 			end
-			uni_string.set (n, 1, n.count)
+			uni_string.set_string (n)
 		end
 
 	prepare_property_setter (f: FEATURE_I; s: CLASS_TYPE; property_name: STRING; return_type: TYPE_A; t: CLASS_TYPE)
@@ -2832,7 +2831,7 @@ feature -- Features info
 					-- Property setter name conflicts with the feature name.
 				n := property_setter_prefix + t.associated_class.name + "." + f.feature_name
 			end
-			uni_string.set (n, 1, n.count)
+			uni_string.set_string (n)
 		end
 
 	is_property_getter_generated (f: FEATURE_I; t: CLASS_TYPE): BOOLEAN
@@ -2904,7 +2903,7 @@ feature -- IL Generation
 					{MD_TYPE_ATTRIBUTES}.Auto_layout |
 					{MD_TYPE_ATTRIBUTES}.Ansi_class |
 					{MD_TYPE_ATTRIBUTES}.Is_class
-				uni_string.set (create_name, 1, create_name.count)
+				uni_string.set_string (create_name)
 				l_type_token := md_emit.define_type (uni_string, l_attributes,
 					current_module.object_type_token, Void)
 
@@ -2977,7 +2976,7 @@ feature -- IL Generation
 			l_name := il_casing.pascal_casing (System.dotnet_naming_convention,
 				feat.feature_name, {IL_CASING_CONVERSION}.lower_case)
 
-			uni_string.set (l_name, 1, l_name.count)
+			uni_string.set_string (l_name)
 
 			l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
 				{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
@@ -3737,9 +3736,8 @@ feature -- IL Generation
 
 					set_signature_type (l_meth_sig, l_return_type, parent_type)
 
-					uni_string.set (Override_prefix + setter_prefix + inh_feat.feature_name +
-						override_counter.next.out, 1, (Override_prefix + setter_prefix + inh_feat.feature_name +
-						override_counter.next.out).count)
+					uni_string.set_string (Override_prefix + setter_prefix + inh_feat.feature_name +
+						override_counter.next.out)
 
 					l_setter_token := md_emit.define_method (uni_string, current_class_token,
 						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
@@ -3844,7 +3842,7 @@ feature -- IL Generation
 						a_feature.arguments.forth
 					end
 				end
-				uni_string.set ("builtin_" + a_feature.written_class.name + "_" + a_feature.feature_name, 1, ("builtin_" + a_feature.written_class.name + "_" + a_feature.feature_name).count)
+				uni_string.set_string ("builtin_" + a_feature.written_class.name + "_" + a_feature.feature_name)
 				l_token := md_emit.define_member_ref (uni_string, current_module.ise_runtime_type_token, l_method_sig)
 				method_body.put_static_call (l_token, m, a_feature.has_return_value)
 				generate_return (a_feature.has_return_value)
@@ -3910,7 +3908,7 @@ feature -- IL Generation
 				l_field_sig := field_sig
 				l_field_sig.reset
 				set_type_in_signature (l_field_sig, l_return_type, l_context_class_type)
-				uni_string.set (member_name, 1, member_name.count)
+				uni_string.set_string (member_name)
 				Result := md_emit.define_member_ref (uni_string, l_class_token, l_field_sig)
 			when Set_field_type, Set_static_field_type then
 				check
@@ -3921,7 +3919,7 @@ feature -- IL Generation
 				l_field_sig.reset
 					-- Type of field is actually the first argument of our setter routine.
 				set_type_in_signature (l_field_sig, l_parameters_string.item (1), l_context_class_type)
-				uni_string.set (member_name, 1, member_name.count)
+				uni_string.set_string (member_name)
 				Result := md_emit.define_member_ref (uni_string, l_class_token, l_field_sig)
 			else
 				l_meth_sig := method_sig
@@ -3957,9 +3955,9 @@ feature -- IL Generation
 				end
 
 				if member_name = Void then
-					uni_string.set (".ctor", 1, (".ctor").count )
+					uni_string.set_string (".ctor")
 				else
-					uni_string.set (member_name, 1, member_name.count)
+					uni_string.set_string (member_name)
 				end
 
 				Result := md_emit.define_member_ref (uni_string, l_class_token, l_meth_sig)
@@ -3984,7 +3982,7 @@ feature -- IL Generation
 		do
 			l_context_class_type := current_class_type
  			if base_name /= Void then
- 				uni_string.set (base_name, 1, base_name.count)
+ 				uni_string.set_string (base_name)
  				l_class_token := md_emit.define_type_ref (uni_string, an_assembly_token)
  			else
 				l_class_token := a_type_token
@@ -3995,7 +3993,7 @@ feature -- IL Generation
 				l_field_sig := field_sig
 				l_field_sig.reset
 				set_type_in_signature (l_field_sig, return_type, l_context_class_type)
-				uni_string.set (member_name, 1, member_name.count)
+				uni_string.set_string (member_name)
 				l_token := md_emit.define_member_ref (uni_string, l_class_token, l_field_sig)
 				if ext_kind = field_type then
 					method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, l_token)
@@ -4011,7 +4009,7 @@ feature -- IL Generation
 				end
 					-- Type of field is actually the first argument of our setter routine.
 				set_type_in_signature (l_field_sig, parameters_string.item (1), l_context_class_type)
-				uni_string.set (member_name, 1, member_name.count)
+				uni_string.set_string (member_name)
 				l_token := md_emit.define_member_ref (uni_string, l_class_token, l_field_sig)
 				if ext_kind = set_field_type then
 					method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, l_token)
@@ -4051,9 +4049,9 @@ feature -- IL Generation
 				end
 
 				if member_name = Void then
-					uni_string.set (".ctor", 1, (".ctor").count )
+					uni_string.set_string (".ctor")
 				else
-					uni_string.set (member_name, 1, member_name.count)
+					uni_string.set_string (member_name)
 				end
 
 				l_token := md_emit.define_member_ref (uni_string, l_class_token, l_meth_sig)
@@ -5273,7 +5271,7 @@ feature -- Once management
 							l_method_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.default_sig)
 							l_method_sig.set_parameter_count (0)
 							l_method_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
-							uni_string.set (".cctor", 1, (".cctor").count)
+							uni_string.set_string (".cctor")
 							class_constructor_token := md_emit.define_method (
 								uni_string,
 								current_class_token,
@@ -5330,7 +5328,7 @@ feature -- Once management
 			name := feat.feature_name
 
 				-- Generate field that indicates whether result is calculated or not
-			uni_string.set (once_done_name (name), 1, once_done_name (name).count)
+			uni_string.set_string (once_done_name (name))
 			done_token := md_emit.define_field (uni_string,
 				current_class_token,
 				{MD_FIELD_ATTRIBUTES}.Public | {MD_FIELD_ATTRIBUTES}.Static,
@@ -5340,7 +5338,7 @@ feature -- Once management
 			end
 
 				-- Generate field that holds exception raised during evaluation
-			uni_string.set (once_exception_name (name), 1, once_exception_name (name).count)
+			uni_string.set_string (once_exception_name (name))
 			exception_token := md_emit.define_field (uni_string,
 				current_class_token,
 				{MD_FIELD_ATTRIBUTES}.Public | {MD_FIELD_ATTRIBUTES}.Static,
@@ -5356,7 +5354,7 @@ feature -- Once management
 				result_sig.reset
 				set_signature_type (result_sig, result_type, a_context_type)
 
-				uni_string.set (once_result_name (name), 1, once_result_name (name).count)
+				uni_string.set_string (once_result_name (name))
 				result_token := md_emit.define_field (uni_string,
 					current_class_token,
 					{MD_FIELD_ATTRIBUTES}.Public | {MD_FIELD_ATTRIBUTES}.Static, result_sig)
@@ -5370,14 +5368,14 @@ feature -- Once management
 
 			if feat.is_process_relative then
 					-- Generate flag that indicates that once data fields are ready to use
-				uni_string.set (once_ready_name (name), 1, once_ready_name (name).count)
+				uni_string.set_string (once_ready_name (name))
 				sync_token := md_emit.define_field (
 					uni_string,
 					current_class_token,
 					{MD_FIELD_ATTRIBUTES}.Public | {MD_FIELD_ATTRIBUTES}.Static,
 					done_sig)
 					-- Generate field to synchronize access to other data fields
-				uni_string.set (once_sync_name (name), 1, once_sync_name (name).count )
+				uni_string.set_string (once_sync_name (name))
 				sync_token := md_emit.define_field (
 					uni_string,
 					current_class_token,
@@ -5404,17 +5402,17 @@ feature -- Once management
 				l_once_info := current_class.object_relative_once_info_of_rout_id_set (feature_i.rout_id_set)
 				check has_obj_relative_once_info: l_once_info /= Void end
 
-				uni_string.set (l_once_info.called_name, 1, l_once_info.called_name.count)
+				uni_string.set_string (l_once_info.called_name)
 				done_token := md_emit.define_field (uni_string, cl_token, {MD_FIELD_ATTRIBUTES}.Private, done_sig)
 
-				uni_string.set (l_once_info.exception_name, 1, l_once_info.exception_name.count)
+				uni_string.set_string (l_once_info.exception_name)
 				exception_token := md_emit.define_field (uni_string, cl_token, {MD_FIELD_ATTRIBUTES}.Private, exception_sig)
 
 				if l_once_info.has_result then
 					l_sig := field_sig
 					l_sig.reset
 					set_signature_type (l_sig, l_once_info.result_type_a, current_class_type)
-					uni_string.set (l_once_info.result_name, 1, l_once_info.result_name.count)
+					uni_string.set_string (l_once_info.result_name)
 					result_token := md_emit.define_field (uni_string, cl_token, {MD_FIELD_ATTRIBUTES}.Private, l_sig)
 				else
 					result_token := 0
@@ -5424,15 +5422,15 @@ feature -- Once management
 			else
 				class_data_token := current_module.class_data_token (system.class_of_id (feature_i.access_in))
 
-				uni_string.set (once_done_name (name), 1, once_done_name (name).count)
+				uni_string.set_string (once_done_name (name))
 				done_token := md_emit.define_member_ref (uni_string, class_data_token, done_sig)
-				uni_string.set (once_exception_name (name), 1, once_exception_name (name).count)
+				uni_string.set_string (once_exception_name (name))
 				exception_token := md_emit.define_member_ref (uni_string, class_data_token, exception_sig)
 				if feature_i.has_return_value or else is_once_creation then
 					l_sig := field_sig
 					l_sig.reset
 					set_signature_type (l_sig, result_type_in (feature_i, current_class_type), current_class_type)
-					uni_string.set(once_result_name (name), 1, once_result_name (name).count)
+					uni_string.set_string (once_result_name (name))
 					result_token := md_emit.define_member_ref (uni_string, class_data_token, l_sig)
 				else
 					result_token := 0
@@ -5440,9 +5438,9 @@ feature -- Once management
 			end
 
 			if feature_i.is_process_relative then
-				uni_string.set (once_ready_name (name), 1, once_ready_name (name).count)
+				uni_string.set_string (once_ready_name (name))
 				ready_token := md_emit.define_member_ref (uni_string, class_data_token, done_sig)
-				uni_string.set (once_sync_name (name), 1, once_sync_name (name).count)
+				uni_string.set_string (once_sync_name (name))
 				sync_token := md_emit.define_member_ref (uni_string, class_data_token, sync_sig)
 			else
 				ready_token := 0
@@ -6275,7 +6273,7 @@ feature -- Assertions
 			if tag = Void then
 				put_void
 			else
-				uni_string.set (tag ,1, tag.count)
+				uni_string.set_string (tag)
 				l_str_token := md_emit.define_string (uni_string)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, l_str_token)
 			end
@@ -6306,7 +6304,7 @@ feature -- Assertions
 			if a_tag = Void then
 				put_void
 			else
-				uni_string.set (a_tag, 1, a_tag.count)
+				uni_string.set_string (a_tag)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr,
 					md_emit.define_string (uni_string))
 			end
@@ -6322,7 +6320,7 @@ feature -- Assertions
 		do
 			if feat = Void or else not current_class_type.is_expanded then
 					-- Generate instance invariant feature even though class invariant is not defined.
-				uni_string.set ("_invariant", 1, ("_invariant").count)
+				uni_string.set_string ("_invariant")
 				l_dotnet_invariant_token := md_emit.define_method (uni_string, current_class_token,
 					{MD_METHOD_ATTRIBUTES}.Public |
 					{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
@@ -6359,7 +6357,7 @@ feature -- Assertions
 					l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 					set_signature_type (l_sig, current_class_type.type, current_class_type)
 
-					uni_string.set ("$$_invariant", 1, ("$$_invariant").count)
+					uni_string.set_string ("$$_invariant")
 					l_invariant_token := md_emit.define_method (uni_string, current_class_token,
 						{MD_METHOD_ATTRIBUTES}.Public |
 						{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
@@ -6555,14 +6553,14 @@ feature -- Constants generation
 	put_system_string (s: READABLE_STRING_GENERAL)
 			-- Put `System.String' object corresponding to `s' on IL stack.
 		do
-			uni_string.set (s, 1, s.count)
+			uni_string.set_string (s)
 			method_body.put_string (md_emit.define_string (uni_string))
 		end
 
 	put_system_string_32 (s: READABLE_STRING_32)
 			-- Put `System.String' object corresponding to `s' on IL stack.
 		do
-			uni_string.set (s, 1, s.count)
+			uni_string.set_string (s)
 			method_body.put_string (md_emit.define_string (uni_string))
 		end
 
@@ -6958,9 +6956,9 @@ feature -- Basic feature
 			set_signature_type (l_sig, Character_type, current_class_type)
 
 			if is_upper then
-				uni_string.set ("ToUpper", 1, ("ToUpper").count)
+				uni_string.set_string ("ToUpper")
 			else
-				uni_string.set ("ToLower", 1, ("ToLower").count)
+				uni_string.set_string ("ToLower")
 			end
 			l_rout_token := md_emit.define_member_ref (uni_string,
 				current_module.char_type_token, l_sig)
@@ -6982,7 +6980,7 @@ feature -- Basic feature
 			set_method_return_type (l_sig, Boolean_type, current_class_type)
 			set_signature_type (l_sig, Character_type, current_class_type)
 
-			uni_string.set (query_name, 1, query_name.count)
+			uni_string.set_string (query_name)
 			l_query_token := md_emit.define_member_ref (uni_string,
 				current_module.char_type_token, l_sig)
 
@@ -7008,7 +7006,7 @@ feature -- Basic feature
 				set_signature_type (l_sig, Real_64_type, current_class_type)
 			end
 
-			uni_string.set (query_name, 1, query_name.count)
+			uni_string.set_string (query_name)
 			if is_real_32 then
 				l_query_token := md_emit.define_member_ref (uni_string, current_module.real_32_type_token, l_sig)
 			else
@@ -7030,7 +7028,7 @@ feature -- Basic feature
 			l_sig.set_parameter_count (1)
 			set_method_return_type (l_sig, type, current_class_type)
 			set_signature_type (l_sig, type, current_class_type)
-			uni_string.set (a_name, 1, a_name.count)
+			uni_string.set_string (a_name)
 			l_math_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
 				l_sig)
 
@@ -7053,7 +7051,7 @@ feature -- Basic feature
 			set_signature_type (l_sig, type, current_class_type)
 			set_signature_type (l_sig, type, current_class_type)
 
-			uni_string.set(a_name, 1, a_name.count)
+			uni_string.set_string (a_name)
 			l_math_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
 				l_sig)
 
@@ -7108,19 +7106,21 @@ feature -- Line info
 		local
 			l_pos: INTEGER
 		do
-			to_implement ("TODO Add implementation")
---			if is_debug_info_enabled and not stop_breakpoints_generation then
---				l_pos := dbg_offsets_count
---				dbg_offsets.force (method_body.count, l_pos)
---				dbg_start_lines.force (n + pragma_offset, l_pos)
---				dbg_start_columns.force (0, l_pos)
---				dbg_end_lines.force (n + pragma_offset, l_pos)
---				dbg_end_columns.force (1000, l_pos)
---				dbg_offsets_count := l_pos + 1
+			if is_debug_info_enabled then
+				to_implement ("TODO Add implementation")
+--				if stop_breakpoints_generation then
+--					l_pos := dbg_offsets_count
+--					dbg_offsets.force (method_body.count, l_pos)
+--					dbg_start_lines.force (n + pragma_offset, l_pos)
+--					dbg_start_columns.force (0, l_pos)
+--					dbg_end_lines.force (n + pragma_offset, l_pos)
+--					dbg_end_columns.force (1000, l_pos)
+--					dbg_offsets_count := l_pos + 1
 
---				Il_debug_info_recorder.record_line_info (current_class_type, Byte_context.current_feature, method_body.count, n)
---				method_body.put_nop
---			end
+--					Il_debug_info_recorder.record_line_info (current_class_type, Byte_context.current_feature, method_body.count, n)
+--					method_body.put_nop
+--				end
+			end
 		end
 
 	put_silent_line_info (n: INTEGER)
@@ -7128,11 +7128,13 @@ feature -- Line info
 			-- But in case of dotnet debugger inside eStudio
 			-- ignore those 'dummy' nope.
 		do
-			to_implement ("TODO Add implementation")
---			if is_debug_info_enabled and not stop_breakpoints_generation then
---				Il_debug_info_recorder.ignore_next_debug_info
---				put_line_info (n)
---			end
+			if is_debug_info_enabled then
+				to_implement ("TODO Add implementation")
+--				if not stop_breakpoints_generation then
+--					Il_debug_info_recorder.ignore_next_debug_info
+--					put_line_info (n)
+--				end
+end
 		end
 
 	put_debug_info (location: LOCATION_AS)
@@ -7141,20 +7143,22 @@ feature -- Line info
 		local
 			l_pos: INTEGER
 		do
-			to_implement ("TODO Add implementation")
---			if is_debug_info_enabled and not stop_breakpoints_generation then
---				l_pos := dbg_offsets_count
---				dbg_offsets.force (method_body.count, l_pos)
---				dbg_start_lines.force (location.line + pragma_offset, l_pos)
---				dbg_start_columns.force (location.column, l_pos)
---				dbg_end_lines.force (location.line + pragma_offset, l_pos)
---				dbg_end_columns.force (location.final_column, l_pos)
---				dbg_offsets_count := l_pos + 1
+			if is_debug_info_enabled then
+				to_implement ("TODO Add implementation")
+--				if not stop_breakpoints_generation then
+--					l_pos := dbg_offsets_count
+--					dbg_offsets.force (method_body.count, l_pos)
+--					dbg_start_lines.force (location.line + pragma_offset, l_pos)
+--					dbg_start_columns.force (location.column, l_pos)
+--					dbg_end_lines.force (location.line + pragma_offset, l_pos)
+--					dbg_end_columns.force (location.final_column, l_pos)
+--					dbg_offsets_count := l_pos + 1
 
---				Il_debug_info_recorder.record_line_info (current_class_type,
---					Byte_context.current_feature, method_body.count, location.line)
---				method_body.put_nop
---			end
+--					Il_debug_info_recorder.record_line_info (current_class_type,
+--						Byte_context.current_feature, method_body.count, location.line)
+--					method_body.put_nop
+--				end
+			end
 		end
 
 	put_ghost_debug_infos (a_line_n:INTEGER; a_nb: INTEGER)
@@ -7162,10 +7166,10 @@ feature -- Line info
 			-- this is to deal with the not generated debug clauses
 			-- but displayed in eStudio during debugging
 		do
-			to_implement ("TODO Add implementation")
---			if is_debug_info_enabled then
+			if is_debug_info_enabled then
+				to_implement ("TODO Add implementation")
 --				Il_debug_info_recorder.record_ghost_debug_infos (current_class_type, Byte_context.current_feature, method_body.count, a_line_n, a_nb)
---			end
+			end
 		end
 
 	put_silent_debug_info (location: LOCATION_AS)
@@ -7174,11 +7178,13 @@ feature -- Line info
 			-- But in case of dotnet debugger inside eStudio
 			-- ignore those 'dummy' nope.
 		do
-			to_implement ("TODO add implementation")
---			if is_debug_info_enabled and not stop_breakpoints_generation then
---				Il_debug_info_recorder.ignore_next_debug_info
---				put_debug_info (location)
---			end
+			if is_debug_info_enabled then
+				to_implement ("TODO Add implementation")
+--				if not stop_breakpoints_generation then
+--					Il_debug_info_recorder.ignore_next_debug_info
+--					put_debug_info (location)
+--				end
+			end
 		end
 
 	flush_sequence_points (a_class_type: CLASS_TYPE)
@@ -7187,8 +7193,8 @@ feature -- Line info
 			l_sequence_point_list: LINKED_LIST [like sequence_point]
 			--l_document: DBG_DOCUMENT_WRITER
 		do
-			to_implement ("TODO add debugging support")
---			if is_debug_info_enabled then
+			if is_debug_info_enabled then
+				to_implement ("TODO add debugging support")
 --				if internal_document /= Void then
 --					l_document := current_module.dbg_pragma_documents (internal_document)
 --				else
@@ -7217,7 +7223,7 @@ feature -- Line info
 --				create dbg_end_lines.make_filled (0, 0, 5)
 --				create dbg_end_columns.make_filled (0, 0, 5)
 --				dbg_offsets_count := 0
---			end
+			end
 		end
 
 	set_pragma_offset (a_offset: INTEGER)
@@ -8088,16 +8094,15 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		do
 		end
 
---	dbg_documents (a_class_id: INTEGER): DBG_DOCUMENT_WRITER
---			-- Associated document to `a_class_id'.
---		require
---			in_debug_mode: is_debug_info_enabled
---		do
---			Result := current_module.dbg_documents (a_class_id)
---		ensure
---			dbg_documents_not_void: Result /= Void
---		end
--- TODO double check how to implement it.
+	dbg_documents (a_class_id: INTEGER): DBG_DOCUMENT_WRITER
+			-- Associated document to `a_class_id'.
+		require
+			in_debug_mode: is_debug_info_enabled
+		do
+			Result := current_module.dbg_documents (a_class_id)
+		ensure
+			dbg_documents_not_void: Result /= Void
+		end
 
 	internal_class_types: ARRAY [CLASS_TYPE]
 			-- Array of CLASS_TYPE in system indexed by `implementation_id' and
@@ -8295,19 +8300,19 @@ note
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -9,6 +9,17 @@ class
 	MD_ASSEMBLY_INFO
 
 inherit
+	MD_ASSEMBLY_INFO_I
+		undefine
+			copy, is_equal
+		redefine
+			make,
+			set_major_version,
+			set_minor_version,
+			set_build_number,
+			set_revision_number
+		end
+
 	MANAGED_POINTER
 		rename
 			make as managed_pointer_make
@@ -22,6 +33,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create MD_ASSEMBLY_INFO.
 		do
+			Precursor
 			managed_pointer_make (structure_size)
 		end
 
@@ -30,25 +42,29 @@ feature -- Settings
 	set_major_version (m: NATURAL_16)
 			-- Set `major_version' to `m'.
 		do
+			Precursor (m)
 			c_set_major_version (item, m)
 		end
 
 	set_minor_version (m: NATURAL_16)
 			-- Set `minor_version' to `m'.
 		do
+			Precursor (m)
 			c_set_minor_version (item, m)
 		end
 
-	set_build_number (m: NATURAL_16)
-			-- Set `build_number' to `m'.
+	set_build_number (b: NATURAL_16)
+			-- Set `build_number' to `b'.
 		do
-			c_set_build_number (item, m)
+			Precursor (b)
+			c_set_build_number (item, b)
 		end
 
-	set_revision_number (m: NATURAL_16)
-			-- Set `revision_number' to `m'.
+	set_revision_number (r: NATURAL_16)
+			-- Set `revision_number' to `r'.
 		do
-			c_set_revision_number (item, m)
+			Precursor (r)
+			c_set_revision_number (item, r)
 		end
 
 feature -- Measurement
@@ -100,7 +116,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -113,22 +129,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class MD_ASSEMBLY_INFO

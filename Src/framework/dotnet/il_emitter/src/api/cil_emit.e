@@ -84,10 +84,10 @@ feature -- Definition: access
 			valid_public_key_size: a_public_key.count = 8
 		do
 			if attached {CIL_ASSEMBLY_DEF} pe_lib.mscorlib_assembly as l_mscorlib then
-				l_mscorlib.set_major (a_assembly_info.major)
-				l_mscorlib.set_minor (a_assembly_info.minor)
-				l_mscorlib.set_revision (a_assembly_info.revision)
-				l_mscorlib.set_build (a_assembly_info.revision)
+				l_mscorlib.set_major (a_assembly_info.major_version)
+				l_mscorlib.set_minor (a_assembly_info.minor_version)
+				l_mscorlib.set_revision (a_assembly_info.revision_number)
+				l_mscorlib.set_build (a_assembly_info.revision_number)
 				l_mscorlib.public_key_token := a_public_key
 			end
 		end

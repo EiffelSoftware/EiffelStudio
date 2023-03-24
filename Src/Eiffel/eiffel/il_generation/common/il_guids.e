@@ -1,18 +1,40 @@
-note
-	description: "Objects that ..."
+﻿note
+	description: "Predefined GUIDs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IL_OFFSET_SET
+	IL_GUIDS
 
-inherit
-	ID_SET
+feature -- Access
 
-create
-	make
+	language_guid: CIL_GUID
+			-- Language guid used to identify our language when debugging.
+		once
+			create Result.make (0xE1FFE11E, 0x8195, 0x490C,
+				{ARRAY [NATURAL_8]} <<0x87, 0xEE, 0xA7, 0x13, 0x30, 0x1A, 0x67, 0x0C>>)
+		ensure
+			language_guid_not_void: language_guid /= Void
+		end
+
+	vendor_guid: CIL_GUID
+			-- Vendor guid used to identify us when debugging.
+		once
+			create Result.make (0xE1FFE10E, 0x9424, 0x485F,
+				{ARRAY [NATURAL_8]} <<0x82, 0x64, 0xD4, 0xA7, 0x26, 0xC1, 0x62, 0xE7>>)
+		ensure
+			vendor_guid_not_void: vendor_guid /= Void
+		end
+
+	document_type_guid: CIL_GUID
+			-- Document type guid.
+		once
+			create Result.make_empty
+		ensure
+			document_type_guid_not_void: document_type_guid /= Void
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2023, Eiffel Software"

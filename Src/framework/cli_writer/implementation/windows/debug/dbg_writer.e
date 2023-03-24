@@ -14,20 +14,26 @@ class
 inherit
 	COM_OBJECT
 
+	DBG_WRITER_I
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (emitter: MD_EMIT; name: UNI_STRING; full_build: BOOLEAN)
+	make (emitter: MD_EMIT_I; name: NATIVE_STRING; full_build: BOOLEAN)
 			-- Create a new SymUnmanagedWriter object using `emitter' in a file `name'.
 		do
 				-- Initialize COM.
 			(create {CLI_COM}).initialize_com
 
 			make_by_pointer (c_new_sym_writer)
-			last_call_success := c_initialize (item, emitter.item, name.item,
-				default_pointer, full_build)
+			if attached {MD_EMIT} emitter as e then
+				last_call_success := c_initialize (item, e.item, name.item,
+					default_pointer, full_build)
+			else
+				check is_expected_emitter: False end
+			end
 			is_closed := False
 		ensure
 			not_is_closed: not is_closed
@@ -38,77 +44,50 @@ feature -- Update
 
 	close
 			-- Stop all processing on current.
-		require
-			not_is_closed: not is_closed
 		do
 			last_call_success := c_close (item)
 			is_closed := True
-		ensure
-			success: last_call_success = 0
-			is_closed: is_closed
 		end
 
 	close_method
 			-- Close current method.
-		require
-			not_is_closed: not is_closed
 		do
 			last_call_success := c_close_method (item)
-		ensure
-			success: last_call_success = 0
 		end
 
 	open_method (a_meth_token: INTEGER)
 			-- Open method `a_meth_token'.
-		require
-			not_is_closed: not is_closed
-			valid_token: a_meth_token /= 0
 		do
 			last_call_success := c_open_method (item, a_meth_token)
-		ensure
-			success: last_call_success = 0
 		end
 
 	open_scope (start_offset: INTEGER)
 			-- Create a new scope for defining local variables.
-		require
-			valid_start_offset: start_offset >= 0
 		local
 			l_scope_id: INTEGER
 		do
 			last_call_success := c_open_scope (item, start_offset, $l_scope_id)
-		ensure
-			success: last_call_success = 0
 		end
 
 	close_scope (end_offset: INTEGER)
 			-- Close most recently opened scope.
-		require
-			valid_end_offset: end_offset >= 0
 		do
-			last_call_success := c_close_scope (item, end_offset) 
-		ensure
-			success: last_call_success = 0
+			last_call_success := c_close_scope (item, end_offset)
 		end
-		
+
 feature -- PE file data
 
 	debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER
 			-- Retrieve debug info required to be inserted in PE file.
-		require
-			not_is_closed: not is_closed
-			a_dbg_directory_not_void: a_dbg_directory /= Void
 		local
 			l_count: INTEGER
 			l_data: MANAGED_POINTER
 		do
 			create l_data.make (1024)
 			last_call_success := c_debug_info (item, a_dbg_directory.item, l_data.count, $l_count, l_data.item)
-			
+
 			create Result.make (l_count)
 			Result.item.memory_copy (l_data.item, l_count)
-		ensure
-			success: last_call_success = 0
 		end
 
 feature -- Status report
@@ -118,14 +97,8 @@ feature -- Status report
 
 feature -- Definition
 
-	define_document (url: UNI_STRING; language, vendor, doc_type: WEL_GUID): DBG_DOCUMENT_WRITER
+	define_document (url: NATIVE_STRING; language, vendor, doc_type: CIL_GUID): DBG_DOCUMENT_WRITER_I
 			-- Create a new document writer needed to generated debug info.
-		require
-			not_is_closed: not is_closed
-			url_not_void: url /= Void
-			language_guid_not_void: language /= Void
-			vendor_guid_not_void: vendor /= Void
-			doc_type_guid_not_void: doc_type /= Void
 		local
 			p: POINTER
 		do
@@ -134,27 +107,12 @@ feature -- Definition
 			check
 				p_not_null: p /= default_pointer
 			end
-			create Result.make_by_pointer (p)
-		ensure
-			success: last_call_success = 0
+			create {DBG_DOCUMENT_WRITER} Result.make_by_pointer (p)
 		end
 
-	define_sequence_points (document: DBG_DOCUMENT_WRITER; count: INTEGER; offsets, start_lines,
+	define_sequence_points (document: DBG_DOCUMENT_WRITER_I; count: INTEGER; offsets, start_lines,
 			start_columns, end_lines, end_columns: ARRAY [INTEGER])
-		
 			-- Set sequence points for `document'
-		require
-			not_is_closed: not is_closed
-			document_not_void: document /= Void
-			offsets_not_void: offsets /= Void
-			start_lines_not_void: start_lines /= Void
-			valid_start_lines_count: count <= start_lines.count
-			start_columns_not_void: start_columns /= Void
-			valid_start_columns_count: count <= start_columns.count
-			end_lines_not_void: end_lines /= Void
-			valid_end_lines_count: count <= end_lines.count
-			end_columns_not_void: end_columns /= Void
-			valid_end_columns_count: count <= end_columns.count
 		local
 			l_offsets, l_start_lines, l_start_columns, l_end_lines, l_end_columns: ANY
 		do
@@ -164,55 +122,40 @@ feature -- Definition
 				l_start_columns := start_columns.to_c
 				l_end_lines := end_lines.to_c
 				l_end_columns := end_columns.to_c
-				last_call_success := c_define_sequence_points (item, document.item, count,
-					$l_offsets, $l_start_lines, $l_start_columns, $l_end_lines, $l_end_columns)
+				if attached {DBG_DOCUMENT_WRITER} document as doc then
+					last_call_success := c_define_sequence_points (item, doc.item, count,
+						$l_offsets, $l_start_lines, $l_start_columns, $l_end_lines, $l_end_columns)
+				else
+					check has_expected_document: False end
+					last_call_success := -1 -- FIXME
+				end
 			else
 				last_call_success := 0
 			end
-		ensure
-			success: last_call_success = 0
 		end
 
-	define_local_variable (name: UNI_STRING; pos: INTEGER; signature: MD_TYPE_SIGNATURE)
+	define_local_variable (name: NATIVE_STRING; pos: INTEGER; signature: MD_TYPE_SIGNATURE)
 			-- Define local variable `name' at position `pos' in current method using
 			-- `signature' of current method.
-		require
-			name_not_void: name /= Void
-			valid_pos: pos >= 0
-			signature_not_void: signature /= Void
 		do
 			last_call_success := c_define_local_variable (item, name.item, 0,
 				signature.count, signature.item.item, 1, pos, 0, 0, 0, 0)
-		ensure
-			success: last_call_success = 0
 		end
 
-	define_parameter (name: UNI_STRING; pos: INTEGER)
+	define_parameter (name: NATIVE_STRING; pos: INTEGER)
 			-- Define parameter `name' at position `pos' in current method.
-		require
-			name_not_void: name /= Void
-			valid_pos: pos >= 0
 		do
 			last_call_success := c_define_parameter (item, name.item, 0, pos, 1, pos, 0, 0)
-		ensure
-			success: last_call_success = 0
 		end
-	
+
 feature -- Settings
 
 	set_user_entry_point (entry_point_token: INTEGER)
 			-- Set `entry_point_token' as entry point.
-		require
-			not_is_closed: not is_closed
-			valid_token:
-				entry_point_token & {MD_TOKEN_TYPES}.Md_mask =
-					{MD_TOKEN_TYPES}.Md_method_def
 		do
 			last_call_success := c_set_user_entry_point (item, entry_point_token)
-		ensure
-			success: last_call_success  = 0
 		end
-		
+
 feature {NONE} -- Implementation
 
 	c_new_sym_writer: POINTER
@@ -249,7 +192,7 @@ feature {NONE} -- Implementation
 
 	c_debug_info (an_item: POINTER; debug_directory: POINTER; input_data_size: INTEGER;
 			output_data_size: POINTER; data: POINTER): INTEGER
-		
+
 			-- Call `ISymUnmanagedWriter->GetDebugInfo'.
 		external
 			"[
@@ -260,12 +203,12 @@ feature {NONE} -- Implementation
 		alias
 			"GetDebugInfo"
 		end
-			
+
 	c_define_document (an_item: POINTER; name: POINTER;
 			lang_guid, lang_vendor, doc_type: POINTER; sym_writer: POINTER): INTEGER
-		
+
 			-- Call `ISymUnmanagedWriter->DefineDocument'.
-		external 
+		external
 			"[
 				C++ ISymUnmanagedWriter signature
 					(LPWSTR, GUID *, GUID *, GUID *, ISymUnmanagedDocumentWriter **): EIF_INTEGER
@@ -278,7 +221,7 @@ feature {NONE} -- Implementation
 	c_define_local_variable (an_item: POINTER; name: POINTER; attributes, signature_length: INTEGER;
 			signature: POINTER; Addresskind, local_pos, unused2, unused3,
 			start_offset, end_offset: INTEGER): INTEGER
-		
+
 			-- Call `ISymUnmanagedWriter->DefineLocalVariable'.
 		external
 			"[
@@ -293,7 +236,7 @@ feature {NONE} -- Implementation
 
 	c_define_parameter (an_item: POINTER; name: POINTER; attributes, param_pos: INTEGER;
 			Addresskind, unused1, unused2, unused3: INTEGER): INTEGER
-		
+
 			-- Call `ISymUnmanagedWriter->DefineParameter'.
 		external
 			"[
@@ -307,7 +250,7 @@ feature {NONE} -- Implementation
 
 	c_define_sequence_points (an_item: POINTER; document: POINTER; count: INTEGER;
 			offsets, lines, columns, end_lines, end_columns: POINTER): INTEGER
-		
+
 			-- Call `ISymUnmanagedWriter->DefineSequencePoints'.
 		external
 			"[
@@ -322,7 +265,7 @@ feature {NONE} -- Implementation
 
 	c_initialize (an_item: POINTER; md_emitter: POINTER; filename: POINTER; stream: POINTER;
 			full_build: BOOLEAN): INTEGER
-		
+
 				-- Call `ISymUnmanagedWriter->Initialize'.
 		external
 			"[
@@ -343,7 +286,7 @@ feature {NONE} -- Implementation
 		end
 
 	c_open_scope (an_item: POINTER; start_offset: INTEGER; scope_id: POINTER): INTEGER
-		
+
 				-- Call `ISymUnmanagedWriter->OpenScope'.
 		external
 			"[
@@ -355,7 +298,7 @@ feature {NONE} -- Implementation
 		end
 
 	c_set_user_entry_point (an_item: POINTER; token: INTEGER): INTEGER
-		
+
 				-- Call `ISymUnmanagedWriter->SetUserEntryPoint'.
 		external
 			"[
@@ -367,7 +310,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -380,22 +323,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class DBG_WRITER

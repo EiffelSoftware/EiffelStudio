@@ -9,14 +9,14 @@ class
 	MD_EMIT
 
 inherit
+	MD_EMIT_I
+
 	COM_OBJECT
 		export
 			{DBG_WRITER} item
 		redefine
 			make_by_pointer
 		end
-
-	MD_TOKEN_TYPES
 
 create
 	make_by_pointer
@@ -38,9 +38,6 @@ feature -- Access
 			-- Size of Current emitted assembly in memory if we were to emit it now.
 		do
 			last_call_success := c_get_save_size (item, accurate, $Result)
-		ensure
-			success: last_call_success = 0
-			result_positive: Result >= 0
 		end
 
 feature -- Save
@@ -55,47 +52,28 @@ feature -- Save
 			create Result.make (l_size)
 			last_call_success := c_save_to_memory (item, Result.item, l_size)
 		ensure
-			success: last_call_success = 0
+			success: is_successful
 			valid_result: Result /= Void
 		end
 
-	save (f_name: UNI_STRING)
+	save (f_name: NATIVE_STRING)
 			-- Save current assembly to file `f_name'.
-		require
-			f_name_not_void: f_name /= Void
-			f_name_not_empty: not f_name.is_empty
 		do
 			last_call_success := c_save (item, f_name.item, 0)
-		ensure
-			success: last_call_success = 0
 		end
 
 feature -- Definition: access
 
-	define_assembly_ref (assembly_name: UNI_STRING; assembly_info: MD_ASSEMBLY_INFO;
+	define_assembly_ref (assembly_name: NATIVE_STRING; assembly_info: MD_ASSEMBLY_INFO;
 			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
 			-- Get token reference on referenced assembly `assembly_name'.
-		require
-			assembly_name_not_void: assembly_name /= Void
-			assembly_name_not_empty: not assembly_name.is_empty
-			assembly_info_not_void: assembly_info /= Void
 		do
 			Result := assembly_emitter.define_assembly_ref (assembly_name,
 				assembly_info, public_key_token)
-		ensure
-			valid_result: Result > 0
 		end
 
-	define_type_ref (type_name: UNI_STRING; resolution_scope: INTEGER): INTEGER
+	define_type_ref (type_name: NATIVE_STRING; resolution_scope: INTEGER): INTEGER
 			-- Compute new token for `type_name' located in `resolution_scope'.
-		require
-			type_name_not_void: type_name /= Void
-			type_name_not_empty: not type_name.is_empty
-			resolution_scope_valid:
-				(resolution_scope = 0) or
-				(resolution_scope & Md_mask = Md_module_ref) or
-				(resolution_scope & Md_mask = Md_assembly_ref) or
-				(resolution_scope & Md_mask = Md_type_ref)
 		do
 			last_call_success := c_define_type_ref_by_name (item, resolution_scope,
 				type_name.item, $Result)
@@ -103,22 +81,12 @@ feature -- Definition: access
 			if last_call_success = {MD_ERRORS}.meta_s_duplicate then
 				last_call_success := 0
 			end
-		ensure
-			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_type_ref
 		end
 
-	define_member_ref (method_name: UNI_STRING; in_class_token: INTEGER;
+	define_member_ref (method_name: NATIVE_STRING; in_class_token: INTEGER;
 			a_signature: MD_SIGNATURE): INTEGER
 
 			-- Create reference to member in class `in_class_token'.
-		require
-			method_name_not_void: method_name /= Void
-			method_name_not_empty: not method_name.is_empty
-			in_class_token_valid: in_class_token & Md_mask = Md_type_ref or
-				in_class_token & Md_mask = Md_type_def or
-				in_class_token & md_mask = md_type_spec
-			signature_not_void: a_signature /= Void
 		do
 			last_call_success := c_define_member_ref (item, in_class_token,
 				method_name.item, a_signature.item.item, a_signature.count, $Result)
@@ -126,74 +94,39 @@ feature -- Definition: access
 			if last_call_success = {MD_ERRORS}.meta_s_duplicate then
 				last_call_success := 0
 			end
-		ensure
-			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_member_ref
 		end
 
-	define_module_ref (a_name: UNI_STRING): INTEGER
+	define_module_ref (a_name: NATIVE_STRING): INTEGER
 			-- Define a reference to a module of name `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.is_empty
 		do
 			last_call_success := c_define_module_ref (item, a_name.item, $Result)
-		ensure
-			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_module_ref
 		end
 
 feature -- Definition: creation
 
-	define_assembly (assembly_name: UNI_STRING; assembly_flags: INTEGER;
+	define_assembly (assembly_name: NATIVE_STRING; assembly_flags: INTEGER;
 			assembly_info: MD_ASSEMBLY_INFO; public_key: detachable MD_PUBLIC_KEY): INTEGER
 
 			-- Define a new assembly.
-		require
-			assembly_name_not_void: assembly_name /= Void
-			assembly_name_not_empty: not assembly_name.is_empty
-			assembly_info_not_void: assembly_info /= Void
-			valid_flags: public_key /= Void implies assembly_flags &
-				{MD_ASSEMBLY_FLAGS}.public_key = {MD_ASSEMBLY_FLAGS}.public_key
 		do
 			Result := assembly_emitter.define_assembly (assembly_name, assembly_flags,
 				assembly_info, public_key)
-		ensure
-			valid_result: Result & Md_mask = Md_assembly
 		end
 
-	define_manifest_resource (resource_name: UNI_STRING; implementation_token: INTEGER;
+	define_manifest_resource (resource_name: NATIVE_STRING; implementation_token: INTEGER;
 			offset, resource_flags: INTEGER): INTEGER
-
 			-- Define a new assembly.
-		require
-			resource_name_not_void: resource_name /= Void
-			resource_name_not_empty: not resource_name.is_empty
-			valid_flags:
-				(resource_flags & {MD_RESOURCE_FLAGS}.public =
-					{MD_RESOURCE_FLAGS}.public) or
-				(resource_flags & {MD_RESOURCE_FLAGS}.private =
-					{MD_RESOURCE_FLAGS}.private)
 		do
 			Result := assembly_emitter.define_manifest_resource (resource_name,
 				implementation_token, offset, resource_flags)
-		ensure
-			valid_result: Result & Md_mask = Md_manifest_resource
 		end
 
-	define_type (type_name: UNI_STRING; flags: INTEGER; extend_token: INTEGER;
+	define_type (type_name: NATIVE_STRING; flags: INTEGER; extend_token: INTEGER;
 			implements: detachable ARRAY [INTEGER]): INTEGER
 
 			-- Create new type with name `type_name' and `flags' which inherits from
 			-- base class `extend_token' and implements interfaces `implements'.
-		require
-			type_name_not_void: type_name /= Void
-			type_name_not_empty: not type_name.is_empty
-			extend_token_valid:
-				(extend_token & Md_mask = Md_type_def) or
-				(extend_token & Md_mask = Md_type_ref) or
-				(extend_token & Md_mask = Md_type_spec) or
-				extend_token = 0
+
 			--implements_valid: for_all (implemements.item (i) is a Md_type_def, Md_type_ref
 			--	or Md_type_spec.
 		local
@@ -207,110 +140,54 @@ feature -- Definition: creation
 				last_call_success := c_define_type_def (item, type_name.item, flags,
 					extend_token, default_pointer, $Result)
 			end
-		ensure
-			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_type_def
 		end
 
 	define_type_spec (a_signature: MD_TYPE_SIGNATURE): INTEGER
 			-- Define a new token of TypeSpec for a type represented by `a_signature'.
 			-- To be used to define different type for .NET arrays.
-		require
-			signature_not_void: a_signature /= Void
 		do
 			last_call_success := c_define_type_spec (item, a_signature.item.item,
 				a_signature.count, $Result)
 			if last_call_success = {MD_ERRORS}.meta_s_duplicate then
 				last_call_success := 0
 			end
-		ensure
-			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_type_spec
 		end
 
-	define_exported_type (type_name: UNI_STRING; implementation_token: INTEGER;
+	define_exported_type (type_name: NATIVE_STRING; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
-
 				-- Create a row in ExportedType table.
-		require
-			type_name_not_void: type_name /= Void
-			type_name_not_empty: not type_name.is_empty
-			implementation_token_valid:
-				(implementation_token & Md_mask = Md_file) or
-				(implementation_token & Md_mask = Md_exported_type)
-			type_def_token_valid: type_def_token = 0 or (type_def_token & Md_mask = Md_type_def)
 		do
 			Result := assembly_emitter.define_exported_type (type_name, implementation_token,
 				type_def_token, type_flags)
-		ensure
-			valid_result: Result & Md_mask = Md_exported_type
 		end
 
-	define_file (file_name: UNI_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
+	define_file (file_name: NATIVE_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
 			-- Create a row in File table
-		require
-			file_name_not_void: file_name /= Void
-			file_name_not_empty: not file_name.is_empty
-			hash_value_not_void: hash_value /= Void
-			hash_value_not_empty: hash_value.count > 0
-			valid_file_flags:
-				(file_flags = 0) or
-				(file_flags = {MD_FILE_FLAGS}.has_no_meta_data)
 		do
 			Result := assembly_emitter.define_file (file_name, hash_value, file_flags)
-		ensure
-			valid_result: Result & Md_mask = Md_file
 		end
 
-	define_method (method_name: UNI_STRING; in_class_token: INTEGER;
+	define_method (method_name: NATIVE_STRING; in_class_token: INTEGER;
 			method_flags: INTEGER; a_signature: MD_METHOD_SIGNATURE;
 			impl_flags: INTEGER): INTEGER
-
 			-- Create new method in class `in_class_token'.
-		require
-			method_name_not_void: method_name /= Void
-			method_name_not_void: not method_name.is_empty
-			in_class_token_valid: in_class_token & Md_mask = Md_type_def
-			signature_not_void: a_signature /= Void
 		do
 			last_call_success := c_define_method (item, in_class_token,
 				method_name.item, method_flags, a_signature.item.item, a_signature.count,
 				0, impl_flags, $Result)
-		ensure
-			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_method_def
 		end
 
 	define_method_impl (in_class_token, method_token, used_method_declaration_token: INTEGER)
 			-- Define a method impl from `used_method_declaration_token' from inherited
 			-- class to method `method_token' defined in `in_class_token'.
-		require
-			in_class_token_valid: in_class_token & Md_mask = Md_type_def
-			method_token_valid:
-				(method_token & Md_mask = Md_method_def) or
-				(method_token & Md_mask = Md_member_ref)
-			used_method_declaration_token_valid:
-				(used_method_declaration_token & Md_mask = Md_method_def) or
-				(used_method_declaration_token & Md_mask = Md_member_ref)
 		do
 			last_call_success := c_define_method_impl (item, in_class_token, method_token,
 				used_method_declaration_token)
-		ensure
-			success: last_call_success = 0
 		end
 
-	define_property (type_token: INTEGER; name: UNI_STRING; flags: NATURAL_32;
+	define_property (type_token: INTEGER; name: NATIVE_STRING; flags: NATURAL_32;
 			signature: MD_PROPERTY_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER): INTEGER
-
 			-- Define property `name' for a type `type_token'.
-		require
-			valid_type_token: type_token & Md_mask = Md_type_def
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-			signature_not_void: signature /= Void
-			signature_not_empty: signature.count > 0
-			setter_token_valid: setter_token & Md_mask = Md_method_def
-			getter_token_valid: getter_token & Md_mask = Md_method_def
 		local
 			property_token: NATURAL_32
 		do
@@ -319,135 +196,77 @@ feature -- Definition: creation
 				0, default_pointer, 0, setter_token, getter_token, default_pointer,
 				$property_token)
 			Result := property_token.as_integer_32
-		ensure
-			success: last_call_success = 0
 		end
 
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;
-			import_name: UNI_STRING; module_ref: INTEGER)
-
+			import_name: NATIVE_STRING; module_ref: INTEGER)
 			-- Further specification of a pinvoke method location defined by `method_token'.
-		require
-			method_token_valid:
-				(method_token & Md_mask = Md_field_def) or
-				(method_token & Md_mask = Md_method_def)
-			import_name_not_void: import_name /= Void
-			import_name_not_empty: not import_name.is_empty
-			module_ref_valid: module_ref & Md_mask = Md_module_ref
 		do
 			last_call_success := c_define_pinvoke_map (item, method_token,
 				mapping_flags, import_name.item, module_ref)
-		ensure
-			success: last_call_success = 0
+		ensure then
+			success: is_successful
 		end
 
-	define_parameter (in_method_token: INTEGER; param_name: UNI_STRING;
+	define_parameter (in_method_token: INTEGER; param_name: NATIVE_STRING;
 			param_pos: INTEGER; param_flags: INTEGER): INTEGER
-
 			-- Create a new parameter specification token for method `in_method_token'.
-		require
-			in_method_token_valid: in_method_token & Md_mask = Md_method_def
-			param_name_not_void: param_name /= Void
-			param_name_not_empty: not param_name.is_empty
-			pos_valid: param_pos >= 0
 		do
 			last_call_success := c_define_param (item, in_method_token, param_pos,
 				param_name.item, param_flags, 0, default_pointer, 0, $Result)
-		ensure
-			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_param_def
 		end
 
 	set_field_marshal (a_token: INTEGER; a_native_type_sig: MD_NATIVE_TYPE_SIGNATURE)
 			-- Set a particular marshaling for `a_token'. Limited to parameter token for the moment.
-		require
-			a_token_valid: a_token & Md_mask = md_param_def
-			a_native_type_sig_not_void: a_native_type_sig /= Void
 		do
 			last_call_success := c_set_field_marshal (item, a_token,
 				a_native_type_sig.item.item, a_native_type_sig.count)
-		ensure
-			success: last_call_success = 0
 		end
 
-	define_field (field_name: UNI_STRING; in_class_token: INTEGER;
+	define_field (field_name: NATIVE_STRING; in_class_token: INTEGER;
 			field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER
-
 			-- Create a new field in class `in_class_token'.
-		require
-			field_name_not_void: field_name /= Void
-			field_name_not_empty: not field_name.is_empty
-			in_class_token_valid: in_class_token & Md_mask = Md_type_def
-			signature_not_void: a_signature /= Void
 		do
 			last_call_success := c_define_field (item, in_class_token,
 				field_name.item, field_flags, a_signature.item.item, a_signature.count,
 				{MD_SIGNATURE_CONSTANTS}.element_type_end, default_pointer, 0, $Result)
-		ensure
-			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_field_def
 		end
 
-	define_string_constant (field_name: UNI_STRING; in_class_token: INTEGER;
+	define_string_constant (field_name: NATIVE_STRING; in_class_token: INTEGER;
 			field_flags: INTEGER; a_string: STRING): INTEGER
-
 			-- Create a new field in class `in_class_token'.
-		require
-			field_name_not_void: field_name /= Void
-			field_name_not_empty: not field_name.is_empty
-			in_class_token_valid: in_class_token & Md_mask = Md_type_def
-			a_string_not_void: a_string /= Void
 		local
 			l_field_signature: MD_FIELD_SIGNATURE
-			l_uni_str: UNI_STRING
+			l_uni_str: NATIVE_STRING
 		do
 			create l_field_signature.make
 			create l_uni_str.make (a_string)
 			l_field_signature.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
 			last_call_success := c_define_field (item, in_class_token,
 				field_name.item, field_flags, l_field_signature.item.item, l_field_signature.count,
-				{MD_SIGNATURE_CONSTANTS}.element_type_string, l_uni_str.item, l_uni_str.count, $Result)
-		ensure
-			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_field_def
+				{MD_SIGNATURE_CONSTANTS}.element_type_string, l_uni_str.item, l_uni_str.bytes_count, $Result)
 		end
 
 	define_signature (a_signature: MD_LOCAL_SIGNATURE): INTEGER
 			-- Define a new token for `a_signature'. To be used only for
 			-- local signature.
-		require
-			signature_not_void: a_signature /= Void
 		do
 			last_call_success := c_define_signature (item, a_signature.item.item,
 				a_signature.count, $Result)
 			if last_call_success = {MD_ERRORS}.meta_s_duplicate then
 				last_call_success := 0
 			end
-		ensure
-			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_signature
 		end
 
-	define_string (str: UNI_STRING): INTEGER
+	define_string (str: NATIVE_STRING): INTEGER
 			-- Define a new token for `str'.
-		require
-			str_not_void: str /= Void
 		do
-			last_call_success := c_define_user_string (item, str.item, str.count, $Result)
-		ensure
-			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_string
+			last_call_success := c_define_user_string (item, str.item, str.bytes_count, $Result)
 		end
 
 	define_custom_attribute (owner, constructor: INTEGER; ca: MD_CUSTOM_ATTRIBUTE): INTEGER
 			-- Define a new token for `ca' applied on token `owner' with using `constructor'
 			-- as creation procedure.
-		require
-			owner_valid: (owner & Md_mask) /= Md_custom_attribute -- Any type of token except mdCustomAttribute is accepted.
-			constructor_valid:
-				(constructor & Md_mask = Md_member_ref) or
-				(constructor & Md_mask = Md_method_def)
-			ca_not_void_implies_not_empty: ca /= Void implies ca.count >= 4
 		local
 			blob: POINTER
 			blob_count: INTEGER
@@ -458,33 +277,20 @@ feature -- Definition: creation
 			end
 			last_call_success := c_define_custom_attribute (item, owner, constructor,
 				blob, blob_count, $Result)
-		ensure
-			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_custom_attribute
 		end
 
 feature -- Settings
 
-	set_module_name (a_name: UNI_STRING)
+	set_module_name (a_name: NATIVE_STRING)
 			-- Set name of current generated module to `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.is_empty
 		do
 			last_call_success := c_set_module_props (item, a_name.item)
-		ensure
-			success: last_call_success = 0
 		end
 
 	set_method_rva (method_token, rva: INTEGER)
 			-- Set RVA of `method_token' to `rva'.
-		require
-			method_token_valid: method_token & Md_mask = Md_method_def
-			rvas_valid: rva >= 0
 		do
 			last_call_success := c_set_rva (item, method_token, rva)
-		ensure
-			success: last_call_success = 0
 		end
 
 feature -- Constants
@@ -759,7 +565,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

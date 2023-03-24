@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	MD_METADATA_TABLES
+	MD_TABLES
 
 create
 	make

@@ -1,5 +1,7 @@
 note
 	description: "Factory that create a memory stream holding IL instruction stream."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -75,7 +77,7 @@ feature -- Status Report
 
 feature -- Update
 
-	update_rvas (md_emit: MD_METADATA_EMIT; top_rva: INTEGER)
+	update_rvas (md_emit: MD_EMIT; top_rva: INTEGER)
 			-- Now that all bodys have been emitted, update each
 			-- method token with its corresponding rva knowing
 			-- that current memory stream starts at `top_rva'.
@@ -86,7 +88,7 @@ feature -- Update
 			across
 				method_locations as l
 			loop
-				md_emit.set_method_rva (@l.key, top_rva + l)
+				md_emit.set_method_rva (@ l.key, top_rva + l)
 			end
 		ensure
 			is_closed: is_closed
@@ -302,7 +304,7 @@ invariant
 	method_locations_not_void: method_locations /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

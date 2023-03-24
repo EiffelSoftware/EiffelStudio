@@ -88,7 +88,7 @@ feature -- Status
 
 feature -- Access
 
-	emitter: MD_METADATA_EMIT
+	emitter: MD_EMIT
 			-- Meta data emitter, needed for RVA update.
 
 feature -- Constant
@@ -228,7 +228,7 @@ feature -- Access
 			-- right now we don't check duplicates on any of the other streams...
 
 		--tables: LIST [DNL_TABLE]
-	tables: SPECIAL [MD_METADATA_TABLES]
+	tables: SPECIAL [MD_TABLES]
 		do
 			Result := emitter.tables
 		end

@@ -8,7 +8,7 @@
 		<option warning="error">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="il_metadata" location="$EIFFEL_SRC\framework\dotnet\il_metadata\il_metadata.ecf">
+		<library name="cli_kernel" location="$EIFFEL_SRC\framework\dotnet\cli_kernel\cli_kernel.ecf">
 			<renaming old_name="MD_ASSEMBLY_INFO" new_name="MD_ASSEMBLY_INFO_I"/>
 			<renaming old_name="MD_STRONG_NAME" new_name="MD_STRONG_NAME_I"/>
 			<renaming old_name="MD_EMIT" new_name="MD_EMIT_I"/>

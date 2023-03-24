@@ -28,7 +28,7 @@
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf"/>
-		<library name="il_metadata" location="$EIFFEL_SRC\framework\dotnet\il_metadata\il_metadata.ecf"/>
+		<library name="cli_kernel" location="$EIFFEL_SRC\framework\dotnet\cli_kernel\cli_kernel.ecf"/>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>

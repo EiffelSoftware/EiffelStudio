@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="cli_writer" uuid="C41AABC0-930E-4CB4-86BC-DEDD73BC7531" library_target="default">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="cli_emitter" uuid="C41AABC0-930E-4CB4-86BC-DEDD73BC7531" library_target="default">
 	<target name="default">
 		<root all_classes="true"/>
 		<file_rule>
@@ -34,7 +34,7 @@
 			<renaming old_name="CLI_DEBUG_DIRECTORY" new_name="IL_CLI_DEBUG_DIRECTORY"/>
 			-->
 		</library>
-		<library name="il_metadata" location="$ISE_LIBRARY\framework\dotnet\il_metadata\il_metadata.ecf"/>
+		<library name="cli_kernel" location="$ISE_LIBRARY\framework\dotnet\cli_kernel\cli_kernel.ecf"/>
 		<cluster name="src" location=".\src\" recursive="false">
 			<cluster name="cil_writer" location="$|cli_writer\" recursive="true">
 				<condition>

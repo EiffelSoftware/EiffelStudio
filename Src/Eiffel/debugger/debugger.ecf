@@ -18,7 +18,7 @@
 			</condition>
 		</library>
 		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf" readonly="false" use_application_options="true"/>
-		<library name="il_metadata" location="$EIFFEL_SRC\framework\dotnet\il_metadata\il_metadata.ecf" readonly="false" use_application_options="true"/>
+		<library name="cli_kernel" location="$EIFFEL_SRC\framework\dotnet\cli_kernel\cli_kernel.ecf" readonly="false" use_application_options="true"/>
 		<library name="compiler_encoding" location="$EIFFEL_SRC\framework\compiler_encoding\compiler_encoding.ecf"/>
 		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true"/>
 		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler.ecf" readonly="false" use_application_options="true"/>

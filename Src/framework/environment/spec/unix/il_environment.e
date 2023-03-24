@@ -19,12 +19,22 @@ inherit
 			default_create
 		end
 
+	SHARED_EXECUTION_ENVIRONMENT
+		redefine
+			default_create
+		end
+
+	REFACTORING_HELPER
+		redefine
+			default_create
+		end
+
 create
 	make, default_create
 
 feature {NONE} -- Initialization
 
-	make (a_version: READABLE_STRING_GENERAL)
+	make (a_version: detachable READABLE_STRING_GENERAL)
 			-- Create an instance of IL_ENVIRONMENT targeting a specific .NET version `a_version'.
 			-- If `a_version' is not specified we currently take `default_version'.
 			-- Set `version' with `a_version'.
@@ -35,7 +45,7 @@ feature {NONE} -- Initialization
 				version := default_version
 			end
 		ensure
-			version_set: version /= Void and (a_version /= Void implies version.same_string_general (a_version))
+			version_set: attached version and (attached a_version implies version.same_string_general (a_version))
 		end
 
 	default_create
@@ -70,8 +80,27 @@ feature -- Access
 	default_version: IMMUTABLE_STRING_32
 			-- Default runtime version if `version' was not specified.
 			-- Semantic is to take the most recent version of the run-time.
+		local
+			l_runtimes: like installed_runtimes
 		do
-			Result := "v1.0"
+			l_runtimes := installed_runtimes
+			if not l_runtimes.is_empty then
+					-- Take the most recent version from `installed_runtimes'.
+				across
+					l_runtimes as r
+				from
+					Result := @ r.key
+					;@ r.forth
+				loop
+					if Result < @ r.key then
+						Result := @ r.key
+					end
+				end
+			else
+					-- No .NET runtime found, we simply return a fake version
+					-- number.
+				create Result.make_from_string_general (v1_0)
+			end
 		end
 
 	is_dotnet_installed: BOOLEAN
@@ -90,22 +119,27 @@ feature -- Access
 			-- All paths of installed versions of .NET runtime indexed by their version names.
 		do
 			create Result.make (0)
+			debug ("refactor_fixme")
+				to_implement ("TODO: to implement")
+			end
 		end
 
 	dotnet_framework_path: detachable PATH
 			-- Path to .NET Framework of version `version'.
-		require
-			is_dotnet_installed: is_dotnet_installed
 		do
 			create Result.make_empty
+			debug ("refactor_fixme")
+				to_implement ("TODO: to implement")
+			end
 		end
 
 	installed_sdks: STRING_TABLE [PATH]
 			-- All paths of installed versions of .NET SDKs indexed by their version names.
-		require
-			is_dotnet_installed: is_dotnet_installed
 		do
 			create Result.make (0)
+			debug ("refactor_fixme")
+				to_implement ("TODO: to implement")
+			end
 		end
 
 	dotnet_framework_sdk_path: like dotnet_framework_path
@@ -113,12 +147,18 @@ feature -- Access
 			-- Void if not installed.
 		do
 			create Result.make_empty
+			debug ("refactor_fixme")
+				to_implement ("TODO: to implement")
+			end
 		end
 
 	dotnet_framework_sdk_bin_path: like dotnet_framework_path
 			-- Path to bin directory of .NET Framework SDK of version `version'.
 		do
 			create Result.make_empty
+			debug ("refactor_fixme")
+				to_implement ("TODO: to implement")
+			end
 		end
 
 feature -- Query
@@ -147,15 +187,28 @@ feature -- Query
 			a_debug_not_void: a_debug /= Void
 		do
 			create Result.make_empty
+			debug ("refactor_fixme")
+				to_implement ("TODO: to implement")
+			end
+		end
+
+	resource_compiler: detachable PATH
+			-- Path to `resgen' tool from .NET Framework SDK.
+		do
+			debug ("refactor_fixme")
+				to_implement ("TODO: to implement")
+			end
 		end
 
 invariant
 	version_not_void: version /= Void
+	version_valid: version.count >= 4 and then (version.item (1) = 'v' and version.item (2).is_digit and
+		version.item (3) = '.' and version.item (4).is_digit)
 
 note
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -184,4 +237,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class IL_ENVIRONMENT
+end

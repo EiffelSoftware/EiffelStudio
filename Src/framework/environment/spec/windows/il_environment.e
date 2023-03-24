@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			-- If `a_version' is not specified we currently take `default_version'.
 			-- Set `version' with `a_version'.
 		do
-			if attached a_version then
+			if a_version /= Void then
 				create version.make_from_string_general (a_version)
 			else
 				version := default_version

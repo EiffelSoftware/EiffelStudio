@@ -13,8 +13,8 @@ feature -- Test
 
 	test
 		local
-			l_dispenser: MD_METADATA_DISPENSER
-			l_emit: MD_METADATA_EMIT
+			l_dispenser: MD_DISPENSER
+			l_emit: MD_EMIT
 			l_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
 			l_field_sig: MD_FIELD_SIGNATURE
@@ -42,7 +42,7 @@ feature -- Test
 			l_assembly_info.set_major (5)
 			l_assembly_info.set_minor (2)
 
-			my_assembly := l_emit.define_assembly ({STRING_32} "manu_assembly", 0, l_assembly_info, Void)
+			my_assembly := l_emit.define_assembly (create {NATIVE_STRING}.make ("manu_assembly"), 0, l_assembly_info, Void)
 
 			l_assembly_info.set_major (1)
 			l_assembly_info.set_minor (0)
@@ -50,13 +50,13 @@ feature -- Test
 			create l_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
 
-			mscorlib_token := l_emit.define_assembly_ref ({STRING_32} "mscorlib", l_assembly_info, l_pub_key_token)
+			mscorlib_token := l_emit.define_assembly_ref (create {NATIVE_STRING}.make ("mscorlib"), l_assembly_info, l_pub_key_token)
 
-			object_type_token := l_emit.define_type_ref ({STRING_32} "System.Object", mscorlib_token)
+			object_type_token := l_emit.define_type_ref (create {NATIVE_STRING}.make ("System.Object"), mscorlib_token)
 
-			system_exception_token := l_emit.define_type_ref ({STRING_32} "System.Exception", mscorlib_token)
+			system_exception_token := l_emit.define_type_ref (create {NATIVE_STRING}.make ("System.Exception"), mscorlib_token)
 
-			my_type := l_emit.define_type ({STRING_32} "TEST",
+			my_type := l_emit.define_type (create {NATIVE_STRING}.make ("TEST"),
 					{MD_TYPE_ATTRIBUTES}.Ansi_class | {MD_TYPE_ATTRIBUTES}.Auto_layout |
 					{MD_TYPE_ATTRIBUTES}.Public,
 					object_type_token, Void)
@@ -66,9 +66,9 @@ feature -- Test
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			object_ctor := l_emit.define_member_ref ({STRING_32} ".ctor", object_type_token, sig)
+			object_ctor := l_emit.define_member_ref (create {NATIVE_STRING}.make (".ctor"), object_type_token, sig)
 
-			my_ctor := l_emit.define_method ({STRING_32} ".ctor",
+			my_ctor := l_emit.define_method (create {NATIVE_STRING}.make (".ctor"),
 					my_type,
 					{MD_METHOD_ATTRIBUTES}.Public |
 					{MD_METHOD_ATTRIBUTES}.Special_name |
@@ -78,7 +78,7 @@ feature -- Test
 			create l_field_sig.make
 			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
-			my_field := l_emit.define_field ({STRING_32} "item", my_type, {MD_FIELD_ATTRIBUTES}.public, l_field_sig)
+			my_field := l_emit.define_field (create {NATIVE_STRING}.make ("item"), my_type, {MD_FIELD_ATTRIBUTES}.public, l_field_sig)
 
 			create l_local_sig.make
 			l_local_sig.set_local_count (2)
@@ -103,7 +103,7 @@ feature -- Test
 			body.set_local_token (local_token)
 			method_writer.write_current_body
 
-			my_meth := L_emit.define_method ({STRING_32} "test",
+			my_meth := L_emit.define_method (create {NATIVE_STRING}.make ("test"),
 					my_type,
 					{MD_METHOD_ATTRIBUTES}.Public,
 					sig, {MD_METHOD_ATTRIBUTES}.Managed)
@@ -121,14 +121,14 @@ feature -- Test
 			body.set_local_token (local_token)
 			method_writer.write_current_body
 
-			my_meth2 := l_emit.define_method ({STRING_32} "test2",
+			my_meth2 := l_emit.define_method (create {NATIVE_STRING}.make ("test2"),
 					my_type,
 					{MD_METHOD_ATTRIBUTES}.Public,
 					sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 			method_writer.write_duplicate_body (my_meth, my_meth2)
 
-			my_meth2 := l_emit.define_method ({STRING_32} "test_rescue",
+			my_meth2 := l_emit.define_method (create {NATIVE_STRING}.make ("test_rescue"),
 					my_type,
 					{MD_METHOD_ATTRIBUTES}.Public,
 					sig, {MD_METHOD_ATTRIBUTES}.Managed)
@@ -146,7 +146,7 @@ feature -- Test
 			body.exception_block.set_type_token (system_exception_token)
 
 			body.put_opcode ({MD_OPCODES}.pop)
-			string_token := l_emit.define_string ({STRING_32} "Manu is nice")
+			string_token := l_emit.define_string (create {NATIVE_STRING}.make ("Manu is nice"))
 			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
 			body.put_opcode ({MD_OPCODES}.pop)
 			body.put_opcode_label ({MD_OPCODES}.Leave, label_id)
@@ -157,7 +157,7 @@ feature -- Test
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
 
-			create l_pe_file.make ("test.dll", True, True, False, L_emit)
+			create l_pe_file.make ({STRING_32} "test.dll", True, True, False, L_emit)
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.save
 

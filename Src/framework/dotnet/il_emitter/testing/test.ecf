@@ -23,7 +23,15 @@
 				<debug name="debug-cli" enabled="true"/>
 			</option>
 		</library>
-		<library name="cli_kernel" location="..\..\cli_kernel\cli_kernel.ecf" readonly="false"/>
+		<library name="cli_kernel" location="$EIFFEL_SRC\framework\dotnet\cli_kernel\cli_kernel.ecf">
+			<renaming old_name="MD_STRONG_NAME" new_name="MD_STRONG_NAME_I"/>
+			<renaming old_name="MD_EMIT" new_name="MD_EMIT_I"/>
+			<renaming old_name="MD_DISPENSER" new_name="MD_DISPENSER_I"/>
+			<renaming old_name="DBG_WRITER" new_name="DBG_WRITER_I"/>
+			<renaming old_name="DBG_DOCUMENT_WRITER" new_name="DBG_DOCUMENT_WRITER_I"/>
+			<renaming old_name="CLI_DEBUG_DIRECTORY" new_name="CLI_DEBUG_DIRECTORY_I"/>
+			<renaming old_name="CLI_PE_FILE" new_name="CLI_PE_FILE_I"/>
+		</library>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="il_emitter_test" location=".\" recursive="true">
 			<option warning="none" manifest_array_type="mismatch_warning">

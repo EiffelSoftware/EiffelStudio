@@ -36,12 +36,12 @@
 		</library>
 		<library name="cli_kernel" location="$ISE_LIBRARY\framework\dotnet\cli_kernel\cli_kernel.ecf"/>
 		<cluster name="src" location=".\src\" recursive="false">
-			<cluster name="cil_writer" location="$|cli_writer\" recursive="true">
+			<cluster name="spec_cil_writer" location="$|cli_writer\" recursive="true">
 				<condition>
 					<platform value="windows"/>
 				</condition>
 			</cluster>
-			<cluster name="il_emitter" location="$|il_emitter\" recursive="true"/>
+			<cluster name="spec_il_emitter" location="$|il_emitter\" recursive="true"/>
 			<cluster name="implementation_windows" location="$|implementation\windows\" recursive="true">
 				<condition>
 					<platform value="windows"/>

@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {CLI_PE_FILE}."
-	author: ""
+	description: "In memory representation of a PE file for CLI."
 	date: "$Date$"
 	revision: "$Revision$"
 

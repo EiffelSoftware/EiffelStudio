@@ -64,6 +64,37 @@ feature -- Access
 		deferred
 		end
 
+feature -- Status report
+
+	is_valid_version (v: detachable READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `v` a valid runtime version?
+			-- cases: v4.0, Microsoft.NETCore.App/6.0.15
+		local
+			i: INTEGER
+			s: READABLE_STRING_GENERAL
+		do
+			if v /= Void and then v.count >= 4 then
+				if v [1] = 'v' then
+					s := v.substring (2, v.count)
+				else
+					i := v.last_index_of ('/', v.count)
+					if i > 0 then
+						s := v.substring (i + 1, v.count)
+					else
+						s := v
+					end
+				end
+				i := s.index_of ('.', 1)
+				if i > 0 then
+					Result := s.substring (1, i - 1).is_integer and then
+						(s[i+1]).is_digit
+				else
+					Result := s.is_integer
+				end
+			end
+		end
+
+
 feature -- Query
 
 	resource_compiler: detachable PATH
@@ -71,10 +102,23 @@ feature -- Query
 		deferred
 		end
 
+feature -- Constants
+
+	v1_0: STRING = "v1.0"
+			-- Version number of v1.0 of Microsoft .NET
+
+	v1_1: STRING = "v1.1"
+			-- Version number of v1.1 of Microsoft .NET
+
+	v2_0: STRING = "v2.0"
+			-- Version number of v2.0 of Microsoft .NET
+
+	v4_0: STRING = "v4.0"
+			-- Version number of v4.0 of Microsoft .NET		
+
 invariant
-	version_not_void: version /= Void
-	version_valid: version.count >= 4 and then (version.item (1) = 'v' and version.item (2).is_digit and
-		version.item (3) = '.' and version.item (4).is_digit)
+	version_not_void: attached version
+	version_valid: is_valid_version (version)
 
 note
 	copyright: "Copyright (c) 1984-2023, Eiffel Software"

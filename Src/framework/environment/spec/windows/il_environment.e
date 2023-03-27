@@ -494,20 +494,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature -- Constants
-
-	v1_0: STRING = "v1.0"
-			-- Version number of v1.0 of Microsoft .NET
-
-	v1_1: STRING = "v1.1"
-			-- Version number of v1.1 of Microsoft .NET
-
-	v2_0: STRING = "v2.0"
-			-- Version number of v2.0 of Microsoft .NET
-
-	v4_0: STRING = "v4.0"
-			-- Version number of v4.0 of Microsoft .NET
-
 feature {NONE} -- Constants
 
 	framework_runtime_root_key: STRING = "InstallRoot"
@@ -520,11 +506,6 @@ feature {NONE} -- Constants
 				-- TODO: update the final part of the expression to match the version specification rules.
 			Result.compile ("(0|([1-9][0-9]*)).(0|([1-9][0-9]*)).*")
 		end
-
-invariant
-	version_not_void: version /= Void
-	version_valid: version.count >= 4 and then (version.item (1) = 'v' and version.item (2).is_digit and
-		version.item (3) = '.' and version.item (4).is_digit)
 
 note
 	copyright: "Copyright (c) 1984-2023, Eiffel Software"

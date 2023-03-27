@@ -99,7 +99,7 @@ feature -- Access
 			else
 					-- No .NET runtime found, we simply return a fake version
 					-- number.
-				create Result.make_from_string_general (v1_0)
+				create Result.make_from_string_general (v4_0)
 			end
 		end
 
@@ -199,11 +199,6 @@ feature -- Query
 				to_implement ("TODO: to implement")
 			end
 		end
-
-invariant
-	version_not_void: version /= Void
-	version_valid: version.count >= 4 and then (version.item (1) = 'v' and version.item (2).is_digit and
-		version.item (3) = '.' and version.item (4).is_digit)
 
 note
 	copyright: "Copyright (c) 1984-2023, Eiffel Software"

@@ -11,7 +11,7 @@ deferred class
 inherit
 	ANY
 
-	SHARED_CLI_FACTORY
+	CLI_EMITTER_SERVICE
 		export
 			{NONE} all
 		end

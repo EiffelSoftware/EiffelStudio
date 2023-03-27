@@ -46,7 +46,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_CLI_FACTORY
+	CLI_EMITTER_SERVICE
 		export
 			{NONE} all
 		end

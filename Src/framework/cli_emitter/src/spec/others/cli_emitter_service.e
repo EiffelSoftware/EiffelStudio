@@ -1,12 +1,28 @@
 note
-	description: "Summary description for {SHARED_IL_MD_FACTORY}."
+	description: "Summary description for {CLI_EMITTER_SERVICE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SHARED_CLI_FACTORY
+	CLI_EMITTER_SERVICE
 
-feature -- Access
+feature -- Settings
+
+	is_using_il_emitter: BOOLEAN
+			-- Is compiler using IL_EMITTER solution to generate CIL code?
+		once
+			Result := True
+		end
+
+feature -- Setup
+
+	setup_cil_code_generation (a_clr_runtime_version: detachable READABLE_STRING_GENERAL)
+			-- Setup CIL code generation underlying services for the runtime `a_clr_runtime_version`.
+		do
+				-- Nothing to do
+		end
+
+feature -- Factory
 
 	md_factory: CLI_FACTORY
 		once

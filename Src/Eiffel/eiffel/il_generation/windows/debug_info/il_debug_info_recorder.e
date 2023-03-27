@@ -5,6 +5,7 @@
 			- class token
 			- feature token
 			- module filename
+			- entry_point token
 			- once `_done' and `_result' token
 			- line debug info
 	]"

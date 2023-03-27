@@ -28,7 +28,7 @@ inherit
 
 	SHARED_IL_CONSTANTS
 
-	--SHARED_IL_DEBUG_INFO_RECORDER
+	SHARED_IL_DEBUG_INFO_RECORDER
 
 	SHARED_WORKBENCH
 		export
@@ -102,7 +102,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_CLI_FACTORY
+	CLI_EMITTER_SERVICE
 		export
 			{NONE} all
 		end
@@ -498,7 +498,7 @@ feature -- Cleanup
 	clean_debug_information (a_class_type: CLASS_TYPE)
 			-- Clean recorded debug information.
 		do
-			to_implement ("TODO add implementation")
+			Il_debug_info_recorder.clean_class_type_info_for (a_class_type)
 		end
 
 	cleanup
@@ -508,8 +508,7 @@ feature -- Cleanup
 		do
 			if not retried then
 					--| End recording session, (then Save IL Information used for eStudio .NET debugger)
-				to_implement ("TODO add implementation")
---				Il_debug_info_recorder.end_recording_session
+				Il_debug_info_recorder.end_recording_session
 					--| Clean up data
 				if internal_il_modules /= Void then
 					across
@@ -549,23 +548,16 @@ feature -- Generation Structure
 			a_file_name_not_empty: not a_file_name.is_empty
 			location_not_void: location /= Void
 			location_not_empty: not location.is_empty
-		local
-			-- l_host: CLR_HOST
 		do
-				--| Initialize recording of IL Information used for eStudio .NET debugger
-			to_implement ("TODO Add implementation")
-			--Il_debug_info_recorder.start_recording_session (debug_mode)
+				--| Initialize recording of IL Information used for eStudio .NET debugger			
+			Il_debug_info_recorder.start_recording_session (debug_mode)
 
 				--| beginning of assembly generation
 			location_path := location
 			assembly_name := a_assembly_name
 
 				-- Set CLR host to proper version if not yet done.
-			-- l_host := (create {CLR_HOST_FACTORY}).runtime_host (System.clr_runtime_version)
-			-- check
-			--	l_host_not_void: l_host /= Void
-			-- end
-			to_implement ("TODO find a way to replace CLR_HOST and CLR_HOST_FACTORY")
+			setup_cil_code_generation (System.clr_runtime_version)
 
 				-- Create Unicode string buffer.
 			create uni_string.make_empty (1024)
@@ -600,7 +592,8 @@ feature -- Generation Structure
 
 			public_key := a_public_key
 
-			is_debug_info_enabled := debug_mode and False -- FIXME: no dotnet debugging for now
+			is_debug_info_enabled := debug_mode
+			-- FIXME jfiat [2003/10/10 - 16:41] try without debug_mode, for no pdb info
 
 			output_file_name := location.extended (a_file_name).name
 
@@ -1075,22 +1068,24 @@ feature -- Generation Structure
 				not is_single_module and then
 				(current_module /= Void and then current_module.is_generated)
 			then
-						-- Mark now entry point for debug information
-					if is_debug_info_enabled then
-						if has_root_type and not system.root_creation_name.is_empty then
-						a_class := system.root_type.base_class
-						root_feat := a_class.feature_table.item (system.root_creation_name)
-						l_decl_type := system.root_class_type (system.root_type).type.implemented_type (root_feat.origin_class_id)
+					-- Mark now entry point for debug information
+				if
+					is_debug_info_enabled and then
+					has_root_type and then not
+					system.root_creation_name.is_empty
+				then
+					a_class := system.root_type.base_class
+					root_feat := a_class.feature_table.item (system.root_creation_name)
+					l_decl_type := system.root_class_type (system.root_type).type.implemented_type (root_feat.origin_class_id)
 
-						entry_point_token := current_module.implementation_feature_token (
-							l_decl_type.associated_class_type (system.root_class_type (system.root_type).type).implementation_id,
-							root_feat.origin_feature_id)
-							-- Debugger API does not allow to use MethodRef token for user entry point
-						if entry_point_token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def then
-							current_module.dbg_writer.set_user_entry_point (entry_point_token)
-						else
-							fixme ("Regenerate root procedure to get MethodDef token or generate a fictious procedure with relevant debug information that will call root procedure.")
-						end
+					entry_point_token := current_module.implementation_feature_token (
+						l_decl_type.associated_class_type (system.root_class_type (system.root_type).type).implementation_id,
+						root_feat.origin_feature_id)
+						-- Debugger API does not allow to use MethodRef token for user entry point
+					if entry_point_token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def then
+						current_module.dbg_writer.set_user_entry_point (entry_point_token)
+					else
+						fixme ("Regenerate root procedure to get MethodDef token or generate a fictious procedure with relevant debug information that will call root procedure.")
 					end
 				end
 					-- Save module.
@@ -2704,9 +2699,8 @@ feature -- Features info
 				end
 			end
 			if is_debug_info_enabled and l_is_attribute then
-				to_implement ("TODO add implement")
---				Il_debug_info_recorder.set_record_context (is_single_class, l_is_attribute, is_static, in_interface)
---				Il_debug_info_recorder.record_il_feature_info (current_module, current_class_type, feat, current_class_token, l_meth_token)
+				Il_debug_info_recorder.set_record_context (is_single_class, l_is_attribute, is_static, in_interface)
+				Il_debug_info_recorder.record_il_feature_info (current_module, current_class_type, feat, current_class_token, l_meth_token)
 			end
 		end
 
@@ -3184,25 +3178,25 @@ feature -- IL Generation
 					l_same_signature)
 				then
 					if is_debug_info_enabled then
-						to_implement ("TODO add implement")
---						dbg_writer.open_method (l_meth_token)
---						across
---							current_module.method_sequence_points.item (l_token) as p
---						loop
---							l_sequence_point := p.item
---							dbg_offsets_count := l_sequence_point.offset_count
---							dbg_offsets := l_sequence_point.offsets
---							dbg_start_lines := l_sequence_point.start_lines
---							dbg_start_columns := l_sequence_point.start_columns
---							dbg_end_lines := l_sequence_point.end_lines
---							dbg_end_columns := l_sequence_point.end_columns
---							dbg_writer.define_sequence_points (
---								dbg_documents (l_sequence_point.written_class_id),
---								dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
---								dbg_end_lines, dbg_end_columns)
---						end
---						generate_local_debug_info (l_token, l_class_type)
---						dbg_writer.close_method
+						dbg_writer.open_method (l_meth_token)
+						across
+							current_module.method_sequence_points.item (l_token) as p
+						loop
+							l_sequence_point := p.item
+							dbg_offsets_count := l_sequence_point.offset_count
+							dbg_offsets := l_sequence_point.offsets
+							dbg_start_lines := l_sequence_point.start_lines
+							dbg_start_columns := l_sequence_point.start_columns
+							dbg_end_lines := l_sequence_point.end_lines
+							dbg_end_columns := l_sequence_point.end_columns
+							dbg_writer.define_sequence_points (
+								dbg_documents (l_sequence_point.written_class_id),
+								dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
+								dbg_end_lines, dbg_end_columns
+								)
+						end
+						generate_local_debug_info (l_token, l_class_type)
+						dbg_writer.close_method
 					end
 					method_writer.write_duplicate_body (l_token, l_meth_token)
 				else
@@ -3317,17 +3311,16 @@ feature -- IL Generation
 				current_feature_token := l_meth_token
 				start_new_body (l_meth_token)
 
-				to_implement ("TODO add implementation")
---				if is_debug_info_enabled then
---					dbg_writer.open_method (l_meth_token)
---					local_start_offset := method_body.count
---					create dbg_offsets.make_filled (0, 0, 5)
---					create dbg_start_lines.make_filled (0, 0, 5)
---					create dbg_start_columns.make_filled (0, 0, 5)
---					create dbg_end_lines.make_filled (0, 0, 5)
---					create dbg_end_columns.make_filled (0, 0, 5)
---					dbg_offsets_count := 0
---				end
+				if is_debug_info_enabled then
+					dbg_writer.open_method (l_meth_token)
+					local_start_offset := method_body.count
+					create dbg_offsets.make_filled (0, 0, 5)
+					create dbg_start_lines.make_filled (0, 0, 5)
+					create dbg_start_columns.make_filled (0, 0, 5)
+					create dbg_end_lines.make_filled (0, 0, 5)
+					create dbg_end_columns.make_filled (0, 0, 5)
+					dbg_offsets_count := 0
+				end
 
 				current_class_type.generate_il_feature (feat)
 				local_end_offset := method_body.count
@@ -3336,12 +3329,11 @@ feature -- IL Generation
 
 				if is_debug_info_enabled then
 					generate_local_debug_info (l_meth_token, current_class_type)
-					to_implement ("TODO add implementation")
---					dbg_writer.define_sequence_points (
---						dbg_documents (current_class.class_id),
---						dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
---						dbg_end_lines, dbg_end_columns)
---					dbg_writer.close_method
+					dbg_writer.define_sequence_points (
+						dbg_documents (current_class.class_id),
+						dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
+						dbg_end_lines, dbg_end_columns)
+					dbg_writer.close_method
 					l_sequence_point_list :=
 						current_module.method_sequence_points.item (l_meth_token)
 					if l_sequence_point_list = Void then
@@ -3355,11 +3347,9 @@ feature -- IL Generation
 						--| feature is not attribute |--
 						-- we assume the feature concerned by `generate_feature_code'
 						-- here are static and not in_interface
-
-					to_implement ("TODO add implementation")
---					Il_debug_info_recorder.set_record_context (is_single_class, False, True, False)
---					Il_debug_info_recorder.record_il_feature_info (current_module,
---								current_class_type, feat, current_class_token, l_meth_token)
+					Il_debug_info_recorder.set_record_context (is_single_class, False, True, False)
+					Il_debug_info_recorder.record_il_feature_info (current_module,
+								current_class_type, feat, current_class_token, l_meth_token)
 				end
 			end
 		end
@@ -5363,8 +5353,7 @@ feature -- Once management
 				end
 			end
 
-			to_implement ("TODO add implementation")
---			Il_debug_info_recorder.record_once_info_for_class (current_class_token, done_token, result_token, exception_token, feat, current_class)
+			Il_debug_info_recorder.record_once_info_for_class (current_class_token, done_token, result_token, exception_token, feat, current_class)
 
 			if feat.is_process_relative then
 					-- Generate flag that indicates that once data fields are ready to use
@@ -5417,8 +5406,7 @@ feature -- Once management
 				else
 					result_token := 0
 				end
-				to_implement ("TODO add implementation")
---				Il_debug_info_recorder.record_once_info_for_class (current_class_token, done_token, result_token, exception_token, feature_i, current_class)
+				Il_debug_info_recorder.record_once_info_for_class (current_class_token, done_token, result_token, exception_token, feature_i, current_class)
 			else
 				class_data_token := current_module.class_data_token (system.class_of_id (feature_i.access_in))
 
@@ -7106,20 +7094,20 @@ feature -- Line info
 		local
 			l_pos: INTEGER
 		do
-			if is_debug_info_enabled then
-				to_implement ("TODO Add implementation")
---				if stop_breakpoints_generation then
---					l_pos := dbg_offsets_count
---					dbg_offsets.force (method_body.count, l_pos)
---					dbg_start_lines.force (n + pragma_offset, l_pos)
---					dbg_start_columns.force (0, l_pos)
---					dbg_end_lines.force (n + pragma_offset, l_pos)
---					dbg_end_columns.force (1000, l_pos)
---					dbg_offsets_count := l_pos + 1
+			if
+				is_debug_info_enabled and then
+				not stop_breakpoints_generation
+			then
+				l_pos := dbg_offsets_count
+				dbg_offsets.force (method_body.count, l_pos)
+				dbg_start_lines.force (n + pragma_offset, l_pos)
+				dbg_start_columns.force (0, l_pos)
+				dbg_end_lines.force (n + pragma_offset, l_pos)
+				dbg_end_columns.force (1000, l_pos)
+				dbg_offsets_count := l_pos + 1
 
---					Il_debug_info_recorder.record_line_info (current_class_type, Byte_context.current_feature, method_body.count, n)
---					method_body.put_nop
---				end
+				Il_debug_info_recorder.record_line_info (current_class_type, Byte_context.current_feature, method_body.count, n)
+				method_body.put_nop
 			end
 		end
 
@@ -7128,13 +7116,13 @@ feature -- Line info
 			-- But in case of dotnet debugger inside eStudio
 			-- ignore those 'dummy' nope.
 		do
-			if is_debug_info_enabled then
-				to_implement ("TODO Add implementation")
---				if not stop_breakpoints_generation then
---					Il_debug_info_recorder.ignore_next_debug_info
---					put_line_info (n)
---				end
-end
+			if
+				is_debug_info_enabled and then
+				not stop_breakpoints_generation
+			then
+				Il_debug_info_recorder.ignore_next_debug_info
+				put_line_info (n)
+			end
 		end
 
 	put_debug_info (location: LOCATION_AS)
@@ -7143,21 +7131,21 @@ end
 		local
 			l_pos: INTEGER
 		do
-			if is_debug_info_enabled then
-				to_implement ("TODO Add implementation")
---				if not stop_breakpoints_generation then
---					l_pos := dbg_offsets_count
---					dbg_offsets.force (method_body.count, l_pos)
---					dbg_start_lines.force (location.line + pragma_offset, l_pos)
---					dbg_start_columns.force (location.column, l_pos)
---					dbg_end_lines.force (location.line + pragma_offset, l_pos)
---					dbg_end_columns.force (location.final_column, l_pos)
---					dbg_offsets_count := l_pos + 1
+			if
+				is_debug_info_enabled and then
+				not stop_breakpoints_generation
+			then
+				l_pos := dbg_offsets_count
+				dbg_offsets.force (method_body.count, l_pos)
+				dbg_start_lines.force (location.line + pragma_offset, l_pos)
+				dbg_start_columns.force (location.column, l_pos)
+				dbg_end_lines.force (location.line + pragma_offset, l_pos)
+				dbg_end_columns.force (location.final_column, l_pos)
+				dbg_offsets_count := l_pos + 1
 
---					Il_debug_info_recorder.record_line_info (current_class_type,
---						Byte_context.current_feature, method_body.count, location.line)
---					method_body.put_nop
---				end
+				Il_debug_info_recorder.record_line_info (current_class_type,
+					Byte_context.current_feature, method_body.count, location.line)
+				method_body.put_nop
 			end
 		end
 
@@ -7167,8 +7155,7 @@ end
 			-- but displayed in eStudio during debugging
 		do
 			if is_debug_info_enabled then
-				to_implement ("TODO Add implementation")
---				Il_debug_info_recorder.record_ghost_debug_infos (current_class_type, Byte_context.current_feature, method_body.count, a_line_n, a_nb)
+				Il_debug_info_recorder.record_ghost_debug_infos (current_class_type, Byte_context.current_feature, method_body.count, a_line_n, a_nb)
 			end
 		end
 
@@ -7178,12 +7165,12 @@ end
 			-- But in case of dotnet debugger inside eStudio
 			-- ignore those 'dummy' nope.
 		do
-			if is_debug_info_enabled then
-				to_implement ("TODO Add implementation")
---				if not stop_breakpoints_generation then
---					Il_debug_info_recorder.ignore_next_debug_info
---					put_debug_info (location)
---				end
+			if
+				is_debug_info_enabled and then
+				not stop_breakpoints_generation
+			then
+				Il_debug_info_recorder.ignore_next_debug_info
+				put_debug_info (location)
 			end
 		end
 
@@ -7191,38 +7178,37 @@ end
 			-- Flush all sequence points.
 		local
 			l_sequence_point_list: LINKED_LIST [like sequence_point]
-			--l_document: DBG_DOCUMENT_WRITER
+			l_document: DBG_DOCUMENT_WRITER
 		do
 			if is_debug_info_enabled then
-				to_implement ("TODO add debugging support")
---				if internal_document /= Void then
---					l_document := current_module.dbg_pragma_documents (internal_document)
---				else
---					l_document := dbg_documents (a_class_type.associated_class.class_id)
---				end
---				dbg_writer.define_sequence_points (
---					l_document,
---					dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
---					dbg_end_lines, dbg_end_columns)
+				if internal_document /= Void then
+					l_document := current_module.dbg_pragma_documents (internal_document)
+				else
+					l_document := dbg_documents (a_class_type.associated_class.class_id)
+				end
+				dbg_writer.define_sequence_points (
+					l_document,
+					dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
+					dbg_end_lines, dbg_end_columns)
 
---				l_sequence_point_list :=
---					current_module.method_sequence_points.item (current_feature_token)
---				if l_sequence_point_list = Void then
---					create l_sequence_point_list.make
---					current_module.method_sequence_points.put (l_sequence_point_list,
---						current_feature_token)
---				end
---				l_sequence_point_list.extend ([dbg_offsets_count, dbg_offsets, dbg_start_lines,
---					dbg_start_columns, dbg_end_lines, dbg_end_columns,
---					a_class_type.associated_class.class_id])
+				l_sequence_point_list :=
+					current_module.method_sequence_points.item (current_feature_token)
+				if l_sequence_point_list = Void then
+					create l_sequence_point_list.make
+					current_module.method_sequence_points.put (l_sequence_point_list,
+						current_feature_token)
+				end
+				l_sequence_point_list.extend ([dbg_offsets_count, dbg_offsets, dbg_start_lines,
+					dbg_start_columns, dbg_end_lines, dbg_end_columns,
+					a_class_type.associated_class.class_id])
 
---					-- Reset offsets.
---				create dbg_offsets.make_filled (0, 0, 5)
---				create dbg_start_lines.make_filled (0, 0, 5)
---				create dbg_start_columns.make_filled (0, 0, 5)
---				create dbg_end_lines.make_filled (0, 0, 5)
---				create dbg_end_columns.make_filled (0, 0, 5)
---				dbg_offsets_count := 0
+					-- Reset offsets.
+				create dbg_offsets.make_filled (0, 0, 5)
+				create dbg_start_lines.make_filled (0, 0, 5)
+				create dbg_start_columns.make_filled (0, 0, 5)
+				create dbg_end_lines.make_filled (0, 0, 5)
+				create dbg_end_columns.make_filled (0, 0, 5)
+				dbg_offsets_count := 0
 			end
 		end
 

@@ -19,7 +19,7 @@ inherit
 			{ANY} system, workbench
 		end
 
-	SHARED_CLI_FACTORY
+	CLI_EMITTER_SERVICE
 		export
 			{NONE} all
 		end

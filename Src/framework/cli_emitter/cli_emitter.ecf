@@ -35,19 +35,20 @@
 			-->
 		</library>
 		<library name="cli_kernel" location="$ISE_LIBRARY\framework\dotnet\cli_kernel\cli_kernel.ecf"/>
-		<cluster name="src" location=".\src\" recursive="false">
+		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>
+		<cluster name="cli_emitter" location=".\src\" recursive="false">
 			<cluster name="spec_cil_writer" location="$|cli_writer\" recursive="true">
 				<condition>
 					<platform value="windows"/>
 				</condition>
 			</cluster>
 			<cluster name="spec_il_emitter" location="$|il_emitter\" recursive="true"/>
-			<cluster name="implementation_windows" location="$|implementation\windows\" recursive="true">
+			<cluster name="spec_windows" location="$|spec\windows\" recursive="true">
 				<condition>
 					<platform value="windows"/>
 				</condition>
 			</cluster>
-			<cluster name="implementation_others" location="$|implementation\others\" recursive="true">
+			<cluster name="spec_others" location="$|spec\others\" recursive="true">
 				<condition>
 					<platform excluded_value="windows"/>
 				</condition>

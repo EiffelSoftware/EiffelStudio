@@ -21,6 +21,9 @@ feature -- Access
 
 	pe_file (a_name: READABLE_STRING_32; console_app, dll_app, is_32bits_app: BOOLEAN; e: MD_EMIT): CLI_PE_FILE
 		do
+			check not_implemented: False then
+
+			end
 		end
 
 	dispenser: MD_DISPENSER

@@ -27,11 +27,6 @@
 			<renaming old_name="MD_DISPENSER" new_name="IL_MD_DISPENSER"/>
 			<renaming old_name="MD_EMIT" new_name="IL_MD_EMIT"/>
 			<renaming old_name="MD_STRONG_NAME" new_name="IL_MD_STRONG_NAME"/>
-			<!--
-			<renaming old_name="DBG_WRITER" new_name="IL_DBG_WRITER"/>
-			<renaming old_name="DBG_DOCUMENT_WRITER" new_name="IL_DBG_DOCUMENT_WRITER"/>
-			<renaming old_name="CLI_DEBUG_DIRECTORY" new_name="IL_CLI_DEBUG_DIRECTORY"/>
-			-->
 		</library>
 		<library name="cli_kernel" location="$ISE_LIBRARY\framework\dotnet\cli_kernel\cli_kernel.ecf"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>

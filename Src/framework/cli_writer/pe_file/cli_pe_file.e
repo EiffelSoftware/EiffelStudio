@@ -9,12 +9,12 @@ class
 	CLI_PE_FILE
 
 inherit
-	CLI_UTILITIES
+	CLI_PE_FILE_I
+
+	MD_UTILITIES
 		export
 			{NONE} padding, file_alignment
 		end
-
-	CLI_PE_FILE_I
 
 create
 	make

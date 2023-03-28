@@ -88,7 +88,7 @@ feature -- Status
 
 feature -- Access
 
-	emitter: MD_EMIT
+	emitter: MD_EMIT_I
 			-- Meta data emitter, needed for RVA update.
 
 feature -- Constant
@@ -230,7 +230,9 @@ feature -- Access
 		--tables: LIST [DNL_TABLE]
 	tables: SPECIAL [MD_TABLES]
 		do
-			Result := emitter.tables
+			check attached {MD_EMIT} emitter as e then
+				Result := e.tables
+			end
 		end
 			-- tables that can appear in a PE file.
 

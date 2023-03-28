@@ -19,11 +19,9 @@ feature -- Access
 			create {IL_EMITTER_CLI_DEBUG_DIRECTORY} Result.make
 		end
 
-	pe_file (a_name: READABLE_STRING_32; console_app, dll_app, is_32bits_app: BOOLEAN; e: MD_EMIT): CLI_PE_FILE
+	pe_file (a_name: READABLE_STRING_32; console_app, dll_app, is_32bits_app: BOOLEAN; e: MD_EMIT): IL_EMITTER_CLI_PE_FILE
 		do
-			check not_implemented: False then
-
-			end
+			create Result.make (a_name, console_app, dll_app, is_32bits_app, e)
 		end
 
 	dispenser: MD_DISPENSER

@@ -25,7 +25,7 @@ feature -- Access
 		deferred
 		end
 
-	strong_name (a_runtime_version: STRING_32): MD_STRONG_NAME
+	strong_name (a_runtime_version: STRING_32): detachable MD_STRONG_NAME
 		deferred
 		end
 

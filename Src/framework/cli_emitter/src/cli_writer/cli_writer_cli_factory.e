@@ -32,7 +32,7 @@ feature -- Access
 			create {CLI_WRITER_MD_DISPENSER} Result.make
 		end
 
-	strong_name (a_runtime_version: STRING_32): MD_STRONG_NAME
+	strong_name (a_runtime_version: STRING_32): detachable MD_STRONG_NAME
 		do
 			create {CLI_WRITER_MD_STRONG_NAME} Result.make_with_version (a_runtime_version)
 		end

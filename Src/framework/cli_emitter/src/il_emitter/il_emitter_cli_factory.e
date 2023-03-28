@@ -39,9 +39,12 @@ feature -- Access
 			create {IL_EMITTER_DBG_WRITER} Result.make (emitter, name, full_build)
 		end
 
-	strong_name (a_runtime_version: STRING_32): MD_STRONG_NAME
+	strong_name (a_runtime_version: STRING_32): detachable MD_STRONG_NAME
 		do
-			create {IL_MD_STRONG_NAME} Result.make_with_version (a_runtime_version)
+			debug ("refactor_fixme")
+				to_implement ("TODO: no support for assembly signing")
+			end
+--			create {IL_MD_STRONG_NAME} Result.make_with_version (a_runtime_version)
 		end
 
 	assembly_info: MD_ASSEMBLY_INFO

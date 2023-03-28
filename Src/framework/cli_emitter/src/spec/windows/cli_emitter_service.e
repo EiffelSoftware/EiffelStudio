@@ -22,10 +22,13 @@ feature -- Setup
 	setup_cil_code_generation (a_clr_runtime_version: READABLE_STRING_GENERAL)
 			-- Setup CIL code generation underlying services for the runtime `a_clr_runtime_version`.
 		do
-			if attached (create {CLR_HOST_FACTORY}).runtime_host (a_clr_runtime_version) as l_host then
-					-- CLR Host initialized for `a_clr_runtime_version`
-			else
-				check clr_host_set: False end
+			if not is_using_il_emitter then
+					-- using the COM interface on Windows
+				if attached (create {CLR_HOST_FACTORY}).runtime_host (a_clr_runtime_version) as l_host then
+						-- CLR Host initialized for `a_clr_runtime_version`
+				else
+					check clr_host_set: False end
+				end
 			end
 		end
 
@@ -48,19 +51,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

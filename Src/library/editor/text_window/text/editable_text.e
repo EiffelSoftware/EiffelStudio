@@ -111,6 +111,78 @@ feature -- Status Report
 			Result := (not is_empty) and then history.undo_is_possible
 		end
 
+	is_commented_selection: BOOLEAN
+			-- Is selection fully commented using "--" ?
+		require
+			not_empty: not is_empty
+		local
+			ln: like first_line
+			end_loop, cursor_start: BOOLEAN
+			start_pos, end_pos, start_line, end_line: INTEGER
+			start_selection, end_selection: like attached_cursor
+		do
+			ignore_cursor_moves := True
+
+			if has_selection then
+				start_selection := selection_start.twin
+				end_selection := selection_end.twin
+			else
+				start_selection := attached_cursor.twin
+				end_selection := attached_cursor.twin
+			end
+			start_pos := start_selection.x_in_characters
+			end_pos := end_selection.x_in_characters
+			start_line := start_selection.y_in_lines
+			end_line := end_selection.y_in_lines
+			cursor_start := (cursor = start_selection)
+
+			Result := True
+			from
+				ln := start_selection.line
+			until
+				ln = Void or else ln.index > end_line or else not Result
+			loop
+				from
+					ln.start
+					end_loop := False
+				until
+					ln.after or end_loop or not Result
+				loop
+					if ln.item.is_text then
+							-- Check if we are strictly between `start_selection' and `end_selection'
+							-- and we are at the end selection, that the selection does not end at the first
+							-- character in the line. Fixes bug#16033.
+						if
+							attached {EDITOR_TOKEN_COMMENT} ln.item as l_comment_token
+							or else (attached {EDITOR_TOKEN_OPERATOR} ln.item as l_op1 and then
+									l_op1.wide_image.is_case_insensitive_equal_general ("-") and then
+									attached {EDITOR_TOKEN_OPERATOR} ln.item.next as l_op2  and then
+									l_op2.wide_image.is_case_insensitive_equal_general ("-")
+							)
+						then
+							if
+								ln /= end_selection.line
+								or else (end_selection.token /= ln.first_token
+										or else end_selection.pos_in_token /= 1
+										or else start_selection.is_equal (end_selection)
+										)
+							then
+								-- Is a comment
+							else
+								Result := False -- Is not a comment
+							end
+						else
+							Result := False
+						end
+						end_loop := True
+					end
+					ln.forth
+				end
+				ln := ln.next
+			end
+			ignore_cursor_moves := False
+		end
+
 feature -- Status setting
 
 	set_changed (value: BOOLEAN; directly_edited: BOOLEAN)
@@ -231,6 +303,18 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
+	toggle_comment_selection
+			-- Comment or uncomment all lines included in the selection with the string `--'.
+		require
+			not_empty: not is_empty
+		do
+			if is_commented_selection then
+				uncomment_selection
+			else
+				comment_selection
+			end
+		end
+
 	comment_selection
 			-- Comment all lines included in the selection with the string `--'.
 		require
@@ -292,29 +376,48 @@ feature -- Basic Operations
 							-- and we are at the end selection, that the selection does not end at the first
 							-- character in the line. Fixes bug#16033.
 						if
-							attached {EDITOR_TOKEN_COMMENT} ln.item as l_comment_token and then
-							(ln /= end_selection.line or else
-								(end_selection.token /= ln.first_token  or else
-								end_selection.pos_in_token /= 1 or else
-								start_selection.is_equal (end_selection)))
+								-- token comment "--"  or two successive operator tokens "-"
+							attached {EDITOR_TOKEN_COMMENT} ln.item as l_comment_token
+							or else (attached {EDITOR_TOKEN_OPERATOR} ln.item as l_op1 and then
+								l_op1.wide_image.is_case_insensitive_equal_general ("-") and then
+								attached {EDITOR_TOKEN_OPERATOR} ln.item.next as l_op2 and then
+								l_op2.wide_image.is_case_insensitive_equal_general ("-")
+							)
 						then
-							create cursor.make_from_relative_pos (ln, l_comment_token, 1, Current)
-							delete_n_chars_at_cursor_pos (2)
-							l_history.record_uncomment ("--")
-							if ln = start_selection.line then
-								l_offset := start_pos - attached_cursor.x_in_characters
-								if l_offset > 0 and l_offset <= 2 then
-									start_pos := (start_pos - l_offset).max (1)
-								elseif l_offset > 2 then
-									start_pos := (start_pos - 2).max (1)
+							if
+								ln /= end_selection.line
+								or else (end_selection.token /= ln.first_token
+									or else end_selection.pos_in_token /= 1
+									or else start_selection.is_equal (end_selection)
+								)
+							then
+								if attached {EDITOR_TOKEN_COMMENT} ln.item as l_comment_token then
+									create cursor.make_from_relative_pos (ln, l_comment_token, 1, Current)
+								elseif attached {EDITOR_TOKEN_OPERATOR} ln.item as l_op1 then
+									create cursor.make_from_relative_pos (ln, l_op1, 1, Current)
+								else
+									check is_comment_or_minus_operator: False end
+									cursor := Void
 								end
-							end
-							if ln = end_selection.line then
-								l_offset := end_pos - attached_cursor.x_in_characters
-								if l_offset > 0 and l_offset <= 2 then
-									end_pos := (end_pos - l_offset).max (1)
-								elseif l_offset > 2 then
-									end_pos := (end_pos - 2).max (1)
+								if cursor /= Void then
+									delete_n_chars_at_cursor_pos (2)
+									l_history.record_uncomment ("--")
+									if ln = start_selection.line then
+										l_offset := start_pos - attached_cursor.x_in_characters
+										if l_offset > 0 and l_offset <= 2 then
+											start_pos := (start_pos - l_offset).max (1)
+										elseif l_offset > 2 then
+											start_pos := (start_pos - 2).max (1)
+										end
+									end
+									if ln = end_selection.line then
+										l_offset := end_pos - attached_cursor.x_in_characters
+										if l_offset > 0 and l_offset <= 2 then
+											end_pos := (end_pos - l_offset).max (1)
+										elseif l_offset > 2 then
+											end_pos := (end_pos - 2).max (1)
+										end
+									end
 								end
 							end
 						end
@@ -2201,7 +2304,7 @@ invariant
 	tabulation_symbol_valid: tabulation_symbol.count > 0
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

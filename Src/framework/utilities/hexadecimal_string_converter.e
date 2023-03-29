@@ -14,17 +14,17 @@ inherit
 
 feature -- Access
 
-	hex_to_integer_32 (s: READABLE_STRING_8): INTEGER_32
+	hex_to_integer_32 (s: READABLE_STRING_GENERAL): INTEGER_32
 			-- Hexadecimal string `s' converted to INTEGER_32 value
 		require
 			s_not_void: s /= Void
 		local
 			i, nb: INTEGER;
-			char: CHARACTER
+			char: CHARACTER_32
 		do
 			nb := s.count
 
-			if nb >= 2 and then s.item (2) = 'x' then
+			if nb >= 2 and then s.item (2) = {CHARACTER_32} 'x' then
 				i := 3
 			else
 				i := 1
@@ -36,10 +36,10 @@ feature -- Access
 			loop
 				Result := Result * 16
 				char := s.item (i)
-				if char >= '0' and then char <= '9' then
-					Result := Result + (char |-| '0')
+				if char >= {CHARACTER_32} '0' and then char <= {CHARACTER_32} '9' then
+					Result := Result + (char |-| {CHARACTER_32} '0').to_integer_32
 				else
-					Result := Result + (char.lower |-| 'a' + 10)
+					Result := Result + (char.lower |-| {CHARACTER_32} 'a' + 10).to_integer_32
 				end
 				i := i + 1
 			end
@@ -47,17 +47,17 @@ feature -- Access
 			instance_free: class
 		end
 
-	hex_to_integer_64 (s: READABLE_STRING_8): INTEGER_64
+	hex_to_integer_64 (s: READABLE_STRING_GENERAL): INTEGER_64
 			-- Hexadecimal string `s' converted to INTEGER_64 value
 		require
 			s_not_void: s /= Void
 		local
 			i, nb: INTEGER;
-			char: CHARACTER
+			char: CHARACTER_32
 		do
 			nb := s.count
 
-			if nb >= 2 and then s.item (2) = 'x' then
+			if nb >= 2 and then s.item (2) = {CHARACTER_32} 'x' then
 				i := 3
 			else
 				i := 1
@@ -69,10 +69,10 @@ feature -- Access
 			loop
 				Result := Result * 16
 				char := s.item (i)
-				if char >= '0' and then char <= '9' then
-					Result := Result + (char |-| '0')
+				if char >= '0' and then char <= {CHARACTER_32} '9' then
+					Result := Result + (char |-| {CHARACTER_32} '0')
 				else
-					Result := Result + (char.lower |-| 'a' + 10)
+					Result := Result + (char.lower |-| {CHARACTER_32} 'a' + 10)
 				end
 				i := i + 1
 			end
@@ -80,7 +80,7 @@ feature -- Access
 			instance_free: class
 		end
 
-	hex_to_pointer (s: READABLE_STRING_8): POINTER
+	hex_to_pointer (s: READABLE_STRING_GENERAL): POINTER
 			-- Hexadecimal string `s' converted to POINTER value
 		require
 			s_not_void: s /= Void

@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			is_void: is_void
 		end
 
-	make_from_string (s: STRING_8)
+	make_from_string (s: READABLE_STRING_GENERAL)
 			-- Create address from string `s'
 			--| FIXME: does not handle offset
 		local
@@ -280,7 +280,7 @@ invariant
 	not_default_value_implies_not_is_void: value /= Default_pointer implies not is_void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

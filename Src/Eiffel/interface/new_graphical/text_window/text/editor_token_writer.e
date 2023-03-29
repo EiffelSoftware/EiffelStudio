@@ -359,7 +359,7 @@ feature -- Text processing
 			addr: DBG_ADDRESS
 		do
 			create tok.make (a_address.as_string_32)
-			create addr.make_from_string (a_address.as_string_32)
+			create addr.make_from_string (a_address)
 			create stone.make (addr, a_name.as_string_32, a_class)
 			tok.set_pebble (stone)
 			append_token (tok)
@@ -718,7 +718,7 @@ feature {NONE} -- Initialisations and File status
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

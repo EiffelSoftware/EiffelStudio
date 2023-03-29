@@ -1231,7 +1231,7 @@ feature -- Code generation
 			method_writer.write_current_body
 		end
 
-	save_to_disk (a_signing: MD_STRONG_NAME)
+	save_to_disk (a_signing: detachable MD_STRONG_NAME)
 			-- Save byte code and metadata to file `module_file_name'.
 		require
 			is_generated: is_generated
@@ -1250,15 +1250,15 @@ feature -- Code generation
 					check implemented: False end
 				end
 			end
-			if public_key /= Void then
-				l_pe_file.set_public_key (public_key, a_signing)
+			if attached public_key as l_pub_key and then a_signing /= Void then
+				l_pe_file.set_public_key (l_pub_key, a_signing)
 			end
 			l_pe_file.set_method_writer (method_writer)
-			if resources /= Void then
-				l_pe_file.set_resources (resources)
+			if attached resources as l_res then
+				l_pe_file.set_resources (l_res)
 			end
-			if entry_point_token /= 0 then
-				l_pe_file.set_entry_point_token (entry_point_token)
+			if attached entry_point_token as ept then
+				l_pe_file.set_entry_point_token (ept)
 			end
 			l_pe_file.save
 

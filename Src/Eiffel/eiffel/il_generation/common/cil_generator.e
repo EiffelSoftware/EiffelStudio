@@ -88,11 +88,9 @@ feature {NONE} -- Implementation: Access
 	has_root_class: BOOLEAN
 			-- Does current module has a root class specification?
 
-	signing: MD_STRONG_NAME
+	signing: detachable MD_STRONG_NAME
 			-- Object used for signing assemblies.
-			--| TODO double check if we really need to keep it,
-			--| it seems it optional now.
-
+			-- This is optional since NetCORE.
 
 feature -- Generation
 
@@ -105,7 +103,6 @@ feature -- Generation
 			deletion_successful: BOOLEAN
 			output_file: RAW_FILE
 			l_last_error_msg: STRING
-			l_key_file_name: PATH
 			l_public_key: MD_PUBLIC_KEY
 			l_res: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]
 		do
@@ -135,34 +132,38 @@ feature -- Generation
 
 					-- Set information about current assembly.
 				create assembly_info.make (System.name)
-				if System.msil_version /= Void and then not System.msil_version.is_empty then
-					assembly_info.set_version (System.msil_version)
+				if
+					attached System.msil_version as l_msil_version and then
+					not l_msil_version.is_empty
+				then
+					assembly_info.set_version (l_msil_version)
 				end
 
-				signing := md_factory.strong_name (System.clr_runtime_version)
-				if not signing.exists then
-						-- We cannot continue as incremental recompilation needs access
-						-- to `MD_STRONG_NAME'.
---FIXME: find how to sign with .Net CORE.						
---					Error_handler.insert_error (create {VIAC})
---					Error_handler.checksum
-				end
+					-- By default no signing
+				signing := Void
 
-				check
-					signing_exists: signing.exists
-				end
-
-					-- Sign assembly if a key was provided.
-				if attached System.msil_key_file_name as l_system_msil_key_file_name then
-					l_key_file_name := l_system_msil_key_file_name
-				end
-
-				if signing.exists and then l_key_file_name /= Void then
-					create l_public_key.make_from_file (l_key_file_name, signing)
-					if not l_public_key.is_valid then
+					-- Sign assembly if a key was provided, and signing supported.
+				if
+					attached System.msil_key_file_name as l_key_file_name and then
+					l_key_file_name /= Void
+				then
+						-- FIXME: maybe add a new setting "signing_enabled" [2023-03-28]
+					signing := md_factory.strong_name (System.clr_runtime_version)
+					if attached signing as sn and then sn.exists then
+						create l_public_key.make_from_file (l_key_file_name, sn)
+						if not l_public_key.is_valid then
+							l_public_key := Void
+								-- Introduce error saying that public key cannot be read.
+							Error_handler.insert_warning (create {VIIK}, universe.target.options.is_warning_as_error)
+						end
+					else
 						l_public_key := Void
-							-- Introduce error saying that public key cannot be read.
-						Error_handler.insert_warning (create {VIIK}, universe.target.options.is_warning_as_error)
+
+							-- No support for assembly key signature.
+							-- This is optional with NetCORE.
+						Error_handler.insert_warning (create {VIAC}, False)
+						Error_handler.checksum
+						signing := Void
 					end
 				else
 					l_public_key := Void
@@ -281,7 +282,6 @@ feature -- Generation
 			l_viop: VIOP
 			l_use_optimized_precomp: BOOLEAN
 			l_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
-			l_as: CONF_PHYSICAL_ASSEMBLY
 			l_state: CONF_STATE
 		do
 			if not retried then
@@ -296,13 +296,13 @@ feature -- Generation
 				until
 					l_assemblies.after
 				loop
-					l_as ?= l_assemblies.item_for_iteration
-					check
-						physical_assembly: l_as /= Void
-					end
-					if l_as.is_enabled (l_state) and then not l_as.is_in_gac then
-						copy_to_local (l_as.location.build_path ({STRING_32} "", l_as.location.original_file), assembly_location (is_finalizing), Void)
-						l_has_local := True
+					if attached {CONF_PHYSICAL_ASSEMBLY} l_assemblies.item_for_iteration as l_as then
+						if l_as.is_enabled (l_state) and then not l_as.is_in_gac then
+							copy_to_local (l_as.location.build_path ({STRING_32} "", l_as.location.original_file), assembly_location (is_finalizing), Void)
+							l_has_local := True
+						end
+					else
+						check is_physical_assembly: False end
 					end
 					l_assemblies.forth
 				end
@@ -371,7 +371,6 @@ feature {NONE} -- Type description
 			-- Generate all classes in compiled system.
 		require
 			valid_system: System.classes /= Void
-			signing_not_void: signing /= Void
 		do
 			compute_root_class
 
@@ -452,7 +451,6 @@ feature {NONE} -- Type description
 			i, nb: INTEGER
 			types: TYPE_LIST
 			cl_type: CLASS_TYPE
-			gen_type: GEN_TYPE_A
 			l_class_counted: BOOLEAN
 		do
 			from
@@ -501,19 +499,22 @@ feature {NONE} -- Type description
 								types.after
 							loop
 								cl_type := types.item
-								gen_type ?= cl_type.type
-								gen_type.enumerate_interfaces (
-									agent (c: CLASS_TYPE; p: ARRAYED_LIST [CLASS_INTERFACE])
-										local
-											ci: CLASS_INTERFACE
-										do
-											ci := c.class_interface
-											if not p.has (ci) then
-												p.extend (ci)
+								if attached {GEN_TYPE_A} cl_type.type as gen_type then
+									gen_type.enumerate_interfaces (
+										agent (c: CLASS_TYPE; p: ARRAYED_LIST [CLASS_INTERFACE])
+											local
+												ci: CLASS_INTERFACE
+											do
+												ci := c.class_interface
+												if not p.has (ci) then
+													p.extend (ci)
+												end
 											end
-										end
-									(?, cl_type.class_interface.parents)
-								)
+										(?, cl_type.class_interface.parents)
+									)
+								else
+									check is_gen_type_a: False end
+								end
 								types.forth
 							end
 						end

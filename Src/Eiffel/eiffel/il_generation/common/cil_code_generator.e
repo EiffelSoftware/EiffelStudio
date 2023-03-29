@@ -877,11 +877,10 @@ feature -- Generation Structure
 			end
 		end
 
-	end_assembly_generation (a_signing: MD_STRONG_NAME)
+	end_assembly_generation (a_signing: detachable MD_STRONG_NAME)
 			-- Finish creation of current assembly.
 		require
-			a_signing_not_void: a_signing /= Void
-			a_signing_exists: a_signing.exists
+			a_signing_exists: a_signing /= Void implies a_signing.exists
 		local
 			l_types: like class_types
 			l_type: CLASS_TYPE
@@ -976,7 +975,7 @@ feature -- Generation Structure
 			(create {IL_RESOURCE_GENERATOR}.make (main_module, a_resources)).generate
 		end
 
-	define_file (a_module: IL_MODULE; a_file: READABLE_STRING_GENERAL; a_name: STRING; file_flags: INTEGER; a_signing: MD_STRONG_NAME): INTEGER
+	define_file (a_module: IL_MODULE; a_file: READABLE_STRING_GENERAL; a_name: STRING; file_flags: INTEGER; a_signing: detachable MD_STRONG_NAME): INTEGER
 			-- Add `a_file' of name `a_name' in list of files referenced by `a_module'.
 		require
 			a_module_not_void: a_module /= Void
@@ -988,14 +987,18 @@ feature -- Generation Structure
 			file_flags_valid:
 				(file_flags = {MD_FILE_FLAGS}.Has_meta_data) or
 				(file_flags = {MD_FILE_FLAGS}.Has_no_meta_data)
-			a_signing_not_void: a_signing /= Void
-			a_signing_exists: a_signing.exists
+			a_signing_exists: a_signing /= Void implies a_signing.exists
 		local
 			l_uni_string: NATIVE_STRING
 			l_hash_res: MANAGED_POINTER
 		do
 			create l_uni_string.make (a_file)
-			l_hash_res := a_signing.hash_of_file (l_uni_string)
+			if a_signing /= Void then
+				l_hash_res := a_signing.hash_of_file (l_uni_string)
+			else
+					-- FIXME: check if the value is acceptable.
+				create l_hash_res.make (0)
+			end
 
 			l_uni_string.set_string (a_name)
 			Result := a_module.md_emit.define_file (l_uni_string, l_hash_res, file_flags)
@@ -1053,11 +1056,10 @@ feature -- Generation Structure
 				current_module.ise_interface_type_attr_ctor_token, l_assert_ca)
 		end
 
-	end_module_generation (has_root_type: BOOLEAN; a_signing: MD_STRONG_NAME)
+	end_module_generation (has_root_type: BOOLEAN; a_signing: detachable MD_STRONG_NAME)
 			-- Finish creation of current module.
 		require
-			a_signing_not_void: a_signing /= Void
-			a_signing_exists: a_signing.exists
+			a_signing_exists: a_signing /= Void implies a_signing.exists
 		local
 			a_class: CLASS_C
 			root_feat: FEATURE_I

@@ -62,7 +62,10 @@ feature {NONE} -- Creation
 		require
 			is_namespace_known (n)
 		do
-			if n.same_string (namespace_1_22_0) then
+			if
+				n.same_string (namespace_1_23_0) or else
+				n.same_string (namespace_1_22_0)
+			then
 					-- Use the defaults of ES 21.05.
 				make_21_05
 			elseif n.same_string (namespace_1_21_0) then
@@ -1047,7 +1050,7 @@ invariant
 
 note
 	ca_ignore: "CA093", "CA093: manifest array type mismatch"
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

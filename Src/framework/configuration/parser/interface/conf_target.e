@@ -51,6 +51,7 @@ feature {NONE} -- Initialization
 			create internal_overrides.make (0)
 			create internal_clusters.make (1)
 			create internal_assemblies.make (0)
+			create internal_dotnet_renaming.make (0)
 
 			create internal_file_rule.make (0)
 			internal_file_rule.compare_objects
@@ -604,6 +605,18 @@ feature -- Access queries
 			end
 		ensure
 			Result_not_void: Result /= Void
+		end
+
+	dotnet_renaming: STRING_TABLE [CONF_RENAMING_GROUP]
+			-- .NET classes that should get particular class names
+			-- associated with the given namespaces.
+		do
+			if attached extends as e then
+				Result := e.dotnet_renaming.twin
+				Result.merge (internal_dotnet_renaming)
+			else
+				Result := internal_dotnet_renaming
+			end
 		end
 
 	concurrency_mode: like {CONF_STATE}.concurrency
@@ -1365,6 +1378,9 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_mapping: detachable like mapping
 			-- Special classes name mapping (eg. STRING => STRING_32) of this target itself.
 
+	internal_dotnet_renaming: like dotnet_renaming
+			-- Renaming of .NET classes.
+
 	internal_external_include: like external_include
 			-- Global external include files of this target itself.
 
@@ -1436,7 +1452,7 @@ invariant
 	environ_variables_not_void: environ_variables /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

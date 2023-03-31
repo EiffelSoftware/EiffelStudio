@@ -1,21 +1,52 @@
 ﻿note
-	description: "[
-			Virtual group like a library or an assembly that only provides access to classes in another group.
-			Virtual groups also allow renamings/prefixing of the classes they give access to.
-			]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description: ".NET namespace naming properties."
 
-deferred class
-	CONF_VIRTUAL_GROUP
+class
+	CONF_NAMESPACE
 
 inherit
-	CONF_GROUP
 	CONF_RENAMING_GROUP
 
+create
+	make
+
+feature {NONE} -- Creation
+
+	make (n: like name)
+			-- Initialize a .NET namespace `n` renaming node.
+		do
+			set_name (n)
+		ensure
+			is_same_name (n)
+		end
+
+feature -- Comparison
+
+	is_same_name (n: like name): BOOLEAN
+			-- Do `n` and `name` represent the same name?
+		do
+			Result := name.same_string (n)
+		end
+
+feature -- Modification
+
+	set_name (n: like name)
+			-- Set `name' to `a_name'.
+		do
+			name := n
+		end
+
+feature {CONF_VISITOR} -- Visitor
+
+	process (v: CONF_VISITOR)
+		do
+			v.process_namespace (Current)
+		end
+
 note
+	date: "$Date$"
+	revision: "$Revision$"
+	author: "Alexander Kogtenkov"
 	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

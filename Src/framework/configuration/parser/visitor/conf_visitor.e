@@ -115,6 +115,11 @@ feature -- Visit nodes
 		deferred
 		end
 
+	process_namespace (n: CONF_NAMESPACE)
+			-- Visit a namespace node `n`.
+		deferred
+		end
+
 feature {NONE} -- Implementation
 
 	add_error (an_error: CONF_ERROR)
@@ -186,7 +191,7 @@ feature {NONE} -- Implementation
 			-- Tag used when raising an exception error.
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

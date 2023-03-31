@@ -1034,6 +1034,8 @@ feature -- Parse errors
 			Result := locale.formatted_string (locale.translation ("Invalid override tag there is already a group with the name $1."), [a_group])
 		end
 
+	e_parse_incorrect_namespace_no_name: STRING_32 do Result := locale.translation ("No name for the namespace element.") end
+
 	e_parse_incorrect_debug_no_name: STRING_32 do Result := locale.translation ("Invalid debug tag.") end
 	e_parse_incorrect_debug (a_debug: READABLE_STRING_GENERAL): STRING_32
 		do
@@ -1357,7 +1359,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,21 +1,39 @@
 ﻿note
-	description: "[
-			Virtual group like a library or an assembly that only provides access to classes in another group.
-			Virtual groups also allow renamings/prefixing of the classes they give access to.
-			]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "A named group of classes."
 
 deferred class
-	CONF_VIRTUAL_GROUP
+	CONF_NAMED_GROUP
 
 inherit
-	CONF_GROUP
-	CONF_RENAMING_GROUP
+	CONF_VISITABLE
+
+feature -- Access
+
+	name: READABLE_STRING_32
+			-- The name of the group.
+
+feature -- Comparison
+
+	is_same_name (n: like name): BOOLEAN
+			-- Do `n` and `name` represent the same name?
+		deferred
+		end
+
+feature -- Modification
+
+	set_name (n: like name)
+			-- Set `name' to `a_name'.
+		require
+			not n.is_empty
+		deferred
+		ensure
+			is_same_name (n)
+		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
+	author: "Alexander Kogtenkov"
 	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

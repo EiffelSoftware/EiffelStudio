@@ -314,6 +314,12 @@ feature -- Callbacks
 					end
 				when t_mapping then
 					process_mapping_attributes
+				when t_namespace then
+					if includes_this_or_after (namespace_1_23_0) then
+						process_namespace_attributes
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_tag ({STRING_32} "namespace"))
+					end
 				when t_note then
 					process_element_under_note
 				else
@@ -432,15 +438,20 @@ feature -- Callbacks
 					current_action := Void
 				when t_post_compile_action then
 					current_action := Void
+				when t_namespace then
+					current_renaming := Void
 				when t_precompile then
 					current_group := Void
 					current_library := Void
+					current_renaming := Void
 				when t_library then
 					current_group := Void
 					current_library := Void
+					current_renaming := Void
 				when t_assembly then
 					current_group := Void
 					current_assembly := Void
+					current_renaming := Void
 				when t_cluster then
 					if l_current_cluster /= Void then
 						current_group := l_current_cluster.parent
@@ -1143,6 +1154,7 @@ feature {NONE} -- Implementation attribute processing
 					l_current_group := l_current_library
 					current_library := l_current_library
 					current_group := l_current_group
+					current_renaming := l_current_library
 					if attached current_attributes.item (at_readonly) as l_readonly then
 						if l_readonly.is_boolean then
 							l_current_library.set_readonly (l_readonly.to_boolean)
@@ -1196,6 +1208,7 @@ feature {NONE} -- Implementation attribute processing
 					l_current_group := l_current_library
 					current_library := l_current_library
 					current_group := l_current_group
+					current_renaming := l_current_library
 					if attached current_attributes.item (at_readonly) as l_readonly then
 						if l_readonly.is_boolean then
 							l_current_library.set_readonly (l_readonly.to_boolean)
@@ -1254,6 +1267,7 @@ feature {NONE} -- Implementation attribute processing
 					l_current_group := l_current_assembly
 					current_assembly := l_current_assembly
 					current_group := l_current_group
+					current_renaming := l_current_assembly
 					if attached current_attributes.item (at_readonly) as l_readonly then
 						if l_readonly.is_boolean then
 							l_current_assembly.set_readonly (l_readonly.to_boolean)
@@ -1416,6 +1430,26 @@ feature {NONE} -- Implementation attribute processing
 			override_and_cluster_and_group: current_override /= Void and current_cluster /= Void and current_group /= Void
 		end
 
+	process_namespace_attributes
+			-- Process attributes of a namespace tag.
+		require
+			current_target_not_void: current_target /= Void
+		local
+			r: CONF_NAMESPACE
+		do
+			if attached current_attributes [at_name] as n then
+				r := factory.new_namespace (n)
+				if attached current_attributes [at_prefix] as p then
+					r.set_name_prefix (p)
+				end
+				current_renaming := r
+			else
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_namespace_no_name)
+			end
+		ensure
+			library_and_group: not is_error implies current_library /= Void and current_group /= Void
+		end
+
 	process_debug_attributes (a_current_option: attached like current_option)
 			-- Process attributes of a debug tag.
 		require
@@ -1553,23 +1587,21 @@ feature {NONE} -- Implementation attribute processing
 	process_renaming_attributes
 			-- Process attributes of a renaming tag.
 		require
-			group: current_group /= Void
+			attached current_renaming
 		local
 			l_old_name, l_new_name: like current_attributes.item
 		do
-			l_old_name := current_attributes.item (at_old_name)
-			l_new_name := current_attributes.item (at_new_name)
-			if l_old_name /= Void and l_new_name /= Void then
-				if attached {CONF_VIRTUAL_GROUP} current_group as l_virtual_group then
-					l_virtual_group.add_renaming (l_old_name.as_upper, l_new_name.as_upper)
+			l_old_name := current_attributes [at_old_name]
+			l_new_name := current_attributes [at_new_name]
+			if attached l_old_name and attached l_new_name then
+				if attached current_renaming as r then
+					r.add_renaming (l_old_name.as_upper, l_new_name.as_upper)
 				else
-					check
-						virtual_group: False
-					end
+					check from_precondition: False end
 				end
-			elseif l_old_name /= Void then
+			elseif attached l_old_name then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_renaming_no_new (l_old_name))
-			elseif l_new_name /= Void then
+			elseif attached l_new_name then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_renaming_no_old (l_new_name))
 			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_renaming_no_name)
@@ -2533,6 +2565,7 @@ feature {NONE} -- Implementation
 	current_library: detachable CONF_LIBRARY
 	current_assembly: detachable CONF_ASSEMBLY
 	current_group: detachable CONF_GROUP
+	current_renaming: detachable CONF_RENAMING_GROUP
 	current_file_rule: detachable CONF_FILE_RULE
 	current_option: detachable CONF_OPTION
 	current_external: detachable CONF_EXTERNAL
@@ -2726,6 +2759,7 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_setting, "setting")
 			l_trans.force (t_capability, tag_capability)
 			l_trans.force (t_mapping, "mapping")
+			l_trans.force (t_namespace, "namespace")
 			l_trans.force (t_external_include, "external_include")
 			l_trans.force (t_external_cflag, "external_cflag")
 			l_trans.force (t_external_object, "external_object")
@@ -3213,6 +3247,14 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_feature_rename, "feature_rename")
 			Result.force (l_attr, t_visible)
 
+				-- namespace
+				-- * name
+				-- * prefix
+			create l_attr.make (4)
+			l_attr.force (at_name, "name")
+			l_attr.force (at_prefix, "prefix")
+			Result.force (l_attr, t_namespace)
+
 				-- mapping, renaming
 				-- * old_name
 				-- * new_name
@@ -3251,7 +3293,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

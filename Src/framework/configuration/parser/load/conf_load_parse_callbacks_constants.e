@@ -98,6 +98,7 @@ feature {NONE} -- Implementation constants
 	t_capability_concurrency: INTEGER = 52
 	t_capability_platform: INTEGER = 53
 	t_capability_void_safety: INTEGER = 54
+	t_namespace: INTEGER = 55
 
 
 		-- Attribute states
@@ -181,7 +182,7 @@ feature {NONE} -- Implementation constants
 			-- Name of the attribute "enabled".
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Precompiles are almost the same as libraries, except that on the first build they load the date as initial point for the incremental compilation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,24 +12,11 @@ inherit
 	CONF_LIBRARY
 		redefine
 			is_precompile,
-			process,
-			make
+			process
 		end
 
 create {CONF_PARSE_FACTORY}
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_name: like name; a_location: like location; a_target: CONF_TARGET)
-			-- Create associated to `a_target'.
-		do
-			target := a_target
-			is_valid := True
-			internal_read_only := True
-			set_name (a_name.as_lower)
-			set_location (a_location)
-		end
 
 feature -- Status
 
@@ -64,7 +51,7 @@ feature -- Visit
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

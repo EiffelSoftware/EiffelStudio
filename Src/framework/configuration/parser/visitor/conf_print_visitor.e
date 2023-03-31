@@ -11,14 +11,15 @@ class
 inherit
 	CONF_ITERATOR
 		redefine
+			process_assembly,
+			process_cluster,
+			process_library,
+			process_namespace,
+			process_override,
+			process_precompile,
 			process_redirection,
 			process_system,
-			process_target,
-			process_assembly,
-			process_library,
-			process_precompile,
-			process_cluster,
-			process_override
+			process_target
 		end
 
 	CONF_VALIDITY
@@ -320,6 +321,9 @@ feature -- Visit nodes
 				append_end_tag (tag_capability)
 			end
 			append_mapping (a_target.internal_mapping)
+			if includes_this_or_after (namespace_1_23_0) then
+				process_in_alphabetic_order (a_target.internal_dotnet_renaming)
+			end
 			append_externals (a_target.internal_external_include, {STRING_32} "external_include", "location")
 			append_externals (a_target.internal_external_cflag, {STRING_32} "external_cflag", "value")
 			append_externals (a_target.internal_external_object, {STRING_32} "external_object", "location")
@@ -456,6 +460,21 @@ feature -- Visit nodes
 			indent_back: indent = old indent
 		end
 
+	process_namespace (n: CONF_NAMESPACE)
+			-- <Precursor>
+		do
+			append_tag_open ({STRING_32} "namespace")
+			append_text_attribute ("name", n.name)
+			if attached n.name_prefix as p and then not p.is_empty then
+				append_text_attribute ("prefix", p)
+			end
+			last_count := text.count
+			append_renaming (n.renaming)
+			append_post_group ({STRING_32} "namespace")
+		ensure then
+			indent_back: indent = old indent
+		end
+
 feature {NONE}
 
 	options: CONF_OPTION
@@ -509,7 +528,7 @@ feature {NONE} -- Implementation
 	current_is_subcluster: BOOLEAN
 			-- Is the current cluster/override a subcluster?
 
-	process_in_alphabetic_order (a_groups: STRING_TABLE [CONF_GROUP])
+	process_in_alphabetic_order (a_groups: STRING_TABLE [CONF_VISITABLE])
 			-- Process `a_groups' in alphabetic order corresponding to their key.
 		require
 			a_groups_not_void: a_groups /= Void
@@ -891,6 +910,21 @@ feature {NONE} -- Implementation
 					append_tag_open ({STRING_32} "mapping")
 					append_text_attribute ("old_name", @ m.key)
 					append_text_attribute ("new_name", m)
+					append_tag_close_empty
+				end
+			end
+		end
+
+	append_renaming (r: detachable STRING_TABLE [READABLE_STRING_32])
+			-- Append renaming `r`.
+		do
+			if attached r then
+				across
+					r as n
+				loop
+					append_tag_open ({STRING_32} "renaming")
+					append_text_attribute ("old_name", @ n.key)
+					append_text_attribute ("new_name", n)
 					append_tag_close_empty
 				end
 			end
@@ -1325,18 +1359,8 @@ feature {NONE} -- Implementation
 				default_options := a_group.default_options
 				append_group_options (persistent_options (a_group.internal_options, default_options), is_own_source, is_own_capability)
 			end
-			if
-				attached {CONF_VIRTUAL_GROUP} a_group as l_vg and then
-				attached l_vg.renaming as l_renaming
-			then
-				across
-					l_renaming as r
-				loop
-					append_tag_open ({STRING_32} "renaming")
-					append_text_attribute ("old_name", @ r.key)
-					append_text_attribute ("new_name", r)
-					append_tag_close_empty
-				end
+			if attached {CONF_VIRTUAL_GROUP} a_group as v then
+				append_renaming (v.renaming)
 			end
 			if
 				attached default_options and then
@@ -1477,7 +1501,7 @@ feature {NONE} -- Match attribute
 
 note
 	ca_ignore: "CA033", "CA033 — very long class"
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

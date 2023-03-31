@@ -9,6 +9,8 @@ deferred class
 	CONF_GROUP
 
 inherit
+	CONF_NAMED_GROUP
+
 	CONF_CONDITIONED
 		redefine
 			add_condition,
@@ -40,11 +42,12 @@ feature {NONE} -- Initialization
 			a_target_not_void: a_target /= Void
 		do
 			target := a_target
-			set_name (a_name.as_lower)
+			set_name (a_name)
 			set_location (a_location)
 			is_valid := True
 		ensure
 			is_valid: is_valid
+			is_same_name (a_name)
 		end
 
 feature -- Status
@@ -133,9 +136,6 @@ feature -- Status update
 		end
 
 feature -- Access, stored in configuration file
-
-	name: READABLE_STRING_32
-			-- The name of the group.
 
 	description: detachable READABLE_STRING_32
 			-- A description about the group.
@@ -359,6 +359,12 @@ feature -- Comparison
 			Result := name < other.name
 		end
 
+	is_same_name (n: like name): BOOLEAN
+			-- <Precursor>
+		do
+			Result := name.is_case_insensitive_equal (n)
+		end
+
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	invalidate
@@ -377,15 +383,10 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_valid: is_valid
 		end
 
-	set_name (a_name: like name)
-			-- Set `name' to `a_name'.
-		require
-			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.is_equal (a_name.as_lower)
+	set_name (n: like name)
+			-- Set `name` to `n`.
 		do
-			name := a_name
-		ensure
-			name_set: name = a_name
+			name := n.as_lower
 		end
 
 	set_description (a_description: detachable READABLE_STRING_GENERAL)
@@ -736,7 +737,7 @@ invariant
 	is_error_same_as_last_error: is_error = (last_error /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

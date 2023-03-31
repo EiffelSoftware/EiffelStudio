@@ -39,14 +39,11 @@ feature {NONE} -- Initialization
 			an_assembly_key_not_void: an_assembly_key /= Void
 			a_target_not_void: a_target /= Void
 		do
-			target := a_target
-			is_valid := True
-			set_name (a_name.as_lower)
+			make (a_name, create {CONF_FILE_LOCATION}.make ({STRING_32} "", a_target), a_target)
 			assembly_name := an_assembly_name
 			assembly_version := an_assembly_version
 			assembly_culture := an_assembly_culture
 			assembly_public_key_token := an_assembly_key
-			create location.make ({STRING_32} "", a_target)
 			is_non_local_assembly := True
 		ensure
 			is_valid: is_valid
@@ -282,7 +279,7 @@ feature -- Visit
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

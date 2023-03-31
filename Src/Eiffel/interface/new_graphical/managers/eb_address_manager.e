@@ -774,8 +774,6 @@ feature -- Updating
 
 	update_colors
 			-- Update the colors for the address manager labels
-		local
-			bg: EV_COLOR
 		do
 			if mode then
 				cluster_label.set_foreground_color (preferences.editor_data.cluster_text_color)

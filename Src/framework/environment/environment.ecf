@@ -12,6 +12,7 @@
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<library name="pcre" location="$ISE_LIBRARY\unstable\library\text\regexp\pcre\pcre.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
 			<condition>
 				<platform value="windows"/>

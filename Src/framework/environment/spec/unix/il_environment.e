@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	register_environment_variable
-			-- If runtime is found, we set the ISE_DOTNET_FRAMEWORK environement variable.
+			-- If runtime is found, we set the ISE_DOTNET_FRAMEWORK environment variable.
 		local
 			l_exec: EXECUTION_ENVIRONMENT
 		do
@@ -117,28 +117,43 @@ feature -- Access
 
 	installed_runtimes: STRING_TABLE [PATH]
 			-- All paths of installed versions of .NET runtime indexed by their version names.
+		local
+			v: READABLE_STRING_GENERAL
 		do
-			create Result.make (0)
-			debug ("refactor_fixme")
-				to_implement ("TODO: to implement")
+			if attached available_runtimes as l_runtimes then
+				create Result.make (l_runtimes.count)
+				across
+					l_runtimes as rt
+				loop
+					v := rt.version
+					Result.force (rt.path, v)
+				end
+			else
+				create Result.make (0)
 			end
 		end
 
 	dotnet_framework_path: detachable PATH
 			-- Path to .NET Framework of version `version'.
 		do
-			create Result.make_empty
-			debug ("refactor_fixme")
-				to_implement ("TODO: to implement")
-			end
+			Result := installed_runtimes [version]
 		end
 
 	installed_sdks: STRING_TABLE [PATH]
 			-- All paths of installed versions of .NET SDKs indexed by their version names.
+		local
+			v: READABLE_STRING_GENERAL
 		do
-			create Result.make (0)
-			debug ("refactor_fixme")
-				to_implement ("TODO: to implement")
+			if attached available_sdks as l_sdks then
+				create Result.make (l_sdks.count)
+				across
+					l_sdks as e
+				loop
+					v := e.version
+					Result.force (e.path.extended (v), v)
+				end
+			else
+				create Result.make (0)
 			end
 		end
 
@@ -146,7 +161,8 @@ feature -- Access
 			-- Path to .NET Framework SDK directory of version `version'.
 			-- Void if not installed.
 		do
-			create Result.make_empty
+			--create Result.make_empty
+			Result := installed_sdks [version]
 			debug ("refactor_fixme")
 				to_implement ("TODO: to implement")
 			end
@@ -192,6 +208,148 @@ feature -- Query
 			end
 		end
 
+feature -- Helpers
+
+	available_sdks: ARRAYED_LIST [TUPLE [version: READABLE_STRING_8; path: PATH]]
+		local
+			fac: BASE_PROCESS_FACTORY
+			p: BASE_PROCESS
+			buffer: SPECIAL [NATURAL_8]
+			s, line, v, d: STRING_8
+			i: INTEGER
+			loc: PATH
+		once
+			create fac
+			if {PLATFORM}.is_windows then
+				p := fac.process_launcher_with_command_line ("dotnet --list-sdks", Void)
+			else
+				p := fac.process_launcher_with_command_line ("/usr/bin/dotnet --list-sdks", Void)
+			end
+			p.redirect_output_to_stream
+
+			p.launch
+			if p.launched then
+				create s.make_empty
+				from
+				until
+					p.has_exited
+				loop
+					from
+						if buffer = Void then
+							create buffer.make_filled (0, 1024)
+						end
+					until
+						p.has_exited or p.has_output_stream_closed
+					loop
+						p.read_output_to_special (buffer)
+						append_special_of_natural_8_to_string_8 (buffer, s)
+					end
+					p.wait_for_exit_with_timeout (50)
+				end
+			end
+			p.close
+			create Result.make (0)
+			if s /= Void then
+				across
+					s.split ('%N') as ic
+				loop
+					line := ic
+					i := line.index_of (' ', 1)
+					if i > 0 then
+						v := line.substring (1, i - 1)
+						d := line.substring (i + 1, line.count)
+						if d.count > 1 and d [1] = '[' and d [d.count] = ']' then
+							d := d.substring (2, d.count - 1)
+							create loc.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (d))
+							Result.force ([v, loc.extended (v)])
+						end
+					end
+				end
+			end
+		end
+
+	available_runtimes: ARRAYED_LIST [TUPLE [version: READABLE_STRING_8; path: PATH]]
+		local
+			fac: BASE_PROCESS_FACTORY
+			p: BASE_PROCESS
+			buffer: SPECIAL [NATURAL_8]
+			s, line, v, d: STRING_8
+			i,j: INTEGER
+			loc: PATH
+		once
+			create fac
+			if {PLATFORM}.is_windows then
+				p := fac.process_launcher_with_command_line ("dotnet --list-runtimes", Void)
+			else
+				p := fac.process_launcher_with_command_line ("/usr/bin/dotnet --list-runtimes", Void)
+			end
+			p.redirect_output_to_stream
+
+			p.launch
+			if p.launched then
+				create s.make_empty
+				from
+				until
+					p.has_exited
+				loop
+					from
+						if buffer = Void then
+							create buffer.make_filled (0, 1024)
+						end
+					until
+						p.has_exited or p.has_output_stream_closed
+					loop
+						p.read_output_to_special (buffer)
+						append_special_of_natural_8_to_string_8 (buffer, s)
+					end
+					p.wait_for_exit_with_timeout (50)
+				end
+			end
+			p.close
+			create Result.make (0)
+			if s /= Void then
+				across
+					s.split ('%N') as ic
+				loop
+					line := ic
+					i := line.index_of (' ', 1)
+					if i > 0 then
+						s := line.substring (1, i - 1)
+						j := line.index_of (' ', i + 1)
+						if j > 0 then
+							v := line.substring (i + 1, j - 1)
+							s.extend ('/')
+							s.append (v)
+							d := line.substring (j + 1, line.count)
+
+							if d.count > 1 and d [1] = '[' and d [d.count] = ']' then
+								d := d.substring (2, d.count - 1)
+								create loc.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (d))
+								Result.force ([s, loc.extended (v)])
+							end
+						end
+					end
+				end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	append_special_of_natural_8_to_string_8 (spec: SPECIAL [NATURAL_8]; a_output: STRING)
+		local
+			i,n: INTEGER
+		do
+			from
+				i := spec.lower
+				n := spec.upper
+			until
+				i > n
+			loop
+				a_output.append_code (spec[i])
+				i := i + 1
+			end
+		end
+
 	resource_compiler: detachable PATH
 			-- Path to `resgen' tool from .NET Framework SDK.
 		do
@@ -206,19 +364,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

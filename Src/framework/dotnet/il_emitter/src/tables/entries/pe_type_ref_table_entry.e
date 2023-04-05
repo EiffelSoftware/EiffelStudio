@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_TYPE_REF_TABLE_ENTRY}."
+	description: "Object representing the TypeRef table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.38 TypeRef : 0x01"
 
 class
 	PE_TYPE_REF_TABLE_ENTRY

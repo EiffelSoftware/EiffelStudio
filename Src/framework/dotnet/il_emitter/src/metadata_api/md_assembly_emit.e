@@ -7,28 +7,65 @@ class
 	MD_ASSEMBLY_EMIT
 
 inherit
+	MD_EMIT_SHARED
 
 	REFACTORING_HELPER
 		export {NONE} all end
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_tables: SPECIAL [MD_TABLES]; a_writer: PE_WRITER)
+		do
+			tables := a_tables
+			pe_writer := a_writer
+		end
+
 feature -- Access
 
-	define_assembly_ref (assembly_name: STRING_32; assembly_info: MD_ASSEMBLY_INFO;
+	define_assembly_ref (assembly_name: NATIVE_STRING; assembly_info: MD_ASSEMBLY_INFO;
 			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
 		require
 			assembly_name_not_void: assembly_name /= Void
 			assembly_info_not_void: assembly_info /= Void
 		local
-			null: POINTER
+			l_assembly_ref_entry: PE_ASSEMBLY_REF_TABLE_ENTRY
+			l_name_index: NATURAL_64
+			l_public_key_or_token_index: NATURAL_64
+			l_major_version: NATURAL_16
+			l_minor_version: NATURAL_16
+			l_build_number: NATURAL_16
+			l_revision_number: NATURAL_16
 		do
-			to_implement ("TODO implement")
+				-- See section II.22.5 AssemblyRef : 0x23
+
+				-- Compute the indexes of the various strings and tokens in the metadata tables.
+			l_name_index := pe_writer.hash_string (assembly_name.string)
+
+				-- TODO double check the public key
+				-- Clean the way to compute the index.
+			l_public_key_or_token_index := pe_writer.hash_blob (public_key_token.item.read_array (0, public_key_token.item.count), public_key_token.item.count.to_natural_64)
+
+				-- Extract the version information from the assembly info.
+			l_major_version := assembly_info.major_version
+			l_minor_version := assembly_info.minor_version
+			l_build_number := assembly_info.build_number
+			l_revision_number := assembly_info.revision_number
+
+				-- TODO double check which flag we need to use.
+			create l_assembly_ref_entry.make_with_data ({PE_ASSEMBLY_FLAGS}.PA_none, l_major_version, l_minor_version, l_build_number, l_revision_number, l_name_index, l_public_key_or_token_index)
+
+				-- Add the new PE_ASSEMBLY_REF_TABLE_ENTRY instance to the metadata tables.
+			Result := add_table_entry (l_assembly_ref_entry).to_integer_32
 		ensure
 			valid_result: Result > 0
 		end
 
 feature -- Definition
 
-	define_assembly (assembly_name: STRING_32; assembly_flags: INTEGER;
+	define_assembly (assembly_name: NATIVE_STRING; assembly_flags: INTEGER;
 			assembly_info: MD_ASSEMBLY_INFO; public_key: detachable MD_PUBLIC_KEY): INTEGER
 
 			-- Define a new assembly `assembly_name' with characteristics
@@ -40,55 +77,161 @@ feature -- Definition
 			assembly_info_not_void: assembly_info /= Void
 			valid_flags: public_key /= Void implies assembly_flags &
 				{MD_ASSEMBLY_FLAGS}.public_key = {MD_ASSEMBLY_FLAGS}.public_key
+		local
+			l_assembly_def_entry: PE_ASSEMBLY_DEF_TABLE_ENTRY
+			l_public_key_or_token: NATURAL_64
+			l_name_index: NATURAL_64
+			l_table_index: NATURAL_64
 		do
-			to_implement ("TODO implement")
+				-- Section II.22.2 Assembly : 0x20
+			l_name_index := pe_writer.hash_string (assembly_name.string)
+			if attached public_key as l_public_key then
+				l_public_key_or_token := pe_writer.
+					hash_blob (
+						(create {BYTE_ARRAY_CONVERTER}.
+							make_from_string (l_public_key.public_key_token_string)).
+						to_natural_8_array,
+						l_public_key.public_key_token_string.count.to_natural_64)
+			else
+				l_public_key_or_token := 0
+			end
+
+			create l_assembly_def_entry.make_with_data
+				(assembly_flags,
+				assembly_info.major_version,
+				assembly_info.minor_version,
+				assembly_info.build_number,
+				assembly_info.revision,
+				l_name_index,
+				l_public_key_or_token)
+			l_table_index := add_table_entry (l_assembly_def_entry)
+			Result := last_token.to_integer_32
 		ensure
 			valid_result: Result > 0
 		end
 
-	define_exported_type (type_name: STRING_32; implementation_token: INTEGER;
+	define_exported_type (type_name: NATIVE_STRING; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
-
-				-- Ensure that `type_name' type defined in `implementation_token' with
-				-- `type_def_token' and `type_flags' is exported from Current assembly.
 		require
 			type_name_not_void: type_name /= Void
+		local
+			l_exported_type_entry: PE_EXPORTED_TYPE_TABLE_ENTRY
+			l_tuple_type: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_tuple_type_def: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_name_index: NATURAL_64
+			l_implementation: PE_IMPLEMENTATION
+			l_dis: NATURAL_64
+			l_namespace_index: NATURAL_64
+			last_dot: INTEGER
+			l_type_name: STRING_32
 		do
-			to_implement("TODO implement")
+
+				-- Section II.22.14 ExportedType : 0x27
+				-- Extract table type and row from the implementation_token
+			l_tuple_type := extract_table_type_and_row (implementation_token)
+
+				-- Extract table type and row from the type_def_token
+			l_tuple_type_def := extract_table_type_and_row (type_def_token)
+
+				-- Hash the type name and get the name index
+				-- First we check if we have a namespace (Double check if this is the correct way to
+				-- compute type_name and namespace.
+			l_type_name := type_name.string
+			last_dot := l_type_name.last_index_of ('.', l_type_name.count)
+			if last_dot = 0 then
+				l_namespace_index := 0 -- empty namespace
+				l_name_index := pe_writer.hash_string (l_type_name)
+			else
+				l_namespace_index := pe_writer.hash_string (l_type_name.substring (1, last_dot - 1))
+				l_name_index := pe_writer.hash_string (l_type_name.substring (last_dot + 1, l_type_name.count))
+			end
+
+			l_implementation := create_implementation (implementation_token, l_tuple_type.table_type_index)
+
+				-- Create a new PE_EXPORTED_TYPE_TABLE_ENTRY instance with the given data
+			create l_exported_type_entry.make_with_data (type_flags.to_natural_32, l_tuple_type_def.table_type_index, l_name_index, l_namespace_index, l_implementation)
+
+			l_dis := add_table_entry (l_exported_type_entry)
+
+			Result := last_token.to_integer_32
 		ensure
 			valid_result: Result > 0
 		end
 
-	define_file (file_name: STRING_32; hash_value: MANAGED_POINTER;
-			file_flags: INTEGER): INTEGER
-
+	define_file (file_name: NATIVE_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
 			-- Define a new entry in file table.
 		require
 			file_name_not_void: file_name /= Void
 			file_name_not_empty: not file_name.is_empty
 			hash_value_not_void: hash_value /= Void
 			hash_value_not_empty: hash_value.count > 0
+		local
+			l_file_entry: PE_FILE_TABLE_ENTRY
+			l_name_index: NATURAL_64
+			l_hash_value_index: NATURAL_64
+			last_slash: INTEGER
+			file_name_len: INTEGER
+			l_flags: NATURAL_32
+			l_dis: NATURAL_64
+			l_file_name: STRING_32
 		do
-			to_implement ("TODO implement")
+				-- II.22.19 File : 0x26
+				-- Compute the name index
+			l_file_name := file_name.string
+			file_name_len := l_file_name.count
+			last_slash := l_file_name.last_index_of ({OPERATING_ENVIRONMENT}.directory_separator, file_name_len)
+			if last_slash > 0 then
+				file_name_len := l_file_name.count - last_slash
+			end
+			l_name_index := pe_writer.hash_string (l_file_name.substring (last_slash + 1, file_name_len))
+
+				-- Compute the hash value index
+			l_hash_value_index := pe_writer.hash_blob (hash_value.read_array (0, hash_value.count), hash_value.count.to_natural_64)
+
+				-- Create a new PE_FILE_TABLE_ENTRY instance with the given data
+			l_flags := file_flags.to_natural_32
+			create l_file_entry.make_with_data (l_flags, l_name_index, l_hash_value_index)
+
+			l_dis := add_table_entry (l_file_entry)
+			Result := last_token.to_integer_32
 		ensure
 			valid_result: Result > 0
 		end
 
-	define_manifest_resource (resource_name: STRING_32; implementation_token: INTEGER
-			offset, resource_flags: INTEGER): INTEGER
-
+	define_manifest_resource (resource_name: NATIVE_STRING; implementation_token: INTEGER; offset, resource_flags: INTEGER): INTEGER
 			-- Define a new entry in manifest resource table.
+		require
+			resource_name_not_void: resource_name /= Void
+		local
+			l_manifest_resource_entry: PE_MANIFEST_RESOURCE_TABLE_ENTRY
+			l_tuple_type: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_implementation: PE_IMPLEMENTATION
+			l_dis: NATURAL_64
+			l_name_index: NATURAL_64
 		do
-			to_implement("TODO implement")
+				-- II.22.24 ManifestResource : 0x28
+				-- Extract table type and row from the implementation_token
+			l_tuple_type := extract_table_type_and_row (implementation_token)
+
+				-- Hash the resource name and get the name index
+			l_name_index := pe_writer.hash_string (resource_name.string)
+
+			l_implementation := create_implementation (implementation_token, l_tuple_type.table_type_index)
+
+				-- Create a new PE_MANIFEST_RESOURCE_TABLE_ENTRY instance with the given data
+			create l_manifest_resource_entry.make_with_data (offset.to_natural_32, resource_flags.to_natural_32, l_name_index, l_implementation)
+
+			l_dis := add_table_entry (l_manifest_resource_entry)
+
+			Result := last_token.to_integer_32
 		ensure
 			valid_result: Result > 0
 		end
-
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

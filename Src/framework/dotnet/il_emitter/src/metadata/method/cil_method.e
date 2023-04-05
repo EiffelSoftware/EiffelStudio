@@ -806,7 +806,7 @@ feature {NONE} -- Implementation
 				l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.method_def_sig (prototype, l_sz)
 				l_method_signature := l_writer.hash_blob (l_sig, l_sz.item.to_natural_8)
 
-				create {PE_METHOD_DEF_TABLE_ENTRY} l_table.make_with_data (l_rendering, l_impl_flags, l_mf_flags, l_name_index, l_method_signature, l_param_index)
+				create {PE_METHOD_DEF_TABLE_ENTRY} l_table.make_with_data (l_rendering, l_impl_flags.to_integer_16, l_mf_flags.to_integer_16, l_name_index, l_method_signature, l_param_index)
 				prototype.set_pe_index (l_writer.add_table_entry (l_table))
 
 				i := 1
@@ -834,7 +834,7 @@ feature {NONE} -- Implementation
 						a_stream.module_ref.force (l_module_ref, l_module_name)
 					end
 					create l_method_index.make_with_tag_and_index ({PE_MEMBER_FORWARDED}.methoddef, prototype.pe_index)
-					create {PE_IMPL_MAP_TABLE_ENTRY} l_table.make_with_data (l_flags, l_method_index, l_import_name_index, l_module_ref)
+					create {PE_IMPL_MAP_TABLE_ENTRY} l_table.make_with_data (l_flags.to_integer_16, l_method_index, l_import_name_index, l_module_ref)
 
 					l_res := l_writer.add_table_entry (l_table).to_natural_8
 						-- TODO fix this, the returned value is not needed.
@@ -859,7 +859,7 @@ feature {NONE} -- Implementation
 						l_attribute_data := l_writer.param_attribute_data
 
 						create l_attribute.make_with_tag_and_index ({PE_CUSTOM_ATTRIBUTE}.ParamDef, l_last_param_index)
-						create l_type.make_with_tag_and_index ({PE_CUSTOM_ATTRIBUTE_TYPE}.methodref, l_attribute_type)
+						create l_type.make_with_tag_and_index ({PE_CUSTOM_ATTRIBUTE_TYPE}.Memberref, l_attribute_type)
 						create {PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY} l_table.make_with_data (l_attribute, l_type, l_attribute_data)
 						l_res := l_writer.add_table_entry (l_table).to_natural_8
 					end

@@ -22,7 +22,13 @@ feature -- Access
 			-- vector of tables that can appear in a PE file
 			-- empty tables are elided / pass over?
 
+feature -- Element Change
 
+	replace (a_entry: PE_TABLE_ENTRY_BASE; i: INTEGER)
+			-- Put `a_entry' at `i'-th position.
+		do
+			table.put_i_th (a_entry, i)
+		end
 feature -- Status Report
 
 	size: INTEGER

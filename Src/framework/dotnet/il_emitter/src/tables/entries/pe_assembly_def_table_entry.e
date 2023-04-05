@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_ASSEMBLY_DEF_TABLE_ENTRY}."
+	description: "Object Representing th Assembly table "
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.2 Assembly : 0x20"
 
 class
 	PE_ASSEMBLY_DEF_TABLE_ENTRY
@@ -48,7 +49,6 @@ feature -- flags
 
 	DefaultHashAlgId: INTEGER = 0x8004
 
-
 feature -- Element Change
 
 	set_public_key_index (a_index: like public_key_index)
@@ -94,12 +94,12 @@ feature -- Operations
 			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest.to_special, revision, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
 			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_integer_32 (a_dest.to_special, flags, l_bytes.to_integer_32)
-			l_bytes := l_bytes +  4
+			l_bytes := l_bytes + 4
 
 				-- Write public_key_index, name_index, culture_index to the buffer and update the number of bytes.
 
- 			l_bytes := l_bytes + public_key_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
- 			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + public_key_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			l_bytes := l_bytes + culture_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
 
 				-- Return the total number of bytes written.
@@ -113,7 +113,7 @@ feature -- Operations
 				-- always assume the right hash algorithm as there is currently only one spec'd
 				-- Initialize the number of bytes readed
 				-- TODO check if we need to get the hash ffrom the buffer and set to
-				-- hash_alg_id	
+				-- hash_alg_id
 			l_bytes := 4
 
 				-- Assembly version

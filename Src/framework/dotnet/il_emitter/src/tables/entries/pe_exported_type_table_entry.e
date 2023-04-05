@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flags: NATURAL; a_type_def_id: NATURAL; a_type_name: NATURAL; a_type_name_space: NATURAL; a_implementation: PE_IMPLEMENTATION)
+	make_with_data (a_flags: NATURAL_32; a_type_def_id: NATURAL_64; a_type_name: NATURAL_64; a_type_name_space: NATURAL_64; a_implementation: PE_IMPLEMENTATION)
 		do
 			flags := a_flags
 			create type_def_id.make_with_index (a_type_def_id)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	flags: NATURAL
+	flags: NATURAL_32
 			-- Defined as a DWord four bytes.
 
 	type_def_id: PE_TYPE_DEF
@@ -44,7 +44,7 @@ feature -- Operations
 	table_index: INTEGER
 		do
 			fixme ("Double check if tManifestResource its ok or tExportedType is the correct one. ")
-			Result := {PE_TABLES}.tManifestResource.value.to_integer_32
+			Result := {PE_TABLES}.tExportedtype.value.to_integer_32
 		end
 
 	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64

@@ -10,7 +10,10 @@ class
 	MD_EMIT
 
 inherit
+
 	MD_EMIT_I
+
+	MD_EMIT_SHARED
 
 	REFACTORING_HELPER
 		export {NONE} all end
@@ -30,8 +33,7 @@ feature {NONE}
 			initialize_metadata_tables
 			initialize_module
 			initialize_guid
-			initialize_string_heap
-			create assembly_emitter
+			create assembly_emitter.make (tables, pe_writer)
 				-- we don't initialize the compilation unit since we don't provide the name of it (similar to the COM interface)
 		ensure
 			module_guid_set: module_guid.count = 16
@@ -68,15 +70,6 @@ feature {NONE}
 			guid_index := pe_writer.hash_guid (module_guid)
 		end
 
-	initialize_string_heap
-			-- Initialize the heap used to store
-			-- user defined strings
-		do
-				-- TODO double check. how many space we need to reserve?
-				-- TODO check alternatives implementations to improve efficiency.
-			create string_heap.make (10)
-		end
-
 feature -- Access
 
 	module_GUID: ARRAY [NATURAL_8]
@@ -90,13 +83,10 @@ feature -- Access
 			-- Index of the GUID
 			-- where it should be located in the metadata tables.
 
-	string_heap: HASH_TABLE [READABLE_STRING_GENERAL, INTEGER]
-			--  metadata table used to store user-defined strings.
-
 feature -- Status report
 
 	is_successful: BOOLEAN
-			-- Was last call successful?	
+			-- Was last call successful?
 		do
 			to_implement ("TODO: for now, always return True")
 			Result := True
@@ -108,6 +98,75 @@ feature -- Access
 			-- Size of Current emitted assembly in memory if we were to emit it now.
 		do
 			to_implement ("TODO implement, double check if we really need it")
+				-- Work in progress.
+		end
+
+	retrieve_user_string (a_token: INTEGER): STRING_32
+			-- Retrieve the user string for `token'.
+		require
+			valid_user_string_token: is_user_string_token (a_token)
+		local
+			l_index: INTEGER_32
+			l_length: INTEGER_32
+			l_bytes: ARRAY [CHARACTER_32]
+			l_str_length: INTEGER_32
+			i: INTEGER_32
+			j: INTEGER_32
+			l_us_heap: ARRAY [NATURAL_8]
+		do
+				-- <<0, 1, 58, 0, 36, 0, ..... >>
+				--      ^   - -
+				-- Copy the Userstring heap,
+				-- the underlying String needs to be retrieved as UTF-16
+				-- TODO check if we have an efficient algorithm to
+				-- convert an array of bytes to utf-16.	
+
+			l_us_heap := pe_writer.us.base.to_array
+
+				-- Compute the index.
+			l_index := a_token - 0x70000000 -- 0x70 table type: UserString heap
+
+				-- Get the length of the string, reading the next byte.
+				-- Per character we use two bytes and it ends with a null character.
+			l_length := array_item (l_us_heap, l_index + 1)
+
+				-- The length of the target string is
+			l_str_length := (l_length // 2) - 1
+
+			create l_bytes.make_filled (' ', 1, l_str_length)
+			from
+				i := l_index + 2
+				j := 1
+			until
+				j > l_str_length
+			loop
+				l_bytes [j] := (array_item (l_us_heap, i) + array_item (l_us_heap, i + 1) * 256).to_character_32
+				i := i + 2
+				j := j + 1
+			end
+				-- Convert the bytes array to String_32
+			create Result.make_filled (' ', l_str_length)
+			from
+				i := 1
+			until
+				i > l_bytes.count
+			loop
+				Result [i] := (l_bytes [i])
+				i := i + 1
+			end
+		end
+
+	is_user_string_token (a_token: INTEGER_32): BOOLEAN
+			-- Checks if the given integer value `a_token` corresponds to a valid user string token.
+		do
+			Result := (a_token >= 0x70000000) and (a_token < (0x70000000 + pe_writer.us.size.to_integer_32))
+		end
+
+feature {NONE} -- Implementation
+
+	array_item (a_heap: ARRAY [NATURAL_8]; a_offset: INTEGER_32): INTEGER_32
+		do
+			Result := (a_heap [a_offset])
 		end
 
 feature -- Save
@@ -127,26 +186,12 @@ feature -- Save
 
 	save (f_name: NATIVE_STRING)
 			-- Save current assembly to file `f_name'.
-		do
-			to_implement ("TODO implement, double check if we really ned it.")
-		end
-
-feature {NONE} -- Change tables
-
-	add_table_entry (a_entry: PE_TABLE_ENTRY_BASE): NATURAL_64
-			-- add an entry to one of the tables
-			-- note the data for the table will be a class inherited from TableEntryBase,
-			--  and this class will self-report the table index to use
 		local
-			n: INTEGER
+			l_file: FILE
 		do
-			n := a_entry.table_index
-			tables [n].table.force (a_entry)
-			Result := tables [n].table.count.to_natural_32
-			last_token := ((n |<< 24).to_natural_32 | Result.to_natural_32)
+			create {RAW_FILE} l_file.make_with_name (f_name.string)
+			to_implement ("TODO implement, double check if we really need it")
 		end
-
-	last_token: NATURAL_32
 
 feature -- Settings
 
@@ -164,8 +209,28 @@ feature -- Settings
 
 	set_method_rva (method_token, rva: INTEGER)
 			-- Set RVA of `method_token' to `rva'.
+		local
+			l_tuple_method: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_dis: NATURAL_64
 		do
-			to_implement ("TODO implement")
+				-- Extract table type and row index from method token
+			l_tuple_method := extract_table_type_and_row (method_token)
+
+				-- Retrieve method definition table entry using row index
+				-- TODO create a helper features
+				-- 		retrieve_table_entry (from the metadata tables),
+				--  	retrieve_table_row (from specific table entry)
+			if attached {PE_METHOD_DEF_TABLE_ENTRY} tables [l_tuple_method.table_type_index.to_integer_32].table [l_tuple_method.table_row_index.to_integer_32] as l_method_def then
+
+					-- Set RVA value in method definition table entry
+				l_method_def.set_rva (rva)
+
+					-- Update method definition table entry in metadata tables
+					-- Create a helper feature to update an entry in a table row.
+				tables [l_tuple_method.table_type_index.to_integer_32].replace (l_method_def, l_tuple_method.table_row_index.to_integer_32)
+			else
+					-- TODO
+			end
 		end
 
 feature -- Definition: Access
@@ -179,12 +244,7 @@ feature -- Definition: Access
 			l_entry: PE_TABLE_ENTRY_BASE
 			l_dis: NATURAL_64
 		do
-			l_name_index := pe_writer.hash_string (assembly_name.string)
-			to_implement ("TODO refactor pe_writer.hash_blob")
-			l_public_key_token_index := pe_writer.hash_blob (public_key_token.item.read_array (0, public_key_token.item.count), public_key_token.item.count.to_natural_64)
-			create {PE_ASSEMBLY_REF_TABLE_ENTRY} l_entry.make_with_data ({PE_ASSEMBLY_FLAGS}.PA_none, assembly_info.major_version, assembly_info.minor_version, assembly_info.build_number, assembly_info.revision_number, l_name_index, l_public_key_token_index)
-			l_dis := add_table_entry (l_entry)
-			Result := last_token.to_integer_32
+			Result := assembly_emitter.define_assembly_ref (assembly_name, assembly_info, public_key_token)
 		end
 
 	define_type_ref (type_name: NATIVE_STRING; resolution_scope: INTEGER): INTEGER
@@ -197,7 +257,7 @@ feature -- Definition: Access
 			l_namespace_index: NATURAL_64
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 		do
-
+				-- II.22.38 TypeRef : 0x01
 			l_tuple := extract_table_type_and_row (resolution_scope)
 
 				--| TODO checks
@@ -292,28 +352,15 @@ feature -- Definition: Creation
 			assembly_info: MD_ASSEMBLY_INFO; public_key: detachable MD_PUBLIC_KEY): INTEGER
 			-- Add assembly metadata information to the metadata tables.
 			--| the public key could be null.
-		local
-			l_name_index: NATURAL_64
-			l_entry: PE_TABLE_ENTRY_BASE
-			l_public_key_index: NATURAL_64
-			l_dis: NATURAL_64
 		do
-			l_name_index := pe_writer.hash_string (assembly_name.string)
-			if public_key /= Void then
-					--l_public_key_index := pe_writer.hash_blob (public_key)
-			else
-				l_public_key_index := 0
-			end
-			create {PE_ASSEMBLY_DEF_TABLE_ENTRY} l_entry.make_with_data (assembly_flags, assembly_info.major, assembly_info.minor, assembly_info.build, assembly_info.revision, l_name_index, l_public_key_index)
-			l_dis := add_table_entry (l_entry)
-			Result := last_token.to_integer_32
+			Result := assembly_emitter.define_assembly (assembly_name, assembly_flags, assembly_info, public_key)
 		end
 
 	define_manifest_resource (resource_name: NATIVE_STRING; implementation_token: INTEGER;
 			offset, resource_flags: INTEGER): INTEGER
 			-- Define a new assembly.
 		do
-			to_implement ("TODO add implementation")
+			Result := assembly_emitter.define_manifest_resource (resource_name, implementation_token, offset, resource_flags)
 		end
 
 	define_type (type_name: NATIVE_STRING; flags: INTEGER; extend_token: INTEGER; implements: detachable ARRAY [INTEGER]): INTEGER
@@ -327,11 +374,17 @@ feature -- Definition: Creation
 			l_extends: PE_TYPEDEF_OR_REF
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_dis: NATURAL_64
+			last_dot: INTEGER
 		do
-			l_name_index := pe_writer.hash_string (type_name.string)
-				-- TODO double check if we need to compute the namespace_index, since we are creating a new type
-				-- we could assume the namespace_index is 0.
-			l_namespace_index := 0
+				-- Double check how to compute namespace_index and name_index.
+			last_dot := type_name.string.last_index_of ('.', type_name.string.count)
+			if last_dot = 0 then
+				l_namespace_index := 0 -- empty namespace
+				l_name_index := pe_writer.hash_string (type_name.string)
+			else
+				l_namespace_index := pe_writer.hash_string (type_name.string.substring (1, last_dot - 1))
+				l_name_index := pe_writer.hash_string (type_name.string.substring (last_dot + 1, type_name.string.count))
+			end
 
 			l_tuple := extract_table_type_and_row (extend_token)
 
@@ -378,13 +431,13 @@ feature -- Definition: Creation
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
 			-- Create a row in ExportedType table.
 		do
-			to_implement ("TODO add implementation")
+			Result := assembly_emitter.define_exported_type (type_name, implementation_token, type_def_token, type_flags)
 		end
 
 	define_file (file_name: NATIVE_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
 			-- Create a row in File table
 		do
-			to_implement ("TODO implement")
+			Result := assembly_emitter.define_file (file_name, hash_value, file_flags)
 		end
 
 	define_method (method_name: NATIVE_STRING; in_class_token: INTEGER; method_flags: INTEGER;
@@ -399,6 +452,7 @@ feature -- Definition: Creation
 			l_name_index: NATURAL_64
 			l_param_index: NATURAL_64
 		do
+				-- See II.22.26 MethodDef : 0x06
 				-- Extract table type and row from the in_class_token
 			l_tuple := extract_table_type_and_row (in_class_token)
 
@@ -410,7 +464,7 @@ feature -- Definition: Creation
 			l_name_index := pe_writer.hash_string (method_name.string)
 
 				-- Create a new PE_METHOD_DEF_TABLE_ENTRY instance with the given data
-			create l_method_def_entry.make (method_flags, impl_flags, l_name_index, l_method_signature, l_param_index)
+			create l_method_def_entry.make (method_flags.to_integer_16, impl_flags.to_integer_16, l_name_index, l_method_signature, l_param_index)
 
 				-- Add the new PE_METHOD_DEF_TABLE_ENTRY instance to the metadata tables.
 			l_method_def_index := add_table_entry (l_method_def_entry)
@@ -497,15 +551,60 @@ feature -- Definition: Creation
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;
 			import_name: NATIVE_STRING; module_ref: INTEGER)
 			-- Further specification of a pinvoke method location defined by `method_token'.
+		local
+			l_member_forwarded: PE_MEMBER_FORWARDED
+			l_name_index: NATURAL_64
+			l_impl_map_entry: PE_IMPL_MAP_TABLE_ENTRY
+			l_tuple_method: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_dis: NATURAL_64
 		do
-			to_implement ("TODO implement")
+			l_tuple_method := extract_table_type_and_row (method_token)
+
+				-- Get the name index of the imported function
+			l_name_index := pe_writer.hash_string (import_name.string)
+
+				-- Create a new PE_MEMBER_FORWARDED instance with the given data
+			create l_member_forwarded.make_with_tag_and_index ({PE_MEMBER_FORWARDED}.MethodDef, l_tuple_method.table_row_index)
+
+				-- Create a new PE_IMPL_MAP_TABLE_ENTRY instance with the given data
+			create l_impl_map_entry.make_with_data (mapping_flags.to_integer_16, l_member_forwarded, l_name_index, module_ref.to_natural_64)
+
+				-- Add the PE_IMPL_MAP_TABLE_ENTRY instance to the table
+			l_dis := add_table_entry (l_impl_map_entry)
 		end
 
 	define_parameter (in_method_token: INTEGER; param_name: NATIVE_STRING;
 			param_pos: INTEGER; param_flags: INTEGER): INTEGER
 			-- Create a new parameter specification token for method `in_method_token'.
+		local
+			l_table_type, l_table_row: NATURAL_64
+			l_param_blob: NATURAL_64
+			l_param_index, l_method_index: NATURAL_64
+			l_param_entry: PE_PARAM_TABLE_ENTRY
+			l_method_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_dis: NATURAL_64
+			l_param_name_index: INTEGER_32
+			l_param_flags: INTEGER_16
 		do
-			to_implement ("TODO add implementation")
+			to_implement ("Review need ensure every row in the Param table is owned by one, and only one, row in the MethodDef table")
+
+				-- Extract table type and row from the method token
+			l_method_tuple := extract_table_type_and_row (in_method_token)
+
+				-- Convert the parameter name to UTF-16 and add it to the string heap
+			l_param_name_index := define_string (param_name)
+
+			l_param_flags := param_flags.to_integer_16
+
+				-- Create a new PE_PARAM_TABLE_ENTRY instance with the given data
+			l_method_index := l_method_tuple.table_row_index
+			create l_param_entry.make_with_data (l_param_flags, param_pos.to_natural_16, l_param_name_index.to_natural_64)
+
+				-- Add the new PE_PARAM_TABLE_ENTRY instance to the metadata tables.
+			l_param_index := add_table_entry (l_param_entry)
+
+				-- Return the generated token.
+			Result := last_token.to_integer_32
 		end
 
 	set_field_marshal (a_token: INTEGER; a_native_type_sig: MD_NATIVE_TYPE_SIGNATURE)
@@ -562,10 +661,13 @@ feature -- Definition: Creation
 			-- Create a new field in class `in_class_token'.
 		local
 			l_field_signature: MD_FIELD_SIGNATURE
-			l_uni_str: STRING_32
+			l_uni_str: NATIVE_STRING
 		do
-			create l_field_signature.make
-			to_implement ("TODO implement")
+			to_implement ("TODO add implementation")
+--			create l_field_signature.make
+--			create l_uni_str.make (a_string)
+--			l_field_signature.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
+--			define_field (field_name, in_class_token, field_flags, a_signature: MD_FIELD_SIGNATURE)
 		end
 
 	define_string (str: NATIVE_STRING): INTEGER
@@ -581,21 +683,52 @@ feature -- Definition: Creation
 			l_us_index := pe_writer.hash_us (l_str, l_str.count)
 			l_result := l_us_index | ({NATURAL_64} 0x70 |<< 24)
 			Result := l_result.to_integer_32
-			string_heap.force (l_str, Result)
 		end
 
 	define_custom_attribute (owner, constructor: INTEGER; ca: MD_CUSTOM_ATTRIBUTE): INTEGER
-			-- Define a new token for `ca' applied on token `owner' with using `constructor'
-			-- as creation procedure.
+			-- Define a new token for `ca' applied on token `owner' with using `constructor' as creation procedure.
 		local
-			blob: POINTER
+			l_table_type, l_table_row: NATURAL_64
+			l_ca_blob: NATURAL_64
+			l_ca_index, l_ca_constructor_index, l_owner_index: NATURAL_64
+			l_ca_entry: PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY
+			l_owner_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_constructor_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_dis: NATURAL_64
 			blob_count: INTEGER
+			l_ca: PE_CUSTOM_ATTRIBUTE
+			l_ca_type: PE_CUSTOM_ATTRIBUTE_TYPE
 		do
+				-- See II.22.10 CustomAttribute : 0x0C
+				-- Extract table type and row from the owner token
+			l_owner_tuple := extract_table_type_and_row (owner)
+
 			if ca /= Void then
-				blob := ca.item.item
 				blob_count := ca.count
+					-- Compute the blob signature of the custom attribute
+				l_ca_blob := pe_writer.hash_blob (ca.item.read_array (0, blob_count), blob_count.to_natural_64)
 			end
-			to_implement ("TODO add implementation")
+
+				-- Create a new PE_CUSTOM_ATTRIBUTE instance with the corresponding tag and index
+			l_ca := create_pe_custom_attribute (l_owner_tuple.table_type_index.to_integer_32, l_ca_blob)
+
+				-- Extract table type and row from the l_constructor_tuple token
+			l_constructor_tuple := extract_table_type_and_row (constructor)
+
+				-- Create a new PE_CUSTOM_ATTRIBUTE_TYPE instance with the corresponding tag and index
+			l_ca_type := create_pe_custom_attribute_type (l_constructor_tuple.table_type_index.to_integer_32, l_constructor_tuple.table_row_index)
+
+				-- Create a new PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY instance with the given data
+			l_ca_constructor_index := constructor.to_natural_64
+			l_owner_index := l_owner_tuple.table_row_index
+
+			create l_ca_entry.make_with_data (l_ca, l_ca_type, l_ca_constructor_index)
+
+				-- Add the new PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY instance to the metadata tables.
+			l_ca_index := add_table_entry (l_ca_entry)
+
+				-- Return the generated token.
+			Result := last_token.to_integer_32
 		end
 
 feature -- Constants
@@ -603,99 +736,10 @@ feature -- Constants
 	accurate: INTEGER = 0x0000
 	quick: INTEGER = 0x0001
 			-- Value taken from CorSaveSize enumeration in `correg.h'.
+
 feature {NONE} -- Access
 
 	assembly_emitter: MD_ASSEMBLY_EMIT
-			-- COM interface that knows how to define assemblies.
-feature {NONE} -- Helper
-
-	extract_table_type_and_row (a_token: INTEGER): TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
-			-- Given a token `a_token' return a TUPLE with the table_type_index and the
-			-- table_row_index.
-			--| Metadata tokens
-			--| Many CIL instructions are followed by a "metadata token". This is a 4-byte value, that specifies a
-			--| row in a metadata table, or a starting byte offset in the User String heap. The most-significant
-			--| byte of the token specifies the table or heap. For example, a value of 0x02 specifies the TypeDef
-			--| table; a value of 0x70 specifies the User String heap. The value corresponds to the number
-			--| assigned to that metadata table (see Partition II for the full list of tables) or to 0x70 for the User
-			--| String heap. The least-significant 3 bytes specify the target row within that metadata table, or
-			--| starting byte offset within the User String heap. The rows within metadata tables are numbered
-			--| one upwards, whilst offsets in the heap are numbered zero upwards. (So, for example, the
-			--| metadata token with value 0x02000007 specifies row number 7 in the TypeDef table)
-		local
-			l_table_type_index: NATURAL_64
-			l_table_row_index: NATURAL_64
-		do
-				-- 2^8 -1 = 255
-			l_table_type_index := ((a_token |>> 24) & 255).to_natural_64
-				-- 2^ 24 -1 = 16777215
-			l_table_row_index := (a_token & 16777215).to_natural_64
-			Result := [l_table_type_index, l_table_row_index]
-		end
-
-	create_method_def_or_ref (a_token: INTEGER; a_index: NATURAL_64): PE_METHOD_DEF_OR_REF
-		local
-			l_tag: INTEGER
-		do
-			if (a_token & Md_mask = Md_method_def)
-			then
-				l_tag := {PE_METHOD_DEF_OR_REF}.methoddef
-			elseif (a_token & Md_mask = Md_member_ref)
-			then
-				l_tag := {PE_METHOD_DEF_OR_REF}.memberref
-			else
-				l_tag := 0
-			end
-			create Result.make_with_tag_and_index (l_tag, a_index)
-		end
-
-	create_type_def_or_ref (a_token: INTEGER; a_index: NATURAL_64): PE_TYPEDEF_OR_REF
-		local
-			l_tag: INTEGER
-		do
-			if (a_token & Md_mask = Md_type_def)
-			then
-				l_tag := {PE_TYPEDEF_OR_REF}.typedef
-			elseif (a_token & Md_mask = Md_type_ref)
-			then
-				l_tag := {PE_TYPEDEF_OR_REF}.typeref
-			elseif (a_token & Md_mask = Md_type_spec) then
-				l_tag := {PE_TYPEDEF_OR_REF}.typespec
-			else
-				l_tag := 0
-			end
-			create Result.make_with_tag_and_index (l_tag, a_index)
-		end
-
-	create_member_ref (a_token: INTEGER; a_index: NATURAL_64): PE_MEMBER_REF_PARENT
-		local
-			l_tag: INTEGER
-		do
-			if (a_token & Md_mask = Md_type_def)
-			then
-				l_tag := {PE_MEMBER_REF_PARENT}.typedef
-			elseif (a_token & Md_mask = Md_type_ref)
-			then
-				l_tag := {PE_MEMBER_REF_PARENT}.typeref
-			elseif (a_token & Md_mask = Md_type_spec) then
-				l_tag := {PE_MEMBER_REF_PARENT}.typespec
-			elseif (a_token & Md_mask = Md_module_ref) then
-				l_tag := {PE_MEMBER_REF_PARENT}.moduleref
-			elseif (a_token & Md_mask = Md_method_def) then
-				l_tag := {PE_MEMBER_REF_PARENT}.methoddef
-			else
-				l_tag := 0
-			end
-			create Result.make_with_tag_and_index (l_tag, a_index)
-		end
-
-feature {CIL_PE_FILE} -- Metadata Tables
-
-	tables: SPECIAL [MD_TABLES]
-			--  in-memory metadata tables
-
-	pe_writer: PE_WRITER
-			-- class to generate the PE file.
-			--| using as a helper class to access needed features.
+			-- Interface that knows how to define assemblies
 
 end

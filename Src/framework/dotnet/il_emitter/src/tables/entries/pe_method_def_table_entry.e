@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {PE_METHOD_DEF_TABLE_ENTRY}."
+	description: "Object representing the MethodDef table"
 	date: "$Date$"
 	revision: "$Revision$"
-
+	see: "II.22.26 MethodDef : 0x06 "
 class
 	PE_METHOD_DEF_TABLE_ENTRY
 
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_method: PE_METHOD; a_iflags: INTEGER; a_mflags: INTEGER; a_name_index: NATURAL_64; a_signature_index: NATURAL_64; a_param_index: NATURAL_64)
+	make_with_data (a_method: PE_METHOD; a_iflags: INTEGER_16; a_mflags: INTEGER_16; a_name_index: NATURAL_64; a_signature_index: NATURAL_64; a_param_index: NATURAL_64)
 		do
 			rva := 0
 			method := a_method
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			method_set: method = a_method
 		end
 
-	make (a_iflags: INTEGER; a_mflags: INTEGER; a_name_index: NATURAL_64; a_signature_index: NATURAL_64; a_param_index: NATURAL_64)
+	make (a_iflags: INTEGER_16; a_mflags: INTEGER_16; a_name_index: NATURAL_64; a_signature_index: NATURAL_64; a_param_index: NATURAL_64)
 		do
 			rva := 0
 			impl_flags := a_iflags
@@ -45,11 +45,11 @@ feature -- Access
 			-- write for rva.
 
 	rva: INTEGER
-			-- read only.
+			-- rva
 
-	impl_flags: INTEGER
+	impl_flags: INTEGER_16
 
-	flags: INTEGER
+	flags: INTEGER_16
 
 	name_index: PE_STRING
 
@@ -117,6 +117,18 @@ feature -- Enum: flags
 
 	HasSecurity: INTEGER = 0x4000
 	RequireSecObject: INTEGER = 0x8000
+
+feature -- Set Rva
+
+	set_rva(a_value: like rva)
+			-- Set rva with a_value.
+		require
+			valid_value: a_value > 0
+		do
+			rva := a_value
+		ensure
+			rva_set: rva = a_value
+		end
 
 feature -- Operations
 

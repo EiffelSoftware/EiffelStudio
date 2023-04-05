@@ -12,6 +12,32 @@ create
 feature -- Initialization
 
 	make
+		local
+			l_pe: CLI_PE_FILE
+			l_name: STRING_32
+			l_namespace: STRING_32
+		do
+			test_metadata_tables_token_interface
+--			test_metadata_tables_object_model
+--			(create {TEST_11}).test;
+		end
+
+	test_metadata_tables_token_interface
+		do
+			(create {TEST_METADATA_TABLES_TK}).test_cli_directory_size;
+			(create {TEST_METADATA_TABLES_TK}).test_cli_header_size;
+			(create {TEST_METADATA_TABLES_TK}).test_user_string_heap;
+			(create {TEST_METADATA_TABLES_TK}).test_empty_assembly;
+			(create {TEST_METADATA_TABLES_TK}).test_define_assembly;
+		end
+
+	test_metadata_tables_object_model
+		do
+			(create {TEST_METADATA_TABLES_OM}).test_empty_assembly;
+			--(create {TEST_METADATA_TABLES_OM}).test_define_assembly;
+		end
+
+	old_make
 			-- Run application.
 		local
 			mp: MANAGED_POINTER
@@ -49,17 +75,10 @@ feature -- Initialization
 --			(create {TEST_9}).test;
 --			(create {TEST_9}).test;
 --			(create {TEST_10}).test;
-			(create {TEST_11}).test;
-			test_random
+--			(create {TEST_11}).test;
+--			test_random
+--			(create {TEST_12}).test;
 
-		end
-
-	assert (m: READABLE_STRING_GENERAL; cond: BOOLEAN)
-		do
-			if not cond then
-				print (m)
-			end
-			check cond end
 		end
 
 	test
@@ -339,14 +358,14 @@ feature -- C Byte Array
 			l_special: SPECIAL [NATURAL_8]
 
 		do
-			l_arr := {ARRAY[NATURAL_8]}<<0, 0, 0, 0, 0, 0, 0, 0>>
+			l_arr := {ARRAY [NATURAL_8]} <<0, 0, 0, 0, 0, 0, 0, 0>>
 			l_special := l_arr.to_special
 			create l_mp.make_from_array (l_arr)
 			l_mp.put_integer_32 (2147483646, 0)
 			l_arr := l_mp.read_array (0, 8)
 			{BYTE_ARRAY_HELPER}.put_array_integer_32 (l_special, 2147483646, 0)
 
-			l_arr := {ARRAY[NATURAL_8]}<<0, 0, 0, 0, 0, 0, 0, 0>>
+			l_arr := {ARRAY [NATURAL_8]} <<0, 0, 0, 0, 0, 0, 0, 0>>
 			{BYTE_ARRAY_HELPER}.put_array_integer_32 (l_arr.to_special, 26, 0)
 		end
 
@@ -757,7 +776,7 @@ feature -- GUID
 
 	test_random
 		local
-			l_random:RANDOM
+			l_random: RANDOM
 			l_data1: NATURAL_32
 			l_data2: NATURAL_16
 			l_data3: NATURAL_16
@@ -765,16 +784,16 @@ feature -- GUID
 			l_seed: INTEGER
 			l_time: TIME
 			l_guid: CIL_GUID
-			l_val:NATURAL_8
-			cil_guid: ARRAY[NATURAL_8]
+			l_val: NATURAL_8
+			cil_guid: ARRAY [NATURAL_8]
 		do
 			create l_time.make_now
-		    l_seed := l_time.hour
-      		l_seed := l_seed * 60 + l_time.minute
-      		l_seed := l_seed * 60 + l_time.second
-     		l_seed := l_seed * 1000 + l_time.milli_second
+			l_seed := l_time.hour
+			l_seed := l_seed * 60 + l_time.minute
+			l_seed := l_seed * 60 + l_time.second
+			l_seed := l_seed * 1000 + l_time.milli_second
 
-     		-- make (data1: NATURAL_32; data2, data3: NATURAL_16; data4: ARRAY [NATURAL_8])
+				-- make (data1: NATURAL_32; data2, data3: NATURAL_16; data4: ARRAY [NATURAL_8])
 
 			create l_random.set_seed (l_seed)
 			l_random.start
@@ -782,16 +801,16 @@ feature -- GUID
 			l_data1 := l_random.item.to_natural_32
 			l_random.forth
 
-			l_data2 := ((l_random.item.to_natural_32 \\  {NATURAL_16}.max_value) + 1).to_natural_16
+			l_data2 := ((l_random.item.to_natural_32 \\ {NATURAL_16}.max_value) + 1).to_natural_16
 			l_random.forth
 
-			l_data3 := ((l_random.item.to_natural_32 \\  {NATURAL_16}.max_value) + 1).to_natural_16
+			l_data3 := ((l_random.item.to_natural_32 \\ {NATURAL_16}.max_value) + 1).to_natural_16
 			l_random.forth
 
-			l_data4 := {ARRAY [NATURAL_8]} << 0,0,0,0,0,0,0,0 >>
+			l_data4 := {ARRAY [NATURAL_8]} <<0, 0, 0, 0, 0, 0, 0, 0>>
 
 			across 1 |..| 8 as i loop
-				l_val := ((l_random.item.to_natural_32 \\  {NATURAL_8}.max_value) + 1).to_natural_8
+				l_val := ((l_random.item.to_natural_32 \\ {NATURAL_8}.max_value) + 1).to_natural_8
 				l_data4 [i] := l_val
 				l_random.forth
 			end
@@ -800,33 +819,6 @@ feature -- GUID
 			print (l_guid.to_array_natural_8)
 		end
 
---	c_create_guid (a_guid: POINTER)
---		external "C++ inline use <random>, <random>, <array>, <algorithm>, <functional>"
---		alias
---			"{
---			std::array<unsigned char, 128 / 8> rnd;
-
---		    std::uniform_int_distribution<int> distribution(0, 0xff);
---		    // note that this whole thing will fall apart if the C++ lib uses
---		    // a prng with constant seed for the random_device implementation.
---		    // that shouldn't be a problem on OS we are interested in.
---		    std::random_device dev;
---		    std::mt19937 engine(dev());
---		    auto generator = std::bind(distribution, engine);
-
---		    std::generate(rnd.begin(), rnd.end(), generator);
-
---		    // make it a valid version 4 (random) GUID
---		    // remember that on windows GUIDs are native endianness so this may need
---		    // work if you port it
---		    rnd[7 /*6*/] &= 0xf;
---		    rnd[7 /*6*/] |= 0x40;
---		    rnd[9 /*8*/] &= 0x3f;
---		    rnd[9 /*8*/] |= 0x80;
-
---		    memcpy($a_guid, rnd.data(), rnd.size());
---			}"
---		end
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"

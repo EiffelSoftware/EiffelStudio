@@ -48,7 +48,7 @@ feature -- Access
 				base := base.resized_area_with_default (0, max_size.to_integer_32)
 			end
 		ensure
-			new_max_size: base.capacity.to_natural_32 = max_size
+			new_max_size: base.capacity.to_natural_64 = max_size
 		end
 
 feature -- Element Change

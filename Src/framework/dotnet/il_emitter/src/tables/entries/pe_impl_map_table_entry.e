@@ -7,6 +7,7 @@ note
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.22 ImplMap : 0x1C"
 
 class
 	PE_IMPL_MAP_TABLE_ENTRY
@@ -20,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flag: INTEGER; a_method_index: PE_MEMBER_FORWARDED; a_import_name_index: NATURAL_64; a_module_index: NATURAL_64)
+	make_with_data (a_flag: INTEGER_16; a_method_index: PE_MEMBER_FORWARDED; a_import_name_index: NATURAL_64; a_module_index: NATURAL_64)
 		do
 			flags := a_flag
 			method_index := a_method_index
@@ -30,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	flags: INTEGER
+	flags: INTEGER_16
 
 	method_index: PE_MEMBER_FORWARDED
 
@@ -102,7 +103,7 @@ feature -- Operations
 			l_bytes: NATURAL_64
 		do
 				-- Set the flags (from a_src)  to flags
-			flags := {BYTE_ARRAY_HELPER}.byte_array_to_integer_32 (a_src, 0)
+			flags := {BYTE_ARRAY_HELPER}.byte_array_to_integer_16 (a_src, 0)
 
 				-- Intialize the number of bytes.
 			l_bytes := 2

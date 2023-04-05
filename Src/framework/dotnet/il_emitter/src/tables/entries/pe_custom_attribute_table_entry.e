@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY}."
+	description: "Object representing the CustomAttribute table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.10 CustomAttribute : 0x0C "
 
 class
 	PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY

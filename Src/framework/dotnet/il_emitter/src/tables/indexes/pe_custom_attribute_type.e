@@ -31,7 +31,7 @@ feature -- Enum: tags
 		-- custom attribute type
 	TagBits: INTEGER = 3
 	MethodDef: INTEGER = 2
-	MethodRef: INTEGER = 3
+	MemberRef: INTEGER = 3
 
 feature -- Operations
 

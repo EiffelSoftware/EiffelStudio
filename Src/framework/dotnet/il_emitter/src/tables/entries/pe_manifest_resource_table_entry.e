@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_MANIFEST_RESOURCE_TABLE_ENTRY}."
+	description: "Object Representing the ManifestResource table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.24 ManifestResource : 0x28"
 
 class
 	PE_MANIFEST_RESOURCE_TABLE_ENTRY
@@ -15,7 +16,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make_with_data (a_offset: NATURAL; a_flags: NATURAL; a_name: NATURAL_64; a_implementation: PE_IMPLEMENTATION)
+	make_with_data (a_offset: NATURAL_32; a_flags: NATURAL_32; a_name: NATURAL_64; a_implementation: PE_IMPLEMENTATION)
 		do
 			offset := a_offset
 			flags := a_flags
@@ -57,7 +58,6 @@ feature -- Operations
 			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest.to_special, flags, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
 
-
 				-- Write name and implemention to the buffer and update the bytes.
 			l_bytes := l_bytes + name.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			l_bytes := l_bytes + implementation.render (a_sizes, a_dest, l_bytes.to_integer_32)
@@ -75,7 +75,6 @@ feature -- Operations
 			l_bytes := l_bytes + 4
 			flags := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
-
 
 				-- Get name and implemention to the buffer and update the bytes.
 			l_bytes := l_bytes + name.get (a_sizes, a_src, l_bytes.to_integer_32)

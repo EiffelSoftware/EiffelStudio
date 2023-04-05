@@ -161,7 +161,7 @@ feature -- Access
 	method_writer: detachable MD_METHOD_WRITER
 			-- To hold IL code.
 
-	emitter: MD_EMIT
+	emitter: MD_EMIT_I
 			-- Meta data emitter, needed for RVA update.
 
 	import_table: CLI_IMPORT_TABLE

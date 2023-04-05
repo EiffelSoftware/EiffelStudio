@@ -27,6 +27,7 @@
 			<renaming old_name="MD_DISPENSER" new_name="IL_MD_DISPENSER"/>
 			<renaming old_name="MD_EMIT" new_name="IL_MD_EMIT"/>
 			<renaming old_name="MD_STRONG_NAME" new_name="IL_MD_STRONG_NAME"/>
+			<renaming old_name="CLI_PE_FILE" new_name="IL_EMITTER_CLI_PE_FILE"/>
 		</library>
 		<library name="cli_kernel" location="$ISE_LIBRARY\framework\dotnet\cli_kernel\cli_kernel.ecf"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>

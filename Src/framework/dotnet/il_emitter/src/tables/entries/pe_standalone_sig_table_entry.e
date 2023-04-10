@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_STANDALONE_SIG_TABLE_ENTRY}."
+	description: "Object representing the table StandAloneSig"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.36 StandAloneSig : 0x11 "
 
 class
 	PE_STANDALONE_SIG_TABLE_ENTRY

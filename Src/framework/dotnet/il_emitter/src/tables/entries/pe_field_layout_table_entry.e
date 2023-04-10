@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_FIELD_LAYOUT_TABLE_ENTRY}."
+	description: "Object representing the FieldLayout table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.16 FieldLayout : 0x10 "
 
 class
 	PE_FIELD_LAYOUT_TABLE_ENTRY

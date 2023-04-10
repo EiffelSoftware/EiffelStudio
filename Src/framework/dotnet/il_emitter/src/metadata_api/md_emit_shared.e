@@ -384,7 +384,7 @@ feature -- Metadata Table Sizes
 		note
 			EIS: "name={PE_MEMBER_REF_TABLE_ENTRY}.parent_index", "protocol=uri", "src=eiffel:?class=PE_MEMBER_REF_TABLE_ENTRY&feature=parent_index"
 			EIS: "name={PE_MEMBER_REF_TABLE_ENTRY}.name_index", "protocol=uri", "src=eiffel:?class=PE_MEMBER_REF_TABLE_ENTRY&feature=name_index"
-			EIS: "name={PE_MEMBER_REF_TABLE_ENTRY}.signature_index", "protocol=uri", "src=eiffel:?class=PE_MEMBER_REF_TABLE_ENTRY&feature=signature_index"
+			EIS: "name={PE_MEMBER_REF_TABLE_ENTRY}.signature", "protocol=uri", "src=eiffel:?class=PE_MEMBER_REF_TABLE_ENTRY&feature=signature"
 		local
 			index_size, string_heap_offset_size, blob_heap_offset_size: INTEGER
 		do
@@ -440,4 +440,133 @@ feature -- Metadata Table Sizes
 			Result := 2 + index_size + blob_heap_offset_size
 		end
 
+	custom_attribute_table_entry_size: INTEGER
+			-- Compute the table entry size for the CustomAttribute table
+		note
+			EIS: "name={PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY}.parent_index", "protocol=uri", "src=eiffel:?class=PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY&feature=parent_index"
+			EIS: "name={PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY}.type_index", "protocol=uri", "src=eiffel:?class=PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY&feature=type_index"
+			EIS: "name={PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY}.value_index", "protocol=uri", "src=eiffel:?class=PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY&feature=value_index"
+		local
+			index_size, blob_heap_offset_size: INTEGER
+		do
+				-- parent_index and type_index
+			if pe_index.to_integer_32 < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+
+				-- value_index
+			if blog_heap_size < 65536 then
+				blob_heap_offset_size := 2
+			else
+				blob_heap_offset_size := 4
+			end
+
+			Result := 2 * index_size + blob_heap_offset_size
+		end
+
+	field_marshal_table_entry_size: INTEGER
+			-- Compute the table entry size for the FieldMarshal table
+		note
+			EIS: "name={PE_FIELD_MARSHAL_TABLE_ENTRY}.parent", "protocol=uri", "src=eiffel:?class=PE_FIELD_MARSHAL_TABLE_ENTRY&feature=parent"
+			EIS: "name={PE_FIELD_MARSHAL_TABLE_ENTRY}.native_type", "protocol=uri", "src=eiffel:?class=PE_FIELD_MARSHAL_TABLE_ENTRY&feature=native_type"
+		local
+			index_size, blob_heap_offset_size: INTEGER
+		do
+			if pe_index.to_integer_32 < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+
+				-- native_type
+			if blog_heap_size < 65536 then
+				blob_heap_offset_size := 2
+			else
+				blob_heap_offset_size := 4
+			end
+
+			Result := index_size + blob_heap_offset_size
+		end
+
+	decl_security_table_entry_size: INTEGER
+			-- Compute the table entry size for the DeclSecurity table
+		note
+			EIS: "name={PE_DECL_SECURITY_TABLE_ENTRY}.action", "protocol=uri", "src=eiffel:?class=PE_DECL_SECURITY_TABLE_ENTRY&feature=action"
+			EIS: "name={PE_DECL_SECURITY_TABLE_ENTRY}.parent", "protocol=uri", "src=eiffel:?class=PE_DECL_SECURITY_TABLE_ENTRY&feature=parent"
+			EIS: "name={PE_DECL_SECURITY_TABLE_ENTRY}.permission_set", "protocol=uri", "src=eiffel:?class=PE_DECL_SECURITY_TABLE_ENTRY&feature=permission_set"
+		local
+			index_size, blob_heap_offset_size: INTEGER
+		do
+			if pe_index.to_integer_32 < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+				-- permission_set
+			if blog_heap_size < 65536 then
+				blob_heap_offset_size := 2
+			else
+				blob_heap_offset_size := 4
+			end
+
+				-- 2 bytes for action column + sizes of parent and permissionSet columns
+			Result := 2 + index_size + blob_heap_offset_size
+		end
+
+	class_layout_table_entry_size: INTEGER
+			-- Compute the table entry size for the ClassLayout table
+		note
+			EIS: "name={PE_CLASS_LAYOUT_TABLE_ENTRY}.pack", "protocol=uri", "src=eiffel:?class=PE_CLASS_LAYOUT_TABLE_ENTRY&feature=pack"
+			EIS: "name={PE_CLASS_LAYOUT_TABLE_ENTRY}.size", "protocol=uri", "src=eiffel:?class=PE_CLASS_LAYOUT_TABLE_ENTRY&feature=size"
+			EIS: "name={PE_CLASS_LAYOUT_TABLE_ENTRY}.parent", "protocol=uri", "src=eiffel:?class=PE_CLASS_LAYOUT_TABLE_ENTRY&feature=parent"
+		local
+			index_size: INTEGER
+		do
+			if pe_index.to_integer_32 < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+
+				-- -- 2 bytes for pack column + 4 bytes for size (class size) column + size of parent column
+			Result := 2 + 4 + index_size
+		end
+
+
+    field_layout_table_entry_size: INTEGER
+            -- Compute the table entry size for the FieldLayout table
+        note
+            EIS: "name={PE_FIELD_LAYOUT_TABLE_ENTRY}.offset", "protocol=uri", "src=eiffel:?class=PE_FIELD_LAYOUT_TABLE_ENTRY&feature=offset"
+            EIS: "name={PE_FIELD_LAYOUT_TABLE_ENTRY}.parent", "protocol=uri", "src=eiffel:?class=PE_FIELD_LAYOUT_TABLE_ENTRY&feature=parent"
+        local
+            index_size: INTEGER
+        do
+            if pe_index.to_integer_32 < 65536 then
+                index_size := 2
+            else
+                index_size := 4
+            end
+				-- 4 bytes for pffset column + size of parent column
+            Result := 4 + index_size
+        end
+
+
+    standalone_sig_table_entry_size (number_of_rows: INTEGER; blob_heap_size: INTEGER): INTEGER
+            -- Compute the table entry size for the StandAloneSig table.
+       	note
+            EIS: "name={PE_STANDALONE_SIG_TABLE_ENTRY}.signature_index", "protocol=uri", "src=eiffel:?class=PE_STANDALONE_SIG_TABLE_ENTRY&feature=signature_index"
+        local
+            index_size: INTEGER
+        do
+            if blob_heap_size < 65536 then
+                index_size := 2
+            else
+                index_size := 4
+            end
+            Result := index_size
+        end
+
 end
+

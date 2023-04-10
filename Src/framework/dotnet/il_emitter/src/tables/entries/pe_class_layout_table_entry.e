@@ -1,7 +1,13 @@
 note
-	description: "Summary description for {PE_CLASS_LAYOUT_TABLE_ENTRY}."
+	description: "[
+			Object representing the class layour table
+			The ClassLayout table is used to define how the fields of a class or value type shall be laid out by the
+			CLI. (Normally, the CLI is free to reorder and/or insert gaps between the fields defined for a class or
+			value type.)
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.8 ClassLayout : 0x0F "
 
 class
 	PE_CLASS_LAYOUT_TABLE_ENTRY
@@ -31,7 +37,6 @@ feature -- Access
 
 	parent: PE_TYPE_DEF
 
-
 feature -- Operations
 
 	table_index: INTEGER
@@ -48,10 +53,9 @@ feature -- Operations
 				-- Intialize the number of bytes written
 			l_bytes := 2
 
-			-- Write size to the destination buffer `a_dest`.
+				-- Write size to the destination buffer `a_dest`.
 			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest.to_special, size, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
-
 
 				-- Write parent to the buffer and update the number of bytes.
 			l_bytes := l_bytes + parent.render (a_sizes, a_dest, l_bytes.to_integer_32)
@@ -59,7 +63,6 @@ feature -- Operations
 				-- Return the number of bytes written
 			Result := l_bytes
 		end
-
 
 	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
 		local

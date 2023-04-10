@@ -55,11 +55,12 @@ feature {NONE}
 			l_table: PE_TABLE_ENTRY_BASE
 			l_dis: NATURAL_64
 		do
+			-- TODO double check if we need to do this initialization.
 			module_index := pe_writer.hash_string ({STRING_32} "<Module>")
 
 			create l_type_def.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
 			create {PE_TYPE_DEF_TABLE_ENTRY} l_table.make_with_data (0, module_index, 0, l_type_def, 1, 1)
-			l_dis := add_table_entry (l_table)
+			pe_index := add_table_entry (l_table)
 		end
 
 	initialize_guid
@@ -151,7 +152,7 @@ feature -- Access
 			until
 				i > l_bytes.count
 			loop
-				Result [i] := (l_bytes [i])
+				Result [i] := l_bytes [i]
 				i := i + 1
 			end
 		end
@@ -166,7 +167,7 @@ feature {NONE} -- Implementation
 
 	array_item (a_heap: ARRAY [NATURAL_8]; a_offset: INTEGER_32): INTEGER_32
 		do
-			Result := (a_heap [a_offset])
+			Result := a_heap [a_offset]
 		end
 
 feature -- Save
@@ -174,11 +175,8 @@ feature -- Save
 	assembly_memory: MANAGED_POINTER
 			-- Save Current into a MEMORY location.
 			-- Allocated here and needs to be freed by caller.
-		local
-			l_size: INTEGER
 		do
-			l_size := save_size
-			create Result.make (l_size)
+			create Result.make (save_size)
 			to_implement ("TODO implement, double check if we really need it")
 		ensure
 			valid_result: Result /= Void
@@ -199,12 +197,11 @@ feature -- Settings
 			-- Set the module name for the compilation unit being emitted.
 		local
 			l_name_index: NATURAL_64
-			n: NATURAL_64
 			l_entry: PE_TABLE_ENTRY_BASE
 		do
 			l_name_index := pe_writer.hash_string (a_name.string)
 			create {PE_MODULE_TABLE_ENTRY} l_entry.make_with_data (l_name_index, guid_index)
-			n := add_table_entry (l_entry)
+			pe_index := add_table_entry (l_entry)
 		end
 
 	set_method_rva (method_token, rva: INTEGER)
@@ -252,7 +249,6 @@ feature -- Definition: Access
 		local
 			l_name_index: NATURAL_64
 			l_entry: PE_TABLE_ENTRY_BASE
-			l_dis: NATURAL_64
 			l_scope: INTEGER
 			l_namespace_index: NATURAL_64
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
@@ -267,13 +263,13 @@ feature -- Definition: Access
 				--| l_table_row: exists.
 			check exist_table_row: attached tables [l_tuple.table_type_index.to_integer_32].table [l_tuple.table_row_index.to_integer_32] end
 
-			if (resolution_scope & Md_mask = Md_module_ref)
+			if resolution_scope & Md_mask = Md_module_ref
 			then
 				l_scope := {PE_RESOLUTION_SCOPE}.moduleref
-			elseif (resolution_scope & Md_mask = Md_assembly_ref)
+			elseif resolution_scope & Md_mask = Md_assembly_ref
 			then
 				l_scope := {PE_RESOLUTION_SCOPE}.assemblyref
-			elseif (resolution_scope & Md_mask = Md_type_ref) then
+			elseif resolution_scope & Md_mask = Md_type_ref then
 				l_scope := {PE_RESOLUTION_SCOPE}.typeref
 			end
 
@@ -293,7 +289,7 @@ feature -- Definition: Access
 
 			l_name_index := pe_writer.hash_string (type_name.string)
 			create {PE_TYPE_REF_TABLE_ENTRY} l_entry.make_with_data (create {PE_RESOLUTION_SCOPE}.make_with_tag_and_index (l_scope, l_tuple.table_row_index), l_name_index, l_namespace_index)
-			l_dis := add_table_entry (l_entry)
+			pe_index := add_table_entry (l_entry)
 			Result := last_token.to_integer_32
 		end
 
@@ -301,7 +297,6 @@ feature -- Definition: Access
 			-- Create reference to member in class `in_class_token'.
 		local
 			l_table_type, l_table_row: NATURAL_64
-			l_member_ref_index: NATURAL_64
 			l_member_ref: PE_MEMBER_REF_PARENT
 			l_member_ref_entry: PE_MEMBER_REF_TABLE_ENTRY
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
@@ -321,7 +316,7 @@ feature -- Definition: Access
 			create l_member_ref_entry.make_with_data (l_member_ref, l_name_index, l_method_signature)
 
 				-- Add the new PE_MEMBER_REF_TABLE_ENTRY instance to the metadata tables.
-			l_member_ref_index := add_table_entry (l_member_ref_entry)
+			pe_index := add_table_entry (l_member_ref_entry)
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
@@ -333,14 +328,13 @@ feature -- Definition: Access
 		local
 			l_name_index: NATURAL_64
 			l_module_ref_entry: PE_MODULE_REF_TABLE_ENTRY
-			l_module_ref_index: NATURAL_64
 		do
 				-- Hash the module name and create a new PE_MODULE_REF_TABLE_ENTRY instance.
 			l_name_index := pe_writer.hash_string (a_name.string)
 			create l_module_ref_entry.make_with_data (l_name_index)
 
 				-- Add the new PE_MODULE_REF_TABLE_ENTRY instance to the metadata tables.
-			l_module_ref_index := add_table_entry (l_module_ref_entry)
+			pe_index := add_table_entry (l_module_ref_entry)
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
@@ -370,10 +364,8 @@ feature -- Definition: Creation
 			l_namespace_index: NATURAL_64
 			l_entry: PE_TABLE_ENTRY_BASE
 				--i: INTEGER
-			l_type_def_index: NATURAL_64
 			l_extends: PE_TYPEDEF_OR_REF
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
-			l_dis: NATURAL_64
 			last_dot: INTEGER
 		do
 				-- Double check how to compute namespace_index and name_index.
@@ -391,7 +383,7 @@ feature -- Definition: Creation
 			l_extends := create_type_def_or_ref (extend_token, l_tuple.table_type_index)
 
 			create {PE_TYPE_DEF_TABLE_ENTRY} l_entry.make_with_data (flags, l_name_index, l_namespace_index, l_extends, 0, 0)
-			l_type_def_index := add_table_entry (l_entry)
+			pe_index := add_table_entry (l_entry)
 			Result := last_token.to_integer_32
 
 				-- Adds entries in the PE_INTERFACE_IMPL_TABLE_ENTRY table for each implemented interface, if any.
@@ -399,9 +391,9 @@ feature -- Definition: Creation
 				across implements as i loop
 					to_implement ("TODO double check and test this code!!!")
 					l_extends := create_type_def_or_ref (i, l_tuple.table_type_index)
-					create {PE_INTERFACE_IMPL_TABLE_ENTRY} l_entry.make_with_data (l_type_def_index, l_extends)
+					create {PE_INTERFACE_IMPL_TABLE_ENTRY} l_entry.make_with_data (pe_index, l_extends)
 						--note: l_dis is not used.
-					l_dis := add_table_entry (l_entry)
+					pe_index := add_table_entry (l_entry)
 				end
 			end
 		end
@@ -412,7 +404,6 @@ feature -- Definition: Creation
 		local
 			l_table_type, l_table_row: NATURAL_64
 			l_type_def_entry: PE_TYPE_SPEC_TABLE_ENTRY
-			l_type_def_index: NATURAL_64
 			l_type_signature: NATURAL_64
 		do
 			l_type_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
@@ -421,7 +412,7 @@ feature -- Definition: Creation
 			create l_type_def_entry.make_with_data (l_type_signature)
 
 				-- Add the new PE_TYPE_SPEC_TABLE_ENTRY instance to the metadata tables.
-			l_type_def_index := add_table_entry (l_type_def_entry)
+			pe_index := add_table_entry (l_type_def_entry)
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
@@ -445,7 +436,6 @@ feature -- Definition: Creation
 			-- Create reference to method in class `in_class_token`.
 		local
 			l_table_type, l_table_row: NATURAL_64
-			l_method_def_index: NATURAL_64
 			l_method_def_entry: PE_METHOD_DEF_TABLE_ENTRY
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_method_signature: NATURAL_64
@@ -454,6 +444,7 @@ feature -- Definition: Creation
 		do
 				-- See II.22.26 MethodDef : 0x06
 				-- Extract table type and row from the in_class_token
+				-- TODO doube check: why we are not using the l_tuple?
 			l_tuple := extract_table_type_and_row (in_class_token)
 
 				-- Param index is the number of parameters.
@@ -467,7 +458,7 @@ feature -- Definition: Creation
 			create l_method_def_entry.make (method_flags.to_integer_16, impl_flags.to_integer_16, l_name_index, l_method_signature, l_param_index)
 
 				-- Add the new PE_METHOD_DEF_TABLE_ENTRY instance to the metadata tables.
-			l_method_def_index := add_table_entry (l_method_def_entry)
+			pe_index := add_table_entry (l_method_def_entry)
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
@@ -482,7 +473,6 @@ feature -- Definition: Creation
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_method_body: PE_METHOD_DEF_OR_REF
 			l_method_declaration: PE_METHOD_DEF_OR_REF
-			l_dis: NATURAL_64
 		do
 				-- Extract table type and row from the in_class_token
 			l_tuple := extract_table_type_and_row (in_class_token)
@@ -495,7 +485,7 @@ feature -- Definition: Creation
 			create l_method_impl_entry.make_with_data (l_tuple.table_row_index, l_method_body, l_method_declaration)
 
 				-- Add the new PE_METHOD_IMPL_TABLE_ENTRY instance to the metadata tables.
-			l_dis := add_table_entry (l_method_impl_entry)
+			pe_index := add_table_entry (l_method_impl_entry)
 		end
 
 	define_property (type_token: INTEGER; name: NATIVE_STRING; flags: NATURAL_32;
@@ -503,7 +493,6 @@ feature -- Definition: Creation
 			-- Define property `name' for a type `type_token'.
 		local
 			l_property: PE_PROPERTY_TABLE_ENTRY
-			l_dis: NATURAL_64
 			l_property_signature: NATURAL_64
 			l_semantics: PE_SEMANTICS
 			l_table: PE_TABLE_ENTRY_BASE
@@ -523,7 +512,7 @@ feature -- Definition: Creation
 				)
 
 				-- Add the new PE_PROPERTY_TABLE_ENTRY instance to the metadata tables.
-			l_dis := add_table_entry (l_property)
+			pe_index := add_table_entry (l_property)
 
 				-- Define the method implementations for the getter and setter, if provided.
 			if getter_token /= 0 then
@@ -532,7 +521,7 @@ feature -- Definition: Creation
 
 				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data
 					({PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, l_tuple.table_type_index, l_semantics)
-				l_dis := add_table_entry (l_table)
+				pe_index := add_table_entry (l_table)
 			end
 
 			if setter_token /= 0 then
@@ -541,7 +530,7 @@ feature -- Definition: Creation
 
 				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data
 					({PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_tuple.table_type_index, l_semantics)
-				l_dis := add_table_entry (l_table)
+				pe_index := add_table_entry (l_table)
 			end
 
 				-- Return the metadata token for the new property.
@@ -556,7 +545,6 @@ feature -- Definition: Creation
 			l_name_index: NATURAL_64
 			l_impl_map_entry: PE_IMPL_MAP_TABLE_ENTRY
 			l_tuple_method: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
-			l_dis: NATURAL_64
 		do
 			l_tuple_method := extract_table_type_and_row (method_token)
 
@@ -570,7 +558,7 @@ feature -- Definition: Creation
 			create l_impl_map_entry.make_with_data (mapping_flags.to_integer_16, l_member_forwarded, l_name_index, module_ref.to_natural_64)
 
 				-- Add the PE_IMPL_MAP_TABLE_ENTRY instance to the table
-			l_dis := add_table_entry (l_impl_map_entry)
+			pe_index := add_table_entry (l_impl_map_entry)
 		end
 
 	define_parameter (in_method_token: INTEGER; param_name: NATIVE_STRING;
@@ -579,7 +567,7 @@ feature -- Definition: Creation
 		local
 			l_table_type, l_table_row: NATURAL_64
 			l_param_blob: NATURAL_64
-			l_param_index, l_method_index: NATURAL_64
+			l_method_index: NATURAL_64
 			l_param_entry: PE_PARAM_TABLE_ENTRY
 			l_method_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_dis: NATURAL_64
@@ -601,7 +589,7 @@ feature -- Definition: Creation
 			create l_param_entry.make_with_data (l_param_flags, param_pos.to_natural_16, l_param_name_index.to_natural_64)
 
 				-- Add the new PE_PARAM_TABLE_ENTRY instance to the metadata tables.
-			l_param_index := add_table_entry (l_param_entry)
+			pe_index := add_table_entry (l_param_entry)
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
@@ -617,13 +605,13 @@ feature -- Definition: Creation
 			-- Create a new field in class `in_class_token'.
 		local
 			l_table_type, l_table_row: NATURAL_64
-			l_field_def_index: NATURAL_64
 			l_field_def_entry: PE_FIELD_TABLE_ENTRY
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_field_signature: NATURAL_64
 			l_name_index: NATURAL_64
 		do
 				-- Extract table type and row from the in_class_token
+				-- TODO double check: Why we are not using l_tuple?
 			l_tuple := extract_table_type_and_row (in_class_token)
 
 			l_field_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
@@ -633,7 +621,7 @@ feature -- Definition: Creation
 			create l_field_def_entry.make_with_data (field_flags, l_name_index, l_field_signature)
 
 				-- Add the new PE_FIELD_TABLE_ENTRY instance to the metadata tables.
-			l_field_def_index := add_table_entry (l_field_def_entry)
+			pe_index := add_table_entry (l_field_def_entry)
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
@@ -644,13 +632,12 @@ feature -- Definition: Creation
 			-- local signature.
 		local
 			l_signature_hash: NATURAL_64
-			l_signature_index: NATURAL_64
 			l_signature_entry: PE_STANDALONE_SIG_TABLE_ENTRY
 		do
 			l_signature_hash := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 
 			create l_signature_entry.make_with_data (l_signature_hash)
-			l_signature_index := add_table_entry (l_signature_entry)
+			pe_index := add_table_entry (l_signature_entry)
 
 			Result := last_token.to_integer_32
 		end
@@ -673,7 +660,6 @@ feature -- Definition: Creation
 	define_string (str: NATIVE_STRING): INTEGER
 			-- Define a new token for `str'.
 		local
-			l_result: NATURAL_64
 			l_str: STRING_32
 			l_us_index: NATURAL_64
 		do
@@ -681,8 +667,7 @@ feature -- Definition: Creation
 			create l_str.make_from_string (str.string)
 			l_str.append_character ('%U')
 			l_us_index := pe_writer.hash_us (l_str, l_str.count)
-			l_result := l_us_index | ({NATURAL_64} 0x70 |<< 24)
-			Result := l_result.to_integer_32
+			Result := (l_us_index | ({NATURAL_64} 0x70 |<< 24)).to_integer_32
 		end
 
 	define_custom_attribute (owner, constructor: INTEGER; ca: MD_CUSTOM_ATTRIBUTE): INTEGER
@@ -690,7 +675,7 @@ feature -- Definition: Creation
 		local
 			l_table_type, l_table_row: NATURAL_64
 			l_ca_blob: NATURAL_64
-			l_ca_index, l_ca_constructor_index, l_owner_index: NATURAL_64
+			l_ca_constructor_index: NATURAL_64
 			l_ca_entry: PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY
 			l_owner_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_constructor_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
@@ -720,12 +705,12 @@ feature -- Definition: Creation
 
 				-- Create a new PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY instance with the given data
 			l_ca_constructor_index := constructor.to_natural_64
-			l_owner_index := l_owner_tuple.table_row_index
+			pe_index := l_owner_tuple.table_row_index
 
 			create l_ca_entry.make_with_data (l_ca, l_ca_type, l_ca_constructor_index)
 
 				-- Add the new PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY instance to the metadata tables.
-			l_ca_index := add_table_entry (l_ca_entry)
+			pe_index := add_table_entry (l_ca_entry)
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32

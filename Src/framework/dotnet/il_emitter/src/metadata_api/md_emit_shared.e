@@ -20,6 +20,9 @@ feature -- Access
 			--| using as a helper class to access needed features.
 			--| TODO, we don't need the full class we need to extract the needed features.
 
+	pe_index: NATURAL_64
+			-- metatable index in the PE file for this data container.
+
 feature -- Status report
 
 	us_heap_size: NATURAL_64
@@ -37,7 +40,7 @@ feature -- Status report
 	blog_heap_size: NATURAL_64
 			-- Blob heap size
 		do
-			Result :=  pe_writer.blob.size
+			Result := pe_writer.blob.size
 		end
 
 	strings_heap_size: NATURAL_64
@@ -46,6 +49,11 @@ feature -- Status report
 			Result := pe_writer.strings.size
 		end
 
+	table_index_size (a_index: PE_TABLES): INTEGER
+			-- Table index size for the given table.
+		do
+			Result := tables [a_index.value.to_integer_32].table.count
+		end
 
 feature {NONE} -- Change tables
 
@@ -59,7 +67,7 @@ feature {NONE} -- Change tables
 			n := a_entry.table_index
 			tables [n].table.force (a_entry)
 			Result := tables [n].table.count.to_natural_32
-			last_token := ((n |<< 24).to_natural_32 | Result.to_natural_32)
+			last_token := (n |<< 24).to_natural_32 | Result.to_natural_32
 		end
 
 	last_token: NATURAL_32
@@ -94,10 +102,10 @@ feature {NONE} -- Helper
 		local
 			l_tag: INTEGER
 		do
-			if (a_token & Md_mask = Md_method_def)
+			if a_token & Md_mask = Md_method_def
 			then
 				l_tag := {PE_METHOD_DEF_OR_REF}.methoddef
-			elseif (a_token & Md_mask = Md_member_ref)
+			elseif a_token & Md_mask = Md_member_ref
 			then
 				l_tag := {PE_METHOD_DEF_OR_REF}.memberref
 			else
@@ -110,13 +118,13 @@ feature {NONE} -- Helper
 		local
 			l_tag: INTEGER
 		do
-			if (a_token & Md_mask = Md_type_def)
+			if a_token & Md_mask = Md_type_def
 			then
 				l_tag := {PE_TYPEDEF_OR_REF}.typedef
-			elseif (a_token & Md_mask = Md_type_ref)
+			elseif a_token & Md_mask = Md_type_ref
 			then
 				l_tag := {PE_TYPEDEF_OR_REF}.typeref
-			elseif (a_token & Md_mask = Md_type_spec) then
+			elseif a_token & Md_mask = Md_type_spec then
 				l_tag := {PE_TYPEDEF_OR_REF}.typespec
 			else
 				l_tag := 0
@@ -128,17 +136,17 @@ feature {NONE} -- Helper
 		local
 			l_tag: INTEGER
 		do
-			if (a_token & Md_mask = Md_type_def)
+			if a_token & Md_mask = Md_type_def
 			then
 				l_tag := {PE_MEMBER_REF_PARENT}.typedef
-			elseif (a_token & Md_mask = Md_type_ref)
+			elseif a_token & Md_mask = Md_type_ref
 			then
 				l_tag := {PE_MEMBER_REF_PARENT}.typeref
-			elseif (a_token & Md_mask = Md_type_spec) then
+			elseif a_token & Md_mask = Md_type_spec then
 				l_tag := {PE_MEMBER_REF_PARENT}.typespec
-			elseif (a_token & Md_mask = Md_module_ref) then
+			elseif a_token & Md_mask = Md_module_ref then
 				l_tag := {PE_MEMBER_REF_PARENT}.moduleref
-			elseif (a_token & Md_mask = Md_method_def) then
+			elseif a_token & Md_mask = Md_method_def then
 				l_tag := {PE_MEMBER_REF_PARENT}.methoddef
 			else
 				l_tag := 0
@@ -159,7 +167,6 @@ feature {NONE} -- Helper
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
-
 
 	create_pe_custom_attribute (a_token: INTEGER; a_index: NATURAL_64): PE_CUSTOM_ATTRIBUTE
 		local
@@ -227,12 +234,109 @@ feature -- Metadata Table Sizes
 
 	module_table_entry_size: INTEGER
 		note
-			EIS:"name={PE_MODULE_TABLE_ENTRY}.name_index", "src=eiffel:?class=PE_MODULE_TABLE_ENTRY&feature=name_index","protocol=uri"
+			EIS: "name={PE_MODULE_TABLE_ENTRY}.name_index", "src=eiffel:?class=PE_MODULE_TABLE_ENTRY&feature=name_index", "protocol=uri"
 			EIS: "name={PE_MODULE_TABLE_ENTRY}.guid_index", "protocol=uri", "src=eiffel:?class=PE_MODULE_TABLE_ENTRY&feature=guid_index"
 		do
 				-- Size of the name column.
-			Result :=  if us_heap_size < 65536 then 2 else 4 end
+			Result := if strings_heap_size < 65536 then 2 else 4 end
 				-- Size of guid column
-			Result :=  Result + if guid_heap_size < 65536 then 2 else 4 end
+			Result := Result + if guid_heap_size < 65536 then 2 else 4 end
 		end
+
+	type_ref_entry_size: INTEGER
+			-- Compute the table entry size for the TypeRef table
+		note
+			EIS: "name={PE_TYPE_REF_TABLE_ENTRY}.resolution", "protocol=uri", "src=eiffel:?class=PE_TYPE_REF_ENTRY&feature=resolution"
+			EIS: "name={PE_TYPE_REF_TABLE_ENTRY}.type_name_index", "protocol=uri", "src=eiffel:?class=PE_TYPE_REF_ENTRY&feature=type_name_index"
+			EIS: "name={PE_TYPE_REF_TABLE_ENTRY}.type_name_space_index", "protocol=uri", "src=eiffel:?class=PE_TYPE_REF_ENTRY&feature=type_name_space_index"
+
+		local
+			index_size, heap_offset_size: INTEGER
+		do
+				-- Resolution scope
+			if pe_index.to_integer_32 < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+
+				-- Type name index and type_name_space_index
+			if strings_heap_size < 65536 then
+				heap_offset_size := 2
+			else
+				heap_offset_size := 4
+			end
+
+			Result := index_size + 2 * heap_offset_size
+		end
+
+	type_def_table_entry_size: INTEGER
+			-- Compute the table entry size for the TypeDef table
+		note
+			EIS: "name={PE_TYPE_DEF_TABLE_ENTRY}.type_name_index", "protocol=uri", "src=eiffel:?class=PE_TYPE_DEF_TABLE_ENTRY&feature=type_name_index"
+			EIS: "name={PE_TYPE_DEF_TABLE_ENTRY}.type_name_space_index", "protocol=uri", "src=eiffel:?class=PE_TYPE_DEF_TABLE_ENTRY&feature=type_name_space_index"
+			EIS: "name={PE_TYPE_DEF_TABLE_ENTRY}.extends", "protocol=uri", "src=eiffel:?class=PE_TYPE_DEF_TABLE_ENTRY&feature=extends"
+			EIS: "name={PE_TYPE_DEF_TABLE_ENTRY}.fields", "protocol=uri", "src=eiffel:?class=PE_TYPE_DEF_TABLE_ENTRY&feature=fields"
+			EIS: "name={PE_TYPE_DEF_TABLE_ENTRY}.methods", "protocol=uri", "src=eiffel:?class=PE_TYPE_DEF_TABLE_ENTRY&feature=methods"
+		local
+			index_size, heap_offset_size: INTEGER
+		do
+				-- extends, fields and methods
+			if pe_index.to_integer_32 < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+
+				-- type_name_index and type_name_space_index
+			if strings_heap_size < 65536 then
+				heap_offset_size := 2
+			else
+				heap_offset_size := 4
+			end
+
+				-- 4 is the size of the flags
+			Result := 4 + 2 * heap_offset_size + 3 * index_size
+		end
+
+
+	method_def_table_entry_size: INTEGER
+            -- Compute the table entry size for the MethodDef table
+        note
+			EIS: "name={PE_METHOD_DEF_TABLE_ENTRY}.rva", "protocol=uri", "src=eiffel:?class=PE_METHOD_DEF_TABLE_ENTRY&feature=rva"
+			EIS: "name={PE_METHOD_DEF_TABLE_ENTRY}.impl_flags", "protocol=uri", "src=eiffel:?class=PE_METHOD_DEF_TABLE_ENTRY&feature=impl_flags"
+			EIS: "name={PE_METHOD_DEF_TABLE_ENTRY}.flags", "protocol=uri", "src=eiffel:?class=PE_METHOD_DEF_TABLE_ENTRY&feature=flags"
+			EIS: "name={PE_METHOD_DEF_TABLE_ENTRY}.name_index", "protocol=uri", "src=eiffel:?class=PE_METHOD_DEF_TABLE_ENTRY&feature=name_index"
+			EIS: "name={PE_METHOD_DEF_TABLE_ENTRY}.signature_index", "protocol=uri", "src=eiffel:?class=PE_METHOD_DEF_TABLE_ENTRY&feature=signature_index"
+			EIS: "name={PE_METHOD_DEF_TABLE_ENTRY}.param_index", "protocol=uri", "src=eiffel:?class=PE_METHOD_DEF_TABLE_ENTRY&feature=param_index"
+        local
+            index_size, string_heap_offset_size, blob_heap_offset_size: INTEGER
+        do
+        		-- param_index
+            if pe_index.to_integer_32 < 65536 then
+                index_size := 2
+            else
+                index_size := 4
+            end
+
+				-- name_index
+            if strings_heap_size < 65536 then
+                string_heap_offset_size := 2
+            else
+                string_heap_offset_size := 4
+            end
+
+				-- signature_index
+            if blog_heap_size < 65536 then
+                blob_heap_offset_size := 2
+            else
+                blob_heap_offset_size := 4
+            end
+				-- Size of rva column 4
+				-- Size of impl_flags column 2
+				-- Size of flags column 2
+				-- 8
+            Result := 8 + string_heap_offset_size + blob_heap_offset_size + index_size
+        end
+
 end

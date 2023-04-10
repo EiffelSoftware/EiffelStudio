@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_INTERFACE_IMPL_TABLE_ENTRY}."
+	description: "Object representing The InterfaceImpl table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see:"II.22.23 InterfaceImpl : 0x09 "
 
 class
 	PE_INTERFACE_IMPL_TABLE_ENTRY

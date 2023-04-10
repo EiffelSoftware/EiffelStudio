@@ -1,7 +1,11 @@
-note
-	description: "Summary description for {PE_MEMBER_REF_TABLE_ENTRY}."
+﻿note
+	description: "[
+		Object representing he MemberRef table combines two sorts of references, to Methods and to Fields of a class, known as
+		‘MethodRef’ and ‘FieldRef’, respectively
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.25 MemberRef : 0x0A "
 
 class
 	PE_MEMBER_REF_TABLE_ENTRY
@@ -25,6 +29,7 @@ feature {NONE} -- Intialization
 feature -- Access
 
 	parent_index: PE_MEMBER_REF_PARENT
+		-- class  column in the spec
 
 	name_index: PE_STRING
 

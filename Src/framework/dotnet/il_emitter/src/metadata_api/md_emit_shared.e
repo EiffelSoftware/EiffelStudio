@@ -299,44 +299,145 @@ feature -- Metadata Table Sizes
 			Result := 4 + 2 * heap_offset_size + 3 * index_size
 		end
 
-
 	method_def_table_entry_size: INTEGER
-            -- Compute the table entry size for the MethodDef table
-        note
+			-- Compute the table entry size for the MethodDef table
+		note
 			EIS: "name={PE_METHOD_DEF_TABLE_ENTRY}.rva", "protocol=uri", "src=eiffel:?class=PE_METHOD_DEF_TABLE_ENTRY&feature=rva"
 			EIS: "name={PE_METHOD_DEF_TABLE_ENTRY}.impl_flags", "protocol=uri", "src=eiffel:?class=PE_METHOD_DEF_TABLE_ENTRY&feature=impl_flags"
 			EIS: "name={PE_METHOD_DEF_TABLE_ENTRY}.flags", "protocol=uri", "src=eiffel:?class=PE_METHOD_DEF_TABLE_ENTRY&feature=flags"
 			EIS: "name={PE_METHOD_DEF_TABLE_ENTRY}.name_index", "protocol=uri", "src=eiffel:?class=PE_METHOD_DEF_TABLE_ENTRY&feature=name_index"
 			EIS: "name={PE_METHOD_DEF_TABLE_ENTRY}.signature_index", "protocol=uri", "src=eiffel:?class=PE_METHOD_DEF_TABLE_ENTRY&feature=signature_index"
 			EIS: "name={PE_METHOD_DEF_TABLE_ENTRY}.param_index", "protocol=uri", "src=eiffel:?class=PE_METHOD_DEF_TABLE_ENTRY&feature=param_index"
-        local
-            index_size, string_heap_offset_size, blob_heap_offset_size: INTEGER
-        do
-        		-- param_index
-            if pe_index.to_integer_32 < 65536 then
-                index_size := 2
-            else
-                index_size := 4
-            end
+		local
+			index_size, string_heap_offset_size, blob_heap_offset_size: INTEGER
+		do
+				-- param_index
+			if pe_index.to_integer_32 < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
 
 				-- name_index
-            if strings_heap_size < 65536 then
-                string_heap_offset_size := 2
-            else
-                string_heap_offset_size := 4
-            end
+			if strings_heap_size < 65536 then
+				string_heap_offset_size := 2
+			else
+				string_heap_offset_size := 4
+			end
 
 				-- signature_index
-            if blog_heap_size < 65536 then
-                blob_heap_offset_size := 2
-            else
-                blob_heap_offset_size := 4
-            end
+			if blog_heap_size < 65536 then
+				blob_heap_offset_size := 2
+			else
+				blob_heap_offset_size := 4
+			end
 				-- Size of rva column 4
 				-- Size of impl_flags column 2
 				-- Size of flags column 2
 				-- 8
-            Result := 8 + string_heap_offset_size + blob_heap_offset_size + index_size
-        end
+			Result := 8 + string_heap_offset_size + blob_heap_offset_size + index_size
+		end
+
+	param_table_entry_size: INTEGER
+			-- Compute the table entry size for the Param table
+		note
+			EIS: "name={PE_PARAM_TABLE_ENTRY}.flags", "protocol=uri", "src=eiffel:?class=PE_PARAM_TABLE_ENTRY&feature=flags"
+			EIS: "name={PE_PARAM_TABLE_ENTRY}.sequence_index", "protocol=uri", "src=eiffel:?class=PE_PARAM_TABLE_ENTRY&feature=sequence_index"
+			EIS: "name={PE_PARAM_TABLE_ENTRY}.name_index", "protocol=uri", "src=eiffel:?class=PE_PARAM_TABLE_ENTRY&feature=name_index"
+		local
+			index_size: INTEGER
+		do
+				-- name_index
+			if strings_heap_size < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+
+				-- Size of flags column 2
+				-- Size of sequence_index column 2
+				-- 4
+			Result := 4 + index_size
+		end
+
+	interface_impl_table_entry_size: INTEGER
+			-- Compute the table entry size for the InterfaceImpl table
+		note
+			EIS: "name={PE_INTERFACE_IMPL_TABLE_ENTRY}.class_", "protocol=uri", "src=eiffel:?class=PE_INTERFACE_IMPL_TABLE_ENTRY&feature=class_"
+			EIS: "name={PE_INTERFACE_IMPL_TABLE_ENTRY}.interface", "protocol=uri", "src=eiffel:?class=PE_INTERFACE_IMPL_TABLE_ENTRY&feature=interface"
+			-- Compute the table entry size for the InterfaceImpl table
+		local
+			index_size: INTEGER
+		do
+			if pe_index.to_integer_32 < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+
+				-- Size of class_ and interface index..
+			Result := 2 * index_size
+		end
+
+	member_ref_table_entry_size: INTEGER
+			-- Compute the table entry size for the MemberRef table
+		note
+			EIS: "name={PE_MEMBER_REF_TABLE_ENTRY}.parent_index", "protocol=uri", "src=eiffel:?class=PE_MEMBER_REF_TABLE_ENTRY&feature=parent_index"
+			EIS: "name={PE_MEMBER_REF_TABLE_ENTRY}.name_index", "protocol=uri", "src=eiffel:?class=PE_MEMBER_REF_TABLE_ENTRY&feature=name_index"
+			EIS: "name={PE_MEMBER_REF_TABLE_ENTRY}.signature_index", "protocol=uri", "src=eiffel:?class=PE_MEMBER_REF_TABLE_ENTRY&feature=signature_index"
+		local
+			index_size, string_heap_offset_size, blob_heap_offset_size: INTEGER
+		do
+				-- parent_index or class_index see spec.
+			if pe_index.to_integer_32 < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+
+				-- name_index
+			if strings_heap_size < 65536 then
+				string_heap_offset_size := 2
+			else
+				string_heap_offset_size := 4
+			end
+
+				-- signature_index
+			if blog_heap_size < 65536 then
+				blob_heap_offset_size := 2
+			else
+				blob_heap_offset_size := 4
+			end
+
+			Result := index_size + string_heap_offset_size + blob_heap_offset_size
+		end
+
+	constant_table_entry_size: INTEGER
+			-- Compute the table entry size for the Constant table
+		note
+			EIS: "name={PE_CONSTANT_TABLE_ENTRY}.type", "protocol=uri", "src=eiffel:?class=PE_CONSTANT_TABLE_ENTRY&feature=type"
+			EIS: "name={PE_CONSTANT_TABLE_ENTRY}.parent_index", "protocol=uri", "src=eiffel:?class=PE_CONSTANT_TABLE_ENTRY&feature=parent_index"
+			EIS: "name={PE_CONSTANT_TABLE_ENTRY}.value_index", "protocol=uri", "src=eiffel:?class=PE_CONSTANT_TABLE_ENTRY&feature=value_index"
+		local
+			index_size, blob_heap_offset_size: INTEGER
+		do
+				-- parent_index
+			if pe_index.to_integer_32 < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+
+				-- value_index
+			if blog_heap_size < 65536 then
+				blob_heap_offset_size := 2
+			else
+				blob_heap_offset_size := 4
+			end
+
+				-- Size of type column 2 (1 byte for the constant and 1 byte for padding)
+				-- 2
+			Result := 2 + index_size + blob_heap_offset_size
+		end
 
 end

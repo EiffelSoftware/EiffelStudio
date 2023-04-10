@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_CONSTANT_TABLE_ENTRY}."
+	description: "Object representing the Constant table is used to store compile-time, constant values for fields, parameters, and properties. "
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.9 Constant : 0x0B "
 
 class
 	PE_CONSTANT_TABLE_ENTRY

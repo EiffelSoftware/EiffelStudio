@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_METHOD_SEMANTIC_TABLE_ENTRY}."
+	description: "Objects representing The MethodSemantics table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.28 MethodSemantics : 0x18 "
 
 class
 	PE_METHOD_SEMANTICS_TABLE_ENTRY

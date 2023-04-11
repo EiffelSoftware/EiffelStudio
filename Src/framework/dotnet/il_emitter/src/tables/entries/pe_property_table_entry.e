@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_PROPERTY_TABLE_ENTRY}."
+	description: "Object representing the Property table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.34 Property : 0x17"
 
 class
 	PE_PROPERTY_TABLE_ENTRY

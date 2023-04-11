@@ -534,12 +534,109 @@ feature -- Metadata Table Sizes
 			Result := 2 + 4 + index_size
 		end
 
+	field_layout_table_entry_size: INTEGER
+			-- Compute the table entry size for the FieldLayout table
+		note
+			EIS: "name={PE_FIELD_LAYOUT_TABLE_ENTRY}.offset", "protocol=uri", "src=eiffel:?class=PE_FIELD_LAYOUT_TABLE_ENTRY&feature=offset"
+			EIS: "name={PE_FIELD_LAYOUT_TABLE_ENTRY}.parent", "protocol=uri", "src=eiffel:?class=PE_FIELD_LAYOUT_TABLE_ENTRY&feature=parent"
+		local
+			index_size: INTEGER
+		do
+			if pe_index.to_integer_32 < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+				-- 4 bytes for pffset column + size of parent column
+			Result := 4 + index_size
+		end
 
-    field_layout_table_entry_size: INTEGER
-            -- Compute the table entry size for the FieldLayout table
+	standalone_sig_table_entry_size: INTEGER
+			-- Compute the table entry size for the StandAloneSig table.
+		note
+			EIS: "name={PE_STANDALONE_SIG_TABLE_ENTRY}.signature_index", "protocol=uri", "src=eiffel:?class=PE_STANDALONE_SIG_TABLE_ENTRY&feature=signature_index"
+		local
+			index_size: INTEGER
+		do
+			if blog_heap_size < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+			Result := index_size
+		end
+
+	property_map_table_entry_size: INTEGER
+			-- Compute the size of a single entry in the PropertyMap table
+		note
+			EIS: "name={PE_PROPERTY_MAP_TABLE_ENTRY}.parent", "protocol=uri", "src=eiffel:?class=PE_PROPERTY_MAP_TABLE_ENTRY&feature=parent"
+			EIS: "name={PE_PROPERTY_MAP_TABLE_ENTRY}.property_list", "protocol=uri", "src=eiffel:?class=PE_PROPERTY_MAP_TABLE_ENTRY&feature=property_list"
+		local
+			index_size: INTEGER
+		do
+				-- parent and property_list
+			if pe_index.to_integer_32 < 65536 then
+				index_size := 2
+			else
+				index_size := 4
+			end
+
+			Result := 2 * index_size
+		end
+
+	property_table_entry_size: INTEGER
+			-- Compute the size of a single entry in the Property table
+		note
+			EIS: "name={PE_PROPERTY_TABLE_ENTRY}.flags", "protocol=uri", "src=eiffel:?class=PE_PROPERTY_TABLE_ENTRY&feature=flags"
+			EIS: "name={PE_PROPERTY_TABLE_ENTRY}.name", "protocol=uri", "src=eiffel:?class=PE_PROPERTY_TABLE_ENTRY&feature=name"
+			EIS: "name={PE_PROPERTY_TABLE_ENTRY}.property_type", "protocol=uri", "src=eiffel:?class=PE_PROPERTY_TABLE_ENTRY&feature=property_type"
+
+		local
+			name_index_size, type_index_size: INTEGER
+		do
+			if strings_heap_size < 65536 then
+				name_index_size := 2
+			else
+				name_index_size := 4
+			end
+
+			if blog_heap_size < 65536 then
+				type_index_size := 2
+			else
+				type_index_size := 4
+			end
+				-- 2 bytes for flag	+ name index and type index
+			Result := 2 + name_index_size + type_index_size
+		end
+
+
+    method_semantics_table_entry_size: INTEGER
+            -- Compute the size of a single entry in the MethodSemantics table
         note
-            EIS: "name={PE_FIELD_LAYOUT_TABLE_ENTRY}.offset", "protocol=uri", "src=eiffel:?class=PE_FIELD_LAYOUT_TABLE_ENTRY&feature=offset"
-            EIS: "name={PE_FIELD_LAYOUT_TABLE_ENTRY}.parent", "protocol=uri", "src=eiffel:?class=PE_FIELD_LAYOUT_TABLE_ENTRY&feature=parent"
+			EIS: "name={PE_METHOD_SEMANTICS_TABLE_ENTRY}.semantics", "protocol=uri", "src=eiffel:?class=PE_METHOD_SEMANTICS_TABLE_ENTRY&feature=semantics"
+			EIS: "name={PE_METHOD_SEMANTICS_TABLE_ENTRY}.method", "protocol=uri", "src=eiffel:?class=PE_METHOD_SEMANTICS_TABLE_ENTRY&feature=method"
+			EIS: "name={PE_METHOD_SEMANTICS_TABLE_ENTRY}.association", "protocol=uri", "src=eiffel:?class=PE_METHOD_SEMANTICS_TABLE_ENTRY&feature=association"
+
+        local
+            index_size : INTEGER
+        do
+        		-- method and association
+            if pe_index.to_integer_32 < 65536 then
+                index_size := 2
+            else
+                index_size := 4
+            end
+				-- 2 bytes for semantics column.
+            Result := 2 + 2 * index_size
+        end
+
+	method_impl_table_entry_size: INTEGER
+            -- Compute the size of a single entry in the MethodImpl table
+        note
+			EIS: "name={PE_METHOD_IMPL_TABLE_ENTRY}.class_", "protocol=uri", "src=eiffel:?class=PE_METHOD_IMPL_TABLE_ENTRY&feature=class_"
+			EIS: "name={PE_METHOD_IMPL_TABLE_ENTRY}.method_body", "protocol=uri", "src=eiffel:?class=PE_METHOD_IMPL_TABLE_ENTRY&feature=method_body"
+			EIS: "name={PE_METHOD_IMPL_TABLE_ENTRY}.method_declaration", "protocol=uri", "src=eiffel:?class=PE_METHOD_IMPL_TABLE_ENTRY&feature=method_declaration"
+
         local
             index_size: INTEGER
         do
@@ -548,24 +645,8 @@ feature -- Metadata Table Sizes
             else
                 index_size := 4
             end
-				-- 4 bytes for pffset column + size of parent column
-            Result := 4 + index_size
-        end
 
-
-    standalone_sig_table_entry_size (number_of_rows: INTEGER; blob_heap_size: INTEGER): INTEGER
-            -- Compute the table entry size for the StandAloneSig table.
-       	note
-            EIS: "name={PE_STANDALONE_SIG_TABLE_ENTRY}.signature_index", "protocol=uri", "src=eiffel:?class=PE_STANDALONE_SIG_TABLE_ENTRY&feature=signature_index"
-        local
-            index_size: INTEGER
-        do
-            if blob_heap_size < 65536 then
-                index_size := 2
-            else
-                index_size := 4
-            end
-            Result := index_size
+            Result := 3 * index_size
         end
 
 end

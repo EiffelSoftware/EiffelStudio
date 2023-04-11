@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {PE_METHOD_IMPL_TABLE_ENTRY}."
+	description: "Object representing the MethodImpl table"
 	date: "$Date$"
 	revision: "$Revision$"
-
+	see: "II.22.27 MethodImpl : 0x19 "
 class
 	PE_METHOD_IMPL_TABLE_ENTRY
 

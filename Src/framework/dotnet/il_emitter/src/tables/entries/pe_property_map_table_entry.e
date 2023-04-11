@@ -1,9 +1,8 @@
 note
-	description: "Summary description for {PE_PROPERTY_MAP_TABLE_ENTRY}."
-	author: ""
+	description: "Object representing the PropertyMap table."
 	date: "$Date$"
 	revision: "$Revision$"
-
+	see: "II.22.35 PropertyMap : 0x15 "
 class
 	PE_PROPERTY_MAP_TABLE_ENTRY
 

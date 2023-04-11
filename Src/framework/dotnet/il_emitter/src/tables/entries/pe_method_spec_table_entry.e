@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_METHOD_SPEC_TABLE_ENTRY}."
+	description: "Object representig the The MethodSpec table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.29 MethodSpec : 0x2B"
 
 class
 	PE_METHOD_SPEC_TABLE_ENTRY

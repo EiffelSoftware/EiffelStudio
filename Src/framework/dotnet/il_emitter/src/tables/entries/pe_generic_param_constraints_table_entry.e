@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_GENERIC_PARAM_CONSTRAINTS_TABLE_ENTRY}."
+	description: "Object representing the GenericParamConstraint table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.21 GenericParamConstraint : 0x2C "
 
 class
 	PE_GENERIC_PARAM_CONSTRAINTS_TABLE_ENTRY

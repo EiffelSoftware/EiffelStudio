@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_NESTED_CLASS_TABLE_ENTRY}."
+	description: "Object representing The NestedClass table "
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.32 NestedClass : 0x29 "
 
 class
 	PE_NESTED_CLASS_TABLE_ENTRY

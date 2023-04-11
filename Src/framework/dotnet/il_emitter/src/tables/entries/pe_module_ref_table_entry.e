@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {PE_MODULE_REF_TABLE_ENTRY}."
+	description: "Object representing the ModuleRef table"
 	date: "$Date$"
 	revision: "$Revision$"
-
+	see: "II.22.31 ModuleRef : 0x1A"
 class
 	PE_MODULE_REF_TABLE_ENTRY
 

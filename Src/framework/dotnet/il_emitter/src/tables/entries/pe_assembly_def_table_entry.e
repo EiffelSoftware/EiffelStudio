@@ -35,6 +35,7 @@ feature -- Access
 
 	hash_alg_id: NATURAL_16
 			-- Defined as word two bytes.
+			-- (a 4-byte constant of type AssemblyHashAlgorithm, §II.23.1.1)
 
 	major, minor, build, revision: NATURAL_16
 			-- Defined as word two bytes.

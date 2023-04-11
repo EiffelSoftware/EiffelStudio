@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_ASSEMBLY_REF_TABLE_ENTRY}."
+	description: "Object representing The AssemblyRef table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.5 AssemblyRef : 0x23 "
 
 class
 	PE_ASSEMBLY_REF_TABLE_ENTRY

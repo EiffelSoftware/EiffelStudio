@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {PE_FIELD_RVA_TABLE_ENTRY}."
-	author: ""
+	description: "Object representing the FieldRVA table."
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.18 FieldRVA : 0x1D "
 
 class
 	PE_FIELD_RVA_TABLE_ENTRY
@@ -25,8 +25,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	rva: NATURAL_64
+		-- (a 4-byte constant)
 
 	field_index: PE_FIELD_LIST
+		-- An index into the Field table.
 
 feature -- Operations
 
@@ -53,7 +55,7 @@ feature -- Operations
 				-- Return the total number of bytes written.
 			Result := l_bytes
 		end
-		
+
 	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
 		local
 			l_bytes: NATURAL_64

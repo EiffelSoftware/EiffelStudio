@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_EXPORTED_TYPE_TABLE_ENTRY}."
+	description: "Object representing The ExportedType table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see:"II.22.14 ExportedType : 0x27"
 
 class
 	PE_EXPORTED_TYPE_TABLE_ENTRY

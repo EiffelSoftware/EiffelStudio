@@ -1,8 +1,9 @@
 note
-	description: "Summary description for {PE_TYPE_SPEC_TABLE_ENTRY}."
-	author: ""
+	description: "Object representing theTypeSpe table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see:  "II.22.39 TypeSpec : 0x1B "
+
 
 class
 	PE_TYPE_SPEC_TABLE_ENTRY
@@ -23,7 +24,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	signature_index: PE_STRING
+	signature_index: PE_BLOB
+			-- index into the Blob heap.
 
 feature -- Operations
 

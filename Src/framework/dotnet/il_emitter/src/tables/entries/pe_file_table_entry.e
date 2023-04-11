@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {PE_FILE_TABLE_ENTRY}."
+	description: "Object representing the File table"
 	date: "$Date$"
 	revision: "$Revision$"
-
+	see: "II.22.19 File : 0x26"
 class
 	PE_FILE_TABLE_ENTRY
 
@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 
 	make_with_data (a_flags: NATURAL_32; a_name: NATURAL_64; a_hash: NATURAL_64)
 		do
-			-- See section II.22.19 File : 0x26 
+			-- See section II.22.19 File : 0x26
 			flags := a_flags
 			create name.make_with_index (a_name)
 			create hash.make_with_index (a_hash)

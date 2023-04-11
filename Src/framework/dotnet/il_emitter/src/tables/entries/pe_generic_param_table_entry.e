@@ -1,15 +1,15 @@
 note
-	description: "Summary description for {PE_GENERIC_PARAM_TABLE}."
+	description: "Object representing the GenericParam table."
 	date: "$Date$"
 	revision: "$Revision$"
-
+	see: "II.22.20 GenericParam : 0x2A"
 class
 	PE_GENERIC_PARAM_TABLE_ENTRY
 
 inherit
 
 	PE_TABLE_ENTRY_BASE
-	
+
 create
 	make_with_data
 

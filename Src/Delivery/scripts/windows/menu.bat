@@ -26,31 +26,29 @@ echo EiffelStudio delivery:
 @echo 3: make_exes
 @echo 4: make_installations
 @echo 5: make_installations no_install
-@echo 6: starting environment
-@echo 7: bootstrap environment
-@echo 8: display logs
-@echo 9: Standard only
+@echo 6: display logs
+@echo 7: Standard only
 @echo -------------------
+@echo e: starting environment
 @echo i: display info
 @echo x: extra menu
 @echo w: wipe out/clean previous delivery
 @echo -------------------
 @echo q: quit
 
-CHOICE /C 123456789ixwq /M " > selection:"
+CHOICE /C 1234567eixwq /M " > selection:"
 if .%ERRORLEVEL%. == .1. GOTO make_delivery
 if .%ERRORLEVEL%. == .2. GOTO make_delivery_quick
 if .%ERRORLEVEL%. == .3. GOTO make_exes
 if .%ERRORLEVEL%. == .4. GOTO make_installations
 if .%ERRORLEVEL%. == .5. GOTO make_installations_no_install
-if .%ERRORLEVEL%. == .6. GOTO starting_env
-if .%ERRORLEVEL%. == .7. GOTO bootstrap_env
-if .%ERRORLEVEL%. == .8. GOTO display_logs
-if .%ERRORLEVEL%. == .9. GOTO menu_std
-if .%ERRORLEVEL%. == .10. GOTO display_info
-if .%ERRORLEVEL%. == .11. GOTO menu_extra
-if .%ERRORLEVEL%. == .12. GOTO clean_delivery
-if .%ERRORLEVEL%. == .13. goto end
+if .%ERRORLEVEL%. == .6. GOTO display_logs
+if .%ERRORLEVEL%. == .7. GOTO menu_std
+if .%ERRORLEVEL%. == .8. GOTO starting_env
+if .%ERRORLEVEL%. == .9. GOTO display_info
+if .%ERRORLEVEL%. == .10. GOTO menu_extra
+if .%ERRORLEVEL%. == .11. GOTO clean_delivery
+if .%ERRORLEVEL%. == .12. goto end
 goto end
 
 :menu_std

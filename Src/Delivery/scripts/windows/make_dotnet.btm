@@ -5,6 +5,18 @@ cdd %EIFFEL_SRC
 
 remtrace Compiling .NET runtime
 cd %EIFFEL_SRC%\Eiffel\eiffel\com_il_generation\core\run-time
+remtrace Compiling .NET CORE runtime
+geant clobber
+espawn "geant install_framework"
+iff exist netcore\EiffelSoftware.Runtime.dll then
+::	For now, just as experiment
+	safe_copy netcore\EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\lib\netcore.EiffelSoftware.Runtime.dll
+else
+	remerror Could not compile .NET CORE runtime
+::	IGNORE this error
+endiff
+
+remtrace Compiling .NET framework runtime
 geant clobber
 sed -e "s/msbuild runtime.sln/msbuild runtime.sln \/p:Platform=\"Any CPU\" \/p:Configuration=Release /" Makefile > Makefile-release
 
@@ -61,11 +73,34 @@ else
 	else
 		remerror Could not compile emdc.exe
 		iff defined REUSE_MDCONSUMER then
-			remtrace REUSE installation MetadataConsumer 
+			remtrace REUSE installation MetadataConsumer
 			safe_copy %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\emdc.exe %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
 			safe_copy %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\libemdc.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
 		else
 			CANCEL_ON_ERROR
+		endiff
+	endiff
+endiff
+
+remtrace Compiling Netcore Eiffel Metadata Consumer Executable nemdc.exe
+iff exist %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore\nemdc.exe then
+	remtrace nemdc tool is already built
+else
+	cdd %EIFFEL_SRC%\dotnet\consumer_netcore
+	espawn "geant clobber"
+	espawn "geant install"
+	mkdir %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
+	iff exist spec\%ISE_PLATFORM%\bin\nemdc.exe then
+		safe_copy spec\%ISE_PLATFORM%\nemdc.exe %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
+		safe_copy spec\%ISE_PLATFORM%\*.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
+		safe_copy spec\%ISE_PLATFORM%\*.json %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
+	else
+		remerror Could not compile nemdc.exe
+		iff defined REUSE_MDCONSUMER then
+			remtrace REUSE installation Netcore MetadataConsumer
+			safe_copy %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\netcore\* %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
+		else
+::			CANCEL_ON_ERROR
 		endiff
 	endiff
 endiff

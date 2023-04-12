@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_FIELD_TABLE_ENTRY}."
+	description: "Object representing The Field table"
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.15 Field : 0x04 "
 
 class
 	PE_FIELD_TABLE_ENTRY

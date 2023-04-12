@@ -35,6 +35,7 @@ feature {NONE}
 			initialize_guid
 			create assembly_emitter.make (tables, pe_writer)
 				-- we don't initialize the compilation unit since we don't provide the name of it (similar to the COM interface)
+			initialize_entry_size
 		ensure
 			module_guid_set: module_guid.count = 16
 		end
@@ -48,6 +49,44 @@ feature {NONE}
 			end
 		end
 
+	initialize_entry_size
+		do
+			create entry_sizes.make (31)
+			entry_sizes.force (agent module_table_entry_size)
+			entry_sizes.force (agent type_ref_entry_size)
+			entry_sizes.force (agent type_def_table_entry_size)
+			entry_sizes.force (agent field_table_entry_size)
+			entry_sizes.force (agent method_def_table_entry_size)
+			entry_sizes.force (agent param_table_entry_size)
+    		entry_sizes.force (agent interface_impl_table_entry_size)
+    		entry_sizes.force (agent member_ref_table_entry_size)
+		    entry_sizes.force (agent constant_table_entry_size)
+		    entry_sizes.force (agent custom_attribute_table_entry_size)
+		    entry_sizes.force (agent field_marshal_table_entry_size)
+		    entry_sizes.force (agent decl_security_table_entry_size)
+		    entry_sizes.force (agent class_layout_table_entry_size)
+		    entry_sizes.force (agent field_layout_table_entry_size)
+		    entry_sizes.force (agent standalone_sig_table_entry_size)
+		    entry_sizes.force (agent property_map_table_entry_size)
+		    entry_sizes.force (agent property_table_entry_size)
+		    entry_sizes.force (agent method_semantics_table_entry_size)
+		    entry_sizes.force (agent method_impl_table_entry_size)
+		    entry_sizes.force (agent module_ref_table_entry_size)
+		    entry_sizes.force (agent type_spec_table_entry_size)
+		    entry_sizes.force (agent impl_map_table_entry_size)
+		    entry_sizes.force (agent field_rva_table_entry_size)
+		    entry_sizes.force (agent assembly_table_entry_size)
+		    entry_sizes.force (agent assembly_ref_table_entry_size)
+		    entry_sizes.force (agent file_table_entry_size)
+		    entry_sizes.force (agent exported_type_table_entry_size)
+		    entry_sizes.force (agent manifest_resource_table_entry_size)
+		    entry_sizes.force (agent nested_class_table_entry_size)
+		    entry_sizes.force (agent generic_param_table_entry_size)
+		    entry_sizes.force (agent method_spec_table_entry_size)
+		    entry_sizes.force (agent generic_param_constraint_table_entry_size)
+		end
+
+
 	initialize_module
 			-- Initialize the type Module.
 		local
@@ -55,7 +94,7 @@ feature {NONE}
 			l_table: PE_TABLE_ENTRY_BASE
 			l_dis: NATURAL_64
 		do
-			-- TODO double check if we need to do this initialization.
+				-- TODO double check if we need to do this initialization.
 			module_index := pe_writer.hash_string ({STRING_32} "<Module>")
 
 			create l_type_def.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
@@ -98,9 +137,37 @@ feature -- Access
 	save_size: INTEGER
 			-- Size of Current emitted assembly in memory if we were to emit it now.
 		do
-			to_implement ("TODO implement, double check if we really need it")
-				-- Work in progress.
+				-- Calculate the size of each metadata table
+			Result := 0
+			across 1 |..| (entry_sizes.count) as i loop
+				if tables [i].size > 0 then
+					--Result := Result + entry_sizes [i].item
+					Result := Result + tables [i].size * entry_sizes [i].item
+				end
+			end
+
+				-- Calculate the size of the meta tables header
+				-- II.24.2.6 #~ stream
+				-- PE_DOTNET_META_TABLES_HEADER
+			Result := Result + 24
+
+				-- Calculate the size of the metadata header IMAGE_COR20_HEADER
+			Result := Result + 132
+
+				-- Calculate the size of the string heap
+			Result := Result + strings_heap_size.to_integer_32
+
+				-- Calculate the size of the user string heap
+			Result := Result + us_heap_size.to_integer_32
+
+				-- Calculate the size of the blob heap
+			Result := Result + blob_heap_size.to_integer_32
+
+				-- Calculate the size of the guid heap
+			Result := Result + guid_heap_size.to_integer_32
 		end
+
+	entry_sizes: ARRAYED_LIST [FUNCTION [INTEGER]]
 
 	retrieve_user_string (a_token: INTEGER): STRING_32
 			-- Retrieve the user string for `token'.
@@ -120,7 +187,7 @@ feature -- Access
 				-- Copy the Userstring heap,
 				-- the underlying String needs to be retrieved as UTF-16
 				-- TODO check if we have an efficient algorithm to
-				-- convert an array of bytes to utf-16.	
+				-- convert an array of bytes to utf-16.
 
 			l_us_heap := pe_writer.us.base.to_array
 

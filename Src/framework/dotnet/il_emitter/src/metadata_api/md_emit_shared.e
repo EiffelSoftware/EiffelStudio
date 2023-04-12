@@ -238,7 +238,7 @@ feature -- Metadata Table Sizes
 	module_table_entry_size: INTEGER
 		note
 			EIS: "name={PE_MODULE_TABLE_ENTRY}.name_index", "src=eiffel:?class=PE_MODULE_TABLE_ENTRY&feature=name_index", "protocol=uri"
-			EIS: "name={PE_MODULE_TABLE_ENTRY}.guid_index", "protocol=uri", "src=eiffel:?class=PE_MODULE_TABLE_ENTRY&feature=guid_index"
+			EIS: "name={PE_MODULE_TABLE_ENTRY}.guid_index", "src=eiffel:?class=PE_MODULE_TABLE_ENTRY&feature=guid_index"
 		do
 				-- Size of the name column.
 			Result := if strings_heap_size < 65536 then 2 else 4 end
@@ -300,6 +300,36 @@ feature -- Metadata Table Sizes
 
 				-- 4 is the size of the flags
 			Result := 4 + 2 * heap_offset_size + 3 * index_size
+		end
+
+	field_table_entry_size: INTEGER
+			-- Compute the table entry size for the Field table
+		note
+			EIS: "name={PE_FIELD_TABLE_ENTRY}.flags", "src=eiffel:?class=PE_FIELD_TABLE_ENTRY&feature=flags"
+			EIS: "name={PE_FIELD_TABLE_ENTRY}.name_index", "src=eiffel:?class=PE_FIELD_TABLE_ENTRY&feature=name_index"
+			EIS: "name={PE_FIELD_TABLE_ENTRY}.signature_index", "src=eiffel:?class=PE_FIELD_TABLE_ENTRY&feature=signature_index"
+
+		local
+			string_offset_size, blob_offset_size: INTEGER
+		do
+				-- Name
+			if strings_heap_size < 65536 then
+				string_offset_size := 2
+			else
+				string_offset_size := 4
+			end
+
+				-- Signature
+			if blob_heap_size < 65536 then
+				blob_offset_size := 2
+			else
+				blob_offset_size := 4
+			end
+
+				-- Flags (a 2-byte bitmask of type FieldAttributes)
+				-- Name (an index into the String heap)
+				-- Signature (an index into the Blob heap)
+			Result := 2 + string_offset_size + blob_offset_size
 		end
 
 	method_def_table_entry_size: INTEGER

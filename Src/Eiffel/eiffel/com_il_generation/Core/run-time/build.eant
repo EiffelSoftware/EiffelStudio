@@ -10,48 +10,61 @@
 		<echo message=" geant compile"/>
 		<echo message=" geant install"/>
 		<echo message=" ---- "/>
-		<echo message=" geant compile_10"/>
-		<echo message=" geant compile_20"/>
-		<echo message=" geant compile_40"/>
+		<echo message=" geant compile_framework"/>
 		<echo message=" geant compile_core"/>
 		<echo message=" ---- "/>
 		<echo message=" geant clean"/>
 		<echo message=" geant clobber"/>
 	</target>
-	
+
 	<target name="compile" >
-		<echo message="- Compile [EiffelSoftware.Runtime.dll]" />
-		<exec executable="nmake" />
+		<geant target="compile_framework" if="${is_windows}"/>
+		<geant target="compile_core" />
 	</target>
 	<target name="install" depend="compile">
-		<echo message="- Install [EiffelSoftware.Runtime.dll]" />
-		<exec executable="nmake install" />
-	</target>
-
-	<target name="compile_10" >
-		<exec executable="nmake dotnet_10" />
+		<geant target="install_framework"  if="${is_windows}"/>
+		<geant target="install_core" />
 	</target>
 	<target name="compile_20" >
-		<exec executable="nmake dotnet_20" />
+		<echo message="- Compile .Net framework 2.0 [EiffelSoftware.Runtime.dll]" />
+		<exec executable="nmake msbuild_20" />
 	</target>
-	<target name="compile_40" >
-		<exec executable="nmake dotnet_40" />
+	<target name="compile_framework" depend="compile_20">
+	</target>
+	<target name="install_framework" depend="compile_framework">
+		<echo message="- Install .Net framework [EiffelSoftware.Runtime.dll]" />
+		<!-- Already done by compile_framework and msbuild_20-->
 	</target>
 	<target name="compile_core" >
-		<echo message="- Compile .Net 6.0 Eiffel runtime" />
+		<echo message="- Compile .Net CORE Eiffel runtime" />
 		<exec executable="dotnet build -c Release runtime_core.csproj --restore --no-incremental" />
 		<exec executable="dotnet publish -c Release runtime_core.csproj" />
+	</target>
+	<target name="install_core" depend="compile_core">
+		<mkdir directory="${cwd}${path_separator}netcore" />
+		<echo message="- Install .Net CORE [EiffelSoftware.Runtime.dll] into ${cwd}${path_separator}netcore" />
+		<copy dir="bin${path_separator}Release${path_separator}net6.0${path_separator}publish" to_directory="${cwd}${path_separator}netcore" force="true">
+		  	<fileset include="@(*.dll|*.pdb)"/>
+		</copy>
+		<delete directory="obj" />
+	</target>
+
+	<target name="compile_20" >
+		<exec executable="nmake dotnet_20" />
 	</target>
 	<target name="clean" >
 		<echo message="- Clean [EiffelSoftware.Runtime.dll]" />
 		<delete>
-			<fileset directory="." include="@(**/*.dll)"/>
+			<fileset directory="." include="@(**/*.dll|**/*.pdb)"/>
 		</delete>
 		<exec executable="dotnet clean -c Release runtime_core.csproj" />
 		<delete directory="obj" />
 		<delete directory="bin" />
+		<!--
+		<delete directory="netcore" />
+		-->
 	</target>
 
 	<target name="clobber" depend="clean" />
-	
+
 </project>

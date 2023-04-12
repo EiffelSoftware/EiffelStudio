@@ -10,13 +10,14 @@ OUTPUT_NAME = EiffelSoftware.Runtime.dll
 ISE_KEY_NAME = isekey.snk
 ISE_KEY_PATH = $(EIFFEL_SRC)\dotnet\helpers\$(ISE_KEY_NAME)
 
-all:: dotnet_20 dotnet_40
+all:: dotnet_20 dotnet_60
 
 dotnet_20: $(RUNTIME_SRC) Makefile
 	csc $(CSFLAGS) -target:library -out:$(OUTPUT_NAME) -recurse:"*.cs" /keyfile:$(ISE_KEY_PATH)
 
-dotnet_40: $(RUNTIME_SRC) Makefile
-	csc $(CSFLAGS) -target:library -out:$(OUTPUT_NAME) -recurse:"*.cs" /keyfile:$(ISE_KEY_PATH)
+dotnet_60: $(RUNTIME_SRC) Makefile
+	dotnet build -c Release runtime_core.csproj --restore --no-incremental
+	dotnet publish -c Release runtime_core.csproj
 
 msbuild_20: $(RUNTIME_SRC) Makefile
 	$(CP) $(ISE_KEY_PATH) $(ISE_KEY_NAME)
@@ -31,3 +32,9 @@ msbuild_40: $(RUNTIME_SRC) Makefile
 	$(RMDIR) obj
 	$(RM) runtime.sln.cache
 	$(RM)  $(ISE_KEY_NAME)
+
+msbuild_60: $(RUNTIME_SRC) Makefile
+	dotnet build -c Release runtime_core.csproj --restore --no-incremental
+	dotnet publish -c Release runtime_core.csproj
+	$(CP) bin\Release\net6.0\publish\EiffelSoftware.Runtime.dll netcore/$(OUTPUT_NAME)
+	$(RMDIR) obj

@@ -4,18 +4,23 @@
 	<description>
 		description: "Eiffel .netcore metadata consumer 's compilation"
 	</description>
-	
+
 	<target name="help">
 		<echo message="usage:"/>
 		<echo message=" geant compile"/>
+		<echo message=" geant install"/>
 		<echo message=" geant clean"/>
 		<echo message=" geant clobber"/>
 	</target>
-	
+
 	<target name="compile" >
 		<echo message="- Compile nemdc" />
 		<exec executable="dotnet build -c Release" accept_errors="true" dir="cs${path_separator}md_consumer_app" />
 		<exec executable="dotnet publish -c Release" accept_errors="true" dir="cs${path_separator}md_consumer_app" />
+	</target>
+
+	<target name="install" depend="compile">
+		<echo message="- Install nemdc into spec/.../bin folder" />
 		<mkdir directory="spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
 		<geant target="_copy_dotnet_build_results" arguments="${cwd}${path_separator}cs${path_separator}md_consumer_app/bin/Release/net6.0/publish/,${cwd}${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
 	</target>
@@ -29,10 +34,10 @@
 		</copy>
 		<exec executable="chmod u+x nemdc${exe} " dir="${a_dest}" />
 	</target>
-	
+
 	<target name="clean" >
 		<echo message="- Clean nemdc" />
-		<exec executable="dotnet clean -c Release" accept_errors="true" dir="cs${path_separator}md_consumer_app" />	
+		<exec executable="dotnet clean -c Release" accept_errors="true" dir="cs${path_separator}md_consumer_app" />
 		<delete dir="spec${path_separator}${ISE_PLATFORM}${path_separator}bin">
 			<fileset  include="@(*.dll|nemdc*)"/>
   		</delete>
@@ -42,5 +47,5 @@
 		<echo message="- Clobber nemdc" />
 		<geant target="clean" />
 	</target>
-	
+
 </project>

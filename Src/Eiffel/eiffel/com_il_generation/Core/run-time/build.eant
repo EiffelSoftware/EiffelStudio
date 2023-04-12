@@ -11,7 +11,7 @@
 		<echo message=" geant install"/>
 		<echo message=" ---- "/>
 		<echo message=" geant compile_framework"/>
-		<echo message=" geant compile_core"/>
+		<echo message=" geant compile_netcore"/>
 		<echo message=" ---- "/>
 		<echo message=" geant clean"/>
 		<echo message=" geant clobber"/>
@@ -19,11 +19,11 @@
 
 	<target name="compile" >
 		<geant target="compile_framework" if="${is_windows}"/>
-		<geant target="compile_core" />
+		<geant target="compile_netcore" />
 	</target>
 	<target name="install" depend="compile">
 		<geant target="install_framework"  if="${is_windows}"/>
-		<geant target="install_core" />
+		<geant target="install_netcore" />
 	</target>
 	<target name="compile_framework_20">
 		<echo message="- Compile .Net framework 2.0 [EiffelSoftware.Runtime.dll]" />
@@ -43,12 +43,12 @@
 	</target>
 	<target name="compile_framework" depend="compile_framework_20"/>
 	<target name="install_framework" depend="install_framework_20"/>
-	<target name="compile_core" >
+	<target name="compile_netcore" >
 		<echo message="- Compile .Net CORE Eiffel runtime" />
 		<exec executable="dotnet build -c Release runtime_core.csproj --restore --no-incremental" />
 		<exec executable="dotnet publish -c Release runtime_core.csproj" />
 	</target>
-	<target name="install_core" depend="compile_core">
+	<target name="install_netcore" depend="compile_netcore">
 		<mkdir directory="${cwd}${path_separator}netcore" />
 		<echo message="- Install .Net CORE [EiffelSoftware.Runtime.dll] into ${cwd}${path_separator}netcore" />
 		<copy dir="bin${path_separator}Release${path_separator}net6.0${path_separator}publish" to_directory="${cwd}${path_separator}netcore" force="true">
@@ -61,8 +61,7 @@
 		<exec executable="nmake dotnet_20" if="${is_windows}"/>
 	</target>
 	<target name="compile_60" >
-		<exec executable="nmake dotnet_20" if="${is_windows}"/>
-		<geant target="compile_core" unless="${is_windows}"/>
+		<geant target="compile_netcore" unless="${is_windows}"/>
 	</target>
 	<target name="clean" >
 		<echo message="- Clean [EiffelSoftware.Runtime.dll]" />

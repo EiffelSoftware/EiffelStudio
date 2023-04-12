@@ -15,6 +15,8 @@ inherit
 
 	MD_EMIT_SHARED
 
+	PE_TABLE_CONSTANTS
+
 	REFACTORING_HELPER
 		export {NONE} all end
 
@@ -52,40 +54,39 @@ feature {NONE}
 	initialize_entry_size
 		do
 			create entry_sizes.make (31)
-			entry_sizes.force (agent module_table_entry_size)
-			entry_sizes.force (agent type_ref_entry_size)
-			entry_sizes.force (agent type_def_table_entry_size)
-			entry_sizes.force (agent field_table_entry_size)
-			entry_sizes.force (agent method_def_table_entry_size)
-			entry_sizes.force (agent param_table_entry_size)
-    		entry_sizes.force (agent interface_impl_table_entry_size)
-    		entry_sizes.force (agent member_ref_table_entry_size)
-		    entry_sizes.force (agent constant_table_entry_size)
-		    entry_sizes.force (agent custom_attribute_table_entry_size)
-		    entry_sizes.force (agent field_marshal_table_entry_size)
-		    entry_sizes.force (agent decl_security_table_entry_size)
-		    entry_sizes.force (agent class_layout_table_entry_size)
-		    entry_sizes.force (agent field_layout_table_entry_size)
-		    entry_sizes.force (agent standalone_sig_table_entry_size)
-		    entry_sizes.force (agent property_map_table_entry_size)
-		    entry_sizes.force (agent property_table_entry_size)
-		    entry_sizes.force (agent method_semantics_table_entry_size)
-		    entry_sizes.force (agent method_impl_table_entry_size)
-		    entry_sizes.force (agent module_ref_table_entry_size)
-		    entry_sizes.force (agent type_spec_table_entry_size)
-		    entry_sizes.force (agent impl_map_table_entry_size)
-		    entry_sizes.force (agent field_rva_table_entry_size)
-		    entry_sizes.force (agent assembly_table_entry_size)
-		    entry_sizes.force (agent assembly_ref_table_entry_size)
-		    entry_sizes.force (agent file_table_entry_size)
-		    entry_sizes.force (agent exported_type_table_entry_size)
-		    entry_sizes.force (agent manifest_resource_table_entry_size)
-		    entry_sizes.force (agent nested_class_table_entry_size)
-		    entry_sizes.force (agent generic_param_table_entry_size)
-		    entry_sizes.force (agent method_spec_table_entry_size)
-		    entry_sizes.force (agent generic_param_constraint_table_entry_size)
+			entry_sizes.force (agent module_table_entry_size, {PE_TABLES}.tModule.value.to_integer_32)
+			entry_sizes.force (agent type_ref_entry_size, {PE_TABLES}.tTypeRef.value.to_integer_32)
+			entry_sizes.force (agent type_def_table_entry_size, {PE_TABLES}.tTypeDef.value.to_integer_32)
+			entry_sizes.force (agent field_table_entry_size, {PE_TABLES}.tField.value.to_integer_32)
+			entry_sizes.force (agent method_def_table_entry_size, {PE_TABLES}.tMethodDef.value.to_integer_32)
+			entry_sizes.force (agent param_table_entry_size, {PE_TABLES}.tParam.value.to_integer_32)
+			entry_sizes.force (agent interface_impl_table_entry_size, {PE_TABLES}.tInterfaceImpl.value.to_integer_32)
+			entry_sizes.force (agent member_ref_table_entry_size, {PE_TABLES}.tMemberRef.value.to_integer_32)
+			entry_sizes.force (agent constant_table_entry_size, {PE_TABLES}.tConstant.value.to_integer_32)
+			entry_sizes.force (agent custom_attribute_table_entry_size, {PE_TABLES}.tCustomAttribute.value.to_integer_32)
+			entry_sizes.force (agent field_marshal_table_entry_size, {PE_TABLES}.tFieldMarshal.value.to_integer_32)
+			entry_sizes.force (agent decl_security_table_entry_size, {PE_TABLES}.tDeclSecurity.value.to_integer_32)
+			entry_sizes.force (agent class_layout_table_entry_size, {PE_TABLES}.tClassLayout.value.to_integer_32)
+			entry_sizes.force (agent field_layout_table_entry_size, {PE_TABLES}.tFieldLayout.value.to_integer_32)
+			entry_sizes.force (agent standalone_sig_table_entry_size, {PE_TABLES}.tStandaloneSig.value.to_integer_32)
+			entry_sizes.force (agent property_map_table_entry_size, {PE_TABLES}.tPropertyMap.value.to_integer_32)
+			entry_sizes.force (agent property_table_entry_size, {PE_TABLES}.tProperty.value.to_integer_32)
+			entry_sizes.force (agent method_semantics_table_entry_size, {PE_TABLES}.tMethodSemantics.value.to_integer_32)
+			entry_sizes.force (agent method_impl_table_entry_size, {PE_TABLES}.tMethodImpl.value.to_integer_32)
+			entry_sizes.force (agent module_ref_table_entry_size, {PE_TABLES}.tModuleRef.value.to_integer_32)
+			entry_sizes.force (agent type_spec_table_entry_size, {PE_TABLES}.tTypeSpec.value.to_integer_32)
+			entry_sizes.force (agent impl_map_table_entry_size, {PE_TABLES}.tImplMap.value.to_integer_32)
+			entry_sizes.force (agent field_rva_table_entry_size, {PE_TABLES}.tFieldRVA.value.to_integer_32)
+			entry_sizes.force (agent assembly_table_entry_size, {PE_TABLES}.tAssemblyDef.value.to_integer_32)
+			entry_sizes.force (agent assembly_ref_table_entry_size, {PE_TABLES}.tAssemblyRef.value.to_integer_32)
+			entry_sizes.force (agent file_table_entry_size, {PE_TABLES}.tFile.value.to_integer_32)
+			entry_sizes.force (agent exported_type_table_entry_size, {PE_TABLES}.tExportedType.value.to_integer_32)
+			entry_sizes.force (agent manifest_resource_table_entry_size, {PE_TABLES}.tManifestResource.value.to_integer_32)
+			entry_sizes.force (agent nested_class_table_entry_size, {PE_TABLES}.tNestedClass.value.to_integer_32)
+			entry_sizes.force (agent generic_param_table_entry_size, {PE_TABLES}.tGenericParam.value.to_integer_32)
+			entry_sizes.force (agent method_spec_table_entry_size, {PE_TABLES}.tMethodSpec.value.to_integer_32)
+			entry_sizes.force (agent generic_param_constraint_table_entry_size, {PE_TABLES}.tGenericParamConstraint.value.to_integer_32)
 		end
-
 
 	initialize_module
 			-- Initialize the type Module.
@@ -136,15 +137,28 @@ feature -- Access
 
 	save_size: INTEGER
 			-- Size of Current emitted assembly in memory if we were to emit it now.
+		local
+			l_count: INTEGER
 		do
+				--| Computes the size of the metadata for the current emitted assembly.
+				--| Iterate through each table and multiplying the size of the table by the number of entries in the table.
+				--| Adds the size of each heap (string, user string, blob, and GUID)
+				--| The size of the metadata header and table header.
+				--| If the size is not a multiple of 4, padding is added to make it a multiple of 4.
+				--| The final result is the size of the metadata in bytes.
+
 				-- Calculate the size of each metadata table
 			Result := 0
-			across 1 |..| (entry_sizes.count) as i loop
-				if tables [i].size > 0 then
-					--Result := Result + entry_sizes [i].item
-					Result := Result + tables [i].size * entry_sizes [i].item
+
+			across 0 |..| (max_tables - 1) as ic loop
+				if not tables [ic].is_empty and then attached entry_sizes.at (ic) as l_item then
+					l_count := l_count + 1
+					Result := Result + tables [ic].size * l_item.item
 				end
 			end
+
+				-- Each table header is 4 bytes long we multiply but the number of heaers used.
+			Result := Result + 4 * l_count
 
 				-- Calculate the size of the meta tables header
 				-- II.24.2.6 #~ stream
@@ -165,9 +179,17 @@ feature -- Access
 
 				-- Calculate the size of the guid heap
 			Result := Result + guid_heap_size.to_integer_32
+
+				-- Padding.
+			if (Result \\ 4) /= 0 then
+				Result := Result + 4 - (Result \\ 4)
+			end
+
 		end
 
-	entry_sizes: ARRAYED_LIST [FUNCTION [INTEGER]]
+	entry_sizes: HASH_TABLE [FUNCTION [INTEGER], INTEGER]
+		-- Hash table of functions to compute the size of a Metadata Table.
+		-- The key is the Metadata Table Key.
 
 	retrieve_user_string (a_token: INTEGER): STRING_32
 			-- Retrieve the user string for `token'.
@@ -237,6 +259,70 @@ feature {NONE} -- Implementation
 			Result := a_heap [a_offset]
 		end
 
+	save_size_tmp
+			-- Optional way to compute the metadata table size.
+		local
+			l_tables_header: PE_DOTNET_META_TABLES_HEADER
+			l_counts: ARRAY [NATURAL_64]
+			l_result: INTEGER
+			l_temp: INTEGER
+			l_buffer: ARRAY [NATURAL_8]
+		do
+			create l_tables_header
+			l_tables_header.major_version := 2
+			l_tables_header.reserved2 := 1
+			l_tables_header.mask_sorted := ({INTEGER_64} 0x1600 |<< 32) + 0x3325FA00
+			if strings_heap_size = 65536 then
+				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 1
+			end
+			if guid_heap_size >= 65536 then
+				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 2
+			end
+			if blob_heap_size >= 65536 then
+				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 4
+			end
+
+			l_result := 0
+			create l_counts.make_filled (0, 1, Max_tables + Extra_indexes)
+			l_counts [t_string + 1] := strings_heap_size
+			l_counts [t_us + 1] := us_heap_size
+			l_counts [t_guid + 1] := guid_heap_size
+			l_counts [t_blob + 1] := blob_heap_size
+
+			l_result := 0
+			across 0 |..| (max_tables - 1) as ic loop
+				if not tables [ic].is_empty then
+					l_counts [ic + 1] := tables [ic].size.to_natural_32
+					l_tables_header.mask_valid := l_tables_header.mask_valid | ({INTEGER_64} 1 |<< ic)
+					l_temp := l_temp + 1
+				end
+			end
+
+			l_result := l_result + (l_temp * {PLATFORM}.natural_32_bytes)
+				--table counts
+				-- Dword is 4 bytes.
+
+			across 0 |..| (max_tables - 1) as ic loop
+				if l_counts [ic + 1] /= 0 then
+					create l_buffer.make_filled (0, 1, 512)
+					l_temp := tables [ic].table [1].render (l_counts, l_buffer).to_integer_32
+					l_temp := l_temp * (l_counts [ic + 1]).to_integer_32
+					l_result := l_result + l_temp
+				end
+			end
+			l_result := l_result + 24
+			l_result := l_result + 132
+			l_result := l_result + strings_heap_size.to_integer_32
+			l_result := l_result + us_heap_size.to_integer_32
+			l_result := l_result + guid_heap_size.to_integer_32
+			l_result := l_result + blob_heap_size.to_integer_32
+
+				-- Padding.
+			if (l_result \\ 4) /= 0 then
+				l_result := l_result + 4 - (l_result \\ 4)
+			end
+
+		end
 feature -- Save
 
 	assembly_memory: MANAGED_POINTER

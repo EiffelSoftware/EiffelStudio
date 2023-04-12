@@ -239,11 +239,28 @@ feature -- Metadata Table Sizes
 		note
 			EIS: "name={PE_MODULE_TABLE_ENTRY}.name_index", "src=eiffel:?class=PE_MODULE_TABLE_ENTRY&feature=name_index", "protocol=uri"
 			EIS: "name={PE_MODULE_TABLE_ENTRY}.guid_index", "src=eiffel:?class=PE_MODULE_TABLE_ENTRY&feature=guid_index"
+		local
+			string_index_size, guid_index_size, blob_index_size: INTEGER
 		do
-				-- Size of the name column.
-			Result := if strings_heap_size < 65536 then 2 else 4 end
-				-- Size of guid column
-			Result := Result + if guid_heap_size < 65536 then 2 else 4 end
+			if strings_heap_size < 65536 then
+				string_index_size := 2
+			else
+				string_index_size := 4
+			end
+
+			if guid_heap_size < 65536 then
+				guid_index_size := 2
+			else
+				guid_index_size := 4
+			end
+
+			if blob_heap_size < 65536 then
+				blob_index_size := 2
+			else
+				blob_index_size := 4
+			end
+
+			Result := 2 + string_index_size + 3 * guid_index_size
 		end
 
 	type_ref_entry_size: INTEGER

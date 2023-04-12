@@ -16,7 +16,6 @@ create
 
 feature {NONE} -- Initialization
 
-
 	make_with_data (a_owner: PE_GENERIC_REF; a_constraint: PE_TYPEDEF_OR_REF)
 		do
 			owner := a_owner
@@ -24,7 +23,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
 
 	owner: PE_GENERIC_REF
 
@@ -54,4 +52,5 @@ feature -- Operations
 			l_bytes := l_bytes + constraint.get (a_sizes, a_src, l_bytes.to_integer_32)
 			Result := l_bytes
 		end
+
 end

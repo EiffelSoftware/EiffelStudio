@@ -25,14 +25,24 @@
 		<geant target="install_framework"  if="${is_windows}"/>
 		<geant target="install_core" />
 	</target>
-	<target name="compile_framework">
+	<target name="compile_framework_20">
 		<echo message="- Compile .Net framework 2.0 [EiffelSoftware.Runtime.dll]" />
 		<exec executable="nmake msbuild_20" if="${is_windows}"/>
 	</target>
-	<target name="install_framework" depend="compile_framework">
-		<echo message="- Install .Net framework [EiffelSoftware.Runtime.dll]" />
+	<target name="install_framework_20" depend="compile_framework_20">
+		<echo message="- Install .Net framework 2.0 [EiffelSoftware.Runtime.dll]" />
 		<!-- Already done by compile_framework and msbuild_20-->
 	</target>
+	<target name="compile_framework_40">
+		<echo message="- Compile .Net framework 4.0 [EiffelSoftware.Runtime.dll]" />
+		<exec executable="nmake msbuild_40" if="${is_windows}"/>
+	</target>
+	<target name="install_framework_40" depend="compile_framework_40">
+		<echo message="- Install .Net framework 4.0 [EiffelSoftware.Runtime.dll]" />
+		<!-- Already done by compile_framework and msbuild_20-->
+	</target>
+	<target name="compile_framework" depend="compile_framework_20"/>
+	<target name="install_framework" depend="install_framework_20"/>
 	<target name="compile_core" >
 		<echo message="- Compile .Net CORE Eiffel runtime" />
 		<exec executable="dotnet build -c Release runtime_core.csproj --restore --no-incremental" />

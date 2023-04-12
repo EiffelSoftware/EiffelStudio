@@ -99,11 +99,15 @@ safe_md %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
 
 remtrace CLI writer
 cd %EIFFEL_SRC%\framework\cli_writer\Clib
-default_make 
+default_make
 
 remtrace CLI debugger
 cd %EIFFEL_SRC%\framework\cli_debugger\Clib
 default_make
+
+remtrace IL emitter
+cd %EIFFEL_SRC%\framework\dotnet\il_emitter
+espawn "geant compile"
 
 REM Compiling EiffelStudio stuff
 iff defined NO_STANDARD_BUILD then
@@ -345,7 +349,7 @@ iff exist %T_FINISH_FREEZING_STUDIO_FILE% then
 else
 	cdd %EIFFEL_SRC%\tools\finish_freezing
 	cd Clib
-	default_make 
+	default_make
 	cd ..
 	clean_project
 	finalize finish_freezing.ecf finish_freezing

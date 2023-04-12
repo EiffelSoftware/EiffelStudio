@@ -6,6 +6,9 @@
     <Nullable>disable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <AssemblyName>EiffelSoftware.Runtime</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>EiffelSoftware.Runtime</RootNamespace>
   </PropertyGroup>
 
 </Project>

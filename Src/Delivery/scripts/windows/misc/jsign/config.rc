@@ -1,7 +1,1 @@
-# Config for EV Code signing using the ssl.com YubiKey (Use token)
-token_pass=
-
-if [ -z "$token_pass" ]; then
-	echo "ERROR: please set the token_pass value in the config.rc file"
-	exit 0
-fi
+token_pass=ZCD0ABV9

@@ -51,7 +51,7 @@ iff not defined ISE_C_COMPILER then
 	iff defined ISE_VC_MSC_VC140 then
 		set ISE_C_COMPILER=msc_vc140
 		set ISE_C_COMPILER_VER=%ISE_VC_MSC_VC140%
-	else 
+	else
 		iff defined ISE_VC_MSC then
 			set ISE_C_COMPILER=msc
 			set ISE_C_COMPILER_VER=%ISE_VC_MSC%
@@ -67,6 +67,12 @@ iff not defined ISE_C_COMPILER_VER then
 			set ISE_C_COMPILER_VER=%ISE_VC_MSC%
 		)
 	)
+endiff
+
+iff not defined USE_NET40 then
+::	Use .net framework v4 instead of v2.0 ?
+::	Check ` reg query HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v2.0.50727 `
+	set USE_NET40="False"
 endiff
 
 iff not defined ISE_NIGHTLY_SCP_HOST then

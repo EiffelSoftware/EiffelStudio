@@ -25,11 +25,9 @@
 		<geant target="install_framework"  if="${is_windows}"/>
 		<geant target="install_core" />
 	</target>
-	<target name="compile_20" >
+	<target name="compile_framework">
 		<echo message="- Compile .Net framework 2.0 [EiffelSoftware.Runtime.dll]" />
-		<exec executable="nmake msbuild_20" />
-	</target>
-	<target name="compile_framework" depend="compile_20">
+		<exec executable="nmake msbuild_20" if="${is_windows}"/>
 	</target>
 	<target name="install_framework" depend="compile_framework">
 		<echo message="- Install .Net framework [EiffelSoftware.Runtime.dll]" />
@@ -50,7 +48,11 @@
 	</target>
 
 	<target name="compile_20" >
-		<exec executable="nmake dotnet_20" />
+		<exec executable="nmake dotnet_20" if="${is_windows}"/>
+	</target>
+	<target name="compile_60" >
+		<exec executable="nmake dotnet_20" if="${is_windows}"/>
+		<geant target="compile_core" unless="${is_windows}"/>
 	</target>
 	<target name="clean" >
 		<echo message="- Clean [EiffelSoftware.Runtime.dll]" />

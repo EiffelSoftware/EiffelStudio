@@ -108,7 +108,10 @@ feature {NONE} -- Actions
 			create l_window.make_with_icon (
 				("Scanning catalog for changes...").as_string_32,
 				(create {EB_SHARED_PIXMAPS}).icon_pixmaps.tool_search_icon_buffer)
-			l_window.set_action (agent (code_template_catalog.service).rescan_catalog)
+			l_window.set_action (agent do
+					code_template_catalog.service.rescan_catalog
+					es_code_template_catalog.service.rescan_catalog
+				end)
 			l_window.show_relative_to_window (window)
 		end
 
@@ -142,6 +145,14 @@ feature {NONE} -- Services
 			result_attached: attached Result
 		end
 
+	frozen es_code_template_catalog: SERVICE_CONSUMER [ES_CODE_TEMPLATE_CATALOG_S]
+			-- Access to the code template catalog service
+		once
+			create Result
+		ensure
+			result_attached: attached Result
+		end
+
 feature -- Access
 
 	menu_path: ARRAY [STRING]
@@ -158,7 +169,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,7 +1,7 @@
 ﻿note
 	description: "[
 			Use "emdc" executable execution to consume dotnet assemblies.
-			
+
 			If the environment variable "ISE_EMDC" is set and not blank, use that path for the executable.
 		]"
 	author: "$Author$"
@@ -38,7 +38,13 @@ feature {NONE} -- Initialization
 			p: PATH
 			fut: FILE_UTILITIES
 		do
-			emdc_location := eiffel_layout.emdc_command_name
+				-- .Net framework runtimes start with "v"
+				-- .Net CORE runtime are formatted like "Microsoft.NETCore.App/6.0..."
+			if a_runtime_version.has ('/') then
+				emdc_location := eiffel_layout.nemdc_command_name
+			else
+				emdc_location := eiffel_layout.emdc_command_name
+			end
 			if attached {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC") as s then
 				create p.make_from_string (s)
 				if fut.file_path_exists (p) then
@@ -214,19 +220,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

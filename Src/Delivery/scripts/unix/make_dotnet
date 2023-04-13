@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# Setup environment
+INIT_DIR=`pwd`
+
+#. $INIT_DIR/set_aliases
+
+if [ -x "$(command -v dotnet)" ]; then
+	remtrace Build Eiffel .Net runtime
+	cd $EIFFEL_SRC/Eiffel/eiffel/com_il_generation/Core/run-time
+	geant install_netcore
+	if [ -d netcore ]; then
+		safe_md $INSTALL_DIR/studio/spec/unix/lib/netcore
+		cp netcore/* $INSTALL_DIR/studio/spec/unix/lib/netcore
+	else
+		remtrace Error: could not build Eiffel .Net CORE runtime
+	fi
+
+	remtrace Build Eiffel .Net CORE nemdc tool
+	cd $EIFFEL_SRC/dotnet/consumer_netcore
+	geant install
+	if [ -f "spec/$ISE_PLATFORM/bin/nemdc" ]; then
+		safe_md $INSTALL_DIR/studio/spec/unix/bin/netcore
+		cp spec/$ISE_PLATFORM/bin/* $INSTALL_DIR/studio/spec/unix/bin/netcore/.
+	else
+		remtrace Error: could not build netcore nemdc tool
+	fi
+else
+	remtrace dotnet is not available on this machine
+fi

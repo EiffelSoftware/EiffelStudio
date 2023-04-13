@@ -302,6 +302,8 @@ if [ ! "$NO_COMPILE" ]; then
 	cd $INIT_DIR
 	. ./make_exes
 	cd $INIT_DIR
+	. ./make_dotnet
+	cd $INIT_DIR
 
 	if [ -z "$NO_WIZARDS" ]; then
 		if [ ! -z "$INCLUDE_GUI" ]; then

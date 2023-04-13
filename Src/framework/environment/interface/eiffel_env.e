@@ -854,7 +854,17 @@ feature  -- Directories (dotnet)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := application_tools_bin_path.extended (emdc_name).appended (executable_suffix)
+			Result := bin_path.extended (emdc_name).appended (executable_suffix)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	nemdc_command_name: PATH
+			-- Complete path to `nemdc'.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			Result := bin_path.extended ("netcore").extended (nemdc_name).appended (executable_suffix)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -865,7 +875,7 @@ feature -- Cache settings
 			-- Check .Net environment
 		do
 			if
-				attached get_environment_32 ("ISE_EMDC")as v1 and then v1.count > 0 and then not v1.is_case_insensitive_equal ("false")
+				attached get_environment_32 ("ISE_EMDC") as v1 and then v1.count > 0 and then not v1.is_case_insensitive_equal ("false")
 				or not {PLATFORM}.is_windows
 			then
 				use_emdc_consumer := True
@@ -1983,6 +1993,9 @@ feature -- Executable names
 
 	emdc_name: STRING_8 = "emdc"
 			-- Name of the .Net metadata consumer executable (emdc).
+
+	nemdc_name: STRING_8 = "nemdc"
+			-- Name of the .Net CORE metadata consumer executable (emdc).
 
 feature {NONE} -- Configuration of layout
 

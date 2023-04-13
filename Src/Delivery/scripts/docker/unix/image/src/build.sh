@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Setup environment, and remaining installation steps
+
+echo Install dotnet environment
+curl -sSL -o dotnet-install.sh https://dot.net/v1/dotnet-install.sh
+chmod +x ./dotnet-install.sh
+./dotnet-install.sh --version latest --channel 6.0 --install-dir $(pwd)/_dotnet
+export DOTNET_ROOT=$(pwd)/_dotnet
+export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
+
+# Delivery building
+
 export DELIV_WS_DIR=$1
 export DELIV_PORTERPACKAGE_TAR=$2
 export DELIV_IMAGE_OUTPUT=$3
@@ -21,7 +32,7 @@ if [ -d "PorterPackage" ]; then
 	# Get revision!
 	DELIV_REVISION=`grep -s "FILE_SVN_REVISION=" PorterPackage/set_aliases | head -1 | sed -e 's/FILE_SVN_REVISION=\([0-9][0-9]*\).*/\1/'`
 
-	echo - Platform: $ISE_PLATFORM 
+	echo - Platform: $ISE_PLATFORM
 	echo - Revision: $DELIV_REVISION
 	if [ ! -d "${DELIV_IMAGE_OUTPUT}" ]; then
 		mkdir -p ${DELIV_IMAGE_OUTPUT}
@@ -29,6 +40,12 @@ if [ -d "PorterPackage" ]; then
 
 	# Initialization
 	export PATH=$PATH:.
+
+	# save setup in setup.rc for convenience
+	echo export ISE_EIFFEL=$ISE_EIFFEL > ${DELIV_WS_DIR}/setup.rc
+	echo export ISE_PLATFORM=$ISE_PLATFORM >> ${DELIV_WS_DIR}/setup.rc
+	echo export DOTNET_ROOT=$DOTNET_ROOT >> ${DELIV_WS_DIR}/setup.rc
+	echo export PATH=$PATH >> ${DELIV_WS_DIR}/setup.rc
 
 	DELIV_LOGDIR=$DELIV_IMAGE_OUTPUT/${DELIV_REVISION}_${ISE_PLATFORM}_logs
 	if [ -d "$DELIV_LOGDIR" ]; then

@@ -1,7 +1,7 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 LABEL maintainer="Jocelyn Fiat <jfiat@eiffel.com>"
-
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends --no-install-suggests \
         ca-certificates curl \
         bzip2 \
@@ -24,7 +24,7 @@ ENV USER_ID=1001 USER_GID=1001
 ENV ISE_PLATFORM=linux-x86-64
 ENV PORTERPACKAGE_TAR=/home/eiffel/porterpackage.tar
 
-RUN mkdir -p /home/eiffel/deliv/image && mkdir /home/eiffel/workspace 
+RUN mkdir -p /home/eiffel/deliv/image && mkdir /home/eiffel/workspace
 COPY ./src/build.sh /home/eiffel/build.sh
 RUN dos2unix /home/eiffel/build.sh
 
@@ -39,7 +39,7 @@ RUN groupadd --gid "${USER_GID}" "eiffel" && \
       eiffel && \
       chown -R eiffel:${USER_GID} /home/eiffel && \
       chmod a+w -R /home/eiffel/workspace && \
-      chmod a+w -R /home/eiffel/deliv/image 
+      chmod a+w -R /home/eiffel/deliv/image
 
 USER eiffel
 WORKDIR /home/eiffel

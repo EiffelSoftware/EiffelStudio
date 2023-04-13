@@ -11,7 +11,7 @@ if [ "$include_enterprise" = "true" ]; then
 else
 	output_dir=$var_dir/standard
 fi
-mkdir -p $output_dir 
+mkdir -p $output_dir
 docker_image_name=local/eiffel-deliv-porterpackage
 docker rmi ${docker_image_name}
 
@@ -27,6 +27,9 @@ fi
 if [ -z "$SVN_EIFFELSTUDIO_REPO" ]; then
         SVN_EIFFELSTUDIO_REPO=svn://svn.ise/mirrors/eiffelstudio
 fi
+if [ -z "$make_delivery_args" ]; then
+        make_delivery_args=
+fi
 echo Use EiffelStudio repo $SVN_EIFFELSTUDIO_REPO
 echo Use ISE repo $SVN_ISE_REPO
 
@@ -41,9 +44,11 @@ docker run --rm \
         -e SVN_EIFFELSTUDIO_REPO_REVISION=$SVN_EIFFELSTUDIO_REPO_REVISION \
         -e SVN_EIFFELSTUDIO_BRANCH=$SVN_EIFFELSTUDIO_BRANCH \
 		-e INCLUDE_ENTERPRISE=$include_enterprise \
+		-e MAKE_DELIVERY_ARGS=$make_delivery_args \
 		-e USER_ID=$(id -u) \
 		-e USER_GID=$(id -g) \
 		--user $(id -u):$(id -g) \
         ${docker_image_name}
+
 #docker rmi ${docker_image_name}
 

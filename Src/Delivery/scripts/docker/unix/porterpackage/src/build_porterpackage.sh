@@ -1,11 +1,27 @@
 #!/bin/bash
 
+# Setup environment, and remaining installation steps
+cd workspace
+mkdir home
+export HOME=$(pwd)/home
+export XDG_DATA_HOME=${HOME}/.local/share
+mkdir -p ${XDG_DATA_HOME}
+
+echo Install the dotnet environment
+curl -sSL -o dotnet-install.sh https://dot.net/v1/dotnet-install.sh
+chmod +x ./dotnet-install.sh
+export DOTNET_CLI_HOME=${HOME}
+export DOTNET_ROOT=${DOTNET_CLI_HOME}/.dotnet
+./dotnet-install.sh --version latest --channel 6.0 --install-dir ${DOTNET_ROOT}
+export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
+
+# Build porterpackage
 echo User: $(id -u):$(id -g)
 echo + SVN_ISE_REPO=$SVN_ISE_REPO
 echo + SVN_ISE_BRANCH=$SVN_ISE_BRANCH
 echo + SVN_EIFFELSTUDIO_REPO=$SVN_EIFFELSTUDIO_REPO
 echo + SVN_EIFFELSTUDIO_REPO_REVISION=$SVN_EIFFELSTUDIO_REPO_REVISION
-if [ -z "$SVN_EIFFELSTUDIO_BRANCH" ]; then 
+if [ -z "$SVN_EIFFELSTUDIO_BRANCH" ]; then
 	export SVN_EIFFELSTUDIO_BRANCH=/trunk
 	echo ++SVN_EIFFELSTUDIO_BRANCH=$SVN_EIFFELSTUDIO_BRANCH
 else
@@ -13,6 +29,7 @@ else
 fi
 echo + INCLUDE_ENTERPRISE=$INCLUDE_ENTERPRISE
 echo + ONLY_PORTERPACKAGE=$ONLY_PORTERPACKAGE
+echo + MAKE_DELIVERY_ARGS=$MAKE_DELIVERY_ARGS
 
 export DELIV_DIR=$1
 echo = DELIV_DIR=$DELIV_DIR
@@ -76,12 +93,18 @@ echo Use ISE svn url: $DEFAULT_ISE_SVN
 # Main
 export DELIV_WORKSPACE=/home/eiffel/workspace
 
+# save setup in setup.rc for convenience
+echo export ISE_EIFFEL=$ISE_EIFFEL > ${DELIV_WORKSPACE}/setup.rc
+echo export ISE_PLATFORM=$ISE_PLATFORM >> ${DELIV_WORKSPACE}/setup.rc
+echo export DOTNET_ROOT=$DOTNET_ROOT >> ${DELIV_WORKSPACE}/setup.rc
+echo export PATH=$PATH >> ${DELIV_WORKSPACE}/setup.rc
+
 if [ -d "$DELIV_WORKSPACE/tmp" ]; then
 	echo Clean $DELIV_WORKSPACE/tmp
 	\rm -rf $DELIV_WORKSPACE/tmp
 fi
 
-echo Build delivery for $ISE_PLATFORM 
+echo Build delivery for $ISE_PLATFORM
 echo revision: $ORIGO_SVN_REVISION
 echo svn checkout --config-option config:miscellany:use-commit-times=yes $SVN_EIFFELSTUDIO_REPO$SVN_EIFFELSTUDIO_BRANCH/Src/Delivery/scripts/unix $DELIV_WORKSPACE/tmp
 svn checkout --config-option config:miscellany:use-commit-times=yes $SVN_EIFFELSTUDIO_REPO$SVN_EIFFELSTUDIO_BRANCH/Src/Delivery/scripts/unix $DELIV_WORKSPACE/tmp
@@ -126,10 +149,10 @@ fi
 if [ ! -d "PorterPackage" ]; then
 	if [ "$INCLUDE_ENTERPRISE" == "true" ]; then
 		echo Build Standard+Enterprise PorterPackage ...
-		./make_delivery all
+		./make_delivery all $MAKE_DELIVERY_ARGS
 	else
 		echo Build Standard PorterPackage ...
-		./make_delivery
+		./make_delivery $MAKE_DELIVERY_ARGS
 	fi
 	echo Copy log files to $DELIV_LOGDIR
 	cp *.log $DELIV_LOGDIR/.

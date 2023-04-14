@@ -1232,6 +1232,7 @@ feature {NONE} -- Implementation
 			customizable_commands.put (agent find_next, "search_forward")
 			customizable_commands.put (agent find_previous, "search_backward")
 			customizable_commands.put (agent run_if_editable (agent prettify), "prettify")
+			customizable_commands.put (agent run_if_editable (agent toggle_comment_selection), "toggle_comment")
 			customizable_commands.put (agent run_if_editable (agent comment_selection), "comment")
 			customizable_commands.put (agent run_if_editable (agent uncomment_selection), "uncomment")
 			customizable_commands.put (agent run_if_editable (agent set_selection_case (False)), "set_to_uppercase")
@@ -2141,7 +2142,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

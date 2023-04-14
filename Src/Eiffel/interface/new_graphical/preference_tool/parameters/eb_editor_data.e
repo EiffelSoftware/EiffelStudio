@@ -1233,6 +1233,7 @@ feature -- Keybord shortcuts Customization
 
 			l_hash.put ([False,  True, False, key_strings.item (Key_f).twin.as_string_8], "show_quick_search_bar")
 			l_hash.put ([False,  True, False, key_strings.item (Key_h).twin.as_string_8], "show_search_and_replace_panel")
+			l_hash.put ([False,  True, False, key_strings.item (key_slash).twin.as_string_8], "toggle_comment")
 			l_hash.put ([False,  True, False, key_strings.item (Key_k).twin.as_string_8], "comment")
 			l_hash.put ([False,  True, True, key_strings.item (Key_k).twin.as_string_8], "uncomment")
 			l_hash.put ([False,  True, True, key_strings.item (Key_p).twin.as_string_8], "prettify")
@@ -1375,7 +1376,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

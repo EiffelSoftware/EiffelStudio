@@ -477,6 +477,15 @@ feature {NONE} -- Comparison
 
 feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_CONTEXT_MENU_FACTORY} -- Edition Operations on text
 
+	toggle_comment_selection
+			-- Comment selected lines if possible.
+		do
+			if is_editable and then not is_empty then
+				text_displayed.toggle_comment_selection
+				refresh_now
+			end
+		end
+
 	comment_selection
 			-- Comment selected lines if possible.
 		do
@@ -541,7 +550,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

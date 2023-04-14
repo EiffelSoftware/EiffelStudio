@@ -567,6 +567,18 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 			create l_cmd.make
 			l_cmd.set_needs_editable (True)
+			l_cmd.set_menu_name (develop_window.Interface_names.m_toggle_comment)
+			l_cmd.add_agent (agent editor_toggle_comment_selection)
+			l_shortcut := develop_window.preferences.editor_data.shortcuts.item ("toggle_comment")
+			l_cmd.set_referred_shortcut (l_shortcut)
+			l_command_menu_item := l_cmd.new_menu_item
+			l_command_controller.add_edition_command (l_cmd)
+			auto_recycle (l_command_menu_item)
+			develop_window.commands.editor_commands.extend (l_cmd)
+			l_sub_menu.extend (l_command_menu_item)
+
+			create l_cmd.make
+			l_cmd.set_needs_editable (True)
 			l_cmd.set_menu_name (develop_window.Interface_names.m_comment)
 			l_cmd.add_agent (agent editor_comment_selection)
 			l_shortcut := develop_window.preferences.editor_data.shortcuts.item ("comment")
@@ -1401,48 +1413,56 @@ feature {NONE} -- Agents for editor
 	editor_prettify
 			-- Prettify class in current editor.
 		do
-			if attached current_editor as l_editor then
-				l_editor.prettify
+			if attached current_editor as e then
+				e.prettify
 			end
 		end
 
 	editor_indent_selection
 			-- Indent selection in current editor.
 		do
-			if current_editor /= Void then
-				current_editor.indent_selection
+			if attached current_editor as e then
+				e.indent_selection
 			end
 		end
 
 	editor_unindent_selection
 			-- Unindent selection in current editor.
 		do
-			if current_editor /= Void then
-				current_editor.unindent_selection
+			if attached current_editor as e then
+				e.unindent_selection
 			end
 		end
 
 	editor_set_selection_case (a_case: BOOLEAN)
 			-- Set selection case in current editor.
 		do
-			if current_editor /= Void then
-				current_editor.set_selection_case (a_case)
+			if attached current_editor as e then
+				e.set_selection_case (a_case)
+			end
+		end
+
+	editor_toggle_comment_selection
+			-- Comment/Uncomment selection in current editor.
+		do
+			if attached current_editor as e then
+				e.toggle_comment_selection
 			end
 		end
 
 	editor_comment_selection
 			-- Comment selection in current editor.
 		do
-			if current_editor /= Void then
-				current_editor.comment_selection
+			if attached current_editor as e then
+				e.comment_selection
 			end
 		end
 
 	editor_uncomment_selection
 			-- Uncomment selection in current editor.
 		do
-			if current_editor /= Void then
-				current_editor.uncomment_selection
+			if attached current_editor as e then
+				e.uncomment_selection
 			end
 		end
 
@@ -1452,8 +1472,8 @@ feature {NONE} -- Agents for editor
 			a_string_not_void: a_string /= Void
 			post_pos_valid: post_pos > 0 and then post_pos <= a_string.count
 		do
-			if current_editor /= Void then
-				current_editor.embed_in_block (a_string, post_pos)
+			if attached current_editor as e then
+				e.embed_in_block (a_string, post_pos)
 			end
 		end
 
@@ -1468,8 +1488,8 @@ feature {NONE} -- Agents for editor
 	editor_complete_class_name
 			-- Complete class name in current editor.
 		do
-			if current_editor /= Void then
-				current_editor.complete_class_name
+			if attached current_editor as e then
+				e.complete_class_name
 			end
 		end
 

@@ -275,7 +275,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 		end
 
 	set_shell_cmd (a_cmd: like shell_cmd)
-			-- Set `shell_cmd;
+			-- Set `shell_cmd`
 		do
 			shell_cmd := a_cmd
 		ensure
@@ -778,6 +778,7 @@ feature -- Recycle
 			new_assembly_cmd.recycle
 			new_feature_cmd.recycle
 			shell_cmd.recycle
+
 			undo_cmd.recycle
 			redo_cmd.recycle
 			toggle_stone_cmd.recycle
@@ -855,7 +856,7 @@ feature -- Recycle
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

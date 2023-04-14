@@ -65,7 +65,10 @@ feature -- Access
 
 	first_token: detachable EDITOR_TOKEN
 			-- First token in the line (margin tokens discarded)
+		local
+			l_old_curr_token: like curr_token
 		do
+			l_old_curr_token := curr_token
 			from
 				Result := real_first_token
 				start
@@ -74,6 +77,9 @@ feature -- Access
 			loop
 				Result := Result.next
 			end
+			curr_token := l_old_curr_token
+		ensure
+			same_curr_token: old curr_token = curr_token
 		end
 
 	number_token: detachable EDITOR_TOKEN_LINE_NUMBER
@@ -531,7 +537,7 @@ invariant
 	eol_token_set: eol_token /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -6,7 +6,7 @@ set EIFFEL_SRC=%TMP_EIFFEL_SRC
 set ISE_LIBRARY=%TMP_EIFFEL_SRC
 set ISE_SRC=%TMP_EIFFEL_SRC
 
-iff not defined INSTALL_DIR then 
+iff not defined INSTALL_DIR then
 	echo INSTALL_DIR not defined
 	CANCEL
 endiff
@@ -43,8 +43,13 @@ iff .%1.==.. then
 		co -r %PUBLIC_SVN_REVISION% %DEFAULT_PUBLIC_SVN%/Src/tools/hallow hallow
 		cd %EIFFEL_SRC%\tools\hallow
 		clean_project
-		finalize hallow.ecf
-		cleanup_dotnet_eiffel hallow hallow.exe
+		iff "%USE_NET40%" EQ "True" then
+			finalize hallow.ecf hallow_40
+			cleanup_dotnet_eiffel hallow_40 hallow.exe
+		else
+			finalize hallow.ecf hallow
+			cleanup_dotnet_eiffel hallow hallow.exe
+		endiff
 		iff not exist libhallow.dll then
 			remtrace Couldnt generate hallow.exe
 			CANCEL_ON_ERROR
@@ -114,7 +119,7 @@ iff EXIST %INSTALL_DIR%\%STUDIO_NAME% then
     ren %INSTALL_DIR%\%STUDIO_NAME% %INSTALL_DIR%\EiffelStudio
 endiff
 
-iff defined NO_MSI then 
+iff defined NO_MSI then
 	goto BUILD_ZIP
 endiff
 

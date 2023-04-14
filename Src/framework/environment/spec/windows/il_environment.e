@@ -265,6 +265,50 @@ feature -- Access
 			end
 		end
 
+	dotnet_framework_sdk_path_list: ARRAYED_LIST [like dotnet_framework_path]
+			-- Path to .NET Framework SDK directory of version `version'.
+			-- Void if not installed.
+		local
+			reg: WEL_REGISTRY
+			p: POINTER
+			key: detachable WEL_REGISTRY_KEY_VALUE
+			l_major_version: like version
+		do
+			create Result.make (1)
+			create reg
+			l_major_version := version.head (4)
+			if old_sdk_keys.has (l_major_version) then
+					-- For version v2.0 and earlier, the path to the SDK path is simple to find.
+				p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",
+					{WEL_REGISTRY_ACCESS_MODE}.Key_read)
+				if p /= default_pointer then
+					if attached old_sdk_keys.item (l_major_version) as l_key then
+						key := reg.key_value (p, l_key)
+						if key /= Void then
+							Result.force (create {PATH}.make_from_string (key.string_value))
+						end
+					end
+					reg.close_key (p)
+				end
+			end
+
+				-- For version v4.0 and later, the path actually depends on what was installed on your machine,
+				-- i.e. Visual Studio vs Windows SDK and the version of the SDK used.
+				-- For the time being we take the first one that is not Void.
+			across
+				sdk_key_paths as l_path
+			loop
+				p := reg.open_key_with_access (l_path, {WEL_REGISTRY_ACCESS_MODE}.key_read)
+				if p /= default_pointer then
+					key := reg.key_value (p, "InstallationFolder")
+					if key /= Void then
+						Result.force (create {PATH}.make_from_string (key.string_value))
+					end
+					reg.close_key (p)
+				end
+			end
+		end
+
 	dotnet_framework_sdk_path: like dotnet_framework_path
 			-- Path to .NET Framework SDK directory of version `version'.
 			-- Void if not installed.
@@ -294,7 +338,8 @@ feature -- Access
 					-- For version v4.0 and later, the path actually depends on what was installed on your machine,
 					-- i.e. Visual Studio vs Windows SDK and the version of the SDK used.
 					-- For the time being we take the first one that is not Void.
-				across sdk_key_paths as l_path
+				across
+					sdk_key_paths as l_path
 				until
 					Result /= Void
 				loop
@@ -318,6 +363,41 @@ feature -- Access
 				if old_sdk_keys.has (version.head (4)) then
 						-- In the old SDKs, it was in a subdirectory
 					Result := Result.extended ("bin")
+				end
+			end
+		end
+
+	dotnet_framework_sdk_executable (a_executable: READABLE_STRING_GENERAL; a_sub_path: detachable PATH): PATH
+			-- Path to the executable found in one of the available SDK.
+			-- if `a_sub_path` is set, search in that sub folder.
+		local
+			f: RAW_FILE
+			l_sdk_path: PATH
+			p: PATH
+		do
+			if attached dotnet_framework_sdk_path_list as lst then
+				create f.make_with_name (a_executable)
+				across
+					lst as l_path
+				until
+					Result /= Void
+				loop
+					if a_sub_path /= Void then
+						l_sdk_path := l_path.extended_path (a_sub_path)
+					else
+						l_sdk_path := l_path
+					end
+					p := l_sdk_path.extended (a_executable)
+					f.make_with_path (p)
+					if f.exists then
+						Result := p
+					else
+						p := l_sdk_path.extended ("bin").extended (a_executable)
+						f.make_with_path (p)
+						if f.exists then
+							Result := p
+						end
+					end
 				end
 			end
 		end
@@ -346,32 +426,26 @@ feature -- Query
 			-- The path to the .NET debugger associated with 'a_debug'.
 		require
 			a_debug_not_void: a_debug /= Void
+		local
+			n: PATH
 		do
-			if use_mdbg (a_debug) then
-				Result := dotnet_framework_sdk_bin_path
-				if attached Result then
-					Result := Result.extended (a_debug).appended_with_extension ("exe")
-				end
-			elseif use_cordbg (a_debug) then
-				Result:= dotnet_framework_sdk_bin_path
-				if attached Result then
-					Result := Result.extended (a_debug).appended_with_extension ("exe")
-				end
+			create n.make_from_string (a_debug)
+			n := n.appended_with_extension ("exe")
+			if
+				use_mdbg (a_debug)
+				or use_cordbg (a_debug)
+			then
+				Result := dotnet_framework_sdk_executable (n.name, Void)
 			elseif use_dbgclr (a_debug) then
-				Result := Dotnet_framework_sdk_path
-				if attached Result then
-					Result := Result.extended ("GuiDebug").extended (a_debug).appended_with_extension ("exe")
-				end
+				create n.make_from_string ("GuiDebug")
+				Result := dotnet_framework_sdk_executable (n.name, create {PATH}.make_from_string ("GuiDebug"))
 			end
 		end
 
 	resource_compiler: detachable PATH
 			-- Path to `resgen' tool from .NET Framework SDK.
 		do
-			Result := dotnet_framework_sdk_bin_path
-			if Result /= Void then
-				Result := Result.extended ("resgen.exe")
-			end
+			Result := dotnet_framework_sdk_executable ("resgen.exe", Void)
 		end
 
 feature {NONE} -- Implementation
@@ -403,7 +477,7 @@ feature {NONE} -- Implementation
 			l_minor := version.item (4)
 				-- Create list of known SDKs
 			create l_list.make (9)
-			l_list.extend ({STRING_32} "v10.0")	-- VS 2017
+			l_list.extend ({STRING_32} "v10.0A")	-- VS 2017
 			l_list.extend ({STRING_32} "v8.1A")	-- VS 2013
 			l_list.extend ({STRING_32} "v8.1")	-- WSDK Windows 8.1
 			l_list.extend ({STRING_32} "v8.0A")	-- VS 2012

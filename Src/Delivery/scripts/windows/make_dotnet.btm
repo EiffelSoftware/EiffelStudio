@@ -110,8 +110,8 @@ else
 	mkdir %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
 	iff exist spec\%ISE_PLATFORM%\bin\nemdc.exe then
 		safe_copy spec\%ISE_PLATFORM%\bin\nemdc.exe %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
-		safe_copy spec\%ISE_PLATFORM%\*.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
-		safe_copy spec\%ISE_PLATFORM%\*.json %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
+		safe_copy spec\%ISE_PLATFORM%\bin\*.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
+		safe_copy spec\%ISE_PLATFORM%\bin\*.json %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
 	else
 		remerror Could not compile nemdc.exe
 		iff defined REUSE_NETCORE_MDCONSUMER then

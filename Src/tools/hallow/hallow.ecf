@@ -34,4 +34,7 @@
 			</file_rule>
 		</cluster>
 	</target>
+	<target name="hallow_40" extends="hallow">
+		<setting name="msil_clr_version" value="v4.0.30319"/>
+	</target>
 </system>

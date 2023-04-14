@@ -367,7 +367,7 @@ feature -- Access
 			end
 		end
 
-	dotnet_framework_sdk_executable (a_executable: READABLE_STRING_GENERAL; a_sub_path: detachable PATH): PATH
+	dotnet_framework_sdk_executable (a_executable: READABLE_STRING_GENERAL; a_sub_path: detachable PATH): detachable PATH
 			-- Path to the executable found in one of the available SDK.
 			-- if `a_sub_path` is set, search in that sub folder.
 		local
@@ -378,24 +378,26 @@ feature -- Access
 			if attached dotnet_framework_sdk_path_list as lst then
 				create f.make_with_name (a_executable)
 				across
-					lst as l_path
+					lst as i
 				until
 					Result /= Void
 				loop
-					if a_sub_path /= Void then
-						l_sdk_path := l_path.extended_path (a_sub_path)
-					else
-						l_sdk_path := l_path
-					end
-					p := l_sdk_path.extended (a_executable)
-					f.make_with_path (p)
-					if f.exists then
-						Result := p
-					else
-						p := l_sdk_path.extended ("bin").extended (a_executable)
+					if attached i as l_path then
+						if a_sub_path /= Void then
+							l_sdk_path := l_path.extended_path (a_sub_path)
+						else
+							l_sdk_path := l_path
+						end
+						p := l_sdk_path.extended (a_executable)
 						f.make_with_path (p)
 						if f.exists then
 							Result := p
+						else
+							p := l_sdk_path.extended ("bin").extended (a_executable)
+							f.make_with_path (p)
+							if f.exists then
+								Result := p
+							end
 						end
 					end
 				end

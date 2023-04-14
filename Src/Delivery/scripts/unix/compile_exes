@@ -183,8 +183,8 @@ if [ ! -f other-libs.tar.bz2 ]; then
 	CANCEL
 fi
 bunzip2 -c other-libs.tar.bz2 | tar -xf -
-if [ ! -d unstable/library/dotnet ]; then
-	remtrace No dotnet unstable library directory
+if [ ! -d framework/dotnet ]; then
+	remtrace 'No dotnet library directory in framework'
 fi
 
 remtrace Recompile quick_finalize

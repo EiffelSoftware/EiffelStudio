@@ -6,8 +6,8 @@ cdd %EIFFEL_SRC
 remtrace Compiling .NET runtime
 cd %EIFFEL_SRC%\Eiffel\eiffel\com_il_generation\core\run-time
 remtrace Compiling .NET CORE runtime
-geant clobber
-espawn "geant install_netcore"
+espawn "geant clobber" >>& %INSTALL_LOG%
+espawn "geant install_netcore" >>& %INSTALL_LOG%
 iff exist netcore\EiffelSoftware.Runtime.dll then
 ::	For now, just as experiment
 	safe_copy netcore\EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\lib\netcore.EiffelSoftware.Runtime.dll
@@ -17,7 +17,7 @@ else
 endiff
 
 remtrace Compiling .NET framework runtime
-geant clobber
+espawn "geant clobber" >>& %INSTALL_LOG%
 sed -e "s/msbuild runtime.sln/msbuild runtime.sln \/p:Platform=\"Any CPU\" \/p:Configuration=Release /" Makefile > Makefile-release
 
 set TMP_ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER%
@@ -105,8 +105,8 @@ iff exist %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore\nemdc.exe then
 	remtrace nemdc tool is already built
 else
 	cdd %EIFFEL_SRC%\dotnet\consumer_netcore
-	espawn "geant clobber"
-	espawn "geant install"
+	espawn "geant clobber" >>& %INSTALL_LOG%
+	espawn "geant install" >>& %INSTALL_LOG%
 	mkdir %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
 	iff exist spec\%ISE_PLATFORM%\bin\nemdc.exe then
 		safe_copy spec\%ISE_PLATFORM%\bin\nemdc.exe %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore

@@ -437,6 +437,7 @@ feature -- Accelerator, focus label and menu name
 	f_Clear_breakpoints: STRING_32		do Result := locale.translation("Remove all breakpoints")	end
 	m_Clear_breakpoints: STRING_32		do Result := locale.translation("Re&move All Breakpoints")	end
 	f_close: STRING_32					do Result := locale.translation("Close")	end
+	m_Toggle_comment: STRING_32					do Result := locale.translation("&Toggle Comment")	end
 	m_Comment: STRING_32					do Result := locale.translation("&Comment")	end
 	m_Compilation_C_Workbench: STRING_32	do Result := locale.translation("Compile W&orkbench C Code")	end
 	m_Compilation_C_Final: STRING_32		do Result := locale.translation("Compile F&inalized C Code")	end
@@ -2284,7 +2285,7 @@ feature -- Label texts
 					Do you want to import settings from a previous installation?
 					
 					(Note: It is always possible to import settings using the menu Tools > Import Settings)
-					]"), [a_version_name])
+]"), [a_version_name])
 		end
 
 	l_update_manager_estudio_beta_help (a_version_name: READABLE_STRING_GENERAL): STRING_32

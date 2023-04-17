@@ -35,6 +35,7 @@ feature {NONE}
 			initialize_metadata_tables
 			initialize_module
 			initialize_guid
+			create tables_header
 			create assembly_emitter.make (tables, pe_writer)
 				-- we don't initialize the compilation unit since we don't provide the name of it (similar to the COM interface)
 			initialize_entry_size
@@ -124,6 +125,9 @@ feature -- Access
 			-- Index of the GUID
 			-- where it should be located in the metadata tables.
 
+	tables_header: PE_DOTNET_META_TABLES_HEADER
+			-- `tables_header'
+
 feature -- Status report
 
 	is_successful: BOOLEAN
@@ -140,6 +144,8 @@ feature -- Access
 		local
 			l_count: INTEGER
 		do
+				-- optional way to compute the header size + table_header setup.
+			save_size_tmp
 				--| Computes the size of the metadata for the current emitted assembly.
 				--| Iterate through each table and multiplying the size of the table by the number of entries in the table.
 				--| Adds the size of each heap (string, user string, blob, and GUID)
@@ -188,8 +194,8 @@ feature -- Access
 		end
 
 	entry_sizes: HASH_TABLE [FUNCTION [INTEGER], INTEGER]
-		-- Hash table of functions to compute the size of a Metadata Table.
-		-- The key is the Metadata Table Key.
+			-- Hash table of functions to compute the size of a Metadata Table.
+			-- The key is the Metadata Table Key.
 
 	retrieve_user_string (a_token: INTEGER): STRING_32
 			-- Retrieve the user string for `token'.
@@ -262,24 +268,22 @@ feature {NONE} -- Implementation
 	save_size_tmp
 			-- Optional way to compute the metadata table size.
 		local
-			l_tables_header: PE_DOTNET_META_TABLES_HEADER
 			l_counts: ARRAY [NATURAL_64]
 			l_result: INTEGER
 			l_temp: INTEGER
 			l_buffer: ARRAY [NATURAL_8]
 		do
-			create l_tables_header
-			l_tables_header.major_version := 2
-			l_tables_header.reserved2 := 1
-			l_tables_header.mask_sorted := ({INTEGER_64} 0x1600 |<< 32) + 0x3325FA00
+			tables_header.major_version := 2
+			tables_header.reserved2 := 1
+			tables_header.mask_sorted := ({INTEGER_64} 0x1600 |<< 32) + 0x3325FA00
 			if strings_heap_size = 65536 then
-				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 1
+				tables_header.heap_offset_sizes := tables_header.heap_offset_sizes | 1
 			end
 			if guid_heap_size >= 65536 then
-				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 2
+				tables_header.heap_offset_sizes := tables_header.heap_offset_sizes | 2
 			end
 			if blob_heap_size >= 65536 then
-				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 4
+				tables_header.heap_offset_sizes := tables_header.heap_offset_sizes | 4
 			end
 
 			l_result := 0
@@ -293,7 +297,7 @@ feature {NONE} -- Implementation
 			across 0 |..| (max_tables - 1) as ic loop
 				if not tables [ic].is_empty then
 					l_counts [ic + 1] := tables [ic].size.to_natural_32
-					l_tables_header.mask_valid := l_tables_header.mask_valid | ({INTEGER_64} 1 |<< ic)
+					tables_header.mask_valid := tables_header.mask_valid | ({INTEGER_64} 1 |<< ic)
 					l_temp := l_temp + 1
 				end
 			end
@@ -323,6 +327,7 @@ feature {NONE} -- Implementation
 			end
 
 		end
+
 feature -- Save
 
 	assembly_memory: MANAGED_POINTER
@@ -340,9 +345,167 @@ feature -- Save
 		local
 			l_file: FILE
 		do
-			create {RAW_FILE} l_file.make_with_name (f_name.string)
-			to_implement ("TODO implement, double check if we really need it")
+			create {RAW_FILE} l_file.make_create_read_write (f_name.string)
+			write_tables (l_file)
+			write_strings (l_file)
+			write_us (l_file)
+			write_guid (l_file)
+			write_blob (l_file)
 		end
+
+feature {NONE} -- Implementation
+
+	write_tables (a_file: FILE)
+		require
+			open_write: a_file.is_open_write
+		local
+			l_counts: ARRAY [NATURAL_64]
+			l_item: NATURAL_32
+			l_buffer: ARRAY [NATURAL_8]
+			l_sz: NATURAL_32
+		do
+			create l_counts.make_filled (0, 1, max_tables + extra_indexes)
+			l_counts [t_string + 1] := strings_heap_size
+			l_counts [t_us + 1] := us_heap_size
+			l_counts [t_guid + 1] := guid_heap_size
+			l_counts [t_blob + 1] := blob_heap_size
+
+			put_tables_header (a_file, tables_header)
+
+			across 0 |..| (max_tables - 1) as i loop
+				l_counts [i + 1] := tables [i].size.to_natural_64
+				l_item := l_counts [i + 1].to_natural_32
+				if l_item /= 0 then
+					a_file.put_natural_32 (l_item)
+				end
+			end
+
+			across 0 |..| (max_tables - 1) as i loop
+				l_item := tables [i].size.to_natural_32
+				across 0 |..| (l_item - 1).to_integer_32 as j loop
+					create l_buffer.make_filled (0, 1, 512)
+					l_sz := tables [i].table [j + 1].render (l_counts, l_buffer).to_natural_32
+						-- TODO double check
+						-- this is not efficient.
+					put_array (a_file, l_buffer.subarray (1, l_sz.as_integer_32))
+				end
+			end
+			align (a_file, 4)
+				-- Commented code in C++ implementation to be double check.
+				-- Dword n = 0
+				-- put(&n, sizeof(n));
+		end
+
+	write_strings (a_file: FILE)
+		local
+			mp: MANAGED_POINTER
+		do
+			create mp.make_from_array (pe_writer.strings.base.to_array)
+			a_file.put_managed_pointer (mp, 0, mp.count)
+			align (a_file, 4)
+		end
+
+	write_us (a_file: FILE)
+		local
+			mp: MANAGED_POINTER
+		do
+			if pe_writer.us.size = 0 then
+				put_array (a_file, pe_writer.default_us)
+			else
+				create mp.make_from_array (pe_writer.us.base.to_array)
+				a_file.put_managed_pointer (mp, 0, mp.count)
+			end
+			align (a_file, 4)
+		end
+
+	write_guid (a_file: FILE)
+		local
+			mp: MANAGED_POINTER
+		do
+			create mp.make_from_array (pe_writer.guid.base.to_array)
+			a_file.put_managed_pointer (mp, 0, mp.count)
+			align (a_file, 4)
+		end
+
+	write_blob (a_file: FILE)
+		local
+			mp: MANAGED_POINTER
+		do
+			create mp.make_from_array (pe_writer.blob.base.to_array)
+			a_file.put_managed_pointer (mp, 0, mp.count)
+			align (a_file, 4)
+		end
+
+	put_tables_header (a_file: FILE; a_header: PE_DOTNET_META_TABLES_HEADER)
+		do
+			a_file.put_managed_pointer (a_header.managed_pointer, 0, {PE_DOTNET_META_TABLES_HEADER}.size_of)
+		end
+
+	put_array (a_file: FILE; a_data: ARRAY [NATURAL_8])
+		local
+			mp: MANAGED_POINTER
+		do
+			create mp.make (a_data.count)
+			mp.put_array (a_data, 0)
+			a_file.put_managed_pointer (mp, 0, mp.count)
+		end
+
+	align (a_file: FILE; a_align: INTEGER)
+		local
+			l_current_offset: INTEGER
+			l_array: ARRAY [NATURAL_8]
+			l_bytes_needed: INTEGER
+
+		do
+				-- Current offset.
+			l_current_offset := a_file.count
+
+				-- Check if the current offset is align with the desired value.
+			if (l_current_offset \\ a_align) /= 0 then
+					-- assumes the alignments are 65536 or less
+
+					-- Compute the number of 0 bytes needed to align the offset.
+				l_bytes_needed := a_align - (l_current_offset \\ a_align)
+				create l_array.make_filled (0, 1, l_bytes_needed.to_integer_32)
+				put_array (a_file, l_array)
+			end
+		end
+
+--	write_strings: BOOLEAN
+--		do
+--			put_array_with_size (strings.base.to_array, strings.size.to_integer_32)
+--			align (4)
+--			Result := True
+--		end
+
+--	write_us: BOOLEAN
+--		do
+--			if us.size = 0 then
+--				put_array (default_us)
+--			else
+--				put_array_with_size (us.base.to_array, us.size.to_integer_32)
+--			end
+--			align (4)
+--			Result := True
+--		end
+
+--	write_guid: BOOLEAN
+--		do
+--			put_array_with_size (guid.base.to_array, guid.size.to_integer_32)
+--			align (4)
+--			Result := True
+--		end
+
+--	write_blob (file: FILE)
+--		local
+--			mp: MANAGED_POINTER
+--			l_data: ARRAY [NATURAL_8]
+--		do
+--			l_data := pe_writer.blob.base.to_array
+--			create mp.make_from_array (l_data)
+--			file.put_managed_pointer (mp, 0, mp.count)
+--			--align (4)
+--		end
 
 feature -- Settings
 

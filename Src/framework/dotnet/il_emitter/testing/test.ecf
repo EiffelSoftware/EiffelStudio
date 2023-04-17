@@ -8,7 +8,8 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="warning" manifest_array_type="mismatch_warning">
+		<option debug="true" warning="warning" manifest_array_type="mismatch_warning">
+			<debug name="il_emitter_dbg" enabled="true"/>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			<warning name="obsolete_feature" value="all"/>
 		</option>
@@ -16,11 +17,6 @@
 		<setting name="dead_code_removal" value="feature"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
 			<option warning="none">
-			</option>
-		</library>
-		<library name="il_emitter" location="..\il_emitter.ecf" readonly="false">
-			<option debug="true" warning="none">
-				<debug name="debug-cli" enabled="true"/>
 			</option>
 		</library>
 		<library name="cli_kernel" location="$EIFFEL_SRC\framework\dotnet\cli_kernel\cli_kernel.ecf">
@@ -31,6 +27,12 @@
 			<renaming old_name="DBG_DOCUMENT_WRITER" new_name="DBG_DOCUMENT_WRITER_I"/>
 			<renaming old_name="CLI_DEBUG_DIRECTORY" new_name="CLI_DEBUG_DIRECTORY_I"/>
 			<renaming old_name="CLI_PE_FILE" new_name="CLI_PE_FILE_I"/>
+		</library>
+		<library name="il_emitter" location="..\il_emitter.ecf" readonly="false">
+			<option debug="true" warning="none">
+				<debug name="debug-cli" enabled="true"/>
+				<debug name="il_emitter_dbg" enabled="true"/>
+			</option>
 		</library>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="il_emitter_test" location=".\" recursive="true">

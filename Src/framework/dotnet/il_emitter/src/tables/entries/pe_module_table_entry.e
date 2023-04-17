@@ -2,6 +2,7 @@
 	description: "Class desribing the module table."
 	date: "$Date$"
 	revision: "$Revision$"
+	see: "II.22.30 Module : 0x00"
 
 class
 	PE_MODULE_TABLE_ENTRY

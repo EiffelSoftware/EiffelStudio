@@ -106,6 +106,19 @@ feature -- Status Report
 			Result := size_of
 		end
 
+
+feature  -- Debug
+
+	debug_header (a_name: STRING_32)
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make_create_read_write (a_name + ".bin")
+			l_file.put_managed_pointer (item, 0, count)
+			l_file.close
+		end
+
+
 feature -- Managed pointer
 
 	item: MANAGED_POINTER
@@ -113,7 +126,6 @@ feature -- Managed pointer
 			l_pos: INTEGER
 		do
 
-			create Result.make (40)
 			create Result.make (size_of)
 			l_pos := 0
 

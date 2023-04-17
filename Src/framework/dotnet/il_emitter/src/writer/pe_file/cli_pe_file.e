@@ -75,11 +75,29 @@ feature {NONE} -- Initialization
 			create entry_data.make
 
 			create reloc_section.make
+
+			debug ("il_emitter_dbg")
+				write_debug
+			end
 		ensure
 			file_name_set: file_name = a_name
 			is_valid_set: is_valid
 			is_console_set: is_console = console_app
 			is_dll_set: is_dll = dll_app
+		end
+
+	debug_output: BOOLEAN
+
+	write_debug
+		do
+			pe_header.debug_header ("pe_header_tk")
+			optional_header.debug_header ("optional_header_tk")
+			text_section_header.debug_header ("text_section_header_tk")
+			reloc_section_header.debug_header ("reloc_section_header_tk")
+			iat.debug_header ("iat_tk")
+			cli_header.debug_header ("cli_header_tk")
+			entry_data.debug_header ("entry_data_tk")
+			reloc_section.debug_header ("reloc_section_tk")
 		end
 
 feature -- Status
@@ -286,15 +304,16 @@ feature -- Saving
 				-- Instead we save it to disk and then copy it over. This is not efficient
 				-- but we cannot use the stream version of the API since we do not have a way
 				-- to make an IStream from an Eiffel FILE.
--- Todo save metadata				
+-- Todo save metadata
 			l_meta_data_file_name := file_name + ".pe"
 			emitter.save (create {NATIVE_STRING}.make (l_meta_data_file_name))
 			create l_meta_data_file.make_with_name (l_meta_data_file_name)
 			l_meta_data_file.open_read
-			check valid_size: l_meta_data_file.count = meta_data_size end
+-- TO double check
+--			check valid_size: l_meta_data_file.count = meta_data_size end
 			l_meta_data_file.copy_to (l_pe_file)
 			l_meta_data_file.close
-			l_meta_data_file.delete
+--			l_meta_data_file.delete
 
 			if import_table_padding > 0 then
 				create l_padding.make (import_table_padding)

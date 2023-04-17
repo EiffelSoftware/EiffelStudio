@@ -79,6 +79,18 @@ feature -- Status Report
 			Result := size_of
 		end
 
+feature  -- Debug
+
+	debug_header (a_name: STRING_32)
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make_create_read_write (a_name + ".bin")
+			l_file.put_managed_pointer (item, 0, count)
+			l_file.close
+		end
+
+
 feature -- Element Change
 
 	set_name (a_name: STRING)

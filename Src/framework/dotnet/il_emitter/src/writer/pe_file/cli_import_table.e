@@ -77,6 +77,18 @@ feature -- Status Report
 			Result := size_of
 		end
 
+feature  -- Debug
+
+	debug_header
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make_create_read_write (generator + ".bin")
+			l_file.put_managed_pointer (item, 0, count)
+			l_file.close
+		end
+
+
 feature -- Settings
 
 	set_rvas (section_rva, current_location: INTEGER)

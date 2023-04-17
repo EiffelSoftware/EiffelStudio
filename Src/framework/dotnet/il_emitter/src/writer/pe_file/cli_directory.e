@@ -18,6 +18,7 @@ feature -- Access
             -- Size of the directory in bytes.
 
 
+
 feature -- Setter
 
     set_rva (a_virtual_address: INTEGER_32)

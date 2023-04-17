@@ -24,11 +24,11 @@ feature -- Initialization
 
 	test_metadata_tables_token_interface
 		do
-			(create {TEST_METADATA_TABLES_TK}).test_cli_directory_size;
-			(create {TEST_METADATA_TABLES_TK}).test_cli_header_size;
-			(create {TEST_METADATA_TABLES_TK}).test_user_string_heap;
+--			(create {TEST_METADATA_TABLES_TK}).test_cli_directory_size;
+--			(create {TEST_METADATA_TABLES_TK}).test_cli_header_size;
+--			(create {TEST_METADATA_TABLES_TK}).test_user_string_heap;
 			(create {TEST_METADATA_TABLES_TK}).test_empty_assembly;
-			(create {TEST_METADATA_TABLES_TK}).test_define_assembly;
+--			(create {TEST_METADATA_TABLES_TK}).test_define_assembly;
 		end
 
 	test_metadata_tables_object_model

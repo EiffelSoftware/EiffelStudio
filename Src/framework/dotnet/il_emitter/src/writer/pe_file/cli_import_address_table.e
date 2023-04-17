@@ -40,6 +40,18 @@ feature -- Element Change
 			import_by_name_rva := a_val
 		end
 
+feature  -- Debug
+
+	debug_header (a_name: STRING_32)
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make_create_read_write (a_name + ".bin")
+			l_file.put_managed_pointer (item, 0, count)
+			l_file.close
+		end
+
+
 feature -- Item
 
     item: MANAGED_POINTER

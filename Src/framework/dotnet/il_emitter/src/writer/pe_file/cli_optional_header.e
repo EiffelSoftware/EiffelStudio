@@ -6,6 +6,7 @@ note
 	revision: "$Revision$"
 	EIS: "name=_IMAGE_OPTIONAL_HEADER ", "src=https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-image_optional_header32", "protocol=uri"
 	Ecma_section: "II.25.2.3 PE optional header"
+
 class
 	CLI_OPTIONAL_HEADER
 
@@ -151,6 +152,18 @@ feature -- Status Report
 		do
 			Result := size_of
 		end
+
+feature  -- Debug
+
+	debug_header (a_name: STRING_32)
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make_create_read_write (a_name + ".bin")
+			l_file.put_managed_pointer (item, 0, count)
+			l_file.close
+		end
+
 
 feature -- Settings
 

@@ -72,11 +72,27 @@ feature {NONE} -- Initialization
 			create entry_data.make
 
 			create reloc_section.make
+
+			debug ("cli_writer_dbg")
+				write_debug
+			end
 		ensure
 			file_name_set: file_name = a_name
 			is_valid_set: is_valid
 			is_console_set: is_console = console_app
 			is_dll_set: is_dll = dll_app
+		end
+
+	write_debug
+		do
+			pe_header.debug_header ("pe_header_com")
+			optional_header.debug_header ("optional_header_com")
+			text_section_header.debug_header ("text_section_header_com")
+			reloc_section_header.debug_header ("reloc_section_header_com")
+			iat.debug_header ("iat_com")
+			cli_header.debug_header ("cli_header_com")
+			entry_data.debug_header ("entry_data_com")
+			reloc_section.debug_header ("reloc_section_com")
 		end
 
 feature -- Status
@@ -261,7 +277,7 @@ feature -- Saving
 					-- Store `resources.item' since otherwise no one will be referencing
 					-- it and thus ready for GC.
 				l_pe_file.put_managed_pointer (p, 0, resources_size)
- 			end
+			end
 
 				-- Save the metadata to `l_pe_file'. We cannot use `MD_EMIT.assembly_memory'
 				-- because on some platforms the amount of required memory cannot be allocated
@@ -368,9 +384,9 @@ feature {NONE} -- Saving
 				reloc_section_header.count
 
 			import_table_padding := pad_up (iat.count + cli_header.count + code_size +
-				debug_size + strong_name_size + resources_size + meta_data_size, 16) -
+					debug_size + strong_name_size + resources_size + meta_data_size, 16) -
 				(iat.count + cli_header.count + code_size + debug_size +
-				strong_name_size + resources_size + meta_data_size)
+					strong_name_size + resources_size + meta_data_size)
 
 			text_size := iat.count + cli_header.count + code_size + debug_size +
 				strong_name_size + resources_size + meta_data_size +
@@ -412,12 +428,12 @@ feature {NONE} -- Saving
 			optional_header.set_headers_size (pad_up (headers_size, file_alignment))
 
 			import_directory := optional_header.directory (
-				{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_import)
+					{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_import)
 			import_directory.set_rva (import_directory_rva)
 			import_directory.set_data_size (import_table.count - 1)
 
 			reloc_directory := optional_header.directory (
-				{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_basereloc)
+					{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_basereloc)
 			reloc_directory.set_rva (reloc_rva)
 			reloc_directory.set_data_size (reloc_size)
 
@@ -426,7 +442,7 @@ feature {NONE} -- Saving
 				attached debug_info as i
 			then
 				l_debug_directory := optional_header.directory (
-					{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_debug)
+						{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_debug)
 				l_debug_directory.set_rva (text_rva + iat.count + cli_header.count + code_size)
 				l_debug_directory.set_data_size (d.count)
 
@@ -438,12 +454,12 @@ feature {NONE} -- Saving
 			end
 
 			iat_directory := optional_header.directory (
-				{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_iat)
+					{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_iat)
 			iat_directory.set_rva (text_rva)
 			iat_directory.set_data_size (iat.count)
 
 			cli_directory := optional_header.directory (
-				{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_cli_descriptor)
+					{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_cli_descriptor)
 			cli_directory.set_rva (text_rva + iat.count)
 			cli_directory.set_data_size (cli_header.count)
 
@@ -510,24 +526,24 @@ feature {NONE} -- Implementation
 			-- DOS header.
 		once
 			create Result.make_from_array ({ARRAY [NATURAL_8]} <<
-				0x4D, 0x5A, 0x90, 0x0, 0x3, 0x0, 0x0, 0x0,
-				0x4, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0x0, 0x0,
-				0xB8, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-				0x40, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-				0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-				0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-				0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-				0x0, 0x0, 0x0, 0x0, 0x80, 0x0, 0x0, 0x0,
-				0xE, 0x1F, 0xBA, 0xE, 0x0, 0xB4, 0x9, 0xCD,
-				0x21, 0xB8, 0x1, 0x4C, 0xCD, 0x21, 0x54, 0x68,
-				0x69, 0x73, 0x20, 0x70, 0x72, 0x6F, 0x67, 0x72,
-				0x61, 0x6D, 0x20, 0x63, 0x61, 0x6E, 0x6E, 0x6F,
-				0x74, 0x20, 0x62, 0x65, 0x20, 0x72, 0x75, 0x6E,
-				0x20, 0x69, 0x6E, 0x20, 0x44, 0x4F, 0x53, 0x20,
-				0x6D, 0x6F, 0x64, 0x65, 0x2E, 0xD, 0xD, 0xA,
-				0x24, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-				0x50, 0x45, 0x0, 0x0
-			>>)
+					0x4D, 0x5A, 0x90, 0x0, 0x3, 0x0, 0x0, 0x0,
+					0x4, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0x0, 0x0,
+					0xB8, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+					0x40, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+					0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+					0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+					0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+					0x0, 0x0, 0x0, 0x0, 0x80, 0x0, 0x0, 0x0,
+					0xE, 0x1F, 0xBA, 0xE, 0x0, 0xB4, 0x9, 0xCD,
+					0x21, 0xB8, 0x1, 0x4C, 0xCD, 0x21, 0x54, 0x68,
+					0x69, 0x73, 0x20, 0x70, 0x72, 0x6F, 0x67, 0x72,
+					0x61, 0x6D, 0x20, 0x63, 0x61, 0x6E, 0x6E, 0x6F,
+					0x74, 0x20, 0x62, 0x65, 0x20, 0x72, 0x75, 0x6E,
+					0x20, 0x69, 0x6E, 0x20, 0x44, 0x4F, 0x53, 0x20,
+					0x6D, 0x6F, 0x64, 0x65, 0x2E, 0xD, 0xD, 0xA,
+					0x24, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+					0x50, 0x45, 0x0, 0x0
+				>>)
 		ensure
 			valid_size: dos_header.count = 132
 		end
@@ -553,9 +569,9 @@ invariant
 	public_key_not_void: (is_valid and has_strong_name) implies public_key /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

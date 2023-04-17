@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="cli_writer_test" uuid="83CC91C7-3C80-4E44-8040-CCD877CBD754">
+	<target name="cli_writer_test">
+		<root class="APP" feature="make"/>
+		<file_rule>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option debug="true" warning="warning" manifest_array_type="mismatch_warning">
+			<debug name="cli_writer_dbg" enabled="true"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			<warning name="obsolete_feature" value="all"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="dead_code_removal" value="feature"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
+			<option warning="none">
+			</option>
+		</library>
+		<library name="cli_writer" location="..\cli_writer.ecf" readonly="false">
+			<option debug="true">
+				<debug name="cli_writer_dbg" enabled="true"/>
+			</option>
+		</library>
+		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf"/>
+		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<cluster name="cli_writer_test" location=".\" recursive="true">
+			<option warning="none" manifest_array_type="mismatch_warning">
+				<warning name="obsolete_feature" value="all"/>
+			</option>
+		</cluster>
+	</target>
+</system>

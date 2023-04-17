@@ -9,6 +9,9 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cli_kernel" location="$EIFFEL_SRC\framework\dotnet\cli_kernel\cli_kernel.ecf">
+			<option>
+				<assertions/>
+			</option>
 			<renaming old_name="MD_ASSEMBLY_INFO" new_name="MD_ASSEMBLY_INFO_I"/>
 			<renaming old_name="MD_STRONG_NAME" new_name="MD_STRONG_NAME_I"/>
 			<renaming old_name="MD_EMIT" new_name="MD_EMIT_I"/>
@@ -33,6 +36,7 @@
 				<exclude>/Clib$</exclude>
 				<exclude>/sample$</exclude>
 				<exclude>/spec$</exclude>
+				<exclude>/tests$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/emitter$</exclude>

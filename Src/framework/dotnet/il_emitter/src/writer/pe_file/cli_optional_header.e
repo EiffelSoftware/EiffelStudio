@@ -173,6 +173,8 @@ feature -- Settings
 			file_alignment_related: i \\ file_alignment = 0
 		do
 			size_of_code := i
+		ensure
+			size_of_code_set: size_of_code = i
 		end
 
 	set_reloc_size (i: INTEGER)
@@ -182,6 +184,8 @@ feature -- Settings
 			file_alignment_related: i \\ file_alignment = 0
 		do
 			size_of_initialized_data := i
+		ensure
+			size_of_initialized_data_set: size_of_initialized_data = i
 		end
 
 	set_subsystem (i: INTEGER_16)
@@ -191,36 +195,48 @@ feature -- Settings
 				or i = {CLI_PE_FILE_CONSTANTS}.Image_subsystem_windows_gui
 		do
 			subsystem := i
+		ensure
+			subsystem_set: subsystem = i
 		end
 
 	set_entry_point_rva (i: INTEGER)
 			-- Set `entry_point_rva' to `i'.
 		do
 			address_of_entry_point := i
+		ensure
+			address_of_entry_point_set: address_of_entry_point = i
 		end
 
 	set_base_of_code (i: INTEGER)
 			-- Set `base_of_code' to `i'
 		do
 			base_of_code := i
+		ensure
+			base_of_code_set: base_of_code = i
 		end
 
 	set_base_of_reloc (i: INTEGER)
 			-- Set `base_of_reloc' to `i'
 		do
 			base_of_data := i
+		ensure
+			base_of_data_set: base_of_data = i
 		end
 
 	set_image_size (i: INTEGER)
 			-- Set `image_size' to `i'.
 		do
 			size_of_image := i
+		ensure
+			size_of_image_set: size_of_image = i
 		end
 
 	set_headers_size (i: INTEGER)
 			-- Set `headers_size' to `i'.
 		do
 			size_of_headers := i
+		ensure
+			size_of_headers_set: size_of_headers = i
 		end
 
 feature {NONE} -- Settings: standard fields
@@ -229,43 +245,34 @@ feature {NONE} -- Settings: standard fields
 			-- Set `magic' to `i'.
 		do
 			magic := i
+		ensure
+			magic_set: magic = i
 		end
 
 	set_major_linker_version (i: INTEGER_8)
 			-- Set `major_linker_version' to `i'.
 		do
 			major_linker_version := i
+		ensure
+			major_linker_version_set: major_linker_version = i
 		end
 
 	set_minor_linker_version (i: INTEGER_8)
 			-- Set `minor_linker_version' to `i'.
 		do
 			minor_linker_version := i
+		ensure
+			minor_linker_version_set: minor_linker_version = i
 		end
 
 	set_size_of_uninitialized_data (i: INTEGER)
 			-- Set `size_of_uninitialized_data' to `i'.
 		do
 			size_of_uninitialized_data := i
+		ensure
+			size_of_uninitialized_data_set: size_of_uninitialized_data = i
 		end
 
-	c_set_address_of_entry_point (i: INTEGER)
-			-- Set `address_of_entry_point' to `i'.
-		do
-			address_of_entry_point := i
-		end
-
-	c_set_base_of_code (i: INTEGER)
-			-- Set `base_of_code' to `i'.
-		do
-			base_of_code := i
-		end
-
-	c_set_base_of_data (i: INTEGER)
-			-- Set `base_of_data' to `i'.
-		do
-			base_of_data := i
-		end
 
 feature {NONE} -- Settings: NT additional fields
 
@@ -273,120 +280,160 @@ feature {NONE} -- Settings: NT additional fields
 			-- Set `image_base' to `i'.
 		do
 			image_base := i
+		ensure
+			image_base = i
 		end
 
 	set_section_alignment (i: INTEGER)
 			-- Set `section_alignment_elem' to `i'.
 		do
 			section_alignment_elem := i
+		ensure
+			section_alignment_elem = i
 		end
 
 	set_file_alignment (i: INTEGER)
 			-- Set `file_alignment_elem' to `i'.
 		do
 			file_alignment_elem := i
+		ensure
+			file_alignment_elem = i
 		end
 
 	set_major_operating_system_version (i: INTEGER_16)
 			-- Set `major_operating_system_version' to `i'.
 		do
 			major_operating_system_version := i
+		ensure
+			major_operating_system_version = i
 		end
 
 	set_minor_operating_system_version (i: INTEGER_16)
 			-- Set `minor_operating_system_version' to `i'.
 		do
 			minor_operating_system_version := i
+		ensure
+			minor_operating_system_version = i
 		end
 
 	set_major_image_version (i: INTEGER_16)
 			-- Set `major_image_version' to `i'.
 		do
 			major_image_version := i
+		ensure
+			major_image_version = i
 		end
 
 	set_minor_image_version (i: INTEGER_16)
 			-- Set `minor_image_version' to `i'.
 		do
 			minor_image_version := i
+		ensure
+			minor_image_version = i
 		end
 
 	set_major_subsystem_version (i: INTEGER_16)
 			-- Set `major_subsystem_version' to `i'.
 		do
 			major_subsystem_version := i
+		ensure
+			major_subsystem_version = i
 		end
 
 	set_minor_subsystem_version (i: INTEGER_16)
 			-- Set `minor_subsystem_version' to `i'.
 		do
 			minor_subsystem_version := i
+		ensure
+			minor_subsystem_version = i
 		end
 
 	set_win32_version_value (i: INTEGER)
 			-- Set `win32_version_value' to `i'.
 		do
 			win32_version_value := i
+		ensure
+			win32_version_value = i
 		end
 
 	set_size_of_image (i: INTEGER)
 			-- Set `SizeOfImage' to `i'.
 		do
 			size_of_image := i
+		ensure
+			size_of_image = i
 		end
 
 	set_size_of_headers (i: INTEGER)
 			-- Set `size_of_headers' to `i'.
 		do
 			size_of_headers := i
+		ensure
+			size_of_headers = i
 		end
 
 	set_check_sum (i: INTEGER)
 			-- Set `check_sum' to `i'.
 		do
 			check_sum := i
+		ensure
+			check_sum = i
 		end
 
 	set_dll_characteristics (i: INTEGER_16)
 			-- Set `dll_characteristics' to `i'.
 		do
 			dll_characteristics := i
+		ensure
+			dll_characteristics = i
 		end
 
 	set_size_of_stack_reserve (i: INTEGER)
 			-- Set `size_of_stack_reserve' to `i'.
 		do
 			size_of_stack_reserve := i
+		ensure
+			size_of_stack_reserve = i
 		end
 
 	set_size_of_stack_commit (i: INTEGER)
 			-- Set `size_of_stack_commit' to `i'.
 		do
 			size_of_stack_commit := i
+		ensure
+			size_of_stack_commit = i
 		end
 
 	set_size_of_heap_reserve (i: INTEGER)
 			-- Set `size_of_stack_commit' to `i'.
 		do
 			size_of_heap_reserve := i
+		ensure
+			size_of_heap_reserve = i
 		end
 
 	set_size_of_heap_commit (i: INTEGER)
 			-- Set `size_of_heap_commit' to `i'.
 		do
 			size_of_heap_commit := i
+		ensure
+			size_of_heap_commit = i
 		end
 
 	set_loader_flags (i: INTEGER)
 			-- Set `loader_flags' to `i'.
 		do
 			loader_flags := i
+		ensure
+			loader_flags = i
 		end
 
 	set_number_of_rva_and_sizes (i: INTEGER)
 			-- Set `number_of_rva_and_sizes' to `i'.
 		do
 			number_of_rva_and_sizes := i
+		ensure
+			number_of_rva_and_sizes = i
 		end
 
 feature {NONE} -- Initialize Directory

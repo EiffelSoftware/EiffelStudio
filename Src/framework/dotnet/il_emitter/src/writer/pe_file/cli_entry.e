@@ -13,7 +13,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create padding.make_filled({NATURAL_8} 0, 1, 2)
+			create padding.make_filled ({NATURAL_8} 0, 1, 2)
 			set_jump_inst_high (0xFF)
 			set_jump_inst_low (0x25)
 		end
@@ -36,7 +36,7 @@ feature -- Status Report
 			Result := size_of
 		end
 
-feature  -- Debug
+feature -- Debug
 
 	debug_header (a_name: STRING_32)
 		local
@@ -49,23 +49,28 @@ feature  -- Debug
 
 feature -- Element Change
 
-   set_jump_inst_high (a_jump_inst_h: INTEGER_8)
-   		-- Set `jump_inst_h` with `a_jump_inst_h`.
-      do
-        jump_inst_h := a_jump_inst_h
-      end
+	set_jump_inst_high (a_jump_inst_h: INTEGER_8)
+			-- Set `jump_inst_h` with `a_jump_inst_h`.
+		do
+			jump_inst_h := a_jump_inst_h
+		ensure
+			jump_inst_h_set: jump_inst_h = a_jump_inst_h
+		end
 
-    set_jump_inst_low (a_jump_inst_l: INTEGER_8)
-     	 -- Set `jump_inst_l` with `a_jump_inst_l`.
-      do
-        jump_inst_l := a_jump_inst_l
-      end
-
+	set_jump_inst_low (a_jump_inst_l: INTEGER_8)
+			-- Set `jump_inst_l` with `a_jump_inst_l`.
+		do
+			jump_inst_l := a_jump_inst_l
+		ensure
+			jump_inst_l_set: jump_inst_l = a_jump_inst_l
+		end
 
 	set_iat_rva (rva: INTEGER)
 			-- Set `iat_rva' to `rva'.
 		do
-			iat_rva :=  rva + 0x400000
+			iat_rva := rva + 0x400000
+		ensure
+			iat_rva_set: iat_rva = rva + 0x400000
 		end
 
 feature -- Managed Pointer
@@ -83,15 +88,15 @@ feature -- Managed Pointer
 			l_pos := 2 * {PLATFORM}.natural_8_bytes
 
 				-- jump_inst_h
-			Result.put_integer_8_le(jump_inst_h, l_pos)
+			Result.put_integer_8_le (jump_inst_h, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_8_bytes
 
 				-- jump_inst_l
-			Result.put_integer_8_le(jump_inst_l, l_pos)
+			Result.put_integer_8_le (jump_inst_l, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_8_bytes
 
 				-- iat_rva
-			Result.put_integer_32_le(iat_rva, l_pos)
+			Result.put_integer_32_le (iat_rva, l_pos)
 		end
 
 feature -- Measurement

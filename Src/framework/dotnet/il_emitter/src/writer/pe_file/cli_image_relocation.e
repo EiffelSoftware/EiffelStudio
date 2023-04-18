@@ -48,15 +48,19 @@ feature -- Status Report
 feature -- Element Change
 
 	set_block_rva (a_block_rva: INTEGER_32)
-			-- Set `block_rva' to `a_block_rva'.
+			-- Set `block_rva` to `a_block_rva'.
 		do
 			block_rva := a_block_rva
+		ensure
+			block_rva_set: block_rva = a_block_rva
 		end
 
 	set_fixup (a_fixup: INTEGER_16)
 			-- Set `fixup' to `a_fixup'.
 		do
 			fixup := a_fixup
+		ensure
+			fixup_set: fixup = a_fixup
 		end
 
 feature -- Settings

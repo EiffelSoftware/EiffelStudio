@@ -50,7 +50,6 @@ feature -- Access: Header versioning
 			-- The minor version number of the .NET runtime.
 			--| The minor portion of the version, currently 0.
 
-
 feature -- Access: 	Symbol table and startup information
 
 	meta_data_directory: CLI_DIRECTORY
@@ -106,8 +105,7 @@ feature --Access:  Precompiled image info (internal use only - set to zero)
 	managed_native_header: CLI_DIRECTORY
 			-- Always 0 (Section II.24.1)
 
-
-feature  -- Debug
+feature -- Debug
 
 	debug_header (a_name: STRING_32)
 		local
@@ -117,7 +115,6 @@ feature  -- Debug
 			l_file.put_managed_pointer (item, 0, count)
 			l_file.close
 		end
-
 
 feature -- Status Report
 
@@ -138,8 +135,6 @@ feature -- Constants
 	strong_name_signed: INTEGER = 0x00000008
 			-- Image has strong name signature.
 
-
-
 feature -- Element Change
 
 	add_flags (i: INTEGER)
@@ -154,77 +149,100 @@ feature -- Element Change
 			flags_added: (flags & i) = i
 		end
 
-
 	set_cb (a_cb: INTEGER_32)
 			-- Set `cb` with `a_cb`.
 		do
 			cb := a_cb
+		ensure
+			cb_set: cb = a_cb
 		end
 
 	set_major_runtime_version (a_major_runtime_version: INTEGER_16)
 			-- Set `major_runtime_version` with `a_major_runtime_version`.
 		do
 			major_runtime_version := a_major_runtime_version
+		ensure
+			major_runtime_version_set: major_runtime_version = a_major_runtime_version
 		end
 
 	set_minor_runtime_version (a_minor_runtime_version: INTEGER_16)
 			-- Set `minor_runtime_version` with `a_minor_runtime_version`.
 		do
 			minor_runtime_version := a_minor_runtime_version
+		ensure
+			minor_runtime_version_set: minor_runtime_version = a_minor_runtime_version
 		end
 
 	set_meta_data (a_meta_data: CLI_DIRECTORY)
 			-- Set `meta_data` with `a_meta_data`.
 		do
 			meta_data := a_meta_data
+		ensure
+			meta_data_set: meta_data = a_meta_data
 		end
 
 	set_flags (a_flags: INTEGER_32)
 			-- Set `flags` with `a_flags`.
 		do
 			flags := a_flags
+		ensure
+			flags_set: flags = a_flags
 		end
 
 	set_entry_point_token (an_entry_point_token: INTEGER_32)
 			-- Set `entry_point_token` with `an_entry_point_token`.
 		do
 			entry_point_token := an_entry_point_token
+		ensure
+			entry_point_token_set: entry_point_token = an_entry_point_token
 		end
 
 	set_resources (a_resources: CLI_DIRECTORY)
 			-- Set `resources` with `a_resources`.
 		do
 			resources := a_resources
+		ensure
+			resources_set: resources = a_resources
 		end
 
 	set_strong_name_signature (a_strong_name_signature: CLI_DIRECTORY)
 			-- Set `strong_name_signature` with `a_strong_name_signature`.
 		do
 			strong_name_signature := a_strong_name_signature
+		ensure
+			strong_name_signature_set: strong_name_signature = a_strong_name_signature
 		end
 
 	set_code_manager_table (a_code_manager_table: CLI_DIRECTORY)
 			-- Set `code_manager_table` with `a_code_manager_table`.
 		do
 			code_manager_table := a_code_manager_table
+		ensure
+			code_manager_table_set: code_manager_table = a_code_manager_table
 		end
 
 	set_vtable_fixups (a_vtable_fixups: CLI_DIRECTORY)
 			-- Set `vtable_fixups` with `a_vtable_fixups`.
 		do
 			vtable_fixups := a_vtable_fixups
+		ensure
+			vtable_fixups_set: vtable_fixups = a_vtable_fixups
 		end
 
 	set_export_address_table_jumps (an_export_address_table_jumps: CLI_DIRECTORY)
 			-- Set `export_address_table_jumps` with `an_export_address_table_jumps`.
 		do
 			export_address_table_jumps := an_export_address_table_jumps
+		ensure
+			export_address_table_jumps_set: export_address_table_jumps = an_export_address_table_jumps
 		end
 
 	set_managed_native_header (a_managed_native_header: CLI_DIRECTORY)
 			-- Set `managed_native_header` with `a_managed_native_header`.
 		do
 			managed_native_header := a_managed_native_header
+		ensure
+			managed_native_header_set: managed_native_header = a_managed_native_header
 		end
 
 feature -- Managed Pointer

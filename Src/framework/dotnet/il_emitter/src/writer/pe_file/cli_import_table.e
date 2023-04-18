@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 				-- 	-- Set `entry_point_name'.
 			if is_dll then
-				 set_entry_point_name (dll_entry_point_name)
+				set_entry_point_name (dll_entry_point_name)
 			else
 				set_entry_point_name (exe_entry_point_name)
 			end
@@ -68,7 +68,6 @@ feature -- Access
 	library_name: ARRAY [NATURAL_8]
 			-- count = 12
 
-
 feature -- Status Report
 
 	count: INTEGER
@@ -77,7 +76,7 @@ feature -- Status Report
 			Result := size_of
 		end
 
-feature  -- Debug
+feature -- Debug
 
 	debug_header
 		local
@@ -87,7 +86,6 @@ feature  -- Debug
 			l_file.put_managed_pointer (item, 0, count)
 			l_file.close
 		end
-
 
 feature -- Settings
 
@@ -102,43 +100,54 @@ feature -- Settings
 			set_import_by_name_rva (current_location + size_to_import_by_name)
 		end
 
-
 feature -- Element Change
 
 	set_import_lookup_table (a_value: INTEGER_32)
 			-- Set the RVA to ImportLookupTable.
 		do
 			import_lookup_table := a_value
+		ensure
+			import_lookup_table_set: import_lookup_table = a_value
 		end
 
 	set_time_date_stamp (a_value: INTEGER_32)
 			-- Set the time and date that the import was added.
 		do
 			time_date_stamp := a_value
+		ensure
+			time_date_stamp_set: time_date_stamp = a_value
 		end
 
 	set_forwarder_chain (a_value: INTEGER_32)
 			-- Set the index of the first forwarder reference.
 		do
 			forwarder_chain := a_value
+		ensure
+			forwarder_chain_set: forwarder_chain = a_value
 		end
 
 	set_name_rva (a_value: INTEGER_32)
 			-- Set the RVA to the null-terminated ASCII string that contains the name of the DLL.
 		do
 			name_rva := a_value
+		ensure
+			name_rva_set: name_rva = a_value
 		end
 
 	set_iat_rva (a_value: INTEGER_32)
 			-- Set the RVA to the import address table (IAT).
 		do
 			iat_rva := a_value
+		ensure
+			iat_rva_set: iat_rva = a_value
 		end
 
 	set_import_by_name_rva (a_value: INTEGER_32)
 			-- Set the RVA to the null-terminated ASCII string that contains the import symbol name.
 		do
 			import_by_name_rva := a_value
+		ensure
+			import_by_name_rva_set: import_by_name_rva = a_value
 		end
 
 	set_entry_point_name (a_value: STRING)
@@ -147,6 +156,8 @@ feature -- Element Change
 			valid_entry_point_name: a_value.count <= 12
 		do
 			entry_point_name := string_to_array_8 (a_value, 12)
+		ensure
+			entry_point_name_set: entry_point_name.same_items (string_to_array_8 (a_value, 12))
 		end
 
 	set_library_name (a_value: STRING)
@@ -155,6 +166,8 @@ feature -- Element Change
 			valid_library_name: a_value.count <= 12
 		do
 			library_name := string_to_array_8 (a_value, 12)
+		ensure
+			library_name_set: library_name.same_items(string_to_array_8 (a_value, 12))
 		end
 
 feature {NONE} -- Implementation
@@ -192,43 +205,42 @@ feature -- Constants
 	library_name_dll: STRING = "mscoree.dll"
 			-- Name of library containing above entry points.
 
-
 feature -- Managed Pointer
 
 	item: MANAGED_POINTER
-		-- Write the item attributes to the buffer in little-endian format.
+			-- Write the item attributes to the buffer in little-endian format.
 		local
 			l_pos: INTEGER
 		do
-			create Result.make(size_of)
+			create Result.make (size_of)
 			l_pos := 0
 
 				-- import_lookup_table
-			Result.put_integer_32_le(import_lookup_table, l_pos)
+			Result.put_integer_32_le (import_lookup_table, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
 				-- time_date_stamp
-			Result.put_integer_32_le(time_date_stamp, l_pos)
+			Result.put_integer_32_le (time_date_stamp, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
 				-- forwarder_chain
-			Result.put_integer_32_le(forwarder_chain, l_pos)
+			Result.put_integer_32_le (forwarder_chain, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
-				-- name_rva	
-			Result.put_integer_32_le(name_rva, l_pos)
+				-- name_rva
+			Result.put_integer_32_le (name_rva, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
-				-- iat_rva	
-			Result.put_integer_32_le(iat_rva, l_pos)
+				-- iat_rva
+			Result.put_integer_32_le (iat_rva, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
 				-- padding_1
 			Result.put_array (padding_1, l_pos)
 			l_pos := l_pos + 20 * {PLATFORM}.natural_8_bytes
 
-				-- import_by_name_rva	
-			Result.put_integer_32_le(import_by_name_rva, l_pos)
+				-- import_by_name_rva
+			Result.put_integer_32_le (import_by_name_rva, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
 				-- padding_3
@@ -245,11 +257,10 @@ feature -- Managed Pointer
 
 		end
 
-
- 	size_of: INTEGER
- 			-- Size of the structure
- 		do
- 				-- import_lookup_table
+	size_of: INTEGER
+			-- Size of the structure
+		do
+				-- import_lookup_table
 			Result := {PLATFORM}.integer_32_bytes
 
 				-- time_date_stamp
@@ -258,16 +269,16 @@ feature -- Managed Pointer
 				-- forwarder_chain
 			Result := Result + {PLATFORM}.integer_32_bytes
 
-				-- name_rva	
+				-- name_rva
 			Result := Result + {PLATFORM}.integer_32_bytes
 
-				-- iat_rva	
+				-- iat_rva
 			Result := Result + {PLATFORM}.integer_32_bytes
 
 				-- padding_1
 			Result := Result + 20 * {PLATFORM}.natural_8_bytes
 
-				-- import_by_name_rva	
+				-- import_by_name_rva
 			Result := Result + {PLATFORM}.integer_32_bytes
 
 				-- padding_3
@@ -279,6 +290,6 @@ feature -- Managed Pointer
 				-- library_name
 			Result := Result + 12 * {PLATFORM}.natural_8_bytes
 
- 		end
+		end
 
 end

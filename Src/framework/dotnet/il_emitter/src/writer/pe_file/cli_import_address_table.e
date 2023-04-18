@@ -38,6 +38,8 @@ feature -- Element Change
 			-- Set `import_by_name_rva' with `a_val'
 		do
 			import_by_name_rva := a_val
+		ensure
+			import_by_name_rva_set: import_by_name_rva = a_val
 		end
 
 feature  -- Debug

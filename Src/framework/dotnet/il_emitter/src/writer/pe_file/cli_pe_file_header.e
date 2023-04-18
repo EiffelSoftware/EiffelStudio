@@ -56,39 +56,51 @@ feature -- Access
 feature -- Settings
 
 	set_machine (i: INTEGER)
-			-- Set `machine` to i
+			-- Set `machine` to `i`
 		do
 			machine := i.to_integer_16
+		ensure
+			machine_set: machine = i.to_integer_16
 		end
 
 	set_number_of_sections (i: INTEGER)
-			-- Set `number_of_sections` to i
+			-- Set `number_of_sections` to `i`
 		do
 			number_of_sections := i.to_integer_16
+		ensure
+			number_of_sections_set: number_of_sections = i.to_integer_16
 		end
 
 	set_time_date_stamp (t: INTEGER)
 			-- Set `time_date_stamp' to `t'.
 		do
 			time_date_stamp := t
+		ensure
+			time_date_stamp_set: time_date_stamp = t
 		end
 
 	set_size_of_optional_header (s: INTEGER_16)
 			-- Set `size_of_optional_header_size' to `s'.
 		do
 			size_of_optional_header := s
+		ensure
+			size_of_optional_header_set: size_of_optional_header = s
 		end
 
 	set_number_of_symbols (i: INTEGER)
-			-- 	Set `number_of_symbols` to i.
+			-- Set `number_of_symbols` to `i`.
 		do
 			number_of_symbols := i
+		ensure
+			number_of_symbols_set: number_of_symbols = i
 		end
 
 	set_pointer_to_symbol_table (i: INTEGER)
 			-- Set `pointer_to_symbol_table' to `i'.
 		do
 			pointer_to_symbol_table := i
+		ensure
+			pointer_to_symbol_table_set: pointer_to_symbol_table = i
 		end
 
 	set_characteristics (c: INTEGER_16)
@@ -96,6 +108,8 @@ feature -- Settings
 			-- Look in `CLI_PE_FILE_CONSTANTS' for possible constants.
 		do
 			characteristics := c
+		ensure
+			characteristics_set: characteristics = c
 		end
 
 feature -- Status Report
@@ -106,8 +120,7 @@ feature -- Status Report
 			Result := size_of
 		end
 
-
-feature  -- Debug
+feature -- Debug
 
 	debug_header (a_name: STRING_32)
 		local
@@ -117,7 +130,6 @@ feature  -- Debug
 			l_file.put_managed_pointer (item, 0, count)
 			l_file.close
 		end
-
 
 feature -- Managed pointer
 

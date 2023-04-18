@@ -27,13 +27,13 @@ feature {NONE} -- Initialization
 			end
 			set_flags (l_flags)
 				-- Initialization.
-			set_managed_native_header (create {CLI_DIRECTORY})
-			set_export_address_table_jumps (create {CLI_DIRECTORY})
-			set_vtable_fixups (create {CLI_DIRECTORY})
-			set_code_manager_table (create {CLI_DIRECTORY})
-			set_strong_name_signature (create {CLI_DIRECTORY})
-			set_resources (create {CLI_DIRECTORY})
-			set_meta_data (create {CLI_DIRECTORY})
+			set_managed_native_header (create {CLI_DIRECTORY}.make)
+			set_export_address_table_jumps (create {CLI_DIRECTORY}.make)
+			set_vtable_fixups (create {CLI_DIRECTORY}.make)
+			set_code_manager_table (create {CLI_DIRECTORY}.make)
+			set_strong_name_signature (create {CLI_DIRECTORY}.make)
+			set_resources (create {CLI_DIRECTORY}.make)
+			set_meta_data (create {CLI_DIRECTORY}.make)
 		end
 
 feature -- Access: Header versioning
@@ -256,7 +256,7 @@ feature -- Managed Pointer
 				-- Symbol table and startup information
 				--
 				-- meta_data
-			Result.put_pointer (meta_data.item.item, l_pos)
+			Result.put_array (meta_data.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
 			l_pos := l_pos + {CLI_DIRECTORY}.size_of
 
 				-- flags
@@ -271,33 +271,33 @@ feature -- Managed Pointer
 				--  Binding information
 				--
 				-- resources
-			Result.put_pointer (resources.item.item, l_pos)
+			Result.put_array (resources.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
 			l_pos := l_pos + {CLI_DIRECTORY}.size_of
 
 				-- strong_name_signature
-			Result.put_pointer (strong_name_signature.item.item, l_pos)
+			Result.put_array (strong_name_signature.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
 			l_pos := l_pos + {CLI_DIRECTORY}.size_of
 
 				--
 				--  Regular fixup and binding information
 				--
 				-- code_manager_table
-			Result.put_pointer (code_manager_table.item.item, l_pos)
+			Result.put_array (code_manager_table.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
 			l_pos := l_pos + {CLI_DIRECTORY}.size_of
 
 				-- vtable_fixups
-			Result.put_pointer (vtable_fixups.item.item, l_pos)
+			Result.put_array (vtable_fixups.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
 			l_pos := l_pos + {CLI_DIRECTORY}.size_of
 
 				-- export_address_table_jumps
-			Result.put_pointer (export_address_table_jumps.item.item, l_pos)
+			Result.put_array (export_address_table_jumps.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
 			l_pos := l_pos + {CLI_DIRECTORY}.size_of
 
 				--
 				-- Precompiled image info (internal use only - set to zero)
 				--
 				-- managed_native_header
-			Result.put_pointer (managed_native_header.item.item, l_pos)
+			Result.put_array (managed_native_header.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
 			l_pos := l_pos + {CLI_DIRECTORY}.size_of
 		end
 

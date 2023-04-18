@@ -8,6 +8,16 @@ class
     CLI_DIRECTORY
 
 
+create
+	make
+
+feature {NONE}
+
+	make
+		do
+			set_rva_and_size(0,0)
+		end
+
 feature -- Access
 
     rva: INTEGER_32

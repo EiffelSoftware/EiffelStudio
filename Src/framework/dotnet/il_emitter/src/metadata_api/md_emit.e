@@ -174,17 +174,17 @@ feature -- Access
 				-- Calculate the size of the metadata header IMAGE_COR20_HEADER
 			Result := Result + 132
 
-				-- Calculate the size of the string heap
-			Result := Result + strings_heap_size.to_integer_32
+--				-- Calculate the size of the string heap
+--			Result := Result + strings_heap_size.to_integer_32
 
-				-- Calculate the size of the user string heap
-			Result := Result + us_heap_size.to_integer_32
+--				-- Calculate the size of the user string heap
+--			Result := Result + us_heap_size.to_integer_32
 
-				-- Calculate the size of the blob heap
-			Result := Result + blob_heap_size.to_integer_32
+--				-- Calculate the size of the blob heap
+--			Result := Result + blob_heap_size.to_integer_32
 
-				-- Calculate the size of the guid heap
-			Result := Result + guid_heap_size.to_integer_32
+--				-- Calculate the size of the guid heap
+--			Result := Result + guid_heap_size.to_integer_32
 
 				-- Padding.
 			if (Result \\ 4) /= 0 then

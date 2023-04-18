@@ -86,8 +86,6 @@ feature {NONE} -- Initialization
 			is_dll_set: is_dll = dll_app
 		end
 
-	debug_output: BOOLEAN
-
 	write_debug
 		do
 			pe_header.debug_header ("pe_header_tk")

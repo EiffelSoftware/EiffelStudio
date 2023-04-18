@@ -82,8 +82,7 @@ feature -- Settings
 				i.to_integer_16)
 		end
 
-
-feature  -- Debug
+feature -- Debug
 
 	debug_header (a_name: STRING_32)
 		local
@@ -93,7 +92,6 @@ feature  -- Debug
 			l_file.put_managed_pointer (item, 0, count)
 			l_file.close
 		end
-
 
 feature -- Managed Pointer
 

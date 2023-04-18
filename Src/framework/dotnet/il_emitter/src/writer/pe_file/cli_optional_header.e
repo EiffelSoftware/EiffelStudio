@@ -153,7 +153,7 @@ feature -- Status Report
 			Result := size_of
 		end
 
-feature  -- Debug
+feature -- Debug
 
 	debug_header (a_name: STRING_32)
 		local
@@ -163,7 +163,6 @@ feature  -- Debug
 			l_file.put_managed_pointer (item, 0, count)
 			l_file.close
 		end
-
 
 feature -- Settings
 
@@ -369,7 +368,7 @@ feature {NONE} -- Settings: NT additional fields
 	set_size_of_heap_reserve (i: INTEGER)
 			-- Set `size_of_stack_commit' to `i'.
 		do
-			size_of_stack_commit := i
+			size_of_heap_reserve := i
 		end
 
 	set_size_of_heap_commit (i: INTEGER)
@@ -396,7 +395,7 @@ feature {NONE} -- Initialize Directory
 		do
 			create data_directory.make ({CLI_DIRECTORY_CONSTANTS}.Image_number_of_directory_entries)
 			across 1 |..| {CLI_DIRECTORY_CONSTANTS}.Image_number_of_directory_entries as i loop
-				data_directory.force (create {CLI_DIRECTORY})
+				data_directory.force (create {CLI_DIRECTORY}.make)
 			end
 		end
 
@@ -415,11 +414,11 @@ feature -- Managed Pointer
 			l_pos := l_pos + {PLATFORM}.integer_16_bytes
 
 				-- major_linker_version
-			Result.put_integer_8 (major_linker_version, l_pos)
+			Result.put_integer_8_le (major_linker_version, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_8_bytes
 
 				-- minor_linker_version
-			Result.put_integer_8 (minor_linker_version, l_pos)
+			Result.put_integer_8_le (minor_linker_version, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_8_bytes
 
 				-- size_of_code
@@ -532,7 +531,7 @@ feature -- Managed Pointer
 
 				-- Write the Array of data directory as pointers.
 			across data_directory as i loop
-				Result.put_pointer (i.item.item, l_pos)
+				Result.put_array (i.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
 				l_pos := l_pos + {CLI_DIRECTORY}.size_of
 			end
 		end

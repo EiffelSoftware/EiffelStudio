@@ -17,6 +17,8 @@ feature -- Element Change
 			-- Set cildata_rva with `a_val`.
 		do
 			value := a_val
+		ensure
+			value_set: value = a_val
 		end
 
 end

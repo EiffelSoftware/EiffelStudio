@@ -232,7 +232,7 @@ feature -- Access
 
 	rva: PE_POOL
 
-feature {NONE} -- Implemenation
+feature {MD_EMIT} -- Implemenation
 
 	meta_header1: PE_DOTNET_META_HEADER
 		do
@@ -449,7 +449,7 @@ feature -- Element Change
 				to_implement ("Double check if its requried.")
 			end
 			Result := tables [n].table.count.to_natural_32
-			l_token :=  ((n |<< 24).to_natural_32 | Result.to_natural_32)
+			l_token := ((n |<< 24).to_natural_32 | Result.to_natural_32)
 		end
 
 	add_method (a_method: PE_METHOD)
@@ -670,16 +670,16 @@ feature -- Various Operations
 			end
 			calculate_objects (a_corflags)
 
-			--l_rv := write_blob
-			--debug
-					-- check write_tables
-				l_rv := write_mz_data and then write_pe_header
-					and then write_pe_objects and then write_iat and then write_core_header and then
-					write_static_data and then write_methods and then write_metadata_headers and then write_tables and then write_strings and then
-					write_us and then write_guid and then write_blob and then write_imports and then write_entry_point and then write_hash_data and then
-						--write_version_info (a_file_name: STRING_32)
-					write_relocs
-			--end
+				--l_rv := write_blob
+				--debug
+				-- check write_tables
+			l_rv := write_mz_data and then write_pe_header
+				and then write_pe_objects and then write_iat and then write_core_header and then
+				write_static_data and then write_methods and then write_metadata_headers and then write_tables and then write_strings and then
+				write_us and then write_guid and then write_blob and then write_imports and then write_entry_point and then write_hash_data and then
+					--write_version_info (a_file_name: STRING_32)
+				write_relocs
+				--end
 
 			if l_rv and then snk_len /= 0 then
 				create l_context.make
@@ -891,7 +891,7 @@ feature -- Operations
 				end
 			end
 
-			cildata_rva.value := l_current_rva.to_natural_32
+			cildata_rva.set_value (l_current_rva.to_natural_32)
 			if rva.size /= 0 then
 				l_current_rva := l_current_rva + rva.size
 				if l_current_rva \\ 8 /= 0 then
@@ -1195,7 +1195,7 @@ feature -- Operations
 			tables_header := l_tables_header
 		end
 
-feature {NONE} -- Implementation
+feature {MD_EMIT} -- Implementation
 
 	number_of_seconds_since_epoch: INTEGER_32
 			-- calculate the number of seconds since epoch in eiffel
@@ -1958,26 +1958,24 @@ feature {NONE} -- Helper features
 			end
 		end
 
-
 	new_random_guid: ARRAY [NATURAL_8]
 			-- Create a random GUID.
 		local
-			l_random:RANDOM
+			l_random: RANDOM
 			l_data1: NATURAL_32
 			l_data2: NATURAL_16
 			l_data3: NATURAL_16
 			l_data4: ARRAY [NATURAL_8]
 			l_seed: INTEGER
 			l_time: TIME
-			l_val:NATURAL_8
+			l_val: NATURAL_8
 			l_guid: CIL_GUID
 		do
 			create l_time.make_now
-		    l_seed := l_time.hour
-      		l_seed := l_seed * 60 + l_time.minute
-      		l_seed := l_seed * 60 + l_time.second
-     		l_seed := l_seed * 1000 + l_time.milli_second
-
+			l_seed := l_time.hour
+			l_seed := l_seed * 60 + l_time.minute
+			l_seed := l_seed * 60 + l_time.second
+			l_seed := l_seed * 1000 + l_time.milli_second
 
 			create l_random.set_seed (l_seed)
 			l_random.start
@@ -1985,16 +1983,16 @@ feature {NONE} -- Helper features
 			l_data1 := l_random.item.to_natural_32
 			l_random.forth
 
-			l_data2 := ((l_random.item.to_natural_32 \\  {NATURAL_16}.max_value) + 1).to_natural_16
+			l_data2 := ((l_random.item.to_natural_32 \\ {NATURAL_16}.max_value) + 1).to_natural_16
 			l_random.forth
 
-			l_data3 := ((l_random.item.to_natural_32 \\  {NATURAL_16}.max_value) + 1).to_natural_16
+			l_data3 := ((l_random.item.to_natural_32 \\ {NATURAL_16}.max_value) + 1).to_natural_16
 			l_random.forth
 
-			l_data4 := {ARRAY [NATURAL_8]} << 0,0,0,0,0,0,0,0 >>
+			l_data4 := {ARRAY [NATURAL_8]} <<0, 0, 0, 0, 0, 0, 0, 0>>
 
 			across 1 |..| 8 as i loop
-				l_val := ((l_random.item.to_natural_32 \\  {NATURAL_8}.max_value) + 1).to_natural_8
+				l_val := ((l_random.item.to_natural_32 \\ {NATURAL_8}.max_value) + 1).to_natural_8
 				l_data4 [i] := l_val
 				l_random.forth
 			end
@@ -2002,6 +2000,5 @@ feature {NONE} -- Helper features
 			create l_guid.make (l_data1, l_data2, l_data3, l_data4)
 			Result := l_guid.to_array_natural_8
 		end
-
 
 end

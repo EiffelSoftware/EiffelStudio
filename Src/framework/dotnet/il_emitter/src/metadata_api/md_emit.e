@@ -32,13 +32,15 @@ feature {NONE}
 		do
 				-- Using PE_WRITER to get access helper features.
 			create pe_writer.make (True, False, "")
+			create stream_headers.make_filled (0, 5, 2)
 			initialize_metadata_tables
-			initialize_module
 			initialize_guid
+			initialize_module
 			create tables_header
 			create assembly_emitter.make (tables, pe_writer)
 				-- we don't initialize the compilation unit since we don't provide the name of it (similar to the COM interface)
 			initialize_entry_size
+
 		ensure
 			module_guid_set: module_guid.count = 16
 		end
@@ -96,8 +98,10 @@ feature {NONE}
 			l_table: PE_TABLE_ENTRY_BASE
 			l_dis: NATURAL_64
 		do
-				-- TODO double check if we need to do this initialization.
+				-- initializes the necessary metadata tables for the module and type definition entries.
 			module_index := pe_writer.hash_string ({STRING_32} "<Module>")
+			create {PE_MODULE_TABLE_ENTRY} l_table.make_with_data (0, guid_index)
+			pe_index := add_table_entry (l_table)
 
 			create l_type_def.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
 			create {PE_TYPE_DEF_TABLE_ENTRY} l_table.make_with_data (0, module_index, 0, l_type_def, 1, 1)
@@ -128,6 +132,9 @@ feature -- Access
 	tables_header: PE_DOTNET_META_TABLES_HEADER
 			-- `tables_header'
 
+	stream_headers: ARRAY2 [NATURAL_64]
+			-- defined as streamHeaders_[5][2];
+
 feature -- Status report
 
 	is_successful: BOOLEAN
@@ -145,12 +152,11 @@ feature -- Access
 			l_count: INTEGER
 		do
 				-- optional way to compute the header size + table_header setup.
-			save_size_tmp
+--			save_size_tmp
 				--| Computes the size of the metadata for the current emitted assembly.
 				--| Iterate through each table and multiplying the size of the table by the number of entries in the table.
 				--| Adds the size of each heap (string, user string, blob, and GUID)
 				--| The size of the metadata header and table header.
-				--| If the size is not a multiple of 4, padding is added to make it a multiple of 4.
 				--| The final result is the size of the metadata in bytes.
 
 				-- Calculate the size of each metadata table
@@ -163,7 +169,7 @@ feature -- Access
 				end
 			end
 
-				-- Each table header is 4 bytes long we multiply but the number of heaers used.
+				-- Each table header is 4 bytes long we multiply but the number of headers used.
 			Result := Result + 4 * l_count
 
 				-- Calculate the size of the meta tables header
@@ -173,24 +179,7 @@ feature -- Access
 
 				-- Calculate the size of the metadata header IMAGE_COR20_HEADER
 			Result := Result + 132
-
---				-- Calculate the size of the string heap
---			Result := Result + strings_heap_size.to_integer_32
-
---				-- Calculate the size of the user string heap
---			Result := Result + us_heap_size.to_integer_32
-
---				-- Calculate the size of the blob heap
---			Result := Result + blob_heap_size.to_integer_32
-
---				-- Calculate the size of the guid heap
---			Result := Result + guid_heap_size.to_integer_32
-
-				-- Padding.
-			if (Result \\ 4) /= 0 then
-				Result := Result + 4 - (Result \\ 4)
-			end
-
+			streams_setup
 		end
 
 	entry_sizes: HASH_TABLE [FUNCTION [INTEGER], INTEGER]
@@ -259,6 +248,126 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	streams_setup
+		local
+			l_current_rva: NATURAL_32
+			l_counts: ARRAY [NATURAL_64]
+			l_temp: NATURAL_32
+			l_buffer: ARRAY [NATURAL_8]
+		do
+--			l_current_rva := 12
+--				-- metadata header offest
+
+--			l_current_rva := l_current_rva + 4
+--				-- version size
+
+			l_current_rva := l_current_rva + pe_writer.compute_rtv_string_size
+
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			l_current_rva := l_current_rva + 2
+				-- flags
+
+			l_current_rva := l_current_rva + 2
+				-- streams, will be 5 in our implementation
+				-- check stream_names feature.
+
+			across pe_writer.stream_names as elem loop
+				l_current_rva := l_current_rva + 8 + (elem.count + 1).to_natural_32
+				if (l_current_rva \\ 4) /= 0 then
+					l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+				end
+			end
+			stream_headers [1, 1] := l_current_rva
+
+			tables_header.major_version := 2
+			tables_header.reserved2 := 1
+			tables_header.mask_sorted := ({INTEGER_64} 0x1600 |<< 32) + 0x3325FA00
+			if strings_heap_size = 65536 then
+				tables_header.heap_offset_sizes := tables_header.heap_offset_sizes | 1
+			end
+			if guid_heap_size >= 65536 then
+				tables_header.heap_offset_sizes := tables_header.heap_offset_sizes | 2
+			end
+			if blob_heap_size >= 65536 then
+				tables_header.heap_offset_sizes := tables_header.heap_offset_sizes | 4
+			end
+
+			create l_counts.make_filled (0, 1, Max_tables + Extra_indexes)
+			l_counts [t_string + 1] := strings_heap_size
+			l_counts [t_us + 1] := us_heap_size
+			l_counts [t_guid + 1] := guid_heap_size
+			l_counts [t_blob + 1] := blob_heap_size
+
+			across 0 |..| (max_tables - 1) as ic loop
+				if not tables [ic].is_empty then
+					l_counts [ic + 1] := tables [ic].size.to_natural_32
+					tables_header.mask_valid := tables_header.mask_valid | ({INTEGER_64} 1 |<< ic)
+					l_temp := l_temp + 1
+				end
+			end
+			l_current_rva := l_current_rva + {PE_DOTNET_META_TABLES_HEADER}.size_of.to_natural_32
+				-- tables header
+			l_current_rva := l_current_rva + (l_temp * ({PLATFORM}.natural_32_bytes).to_natural_32)
+				--table counts
+				-- Dword is 4 bytes.
+
+			across 0 |..| (max_tables - 1) as ic loop
+				if l_counts [ic + 1] /= 0 then
+					create l_buffer.make_filled (0, 1, 512)
+					l_temp := tables [ic].table [1].render (l_counts, l_buffer).to_natural_32
+					l_temp := l_temp * (l_counts [ic + 1]).to_natural_32
+					l_current_rva := l_current_rva + l_temp
+				end
+			end
+
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			stream_headers [1, 2] := l_current_rva - stream_headers [1, 1]
+			stream_headers [2, 1] := l_current_rva
+			l_current_rva := l_current_rva + pe_writer.strings.size.to_natural_32
+
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			stream_headers [2, 2] := l_current_rva - stream_headers [2, 1]
+			stream_headers [3, 1] := l_current_rva
+			if pe_writer.us.size = 0 then
+				l_current_rva := l_current_rva + pe_writer.default_us.count.to_natural_32
+					-- US May be empty in our implementation we put an empty string there
+			else
+				l_current_rva := l_current_rva + pe_writer.us.size.to_natural_32
+			end
+
+				-- TODO refactor this code into a feature.
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			stream_headers [3, 2] := l_current_rva - stream_headers [3, 1]
+			stream_headers [4, 1] := l_current_rva
+			l_current_rva := l_current_rva + pe_writer.guid.size.to_natural_32
+
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			stream_headers [4, 2] := l_current_rva - stream_headers [4, 1]
+			stream_headers [5, 1] := l_current_rva
+			l_current_rva := l_current_rva + pe_writer.blob.size.to_natural_32
+
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			stream_headers [5, 2] := l_current_rva - stream_headers [5, 1]
+		end
 
 	array_item (a_heap: ARRAY [NATURAL_8]; a_offset: INTEGER_32): INTEGER_32
 		do
@@ -346,6 +455,7 @@ feature -- Save
 			l_file: FILE
 		do
 			create {RAW_FILE} l_file.make_create_read_write (f_name.string)
+			write_metadata_headers (l_file)
 			write_tables (l_file)
 			write_strings (l_file)
 			write_us (l_file)
@@ -391,17 +501,13 @@ feature {NONE} -- Implementation
 				end
 			end
 			align (a_file, 4)
-				-- Commented code in C++ implementation to be double check.
-				-- Dword n = 0
-				-- put(&n, sizeof(n));
 		end
 
 	write_strings (a_file: FILE)
 		local
 			mp: MANAGED_POINTER
 		do
-			create mp.make_from_array (pe_writer.strings.base.to_array)
-			a_file.put_managed_pointer (mp, 0, mp.count)
+			put_array_with_size (a_file, pe_writer.strings.base.to_array, pe_writer.strings.size.to_integer_32)
 			align (a_file, 4)
 		end
 
@@ -412,33 +518,78 @@ feature {NONE} -- Implementation
 			if pe_writer.us.size = 0 then
 				put_array (a_file, pe_writer.default_us)
 			else
-				create mp.make_from_array (pe_writer.us.base.to_array)
-				a_file.put_managed_pointer (mp, 0, mp.count)
+				put_array_with_size (a_file, pe_writer.us.base.to_array, pe_writer.us.size.to_integer_32)
 			end
 			align (a_file, 4)
 		end
 
 	write_guid (a_file: FILE)
-		local
-			mp: MANAGED_POINTER
 		do
-			create mp.make_from_array (pe_writer.guid.base.to_array)
-			a_file.put_managed_pointer (mp, 0, mp.count)
+			put_array_with_size (a_file, pe_writer.guid.base.to_array, pe_writer.guid.size.to_integer_32)
 			align (a_file, 4)
 		end
 
 	write_blob (a_file: FILE)
+		do
+			put_array_with_size (a_file, pe_writer.blob.base.to_array, pe_writer.blob.size.to_integer_32)
+			align (a_file, 4)
+		end
+
+	write_metadata_headers (a_file: FILE)
+		local
+			n: INTEGER
+			l_flags: NATURAL_16
+			l_data: NATURAL_16
+			l_names: STRING_32
+			l_rvt_string: STRING_32
+		do
+			align (a_file, 4)
+			put_metadata_headers (a_file, pe_writer.meta_header1)
+			l_rvt_string := pe_writer.rtv_string + "%U"
+			n := l_rvt_string.count
+			if n \\ 4 /= 0 then
+				n := n + 4 - (n \\ 4)
+			end
+			a_file.put_integer_32 (n)
+			a_file.put_string (l_rvt_string)
+			align (a_file, 4)
+			l_flags := 0
+			a_file.put_natural_16 (0)
+			l_data := 5
+			a_file.put_natural_16 (l_data)
+			across 1 |..| 5 as i loop
+
+					-- TODO double check
+					-- C++ code uses put(&streamHeaders_[i][0], 4);
+				a_file.put_natural_32 (stream_headers [i, 1].to_natural_32)
+				a_file.put_natural_32 (stream_headers [i, 2].to_natural_32)
+
+					-- Adding a null character a the end of the string
+					-- C++ code uses put(streamNames_[i], strlen(streamNames_[i]) + 1);
+				l_names := pe_writer.stream_names [i].twin
+				l_names.append_character ('%U')
+				a_file.put_string (l_names)
+				align (a_file, 4)
+			end
+		end
+
+	put_array_with_size (a_file: FILE; a_data: ARRAY [NATURAL_8]; a_size: INTEGER_32)
 		local
 			mp: MANAGED_POINTER
 		do
-			create mp.make_from_array (pe_writer.blob.base.to_array)
+			create mp.make (a_size)
+			mp.put_array (a_data.subarray (1, a_size), 0)
 			a_file.put_managed_pointer (mp, 0, mp.count)
-			align (a_file, 4)
+		end
+
+	put_metadata_headers (a_file: FILE; a_header: PE_DOTNET_META_HEADER)
+		do
+			a_file.put_managed_pointer (a_header.managed_pointer, 0, a_header.managed_pointer.count)
 		end
 
 	put_tables_header (a_file: FILE; a_header: PE_DOTNET_META_TABLES_HEADER)
 		do
-			a_file.put_managed_pointer (a_header.managed_pointer, 0, {PE_DOTNET_META_TABLES_HEADER}.size_of)
+			a_file.put_managed_pointer (a_header.managed_pointer, 0, a_header.managed_pointer.count)
 		end
 
 	put_array (a_file: FILE; a_data: ARRAY [NATURAL_8])
@@ -470,42 +621,6 @@ feature {NONE} -- Implementation
 				put_array (a_file, l_array)
 			end
 		end
-
---	write_strings: BOOLEAN
---		do
---			put_array_with_size (strings.base.to_array, strings.size.to_integer_32)
---			align (4)
---			Result := True
---		end
-
---	write_us: BOOLEAN
---		do
---			if us.size = 0 then
---				put_array (default_us)
---			else
---				put_array_with_size (us.base.to_array, us.size.to_integer_32)
---			end
---			align (4)
---			Result := True
---		end
-
---	write_guid: BOOLEAN
---		do
---			put_array_with_size (guid.base.to_array, guid.size.to_integer_32)
---			align (4)
---			Result := True
---		end
-
---	write_blob (file: FILE)
---		local
---			mp: MANAGED_POINTER
---			l_data: ARRAY [NATURAL_8]
---		do
---			l_data := pe_writer.blob.base.to_array
---			create mp.make_from_array (l_data)
---			file.put_managed_pointer (mp, 0, mp.count)
---			--align (4)
---		end
 
 feature -- Settings
 

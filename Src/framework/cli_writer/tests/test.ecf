@@ -23,6 +23,9 @@
 			<option debug="true">
 				<debug name="cli_writer_dbg" enabled="true"/>
 			</option>
+			<condition>
+				<platform value="windows"/>
+			</condition>
 		</library>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>
@@ -30,10 +33,20 @@
 		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<cluster name="cli_writer_test" location=".\" recursive="true">
+		<cluster name="cli_writer_test" location=".">
 			<option warning="none" manifest_array_type="mismatch_warning">
 				<warning name="obsolete_feature" value="all"/>
 			</option>
+			<cluster name="cli_writer_test_windows" location="windows" recursive="true">
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</cluster>
+			<cluster name="cli_writer_test_others" location="others" recursive="true">
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</cluster>
 		</cluster>
 	</target>
 </system>

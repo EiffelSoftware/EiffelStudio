@@ -17,9 +17,9 @@ feature -- Tests
 		do
 				-- Create the working assembly `manus_assembly`
 				-- md_emit.define_assembly
-			create pe_file.make_with_name ("manus_assembly", {PE_LIB}.il_only)
+			create pe_file.make_with_name ("empty_assembly_om", {PE_LIB}.il_only)
 
-			pe_file.dump_output_file ("test_define_assembly_om.dll", {CIL_OUTPUT_MODE}.pedll, false)
+			pe_file.dump_output_file ("test_define_empty_assembly_om.dll", {CIL_OUTPUT_MODE}.pedll, false)
 
 		end
 

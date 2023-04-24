@@ -4,6 +4,7 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=Structure of the runtime file format path", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=303", "protocol=Uri"
 
 class
 	CLI_PE_FILE
@@ -546,6 +547,8 @@ feature {NONE} -- Implementation
 
 	dos_header: MANAGED_POINTER
 			-- DOS header.
+			-- TODO double check with
+			-- section I I.25.2.1 MS-DOS header
 		once
 			create Result.make_from_array ({ARRAY [NATURAL_8]} <<
 					0x4D, 0x5A, 0x90, 0x0, 0x3, 0x0, 0x0, 0x0,

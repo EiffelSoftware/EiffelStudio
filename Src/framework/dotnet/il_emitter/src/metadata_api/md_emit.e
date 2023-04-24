@@ -151,8 +151,6 @@ feature -- Access
 		local
 			l_count: INTEGER
 		do
-				-- optional way to compute the header size + table_header setup.
---			save_size_tmp
 				--| Computes the size of the metadata for the current emitted assembly.
 				--| Iterate through each table and multiplying the size of the table by the number of entries in the table.
 				--| Adds the size of each heap (string, user string, blob, and GUID)
@@ -179,7 +177,6 @@ feature -- Access
 
 				-- Calculate the size of the metadata header IMAGE_COR20_HEADER
 			Result := Result + 132
-			streams_setup
 		end
 
 	entry_sizes: HASH_TABLE [FUNCTION [INTEGER], INTEGER]
@@ -454,7 +451,24 @@ feature -- Save
 		local
 			l_file: FILE
 		do
+				-- The current code does not have access to the
+				-- different headers that we setup CLI_PE_FILE.
+				-- (pe_header, optional_header, text_section_header, reloc_section_header,
+				--  ... etc)
+				-- So the current code doesn't use them to compute the rva's.
+				-- And maybe as part of the process these headers also need to be updated.
+
+
+				-- See the feature PE_WRITER.calculate_objects, that compute the rva's and update
+				-- the header.
+
+				-- This code also writes the PE_DOTNET_META_HEADER
+				-- see II.24.2 File headers, II.24.2.1 Metadata root
+				-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297
+				-- and the rtv_string.
+
 			create {RAW_FILE} l_file.make_create_read_write (f_name.string)
+			streams_setup
 			write_metadata_headers (l_file)
 			write_tables (l_file)
 			write_strings (l_file)

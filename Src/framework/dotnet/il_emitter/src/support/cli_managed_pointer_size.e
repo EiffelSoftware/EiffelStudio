@@ -1,6 +1,6 @@
 note
 	description: "[
-			Compute the sizeof C struct memory taking care of padding and alignment.
+			Compute the size of the expected memory.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"

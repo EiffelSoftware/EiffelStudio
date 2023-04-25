@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of PE import table for CLI"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -158,7 +158,7 @@ feature -- Element Change
 		do
 			library_name := string_to_array_8 (a_value, 12)
 		ensure
-			library_name_set: library_name.same_items(string_to_array_8 (a_value, 12))
+			library_name_set: library_name.same_items (string_to_array_8 (a_value, 12))
 		end
 
 feature {NONE} -- Implementation
@@ -209,11 +209,34 @@ feature -- Managed Pointer
 			Result.put_integer_32 (iat_rva) -- iat_rva
 			Result.put_padding (20, 0) -- End of Import Table. Shall, be filled with zeros
 			Result.put_integer_32 (import_by_name_rva) -- import_by_name_rva
+				-- this fields seems to be Hint/Name Table RVA
 
 				-- FIXME: where is it specified?
+				-- JV:
+				-- It seems to be specified in the following two tables
+				-- Offset Size Field            Description
+				--	0      4   Hint/Name Table  RVA A 31-bit RVA into the Hint/Name Table. Bit 31
+				-- 								shall be set to 0 indicating import by name.
+				--  4      4                     End of table, shall be filled with zeros.
+
+				-- The IAT should be in an executable and writable section as the loader will replace the pointers into the
+				-- Hint/Name table by the actual entry points of the imported symbols.
+				-- The Hint/Name table contains the name of the dll-entry that is imported.
+				-- Offset Size   Field      Description
+				--	0      2      Hint      Shall be 0.
+				--  2   variable  Name 		Case sensitive, null-terminated ASCII string containing name to
+				--							import. Shall be “_CorExeMain” for a .exe file and
+				--							“_CorDllMain” for a .dll file.
+
+				-- So the value 6 is 4 end of the table + 2 of the Hint field.
 			Result.put_padding (6, 0) -- Padding of 6
+
 			Result.put_natural_8_array (entry_point_name) -- entry_point_name
+				-- This seems to be the field Name in The Hint/Name table.
+
+				--TODO: Where is this specifed?
 			Result.put_natural_8_array (library_name) -- library_name
+
 		end
 
 	size_of: INTEGER

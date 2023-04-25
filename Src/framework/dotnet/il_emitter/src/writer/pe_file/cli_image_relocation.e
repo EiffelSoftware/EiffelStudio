@@ -99,36 +99,47 @@ feature -- Debug
 
 feature -- Managed Pointer
 
-	item: MANAGED_POINTER
+	item: CLI_MANAGED_POINTER
 			-- Write the items to the buffer in little-endian format.
-		local
-			l_pos: INTEGER
 		do
 			create Result.make (size_of)
-			l_pos := 0
 
 				-- block_rva
-			Result.put_integer_32_le (block_rva, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+			Result.put_integer_32 (block_rva)
 
 				-- block_size_field
-			Result.put_integer_32_le (block_size_field, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+			Result.put_integer_32 (block_size_field)
 
 				-- fixup
-			Result.put_integer_16_le (fixup, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
+			Result.put_integer_16 (fixup)
 
 				-- padding_field
-			Result.put_array (padding_field, l_pos)
+			Result.put_natural_8_array (padding_field)
+		ensure
+			Result.count = size_of
 		end
 
 feature -- Measurement
 
 	size_of: INTEGER
 			-- Size of `CLI_IMAGE_RELOCATION' structure.
+		local
+			s: CLI_MANAGED_POINTER_SIZE
 		do
-			Result := {PLATFORM}.integer_32_bytes + {PLATFORM}.integer_32_bytes + {PLATFORM}.integer_16_bytes + 2 * {PLATFORM}.natural_8_bytes
+			create s.make
+
+				-- block_rva
+			s.put_integer_32
+
+				-- block_size_field
+			s.put_integer_32
+
+				-- fixup
+			s.put_integer_16
+
+				-- padding_field
+			s.put_natural_8_array (2) -- should be `padding_field.count`
+			Result := s
 		ensure
 			is_class: class
 		end

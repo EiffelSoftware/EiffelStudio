@@ -247,76 +247,58 @@ feature -- Element Change
 
 feature -- Managed Pointer
 
-	item: MANAGED_POINTER
+	item: STRUCT_MANAGED_POINTER
 			-- write the items to the buffer in  little-endian format.
-		local
-			l_pos: INTEGER
 		do
 			create Result.make (size_of)
-			l_pos := 0
 
 				--
 				--  Header versioning
 				--
 				-- cb
-			Result.put_integer_32_le (cb, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (cb)
 				-- major_runtime_version
-			Result.put_integer_16_le (major_runtime_version, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (major_runtime_version)
 				-- minor_runtime_version
-			Result.put_integer_16_le (minor_runtime_version, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (minor_runtime_version)
 				--
 				-- Symbol table and startup information
 				--
 				-- meta_data
-			Result.put_array (meta_data.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
-			l_pos := l_pos + {CLI_DIRECTORY}.size_of
+			Result.put_inner_struct (meta_data.item.read_array (0, {CLI_DIRECTORY}.size_of), {CLI_DIRECTORY}.structure_alignment_size)
 
 				-- flags
-			Result.put_integer_32_le (flags, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+			Result.put_integer_32 (flags)
 
 				-- entry_point_token
-			Result.put_integer_32_le (entry_point_token, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+			Result.put_integer_32 (entry_point_token)
 
 				--
 				--  Binding information
 				--
 				-- resources
-			Result.put_array (resources.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
-			l_pos := l_pos + {CLI_DIRECTORY}.size_of
+			Result.put_inner_struct (resources.item.read_array (0, {CLI_DIRECTORY}.size_of), {CLI_DIRECTORY}.structure_alignment_size)
 
 				-- strong_name_signature
-			Result.put_array (strong_name_signature.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
-			l_pos := l_pos + {CLI_DIRECTORY}.size_of
+			Result.put_inner_struct (strong_name_signature.item.read_array (0, {CLI_DIRECTORY}.size_of), {CLI_DIRECTORY}.structure_alignment_size)
 
 				--
 				--  Regular fixup and binding information
 				--
 				-- code_manager_table
-			Result.put_array (code_manager_table.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
-			l_pos := l_pos + {CLI_DIRECTORY}.size_of
+			Result.put_inner_struct (code_manager_table.item.read_array (0, {CLI_DIRECTORY}.size_of), {CLI_DIRECTORY}.structure_alignment_size)
 
 				-- vtable_fixups
-			Result.put_array (vtable_fixups.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
-			l_pos := l_pos + {CLI_DIRECTORY}.size_of
+			Result.put_inner_struct (vtable_fixups.item.read_array (0, {CLI_DIRECTORY}.size_of), {CLI_DIRECTORY}.structure_alignment_size)
 
 				-- export_address_table_jumps
-			Result.put_array (export_address_table_jumps.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
-			l_pos := l_pos + {CLI_DIRECTORY}.size_of
+			Result.put_inner_struct (export_address_table_jumps.item.read_array (0, {CLI_DIRECTORY}.size_of), {CLI_DIRECTORY}.structure_alignment_size)
 
 				--
 				-- Precompiled image info (internal use only - set to zero)
 				--
 				-- managed_native_header
-			Result.put_array (managed_native_header.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
-			l_pos := l_pos + {CLI_DIRECTORY}.size_of
+			Result.put_inner_struct (managed_native_header.item.read_array (0, {CLI_DIRECTORY}.size_of) , {CLI_DIRECTORY}.structure_alignment_size)
 		end
 
 feature -- Size

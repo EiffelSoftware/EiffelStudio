@@ -189,77 +189,65 @@ feature -- Managed Pointer
 	item: MANAGED_POINTER
 			-- write the items to the buffer in little-endian format.
 		local
-			l_pos: INTEGER_32
+			st: STRUCT_MANAGED_POINTER
 		do
-			create Result.make(size_of)
-			l_pos := 0
-
+			create st.make(size_of)
 				-- name
-			Result.put_array (name, l_pos)
-			l_pos := l_pos + 8
-
+			st.put_natural_8_array (name)
 				-- physical_address or virtual_size depending on is_physical_address_active.
-			Result.put_integer_32_le(value, l_pos)
-
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			st.put_integer_32 (value)
 				-- virtual_address
-			Result.put_integer_32_le(virtual_address, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			st.put_integer_32 (virtual_address)
 				-- size_of_raw_data
-			Result.put_integer_32_le(size_of_raw_data, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			st.put_integer_32 (size_of_raw_data)
 				-- pointer_to_raw_data
-			Result.put_integer_32_le(pointer_to_raw_data, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			st.put_integer_32 (pointer_to_raw_data)
 				-- pointer_to_relocations
-			Result.put_integer_32_le(pointer_to_relocations, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			st.put_integer_32 (pointer_to_relocations)
 				-- pointer_to_linenumbers
-			Result.put_integer_32_le(pointer_to_linenumbers, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			st.put_integer_32 (pointer_to_linenumbers)
 				-- number_of_relocations
-			Result.put_integer_16_le(number_of_relocations, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			st.put_integer_16 (number_of_relocations)
 				-- number_of_linenumbers
-			Result.put_integer_16_le(number_of_linenumbers, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			st.put_integer_16 (number_of_linenumbers)
 				-- characteristics
-			Result.put_integer_32_le(characteristics, l_pos)
+			st.put_integer_32 (characteristics)
+
+			Result := st
 		end
 
 feature -- Size
 
+	structure_size: STRUCT_SIZE
+			-- Size of the structure.
+		do
+			create Result.make
+				-- name
+			Result.put_natural_8_array (name.count)
+				-- physical_address or virtual_size depending on is_physical_address_active.
+			Result.put_integer_32
+				-- virtual_address
+			Result.put_integer_32
+				-- size_of_raw_data
+			Result.put_integer_32
+				-- pointer_to_raw_data
+			Result.put_integer_32
+				-- pointer_to_relocations
+			Result.put_integer_32
+				-- pointer_to_linenumbers
+			Result.put_integer_32
+				-- number_of_relocations
+			Result.put_integer_16
+				-- number_of_linenumbers
+			Result.put_integer_16
+				-- characteristics
+			Result.put_integer_32
+		end
+
 	size_of: INTEGER_32
 			-- Size of the structure.
 		do
-				-- name
-			Result := 8
-				-- misc	
-			Result := Result + {PLATFORM}.integer_32_bytes
-				-- virtual_address
-			Result := Result + {PLATFORM}.integer_32_bytes
-				-- size_of_raw_data
-			Result := Result + {PLATFORM}.integer_32_bytes
-				-- pointer_to_raw_data
-			Result := Result + {PLATFORM}.integer_32_bytes
-				-- pointer_to_relocations
-			Result := Result + {PLATFORM}.integer_32_bytes
-				-- pointer_to_linenumbers
-			Result := Result + {PLATFORM}.integer_32_bytes
-				-- number_of_relocations
-			Result := Result + {PLATFORM}.integer_16_bytes
-				-- number_of_linenumbers
-			Result := Result + {PLATFORM}.integer_16_bytes
-				-- characteristics
-			Result := Result + {PLATFORM}.integer_32_bytes
+			Result := structure_size
 		end
 
 

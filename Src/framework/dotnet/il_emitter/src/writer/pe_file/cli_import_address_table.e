@@ -60,29 +60,25 @@ feature -- Item
             -- Write the items to the buffer in little-endian format.
 
         local
-        	l_pos: INTEGER
+        	st: STRUCT_MANAGED_POINTER
         do
-			create Result.make(size_of)
-			l_pos := 0
-
-				-- import_by_name_rva
-			Result.put_integer_32_le(import_by_name_rva, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
-				-- padding
-			Result.put_array (padding, l_pos)
+			create st.make (size_of)
+			st.put_integer_32 (import_by_name_rva) -- import_by_name_rva
+			st.put_natural_8_array (padding) -- padding
+			Result := st
         end
 
 feature -- Size
 
     size_of: INTEGER
             -- Compute the size of the struct.
-       do
-       			--import_by_name_rva
-            Result := {PLATFORM}.integer_32_bytes
-            	-- padding 4 bytes
-            Result := Result + 4 * {PLATFORM}.natural_8_bytes
-
+		local
+			st: STRUCT_SIZE
+		do
+			create st.make
+       		st.put_integer_32 --import_by_name_rva
+       		st.put_natural_8_array (4) -- padding 4 bytes (FIXME: why?)
+       		Result := st
         end
 
 

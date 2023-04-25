@@ -37,9 +37,11 @@ feature -- Access
 			end
 		end
 
-	internal_size: INTEGER
-
 	alignment_size: INTEGER
+
+feature {NONE} -- Implementation
+
+	internal_size: INTEGER
 
 feature -- Change
 
@@ -68,6 +70,13 @@ feature -- Change
 			put_padding (a_byte_size)
 			internal_size := internal_size + a_byte_size
 			alignment_size := alignment_size.max (a_byte_size)
+		end
+
+	put_inner_struct (a_byte_size: INTEGER; a_struct_alignment: INTEGER)
+		do
+			put_padding (a_struct_alignment)
+			internal_size := internal_size + a_byte_size
+			alignment_size := alignment_size.max (a_struct_alignment)
 		end
 
 	put_character

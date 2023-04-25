@@ -85,6 +85,13 @@ feature {NONE} -- Implementation
 
 feature -- Change
 
+	put_inner_struct (a_bytes: ARRAY [NATURAL_8]; a_struct_alignment: INTEGER)
+		do
+			put_padding_for (a_struct_alignment)
+			mp.put_array (a_bytes, internal_pos)
+			internal_pos := internal_pos + a_bytes.count
+		end
+
 	put_character (c: CHARACTER_8)
 		do
 			mp.put_character (c, internal_pos)

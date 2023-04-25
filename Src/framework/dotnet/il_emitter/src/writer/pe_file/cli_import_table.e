@@ -198,44 +198,41 @@ feature -- Constants
 
 feature -- Managed Pointer
 
-	item: MANAGED_POINTER
+	item: CLI_MANAGED_POINTER
 			-- Write the item attributes to the buffer in little-endian format.
-		local
-			st: STRUCT_MANAGED_POINTER
 		do
-			create st.make (size_of)
-			st.put_integer_32 (import_lookup_table) -- import_lookup_table
-			st.put_integer_32 (time_date_stamp) -- time_date_stamp
-			st.put_integer_32 (forwarder_chain) -- forwarder_chain
-			st.put_integer_32 (name_rva) -- name_rva
-			st.put_integer_32 (iat_rva) -- iat_rva
-			st.put_padding (20, 0) -- End of Import Table. Shall, be filled with zeros
-			st.put_integer_32 (import_by_name_rva) -- import_by_name_rva
+			create Result.make (size_of)
+			Result.put_integer_32 (import_lookup_table) -- import_lookup_table
+			Result.put_integer_32 (time_date_stamp) -- time_date_stamp
+			Result.put_integer_32 (forwarder_chain) -- forwarder_chain
+			Result.put_integer_32 (name_rva) -- name_rva
+			Result.put_integer_32 (iat_rva) -- iat_rva
+			Result.put_padding (20, 0) -- End of Import Table. Shall, be filled with zeros
+			Result.put_integer_32 (import_by_name_rva) -- import_by_name_rva
 
 				-- FIXME: where is it specified?
-			st.put_padding (6, 0) -- Padding of 6
-			st.put_natural_8_array (entry_point_name) -- entry_point_name
-			st.put_natural_8_array (library_name) -- library_name
-			Result := st
+			Result.put_padding (6, 0) -- Padding of 6
+			Result.put_natural_8_array (entry_point_name) -- entry_point_name
+			Result.put_natural_8_array (library_name) -- library_name
 		end
 
 	size_of: INTEGER
 			-- Size of the structure
 		local
-			st: STRUCT_SIZE
+			s: CLI_MANAGED_POINTER_SIZE
 		do
-			create st.make
-			st.put_integer_32 -- import_lookup_table
-			st.put_integer_32 -- time_date_stamp
-			st.put_integer_32 -- forwarder_chain
-			st.put_integer_32 -- name_rva
-			st.put_integer_32 -- iat_rva
-			st.put_natural_8_array (20) -- padding_1
-			st.put_integer_32 -- import_by_name_rva
-			st.put_natural_8_array (6) -- padding_3
-			st.put_natural_8_array (12) -- entry_point_name
-			st.put_natural_8_array (12) -- library_name
-			Result := st
+			create s.make
+			s.put_integer_32 -- import_lookup_table
+			s.put_integer_32 -- time_date_stamp
+			s.put_integer_32 -- forwarder_chain
+			s.put_integer_32 -- name_rva
+			s.put_integer_32 -- iat_rva
+			s.put_natural_8_array (20) -- padding_1
+			s.put_integer_32 -- import_by_name_rva
+			s.put_natural_8_array (6) -- padding_3
+			s.put_natural_8_array (12) -- entry_point_name
+			s.put_natural_8_array (12) -- library_name
+			Result := s
 		end
 
 end

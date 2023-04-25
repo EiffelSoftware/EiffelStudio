@@ -167,6 +167,9 @@ feature -- Managed pointer
 
 				-- characteristics
 			Result.put_integer_16_le (characteristics, l_pos)
+			l_pos := l_pos + {PLATFORM}.integer_16_bytes
+
+			check l_pos = 20 end
 		end
 
 feature -- Measurement
@@ -188,6 +191,7 @@ feature -- Measurement
 				-- characteristics
 			Result := Result + {PLATFORM}.integer_16_bytes
 		ensure
+			ecma: Result = 20
 			instance_free: class
 		end
 

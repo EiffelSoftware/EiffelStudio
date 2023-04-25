@@ -190,68 +190,61 @@ feature {NONE} -- Internal
 
 feature -- Managed Pointer
 
-	item: MANAGED_POINTER
+	item: CLI_MANAGED_POINTER
 			-- write the items to the buffer in little-endian format.
-		local
-			st: STRUCT_MANAGED_POINTER
 		do
-			create st.make(size_of)
+			create Result.make(size_of)
 				-- name
-			st.put_natural_8_array (name)
+			Result.put_natural_8_array (name)
 				-- physical_address or virtual_size depending on is_physical_address_active.
-			st.put_integer_32 (value)
+			Result.put_integer_32 (value)
 				-- virtual_address
-			st.put_integer_32 (virtual_address)
+			Result.put_integer_32 (virtual_address)
 				-- size_of_raw_data
-			st.put_integer_32 (size_of_raw_data)
+			Result.put_integer_32 (size_of_raw_data)
 				-- pointer_to_raw_data
-			st.put_integer_32 (pointer_to_raw_data)
+			Result.put_integer_32 (pointer_to_raw_data)
 				-- pointer_to_relocations
-			st.put_integer_32 (pointer_to_relocations)
+			Result.put_integer_32 (pointer_to_relocations)
 				-- pointer_to_linenumbers
-			st.put_integer_32 (pointer_to_linenumbers)
+			Result.put_integer_32 (pointer_to_linenumbers)
 				-- number_of_relocations
-			st.put_integer_16 (number_of_relocations)
+			Result.put_integer_16 (number_of_relocations)
 				-- number_of_linenumbers
-			st.put_integer_16 (number_of_linenumbers)
+			Result.put_integer_16 (number_of_linenumbers)
 				-- characteristics
-			st.put_integer_32 (characteristics)
-
-			Result := st
+			Result.put_integer_32 (characteristics)
 		end
 
 feature -- Size
 
-	structure_size: STRUCT_SIZE
-			-- Size of the structure.
-		do
-			create Result.make
-				-- name
-			Result.put_natural_8_array (name.count)
-				-- physical_address or virtual_size depending on is_physical_address_active.
-			Result.put_integer_32
-				-- virtual_address
-			Result.put_integer_32
-				-- size_of_raw_data
-			Result.put_integer_32
-				-- pointer_to_raw_data
-			Result.put_integer_32
-				-- pointer_to_relocations
-			Result.put_integer_32
-				-- pointer_to_linenumbers
-			Result.put_integer_32
-				-- number_of_relocations
-			Result.put_integer_16
-				-- number_of_linenumbers
-			Result.put_integer_16
-				-- characteristics
-			Result.put_integer_32
-		end
-
 	size_of: INTEGER_32
 			-- Size of the structure.
+		local
+			s: CLI_MANAGED_POINTER_SIZE
 		do
-			Result := structure_size
+			create s.make
+				-- name
+			s.put_natural_8_array (name.count)
+				-- physical_address or virtual_size depending on is_physical_address_active.
+			s.put_integer_32
+				-- virtual_address
+			s.put_integer_32
+				-- size_of_raw_data
+			s.put_integer_32
+				-- pointer_to_raw_data
+			s.put_integer_32
+				-- pointer_to_relocations
+			s.put_integer_32
+				-- pointer_to_linenumbers
+			s.put_integer_32
+				-- number_of_relocations
+			s.put_integer_16
+				-- number_of_linenumbers
+			s.put_integer_16
+				-- characteristics
+			s.put_integer_32
+			Result := s
 		end
 
 

@@ -56,16 +56,12 @@ feature  -- Debug
 
 feature -- Item
 
-    item: MANAGED_POINTER
+    item: CLI_MANAGED_POINTER
             -- Write the items to the buffer in little-endian format.
-
-        local
-        	st: STRUCT_MANAGED_POINTER
         do
-			create st.make (size_of)
-			st.put_integer_32 (import_by_name_rva) -- import_by_name_rva
-			st.put_natural_8_array (padding) -- padding
-			Result := st
+			create Result.make (size_of)
+			Result.put_integer_32 (import_by_name_rva) -- import_by_name_rva
+			Result.put_natural_8_array (padding) -- padding
         end
 
 feature -- Size
@@ -73,12 +69,12 @@ feature -- Size
     size_of: INTEGER
             -- Compute the size of the struct.
 		local
-			st: STRUCT_SIZE
+			s: CLI_MANAGED_POINTER_SIZE
 		do
-			create st.make
-       		st.put_integer_32 --import_by_name_rva
-       		st.put_natural_8_array (4) -- padding 4 bytes (FIXME: why?)
-       		Result := st
+			create s.make
+       		s.put_integer_32 --import_by_name_rva
+       		s.put_natural_8_array (4) -- padding 4 bytes (FIXME: why?)
+       		Result := s
         end
 
 

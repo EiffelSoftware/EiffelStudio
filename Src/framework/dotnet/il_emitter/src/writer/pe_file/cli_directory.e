@@ -59,44 +59,32 @@ feature -- Managed Pointer
 	item: MANAGED_POINTER
 			-- write the items to the buffer in  little-endian format.
 		local
-			st: STRUCT_MANAGED_POINTER
+			mp: CLI_MANAGED_POINTER
 		do
-			create st.make (size_of)
+			create mp.make (size_of)
 
 				-- rva
-			st.put_integer_32 (rva)
+			mp.put_integer_32 (rva)
 				-- data_size
-			st.put_integer_32 (data_size)
+			mp.put_integer_32 (data_size)
 
-			Result := st
+			Result := mp
 		end
 
 feature -- Size
 
-	structure_alignment_size: INTEGER
-			-- Alignment size for the associated C Struct memory.
-		do
-			Result := {PLATFORM}.integer_32_bytes
-		ensure
-			class
-			structure_size.alignment_size = Result
-		end
-
-	structure_size: STRUCT_SIZE
-		do
-			create Result.make
-				-- rva
-			Result.put_integer_32
-				-- data_size
-			Result.put_integer_32
-		ensure
-			is_class: class
-		end
-
 	size_of: INTEGER_32
 			-- Size of the structure.
+		local
+			s: CLI_MANAGED_POINTER_SIZE
 		do
-			Result := structure_size
+			create s.make
+				-- rva
+			s.put_integer_32
+				-- data_size
+			s.put_integer_32
+
+			Result := s
 		ensure
 			is_class: class
 		end

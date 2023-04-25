@@ -247,7 +247,7 @@ feature -- Element Change
 
 feature -- Managed Pointer
 
-	item: STRUCT_MANAGED_POINTER
+	item: CLI_MANAGED_POINTER
 			-- write the items to the buffer in  little-endian format.
 		do
 			create Result.make (size_of)
@@ -265,7 +265,7 @@ feature -- Managed Pointer
 				-- Symbol table and startup information
 				--
 				-- meta_data
-			Result.put_inner_struct (meta_data.item.read_array (0, {CLI_DIRECTORY}.size_of), {CLI_DIRECTORY}.structure_alignment_size)
+			Result.put_natural_8_array (meta_data.item.read_array (0, {CLI_DIRECTORY}.size_of))
 
 				-- flags
 			Result.put_integer_32 (flags)
@@ -277,28 +277,28 @@ feature -- Managed Pointer
 				--  Binding information
 				--
 				-- resources
-			Result.put_inner_struct (resources.item.read_array (0, {CLI_DIRECTORY}.size_of), {CLI_DIRECTORY}.structure_alignment_size)
+			Result.put_natural_8_array (resources.item.read_array (0, {CLI_DIRECTORY}.size_of))
 
 				-- strong_name_signature
-			Result.put_inner_struct (strong_name_signature.item.read_array (0, {CLI_DIRECTORY}.size_of), {CLI_DIRECTORY}.structure_alignment_size)
+			Result.put_natural_8_array (strong_name_signature.item.read_array (0, {CLI_DIRECTORY}.size_of))
 
 				--
 				--  Regular fixup and binding information
 				--
 				-- code_manager_table
-			Result.put_inner_struct (code_manager_table.item.read_array (0, {CLI_DIRECTORY}.size_of), {CLI_DIRECTORY}.structure_alignment_size)
+			Result.put_natural_8_array (code_manager_table.item.read_array (0, {CLI_DIRECTORY}.size_of))
 
 				-- vtable_fixups
-			Result.put_inner_struct (vtable_fixups.item.read_array (0, {CLI_DIRECTORY}.size_of), {CLI_DIRECTORY}.structure_alignment_size)
+			Result.put_natural_8_array (vtable_fixups.item.read_array (0, {CLI_DIRECTORY}.size_of))
 
 				-- export_address_table_jumps
-			Result.put_inner_struct (export_address_table_jumps.item.read_array (0, {CLI_DIRECTORY}.size_of), {CLI_DIRECTORY}.structure_alignment_size)
+			Result.put_natural_8_array (export_address_table_jumps.item.read_array (0, {CLI_DIRECTORY}.size_of))
 
 				--
 				-- Precompiled image info (internal use only - set to zero)
 				--
 				-- managed_native_header
-			Result.put_inner_struct (managed_native_header.item.read_array (0, {CLI_DIRECTORY}.size_of) , {CLI_DIRECTORY}.structure_alignment_size)
+			Result.put_natural_8_array (managed_native_header.item.read_array (0, {CLI_DIRECTORY}.size_of))
 		end
 
 feature -- Size

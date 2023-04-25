@@ -92,8 +92,25 @@ feature -- Change
 			internal_pos := internal_pos + a_bytes.count
 		end
 
+	put_padding (nb: INTEGER; v: NATURAL_8)
+		local
+			i: INTEGER
+		do
+			from
+				i := 0
+			until
+				i >= nb
+			loop
+				mp.put_natural_8_le (v, internal_pos + i)
+				i := i + 1
+			end
+			internal_pos := internal_pos + nb
+		end
+
 	put_character (c: CHARACTER_8)
 		do
+-- Useless, as it is one byte:
+--			put_padding_for ({PLATFORM}.character_8_bytes)
 			mp.put_character (c, internal_pos)
 			internal_pos := internal_pos + 1
 		end
@@ -109,12 +126,17 @@ feature -- Change
 
 	put_natural_8_array (v: ARRAY [NATURAL_8])
 		do
+-- Useless, as it is one byte:
+--			put_padding_for ({PLATFORM}.natural_8_bytes)
 			mp.put_array (v, internal_pos)
 			internal_pos := internal_pos + v.count * {PLATFORM}.natural_8_bytes
 		end
 
 	put_natural_8 (v: NATURAL_8)
 		do
+-- Useless, as it is one byte:
+--			put_padding_for ({PLATFORM}.natural_8_bytes)
+			mp.put_natural_8_le (v, internal_pos)
 			internal_pos := internal_pos + {PLATFORM}.natural_8_bytes
 		end
 

@@ -1,7 +1,11 @@
 note
-	description:  "Representation of a CLI section header."
+	description:  "[
+		Representation of a CLI section header.
+		see ECMA spec, section II.25.3 Section headers
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=II.25.3 Section headers", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#%%5B%%7B%%22num%%22%%3A3050%%2C%%22gen%%22%%3A0%%7D%%2C%%7B%%22name%%22%%3A%%22XYZ%%22%%7D%%2C87%%2C638%%2C0%%5D", "protocol=uri"
 	EIS: "name=IMAGE_SECTION_HEADER", "src=https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-image_section_header", "protocol=uri"
 
 class

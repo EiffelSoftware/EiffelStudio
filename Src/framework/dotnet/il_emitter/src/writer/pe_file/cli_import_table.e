@@ -2,6 +2,7 @@ note
 	description: "Representation of PE import table for CLI"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=II.25.3.1 Import Table and Import Address Table (IAT)", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#%%5B%%7B%%22num%%22%%3A3068%%2C%%22gen%%22%%3A0%%7D%%2C%%7B%%22name%%22%%3A%%22XYZ%%22%%7D%%2C87%%2C770%%2C0%%5D", "protocol=uri"
 
 class
 	CLI_IMPORT_TABLE
@@ -20,10 +21,7 @@ feature {NONE} -- Initialization
 			set_time_date_stamp (0)
 			set_forwarder_chain (0)
 
-			create padding_1.make_filled ({NATURAL_8} 0, 1, 20)
-			create padding_3.make_filled ({NATURAL_8} 0, 1, 6)
-
-				-- 	-- Set `entry_point_name'.
+				-- Set `entry_point_name'.
 			if is_dll then
 				set_entry_point_name (dll_entry_point_name)
 			else
@@ -52,15 +50,8 @@ feature -- Access
 	iat_rva: INTEGER_32
 			-- RVA to IAT
 
-	padding_1: ARRAY [NATURAL_8]
-			-- Filled with 0
-			-- count = 20
-
 	import_by_name_rva: INTEGER_32
 			-- RVA to null terminated ASCII string "_CorDllMain" or "_CorExeMain"
-
-	padding_3: ARRAY [NATURAL_8]
-			-- count = 6
 
 	entry_point_name: ARRAY [NATURAL_8]
 			-- count = 12
@@ -218,9 +209,11 @@ feature -- Managed Pointer
 			st.put_integer_32 (forwarder_chain) -- forwarder_chain
 			st.put_integer_32 (name_rva) -- name_rva
 			st.put_integer_32 (iat_rva) -- iat_rva
-			st.put_natural_8_array (padding_1) -- padding_1
+			st.put_padding (20, 0) -- End of Import Table. Shall, be filled with zeros
 			st.put_integer_32 (import_by_name_rva) -- import_by_name_rva
-			st.put_natural_8_array (padding_3) -- padding_3
+
+				-- FIXME: where is it specified?
+			st.put_padding (6, 0) -- Padding of 6
 			st.put_natural_8_array (entry_point_name) -- entry_point_name
 			st.put_natural_8_array (library_name) -- library_name
 			Result := st

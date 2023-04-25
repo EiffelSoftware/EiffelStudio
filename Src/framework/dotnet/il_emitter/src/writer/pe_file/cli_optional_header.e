@@ -31,20 +31,27 @@ feature {NONE} -- Initialization
 			set_minor_linker_version (0)
 			set_image_base (0x400000)
 			set_section_alignment (section_alignment)
+				-- Shall be greater than File Alignment.
 			set_file_alignment (file_alignment)
-			set_major_operating_system_version (4)
+				-- Should be 0x200
+			set_major_operating_system_version (5)
 			set_minor_operating_system_version (0)
 			set_major_image_version (0)
 			set_minor_image_version (0)
-			set_major_subsystem_version (4)
+			set_major_subsystem_version (5)
 			set_minor_subsystem_version (0)
 			set_win32_version_value (0)
+				-- Reserved
 			set_check_sum (0)
 			set_dll_characteristics (0)
-			set_size_of_stack_reserve (0x500000)
+			set_size_of_stack_reserve (0x100000)
+				-- 1 Mb
 			set_size_of_stack_commit (0x1000)
+				-- 4k
 			set_size_of_heap_reserve (0x100000)
+				-- 1 Mb
 			set_size_of_heap_commit (0x1000)
+				-- 4k
 			set_loader_flags (0)
 			set_number_of_rva_and_sizes ({CLI_DIRECTORY_CONSTANTS}.Image_number_of_directory_entries)
 			initialize_directories
@@ -278,6 +285,8 @@ feature {NONE} -- Settings: NT additional fields
 
 	set_image_base (i: INTEGER)
 			-- Set `image_base' to `i'.
+			--| Shall be a multiple of 0x10000
+			--| TODO add code to do that.
 		do
 			image_base := i
 		ensure
@@ -430,6 +439,7 @@ feature {NONE} -- Settings: NT additional fields
 
 	set_number_of_rva_and_sizes (i: INTEGER)
 			-- Set `number_of_rva_and_sizes' to `i'.
+			--| Number of Data Directories
 		do
 			number_of_rva_and_sizes := i
 		ensure
@@ -455,6 +465,9 @@ feature -- Managed Pointer
 		do
 			create Result.make (size_of)
 			l_pos := 0
+
+				-- II.25.2.3.1 PE header standard fields
+				-- Size 28 Standard fields: These define general properties of the PE file
 
 				-- magic
 			Result.put_integer_16_le (magic, l_pos)
@@ -492,6 +505,10 @@ feature -- Managed Pointer
 			Result.put_integer_32_le (base_of_data, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
+				-- End of Standard fields
+			check offset_NT_specific: l_pos =  28 end
+
+				-- II.25.2.3.2 PE header Windows NT-specific fields
 				-- image_base
 			Result.put_integer_32_le (image_base, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
@@ -529,6 +546,7 @@ feature -- Managed Pointer
 			l_pos := l_pos + {PLATFORM}.integer_16_bytes
 
 				-- win32_version_value
+				-- Reserverd and should be 0
 			Result.put_integer_32_le (win32_version_value, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
@@ -576,6 +594,7 @@ feature -- Managed Pointer
 			Result.put_integer_32_le (number_of_rva_and_sizes, l_pos)
 			l_pos := l_pos + {PLATFORM}.integer_32_bytes
 
+				-- II.25.2.3.3 PE header data directories
 				-- Write the Array of data directory as pointers.
 			across data_directory as i loop
 				Result.put_array (i.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)

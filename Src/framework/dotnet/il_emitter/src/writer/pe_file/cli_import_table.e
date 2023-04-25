@@ -210,86 +210,39 @@ feature -- Managed Pointer
 	item: MANAGED_POINTER
 			-- Write the item attributes to the buffer in little-endian format.
 		local
-			l_pos: INTEGER
+			st: STRUCT_MANAGED_POINTER
 		do
-			create Result.make (size_of)
-			l_pos := 0
-
-				-- import_lookup_table
-			Result.put_integer_32_le (import_lookup_table, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
-				-- time_date_stamp
-			Result.put_integer_32_le (time_date_stamp, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
-				-- forwarder_chain
-			Result.put_integer_32_le (forwarder_chain, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
-				-- name_rva
-			Result.put_integer_32_le (name_rva, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
-				-- iat_rva
-			Result.put_integer_32_le (iat_rva, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
-				-- padding_1
-			Result.put_array (padding_1, l_pos)
-			l_pos := l_pos + 20 * {PLATFORM}.natural_8_bytes
-
-				-- import_by_name_rva
-			Result.put_integer_32_le (import_by_name_rva, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
-				-- padding_3
-			Result.put_array (padding_3, l_pos)
-			l_pos := l_pos + 6 * {PLATFORM}.natural_8_bytes
-
-				-- entry_point_name
-			Result.put_array (entry_point_name, l_pos)
-			l_pos := l_pos + 12 * {PLATFORM}.natural_8_bytes
-
-				-- library_name
-			Result.put_array (library_name, l_pos)
-			l_pos := l_pos + 12 * {PLATFORM}.natural_8_bytes
-
+			create st.make (size_of)
+			st.put_integer_32 (import_lookup_table) -- import_lookup_table
+			st.put_integer_32 (time_date_stamp) -- time_date_stamp
+			st.put_integer_32 (forwarder_chain) -- forwarder_chain
+			st.put_integer_32 (name_rva) -- name_rva
+			st.put_integer_32 (iat_rva) -- iat_rva
+			st.put_natural_8_array (padding_1) -- padding_1
+			st.put_integer_32 (import_by_name_rva) -- import_by_name_rva
+			st.put_natural_8_array (padding_3) -- padding_3
+			st.put_natural_8_array (entry_point_name) -- entry_point_name
+			st.put_natural_8_array (library_name) -- library_name
+			Result := st
 		end
 
 	size_of: INTEGER
 			-- Size of the structure
+		local
+			st: STRUCT_SIZE
 		do
-				-- import_lookup_table
-			Result := {PLATFORM}.integer_32_bytes
-
-				-- time_date_stamp
-			Result := Result + {PLATFORM}.integer_32_bytes
-
-				-- forwarder_chain
-			Result := Result + {PLATFORM}.integer_32_bytes
-
-				-- name_rva
-			Result := Result + {PLATFORM}.integer_32_bytes
-
-				-- iat_rva
-			Result := Result + {PLATFORM}.integer_32_bytes
-
-				-- padding_1
-			Result := Result + 20 * {PLATFORM}.natural_8_bytes
-
-				-- import_by_name_rva
-			Result := Result + {PLATFORM}.integer_32_bytes
-
-				-- padding_3
-			Result := Result + 6 * {PLATFORM}.natural_8_bytes
-
-				-- entry_point_name
-			Result := Result + 12 * {PLATFORM}.natural_8_bytes
-
-				-- library_name
-			Result := Result + 12 * {PLATFORM}.natural_8_bytes
-
+			create st.make
+			st.put_integer_32 -- import_lookup_table
+			st.put_integer_32 -- time_date_stamp
+			st.put_integer_32 -- forwarder_chain
+			st.put_integer_32 -- name_rva
+			st.put_integer_32 -- iat_rva
+			st.put_natural_8_array (20) -- padding_1
+			st.put_integer_32 -- import_by_name_rva
+			st.put_natural_8_array (6) -- padding_3
+			st.put_natural_8_array (12) -- entry_point_name
+			st.put_natural_8_array (12) -- library_name
+			Result := st
 		end
 
 end

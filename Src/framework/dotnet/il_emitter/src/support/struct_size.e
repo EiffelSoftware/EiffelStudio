@@ -11,6 +11,9 @@ class
 create
 	make
 
+convert
+	size: {INTEGER_32}
+
 feature {NONE} -- Initialization
 
 	make
@@ -79,6 +82,12 @@ feature -- Change
 --			alignment_size := alignment_size.max ({PLATFORM}.character_8_bytes)
 		end
 
+	put_natural_8_array (n: INTEGER)
+		do
+			internal_size := internal_size + n * {PLATFORM}.natural_8_bytes
+--			alignment_size := alignment_size.max ({PLATFORM}.natural_8_bytes)
+		end
+
 	put_natural_8
 		do
 			put ({PLATFORM}.natural_8_bytes)
@@ -109,9 +118,5 @@ feature -- Change
 			put ({PLATFORM}.pointer_bytes)
 		end
 
-feature {NONE} -- Implementation
-
-invariant
---	invariant_clause: True
 
 end

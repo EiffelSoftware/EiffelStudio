@@ -458,147 +458,84 @@ feature {NONE} -- Initialize Directory
 
 feature -- Managed Pointer
 
-	item: MANAGED_POINTER
+	item: CLI_MANAGED_POINTER
 			-- write the items to the buffer in little-endian format.
-		local
-			l_pos: INTEGER
 		do
 			create Result.make (size_of)
-			l_pos := 0
 
 				-- II.25.2.3.1 PE header standard fields
 				-- Size 28 Standard fields: These define general properties of the PE file
 
 				-- magic
-			Result.put_integer_16_le (magic, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (magic)
 				-- major_linker_version
-			Result.put_integer_8_le (major_linker_version, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_8_bytes
-
+			Result.put_integer_8 (major_linker_version)
 				-- minor_linker_version
-			Result.put_integer_8_le (minor_linker_version, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_8_bytes
-
+			Result.put_integer_8 (minor_linker_version)
 				-- size_of_code
-			Result.put_integer_32_le (size_of_code, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (size_of_code)
 				-- size_of_initialized_data
-			Result.put_integer_32_le (size_of_initialized_data, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (size_of_initialized_data)
 				-- size_of_uninitialized_data
-			Result.put_integer_32_le (size_of_uninitialized_data, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
+			Result.put_integer_32 (size_of_uninitialized_data)
 
 				-- address_of_entry_point
-			Result.put_integer_32_le (address_of_entry_point, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (address_of_entry_point)
 				-- base_of_code
-			Result.put_integer_32_le (base_of_code, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (base_of_code)
 				-- base_of_data
-			Result.put_integer_32_le (base_of_data, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (base_of_data)
 				-- End of Standard fields
-			check offset_NT_specific: l_pos =  28 end
+			check offset_NT_specific: Result.count =  28 end
 
 				-- II.25.2.3.2 PE header Windows NT-specific fields
 				-- image_base
-			Result.put_integer_32_le (image_base, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (image_base)
 				-- section_alignment
-			Result.put_integer_32_le (section_alignment, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (section_alignment)
 				-- file_alignment_elem
-			Result.put_integer_32_le (file_alignment_elem, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (file_alignment_elem)
 				-- major_operating_system_version
-			Result.put_integer_16_le (major_operating_system_version, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (major_operating_system_version)
 				-- minor_operating_system_version
-			Result.put_integer_16_le (minor_operating_system_version, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (minor_operating_system_version)
 				-- major_image_version
-			Result.put_integer_16_le (major_image_version, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (major_image_version)
 				-- minor_image_version
-			Result.put_integer_16_le (minor_image_version, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (minor_image_version)
 				-- major_subsystem_version
-			Result.put_integer_16_le (major_subsystem_version, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (major_subsystem_version)
 				-- minor_subsystem_version
-			Result.put_integer_16_le (minor_subsystem_version, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (minor_subsystem_version)
 				-- win32_version_value
 				-- Reserverd and should be 0
-			Result.put_integer_32_le (win32_version_value, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (win32_version_value)
 				-- size_of_image
-			Result.put_integer_32_le (size_of_image, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (size_of_image)
 				-- size_of_headers
-			Result.put_integer_32_le (size_of_headers, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (size_of_headers)
 				-- check_sum
-			Result.put_integer_32_le (check_sum, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (check_sum)
 				-- subsystem
-			Result.put_integer_16_le (subsystem, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (subsystem)
 				-- dll_characteristics
-			Result.put_integer_16_le (dll_characteristics, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (dll_characteristics)
 				-- size_of_stack_reserve
-			Result.put_integer_32_le (size_of_stack_reserve, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (size_of_stack_reserve)
 				-- size_of_stack_commit
-			Result.put_integer_32_le (size_of_stack_commit, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (size_of_stack_commit)
 				-- size_of_heap_reserve
-			Result.put_integer_32_le (size_of_heap_reserve, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (size_of_heap_reserve)
 				-- size_of_heap_commit
-			Result.put_integer_32_le (size_of_heap_commit, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (size_of_heap_commit)
 				-- loader_flags
-			Result.put_integer_32_le (loader_flags, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (loader_flags)
 				-- number_of_rva_and_sizes
-			Result.put_integer_32_le (number_of_rva_and_sizes, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (number_of_rva_and_sizes)
 				-- II.25.2.3.3 PE header data directories
 				-- Write the Array of data directory as pointers.
 			across data_directory as i loop
-				Result.put_array (i.item.read_array (0, {CLI_DIRECTORY}.size_of), l_pos)
-				l_pos := l_pos + {CLI_DIRECTORY}.size_of
+				Result.put_natural_8_array (i.item.read_array (0, {CLI_DIRECTORY}.size_of))
 			end
 		end
 
@@ -606,100 +543,89 @@ feature -- Size
 
 	size_of: INTEGER_32
 			-- Size of the structure.
+		local
+			s: CLI_MANAGED_POINTER_SIZE
 		do
+			create s.make
+
+				-- II.25.2.3.1 PE header standard fields
+				-- Size 28 Standard fields: These define general properties of the PE file
+
 				-- magic
-			Result := {PLATFORM}.integer_16_bytes
-
+			s.put_integer_16
 				-- major_linker_version
-			Result := Result + {PLATFORM}.integer_8_bytes
-
+			s.put_integer_8
 				-- minor_linker_version
-			Result := Result + {PLATFORM}.integer_8_bytes
-
+			s.put_integer_8
 				-- size_of_code
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- size_of_initialized_data
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- size_of_uninitialized_data
-			Result := Result + {PLATFORM}.integer_32_bytes
+			s.put_integer_32
 
 				-- address_of_entry_point
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- base_of_code
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- base_of_data
-			Result := Result + {PLATFORM}.integer_32_bytes
+			s.put_integer_32
+				-- End of Standard fields
+			check offset_NT_specific: s.size =  28 end
 
+				-- II.25.2.3.2 PE header Windows NT-specific fields
 				-- image_base
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- section_alignment
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- file_alignment_elem
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- major_operating_system_version
-			Result := Result + {PLATFORM}.integer_16_bytes
-
+			s.put_integer_16
 				-- minor_operating_system_version
-			Result := Result + {PLATFORM}.integer_16_bytes
-
+			s.put_integer_16
 				-- major_image_version
-			Result := Result + {PLATFORM}.integer_16_bytes
-
+			s.put_integer_16
 				-- minor_image_version
-			Result := Result + {PLATFORM}.integer_16_bytes
-
+			s.put_integer_16
 				-- major_subsystem_version
-			Result := Result + {PLATFORM}.integer_16_bytes
-
+			s.put_integer_16
 				-- minor_subsystem_version
-			Result := Result + {PLATFORM}.integer_16_bytes
-
+			s.put_integer_16
 				-- win32_version_value
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+				-- Reserverd and should be 0
+			s.put_integer_32
 				-- size_of_image
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- size_of_headers
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- check_sum
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- subsystem
-			Result := Result + {PLATFORM}.integer_16_bytes
-
+			s.put_integer_16
 				-- dll_characteristics
-			Result := Result + {PLATFORM}.integer_16_bytes
-
+			s.put_integer_16
 				-- size_of_stack_reserve
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- size_of_stack_commit
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- size_of_heap_reserve
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- size_of_heap_commit
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- loader_flags
-			Result := Result + {PLATFORM}.integer_32_bytes
-
+			s.put_integer_32
 				-- number_of_rva_and_sizes
-			Result := Result + {PLATFORM}.integer_32_bytes
+			s.put_integer_32
+
+				-- II.25.2.3.3 PE header data directories
+				-- Write the Array of data directory as pointers.
 
 				-- data_directory
-			Result := Result + {CLI_DIRECTORY_CONSTANTS}.Image_number_of_directory_entries * {CLI_DIRECTORY}.size_of
-
+			across data_directory as i loop
+				s.put_natural_8_array ({CLI_DIRECTORY}.size_of)
+			end
+			Result := s
 		end
 
 note

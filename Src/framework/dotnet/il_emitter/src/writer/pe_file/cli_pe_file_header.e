@@ -133,63 +133,50 @@ feature -- Debug
 
 feature -- Managed pointer
 
-	item: MANAGED_POINTER
-		local
-			l_pos: INTEGER
+	item: CLI_MANAGED_POINTER
 		do
-
 			create Result.make (size_of)
-			l_pos := 0
 
 				-- machine
-			Result.put_integer_16_le (machine, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (machine)
 				-- number_of_sections
-			Result.put_integer_16_le (number_of_sections, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (number_of_sections)
 				-- time_date_stamp
-			Result.put_integer_32_le (time_date_stamp, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (time_date_stamp)
 				-- pointer_to_symbol_table
-			Result.put_integer_32_le (pointer_to_symbol_table, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (pointer_to_symbol_table)
 				-- number_of_symbols
-			Result.put_integer_32_le (number_of_symbols, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_32_bytes
-
+			Result.put_integer_32 (number_of_symbols)
 				-- size_of_optional_header
-			Result.put_integer_16_le (size_of_optional_header, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
+			Result.put_integer_16 (size_of_optional_header)
 				-- characteristics
-			Result.put_integer_16_le (characteristics, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_16_bytes
-
-			check l_pos = 20 end
+			Result.put_integer_16 (characteristics)
+		ensure
+			Result.count = size_of
 		end
 
 feature -- Measurement
 
 	size_of: INTEGER
+		local
+			s: CLI_MANAGED_POINTER_SIZE
 		do
+			create s.make
 				-- machine
-			Result := {PLATFORM}.integer_16_bytes
+			s.put_integer_16
 				-- number of sections
-			Result := Result + {PLATFORM}.integer_16_bytes
+			s.put_integer_16
 				-- time_date_stamp
-			Result := Result + {PLATFORM}.integer_32_bytes
+			s.put_integer_32
 				-- pointer_to_symbol_table
-			Result := Result + {PLATFORM}.integer_32_bytes
+			s.put_integer_32
 				-- number_of_symbols
-			Result := Result + {PLATFORM}.integer_32_bytes
+			s.put_integer_32
 				-- size_of_optional_header
-			Result := Result + {PLATFORM}.integer_16_bytes
+			s.put_integer_16
 				-- characteristics
-			Result := Result + {PLATFORM}.integer_16_bytes
+			s.put_integer_16
+			Result := s
 		ensure
 			ecma: Result = 20
 			instance_free: class

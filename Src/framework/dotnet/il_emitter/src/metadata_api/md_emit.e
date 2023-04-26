@@ -381,17 +381,6 @@ feature -- Save
 		local
 			l_file: FILE
 		do
-				-- The current code does not have access to the
-				-- different headers that we setup CLI_PE_FILE.
-				-- (pe_header, optional_header, text_section_header, reloc_section_header,
-				--  ... etc)
-				-- So the current code doesn't use them to compute the rva's.
-				-- And maybe as part of the process these headers also need to be updated.
-
-
-				-- See the feature PE_WRITER.calculate_objects, that compute the rva's and update
-				-- the header.
-
 				-- This code also writes the PE_DOTNET_META_HEADER
 				-- see II.24.2 File headers, II.24.2.1 Metadata root
 				-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297
@@ -409,6 +398,7 @@ feature -- Save
 feature {NONE} -- Implementation
 
 	write_tables (a_file: FILE)
+			-- Write the metadata table to a binary file `a_file'.
 		require
 			open_write: a_file.is_open_write
 		local
@@ -447,6 +437,10 @@ feature {NONE} -- Implementation
 		end
 
 	write_strings (a_file: FILE)
+			-- Write the string heap to a binary file.
+			-- II.24.2.3 #Strings heap
+		require
+			open_write: a_file.is_open_write
 		local
 			mp: MANAGED_POINTER
 		do
@@ -455,6 +449,10 @@ feature {NONE} -- Implementation
 		end
 
 	write_us (a_file: FILE)
+			-- Write the user string heap to a binary file
+			-- II.24.2.4 #US heap
+		require
+			open_write: a_file.is_open_write
 		local
 			mp: MANAGED_POINTER
 		do
@@ -467,18 +465,29 @@ feature {NONE} -- Implementation
 		end
 
 	write_guid (a_file: FILE)
+			-- Write the guid heap to a file.
+			-- II.24.2.5 #GUID heap
+		require
+			open_write: a_file.is_open_write
 		do
 			put_array_with_size (a_file, pe_writer.guid.base.to_array, pe_writer.guid.size.to_integer_32)
 			align (a_file, 4)
 		end
 
 	write_blob (a_file: FILE)
+			-- Write the blob heap to a binary file
+			-- II.24.2.4 #Blob heap
+		require
+			open_write: a_file.is_open_write
 		do
 			put_array_with_size (a_file, pe_writer.blob.base.to_array, pe_writer.blob.size.to_integer_32)
 			align (a_file, 4)
 		end
 
 	write_metadata_headers (a_file: FILE)
+			-- Write the metadata headers to binary file.
+		require
+			open_write: a_file.is_open_write
 		local
 			n: INTEGER
 			l_flags: NATURAL_16

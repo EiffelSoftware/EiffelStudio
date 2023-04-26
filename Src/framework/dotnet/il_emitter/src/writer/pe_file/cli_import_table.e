@@ -237,6 +237,8 @@ feature -- Managed Pointer
 				--TODO: Where is this specifed?
 			Result.put_natural_8_array (library_name) -- library_name
 
+			Result.put_padding (2, 0)
+
 		end
 
 	size_of: INTEGER
@@ -251,11 +253,18 @@ feature -- Managed Pointer
 			s.put_integer_32 -- name_rva
 			s.put_integer_32 -- iat_rva
 			s.put_natural_8_array (20) -- padding_1
+			check s.size = 40 end
+
+
 			s.put_integer_32 -- import_by_name_rva
 			s.put_natural_8_array (6) -- padding_3
 			s.put_natural_8_array (12) -- entry_point_name
 			s.put_natural_8_array (12) -- library_name
+
+			s.put_padding (2) -- FIXME: Check why this is needed?
 			Result := s
+		ensure
+			Result = 76
 		end
 
 end

@@ -44,7 +44,11 @@ feature {NONE} -- Initialization
 				-- Reserved
 			set_check_sum (0)
 			set_dll_characteristics (0)
-			set_size_of_stack_reserve (0x100000)
+			
+				-- Changed the default stack size to be 5MB instead of 1MB the same way it is done
+				--  in classic Eiffel. It certainly vary from the ECMA CLI specification but on 64 bits
+				--  platform 1MB is certainly not enough.
+			set_size_of_stack_reserve (0x500000)
 				-- 1 Mb
 			set_size_of_stack_commit (0x1000)
 				-- 4k
@@ -478,7 +482,6 @@ feature -- Managed Pointer
 			Result.put_integer_32 (size_of_initialized_data)
 				-- size_of_uninitialized_data
 			Result.put_integer_32 (size_of_uninitialized_data)
-
 				-- address_of_entry_point
 			Result.put_integer_32 (address_of_entry_point)
 				-- base_of_code

@@ -253,11 +253,11 @@ feature {NONE} -- Implementation
 			l_temp: NATURAL_32
 			l_buffer: ARRAY [NATURAL_8]
 		do
---			l_current_rva := 12
---				-- metadata header offest
+			l_current_rva := 12
+				-- metadata header offest
 
---			l_current_rva := l_current_rva + 4
---				-- version size
+			l_current_rva := l_current_rva + 4
+				-- version size
 
 			l_current_rva := l_current_rva + pe_writer.compute_rtv_string_size
 
@@ -557,6 +557,8 @@ feature {NONE} -- Implementation
 			l_names: STRING_32
 			l_rvt_string: STRING_32
 		do
+			--| TODO: check if we need to use
+			--| UTF-8 for l_names.
 			align (a_file, 4)
 			put_metadata_headers (a_file, pe_writer.meta_header1)
 			l_rvt_string := pe_writer.rtv_string + "%U"
@@ -565,7 +567,7 @@ feature {NONE} -- Implementation
 				n := n + 4 - (n \\ 4)
 			end
 			a_file.put_integer_32 (n)
-			a_file.put_string (l_rvt_string)
+			a_file.put_string (l_rvt_string.to_string_8)
 			align (a_file, 4)
 			l_flags := 0
 			a_file.put_natural_16 (0)
@@ -582,7 +584,7 @@ feature {NONE} -- Implementation
 					-- C++ code uses put(streamNames_[i], strlen(streamNames_[i]) + 1);
 				l_names := pe_writer.stream_names [i].twin
 				l_names.append_character ('%U')
-				a_file.put_string (l_names)
+				a_file.put_string (l_names.to_string_8)
 				align (a_file, 4)
 			end
 		end

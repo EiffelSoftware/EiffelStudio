@@ -2,7 +2,7 @@ note
 	description: "CLI Header. See ECMA Partition II 24.3.2"
 	date: "$Date$"
 	revision: "$Revision$"
-	ECMA_section: "II.25.3.3 CLI header"
+	EIS: "name=II.25.3.3 CLI header", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf,#page=309", "protocol=uri"
 
 class
 	CLI_HEADER
@@ -63,7 +63,7 @@ feature -- Access: 	Symbol table and startup information
 			-- RVA and size of the physical metadata (Section II.24).
 
 	flags: INTEGER_32
-			--  Specified flags of header.
+			-- Specified flags of header.
 			-- Flags describing this runtime image. (Section II.25.3.3.1)
 
 	entry_point_token: INTEGER_32

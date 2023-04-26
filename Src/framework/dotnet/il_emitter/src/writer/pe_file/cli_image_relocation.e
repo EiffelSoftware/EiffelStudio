@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {CLI_IMAGE_RELOCATION}."
-	author: ""
+	description: "Representation of a relocation structure for CLI."
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=II.25.3.2 Relocations", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf,#page=308", "protocol=uri"
 
 class
 	CLI_IMAGE_RELOCATION
@@ -27,15 +27,20 @@ feature -- Access
 
 	block_rva: INTEGER_32
 			-- RVA of section in which fixup needs to be applied.
+			-- The low 12 bits shall be zero.
+			-- field Page va
 
 	block_size_field: INTEGER_32
 			-- Default value 0x0C
 
 	fixup: INTEGER_16
 			-- Fixup location from `BlockRVA'.
+			-- This represents the Type field.
 
 	padding_field: ARRAY [NATURAL_8]
 			-- two bytes
+			-- FIXME: Double check: In the spec it's defined as 12 bits.
+			--  field offset.
 
 feature -- Status Report
 

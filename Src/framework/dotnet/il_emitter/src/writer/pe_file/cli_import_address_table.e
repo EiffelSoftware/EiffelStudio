@@ -13,16 +13,12 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create padding.make_filled ({NATURAL_8}0, 1, 4)
 		end
 
 feature -- Access
 
     import_by_name_rva: INTEGER_32
     	-- RVA to ImportByName table.
-
-    padding: ARRAY [NATURAL_8]
-    	-- Padding to make structure 8 bytes.
 
 feature -- Status Report
 
@@ -61,7 +57,7 @@ feature -- Item
         do
 			create Result.make (size_of)
 			Result.put_integer_32 (import_by_name_rva) -- import_by_name_rva
-			Result.put_natural_8_array (padding) -- padding
+			Result.put_padding (4, 0) -- padding
         end
 
 feature -- Size
@@ -73,7 +69,7 @@ feature -- Size
 		do
 			create s.make
        		s.put_integer_32 --import_by_name_rva
-       		s.put_natural_8_array (4) -- padding 4 bytes (FIXME: why?)
+       		s.put_padding (4) -- padding 4 bytes (FIXME: why?)
        		Result := s
         end
 

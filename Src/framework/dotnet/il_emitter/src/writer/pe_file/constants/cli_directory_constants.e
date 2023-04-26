@@ -13,52 +13,52 @@ feature -- Access
 	image_number_of_directory_entries: INTEGER = 16
 			-- Number of directory entries in CLI_OPTIONAL_HEADER.
 
-	image_directory_entry_export: INTEGER = 0
+	image_directory_entry_export: INTEGER = 1
 			-- Export Directory
 
-	image_directory_entry_import: INTEGER = 1
+	image_directory_entry_import: INTEGER = 2
 			-- Import Directory
 
-	image_directory_entry_resource: INTEGER = 2
+	image_directory_entry_resource: INTEGER = 3
 			-- Resource Directory
 
-	image_directory_entry_exception: INTEGER = 3
+	image_directory_entry_exception: INTEGER = 4
 			-- Exception Directory
 
-	image_directory_entry_security: INTEGER = 4
+	image_directory_entry_security: INTEGER = 5
 			-- Security Directory
 
-	image_directory_entry_basereloc: INTEGER = 5
+	image_directory_entry_basereloc: INTEGER = 6
 			-- Base Relocation Table
 
-	image_directory_entry_debug: INTEGER = 6
+	image_directory_entry_debug: INTEGER = 7
 			-- Debug Directory
 
-	image_directory_entry_copyright: INTEGER = 7
+	image_directory_entry_copyright: INTEGER = 8
 			-- (X86 usage)
 
-	image_directory_entry_globalptr: INTEGER = 8
+	image_directory_entry_globalptr: INTEGER = 9
 			-- RVA of GP
 
-	image_directory_entry_tls: INTEGER = 9
+	image_directory_entry_tls: INTEGER = 10
 			-- TLS Directory
 
-	image_directory_entry_load_config: INTEGER = 10
+	image_directory_entry_load_config: INTEGER = 11
 			-- Load Configuration Directory
 
-	image_directory_entry_bound_import: INTEGER = 11
+	image_directory_entry_bound_import: INTEGER = 12
 			-- Bound Import Directory in headers
 
-	image_directory_entry_iat: INTEGER = 12
+	image_directory_entry_iat: INTEGER = 13
 			-- Import Address Table
 
-	image_directory_entry_delay_import: INTEGER = 13
+	image_directory_entry_delay_import: INTEGER = 14
 			-- Delay Load Import Descriptors
 
-	image_directory_entry_cli_descriptor: INTEGER = 14
+	image_directory_entry_cli_descriptor: INTEGER = 15
 			-- CLI Runtime descriptor
 
-	image_directory_reserved: INTEGER = 15;
+	image_directory_reserved: INTEGER = 16;
 			-- Reserved
 
 note

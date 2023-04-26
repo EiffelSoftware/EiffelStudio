@@ -157,26 +157,7 @@ feature -- Access
 				--| The size of the metadata header and table header.
 				--| The final result is the size of the metadata in bytes.
 
-				-- Calculate the size of each metadata table
-			Result := 0
-
-			across 0 |..| (max_tables - 1) as ic loop
-				if not tables [ic].is_empty and then attached entry_sizes.at (ic) as l_item then
-					l_count := l_count + 1
-					Result := Result + tables [ic].size * l_item.item
-				end
-			end
-
-				-- Each table header is 4 bytes long we multiply but the number of headers used.
-			Result := Result + 4 * l_count
-
-				-- Calculate the size of the meta tables header
-				-- II.24.2.6 #~ stream
-				-- PE_DOTNET_META_TABLES_HEADER
-			Result := Result + 24
-
-				-- Calculate the size of the metadata header IMAGE_COR20_HEADER
-			Result := Result + 132
+			Result := compute_metadata_size
 		end
 
 	entry_sizes: HASH_TABLE [FUNCTION [INTEGER], INTEGER]
@@ -246,24 +227,32 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	streams_setup
+	compute_metadata_size: INTEGER
+			--| Computes the size of the metadata for the current emitted assembly.
+			--| Iterate through each table and multiplying the size of the table by the number of entries in the table.
+			--| Adds the size of each heap (string, user string, blob, and GUID)
+			--| The size of the metadata header and table header.
+			--| The final result is the size of the metadata in bytes.
+		note
+			EIS:"name=Metadata Root","src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297", "protocol=uri"
 		local
 			l_current_rva: NATURAL_32
 			l_counts: ARRAY [NATURAL_64]
 			l_temp: NATURAL_32
 			l_buffer: ARRAY [NATURAL_8]
 		do
-			l_current_rva := 12
-				-- metadata header offest
 
-			l_current_rva := l_current_rva + 4
-				-- version size
+			l_current_rva := 16
+				-- metadata header offest
+				-- Signature + Major Version + MinorVersion + Reserved + Length
 
 			l_current_rva := l_current_rva + pe_writer.compute_rtv_string_size
+				-- Version.
 
 			if (l_current_rva \\ 4) /= 0 then
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
+				-- Padding to next 4 byte boundary
 
 			l_current_rva := l_current_rva + 2
 				-- flags
@@ -272,12 +261,15 @@ feature {NONE} -- Implementation
 				-- streams, will be 5 in our implementation
 				-- check stream_names feature.
 
+				-- StreamHeaders. Array of n StreamHdr structures	
 			across pe_writer.stream_names as elem loop
 				l_current_rva := l_current_rva + 8 + (elem.count + 1).to_natural_32
 				if (l_current_rva \\ 4) /= 0 then
 					l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 				end
 			end
+
+
 			stream_headers [1, 1] := l_current_rva
 
 			tables_header.major_version := 2
@@ -364,74 +356,12 @@ feature {NONE} -- Implementation
 			end
 
 			stream_headers [5, 2] := l_current_rva - stream_headers [5, 1]
+			Result := l_current_rva.to_integer_32
 		end
 
 	array_item (a_heap: ARRAY [NATURAL_8]; a_offset: INTEGER_32): INTEGER_32
 		do
 			Result := a_heap [a_offset]
-		end
-
-	save_size_tmp
-			-- Optional way to compute the metadata table size.
-		local
-			l_counts: ARRAY [NATURAL_64]
-			l_result: INTEGER
-			l_temp: INTEGER
-			l_buffer: ARRAY [NATURAL_8]
-		do
-			tables_header.major_version := 2
-			tables_header.reserved2 := 1
-			tables_header.mask_sorted := ({INTEGER_64} 0x1600 |<< 32) + 0x3325FA00
-			if strings_heap_size = 65536 then
-				tables_header.heap_offset_sizes := tables_header.heap_offset_sizes | 1
-			end
-			if guid_heap_size >= 65536 then
-				tables_header.heap_offset_sizes := tables_header.heap_offset_sizes | 2
-			end
-			if blob_heap_size >= 65536 then
-				tables_header.heap_offset_sizes := tables_header.heap_offset_sizes | 4
-			end
-
-			l_result := 0
-			create l_counts.make_filled (0, 1, Max_tables + Extra_indexes)
-			l_counts [t_string + 1] := strings_heap_size
-			l_counts [t_us + 1] := us_heap_size
-			l_counts [t_guid + 1] := guid_heap_size
-			l_counts [t_blob + 1] := blob_heap_size
-
-			l_result := 0
-			across 0 |..| (max_tables - 1) as ic loop
-				if not tables [ic].is_empty then
-					l_counts [ic + 1] := tables [ic].size.to_natural_32
-					tables_header.mask_valid := tables_header.mask_valid | ({INTEGER_64} 1 |<< ic)
-					l_temp := l_temp + 1
-				end
-			end
-
-			l_result := l_result + (l_temp * {PLATFORM}.natural_32_bytes)
-				--table counts
-				-- Dword is 4 bytes.
-
-			across 0 |..| (max_tables - 1) as ic loop
-				if l_counts [ic + 1] /= 0 then
-					create l_buffer.make_filled (0, 1, 512)
-					l_temp := tables [ic].table [1].render (l_counts, l_buffer).to_integer_32
-					l_temp := l_temp * (l_counts [ic + 1]).to_integer_32
-					l_result := l_result + l_temp
-				end
-			end
-			l_result := l_result + 24
-			l_result := l_result + 132
-			l_result := l_result + strings_heap_size.to_integer_32
-			l_result := l_result + us_heap_size.to_integer_32
-			l_result := l_result + guid_heap_size.to_integer_32
-			l_result := l_result + blob_heap_size.to_integer_32
-
-				-- Padding.
-			if (l_result \\ 4) /= 0 then
-				l_result := l_result + 4 - (l_result \\ 4)
-			end
-
 		end
 
 feature -- Save
@@ -468,7 +398,6 @@ feature -- Save
 				-- and the rtv_string.
 
 			create {RAW_FILE} l_file.make_create_read_write (f_name.string)
-			streams_setup
 			write_metadata_headers (l_file)
 			write_tables (l_file)
 			write_strings (l_file)

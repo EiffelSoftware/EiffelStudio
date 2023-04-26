@@ -115,6 +115,8 @@ feature -- Element Change
 			end
 
 			name := l_name
+		ensure
+			name.count = 8
 		end
 
 	set_physical_address (v: like physical_address)
@@ -210,6 +212,7 @@ feature -- Managed Pointer
 		do
 			create Result.make (size_of)
 				-- name
+			check name.count = 8 end
 			Result.put_natural_8_array (name)
 				-- physical_address or virtual_size depending on is_physical_address_active.
 			Result.put_integer_32 (value)
@@ -240,7 +243,8 @@ feature -- Size
 		do
 			create s.make
 				-- name
-			s.put_natural_8_array (name.count)
+			s.put_natural_8_array (8)
+			check name.count = 8 end
 				-- physical_address or virtual_size depending on is_physical_address_active.
 			s.put_integer_32
 				-- virtual_address
@@ -260,6 +264,8 @@ feature -- Size
 				-- characteristics
 			s.put_integer_32
 			Result := s
+		ensure
+			Result = 40
 		end
 
 end

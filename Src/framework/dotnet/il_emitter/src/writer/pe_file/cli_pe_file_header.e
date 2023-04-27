@@ -152,7 +152,7 @@ feature -- Managed pointer
 				-- characteristics
 			Result.put_integer_16 (characteristics)
 		ensure
-			Result.count = size_of
+			Result.position = size_of
 		end
 
 feature -- Measurement

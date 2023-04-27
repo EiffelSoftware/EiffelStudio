@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 				-- Reserved
 			set_check_sum (0)
 			set_dll_characteristics (0)
-			
+
 				-- Changed the default stack size to be 5MB instead of 1MB the same way it is done
 				--  in classic Eiffel. It certainly vary from the ECMA CLI specification but on 64 bits
 				--  platform 1MB is certainly not enough.
@@ -489,7 +489,7 @@ feature -- Managed Pointer
 				-- base_of_data
 			Result.put_integer_32 (base_of_data)
 				-- End of Standard fields
-			check offset_NT_specific: Result.count =  28 end
+			check offset_NT_specific: Result.position = 28 end
 
 				-- II.25.2.3.2 PE header Windows NT-specific fields
 				-- image_base

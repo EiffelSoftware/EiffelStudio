@@ -121,7 +121,7 @@ feature -- Managed Pointer
 				-- padding_field
 			Result.put_natural_8_array (padding_field)
 		ensure
-			Result.count = size_of
+			Result.position = size_of
 		end
 
 feature -- Measurement

@@ -145,9 +145,11 @@ feature -- Generation
 					-- Sign assembly if a key was provided, and signing supported.
 				if
 					attached System.msil_key_file_name as l_key_file_name and then
-					l_key_file_name /= Void
+					l_key_file_name /= Void and then
+					is_signing_enabled
 				then
 						-- FIXME: maybe add a new setting "signing_enabled" [2023-03-28]
+
 					signing := md_factory.strong_name (System.clr_runtime_version)
 					if attached signing as sn and then sn.exists then
 						create l_public_key.make_from_file (l_key_file_name, sn)
@@ -213,7 +215,7 @@ feature -- Generation
 
 				cil_generator.start_assembly_generation (System.name, file_name,
 					l_public_key, location, assembly_info,
-					System.line_generation or not is_finalizing)
+					is_debug_enabled and then (System.line_generation or not is_finalizing))
 
 					-- Split classes into modules
 				prepare_classes (System.classes)

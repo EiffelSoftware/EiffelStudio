@@ -14,6 +14,16 @@ feature -- Settings
 			Result := True
 		end
 
+	is_debug_enabled: BOOLEAN
+		do
+			Result := not is_using_il_emitter -- False
+		end
+
+	is_signing_enabled: BOOLEAN
+		do
+			Result := not is_using_il_emitter -- False
+		end
+
 feature -- Setup
 
 	setup_cil_code_generation (a_clr_runtime_version: READABLE_STRING_GENERAL)
@@ -28,7 +38,6 @@ feature -- Factory
 		once
 			create {IL_EMITTER_CLI_FACTORY} Result
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2023, Eiffel Software"

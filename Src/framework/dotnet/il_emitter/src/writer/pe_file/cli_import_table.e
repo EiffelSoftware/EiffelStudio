@@ -141,47 +141,50 @@ feature -- Element Change
 			import_by_name_rva_set: import_by_name_rva = a_value
 		end
 
-	set_entry_point_name (a_value: STRING)
+	set_entry_point_name (a_value: READABLE_STRING_8)
 			-- Set the EntryPointName attribute to `a_value`.
 		require
-			valid_entry_point_name: a_value.count <= 12
+			valid_entry_point_name: not a_value.is_empty
 		do
-			entry_point_name := string_to_array_8 (a_value, 12)
+			entry_point_name := string_to_null_terminated_array_8 (a_value)
 		ensure
-			entry_point_name_set: entry_point_name.same_items (string_to_array_8 (a_value, 12))
+			entry_point_name_set: entry_point_name.same_items (string_to_null_terminated_array_8 (a_value))
 		end
 
-	set_library_name (a_value: STRING)
+	set_library_name (a_value: READABLE_STRING_8)
 			-- Set the LibraryName attribute to `a_value`.
 		require
-			valid_library_name: a_value.count <= 12
+			valid_library_name: not a_value.is_empty
 		do
-			library_name := string_to_array_8 (a_value, 12)
+			library_name := string_to_null_terminated_array_8 (a_value)
 		ensure
-			library_name_set: library_name.same_items (string_to_array_8 (a_value, 12))
+			library_name_set: library_name.same_items (string_to_null_terminated_array_8 (a_value))
 		end
 
 feature {NONE} -- Implementation
 
-	string_to_array_8 (a_name: STRING; n: INTEGER): ARRAY [NATURAL_8]
-			-- Set the `name` attribute with `a_name`, padding with null characters if necessary.
+	string_to_null_terminated_array_8 (a_string: STRING_8): ARRAY [NATURAL_8]
+			-- Null terminated array of NATURAL_8 built from `a_string`.
 		local
-			l_name: ARRAY [NATURAL_8]
-			l_name_length: INTEGER_32
-			l_index: INTEGER_32
+			n: INTEGER_32
+			i: INTEGER_32
 		do
-			create l_name.make_filled ({NATURAL_8} 0, 1, n)
-			l_name_length := a_name.count
-			from
-				l_index := 1
-			until
-				l_index > l_name_length
-			loop
-				l_name [l_index] := a_name.item_code (l_index).to_natural_8
-				l_index := l_index + 1
+			n := a_string.count
+			if a_string [n] /= '%U' then
+				n := n + 1
 			end
-
-			Result := l_name
+			create Result.make_filled ({NATURAL_8} 0, 1, n)
+			from
+				i := 1
+				n := a_string.count
+					-- the array is already filled with `0`
+					-- then, already null terminated
+			until
+				i > n
+			loop
+				Result [i] := a_string.item_code (i).to_natural_8
+				i := i + 1
+			end
 		end
 
 feature -- Constants
@@ -200,6 +203,8 @@ feature -- Managed Pointer
 
 	item: CLI_MANAGED_POINTER
 			-- Write the item attributes to the buffer in little-endian format.
+		local
+			pad: INTEGER
 		do
 			create Result.make (size_of)
 			Result.put_integer_32 (import_lookup_table) -- import_lookup_table
@@ -208,16 +213,14 @@ feature -- Managed Pointer
 			Result.put_integer_32 (name_rva) -- name_rva
 			Result.put_integer_32 (iat_rva) -- iat_rva
 			Result.put_padding (20, 0) -- End of Import Table. Shall, be filled with zeros
-			Result.put_integer_32 (import_by_name_rva) -- import_by_name_rva
-				-- this fields seems to be Hint/Name Table RVA
 
-				-- FIXME: where is it specified?
-				-- JV:
-				-- It seems to be specified in the following two tables
 				-- Offset Size Field            Description
 				--	0      4   Hint/Name Table  RVA A 31-bit RVA into the Hint/Name Table. Bit 31
 				-- 								shall be set to 0 indicating import by name.
-				--  4      4                     End of table, shall be filled with zeros.
+				--  4      4                    End of table, shall be filled with zeros.
+
+			Result.put_integer_32 (import_by_name_rva) -- import_by_name_rva: Hint/Name Table RVA
+			Result.put_padding (4, 0) -- End of table
 
 				-- The IAT should be in an executable and writable section as the loader will replace the pointers into the
 				-- Hint/Name table by the actual entry points of the imported symbols.
@@ -227,24 +230,24 @@ feature -- Managed Pointer
 				--  2   variable  Name 		Case sensitive, null-terminated ASCII string containing name to
 				--							import. Shall be “_CorExeMain” for a .exe file and
 				--							“_CorDllMain” for a .dll file.
-
-				-- So the value 6 is 4 end of the table + 2 of the Hint field.
-			Result.put_padding (6, 0) -- Padding of 6
-
+			Result.put_padding (2, 0) -- Hint
+				-- variable Name: null-terminated Entry point name + null-terminated Library name.
 			Result.put_natural_8_array (entry_point_name) -- entry_point_name
-				-- This seems to be the field Name in The Hint/Name table.
-
-				--TODO: Where is this specifed?
 			Result.put_natural_8_array (library_name) -- library_name
 
-			Result.put_padding (2, 0)
-
+			pad := Result.count - Result.position
+			if pad > 0 then
+					-- Padding to fill expected side (may be useful if required to be aligned on 4 bytes,
+					-- see the comment at the end of `size_of`).
+				Result.put_padding (pad, 0)
+			end
 		end
 
 	size_of: INTEGER
 			-- Size of the structure
 		local
 			s: CLI_MANAGED_POINTER_SIZE
+			i: INTEGER
 		do
 			create s.make
 			s.put_integer_32 -- import_lookup_table
@@ -255,16 +258,20 @@ feature -- Managed Pointer
 			s.put_natural_8_array (20) -- padding_1
 			check s.size = 40 end
 
-
 			s.put_integer_32 -- import_by_name_rva
-			s.put_natural_8_array (6) -- padding_3
-			s.put_natural_8_array (12) -- entry_point_name
-			s.put_natural_8_array (12) -- library_name
+			s.put_natural_8_array (4) -- End of table
+			s.put_natural_8_array (2) -- Hint
+			s.put_natural_8_array (entry_point_name.count) -- entry_point_name
+			s.put_natural_8_array (library_name.count) -- library_name
 
-			s.put_padding (2) -- FIXME: Check why this is needed?
+-- If alignment on 4 bytes is required, uncomment the following lines.
+--			i := s.size \\ 4 -- Align on 4 bytes.
+--			if i > 0 then
+--				s.put_padding (4 - i)
+--			end
 			Result := s
 		ensure
-			Result = 76
+--			aligned_to_4_bytes: Result \\ 4 = 0
 		end
 
 end

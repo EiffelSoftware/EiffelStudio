@@ -19,7 +19,6 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create padding_field.make_filled ({NATURAL_8} 0, 1, 2)
 			block_size_field := 0x0C
 		end
 
@@ -36,11 +35,6 @@ feature -- Access
 	fixup: INTEGER_16
 			-- Fixup location from `BlockRVA'.
 			-- This represents the Type field.
-
-	padding_field: ARRAY [NATURAL_8]
-			-- two bytes
-			-- FIXME: Double check: In the spec it's defined as 12 bits.
-			--  field offset.
 
 feature -- Status Report
 
@@ -106,6 +100,8 @@ feature -- Managed Pointer
 
 	item: CLI_MANAGED_POINTER
 			-- Write the items to the buffer in little-endian format.
+		local
+			pad: INTEGER
 		do
 			create Result.make (size_of)
 
@@ -118,8 +114,13 @@ feature -- Managed Pointer
 				-- fixup
 			Result.put_integer_16 (fixup)
 
-				-- padding_field
-			Result.put_natural_8_array (padding_field)
+				-- two bytes
+				-- FIXME: Double check: In the spec it's defined as 12 bits.
+				--  field offset.
+			pad := Result.count - Result.position
+			if pad > 0 then
+				Result.put_padding (pad, 0)
+			end
 		ensure
 			Result.position = size_of
 		end
@@ -130,6 +131,7 @@ feature -- Measurement
 			-- Size of `CLI_IMAGE_RELOCATION' structure.
 		local
 			s: CLI_MANAGED_POINTER_SIZE
+			i: INTEGER
 		do
 			create s.make
 
@@ -142,8 +144,11 @@ feature -- Measurement
 				-- fixup
 			s.put_integer_16
 
-				-- padding_field
-			s.put_natural_8_array (2) -- should be `padding_field.count`
+				-- Alignment on 4 bytes
+			i := s.size \\ 4 -- Align on 4 bytes.
+			if i > 0 then
+				s.put_padding (4 - i)
+			end
 			Result := s
 		ensure
 			is_class: class

@@ -212,6 +212,7 @@ feature -- Managed Pointer
 			Result.put_integer_32 (forwarder_chain) -- forwarder_chain
 			Result.put_integer_32 (name_rva) -- name_rva
 			Result.put_integer_32 (iat_rva) -- iat_rva
+
 			Result.put_padding (20, 0) -- End of Import Table. Shall, be filled with zeros
 
 				-- Offset Size Field            Description
@@ -264,14 +265,13 @@ feature -- Managed Pointer
 			s.put_natural_8_array (entry_point_name.count) -- entry_point_name
 			s.put_natural_8_array (library_name.count) -- library_name
 
--- If alignment on 4 bytes is required, uncomment the following lines.
---			i := s.size \\ 4 -- Align on 4 bytes.
---			if i > 0 then
---				s.put_padding (4 - i)
---			end
+				-- Alignment on 4 bytes may be required
+				-- (if not comment the following 4 lines)
+			i := s.size \\ 4 -- Align on 4 bytes.
+			if i > 0 then
+				s.put_padding (4 - i)
+			end
 			Result := s
-		ensure
---			aligned_to_4_bytes: Result \\ 4 = 0
 		end
 
 end

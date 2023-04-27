@@ -13,14 +13,11 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create padding.make_filled ({NATURAL_8} 0, 1, 2)
 			set_jump_inst_high (0xFF)
 			set_jump_inst_low (0x25)
 		end
 
 feature -- Access
-
-	padding: ARRAY [NATURAL_8]
 
 	jump_inst_h: INTEGER_8
 
@@ -75,46 +72,47 @@ feature -- Element Change
 
 feature -- Managed Pointer
 
-	item: MANAGED_POINTER
+	item: CLI_MANAGED_POINTER
 			-- write the items to the buffer in  little-endian format.
-		local
-			l_pos: INTEGER
 		do
 			create Result.make (size_of)
-			l_pos := 0
 
 				-- padding
-			Result.put_array (padding, l_pos)
-			l_pos := 2 * {PLATFORM}.natural_8_bytes
+			Result.put_padding (2, 0)
 
 				-- jump_inst_h
-			Result.put_integer_8_le (jump_inst_h, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_8_bytes
+			Result.put_integer_8 (jump_inst_h)
 
 				-- jump_inst_l
-			Result.put_integer_8_le (jump_inst_l, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_8_bytes
+			Result.put_integer_8 (jump_inst_l)
 
 				-- iat_rva
-			Result.put_integer_32_le (iat_rva, l_pos)
+			Result.put_integer_32 (iat_rva)
+		ensure
+			item.position = size_of
 		end
 
 feature -- Measurement
 
 	size_of: INTEGER
 			-- Size of `CLI_ENTRY' structure.
+		local
+			s: CLI_MANAGED_POINTER_SIZE
 		do
+			create s.make
+
 				-- padding
-			Result := 2 * {PLATFORM}.natural_8_bytes
+			s.put_padding (2)
 
 				-- jump_inst_h
-			Result := Result + {PLATFORM}.integer_8_bytes
+			s.put_integer_8
 
 				-- jump_inst_l
-			Result := Result + {PLATFORM}.integer_8_bytes
+			s.put_integer_8
 
 				-- iat_rva
-			Result := Result + {PLATFORM}.integer_32_bytes
+			s.put_integer_32
+			Result := s
 		ensure
 			is_class: class
 		end

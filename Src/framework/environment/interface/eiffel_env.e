@@ -522,10 +522,10 @@ feature {NONE} -- Helpers
 
 feature -- IL environment
 
-	default_il_environment: IL_ENVIRONMENT
+	default_il_environment: IL_ENVIRONMENT_I
 			-- Default il environment, using the newest available runtime.
 		once
-			create Result
+			create {IL_ENVIRONMENT} Result
 		end
 
 feature -- Query
@@ -875,19 +875,38 @@ feature -- Cache settings
 			-- Check .Net environment
 		do
 			if
-				attached get_environment_32 ("ISE_EMDC") as v1 and then v1.count > 0 and then not v1.is_case_insensitive_equal ("false")
-				or not {PLATFORM}.is_windows
+				not {PLATFORM}.is_windows
+			then
+					-- On non Windows platform (Linux, ...), always use "emdc".
+				use_emdc_consumer := True
+			elseif
+				attached get_environment_32 ("ISE_EMDC") as v1 and then v1.count > 0 and then
+				not (v1.is_case_insensitive_equal ("false") or v1.is_case_insensitive_equal ("no"))
 			then
 				use_emdc_consumer := True
 			else
 				use_emdc_consumer := False
 			end
-			if
-				attached get_environment_32 ("ISE_EMDC_JSON") as v2 and then
-				v2.count > 0 and then
-				not v2.is_case_insensitive_equal ("false")
-			then
+			update_use_json_dotnet_md_cache
+		end
+
+	update_use_json_dotnet_md_cache
+			-- Update `use_json_dotnet_md_cache` accordingly to `use_emdc_consumer` and the environment.
+		do
+			if use_emdc_consumer then
+					-- By default, use JSON content
 				use_json_dotnet_md_cache := True
+
+					-- unless ISE_EMDC_JSON is "false"
+				if
+					attached get_environment_32 ("ISE_EMDC_JSON") as v2 and then
+					v2.count > 0 and then
+					( v2.is_case_insensitive_equal ("false")
+					  or v2.is_case_insensitive_equal ("no")
+					)
+				then
+					use_json_dotnet_md_cache := False
+				end
 			else
 				use_json_dotnet_md_cache := False
 			end
@@ -911,6 +930,7 @@ feature -- Cache settings
 					environment.set_application_item ("ISE_EMDC", application_name, version_name, "false")
 				end
 			end
+			update_use_json_dotnet_md_cache
 		end
 
 	set_use_json_dotnet_md_cache (b: BOOLEAN; a_permanent: BOOLEAN)

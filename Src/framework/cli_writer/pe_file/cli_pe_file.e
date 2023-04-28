@@ -90,6 +90,7 @@ feature {NONE} -- Initialization
 			text_section_header.debug_header ("text_section_header_com")
 			reloc_section_header.debug_header ("reloc_section_header_com")
 			iat.debug_header ("iat_com")
+			import_table.debug_header("import_table_com")
 			cli_header.debug_header ("cli_header_com")
 			entry_data.debug_header ("entry_data_com")
 			reloc_section.debug_header ("reloc_section_com")

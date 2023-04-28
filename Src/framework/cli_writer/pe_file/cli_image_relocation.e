@@ -4,6 +4,7 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=II.25.3.2 Relocations", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf,#page=308", "protocol=uri"
 
 class
 	CLI_IMAGE_RELOCATION

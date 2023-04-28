@@ -14,12 +14,11 @@ inherit
 create
 	make
 
-
 feature -- Testing
 
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"empty_assembly">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"define_type_ref">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -58,6 +57,9 @@ feature {NONE} -- Implementation
 			if is_test_included ("define_method_net2", a_pattern) then
 				(create {TEST_METADATA_TABLES}).test_define_method_net2;
 			end
+			if is_test_included ("define_type_ref", a_pattern) then
+				(create {TEST_METADATA_TABLES}).test_define_type_ref;
+			end
 		end
 
 feature -- Initialization
@@ -87,7 +89,7 @@ feature -- Initialization
 								create test_directory.make_current
 							end
 						end
-						-- Ignore for now
+							-- Ignore for now
 					else
 						if lst = Void then
 							create lst.make (n)
@@ -117,7 +119,7 @@ feature -- Settings
 
 	test_directory: detachable PATH
 
-feature {NONE} -- Implementation				
+feature {NONE} -- Implementation
 
 	pre_test (tn: READABLE_STRING_GENERAL)
 		local
@@ -160,7 +162,7 @@ feature -- Helper
 				Result := True
 			else
 				Result := a_name.is_case_insensitive_equal (s)
-				-- Todo: maybe add wildcart test such as ("*_assembly")
+					-- Todo: maybe add wildcart test such as ("*_assembly")
 			end
 		end
 

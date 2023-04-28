@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			MD_EMIT represents a set of in-memory metadata tables and creates a unique module version identifier (GUID) for the metadata. 
 			The class has the ability to add entries to the metadata tables and define the assembly information in the metadata.
@@ -234,12 +234,13 @@ feature {NONE} -- Implementation
 			--| The size of the metadata header and table header.
 			--| The final result is the size of the metadata in bytes.
 		note
-			EIS:"name=Metadata Root","src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297", "protocol=uri"
+			EIS: "name=Metadata Root", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297", "protocol=uri"
 		local
 			l_current_rva: NATURAL_32
 			l_counts: ARRAY [NATURAL_64]
 			l_temp: NATURAL_32
 			l_buffer: ARRAY [NATURAL_8]
+			i: INTEGER
 		do
 
 			l_current_rva := 16
@@ -248,6 +249,8 @@ feature {NONE} -- Implementation
 
 			l_current_rva := l_current_rva + pe_writer.compute_rtv_string_size
 				-- Version.
+				--| The Version string shall be
+				--| Standard CLI 2005
 
 			if (l_current_rva \\ 4) /= 0 then
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
@@ -261,14 +264,15 @@ feature {NONE} -- Implementation
 				-- streams, will be 5 in our implementation
 				-- check stream_names feature.
 
-				-- StreamHeaders. Array of n StreamHdr structures	
+				-- StreamHeaders. Array of n StreamHdr structures
+				-- "#~", "#Strings", "#US", "#GUID", "#Blob"
+				--   1 ,      2    ,   3  ,     4  ,    5
 			across pe_writer.stream_names as elem loop
 				l_current_rva := l_current_rva + 8 + (elem.count + 1).to_natural_32
 				if (l_current_rva \\ 4) /= 0 then
 					l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 				end
 			end
-
 
 			stream_headers [1, 1] := l_current_rva
 
@@ -356,6 +360,7 @@ feature {NONE} -- Implementation
 			end
 
 			stream_headers [5, 2] := l_current_rva - stream_headers [5, 1]
+
 			Result := l_current_rva.to_integer_32
 		end
 
@@ -495,8 +500,8 @@ feature {NONE} -- Implementation
 			l_names: STRING_32
 			l_rvt_string: STRING_32
 		do
-			--| TODO: check if we need to use
-			--| UTF-8 for l_names.
+				--| TODO: check if we need to use
+				--| UTF-8 for l_names.
 			align (a_file, 4)
 			put_metadata_headers (a_file, pe_writer.meta_header1)
 			l_rvt_string := pe_writer.rtv_string + "%U"
@@ -631,12 +636,16 @@ feature -- Definition: Access
 
 	define_type_ref (type_name: NATIVE_STRING; resolution_scope: INTEGER): INTEGER
 			-- Adds type reference information to the metadata tables.
+		note
+			EIS:"name=TypeRef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=273", "protocol=uri"
 		local
 			l_name_index: NATURAL_64
 			l_entry: PE_TABLE_ENTRY_BASE
 			l_scope: INTEGER
 			l_namespace_index: NATURAL_64
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			last_dot: INTEGER
+			l_type_name: STRING_32
 		do
 				-- II.22.38 TypeRef : 0x01
 			l_tuple := extract_table_type_and_row (resolution_scope)
@@ -648,31 +657,35 @@ feature -- Definition: Access
 				--| l_table_row: exists.
 			check exist_table_row: attached tables [l_tuple.table_type_index.to_integer_32].table [l_tuple.table_row_index.to_integer_32] end
 
-			if resolution_scope & Md_mask = Md_module_ref
-			then
+				-- ResolutionScope : an index into a Module, ModuleRef, AssemblyRef or TypeRef table,or null
+			if resolution_scope & Md_mask = md_module then
+				l_scope := {PE_RESOLUTION_SCOPE}.module
+			elseif resolution_scope & Md_mask = Md_module_ref then
 				l_scope := {PE_RESOLUTION_SCOPE}.moduleref
-			elseif resolution_scope & Md_mask = Md_assembly_ref
-			then
+			elseif resolution_scope & Md_mask = Md_assembly_ref then
 				l_scope := {PE_RESOLUTION_SCOPE}.assemblyref
 			elseif resolution_scope & Md_mask = Md_type_ref then
 				l_scope := {PE_RESOLUTION_SCOPE}.typeref
 			end
 
-				-- If the table type is TypeDef or TypeRef, WE can retrieve the
-				-- namespace index from the corresponding row in the TypeDef or TypeRef table.
-			if l_tuple.table_type_index = {PE_TABLES}.tTypeRef.value and then
-				attached {PE_TYPE_REF_TABLE_ENTRY} tables [l_tuple.table_type_index.to_integer_32].table [l_tuple.table_row_index.to_integer_32] as l_type_ref
-			then
-				l_namespace_index := l_type_ref.type_name_space_index.index
-			elseif l_tuple.table_type_index = {PE_TABLES}.tTypeDef.value and then
-				attached {PE_TYPE_DEF_TABLE_ENTRY} tables [l_tuple.table_type_index.to_integer_32].table [l_tuple.table_row_index.to_integer_32] as l_type_def
-			then
-				l_namespace_index := l_type_def.type_name_space_index.index
-			else
+				-- NamespaceIndex and TypeIndex
+				-- The full name of the type need not be stored directly. Instead, it can be split into two parts at any
+				-- included “.” (although typically this is done at the last “.” in the full name). The part preceding the “.”
+				-- is stored as the TypeNamespace and that following the “.” is stored as the TypeName. If there is no “.”
+				-- in the full name, then the TypeNamespace shall be the index of the empty string.
+
+			l_type_name := type_name.string
+			last_dot := l_type_name.last_index_of ('.', l_type_name.count)
+			if last_dot = 0 then
 				l_namespace_index := 0
+				l_name_index := pe_writer.hash_string (l_type_name)
+			else
+				l_namespace_index := pe_writer.hash_string (l_type_name.substring (1, last_dot - 1))
+				l_name_index := pe_writer.hash_string (l_type_name.substring (last_dot + 1, l_type_name.count))
 			end
 
-			l_name_index := pe_writer.hash_string (type_name.string)
+				-- TODO: ResolutionScope : null needs to be checked.
+
 			create {PE_TYPE_REF_TABLE_ENTRY} l_entry.make_with_data (create {PE_RESOLUTION_SCOPE}.make_with_tag_and_index (l_scope, l_tuple.table_row_index), l_name_index, l_namespace_index)
 			pe_index := add_table_entry (l_entry)
 			Result := last_token.to_integer_32

@@ -7,7 +7,6 @@ note
 	EIS: "name=Structure of the runtime file format path", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=303", "protocol=Uri"
 	EIS: "name=II.25 File format extensions to PE", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#[{%%22num%%22%%3A3068%%2C%%22gen%%22%%3A0}%%2C{%%22name%%22%%3A%%22XYZ%%22}%%2C87%%2C770%%2C0]", "protocol=Uri"
 
-
 class
 	CLI_PE_FILE
 
@@ -310,7 +309,6 @@ feature -- Saving
 			emitter.save (create {NATIVE_STRING}.make (l_meta_data_file_name))
 			create l_meta_data_file.make_with_name (l_meta_data_file_name)
 			l_meta_data_file.open_read
--- TO double check
 --			check valid_size: l_meta_data_file.count = meta_data_size end
 			l_meta_data_file.copy_to (l_pe_file)
 			l_meta_data_file.close

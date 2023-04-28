@@ -1674,30 +1674,33 @@ feature {NONE} -- Implementation
 	set_clr_runtime_version (a_version: detachable READABLE_STRING_GENERAL)
 			-- Set clr runtime version, use default if `a_version' is Void.
 		local
-			l_il_env: IL_ENVIRONMENT
+			l_il_env: IL_ENVIRONMENT_I
 			vd15: VD15
 		do
-			create l_il_env
+			create {IL_ENVIRONMENT} l_il_env
 
 			if a_version = Void then
 				system.set_clr_runtime_version (l_il_env.default_version)
 			else
-				if not l_il_env.is_version_installed (a_version) then
+				if attached l_il_env.installed_version (a_version) as v then
+					system.set_clr_runtime_version (v)
+				else
 					create vd15
 					vd15.set_option_name ("msil_clr_version")
 					vd15.set_option_value (a_version)
 					Error_handler.insert_error (vd15)
 					Error_handler.raise_error
+
+					system.set_clr_runtime_version (a_version)
 				end
-				system.set_clr_runtime_version (a_version)
 			end
 
-			create l_il_env.make (system.clr_runtime_version)
+			create {IL_ENVIRONMENT} l_il_env.make (system.clr_runtime_version)
 			l_il_env.register_environment_variable
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

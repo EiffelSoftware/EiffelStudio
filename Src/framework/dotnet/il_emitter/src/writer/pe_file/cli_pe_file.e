@@ -231,14 +231,13 @@ feature -- Settings
 
 feature -- Saving
 
-feature -- Saving
-
 	save
-			--
 		local
 			l_pe_file, l_meta_data_file: RAW_FILE
-			l_padding, l_signature: MANAGED_POINTER
-			l_strong_name_location, l_size: INTEGER
+			l_padding: MANAGED_POINTER
+--			l_signature: MANAGED_POINTER
+			l_strong_name_location: INTEGER
+--			l_size: INTEGER
 			l_uni_string: NATIVE_STRING
 			l_meta_data_file_name: like file_name
 		do
@@ -441,7 +440,8 @@ feature {NONE} -- Saving
 			-- Update all PE files data structures with correct RVAs.
 		local
 			import_directory, reloc_directory,
-			iat_directory, cli_directory, l_debug_directory: CLI_DIRECTORY
+			iat_directory, cli_directory: CLI_DIRECTORY
+			--l_debug_directory: CLI_DIRECTORY
 		do
 				-- Update optional header section.
 			optional_header.set_code_size (text_size_on_disk)

@@ -14,9 +14,6 @@ feature {NONE} -- Initialization
 
 	make (is_dll: BOOLEAN)
 			-- Allocate `item'.
-		local
-			str: POINTER
-			l_name: ARRAY [NATURAL_8]
 		do
 			set_time_date_stamp (0)
 			set_forwarder_chain (0)
@@ -30,7 +27,6 @@ feature {NONE} -- Initialization
 
 				-- Set `library_name'.
 			set_library_name (library_name_dll)
-
 		end
 
 feature -- Access
@@ -163,7 +159,7 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	string_to_null_terminated_array_8 (a_string: STRING_8): ARRAY [NATURAL_8]
+	string_to_null_terminated_array_8 (a_string: READABLE_STRING_8): ARRAY [NATURAL_8]
 			-- Null terminated array of NATURAL_8 built from `a_string`.
 		local
 			n: INTEGER_32
@@ -182,7 +178,7 @@ feature {NONE} -- Implementation
 			until
 				i > n
 			loop
-				Result [i] := a_string.item_code (i).to_natural_8
+				Result [i] := a_string.item (i).code.to_natural_8
 				i := i + 1
 			end
 		end

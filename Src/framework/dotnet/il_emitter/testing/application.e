@@ -6,20 +6,42 @@ note
 class
 	APPLICATION
 
+inherit
+	ARGUMENTS_32
+
+	SHARED_EXECUTION_ENVIRONMENT
+
 create
 	make
 
-feature -- Initialization
+feature -- Testing
 
-	make
+	default_tests: ARRAY [READABLE_STRING_GENERAL]
+		once
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.empty_assembly">>
+		end
+
+	process_test (tn: READABLE_STRING_GENERAL)
 		local
-			l_pe: CLI_PE_FILE
-			l_name: STRING_32
-			l_namespace: STRING_32
+			curr: PATH
 		do
-			test_metadata_tables_token_interface ("define_module")
-			test_metadata_tables_object_model ("*")
-			old_tests ("none") --"test_11")
+			curr := execution_environment.current_working_path
+
+			pre_test (tn)
+			if tn.starts_with ("tk.") then
+				test_metadata_tables_token_interface (tn.substring (4, tn.count))
+			elseif tn.starts_with ("om.") then
+				test_metadata_tables_object_model (tn.substring (4, tn.count))
+			else
+				old_tests (tn) --"test_11")
+			end
+			post_test (tn)
+
+			execution_environment.change_working_path (curr)
+		rescue
+			if attached curr then
+				execution_environment.change_working_path (curr)
+			end
 		end
 
 feature -- Token tests		
@@ -56,6 +78,57 @@ feature -- Object model tests
 --			if is_test_included ("define_assembly", a_pattern) then
 --				(create {TEST_METADATA_TABLES_OM}).test_define_assembly;
 --			end
+		end
+
+feature -- Initialization
+
+	make
+		local
+			tn: READABLE_STRING_GENERAL
+			i, n: INTEGER
+			lst: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			tests: ITERABLE [READABLE_STRING_GENERAL]
+		do
+			n := argument_count
+			if n > 0 then
+				from
+					i := 1
+				until
+					i > n
+				loop
+					tn := argument (i)
+					if tn.starts_with ("-") then
+						if tn.starts_with ("--testdir") then
+							is_using_sub_directory_per_test := True
+							if i < n then
+								create test_directory.make_from_string (argument (i + 1))
+								i := i + 1
+							else
+								create test_directory.make_current
+							end
+						end
+						-- Ignore for now
+					else
+						if lst = Void then
+							create lst.make (n)
+						end
+						lst.extend (tn)
+					end
+					i := i + 1
+				end
+			end
+			if lst = Void then
+					-- Default
+				tests := default_tests
+			else
+				tests := lst
+			end
+			across
+				tests as ic
+			loop
+				tn := ic
+				process_test (tn)
+			end
 		end
 
 feature -- Old tests		
@@ -642,65 +715,63 @@ feature -- Static
 			"C++ inline use <iostream>, <fstream>"
 		alias
 			"[
-				
-																			{
-				
-																					typedef uint32_t DIGIT_T;
-																					DIGIT_T* dkey = (DIGIT_T*)$a_key;
-																					dkey[0] = 0x2400;
-																					dkey[1] = 0x8004;
-																					dkey[2] = 0x14 + $a_modulus_bits / 8;
-																					//
-																					//memcpy(dkey + 3, keyPair, dkey[2]);
-																					//
-				
-																					// Code for testing
-																					dkey[2] = 0x14 + $a_modulus_bits / 8;
-																					dkey[3] = 1;
-																					dkey[4] = 2;
-																					dkey[5] = 3;
-																					dkey[6] = 4;
-																					dkey[7] = 5;
-																					dkey[8] = 6;
-																					dkey[9] = 7;
-																					dkey[10] = 8;
-																					dkey[11] = 9;
-																					dkey[12] = 10;
-																					dkey[13] = 11;
-																					dkey[14] = 12;
-																					dkey[15] = 13;
-																					dkey[16] = 14;
-																					dkey[17] = 15;
-																					dkey[18] = 16;
-																					dkey[19] = 17;
-																					dkey[20] = 18;
-																					dkey[21] = 19;
-																					dkey[22] = 20;
-																					dkey[23] = 21;
-																					dkey[24] = 22;
-				
-																					((char*)dkey)[12 + 0x0b] = '1';  // change to RSA1 (pub key only)
-																					((char*)dkey)[12 + 0] = 6;       // change to pub key only
-																					*($a_key_size) = dkey[2] + 12;
-				
-																					 std::cout << "dkey[12 + 0x0b] = " << dkey[12 + 0x0b] << std::endl;
-																					 std::cout << "((char*)dkey)[12 + 0x0b] = " << ((char*)dkey)[12 + 0x0b] << std::endl;
-				
-																					 std::cout << "dkey[12 + 0] = " << dkey[12 + 0] << std::endl;
-																					 std::cout << "((char*)dkey)[12 + 0] = " << ((char*)dkey)[12 + 0] << std::endl;
-				
-																					std::ofstream outfile;
-																	    			outfile.open("carray_key.bin", std::ios::binary);
-				
-																					outfile.write(((char*)($a_key)), 100);
-												    								outfile.close();
-												    								std::ofstream outfile2;
-																	    			outfile2.open("carray_dkey.bin", std::ios::binary);
-				
-																					outfile2.write(((char*)(dkey)), 100);
-												    								outfile2.close();
-				
-																			}
+				{
+					typedef uint32_t DIGIT_T;
+					DIGIT_T* dkey = (DIGIT_T*)$a_key;
+					dkey[0] = 0x2400;
+					dkey[1] = 0x8004;
+					dkey[2] = 0x14 + $a_modulus_bits / 8;
+					//
+					//memcpy(dkey + 3, keyPair, dkey[2]);
+					//
+
+					// Code for testing
+					dkey[2] = 0x14 + $a_modulus_bits / 8;
+					dkey[3] = 1;
+					dkey[4] = 2;
+					dkey[5] = 3;
+					dkey[6] = 4;
+					dkey[7] = 5;
+					dkey[8] = 6;
+					dkey[9] = 7;
+					dkey[10] = 8;
+					dkey[11] = 9;
+					dkey[12] = 10;
+					dkey[13] = 11;
+					dkey[14] = 12;
+					dkey[15] = 13;
+					dkey[16] = 14;
+					dkey[17] = 15;
+					dkey[18] = 16;
+					dkey[19] = 17;
+					dkey[20] = 18;
+					dkey[21] = 19;
+					dkey[22] = 20;
+					dkey[23] = 21;
+					dkey[24] = 22;
+
+					((char*)dkey)[12 + 0x0b] = '1';  // change to RSA1 (pub key only)
+					((char*)dkey)[12 + 0] = 6;       // change to pub key only
+					*($a_key_size) = dkey[2] + 12;
+
+					 std::cout << "dkey[12 + 0x0b] = " << dkey[12 + 0x0b] << std::endl;
+					 std::cout << "((char*)dkey)[12 + 0x0b] = " << ((char*)dkey)[12 + 0x0b] << std::endl;
+
+					 std::cout << "dkey[12 + 0] = " << dkey[12 + 0] << std::endl;
+					 std::cout << "((char*)dkey)[12 + 0] = " << ((char*)dkey)[12 + 0] << std::endl;
+
+					std::ofstream outfile;
+	    			outfile.open("carray_key.bin", std::ios::binary);
+
+					outfile.write(((char*)($a_key)), 100);
+    								outfile.close();
+    								std::ofstream outfile2;
+	    			outfile2.open("carray_dkey.bin", std::ios::binary);
+
+					outfile2.write(((char*)(dkey)), 100);
+    								outfile2.close();
+
+				}
 			]"
 		end
 
@@ -904,6 +975,33 @@ feature -- GUID
 		end
 
 
+feature -- Settings
+
+	is_using_sub_directory_per_test: BOOLEAN
+
+	test_directory: detachable PATH
+
+feature {NONE} -- Implementation				
+
+	pre_test (tn: READABLE_STRING_GENERAL)
+		local
+			p: PATH
+			fut: FILE_UTILITIES
+		do
+			if is_using_sub_directory_per_test and then attached test_directory as loc then
+				p := loc.extended (tn)
+				if not fut.directory_path_exists (p) then
+					fut.create_directory_path (p)
+				end
+				execution_environment.change_working_path (p)
+			end
+		end
+
+	post_test (tn: READABLE_STRING_GENERAL)
+		do
+
+		end
+
 feature -- Helper
 
 	is_test_included (a_name: READABLE_STRING_GENERAL; a_pattern: READABLE_STRING_GENERAL): BOOLEAN
@@ -916,7 +1014,7 @@ feature -- Helper
 				s.starts_with ("test_") and
 				not a_name.as_lower.starts_with ("test_")
 			then
-				s := s.substring (5, s.count) -- remove "test_" prefix
+				s := s.substring (6, s.count) -- remove "test_" prefix
 			end
 			if
 				s.is_empty

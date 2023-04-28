@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<execution_parameters xmlns="http://www.eiffel.com/developers/xml/execution-parameters-1-0-0" last_profile="4060CFED-C810-4F76-B794-288287FB7F92">
+ <profile uuid="87E34963-6D69-49EE-8C26-B4B566291091" title="tk.empty_assembly" arguments="tk.empty_assembly --testdir output" working_directory="">
+ </profile>
+ <profile uuid="BA6690B0-D150-4478-A171-A6BF26AEFCB3" title="tk.define_module" arguments="tk.define_module --testdir output" working_directory="">
+ </profile>
+ <profile uuid="4060CFED-C810-4F76-B794-288287FB7F92" title="om.empty_assembly --testdir output" arguments="om.empty_assembly --testdir output" working_directory="">
+ </profile>
+</execution_parameters>

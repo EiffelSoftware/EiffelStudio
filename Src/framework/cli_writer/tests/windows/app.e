@@ -29,7 +29,7 @@ feature -- Testing
 			curr := execution_environment.current_working_path
 
 			pre_test (tn)
-			test_metadata_tables (tn.substring (5, tn.count))
+			test_metadata_tables (tn)
 			post_test (tn)
 
 			execution_environment.change_working_path (curr)

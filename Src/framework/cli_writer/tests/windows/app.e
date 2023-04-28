@@ -55,6 +55,9 @@ feature {NONE} -- Implementation
 			if is_test_included ("cli_header_size", a_pattern) then
 				(create {TEST_METADATA_TABLES}).test_cli_header_size;
 			end
+			if is_test_included ("define_method_net2", a_pattern) then
+				(create {TEST_METADATA_TABLES}).test_define_method_net2;
+			end
 		end
 
 feature -- Initialization

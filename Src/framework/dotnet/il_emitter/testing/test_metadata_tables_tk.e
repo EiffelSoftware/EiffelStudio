@@ -66,8 +66,8 @@ feature -- Test
 			md_emit := md_dispenser.emit
 
 			create md_assembly_info.make
-			md_assembly_info.set_major (5)
-			md_assembly_info.set_minor (2)
+			md_assembly_info.set_major_version (5)
+			md_assembly_info.set_minor_version (2)
 			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("manus_assembly"),
 						0, md_assembly_info, Void)
 
@@ -98,6 +98,39 @@ feature -- Test
 			check same_string: l_str.same_string_general ("Java") end
 			l_str := md_emit.retrieve_user_string (l_token3.to_integer_32)
 			check same_string: l_str.same_string_general ("TEST_METADATA_TABLES_TK") end
+		end
+
+	test_define_module
+		local
+			l_pe_file: CLI_PE_FILE
+			md_dispenser: MD_DISPENSER
+			md_emit: MD_EMIT
+			md_assembly_info: MD_ASSEMBLY_INFO
+			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
+			my_assembly, mscorlib_token: INTEGER
+
+		do
+			create md_dispenser.make
+			md_emit := md_dispenser.emit
+
+			create md_assembly_info.make
+			md_assembly_info.set_major_version (5)
+			md_assembly_info.set_minor_version (2)
+
+			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("module_assembly"), 0, md_assembly_info, Void)
+
+			md_assembly_info.set_major_version (1)
+			md_assembly_info.set_minor_version (0)
+			md_assembly_info.set_build_number (3300)
+			create l_pub_key_token.make_from_array (
+				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
+
+			mscorlib_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("mscorlib"), md_assembly_info, l_pub_key_token)
+
+			md_emit.set_module_name (create {NATIVE_STRING}.make ("module_assembly.dll"))
+
+			create l_pe_file.make ("module_assembly.dll", True, True, False, md_emit)
+			l_pe_file.save
 		end
 
 end

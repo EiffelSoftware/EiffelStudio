@@ -66,6 +66,12 @@ feature -- Token tests
 			if is_test_included ("define_module", a_pattern) then
 				(create {TEST_METADATA_TABLES_TK}).test_define_module;
 			end
+			if is_test_included ("define_module_net6", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_module_net6;
+			end
+			if is_test_included ("define_method_net2", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_method_net2;
+			end
 		end
 
 feature -- Object model tests		

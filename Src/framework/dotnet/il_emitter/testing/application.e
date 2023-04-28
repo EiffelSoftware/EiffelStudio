@@ -17,27 +17,50 @@ feature -- Initialization
 			l_name: STRING_32
 			l_namespace: STRING_32
 		do
-			test_metadata_tables_token_interface
---			test_metadata_tables_object_model
---			(create {TEST_11}).test;
+			test_metadata_tables_token_interface ("define_module")
+			test_metadata_tables_object_model ("*")
+			old_tests ("none") --"test_11")
 		end
 
-	test_metadata_tables_token_interface
+feature -- Token tests		
+
+	test_metadata_tables_token_interface (a_pattern: READABLE_STRING_GENERAL)
 		do
---			(create {TEST_METADATA_TABLES_TK}).test_cli_directory_size;
---			(create {TEST_METADATA_TABLES_TK}).test_cli_header_size;
---			(create {TEST_METADATA_TABLES_TK}).test_user_string_heap;
-			(create {TEST_METADATA_TABLES_TK}).test_empty_assembly;
---			(create {TEST_METADATA_TABLES_TK}).test_define_assembly;
+			if is_test_included ("cli_directory_size", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_cli_directory_size;
+			end
+			if is_test_included ("cli_header_size", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_cli_header_size;
+			end
+			if is_test_included ("user_string_heap", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_user_string_heap;
+			end
+			if is_test_included ("empty_assembly", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_empty_assembly;
+			end
+			if is_test_included ("define_assembly", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_assembly;
+			end
+			if is_test_included ("define_module", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_module;
+			end
 		end
 
-	test_metadata_tables_object_model
+feature -- Object model tests		
+
+	test_metadata_tables_object_model (a_pattern: READABLE_STRING_GENERAL)
 		do
-			(create {TEST_METADATA_TABLES_OM}).test_empty_assembly;
-			--(create {TEST_METADATA_TABLES_OM}).test_define_assembly;
+			if is_test_included ("empty_assembly", a_pattern) then
+				(create {TEST_METADATA_TABLES_OM}).test_empty_assembly;
+			end
+--			if is_test_included ("define_assembly", a_pattern) then
+--				(create {TEST_METADATA_TABLES_OM}).test_define_assembly;
+--			end
 		end
 
-	old_make
+feature -- Old tests		
+
+	old_tests (a_pattern: READABLE_STRING_GENERAL)
 			-- Run application.
 		local
 			mp: MANAGED_POINTER
@@ -45,39 +68,100 @@ feature -- Initialization
 			l_cell: CELL [INTEGER]
 			time: TIME
 		do
---			test_big_digits
---			test_copy_arrays
---			test_array_wrapped_code
---			test_arrays
---			test_string_to_buf
---			test_pe_version_string ({STRING_32} "FileVersion", "1.1.0.1")
---				--test_pe_version_string({STRING_32}"FileDescription", " ")
---			text_hexadecimal_value
---			test_path_entries
---			test_pe_strings_32
---			test_pe_naturals
---			test_pe_reader
---			test_pe_import_dir
---			test_pe_write_string
---			test_byte_array_to_string
---			file_test
---			test_natural_64
---			test_byte_array
---			test_guid;
---			(create {TEST_1}).test;
---			(create {TEST_2}).test;
---			(create {TEST_3}).test;
---			(create {TEST_4}).test;
---			(create {TEST_5}).test;
---			(create {TEST_6}).test;
---			(create {TEST_7}).test;
---			(create {TEST_8}).test;
---			(create {TEST_9}).test;
---			(create {TEST_9}).test;
---			(create {TEST_10}).test;
---			(create {TEST_11}).test;
---			test_random
---			(create {TEST_12}).test;
+			if is_test_included ("big_digits", a_pattern) then
+				test_big_digits
+			end
+			if is_test_included ("copy_arrays", a_pattern) then
+				test_copy_arrays
+			end
+			if is_test_included ("array_wrapped_code", a_pattern) then
+				test_array_wrapped_code
+			end
+			if is_test_included ("arrays", a_pattern) then
+				test_arrays
+			end
+			if is_test_included ("string_to_buf", a_pattern) then
+				test_string_to_buf
+			end
+			if is_test_included ("pe_version_string", a_pattern) then
+				test_pe_version_string ({STRING_32} "FileVersion", "1.1.0.1")
+--				test_pe_version_string ({STRING_32} "FileDescription", " ")
+			end
+			if is_test_included ("hexadecimal_value", a_pattern) then
+				text_hexadecimal_value
+			end
+			if is_test_included ("path_entries", a_pattern) then
+				test_path_entries
+			end
+			if is_test_included ("pe_strings_32", a_pattern) then
+				test_pe_strings_32
+			end
+			if is_test_included ("pe_naturals", a_pattern) then
+				test_pe_naturals
+			end
+			if is_test_included ("pe_reader", a_pattern) then
+				test_pe_reader
+			end
+			if is_test_included ("pe_import_dir", a_pattern) then
+				test_pe_import_dir
+			end
+			if is_test_included ("pe_write_string", a_pattern) then
+				test_pe_write_string
+			end
+			if is_test_included ("byte_array_to_string", a_pattern) then
+				test_byte_array_to_string
+			end
+			if is_test_included ("test", a_pattern) then
+				file_test
+			end
+			if is_test_included ("natural_64", a_pattern) then
+				test_natural_64
+			end
+			if is_test_included ("byte_array", a_pattern) then
+				test_byte_array
+			end
+			if is_test_included ("guid", a_pattern) then
+				test_guid;
+			end
+			if is_test_included ("test_1", a_pattern) then
+				(create {TEST_1}).test;
+			end
+			if is_test_included ("test_2", a_pattern) then
+				(create {TEST_2}).test;
+			end
+			if is_test_included ("test_3", a_pattern) then
+				(create {TEST_3}).test;
+			end
+			if is_test_included ("test_4", a_pattern) then
+				(create {TEST_4}).test;
+			end
+			if is_test_included ("test_5", a_pattern) then
+				(create {TEST_5}).test;
+			end
+			if is_test_included ("test_6", a_pattern) then
+				(create {TEST_6}).test;
+			end
+			if is_test_included ("test_7", a_pattern) then
+				(create {TEST_7}).test;
+			end
+			if is_test_included ("test_8", a_pattern) then
+				(create {TEST_8}).test;
+			end
+			if is_test_included ("test_9", a_pattern) then
+				(create {TEST_9}).test;
+			end
+			if is_test_included ("test_10", a_pattern) then
+				(create {TEST_10}).test;
+			end
+			if is_test_included ("test_11", a_pattern) then
+--FIXME				(create {TEST_11}).test;
+			end
+			if is_test_included ("random", a_pattern) then
+				test_random
+			end
+			if is_test_included ("test_12", a_pattern) then
+--FIXME				(create {TEST_12}).test;
+			end
 
 		end
 
@@ -817,6 +901,33 @@ feature -- GUID
 
 			create l_guid.make (l_data1, l_data2, l_data3, l_data4)
 			print (l_guid.to_array_natural_8)
+		end
+
+
+feature -- Helper
+
+	is_test_included (a_name: READABLE_STRING_GENERAL; a_pattern: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is test `a_name` matching pattern `a_pattern`?
+		local
+			s: READABLE_STRING_GENERAL
+		do
+			s := a_pattern.as_lower
+			if
+				s.starts_with ("test_") and
+				not a_name.as_lower.starts_with ("test_")
+			then
+				s := s.substring (5, s.count) -- remove "test_" prefix
+			end
+			if
+				s.is_empty
+				or else s.is_case_insensitive_equal ("*")
+				or else s.is_case_insensitive_equal ("all")
+			then
+				Result := True
+			else
+				Result := a_name.is_case_insensitive_equal (s)
+				-- Todo: maybe add wildcart test such as ("*_assembly")
+			end
 		end
 
 

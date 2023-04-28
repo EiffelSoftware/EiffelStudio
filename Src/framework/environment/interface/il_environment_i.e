@@ -40,6 +40,32 @@ feature -- Access
 		deferred
 		end
 
+	installed_version (a_version: READABLE_STRING_GENERAL): detachable READABLE_STRING_GENERAL
+			-- Exact installed version adapted from `a_version`.
+			-- note: `a_version` could have only the major and minor, but not the rest
+			--		 the installed_version will be a full defined version compatible with `a_version`
+			--|		 for instance, for ".../6.0", it could return ".../6.0.15" if that one is installed.
+		local
+			k: READABLE_STRING_GENERAL
+		do
+			if is_version_installed (a_version) then
+				Result := a_version
+			else
+					-- FIXME: try to sort the `installed_runtimes` before using it
+					-- sort with versioning M.m.build in mind, and not just alphabetical order.
+				across
+					installed_runtimes as tb
+				loop
+					k := @ tb.key
+						-- FIXME: be more acurate working with versioning and not just "starts_with"
+					if k.starts_with (a_version) then
+							-- From 6.0, accept latest installed version 6.0.16
+						Result := k
+					end
+				end
+			end
+		end
+
 	is_version_installed (a_version: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_version' installed?
 		deferred

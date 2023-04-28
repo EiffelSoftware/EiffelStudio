@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<execution_parameters xmlns="http://www.eiffel.com/developers/xml/execution-parameters-1-0-0" last_profile="DA58AC54-4779-4195-95BA-0133829280BB">
+ <profile uuid="DA58AC54-4779-4195-95BA-0133829280BB" title="empty_assembly --testdir output" arguments="empty_assembly --testdir output" working_directory="">
+ </profile>
+ <profile uuid="4B341CC8-ECA8-4ADB-8AF0-696DACD5FD01" title="all --testdir output" arguments="all --testdir output" working_directory="">
+ </profile>
+</execution_parameters>

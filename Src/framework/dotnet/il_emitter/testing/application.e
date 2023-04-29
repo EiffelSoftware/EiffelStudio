@@ -19,7 +19,7 @@ feature -- Testing
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
 			--Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.empty_assembly", "tk.define_method_net2", "om.method_assembly">>
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_type_ref", "om.define_type_ref">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_type", "om.define_type">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -76,6 +76,10 @@ feature -- Token tests
 			if is_test_included ("define_type_ref", a_pattern) then
 				(create {TEST_METADATA_TABLES_TK}).test_define_type_ref;
 			end
+			if is_test_included ("define_type", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_type;
+			end
+
 		end
 
 feature -- Object model tests		
@@ -93,6 +97,10 @@ feature -- Object model tests
 			end
 			if is_test_included ("define_type_ref", a_pattern) then
 				(create {TEST_METADATA_TABLES_OM}).test_define_type_ref;
+			end
+
+			if is_test_included ("define_type", a_pattern) then
+				(create {TEST_METADATA_TABLES_OM}).test_define_type;
 			end
 
 

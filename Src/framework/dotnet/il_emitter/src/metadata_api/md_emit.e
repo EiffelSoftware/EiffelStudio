@@ -757,6 +757,8 @@ feature -- Definition: Creation
 
 	define_type (type_name: NATIVE_STRING; flags: INTEGER; extend_token: INTEGER; implements: detachable ARRAY [INTEGER]): INTEGER
 			-- Define a new type in the metadata.
+		note
+			EIS: "name=TypeDef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=270", "protocoo"
 		local
 			l_name_index: NATURAL_64
 			l_namespace_index: NATURAL_64
@@ -765,22 +767,29 @@ feature -- Definition: Creation
 			l_extends: PE_TYPEDEF_OR_REF
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			last_dot: INTEGER
+			l_type_name: STRING_32
+			l_field_index, l_method_index: NATURAL
 		do
-				-- Double check how to compute namespace_index and name_index.
-			last_dot := type_name.string.last_index_of ('.', type_name.string.count)
+				-- FieldList (an index into the Field table; it marks the first of a contiguous run of Fields owned by this Type).	
+			l_field_index :=  next_table_index ({PE_TABLES}.tfield.value.to_integer_32)
+				-- MethodList (an index into the MethodDef table; it marks the first of a continguous run of Methods owned by this Type).
+			l_method_index := next_table_index ({PE_TABLES}.tmethoddef.value.to_integer_32)
+
+			l_type_name := type_name.string
+			last_dot := l_type_name.last_index_of ('.', l_type_name.count)
 			if last_dot = 0 then
-				l_namespace_index := 0 -- empty namespace
-				l_name_index := pe_writer.hash_string (type_name.string)
+				l_namespace_index := 0
+				l_name_index := pe_writer.hash_string (l_type_name)
 			else
-				l_namespace_index := pe_writer.hash_string (type_name.string.substring (1, last_dot - 1))
-				l_name_index := pe_writer.hash_string (type_name.string.substring (last_dot + 1, type_name.string.count))
+				l_namespace_index := pe_writer.hash_string (l_type_name.substring (1, last_dot - 1))
+				l_name_index := pe_writer.hash_string (l_type_name.substring (last_dot + 1, l_type_name.count))
 			end
 
 			l_tuple := extract_table_type_and_row (extend_token)
 
-			l_extends := create_type_def_or_ref (extend_token, l_tuple.table_type_index)
+			l_extends := create_type_def_or_ref (extend_token, l_tuple.table_row_index)
 
-			create {PE_TYPE_DEF_TABLE_ENTRY} l_entry.make_with_data (flags, l_name_index, l_namespace_index, l_extends, 0, 0)
+			create {PE_TYPE_DEF_TABLE_ENTRY} l_entry.make_with_data (flags, l_name_index, l_namespace_index, l_extends, l_field_index, l_method_index)
 			pe_index := add_table_entry (l_entry)
 			Result := last_token.to_integer_32
 
@@ -788,7 +797,7 @@ feature -- Definition: Creation
 			if attached implements then
 				across implements as i loop
 					to_implement ("TODO double check and test this code!!!")
-					l_extends := create_type_def_or_ref (i, l_tuple.table_type_index)
+					l_extends := create_type_def_or_ref (i, l_tuple.table_row_index)
 					create {PE_INTERFACE_IMPL_TABLE_ENTRY} l_entry.make_with_data (pe_index, l_extends)
 						--note: l_dis is not used.
 					pe_index := add_table_entry (l_entry)

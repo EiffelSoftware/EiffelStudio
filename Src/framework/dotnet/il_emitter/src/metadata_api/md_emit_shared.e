@@ -121,11 +121,9 @@ feature {NONE} -- Helper
 		local
 			l_tag: INTEGER
 		do
-			if a_token & Md_mask = Md_type_def
-			then
+			if a_token & Md_mask = Md_type_def then
 				l_tag := {PE_TYPEDEF_OR_REF}.typedef
-			elseif a_token & Md_mask = Md_type_ref
-			then
+			elseif a_token & Md_mask = Md_type_ref then
 				l_tag := {PE_TYPEDEF_OR_REF}.typeref
 			elseif a_token & Md_mask = Md_type_spec then
 				l_tag := {PE_TYPEDEF_OR_REF}.typespec
@@ -231,6 +229,13 @@ feature {NONE} -- Helper
 				l_tag := 0
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
+		end
+
+feature -- 	
+
+	next_table_index (a_table: INTEGER): NATURAL
+		do
+			Result := (tables [a_table].size + 1).to_natural_32
 		end
 
 feature -- Metadata Table Sizes

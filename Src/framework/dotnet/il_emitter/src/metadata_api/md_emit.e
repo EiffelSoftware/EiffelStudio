@@ -637,7 +637,7 @@ feature -- Definition: Access
 	define_type_ref (type_name: NATIVE_STRING; resolution_scope: INTEGER): INTEGER
 			-- Adds type reference information to the metadata tables.
 		note
-			EIS:"name=TypeRef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=273", "protocol=uri"
+			EIS: "name=TypeRef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=273", "protocol=uri"
 		local
 			l_name_index: NATURAL_64
 			l_entry: PE_TABLE_ENTRY_BASE
@@ -770,8 +770,8 @@ feature -- Definition: Creation
 			l_type_name: STRING_32
 			l_field_index, l_method_index: NATURAL
 		do
-				-- FieldList (an index into the Field table; it marks the first of a contiguous run of Fields owned by this Type).	
-			l_field_index :=  next_table_index ({PE_TABLES}.tfield.value.to_integer_32)
+				-- FieldList (an index into the Field table; it marks the first of a contiguous run of Fields owned by this Type).
+			l_field_index := next_table_index ({PE_TABLES}.tfield.value.to_integer_32)
 				-- MethodList (an index into the MethodDef table; it marks the first of a continguous run of Methods owned by this Type).
 			l_method_index := next_table_index ({PE_TABLES}.tmethoddef.value.to_integer_32)
 

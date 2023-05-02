@@ -18,7 +18,7 @@ feature -- Testing
 
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"define_method">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"define_signature_local">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -66,6 +66,14 @@ feature {NONE} -- Implementation
 			if is_test_included ("define_method", a_pattern) then
 				(create {TEST_METADATA_TABLES}).test_define_method;
 			end
+			if is_test_included ("define_field", a_pattern) then
+				(create {TEST_METADATA_TABLES}).test_define_field;
+			end
+			if is_test_included ("define_signature_local", a_pattern) then
+				(create {TEST_METADATA_TABLES}).test_define_signature_local;
+			end
+
+
 
 		end
 

@@ -18,7 +18,7 @@ feature -- Testing
 
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"define_type_ref">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"define_method">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -60,6 +60,13 @@ feature {NONE} -- Implementation
 			if is_test_included ("define_type_ref", a_pattern) then
 				(create {TEST_METADATA_TABLES}).test_define_type_ref;
 			end
+			if is_test_included ("define_member_ref", a_pattern) then
+				(create {TEST_METADATA_TABLES}).test_define_member_ref;
+			end
+			if is_test_included ("define_method", a_pattern) then
+				(create {TEST_METADATA_TABLES}).test_define_method;
+			end
+
 		end
 
 feature -- Initialization

@@ -3,6 +3,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	see: "II.22.26 MethodDef : 0x06 "
+	EIS: "name=MethodDef","src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=259", "protocol=uri"
 class
 	PE_METHOD_DEF_TABLE_ENTRY
 
@@ -48,14 +49,19 @@ feature -- Access
 			-- rva
 
 	impl_flags: INTEGER_16
+			-- 2-byte bitmask of type MethodImplAttributes.
 
 	flags: INTEGER_16
+			-- 2-byte bitmask of type MethodAttributes
 
 	name_index: PE_STRING
+			-- index in the string heap
 
 	signature_index: PE_BLOB
+			-- index in the blob heap
 
 	param_index: PE_PARAM_LIST
+			-- index into the Param table
 
 feature -- Enum: Implementation Flags
 

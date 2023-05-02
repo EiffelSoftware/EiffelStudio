@@ -1,11 +1,11 @@
 ﻿note
 	description: "[
-		Object representing he MemberRef table combines two sorts of references, to Methods and to Fields of a class, known as
-		‘MethodRef’ and ‘FieldRef’, respectively
+			Object representing he MemberRef table combines two sorts of references, to Methods and to Fields of a class, known as
+			‘MethodRef’ and ‘FieldRef’, respectively
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.25 MemberRef : 0x0A "
+	EIS: "name=MemberRef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=258", "protocol=uri"
 
 class
 	PE_MEMBER_REF_TABLE_ENTRY
@@ -17,7 +17,7 @@ inherit
 create
 	make_with_data
 
-feature {NONE} -- Intialization	
+feature {NONE} -- Intialization
 
 	make_with_data (a_parent_index: PE_MEMBER_REF_PARENT; a_name_index: NATURAL_64; a_signature_index: NATURAL_64)
 		do
@@ -29,11 +29,13 @@ feature {NONE} -- Intialization
 feature -- Access
 
 	parent_index: PE_MEMBER_REF_PARENT
-		-- class  column in the spec
+			-- class  column in the spec.
 
 	name_index: PE_STRING
+			-- index in the string heap.
 
 	signature_index: PE_BLOB
+			-- index in the blob heap.
 
 feature -- Operations
 
@@ -81,6 +83,5 @@ feature -- Operations
 				-- Return the number of bytes readed
 			Result := l_bytes
 		end
-
 
 end

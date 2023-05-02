@@ -854,15 +854,13 @@ feature -- Definition: Creation
 				-- TODO doube check: why we are not using the l_tuple?
 			l_tuple := extract_table_type_and_row (in_class_token)
 
-				-- Param index is the number of parameters.
-				--| TODO double check.
-			l_param_index := a_signature.parameter_count.to_natural_64
+			l_param_index := next_table_index ({PE_TABLES}.tparam.value.to_integer_32)
 
 			l_method_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 			l_name_index := pe_writer.hash_string (method_name.string)
 
 				-- Create a new PE_METHOD_DEF_TABLE_ENTRY instance with the given data
-			create l_method_def_entry.make (method_flags.to_integer_16, impl_flags.to_integer_16, l_name_index, l_method_signature, l_param_index)
+			create l_method_def_entry.make (impl_flags.to_integer_16, method_flags.to_integer_16, l_name_index, l_method_signature, l_param_index)
 
 				-- Add the new PE_METHOD_DEF_TABLE_ENTRY instance to the metadata tables.
 			pe_index := add_table_entry (l_method_def_entry)

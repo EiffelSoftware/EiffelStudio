@@ -137,11 +137,9 @@ feature {NONE} -- Helper
 		local
 			l_tag: INTEGER
 		do
-			if a_token & Md_mask = Md_type_def
-			then
+			if a_token & Md_mask = Md_type_def	then
 				l_tag := {PE_MEMBER_REF_PARENT}.typedef
-			elseif a_token & Md_mask = Md_type_ref
-			then
+			elseif a_token & Md_mask = Md_type_ref then
 				l_tag := {PE_MEMBER_REF_PARENT}.typeref
 			elseif a_token & Md_mask = Md_type_spec then
 				l_tag := {PE_MEMBER_REF_PARENT}.typespec

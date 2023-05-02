@@ -467,9 +467,10 @@ feature -- Assembly
 			l_tuple: TUPLE [index: INTEGER; dc: detachable CIL_DATA_CONTAINER]
 			n: INTEGER
 			exit: BOOLEAN
+			o: detachable ANY
 		do
 			l_assembly := a_assembly
-			Result := [{CIL_FIND_TYPE}.s_notfound, Void]
+			Result := [{CIL_FIND_TYPE}.s_notfound, o]
 			create l_path.make_from_string (a_path)
 			l_path.replace_substring_all ("/", ".")
 
@@ -563,23 +564,23 @@ feature -- Assembly
 				exit := True
 				Result := [{CIL_FIND_TYPE}.s_ambiguous, Void]
 			elseif not exit and then not l_found.is_empty then
-				Result.resource := l_found [1]
-				if attached {CIL_NAMESPACE} l_found [1] then
+				Result.resource := l_found.first
+				if attached {CIL_NAMESPACE} l_found.first then
 					Result.type := {CIL_FIND_TYPE}.s_namespace
-				elseif attached {CIL_CLASS} l_found [1] then
+				elseif attached {CIL_CLASS} l_found.first then
 					Result.type := {CIL_FIND_TYPE}.s_class
-				elseif attached {CIL_ENUM} l_found [1] then
+				elseif attached {CIL_ENUM} l_found.first then
 					Result.type := {CIL_FIND_TYPE}.s_enum
 				end
 				exit := True
 			elseif not exit and then not l_found_method.is_empty then
-				Result := [{CIL_FIND_TYPE}.s_method, l_found_method [1]]
+				Result := [{CIL_FIND_TYPE}.s_method, l_found_method.first]
 				exit := True
 			elseif not exit and then not l_found_field.is_empty then
-				Result := [{CIL_FIND_TYPE}.s_field, l_found_field [1]]
+				Result := [{CIL_FIND_TYPE}.s_field, l_found_field.first]
 				exit := True
 			elseif not exit and then not l_found_property.is_empty then
-				Result := [{CIL_FIND_TYPE}.s_property, l_found_property [1]]
+				Result := [{CIL_FIND_TYPE}.s_property, l_found_property.first]
 				exit := True
 			end
 

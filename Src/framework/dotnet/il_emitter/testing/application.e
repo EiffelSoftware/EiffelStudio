@@ -19,7 +19,7 @@ feature -- Testing
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
 			--Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.empty_assembly", "tk.define_method_net2", "om.method_assembly">>
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_method_net2">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_entry_point">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -90,6 +90,12 @@ feature -- Token tests
 			end
 			if is_test_included ("define_signature_local", a_pattern) then
 				(create {TEST_METADATA_TABLES_TK}).test_define_signature_local;
+			end
+			if is_test_included ("define_entry_point", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_entry_point
+			end
+			if is_test_included ("define_entry_point_net6", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_entry_point_net6
 			end
 
 		end

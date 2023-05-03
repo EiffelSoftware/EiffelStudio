@@ -152,7 +152,7 @@ feature -- Definition: Creation
 		deferred
 		ensure
 			is_successful
-			result_valid: Result & Md_mask = Md_type_def
+			result_valid: Result & Md_mask = Md_type_spec
 		end
 
 	define_exported_type (type_name: NATIVE_STRING; implementation_token: INTEGER;

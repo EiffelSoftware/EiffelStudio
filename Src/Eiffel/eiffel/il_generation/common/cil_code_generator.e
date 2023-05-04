@@ -7682,21 +7682,31 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 			f: FEATURE_I
 		once
 			c := System.system_object_class.compiled_class
-			across
-				c.feature_table.overloaded_items ({PREDEFINED_NAMES}.equals_name_id) as l
-			from
-				l.start
-				f := l.item
-				l.forth
-			until
-					-- "public virtual bool Equals (System.Object)"
-				not f.is_class and then
-				f.argument_count = 1 and then
-				f.arguments.first.same_as (c.actual_type)
-			loop
-				f := l.item
+			if c.feature_table.has_overloaded ({PREDEFINED_NAMES}.equals_name_id) then
+				across
+					c.feature_table.overloaded_items ({PREDEFINED_NAMES}.equals_name_id) as l
+				from
+					l.start
+					f := l.item
+					l.forth
+				until
+						-- "public virtual bool Equals (System.Object)"
+					not f.is_class and then
+					f.argument_count = 1 and then
+					f.arguments.first.same_as (c.actual_type)
+				loop
+					f := l.item
+				end
+			else
+				f := c.feature_table.item_id ({PREDEFINED_NAMES}.equals_name_id)
 			end
-			Result := f.rout_id_set.first
+			if f /= Void then
+				Result := f.rout_id_set.first
+			else
+				check has_equals_rout_id: False then
+					-- Raise an exception, as "equals" is required.
+				end
+			end
 		ensure
 			equals_rout_id_positive: Result > 0
 		end

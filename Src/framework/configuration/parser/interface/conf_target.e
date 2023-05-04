@@ -1199,6 +1199,13 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_abstract_set: is_abstract = an_enabled
 		end
 
+	add_dotnet_renaming (a_renaming: CONF_RENAMING_GROUP)
+		do
+			internal_dotnet_renaming.extend (a_renaming, a_renaming.name)
+		ensure
+			renaming_added: internal_dotnet_renaming.count = 1 + old internal_dotnet_renaming.count
+		end
+
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
 	set_environ_variables (a_vars: like environ_variables)

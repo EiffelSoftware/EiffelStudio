@@ -1443,11 +1443,14 @@ feature {NONE} -- Implementation attribute processing
 					r.set_name_prefix (p)
 				end
 				current_renaming := r
+				if attached current_target as l_current_target then
+					l_current_target.add_dotnet_renaming (r)
+				end
 			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_namespace_no_name)
 			end
 		ensure
-			library_and_group: not is_error implies current_library /= Void and current_group /= Void
+			target: not is_error implies current_target /= Void
 		end
 
 	process_debug_attributes (a_current_option: attached like current_option)
@@ -2777,6 +2780,12 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_test_cluster, "tests")
 			l_trans.force (t_override, "override")
 			Result.force (l_trans, t_target)
+
+				-- namespace
+				-- => renaming
+			create l_trans.make (1)
+			l_trans.force (t_renaming, "renaming")
+			Result.force (l_trans, t_namespace)
 
 				-- file_rule
 				-- => description

@@ -15,6 +15,15 @@ feature -- Access, stored in configuration file
 	name_prefix: detachable READABLE_STRING_32
 			-- An optional name prefix for this group.
 
+feature -- Status report			
+
+	has_renaming_or_prefix: BOOLEAN
+			-- Has renaming or prefix?
+		do
+			Result := (attached renaming as r and then not r.is_empty)
+				or else (attached name_prefix as p and then not p.is_empty)
+		end
+
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_name_prefix (a_name_prefix: like name_prefix)

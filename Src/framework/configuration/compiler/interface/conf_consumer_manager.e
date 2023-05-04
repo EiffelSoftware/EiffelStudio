@@ -347,21 +347,28 @@ feature {NONE} -- Implementation
 			a_assembly_physical_assembly_set: a_assembly.physical_assembly /= Void
 		local
 			l_new_classes: STRING_TABLE [CONF_CLASS]
-			l_renamings: STRING_TABLE [READABLE_STRING_32]
-			l_prefix: READABLE_STRING_32
+			l_renaming_group: CONF_RENAMING_GROUP
 			l_name: STRING_32
+			l_dotnet_renaming_groups: STRING_TABLE [CONF_RENAMING_GROUP]
 		do
 			if
 				attached a_assembly.physical_assembly as a and then
 				attached a.classes as l_classes
 			then
-				l_renamings := a_assembly.renaming
-				l_prefix := a_assembly.name_prefix
+				if
+					not l_classes.is_empty and then
+				 	attached a_assembly.target.dotnet_renaming as l_dotnet_renaming
+				then
+						-- TODO Check libraries target dotnet_renaming ...
+					l_dotnet_renaming_groups := l_dotnet_renaming
+				end
+
+				l_renaming_group := a_assembly
 
 					-- Do we have any renamings?
 				if
-					(l_renamings = Void or else l_renamings.is_empty) and
-					(l_prefix = Void or else l_prefix.is_empty)
+					not l_renaming_group.has_renaming_or_prefix and
+					l_dotnet_renaming_groups = Void
 				then
 					a_assembly.set_classes (l_classes)
 				else
@@ -371,13 +378,14 @@ feature {NONE} -- Implementation
 							create l_name.make_from_string (l_class.name)
 								-- "prefix" is the default "renaming", but if a "renaming" exists
 								-- do not apply the "prefix"
+							if l_renaming_group.has_renaming_or_prefix then
+								l_name := renamed_name (l_class.dotnet_name, l_name, l_renaming_group)
+							end
 							if
-								l_renamings /= Void and then
-								attached l_renamings.item (l_name) as l_found_item
+								l_dotnet_renaming_groups /= Void and then
+								attached dotnet_renaming_group_for (l_class.dotnet_name, l_dotnet_renaming_groups) as grp
 							then
-								l_name := l_found_item -- FIXME: should has "twin" ?
-							elseif l_prefix /= Void then
-								l_name.prepend (l_prefix)
+								l_name := renamed_name (l_class.dotnet_name, l_name, grp)
 							end
 							l_new_classes.force (l_class, l_name)
 						else
@@ -392,6 +400,40 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			classes_set: a_assembly.classes_set
+		end
+
+	renamed_name (a_dotnet_name, a_name: STRING_32; a_renaming_grp: CONF_RENAMING_GROUP): STRING_32
+			-- Renamed name for `a_name` according to the ` a_renaming_grp` group.
+		do
+			if
+				attached a_renaming_grp.renaming as l_renamings and then
+				attached l_renamings.item (a_name) as l_found_item
+			then
+				Result := l_found_item -- FIXME: should has "twin" ?
+			elseif attached a_renaming_grp.name_prefix as l_prefix then
+				Result := l_prefix + a_name
+			else
+				Result := a_name
+			end
+			debug ("consumer")
+				if not Result.is_case_insensitive_equal_general (a_name) then
+					print ({STRING_32} "RENAME " + a_dotnet_name + " {"+ a_name + "} -> " + Result + "%N")
+				end
+			end
+		end
+
+	dotnet_renaming_group_for (a_dotnet_classname: READABLE_STRING_GENERAL; a_namespace_renaming_groups: STRING_TABLE [CONF_RENAMING_GROUP]): detachable CONF_RENAMING_GROUP
+			-- Dotnet renaming group based on dotnet namespace for dotnet class `a_dotnet_classname`, from `a_namespace_renaming_groups`.
+		local
+			ns: READABLE_STRING_GENERAL
+			i: INTEGER
+		do
+				-- TODO: eventually support wildcard such as "System.*"
+			i := a_dotnet_classname.last_index_of ('.', a_dotnet_classname.count)
+			if i > 0 then
+				ns := a_dotnet_classname.substring (1, i - 1)
+				Result := a_namespace_renaming_groups [ns]
+			end
 		end
 
 	build_dependencies (an_assembly: CONF_PHYSICAL_ASSEMBLY)

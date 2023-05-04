@@ -712,24 +712,24 @@ namespace md_consumer
 
 				CONSUMED_REFERENCED_TYPE? underlying_enum_type = null;
 
-				// bool has_consumed_function (CONSUMED_FUNCTION fct) //, List<CONSUMED_FUNCTION> lst)
-				// {
-				// 	foreach (CONSUMED_FUNCTION f in l_functions) {
-				// 		if (f.Equals (fct) || f.same_function (fct)) {
-				// 			return true;
-				// 		}
-				// 	}
-				// 	return false;
-				// }
-				// bool has_consumed_procedure (CONSUMED_PROCEDURE proc)
-				// {
-				// 	foreach (CONSUMED_PROCEDURE p in l_procedures) {
-				// 		if (p.Equals (proc) || p.same_procedure (proc)) {
-				// 			return true;
-				// 		}
-				// 	}
-				// 	return false;
-				// }				
+				bool has_consumed_function (CONSUMED_FUNCTION fct) //, List<CONSUMED_FUNCTION> lst)
+				{
+					foreach (CONSUMED_FUNCTION f in l_functions) {
+						if (f.Equals (fct) || f.same_function (fct)) {
+							return true;
+						}
+					}
+					return false;
+				}
+				bool has_consumed_procedure (CONSUMED_PROCEDURE proc)
+				{
+					foreach (CONSUMED_PROCEDURE p in l_procedures) {
+						if (p.Equals (proc) || p.same_procedure (proc)) {
+							return true;
+						}
+					}
+					return false;
+				}
 
 				foreach(MemberInfo l_member in internal_members) 
 				{
@@ -741,20 +741,20 @@ namespace md_consumer
 								if (is_function (l_meth)) {
 									CONSUMED_FUNCTION? cp_function = consumed_function (l_meth, false);
 									if (cp_function != null && !cp_function.is_excluded()) {
-										// if (has_consumed_function (cp_function)) {
+										if (has_consumed_function (cp_function)) {
 										// DEBUG: Console.WriteLine(" !!! Already has such function: " + eiffel_name + "." + cp_function.dotnet_name);
-										// } else {
+										} else {
 											l_functions.Add (cp_function);
-										// }
+										}
 									}
 								} else {
 									CONSUMED_PROCEDURE? cp_procedure = consumed_procedure (l_meth, false);
 									if (cp_procedure != null && !cp_procedure.is_excluded()) {
-										// if (has_consumed_procedure (cp_procedure)) {
+										if (has_consumed_procedure (cp_procedure)) {
 										// DEBUG: Console.WriteLine(" !!! Already has such procedure ");
-										// } else {
+										} else {
 											l_procedures.Add (cp_procedure);
-										// }
+										}
 									}
 								}
 							} else {

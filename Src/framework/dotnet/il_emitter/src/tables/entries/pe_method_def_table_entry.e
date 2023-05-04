@@ -148,7 +148,7 @@ feature -- Operations
 			l_bytes: NATURAL_64
 		do
 				-- Write the method.rva to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_dest.to_special, if attached method as l_method then l_method.rva else {NATURAL_64} 0 end, 0)
+			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_dest.to_special, if attached method as l_method then l_method.rva else rva.to_natural_64 end, 0)
 
 				-- Initialize the number of bytes written
 			l_bytes := 4

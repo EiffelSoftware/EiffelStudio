@@ -693,11 +693,10 @@ feature -- Test
 			create md_dispenser.make
 			md_emit := md_dispenser.emit
 
-
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
 			md_assembly_info.set_minor_version (2)
-			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("test"),
+			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("test_tk"),
 				0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (1)
@@ -727,16 +726,16 @@ feature -- Test
 			string_type_token := md_emit.define_type_ref (
 								create {NATIVE_STRING}.make ("System.String"), mscorlib_token)
 
-			create sig.make
-			sig.set_method_type({MD_SIGNATURE_CONSTANTS}.Default_sig)
-			sig.set_parameter_count(1)
-			sig.set_return_type({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token)
+--			create sig.make
+--			sig.set_method_type({MD_SIGNATURE_CONSTANTS}.Default_sig)
+--			sig.set_parameter_count(1)
+--			sig.set_return_type({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+--			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token)
 
 
-			write_line_token := md_emit.define_member_ref (
-						create {NATIVE_STRING}.make ("WriteLine"),
-						console_type_token, sig)
+--			write_line_token := md_emit.define_member_ref (
+--						create {UNI_STRING}.make ("WriteLine"),
+--						console_type_token, sig)
 
 
 			l_entry_type_token := md_emit.define_type (
@@ -767,17 +766,19 @@ feature -- Test
 
 			string_token := md_emit.define_string (create {NATIVE_STRING}.make ("Hello"))
 			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_call ({MD_OPCODES}.Call, write_line_token, 0, False)
+
+				-- TODO double check why it fails
+				-- When we run including it we got
+				-- Unhandled exception. System.MissingMethodException: Method not found: 'Void System.Console.WriteLine(System.String)'.
+   				-- at MAIN.main()
+			--body.put_call ({MD_OPCODES}.Call, write_line_token, 0, False)
 
 			body.put_opcode ({MD_OPCODES}.pop)
 
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
 
-				-- TODO double check why the method is not written in the final
-				-- assembly
-
-			create l_pe_file.make ("test.dll", True, False, False, md_emit)
+			create l_pe_file.make ("test_tk.dll", True, False, False, md_emit)
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save

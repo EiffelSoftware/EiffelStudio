@@ -141,6 +141,31 @@ namespace md_consumer
             }
             return false;
         }        
+        public bool same_procedure (CONSUMED_PROCEDURE obj)
+        {
+            if (dotnet_name.Equals (obj.dotnet_name)) 
+            {
+                if (
+				    eiffel_name.Equals (obj.eiffel_name)
+				    && dotnet_eiffel_name.Equals (obj.dotnet_eiffel_name)
+				    && flags == obj.flags
+                    && declared_type.same_as (obj.declared_type)
+                    && arguments.Length == obj.arguments.Length
+                )
+                {
+                    int n = arguments.Length;
+                    bool b=true;
+                    for (var i=0; i < n && b; i++) {
+                        if (! arguments[i].same_as(obj.arguments[i])) {
+                            b=false;
+                        };
+                    }
+                    return b;
+                }
+            }
+            return false;            
+        }
+
         //FIXME ...
     }
 
@@ -159,6 +184,11 @@ namespace md_consumer
             if (pref) {
                 flags = flags | FEATURE_ATTRIBUTE.is_prefix;
             }
+        }
+
+        public bool same_function (CONSUMED_FUNCTION obj)
+        {
+            return same_procedure (obj) && return_type.same_as (obj.return_type);
         }
         public new bool is_excluded()
         {

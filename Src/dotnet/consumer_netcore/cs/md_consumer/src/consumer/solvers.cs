@@ -256,9 +256,40 @@ namespace md_consumer
                 }
             }
         }
+
+		// Already has this method added internally? 
+		public bool has_method (MethodInfo meth)
+        {
+            string name = meth.Name;
+            List<METHOD_SOLVER>? lst = null;
+            if (method_table.ContainsKey(name)) {
+                lst = method_table[name];
+            }
+            if (lst != null) {
+                METHOD_SOLVER m = new METHOD_SOLVER(meth, false);
+                foreach (METHOD_SOLVER ms in lst)
+                {
+                    if (ms.Equals (m)) {
+                        return true;
+                    } else {
+                        if (ms.same_as (m)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         public void add_method (MethodInfo meth)
         {
-            internal_add_method (meth, false);
+            if (is_consumed_method (meth)) {
+                if (has_method (meth)) {
+                    // DEBUG Console.WriteLine("ALREADY HAS " + meth.ToString());
+                } else {
+                    internal_add_method (meth, false);
+                }
+            }                
         }
 
         public void add_event (EventInfo ev)
@@ -496,6 +527,50 @@ namespace md_consumer
                 return null;
             }
         }
+
+        public bool same_as (METHOD_SOLVER other)
+        {
+            MethodInfo m1 = internal_method;
+            MethodInfo m2 = other.internal_method;
+            int n1 = arguments.Length;
+            int n2 = other.arguments.Length;
+            if (
+                n1 == n2 &&
+                m1.Name.Equals (m2.Name)
+            ) 
+			{
+				// Check attributes (Public, Static, ...)
+                MethodAttributes matt1 = m1.Attributes;
+                MethodAttributes matt2 = m2.Attributes;
+                if (matt1.Equals(matt2)) {
+					// Check ReturnType
+	                Type? t1 = m1.ReturnType;
+	                Type? t2 = m2.ReturnType;
+	                if (t1 != null && t2 != null && ! t1.Equals(t2)) {
+						// Check DeclaringType
+	                	t1 = m1.DeclaringType;
+	                	t2 = m2.DeclaringType;
+	                	if (t1 != null && t2 != null && ! t1.Equals(t2)) {
+							// Check Arguments
+		                	for (var i = 0; i < n1; i++) {
+			                    if (! arguments[i].same_as (other.arguments[i])) {
+	    	                    	return false;
+	        	            	}
+	            	    	}
+		                } else {
+							return false;
+	                	}
+					} else {
+	                    return false;
+	                }
+				} else {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
         public int CompareTo(METHOD_SOLVER other)
         {
             int n1 = arguments.Length;

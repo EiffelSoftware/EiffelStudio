@@ -20,9 +20,10 @@ namespace md_consumer
             type = t;
         }
 
-        public bool is_equal (CONSUMED_ARGUMENT other)
+        public bool same_as (CONSUMED_ARGUMENT other)
         {
-            return other.dotnet_name.Equals(dotnet_name) && other.type.same_as (type);
+            return other.dotnet_name.Equals(dotnet_name)
+                && other.type.same_as (type);
         }
         public bool has_generic_type()
         {

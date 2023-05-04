@@ -1239,6 +1239,7 @@ feature -- Code generation
 		local
 			l_pe_file: CLI_PE_FILE
 			l_debug_info: MANAGED_POINTER
+			ept: like entry_point_token
 		do
 			l_pe_file := md_factory.pe_file (module_file_name, is_dll or is_console_application, is_dll, is_32bits, md_emit)
 			if is_debug_info_enabled then
@@ -1257,7 +1258,8 @@ feature -- Code generation
 			if attached resources as l_res then
 				l_pe_file.set_resources (l_res)
 			end
-			if attached entry_point_token as ept then
+			ept := entry_point_token
+			if ept /= 0 then
 				l_pe_file.set_entry_point_token (ept)
 			end
 			l_pe_file.save

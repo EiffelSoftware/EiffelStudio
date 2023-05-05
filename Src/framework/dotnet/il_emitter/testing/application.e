@@ -19,7 +19,7 @@ feature -- Testing
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
 			--Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.empty_assembly", "tk.define_method_net2", "om.method_assembly">>
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_entry_point">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_entry_point_net6">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)

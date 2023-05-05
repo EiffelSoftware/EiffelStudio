@@ -2,7 +2,7 @@
 	description: "Class desribing the module table."
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.30 Module : 0x00"
+	EIS: "name=Module", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=265&zoom=100,116,350", "protocol=uri"
 
 class
 	PE_MODULE_TABLE_ENTRY
@@ -27,6 +27,12 @@ feature -- Access
 	name_index: PE_STRING
 
 	guid_index: PE_GUID
+		-- Mvid (an index into the Guid heap; simply a Guid used to distinguish between two
+		-- versions of the same module)
+
+
+	--  EncId (an index into the Guid heap; reserved, shall be zero)
+	--  EncBaseId (an index into the Guid heap; reserved, shall be zero)
 
 feature -- Operations
 
@@ -51,6 +57,8 @@ feature -- Operations
 				-- Render the guid_index and add the number of bytes written to l_bytes_written
 			l_bytes_written := l_bytes_written + guid_index.render (a_sizes, a_dest, l_bytes_written.to_integer_32)
 
+				--  EncId (an index into the Guid heap; reserved, shall be zero)
+				--  EncBaseId (an index into the Guid heap; reserved, shall be zero)
 			if a_sizes [{PE_TABLE_CONSTANTS}.t_guid + 1] > 65535 then
 					-- If the size of the GUID table is greater than 65535, write two
 					-- zero-valued NATURAL_32 to the destination

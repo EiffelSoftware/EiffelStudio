@@ -475,7 +475,6 @@ feature -- Test
 			l_pe_file.save
 		end
 
-
 	test_define_signature_local
 		local
 			l_pe_file: CLI_PE_FILE
@@ -682,13 +681,15 @@ feature -- Test
 			method_writer: MD_METHOD_WRITER
 			body: MD_METHOD_BODY
 			my_main: INTEGER
-			label_id: INTEGER
+			label_id, l_id2: INTEGER
 			system_exception_token: INTEGER
-			string_token: INTEGER
-			object_type_token, mscorlib_token, my_assembly, my_type: INTEGER
+			my_field, local_token, string_token: INTEGER
+			my_ctor, object_type_token, mscorlib_token, my_assembly, my_type: INTEGER
 			md_assembly_info: MD_ASSEMBLY_INFO
 			md_pub_key_token: MD_PUBLIC_KEY_TOKEN
-			l_entry_type_token, console_type_token, write_line_token, console_token, string_type_token, system_type_token: INTEGER
+			object_ctor, l_entry_type_token, console_type_token, write_line_token, console_token, string_type_token, system_type_token: INTEGER
+			field_sig: MD_FIELD_SIGNATURE
+			local_sig: MD_LOCAL_SIGNATURE
 		do
 			create md_dispenser.make
 			md_emit := md_dispenser.emit
@@ -697,88 +698,119 @@ feature -- Test
 			md_assembly_info.set_major_version (5)
 			md_assembly_info.set_minor_version (2)
 			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("test_tk"),
-				0, md_assembly_info, Void)
+					0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (1)
 			md_assembly_info.set_minor_version (0)
 			md_assembly_info.set_build_number (3300)
+
+
 			create md_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
 
 			mscorlib_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("mscorlib"),
-				md_assembly_info, md_pub_key_token)
-
+					md_assembly_info, md_pub_key_token)
 
 			system_type_token := md_emit.define_type_ref (
 					create {NATIVE_STRING}.make ("System"), mscorlib_token)
-
 
 			object_type_token := md_emit.define_type_ref (
 					create {NATIVE_STRING}.make ("System.Object"), mscorlib_token)
 
 			system_exception_token := md_emit.define_type_ref (
-						create {NATIVE_STRING}.make ("System.Exception"), mscorlib_token)
+					create {NATIVE_STRING}.make ("System.Exception"), mscorlib_token)
 
 			console_type_token := md_emit.define_type_ref (
-						create {NATIVE_STRING}.make ("System.Console"), mscorlib_token)
-
+					create {NATIVE_STRING}.make ("System.Console"), mscorlib_token)
 
 			string_type_token := md_emit.define_type_ref (
-								create {NATIVE_STRING}.make ("System.String"), mscorlib_token)
+					create {NATIVE_STRING}.make ("System.String"), mscorlib_token)
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token)
 
---			create sig.make
---			sig.set_method_type({MD_SIGNATURE_CONSTANTS}.Default_sig)
---			sig.set_parameter_count(1)
---			sig.set_return_type({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
---			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token)
+			write_line_token := md_emit.define_member_ref (
+					create {NATIVE_STRING}.make ("WriteLine"),
+					console_type_token, sig)
 
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (0)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
---			write_line_token := md_emit.define_member_ref (
---						create {UNI_STRING}.make ("WriteLine"),
---						console_type_token, sig)
-
+			object_ctor := md_emit.define_member_ref (create {NATIVE_STRING}.make (".ctor"),
+					object_type_token, sig)
 
 			l_entry_type_token := md_emit.define_type (
-									create {NATIVE_STRING}.make ("MAIN"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
-										{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public,
-									object_type_token, Void)
+					create {NATIVE_STRING}.make ("MAIN"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
+					{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public,
+					object_type_token, Void)
 
+			my_ctor := md_emit.define_method (create {NATIVE_STRING}.make (".ctor"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.Special_name |
+					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
+					sig, {MD_METHOD_ATTRIBUTES}.Managed)
+
+			create field_sig.make
+			field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+
+			my_field := md_emit.define_field (create {NATIVE_STRING}.make ("item"), l_entry_type_token,
+					{MD_FIELD_ATTRIBUTES}.public, field_sig)
+
+			create local_sig.make
+			local_sig.set_local_count (2)
+			local_sig.add_local_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+			local_sig.add_local_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, l_entry_type_token)
+			local_token := md_emit.define_signature (local_sig)
 
 			create method_writer.make
+
+			body := method_writer.new_method_body (my_ctor)
+			body.put_opcode ({MD_OPCODES}.Ldarg_0)
+			body.put_call ({MD_OPCODES}.Call, object_ctor, 0, True)
+			label_id := body.define_label
+			l_id2 := body.define_label
+			body.mark_label (l_id2)
+			body.put_opcode_label ({MD_OPCODES}.Br, label_id)
+			body.put_opcode ({MD_OPCODES}.Ldc_i4_1)
+			body.put_opcode ({MD_OPCODES}.pop)
+			body.put_opcode_label ({MD_OPCODES}.Br, l_id2)
+			body.mark_label (label_id)
+			body.put_opcode ({MD_OPCODES}.Ret)
+			body.set_local_token (local_token)
+			method_writer.write_current_body
+
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 			my_main := md_emit.define_method (create {NATIVE_STRING}.make ("main"),
-				l_entry_type_token,
-				{MD_METHOD_ATTRIBUTES}.Public |
-				{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-				{MD_METHOD_ATTRIBUTES}.Static,
-				sig, {MD_METHOD_ATTRIBUTES}.Managed)
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.Static,
+					sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 			body := method_writer.new_method_body (my_main)
-
-			body.put_opcode ({MD_OPCODES}.Ldc_i4_1)
-			body.put_opcode ({MD_OPCODES}.pop)
 
 				-- Load the string "Hello" onto the stack
 
 			string_token := md_emit.define_string (create {NATIVE_STRING}.make ("Hello"))
 			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
+			body.put_call ({MD_OPCODES}.Call, write_line_token, 0, False)
 
-				-- TODO double check why it fails
-				-- When we run including it we got
-				-- Unhandled exception. System.MissingMethodException: Method not found: 'Void System.Console.WriteLine(System.String)'.
-   				-- at MAIN.main()
-			--body.put_call ({MD_OPCODES}.Call, write_line_token, 0, False)
-
+				-- TODO nop is not supported!!!
 			body.put_opcode ({MD_OPCODES}.pop)
 
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
 
-			create l_pe_file.make ("test_tk.dll", True, False, False, md_emit)
+			create l_pe_file.make ("test_main_net6.dll", True, False, False, md_emit)
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save
@@ -797,87 +829,129 @@ feature -- Test
 			method_writer: MD_METHOD_WRITER
 			body: MD_METHOD_BODY
 			my_main: INTEGER
-			label_id: INTEGER
-			system_exception_token: INTEGER
-			string_token: INTEGER
+			label_id, l_id2: INTEGER
+			local_token, system_exception_token: INTEGER
+			my_field, my_ctor, string_token: INTEGER
 			md_pub_key_token: MD_PUBLIC_KEY_TOKEN
-			system_console_token, object_type_token, write_line_token, string_type_token, l_entry_type_token, write_line_method: INTEGER
+			object_ctor, system_console_token, object_type_token, write_line_token,
+			string_type_token, l_entry_type_token, write_line_method: INTEGER
+			field_sig: MD_FIELD_SIGNATURE
+			local_sig: MD_LOCAL_SIGNATURE
 		do
 			create md_dispenser.make
 			md_emit := md_dispenser.emit
 
 			create md_assembly_info.make
-			md_assembly_info.set_major_version (6) -- set_minor_version
+			md_assembly_info.set_major_version (1) -- set_minor_version
 			md_assembly_info.set_minor_version (0)
 
 			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("test_main_net6"), 0, md_assembly_info, Void)
+
+
 
 			md_assembly_info.set_major_version (6)
 			md_assembly_info.set_minor_version (0)
 			md_assembly_info.set_build_number (0)
 			create l_pub_key_token.make_from_array (
-				{ARRAY [NATURAL_8]} <<0xE0, 0x0A, 0x5E, 0xC9, 0x26, 0x36, 0x2E, 0x35>>)
+						{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
+--			create l_pub_key_token.make_from_array (
+--				{ARRAY [NATURAL_8]} <<0xE0, 0x0A, 0x5E, 0xC9, 0x26, 0x36, 0x2E, 0x35>>)
+
+					-- mscorlib.dll
 
 			system_runtime_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("System.Runtime"), md_assembly_info, l_pub_key_token)
 
 			system_console_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("System.Console"), md_assembly_info, l_pub_key_token)
 
+			object_type_token := md_emit.define_type_ref (
+					create {NATIVE_STRING}.make ("System.Object"), system_runtime_token)
+
 			string_type_token := md_emit.define_type_ref (
-								create {NATIVE_STRING}.make ("System.String"), system_runtime_token)
+					create {NATIVE_STRING}.make ("System.String"), system_runtime_token)
 
 			console_type_token := md_emit.define_type_ref (
-								create {NATIVE_STRING}.make ("System.Console"), system_console_token)
+					create {NATIVE_STRING}.make ("System.Console"), system_console_token)
+
+			md_emit.set_module_name (create {NATIVE_STRING}.make ("test_main_net6.dll"))
 
 			create sig.make
-			sig.set_method_type({MD_SIGNATURE_CONSTANTS}.Default_sig)
-			sig.set_parameter_count(1)
-			sig.set_return_type({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token)
-
 
 			write_line_token := md_emit.define_member_ref (
 					create {NATIVE_STRING}.make ("WriteLine"),
-							console_type_token, sig)
+					console_type_token, sig)
 
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (0)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+
+			object_ctor := md_emit.define_member_ref (create {NATIVE_STRING}.make (".ctor"),
+					object_type_token, sig)
 
 			l_entry_type_token := md_emit.define_type (
-										create {NATIVE_STRING}.make ("MAIN"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
-											{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public,
-										object_type_token, Void)
-
+					create {NATIVE_STRING}.make ("Program"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
+					{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public | {MD_TYPE_ATTRIBUTES}.before_field_init,
+					object_type_token, Void)
 
 			create method_writer.make
+
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			my_main := md_emit.define_method (create {NATIVE_STRING}.make ("main"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.Static,
-					sig, {MD_METHOD_ATTRIBUTES}.Managed)
+			my_main := md_emit.define_method (create {NATIVE_STRING}.make ("Main"),
+						l_entry_type_token,
+						{MD_METHOD_ATTRIBUTES}.Public |
+						{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+						{MD_METHOD_ATTRIBUTES}.Static,
+						sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 			body := method_writer.new_method_body (my_main)
-
-			body.put_opcode ({MD_OPCODES}.Ldc_i4_1)
-			body.put_opcode ({MD_OPCODES}.pop)
 
 					-- Load the string "Hello" onto the stack
 
 			string_token := md_emit.define_string (create {NATIVE_STRING}.make ("Hello"))
 			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
 			body.put_call ({MD_OPCODES}.Call, write_line_token, 0, False)
-
-			body.put_opcode ({MD_OPCODES}.pop)
+			body.put_nop
 
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
+
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (0)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+
+			my_ctor := md_emit.define_method (create {NATIVE_STRING}.make (".ctor"),
+			l_entry_type_token,
+			{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.Special_name |
+					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
+					sig, {MD_METHOD_ATTRIBUTES}.Managed)
+
+
+
+
+			body := method_writer.new_method_body (my_ctor)
+			body.put_opcode ({MD_OPCODES}.Ldarg_0)
+			body.put_call ({MD_OPCODES}.Call, object_ctor, 0, True)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			body.set_local_token (local_token)
+			method_writer.write_current_body
+
+
 
 			create l_pe_file.make ("test_main_net6.dll", True, False, False, md_emit)
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save
 		end
+
 end

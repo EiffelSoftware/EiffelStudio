@@ -1,5 +1,8 @@
 note
-	description: "Define a type of possible index type that occur in the tables we are interested in."
+	description: "[
+					Define a type of possible index type that occur in the tables we are interested in.
+					e MethodDef, ModuleRef,TypeDef, TypeRef, or TypeSpec				
+				]"
 	date: "$Date$"
 	revision: "$Revision$"
 

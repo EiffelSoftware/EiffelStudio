@@ -35,7 +35,7 @@ feature {NONE}
 			create stream_headers.make_filled (0, 5, 2)
 			initialize_metadata_tables
 			initialize_guid
-			initialize_module
+			initialize_unit
 			create tables_header
 			create assembly_emitter.make (tables, pe_writer)
 				-- we don't initialize the compilation unit since we don't provide the name of it (similar to the COM interface)
@@ -91,8 +91,8 @@ feature {NONE}
 			entry_sizes.force (agent generic_param_constraint_table_entry_size, {PE_TABLES}.tGenericParamConstraint.value.to_integer_32)
 		end
 
-	initialize_module
-			-- Initialize the type Module.
+	initialize_unit
+			-- Initialize the compilation unit
 		local
 			l_type_def: PE_TYPEDEF_OR_REF
 			l_table: PE_TABLE_ENTRY_BASE
@@ -100,8 +100,6 @@ feature {NONE}
 		do
 				-- initializes the necessary metadata tables for the module and type definition entries.
 			module_index := pe_writer.hash_string ({STRING_32} "<Module>")
-			create {PE_MODULE_TABLE_ENTRY} l_table.make_with_data (0, guid_index)
-			pe_index := add_table_entry (l_table)
 
 			create l_type_def.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
 			create {PE_TYPE_DEF_TABLE_ENTRY} l_table.make_with_data (0, module_index, 0, l_type_def, 1, 1)
@@ -704,8 +702,8 @@ feature -- Definition: Access
 				-- Extract table type and row from the in_class_token
 			l_tuple := extract_table_type_and_row (in_class_token)
 
-				-- Create a new PE_MEMBER_REF_PARENT instance with the extracted table type index and the in_class_tokebn
-			l_member_ref := create_member_ref (in_class_token, l_tuple.table_type_index)
+				-- Create a new PE_MEMBER_REF_PARENT instance with the extracted table row index and the in_class_tokebn
+			l_member_ref := create_member_ref (in_class_token, l_tuple.table_row_index)
 
 			l_method_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 			l_name_index := pe_writer.hash_string (method_name.string)

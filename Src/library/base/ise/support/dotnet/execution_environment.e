@@ -157,7 +157,10 @@ feature -- Access
 		obsolete
 			"Use starting_environment which support unicode. [2017-05-31]"
 		do
-			if attached {IDICTIONARY} {ENVIRONMENT}.get_environment_variables as l_dic and then attached {IENUMERATOR} l_dic.get_enumerator_2 as l_enumerator then
+			if 
+				attached {IDICTIONARY} {ENVIRONMENT}.get_environment_variables as l_dic and then
+				attached {IENUMERATOR} l_dic.get_enumerator as l_enumerator 
+			then
 				create Result.make (l_dic.count)
 				from
 				until
@@ -180,7 +183,10 @@ feature -- Access
 			-- Table of environment variables associated with current process,
 			-- indexed by variable name
 		do
-			if attached {IDICTIONARY} {ENVIRONMENT}.get_environment_variables as l_dic and then attached {IENUMERATOR} l_dic.get_enumerator_2 as l_enumerator then
+			if 
+				attached {IDICTIONARY} {ENVIRONMENT}.get_environment_variables as l_dic and then
+				attached {IENUMERATOR} l_dic.get_enumerator as l_enumerator 
+			then
 				create Result.make (l_dic.count)
 				from
 				until

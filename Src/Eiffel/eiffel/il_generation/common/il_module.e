@@ -1231,7 +1231,7 @@ feature -- Code generation
 			method_writer.write_current_body
 		end
 
-	save_to_disk (a_signing: detachable MD_STRONG_NAME)
+	save_to_disk (a_signing: MD_STRONG_NAME)
 			-- Save byte code and metadata to file `module_file_name'.
 		require
 			is_generated: is_generated

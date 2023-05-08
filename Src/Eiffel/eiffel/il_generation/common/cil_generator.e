@@ -88,10 +88,6 @@ feature {NONE} -- Implementation: Access
 	has_root_class: BOOLEAN
 			-- Does current module has a root class specification?
 
-	signing: detachable MD_STRONG_NAME
-			-- Object used for signing assemblies.
-			-- This is optional since NetCORE.
-
 feature -- Generation
 
 	generate
@@ -105,6 +101,7 @@ feature -- Generation
 			l_last_error_msg: STRING
 			l_public_key: MD_PUBLIC_KEY
 			l_res: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]
+			signing: MD_STRONG_NAME
 		do
 			if not retried then
 					-- At this point the COM component should be properly instantiated.
@@ -139,20 +136,20 @@ feature -- Generation
 					assembly_info.set_version (l_msil_version)
 				end
 
-					-- By default no signing
-				signing := Void
+					-- Sign assembly
+					-- Object used for signing assemblies and computing Hash values.
+					--| The signing part of `signing` is optional for NetCORE.		
+			
+				signing := md_factory.strong_name (System.clr_runtime_version)
 
-					-- Sign assembly if a key was provided, and signing supported.
+					-- And set a key if provided
 				if
 					attached System.msil_key_file_name as l_key_file_name and then
 					l_key_file_name /= Void and then
 					is_signing_enabled
 				then
-						-- FIXME: maybe add a new setting "signing_enabled" [2023-03-28]
-
-					signing := md_factory.strong_name (System.clr_runtime_version)
-					if attached signing as sn and then sn.exists then
-						create l_public_key.make_from_file (l_key_file_name, sn)
+					if signing.exists then
+						create l_public_key.make_from_file (l_key_file_name, signing)
 						if not l_public_key.is_valid then
 							l_public_key := Void
 								-- Introduce error saying that public key cannot be read.
@@ -160,12 +157,6 @@ feature -- Generation
 						end
 					else
 						l_public_key := Void
-
-							-- No support for assembly key signature.
-							-- This is optional with NetCORE.
-						Error_handler.insert_warning (create {VIAC}, False)
-						Error_handler.checksum
-						signing := Void
 					end
 				else
 					l_public_key := Void
@@ -221,7 +212,7 @@ feature -- Generation
 				prepare_classes (System.classes)
 
 					-- Generate types metadata description and IL code
-				generate_all_types (sorted_classes (System.classes))
+				generate_all_types (sorted_classes (System.classes), signing)
 
 				if not is_single_module then
 						-- Generate run-time helper.
@@ -369,10 +360,11 @@ feature -- Generation
 
 feature {NONE} -- Type description
 
-	generate_all_types (classes: ARRAY [CLASS_C])
+	generate_all_types (classes: ARRAY [CLASS_C]; a_signing: MD_STRONG_NAME)
 			-- Generate all classes in compiled system.
 		require
 			valid_system: System.classes /= Void
+			signing_not_void: a_signing /= Void
 		do
 			compute_root_class
 
@@ -389,7 +381,7 @@ feature {NONE} -- Type description
 			loop
 				cil_generator.start_module_generation (ordered_classes.key_for_iteration)
 				generate_types (ordered_classes.item_for_iteration)
-				cil_generator.end_module_generation (has_root_class, signing)
+				cil_generator.end_module_generation (has_root_class, a_signing)
 				ordered_classes.forth
 			end
 			if not is_single_module then

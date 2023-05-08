@@ -185,7 +185,12 @@ feature -- Definition
 			l_name_index := pe_writer.hash_string (l_file_name.substring (last_slash + 1, file_name_len))
 
 				-- Compute the hash value index
-			l_hash_value_index := pe_writer.hash_blob (hash_value.read_array (0, hash_value.count), hash_value.count.to_natural_64)
+			if hash_value.count > 0 then
+				l_hash_value_index := pe_writer.hash_blob (hash_value.read_array (0, hash_value.count), hash_value.count.to_natural_64)
+			else
+				check has_non_empty_hash_value: False end
+				l_hash_value_index := pe_writer.hash_blob (create {ARRAY [NATURAL_8]}.make_empty, 0)
+			end
 
 				-- Create a new PE_FILE_TABLE_ENTRY instance with the given data
 			l_flags := file_flags.to_natural_32

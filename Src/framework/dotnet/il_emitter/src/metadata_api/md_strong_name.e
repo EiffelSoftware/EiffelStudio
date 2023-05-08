@@ -19,10 +19,7 @@ feature {NONE} -- Initialization
 	make_with_version (a_runtime_version: like runtime_version)
 		do
 			runtime_version := a_runtime_version
-			snk_file := ""
 		end
-
-	snk_file: STRING_32
 
 feature -- Status report
 

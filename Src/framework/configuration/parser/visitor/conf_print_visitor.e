@@ -64,6 +64,14 @@ feature -- Access
 	schema: STRING_32
 			-- Schema to use.
 
+feature -- Status report
+
+	is_last_character (c: CHARACTER): BOOLEAN
+			-- Is last character of `text` , the character `c` ?
+		do
+			Result := text [text.count] = c
+		end
+
 feature -- Update
 
 	set_namespace (a_namespace: like namespace)
@@ -534,6 +542,8 @@ feature {NONE} -- Implementation
 	current_is_subcluster: BOOLEAN
 			-- Is the current cluster/override a subcluster?
 
+	last_general_options_has_children: BOOLEAN
+
 	process_in_alphabetic_order (a_groups: STRING_TABLE [CONF_VISITABLE])
 			-- Process `a_groups' in alphabetic order corresponding to their key.
 		require
@@ -636,6 +646,23 @@ feature {NONE} -- Implementation
 				i := i - 1
 			end
 			text.append (a_text)
+		end
+
+	remove_last_tag_close
+			-- When `text` ends with a tag close, remove it.
+		local
+			n: INTEGER
+		do
+			n := text.count
+			if
+				n > 1 and then
+				text [n-1] = '>' and then
+				text [n] = '%N'
+			then
+				text.remove_tail (2)
+			end
+		ensure
+			text.count = old (text.count) or text.count = old (text.count) - 2
 		end
 
 	append_text (a_text: READABLE_STRING_8)
@@ -1028,7 +1055,7 @@ feature {NONE} -- Implementation
 		end
 
 	append_class_options (o: CONF_OPTION; c: READABLE_STRING_GENERAL; is_own_source, is_own_capability: BOOLEAN)
-			-- Append class options `o' (if any) for a calss `c'.
+			-- Append class options `o' (if any) for a class `c'.
 			--
 			-- • `is_own_source` tells whether the options control the source code (i.e. not a library, a precompile, etc.)
 			-- • `is_own_capability` tells whether the options control the capabilities (i.e. not an override, a library, etc.)
@@ -1037,7 +1064,13 @@ feature {NONE} -- Implementation
 				append_tag_open ({STRING_32} "class_option")
 				append_text_attribute ("class", c)
 				append_general_options (o, is_own_source, is_own_capability)
-				append_end_tag ({STRING_32} "class_option")
+				if last_general_options_has_children then
+					append_end_tag ({STRING_32} "class_option")
+				else
+					indent := indent - 1
+					remove_last_tag_close
+					append_tag_close_empty
+				end
 			end
 		end
 
@@ -1050,7 +1083,13 @@ feature {NONE} -- Implementation
 			if not o.is_empty_for (namespace) then
 				append_tag_open ({STRING_32} "option")
 				append_general_options (o, is_own_source, is_own_capability)
-				append_end_tag ({STRING_32} "option")
+				if last_general_options_has_children then
+					append_end_tag ({STRING_32} "option")
+				else
+					indent := indent - 1
+					remove_last_tag_close
+					append_tag_close_empty
+				end
 			end
 		end
 
@@ -1059,11 +1098,14 @@ feature {NONE} -- Implementation
 			--
 			-- • `is_own_source` tells whether the options control the source code (i.e. not a library, a precompile, etc.)
 			-- • `is_own_capability` tells whether the options control the capabilities (i.e. not an override, a library, etc.)
+			--
+			-- note: update `last_general_options_has_children` to indicate if sub tag was added.
 		local
 			l_str: detachable READABLE_STRING_32
 			l_debugs, l_warnings: detachable STRING_TABLE [BOOLEAN]
 			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			w: READABLE_STRING_GENERAL
+			l_text_count_for_close_open_tag: INTEGER
 		do
 			if an_options.is_trace_configured then
 				check not is_supplier_option (at_trace) end
@@ -1177,7 +1219,10 @@ feature {NONE} -- Implementation
 			if l_str /= Void and then not l_str.is_empty then
 				append_text_attribute (o_namespace, l_str)
 			end
+
+				-- End of open tag, attributes
 			append_tag_close
+			l_text_count_for_close_open_tag := text.count
 
 			append_description_tag (an_options.description)
 
@@ -1245,6 +1290,7 @@ feature {NONE} -- Implementation
 					append_tag_close_empty
 				end
 			end
+			last_general_options_has_children := text.count > l_text_count_for_close_open_tag
 		end
 
 	append_ordered_capability (capability: CONF_ORDERED_CAPABILITY; name: READABLE_STRING_32)
@@ -1381,7 +1427,7 @@ feature {NONE} -- Implementation
 		end
 
 	append_post_group (a_tag: READABLE_STRING_32)
-			-- Finish the the tag for the group.
+			-- Finish the `a_tag` for the group.
 		require
 			a_tag_ok: a_tag /= Void and then not a_tag.is_empty
 		do

@@ -117,6 +117,7 @@ feature -- Commands
 			an_assembly: CONF_PHYSICAL_ASSEMBLY
 			ca: CONSUMED_ASSEMBLY
 			l_chained_forwarded_types: ARRAYED_LIST [CONSUMED_FORWARDED_TYPE]
+			l_forwarded_assemblies: STRING_TABLE [CONF_ASSEMBLY]
 		do
 			if not l_retried then
 					-- load information from metadata cache, consume if the metadata cache does not yet exist
@@ -177,16 +178,19 @@ feature -- Commands
 							then
 								ca := l_fwd_assembly.consumed_assembly
 								l_fwd_type.set_assembly (ca)
+
+									-- Create and add to the CONF_TARGET, the CONF_ASSEMBLY-s to support forwarded types
+								if l_forwarded_assemblies = Void then
+									create l_forwarded_assemblies.make (1)
+								end
+								register_forwarded_type_assembly (an_assembly, ca, l_forwarded_assemblies)
+
 								if ca.has_forwarded_type (l_fwd_type) then
 									if l_chained_forwarded_types = Void then
 										create l_chained_forwarded_types.make (1)
 									end
 									l_chained_forwarded_types.force (l_fwd_type)
 								end
-
-									-- TODO: add forwarded classes to the CONF_PHYSICAL_ASSEMBLY  `l_fwd_assembly`
---								if attached l_fwd_assembly.classes [l_fwd_type.eiffel_name] as l_fwd_class then
---								end
 							end
 						end
 					end
@@ -207,6 +211,12 @@ feature -- Commands
 									if attached f_t.assembly as f_ca then
 										ca := f_ca
 										l_fwd_type.set_assembly (f_ca)
+
+											-- Create and add to the CONF_TARGET, the CONF_ASSEMBLY-s to support forwarded types
+										if l_forwarded_assemblies = Void then
+											create l_forwarded_assemblies.make (1)
+										end
+										register_forwarded_type_assembly (an_assembly, ca, l_forwarded_assemblies)
 									else
 											-- At this point, all forwarded types should have an associated CONSUMED_ASSEMBLY object.
 										check has_assembly: False end
@@ -232,6 +242,44 @@ feature -- Commands
 			then
 				l_retried := True
 				retry
+			end
+		end
+
+	register_forwarded_type_assembly (a_physical_assembly: CONF_PHYSICAL_ASSEMBLY; ca: CONSUMED_ASSEMBLY; a_forwarded_assemblies_cache: STRING_TABLE [CONF_ASSEMBLY])
+			-- Register assemblies implementing the forwarded types from `ca` in the context of declared assembly `a_physical_assembly`.
+			-- Use `a_forwarded_assemblies_cache` as a cache to avoid having un-needed CONF_ASSEMBLY duplication.
+		require
+			a_physical_assembly /= Void
+			ca /= Void
+			a_forwarded_assemblies_cache /= Void
+		local
+			l_forwarded_assembly: CONF_ASSEMBLY
+			loc, k: READABLE_STRING_GENERAL
+			l_assembly_target: CONF_TARGET
+		do
+				-- Create and add to the CONF_TARGET, the CONF_ASSEMBLY-s to support forwarded types
+			loc := ca.location.name
+			across
+				a_physical_assembly.assemblies as l_assembly
+			loop
+				l_assembly_target := l_assembly.target
+				k := l_assembly_target.name + {STRING_32} "#" + loc
+				l_forwarded_assembly := a_forwarded_assemblies_cache [k]
+				if l_forwarded_assembly = Void then
+					debug ("consumer")
+						print ({STRING_32} "Import assembly related to forwarded-type: " + ca.name + " [target:" + l_assembly_target.name + "]%N")
+					end
+					l_forwarded_assembly := factory.new_assembly (ca.name, loc, l_assembly_target)
+					a_forwarded_assemblies_cache [k] := l_forwarded_assembly
+					l_assembly_target.add_assembly (l_forwarded_assembly)
+					if attached get_physical_assembly (ca) as l_physical_assembly then
+						l_forwarded_assembly.set_physical_assembly (l_physical_assembly)
+						l_physical_assembly.set_is_dependency (False)
+						set_renamed_classes (l_forwarded_assembly)
+					end
+				else
+					check forwarded_assembly_already_added: l_assembly_target.assemblies.has_item (l_forwarded_assembly) end
+				end
 			end
 		end
 
@@ -357,7 +405,8 @@ feature {NONE} -- Implementation
 			then
 				if
 					not l_classes.is_empty and then
-				 	attached a_assembly.target.dotnet_renaming as l_dotnet_renaming
+				 	attached a_assembly.target.dotnet_renaming as l_dotnet_renaming and then
+				 	not l_dotnet_renaming.is_empty
 				then
 						-- TODO Check libraries target dotnet_renaming ...
 					l_dotnet_renaming_groups := l_dotnet_renaming
@@ -383,11 +432,17 @@ feature {NONE} -- Implementation
 							end
 							if
 								l_dotnet_renaming_groups /= Void and then
+								not l_dotnet_renaming_groups.is_empty and then
 								attached dotnet_renaming_group_for (l_class.dotnet_name, l_dotnet_renaming_groups) as grp
 							then
 								l_name := renamed_name (l_class.dotnet_name, l_name, grp)
 							end
 							l_new_classes.force (l_class, l_name)
+							debug ("consumer")
+								if not l_name.is_case_insensitive_equal_general (l_class.name) then
+									print ({STRING_32} "RENAME " + l_class.dotnet_name + " {"+ l_class.name + "} -> " + l_name + " from ["+ l_class.group.name +"]%N")
+								end
+							end
 						else
 								-- In assemblies there are only CONF_CLASS_ASSEMBLY.
 							check has_only_conf_class_assembly: False end
@@ -414,11 +469,6 @@ feature {NONE} -- Implementation
 				Result := l_prefix + a_name
 			else
 				Result := a_name
-			end
-			debug ("consumer")
-				if not Result.is_case_insensitive_equal_general (a_name) then
-					print ({STRING_32} "RENAME " + a_dotnet_name + " {"+ a_name + "} -> " + Result + "%N")
-				end
 			end
 		end
 

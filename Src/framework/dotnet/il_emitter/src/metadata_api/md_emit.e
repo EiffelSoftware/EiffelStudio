@@ -705,7 +705,7 @@ feature -- Definition: Access
 				-- Create a new PE_MEMBER_REF_PARENT instance with the extracted table row index and the in_class_tokebn
 			l_member_ref := create_member_ref (in_class_token, l_tuple.table_row_index)
 
-			l_method_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 			l_name_index := pe_writer.hash_string (method_name.string)
 
 				-- Create a new PE_MEMBER_REF_TABLE_ENTRY instance with the given data
@@ -811,7 +811,7 @@ feature -- Definition: Creation
 			l_type_def_entry: PE_TYPE_SPEC_TABLE_ENTRY
 			l_type_signature: NATURAL_64
 		do
-			l_type_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+			l_type_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 
 				-- Create a new PE_TYPE_SPEC_TABLE_ENTRY instance with the given data
 			create l_type_def_entry.make_with_data (l_type_signature)
@@ -854,7 +854,7 @@ feature -- Definition: Creation
 
 			l_param_index := next_table_index ({PE_TABLES}.tparam.value.to_integer_32)
 
-			l_method_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 			l_name_index := pe_writer.hash_string (method_name.string)
 
 				-- Create a new PE_METHOD_DEF_TABLE_ENTRY instance with the given data
@@ -903,7 +903,7 @@ feature -- Definition: Creation
 			l_property_index: NATURAL_64
 		do
 				-- Compute the signature token
-			l_property_signature := pe_writer.hash_blob (signature.as_array, signature.count.to_natural_64)
+			l_property_signature := hash_blob (signature.as_array, signature.count.to_natural_64)
 
 			l_property_index := pe_writer.next_table_index ({PE_TABLES}.tproperty.value.to_integer_32)
 
@@ -1017,7 +1017,7 @@ feature -- Definition: Creation
 				-- TODO double check: Why we are not using l_tuple?
 			l_tuple := extract_table_type_and_row (in_class_token)
 
-			l_field_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+			l_field_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 			l_name_index := pe_writer.hash_string (field_name.string)
 
 				-- Create a new PE_FIELD_TABLE_ENTRY instance with the given data
@@ -1037,7 +1037,7 @@ feature -- Definition: Creation
 			l_signature_hash: NATURAL_64
 			l_signature_entry: PE_STANDALONE_SIG_TABLE_ENTRY
 		do
-			l_signature_hash := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+			l_signature_hash := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 
 			create l_signature_entry.make_with_data (l_signature_hash)
 			pe_index := add_table_entry (l_signature_entry)
@@ -1094,7 +1094,7 @@ feature -- Definition: Creation
 			if ca /= Void then
 				blob_count := ca.count
 					-- Compute the blob signature of the custom attribute
-				l_ca_blob := pe_writer.hash_blob (ca.item.read_array (0, blob_count), blob_count.to_natural_64)
+				l_ca_blob := hash_blob (ca.item.read_array (0, blob_count), blob_count.to_natural_64)
 			end
 
 				-- Create a new PE_CUSTOM_ATTRIBUTE instance with the corresponding tag and index

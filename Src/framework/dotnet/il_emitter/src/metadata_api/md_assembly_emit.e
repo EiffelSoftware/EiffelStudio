@@ -46,7 +46,7 @@ feature -- Access
 
 				-- TODO double check the public key
 				-- Clean the way to compute the index.
-			l_public_key_or_token_index := pe_writer.hash_blob (public_key_token.item.read_array (0, public_key_token.item.count), public_key_token.item.count.to_natural_64)
+			l_public_key_or_token_index := hash_blob (public_key_token.item.read_array (0, public_key_token.item.count), public_key_token.item.count.to_natural_64)
 
 				-- Extract the version information from the assembly info.
 			l_major_version := assembly_info.major_version
@@ -86,7 +86,7 @@ feature -- Definition
 				-- Section II.22.2 Assembly : 0x20
 			l_name_index := pe_writer.hash_string (assembly_name.string)
 			if attached public_key as l_public_key then
-				l_public_key_or_token := pe_writer.
+				l_public_key_or_token :=
 					hash_blob (
 						(create {BYTE_ARRAY_CONVERTER}.
 							make_from_string (l_public_key.public_key_token_string.to_string_8)).  -- TODO doubel check if to_string_8 is ok.
@@ -186,10 +186,10 @@ feature -- Definition
 
 				-- Compute the hash value index
 			if hash_value.count > 0 then
-				l_hash_value_index := pe_writer.hash_blob (hash_value.read_array (0, hash_value.count), hash_value.count.to_natural_64)
+				l_hash_value_index := hash_blob (hash_value.read_array (0, hash_value.count), hash_value.count.to_natural_64)
 			else
 				check has_non_empty_hash_value: False end
-				l_hash_value_index := pe_writer.hash_blob (create {ARRAY [NATURAL_8]}.make_empty, 0)
+				l_hash_value_index := hash_blob (create {ARRAY [NATURAL_8]}.make_empty, 0)
 			end
 
 				-- Create a new PE_FILE_TABLE_ENTRY instance with the given data

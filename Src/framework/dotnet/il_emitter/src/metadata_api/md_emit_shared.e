@@ -137,7 +137,7 @@ feature {NONE} -- Helper
 		local
 			l_tag: INTEGER
 		do
-			if a_token & Md_mask = Md_type_def	then
+			if a_token & Md_mask = Md_type_def then
 				l_tag := {PE_MEMBER_REF_PARENT}.typedef
 			elseif a_token & Md_mask = Md_type_ref then
 				l_tag := {PE_MEMBER_REF_PARENT}.typeref
@@ -229,7 +229,7 @@ feature {NONE} -- Helper
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
 
-feature -- 	
+feature --
 
 	next_table_index (a_table: INTEGER): NATURAL
 		do
@@ -1046,6 +1046,105 @@ feature -- Metadata Table Sizes
 				-- Owner (an index into the GenericParam table)
 				-- Constraint (a TypeDefOrRef coded index into the TypeDef, TypeRef, or TypeSpec tables)
 			Result := 2 * index_size
+		end
+
+feature -- Heaps
+
+	hash_blob (a_blob_data: ARRAY [NATURAL_8]; a_blob_len: NATURAL_64): NATURAL_64
+			-- Computes the hash of a blob `a_blob_data'
+			-- if the blob already exists in a heap, returns the index of the existing blob
+			-- otherwise computes the hash and returns the index of the new blob.
+		do
+			Result := check_blob (pe_writer.blob.base.to_array, a_blob_data).to_natural_64
+			if Result = 0 then
+				Result := pe_writer.hash_blob (a_blob_data, a_blob_len)
+			end
+		end
+
+	
+	check_blob (blob_heap: ARRAY [NATURAL_8]; target_blob: ARRAY [NATURAL_8]): INTEGER
+			-- Check if `target_blob` exists in `blob_heap` and return its index if found, otherwise return 0.
+		local
+			i, j, k, target_size, current_size: INTEGER
+		do
+			target_size := target_blob.count
+			from
+				i := 2
+			until i > blob_heap.count or else Result /= 0
+			loop
+					-- Check if the blob header matches the target blob size.
+				if blob_heap [i] < 128 then -- 0x80
+					current_size := blob_heap [i]
+					j := i + 1
+				elseif blob_heap [i] < 192 then
+					current_size := (blob_heap [i] - 128) * 256 + blob_heap [i + 1]
+					j := i + 2
+				else
+					current_size := (blob_heap [i] - 192) * 16777216 + blob_heap [i + 1] * 65536 + blob_heap [i + 2] * 256 + blob_heap [i + 3]
+					j := i + 4
+				end
+					-- Check if the current blob matches the target blob.
+				if current_size = target_size then
+
+					from
+						k := 1
+					until
+						j > blob_heap.count or else k > target_size or else target_blob [k] /= blob_heap [j]
+					loop
+						j := j + 1
+						k := k + 1
+					end
+					if (k - 1) = target_size then
+							-- Found a match.
+						Result := i - 1
+					end
+				end
+				i := j + current_size
+			end
+		ensure
+			valid_result: Result >= 0
+		end
+
+	check_us (us_heap: ARRAY [NATURAL_8]; target_us: ARRAY [NATURAL_8]): INTEGER
+			-- Check if `target_us` exists in `us_heap` and return its index if found, otherwise return 0.
+		local
+			i, j, k, target_size, current_size: INTEGER
+		do
+			target_size := target_us.count
+			from
+				i := 2
+			until i > us_heap.count or else Result /= 0
+			loop
+					-- Check if the current user string matches the target user string.
+				if us_heap [i] = 0 then
+					current_size := 0
+					j := i + 1
+				elseif (us_heap [i] \\ 2) = 0 then
+					current_size := us_heap [i] - 1
+					j := i + 2
+				else
+					current_size := us_heap [i] - 1
+					j := i + 1
+				end
+
+				from
+					k := 1
+				until
+					j > us_heap.count or else k > target_size or else target_us [k] /= us_heap [j]
+				loop
+					j := j + 1
+					k := k + 1
+				end
+
+				if (k - 1) = target_size then
+						-- Found a match.
+					Result := i - 1
+				end
+
+				i := j + current_size + 1
+			end
+		ensure
+			valid_result: Result >= 0
 		end
 
 end

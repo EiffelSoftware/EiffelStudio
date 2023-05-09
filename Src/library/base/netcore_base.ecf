@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
+	<description>Eiffel Base (experimental dotnet core variant)</description>
+	<target name="base">
+		<description>FreeELKS: Library of reusable components for Eiffel.
+			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).
+		</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="error" namespace="EiffelSoftware.Library">
+			<warning name="obsolete_feature" value="all"/>
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<mapping old_name="REAL" new_name="REAL_32"/>
+		<mapping old_name="IMMUTABLE_STRING" new_name="IMMUTABLE_STRING_8"/>
+		<mapping old_name="READABLE_STRING" new_name="READABLE_STRING_8"/>
+		<mapping old_name="STRING" new_name="STRING_8"/>
+		<mapping old_name="REAL_REF" new_name="REAL_32_REF"/>
+		<mapping old_name="INTEGER_REF" new_name="INTEGER_32_REF"/>
+		<mapping old_name="INTEGER" new_name="INTEGER_32"/>
+		<mapping old_name="WIDE_CHARACTER" new_name="CHARACTER_32"/>
+		<mapping old_name="WIDE_CHARACTER_REF" new_name="CHARACTER_32_REF"/>
+		<mapping old_name="NATURAL" new_name="NATURAL_32"/>
+		<mapping old_name="DOUBLE_REF" new_name="REAL_64_REF"/>
+		<mapping old_name="CHARACTER" new_name="CHARACTER_8"/>
+		<mapping old_name="CHARACTER_REF" new_name="CHARACTER_8_REF"/>
+		<mapping old_name="DOUBLE" new_name="REAL_64"/>
+		<namespace name="Internal">
+			<renaming old_name="CONSOLE" new_name="INTERNAL_CONSOLE"/>
+		</namespace>
+		<namespace name="System"/>
+		<namespace name="System.Diagnostics">
+			<renaming old_name="PROCESS" new_name="SYSTEM_DLL_PROCESS"/>
+			<renaming old_name="PROCESS_START_INFO" new_name="SYSTEM_DLL_PROCESS_START_INFO"/>
+		</namespace>
+		<namespace name="System.Runtime" prefix="SYSTEM_DLL_"/>
+		<namespace name="System.Text">
+			<renaming old_name="ENCODING" new_name="SYSTEM_ENCODING"/>
+		</namespace>
+		<namespace name="System.XML" prefix="XML_"/>
+		<external_include location="$(ISE_LIBRARY)/library/base/elks/encoding/implementation/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_cflag value="`$ISE_LIBRARY/library/base/elks/encoding/implementation/unix/Clib/iconv-config --include_path`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_cflag>
+		<external_linker_flag value="`$(ISE_LIBRARY)/library/base/elks/encoding/implementation/unix/Clib/iconv-config --library`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_linker_flag>
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system_diagnostics_process" location="$ISE_DOTNET_FRAMEWORK\System.Diagnostics.Process.dll"/>
+		<cluster name="elks" location="$ISE_LIBRARY\library\base\elks\" recursive="true">
+			<option namespace="Base"/>
+			<file_rule>
+				<exclude>/structures/cursor_tree/compact_cursor_tree.e$</exclude>
+				<exclude>/structures/cursor_tree/linked_cursor_tree.e$</exclude>
+				<exclude>/structures/cursor_tree/two_way_cursor_tree.e$</exclude>
+				<exclude>/structures/cursors/compact_tree_cursor.e$</exclude>
+				<exclude>/structures/cursors/linked_cursor_tree_cursor.e$</exclude>
+				<exclude>/structures/cursors/two_way_cursor_tree_cursor.e$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>/kernel/console.e$</exclude>
+				<exclude>/kernel/directory.e$</exclude>
+				<exclude>/kernel/directory_name.e$</exclude>
+				<exclude>/kernel/disposable.e$</exclude>
+				<exclude>/kernel/exceptions.e$</exclude>
+				<exclude>/kernel/exceptions/exception.e$</exclude>
+				<exclude>/kernel/exceptions/operating_system_failure.e$</exclude>
+				<exclude>/kernel/exceptions/operating_system_signal_failure.e$</exclude>
+				<exclude>/kernel/exceptions/void_target.e$</exclude>
+				<exclude>/kernel/file.e$</exclude>
+				<exclude>/kernel/file_info.e$</exclude>
+				<exclude>/kernel/file_iteration_cursor.e$</exclude>
+				<exclude>/kernel/file_name.e$</exclude>
+				<exclude>/kernel/function.e$</exclude>
+				<exclude>/kernel/gc_info.e$</exclude>
+				<exclude>/kernel/ise_runtime.e$</exclude>
+				<exclude>/kernel/mem_info.e$</exclude>
+				<exclude>/kernel/memory.e$</exclude>
+				<exclude>/kernel/native_array.e$</exclude>
+				<exclude>/kernel/path_name.e$</exclude>
+				<exclude>/kernel/plain_text_file.e$</exclude>
+				<exclude>/kernel/pointer.e$</exclude>
+				<exclude>/kernel/pointer_ref.e$</exclude>
+				<exclude>/kernel/procedure.e$</exclude>
+				<exclude>/kernel/raw_file.e$</exclude>
+				<exclude>/kernel/real_32_ref.e$</exclude>
+				<exclude>/kernel/real_64_ref.e$</exclude>
+				<exclude>/kernel/routine.e$</exclude>
+				<exclude>/kernel/special.e$</exclude>
+				<exclude>/kernel/storable.e$</exclude>
+				<exclude>/kernel/stream.e$</exclude>
+				<exclude>/kernel/string/system_string.e$</exclude>
+				<exclude>/kernel/string/system_string_factory.e$</exclude>
+				<exclude>/kernel/tuple.e$</exclude>
+				<exclude>/kernel/type.e$</exclude>
+				<exclude>/kernel/unix_signals.e$</exclude>
+				<exclude>/support/class_name_translations.e$</exclude>
+				<exclude>/support/double_math.e$</exclude>
+				<exclude>/support/execution_environment.e$</exclude>
+				<exclude>/support/managed_pointer.e$</exclude>
+				<exclude>/support/mismatch_information.e$</exclude>
+				<exclude>/support/object_graph_marker.e$</exclude>
+				<exclude>/support/operating_environment.e$</exclude>
+				<exclude>/support/reflected_copy_semantics_object.e$</exclude>
+				<exclude>/support/reflected_object.e$</exclude>
+				<exclude>/support/reflected_reference_object.e$</exclude>
+				<exclude>/support/reflector.e$</exclude>
+				<exclude>/support/single_math.e$</exclude>
+				<condition>
+					<dotnet value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/encoding$</exclude>
+			</file_rule>
+			<cluster name="encoding" location="$|encoding\">
+				<option namespace="Encoding"/>
+				<cluster name="implementation" location="$|implementation\" hidden="true">
+					<option namespace="Implementation"/>
+					<cluster name="windows" location="$|windows\" hidden="true">
+						<condition>
+							<platform value="windows"/>
+						</condition>
+						<option namespace="Windows"/>
+					</cluster>
+					<cluster name="unix" location="$|unix\" hidden="true">
+						<condition>
+							<platform excluded_value="windows"/>
+						</condition>
+					</cluster>
+				</cluster>
+			</cluster>
+		</cluster>
+		<cluster name="ise" location="$ISE_LIBRARY\library\base\ise\" recursive="true">
+			<option namespace="Base"/>
+			<file_rule>
+				<exclude>/dotnet$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/classic$</exclude>
+				<exclude>/kernel/exceptions/io_failure.e$</exclude>
+				<exclude>/kernel/exceptions/ise_exception_manager.e$</exclude>
+				<exclude>/kernel/execution_environment_32.e$</exclude>
+				<condition>
+					<dotnet value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/runtime$</exclude>
+			</file_rule>
+			<cluster name="debug" location="$ISE_LIBRARY\library\base\ise\runtime\debug\api\" recursive="true">
+				<file_rule>
+					<exclude>/dotnet$</exclude>
+					<condition>
+						<dotnet value="false"/>
+					</condition>
+				</file_rule>
+				<file_rule>
+					<exclude>/classic$</exclude>
+					<condition>
+						<dotnet value="true"/>
+					</condition>
+				</file_rule>
+			</cluster>
+			<cluster name="debug_implementation" location="$ISE_LIBRARY\library\base\ise\runtime\debug\implementation\" recursive="true" hidden="true">
+				<condition>
+					<build value="workbench"/>
+				</condition>
+				<file_rule>
+					<exclude>/dotnet$</exclude>
+					<condition>
+						<dotnet value="false"/>
+					</condition>
+				</file_rule>
+				<file_rule>
+					<exclude>/classic$</exclude>
+					<condition>
+						<dotnet value="true"/>
+					</condition>
+				</file_rule>
+			</cluster>
+		</cluster>
+	</target>
+	<target name="base_dotnet" extends="base">
+		<option>
+			<warning name="obsolete_feature" value="all"/>
+		</option>
+		<setting name="msil_clr_version" value="Microsoft.NETCore.App/6.0.14"/>
+		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency use="thread"/>
+		</capability>
+	</target>
+</system>

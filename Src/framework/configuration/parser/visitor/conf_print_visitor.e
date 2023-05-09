@@ -468,9 +468,15 @@ feature -- Visit nodes
 			if attached n.name_prefix as p and then not p.is_empty then
 				append_text_attribute ("prefix", p)
 			end
+			if attached n.renaming as l_renamings and then not l_renamings.is_empty then
+				append_tag_close
+				last_count := text.count
+				append_renaming (n.renaming)
+				append_end_tag ({STRING_32} "namespace")
+			else
+				append_tag_close_empty
+			end
 			last_count := text.count
-			append_renaming (n.renaming)
-			append_post_group ({STRING_32} "namespace")
 		ensure then
 			indent_back: indent = old indent
 		end

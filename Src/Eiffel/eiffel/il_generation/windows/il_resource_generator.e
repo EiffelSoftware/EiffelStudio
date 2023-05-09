@@ -130,14 +130,14 @@ feature {NONE} -- Implementation
 			a_resource_not_void: a_resource /= Void
 			a_target_not_void: a_target /= Void
 		local
-			l_env: IL_ENVIRONMENT
+			l_env: IL_ENVIRONMENT_I
 			l_rc: PATH
 			l_cmd: READABLE_STRING_32
 			l_launch: WEL_PROCESS_LAUNCHER
 			l_dir: detachable PATH
 			l_virc: VIRC
 		do
-			create l_env.make (System.clr_runtime_version)
+			create {IL_ENVIRONMENT} l_env.make (System.clr_runtime_version)
 			l_rc := l_env.resource_compiler
 
 			if l_rc /= Void then

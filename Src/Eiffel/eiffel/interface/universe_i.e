@@ -683,7 +683,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_system: like system
 		do
 			create l_actions.make (52)
-			create l_exceptions.make (1)
+			create l_exceptions.make (2)
 
 			l_system := system
 
@@ -949,7 +949,7 @@ invariant
 	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

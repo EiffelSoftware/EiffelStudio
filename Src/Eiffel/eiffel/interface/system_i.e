@@ -733,19 +733,19 @@ end
 			l_sorter: QUICK_SORTER [VTCT]
 			l_list: ARRAYED_LIST [VTCT]
 		do
-			if missing_classes /= Void then
+			if attached missing_classes as l_missing_classes then
 				from
 						-- `l_list' is used to display errors in alphabetical order
 						-- This is mostly interesting for eweasel as the compiler does
 						-- not always give you the same order depending on the way
 						-- classes are written.
-					create l_list.make (missing_classes.count)
-					missing_classes.start
+					create l_list.make (l_missing_classes.count)
+					l_missing_classes.start
 				until
-					missing_classes.after
+					l_missing_classes.after
 				loop
-					locations := missing_classes.item_for_iteration
-					l_name := names.item (missing_classes.key_for_iteration)
+					locations := l_missing_classes.item_for_iteration
+					l_name := names.item (l_missing_classes.key_for_iteration)
 					from
 						locations.start
 					until
@@ -773,7 +773,7 @@ end
 						end
 						locations.forth
 					end
-					missing_classes.forth
+					l_missing_classes.forth
 				end
 
 				missing_classes := Void

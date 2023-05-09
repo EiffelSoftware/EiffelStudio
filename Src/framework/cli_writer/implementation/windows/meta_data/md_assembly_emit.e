@@ -83,7 +83,6 @@ feature -- Definition
 
 	define_file (file_name: NATIVE_STRING; hash_value: MANAGED_POINTER;
 			file_flags: INTEGER): INTEGER
-
 			-- Define a new entry in file table.
 		require
 			file_name_not_void: file_name /= Void

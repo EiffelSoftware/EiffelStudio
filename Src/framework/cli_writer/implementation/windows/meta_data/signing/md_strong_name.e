@@ -49,12 +49,12 @@ feature {NONE} -- Status report
 			-- append path to `mscorsn.dll' to PATH environment variable.
 		local
 			s: STRING_32
-			l_il_env: IL_ENVIRONMENT
+			l_il_env: IL_ENVIRONMENT_I
 			e: EXECUTION_ENVIRONMENT
 		once
 				-- Look for specific version of the runtime since `mscorsn.dll' is
 				-- version specific.
-			create l_il_env.make (runtime_version)
+			create {IL_ENVIRONMENT} l_il_env.make (runtime_version)
 			if l_il_env.is_dotnet_installed then
 					-- We try to call `get_error'. If the DLL exists, it
 					-- will work, if it does not exist it will not reach

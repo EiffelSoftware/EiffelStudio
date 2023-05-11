@@ -833,9 +833,12 @@ feature -- Test
 			my_field, my_ctor, string_token: INTEGER
 			md_pub_key_token: MD_PUBLIC_KEY_TOKEN
 			object_ctor, system_console_token, object_type_token, write_line_token,
-			system_type_token, string_type_token, l_entry_type_token, write_line_method: INTEGER
+			ca_token, system_type_token, string_type_token, l_entry_type_token, write_line_method: INTEGER
+
 			field_sig: MD_FIELD_SIGNATURE
 			local_sig: MD_LOCAL_SIGNATURE
+			ca: MD_CUSTOM_ATTRIBUTE
+			attribute_ctor, target_framework_attr_type_token: INTEGER
 		do
 			create md_dispenser.make
 			md_emit := md_dispenser.emit
@@ -851,18 +854,14 @@ feature -- Test
 			md_assembly_info.set_build_number (0)
 			create l_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB0, 0x3F, 0x5F, 0x7F, 0x11, 0xD5, 0x0A, 0x3A>>)
-			-- b0 3f 5f 7f 11 d5 0a 3a
-			-- b7 7a 5c 56 19 34 e0 89
-
+				-- b0 3f 5f 7f 11 d5 0a 3a
+				-- b7 7a 5c 56 19 34 e0 89
 
 				-- mscorlib.dll
 
 			system_runtime_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("System.Runtime"), md_assembly_info, l_pub_key_token)
 
 			system_console_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("System.Console"), md_assembly_info, l_pub_key_token)
-
-			system_type_token := md_emit.define_type_ref (
-						create {NATIVE_STRING}.make ("System"), system_runtime_token)
 
 			object_type_token := md_emit.define_type_ref (
 					create {NATIVE_STRING}.make ("System.Object"), system_runtime_token)
@@ -872,6 +871,9 @@ feature -- Test
 
 			console_type_token := md_emit.define_type_ref (
 					create {NATIVE_STRING}.make ("System.Console"), system_console_token)
+
+			target_framework_attr_type_token := md_emit.define_type_ref (
+					create {NATIVE_STRING}.make ("System.Runtime.Versioning.TargetFrameworkAttribute"), system_runtime_token)
 
 			md_emit.set_module_name (create {NATIVE_STRING}.make ("test_main_net6.dll"))
 
@@ -887,9 +889,29 @@ feature -- Test
 
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token)
+
+			--
+			-- Begin Metadata
+			-- TODO check why adding the metadata cause issues with the Base Relation Table
+			--
+			attribute_ctor := md_emit.define_member_ref (create {NATIVE_STRING}.make (".ctor"),
+					target_framework_attr_type_token, sig)
+
+			create ca.make
+			ca.put_string ((create {NATIVE_STRING}.make (".NETCoreApp,Version=v6.0")).string)
+			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
+
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
+			--
+			-- End  Metadata
+			--
 			object_ctor := md_emit.define_member_ref (create {NATIVE_STRING}.make (".ctor"),
 					object_type_token, sig)
 
@@ -944,7 +966,7 @@ feature -- Test
 			body.set_local_token (local_token)
 			method_writer.write_current_body
 
-			create l_pe_file.make ("test_main_net6.dll", True, True, False, md_emit)
+			create l_pe_file.make ("test_main_net6.dll", True, False, False, md_emit)
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save

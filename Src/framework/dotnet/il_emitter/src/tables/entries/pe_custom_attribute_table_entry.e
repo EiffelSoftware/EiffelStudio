@@ -2,7 +2,7 @@ note
 	description: "Object representing the CustomAttribute table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.10 CustomAttribute : 0x0C "
+	EIS: "name=CustomAttribute", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=242&zoom=100,116,794", "protocol=uri"
 
 class
 	PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY

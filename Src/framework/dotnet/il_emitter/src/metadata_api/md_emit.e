@@ -1075,10 +1075,11 @@ feature -- Definition: Creation
 
 	define_custom_attribute (owner, constructor: INTEGER; ca: MD_CUSTOM_ATTRIBUTE): INTEGER
 			-- Define a new token for `ca' applied on token `owner' with using `constructor' as creation procedure.
+		note
+			eis: "name=CustomAttribute", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=242&zoom=100,116,794", "protocol=uri"
 		local
 			l_table_type, l_table_row: NATURAL_64
 			l_ca_blob: NATURAL_64
-			l_ca_constructor_index: NATURAL_64
 			l_ca_entry: PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY
 			l_owner_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_constructor_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
@@ -1098,19 +1099,17 @@ feature -- Definition: Creation
 			end
 
 				-- Create a new PE_CUSTOM_ATTRIBUTE instance with the corresponding tag and index
-			l_ca := create_pe_custom_attribute (l_owner_tuple.table_type_index.to_integer_32, l_ca_blob)
+			l_ca := create_pe_custom_attribute (owner, l_owner_tuple.table_row_index)
 
 				-- Extract table type and row from the l_constructor_tuple token
 			l_constructor_tuple := extract_table_type_and_row (constructor)
 
 				-- Create a new PE_CUSTOM_ATTRIBUTE_TYPE instance with the corresponding tag and index
-			l_ca_type := create_pe_custom_attribute_type (l_constructor_tuple.table_type_index.to_integer_32, l_constructor_tuple.table_row_index)
+			l_ca_type := create_pe_custom_attribute_type (constructor, l_constructor_tuple.table_row_index)
 
-				-- Create a new PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY instance with the given data
-			l_ca_constructor_index := constructor.to_natural_64
 			pe_index := l_owner_tuple.table_row_index
 
-			create l_ca_entry.make_with_data (l_ca, l_ca_type, l_ca_constructor_index)
+			create l_ca_entry.make_with_data (l_ca, l_ca_type, l_ca_blob)
 
 				-- Add the new PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY instance to the metadata tables.
 			pe_index := add_table_entry (l_ca_entry)

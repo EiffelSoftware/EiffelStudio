@@ -145,8 +145,9 @@ feature -- Test
 			md_emit := md_dispenser.emit
 
 			create md_assembly_info.make
-			md_assembly_info.set_major_version (6) -- set_minor_version
-			md_assembly_info.set_minor_version (0)
+			md_assembly_info.set_major_version (3) -- set_minor_version
+			md_assembly_info.set_minor_version (1)
+			md_assembly_info.set_build_number (28)
 
 			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("module_assembly_net6"), 0, md_assembly_info, Void)
 
@@ -704,7 +705,6 @@ feature -- Test
 			md_assembly_info.set_minor_version (0)
 			md_assembly_info.set_build_number (3300)
 
-
 			create md_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
 
@@ -816,7 +816,6 @@ feature -- Test
 			l_pe_file.save
 		end
 
-
 	test_define_entry_point_net6
 		local
 			l_pe_file: CLI_PE_FILE
@@ -834,7 +833,7 @@ feature -- Test
 			my_field, my_ctor, string_token: INTEGER
 			md_pub_key_token: MD_PUBLIC_KEY_TOKEN
 			object_ctor, system_console_token, object_type_token, write_line_token,
-			string_type_token, l_entry_type_token, write_line_method: INTEGER
+			system_type_token, string_type_token, l_entry_type_token, write_line_method: INTEGER
 			field_sig: MD_FIELD_SIGNATURE
 			local_sig: MD_LOCAL_SIGNATURE
 		do
@@ -847,21 +846,23 @@ feature -- Test
 
 			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("test_main_net6"), 0, md_assembly_info, Void)
 
-
-
 			md_assembly_info.set_major_version (6)
 			md_assembly_info.set_minor_version (0)
 			md_assembly_info.set_build_number (0)
 			create l_pub_key_token.make_from_array (
-						{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
---			create l_pub_key_token.make_from_array (
---				{ARRAY [NATURAL_8]} <<0xE0, 0x0A, 0x5E, 0xC9, 0x26, 0x36, 0x2E, 0x35>>)
+				{ARRAY [NATURAL_8]} <<0xB0, 0x3F, 0x5F, 0x7F, 0x11, 0xD5, 0x0A, 0x3A>>)
+			-- b0 3f 5f 7f 11 d5 0a 3a
+			-- b7 7a 5c 56 19 34 e0 89
 
-					-- mscorlib.dll
+
+				-- mscorlib.dll
 
 			system_runtime_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("System.Runtime"), md_assembly_info, l_pub_key_token)
 
 			system_console_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("System.Console"), md_assembly_info, l_pub_key_token)
+
+			system_type_token := md_emit.define_type_ref (
+						create {NATIVE_STRING}.make ("System"), system_runtime_token)
 
 			object_type_token := md_emit.define_type_ref (
 					create {NATIVE_STRING}.make ("System.Object"), system_runtime_token)
@@ -905,19 +906,19 @@ feature -- Test
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 			my_main := md_emit.define_method (create {NATIVE_STRING}.make ("Main"),
-						l_entry_type_token,
-						{MD_METHOD_ATTRIBUTES}.Public |
-						{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-						{MD_METHOD_ATTRIBUTES}.Static,
-						sig, {MD_METHOD_ATTRIBUTES}.Managed)
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.Static,
+					sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 			body := method_writer.new_method_body (my_main)
 
-					-- Load the string "Hello" onto the stack
+				-- Load the string "Hello" onto the stack
 
 			string_token := md_emit.define_string (create {NATIVE_STRING}.make ("Hello"))
 			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_call ({MD_OPCODES}.Call, write_line_token, 0, False)
+			body.put_call ({MD_OPCODES}.Call, write_line_token, 1, False)
 			body.put_nop
 
 			body.put_opcode ({MD_OPCODES}.Ret)
@@ -929,14 +930,11 @@ feature -- Test
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 			my_ctor := md_emit.define_method (create {NATIVE_STRING}.make (".ctor"),
-			l_entry_type_token,
-			{MD_METHOD_ATTRIBUTES}.Public |
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
 					{MD_METHOD_ATTRIBUTES}.Special_name |
 					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
 					sig, {MD_METHOD_ATTRIBUTES}.Managed)
-
-
-
 
 			body := method_writer.new_method_body (my_ctor)
 			body.put_opcode ({MD_OPCODES}.Ldarg_0)
@@ -946,9 +944,7 @@ feature -- Test
 			body.set_local_token (local_token)
 			method_writer.write_current_body
 
-
-
-			create l_pe_file.make ("test_main_net6.dll", True, False, False, md_emit)
+			create l_pe_file.make ("test_main_net6.dll", True, True, False, md_emit)
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save

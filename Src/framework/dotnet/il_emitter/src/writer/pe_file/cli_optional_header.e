@@ -24,10 +24,12 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Allocate `item' and initialize default values for CLI.
+			-- Allocate `item' and initialize default values for CLI
 		do
+				-- TODO check if we need to configure this HEADER with
+			 	-- a CLI_CONFIG_OPTIONS. 
 			set_magic (0x10B)
-			set_major_linker_version (6)
+			set_major_linker_version (48)
 			set_minor_linker_version (0)
 			set_image_base (0x400000)
 			set_section_alignment (section_alignment)
@@ -283,7 +285,6 @@ feature {NONE} -- Settings: standard fields
 		ensure
 			size_of_uninitialized_data_set: size_of_uninitialized_data = i
 		end
-
 
 feature {NONE} -- Settings: NT additional fields
 
@@ -574,7 +575,7 @@ feature -- Size
 				-- base_of_data
 			s.put_integer_32
 				-- End of Standard fields
-			check offset_NT_specific: s.size =  28 end
+			check offset_NT_specific: s.size = 28 end
 
 				-- II.25.2.3.2 PE header Windows NT-specific fields
 				-- image_base

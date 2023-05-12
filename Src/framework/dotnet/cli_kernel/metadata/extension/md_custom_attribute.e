@@ -4,6 +4,8 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS:"name=Custom Attribute Table", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=242&zoom=100,116,794", "protocol=uri"
+	EIS:"name=Custom Attribute definition", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=293&zoom=100", "protocol=uri"
 
 class
 	MD_CUSTOM_ATTRIBUTE
@@ -187,6 +189,13 @@ feature -- Settings
 				end
 			end
 		end
+
+	--Note
+	--| Review the specification and see if we need to create different features like
+	--| put_string_named_arg (arg: READABLE_STRING_GENERAL, value: READABLE_STRING_GENERAL)
+	--| See section 23.3 (EIS)
+
+
 
 note
 	copyright:	"Copyright (c) 1984-2012, Eiffel Software"

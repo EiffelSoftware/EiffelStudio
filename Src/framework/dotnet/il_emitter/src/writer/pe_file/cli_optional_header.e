@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "name=_IMAGE_OPTIONAL_HEADER ", "src=https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-image_optional_header32", "protocol=uri"
-	Ecma_section: "II.25.2.3 PE optional header"
+	EIS: "name=II.25.2.3 PE optional header ", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=305", "protocol=uri"
 
 class
 	CLI_OPTIONAL_HEADER
@@ -22,25 +22,28 @@ create
 	make
 
 feature {NONE} -- Initialization
-
+	--(is_32bit)
 	make
 			-- Allocate `item' and initialize default values for CLI
 		do
 				-- TODO check if we need to configure this HEADER with
-			 	-- a CLI_CONFIG_OPTIONS. 
+				-- a CLI_CONFIG_OPTIONS.
+				-- CLI_CONFIG_32
+				-- CLI_CONFIG_64
+
 			set_magic (0x10B)
-			set_major_linker_version (48)
+			set_major_linker_version (6) --48
 			set_minor_linker_version (0)
 			set_image_base (0x400000)
 			set_section_alignment (section_alignment)
 				-- Shall be greater than File Alignment.
 			set_file_alignment (file_alignment)
 				-- Should be 0x200
-			set_major_operating_system_version (5)
+			set_major_operating_system_version (5) -- 5
 			set_minor_operating_system_version (0)
 			set_major_image_version (0)
 			set_minor_image_version (0)
-			set_major_subsystem_version (5)
+			set_major_subsystem_version (5) -- 5
 			set_minor_subsystem_version (0)
 			set_win32_version_value (0)
 				-- Reserved

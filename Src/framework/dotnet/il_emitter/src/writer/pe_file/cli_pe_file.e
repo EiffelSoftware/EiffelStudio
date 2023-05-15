@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 				{CLI_PE_FILE_CONSTANTS}.Image_file_executable_image |
 				{CLI_PE_FILE_CONSTANTS}.Image_file_line_nums_stripped |
 				{CLI_PE_FILE_CONSTANTS}.Image_file_local_syms_stripped
+
 			if is_dll then
 				l_characteristics := l_characteristics | {CLI_PE_FILE_CONSTANTS}.Image_file_dll
 			end
@@ -234,7 +235,7 @@ feature -- Saving
 		local
 			l_pe_file, l_meta_data_file: RAW_FILE
 			l_padding: MANAGED_POINTER
---			l_signature: MANAGED_POINTER
+			l_signature: MANAGED_POINTER
 			l_strong_name_location: INTEGER
 --			l_size: INTEGER
 			l_uni_string: CLI_STRING
@@ -309,7 +310,7 @@ feature -- Saving
 			emitter.save (create {CLI_STRING}.make (l_meta_data_file_name))
 			create l_meta_data_file.make_with_name (l_meta_data_file_name)
 			l_meta_data_file.open_read
---			check valid_size: l_meta_data_file.count = meta_data_size end
+			check valid_size: l_meta_data_file.count = meta_data_size end
 			l_meta_data_file.copy_to (l_pe_file)
 			l_meta_data_file.close
 --			l_meta_data_file.delete
@@ -562,9 +563,9 @@ feature {NONE} -- Implementation
 						0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 						0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 						0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00,
-						-- in previous line, the value 0x80:
-						-- 		At offset 0x3c in the DOS header is a 4-byte unsigned integer offset,
-						--		lfanew, to the PE signature (shall be "PE\0\0")						
+							-- in previous line, the value 0x80:
+							-- 		At offset 0x3c in the DOS header is a 4-byte unsigned integer offset,
+							--		lfanew, to the PE signature (shall be "PE\0\0")
 
 						0x0e, 0x1f, 0xba, 0x0e, 0x00, 0xb4, 0x09, 0xcd,
 						0x21, 0xb8, 0x01, 0x4c, 0xcd, 0x21, 0x54, 0x68,
@@ -574,7 +575,7 @@ feature {NONE} -- Implementation
 						0x20, 0x69, 0x6e, 0x20, 0x44, 0x4f, 0x53, 0x20,
 						0x6d, 0x6f, 0x64, 0x65, 0x2e, 0x0d, 0x0d, 0x0a,
 						0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-						-- Then the PE signature: 4 bytes that shall be "PE\0\0"
+							-- Then the PE signature: 4 bytes that shall be "PE\0\0"
 						0x50, 0x45, 0x00, 0x00
 					>>
 				)

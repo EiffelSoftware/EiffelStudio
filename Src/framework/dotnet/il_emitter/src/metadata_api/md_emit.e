@@ -396,6 +396,8 @@ feature -- Save
 			write_us (l_file)
 			write_guid (l_file)
 			write_blob (l_file)
+			 -- Workaround to align
+			align (l_file, 4)
 		end
 
 feature {NONE} -- Implementation
@@ -559,6 +561,8 @@ feature {NONE} -- Implementation
 		end
 
 	align (a_file: FILE; a_align: INTEGER)
+			-- Aligns the output file `a_file' by appending zero bytes to the end of the file until the current offset
+			-- is aligned with the desired value `a_align'.
 		local
 			l_current_offset: INTEGER
 			l_array: ARRAY [NATURAL_8]

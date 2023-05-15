@@ -135,12 +135,12 @@ feature {NONE} -- Implementation
 			a_resource_not_void: a_resource /= Void
 			a_target_not_void: a_target /= Void
 		local
-			l_env: IL_ENVIRONMENT
-			l_rc: PATH
-			l_cmd: READABLE_STRING_32
-			--l_launch: WEL_PROCESS_LAUNCHER
-			l_dir: detachable PATH
-			l_virc: VIRC
+--			l_env: IL_ENVIRONMENT
+--			l_rc: PATH
+--			l_cmd: READABLE_STRING_32
+--			--l_launch: WEL_PROCESS_LAUNCHER
+--			l_dir: detachable PATH
+--			l_virc: VIRC
 		do
 			to_implement ("TODO replace code WEL_PROCESS_LAUNCHER")
 --			create l_env.make (System.clr_runtime_version)
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 
 				-- Add entry in manifest resource table of current module.
 			l_token := a_module.md_emit.define_manifest_resource (
-				create {NATIVE_STRING}.make (a_name), 0, last_resource_offset, {MD_RESOURCE_FLAGS}.Public)
+				create {CLI_STRING}.make (a_name), 0, last_resource_offset, {MD_RESOURCE_FLAGS}.Public)
 			last_resource_offset := last_resource_offset + l_data.count
 		ensure
 			inserted: a_module.resources /= Void

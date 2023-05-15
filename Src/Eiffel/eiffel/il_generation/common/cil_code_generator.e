@@ -252,7 +252,7 @@ feature {NONE} -- Access
 	local_types: ARRAYED_LIST [PAIR [TYPE_A, STRING]]
 			-- To store types of local variables.
 
-	uni_string: NATIVE_STRING
+	uni_string: CLI_STRING
 			-- Buffer for all Unicode string conversion.
 
 	is_console_application: BOOLEAN
@@ -700,7 +700,7 @@ feature -- Generation Structure
 				method_body.set_local_token (helper_emit.define_signature (local_sig))
 				check_body_index_range_label := create_label
 				allocate_for_body_index_label := create_label
-				array_type_token := helper_emit.define_type_ref (create {NATIVE_STRING}.make ("System.Array"), current_module.mscorlib_token)
+				array_type_token := helper_emit.define_type_ref (create {CLI_STRING}.make ("System.Array"), current_module.mscorlib_token)
 				method_sig.reset
 				method_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.default_sig)
 				method_sig.set_parameter_count (3)
@@ -708,7 +708,7 @@ feature -- Generation Structure
 				method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, array_type_token)
 				method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, array_type_token)
 				method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
-				array_copy_method_token := helper_emit.define_member_ref (create {NATIVE_STRING}.make ("Copy"), array_type_token, method_sig)
+				array_copy_method_token := helper_emit.define_member_ref (create {CLI_STRING}.make ("Copy"), array_type_token, method_sig)
 
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_field_cil_token)
 				method_body.put_opcode ({MD_OPCODES}.dup)
@@ -886,7 +886,7 @@ feature -- Generation Structure
 			l_type: CLASS_TYPE
 			l_class: CLASS_C
 			i, nb: INTEGER
-			l_uni_string: NATIVE_STRING
+			l_uni_string: CLI_STRING
 			l_module: IL_MODULE
 			l_file_token: INTEGER
 		do
@@ -989,7 +989,7 @@ feature -- Generation Structure
 				(file_flags = {MD_FILE_FLAGS}.Has_no_meta_data)
 			a_signing_exists: a_signing /= Void and then a_signing.exists
 		local
-			l_uni_string: NATIVE_STRING
+			l_uni_string: CLI_STRING
 			l_hash_res: MANAGED_POINTER
 		do
 			create l_uni_string.make (a_file)

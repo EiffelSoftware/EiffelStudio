@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	define_assembly_ref (assembly_name: NATIVE_STRING; assembly_info: MD_ASSEMBLY_INFO;
+	define_assembly_ref (assembly_name: CLI_STRING; assembly_info: MD_ASSEMBLY_INFO;
 			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
 		require
 			assembly_name_not_void: assembly_name /= Void
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Definition
 
-	define_assembly (assembly_name: NATIVE_STRING; assembly_flags: INTEGER;
+	define_assembly (assembly_name: CLI_STRING; assembly_flags: INTEGER;
 			assembly_info: MD_ASSEMBLY_INFO; public_key: detachable MD_PUBLIC_KEY): INTEGER
 
 			-- Define a new assembly `assembly_name' with characteristics
@@ -110,7 +110,7 @@ feature -- Definition
 			valid_result: Result > 0
 		end
 
-	define_exported_type (type_name: NATIVE_STRING; implementation_token: INTEGER;
+	define_exported_type (type_name: CLI_STRING; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
 		require
 			type_name_not_void: type_name /= Void
@@ -157,7 +157,7 @@ feature -- Definition
 			valid_result: Result > 0
 		end
 
-	define_file (file_name: NATIVE_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
+	define_file (file_name: CLI_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
 			-- Define a new entry in file table.
 		require
 			file_name_not_void: file_name /= Void
@@ -202,7 +202,7 @@ feature -- Definition
 			valid_result: Result > 0
 		end
 
-	define_manifest_resource (resource_name: NATIVE_STRING; implementation_token: INTEGER; offset, resource_flags: INTEGER): INTEGER
+	define_manifest_resource (resource_name: CLI_STRING; implementation_token: INTEGER; offset, resource_flags: INTEGER): INTEGER
 			-- Define a new entry in manifest resource table.
 		require
 			resource_name_not_void: resource_name /= Void

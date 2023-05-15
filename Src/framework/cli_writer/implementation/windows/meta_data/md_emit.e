@@ -56,7 +56,7 @@ feature -- Save
 			valid_result: Result /= Void
 		end
 
-	save (f_name: NATIVE_STRING)
+	save (f_name: CLI_STRING)
 			-- Save current assembly to file `f_name'.
 		do
 			last_call_success := c_save (item, f_name.item, 0)
@@ -64,7 +64,7 @@ feature -- Save
 
 feature -- Definition: access
 
-	define_assembly_ref (assembly_name: NATIVE_STRING; assembly_info: MD_ASSEMBLY_INFO;
+	define_assembly_ref (assembly_name: CLI_STRING; assembly_info: MD_ASSEMBLY_INFO;
 			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
 			-- Get token reference on referenced assembly `assembly_name'.
 		do
@@ -72,7 +72,7 @@ feature -- Definition: access
 				assembly_info, public_key_token)
 		end
 
-	define_type_ref (type_name: NATIVE_STRING; resolution_scope: INTEGER): INTEGER
+	define_type_ref (type_name: CLI_STRING; resolution_scope: INTEGER): INTEGER
 			-- Compute new token for `type_name' located in `resolution_scope'.
 		do
 			last_call_success := c_define_type_ref_by_name (item, resolution_scope,
@@ -83,7 +83,7 @@ feature -- Definition: access
 			end
 		end
 
-	define_member_ref (method_name: NATIVE_STRING; in_class_token: INTEGER;
+	define_member_ref (method_name: CLI_STRING; in_class_token: INTEGER;
 			a_signature: MD_SIGNATURE): INTEGER
 
 			-- Create reference to member in class `in_class_token'.
@@ -96,7 +96,7 @@ feature -- Definition: access
 			end
 		end
 
-	define_module_ref (a_name: NATIVE_STRING): INTEGER
+	define_module_ref (a_name: CLI_STRING): INTEGER
 			-- Define a reference to a module of name `a_name'.
 		do
 			last_call_success := c_define_module_ref (item, a_name.item, $Result)
@@ -104,7 +104,7 @@ feature -- Definition: access
 
 feature -- Definition: creation
 
-	define_assembly (assembly_name: NATIVE_STRING; assembly_flags: INTEGER;
+	define_assembly (assembly_name: CLI_STRING; assembly_flags: INTEGER;
 			assembly_info: MD_ASSEMBLY_INFO; public_key: detachable MD_PUBLIC_KEY): INTEGER
 
 			-- Define a new assembly.
@@ -113,7 +113,7 @@ feature -- Definition: creation
 				assembly_info, public_key)
 		end
 
-	define_manifest_resource (resource_name: NATIVE_STRING; implementation_token: INTEGER;
+	define_manifest_resource (resource_name: CLI_STRING; implementation_token: INTEGER;
 			offset, resource_flags: INTEGER): INTEGER
 			-- Define a new assembly.
 		do
@@ -121,7 +121,7 @@ feature -- Definition: creation
 				implementation_token, offset, resource_flags)
 		end
 
-	define_type (type_name: NATIVE_STRING; flags: INTEGER; extend_token: INTEGER;
+	define_type (type_name: CLI_STRING; flags: INTEGER; extend_token: INTEGER;
 			implements: detachable ARRAY [INTEGER]): INTEGER
 
 			-- Create new type with name `type_name' and `flags' which inherits from
@@ -153,7 +153,7 @@ feature -- Definition: creation
 			end
 		end
 
-	define_exported_type (type_name: NATIVE_STRING; implementation_token: INTEGER;
+	define_exported_type (type_name: CLI_STRING; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
 				-- Create a row in ExportedType table.
 		do
@@ -161,13 +161,13 @@ feature -- Definition: creation
 				type_def_token, type_flags)
 		end
 
-	define_file (file_name: NATIVE_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
+	define_file (file_name: CLI_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
 			-- Create a row in File table
 		do
 			Result := assembly_emitter.define_file (file_name, hash_value, file_flags)
 		end
 
-	define_method (method_name: NATIVE_STRING; in_class_token: INTEGER;
+	define_method (method_name: CLI_STRING; in_class_token: INTEGER;
 			method_flags: INTEGER; a_signature: MD_METHOD_SIGNATURE;
 			impl_flags: INTEGER): INTEGER
 			-- Create new method in class `in_class_token'.
@@ -185,7 +185,7 @@ feature -- Definition: creation
 				used_method_declaration_token)
 		end
 
-	define_property (type_token: INTEGER; name: NATIVE_STRING; flags: NATURAL_32;
+	define_property (type_token: INTEGER; name: CLI_STRING; flags: NATURAL_32;
 			signature: MD_PROPERTY_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER): INTEGER
 			-- Define property `name' for a type `type_token'.
 		local
@@ -199,7 +199,7 @@ feature -- Definition: creation
 		end
 
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;
-			import_name: NATIVE_STRING; module_ref: INTEGER)
+			import_name: CLI_STRING; module_ref: INTEGER)
 			-- Further specification of a pinvoke method location defined by `method_token'.
 		do
 			last_call_success := c_define_pinvoke_map (item, method_token,
@@ -208,7 +208,7 @@ feature -- Definition: creation
 			success: is_successful
 		end
 
-	define_parameter (in_method_token: INTEGER; param_name: NATIVE_STRING;
+	define_parameter (in_method_token: INTEGER; param_name: CLI_STRING;
 			param_pos: INTEGER; param_flags: INTEGER): INTEGER
 			-- Create a new parameter specification token for method `in_method_token'.
 		do
@@ -223,7 +223,7 @@ feature -- Definition: creation
 				a_native_type_sig.item.item, a_native_type_sig.count)
 		end
 
-	define_field (field_name: NATIVE_STRING; in_class_token: INTEGER;
+	define_field (field_name: CLI_STRING; in_class_token: INTEGER;
 			field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER
 			-- Create a new field in class `in_class_token'.
 		do
@@ -232,12 +232,12 @@ feature -- Definition: creation
 				{MD_SIGNATURE_CONSTANTS}.element_type_end, default_pointer, 0, $Result)
 		end
 
-	define_string_constant (field_name: NATIVE_STRING; in_class_token: INTEGER;
+	define_string_constant (field_name: CLI_STRING; in_class_token: INTEGER;
 			field_flags: INTEGER; a_string: STRING): INTEGER
 			-- Create a new field in class `in_class_token'.
 		local
 			l_field_signature: MD_FIELD_SIGNATURE
-			l_uni_str: NATIVE_STRING
+			l_uni_str: CLI_STRING
 		do
 			create l_field_signature.make
 			create l_uni_str.make (a_string)
@@ -258,7 +258,7 @@ feature -- Definition: creation
 			end
 		end
 
-	define_string (str: NATIVE_STRING): INTEGER
+	define_string (str: CLI_STRING): INTEGER
 			-- Define a new token for `str'.
 		do
 			last_call_success := c_define_user_string (item, str.item, str.bytes_count, $Result)
@@ -281,7 +281,7 @@ feature -- Definition: creation
 
 feature -- Settings
 
-	set_module_name (a_name: NATIVE_STRING)
+	set_module_name (a_name: CLI_STRING)
 			-- Set name of current generated module to `a_name'.
 		do
 			last_call_success := c_set_module_props (item, a_name.item)

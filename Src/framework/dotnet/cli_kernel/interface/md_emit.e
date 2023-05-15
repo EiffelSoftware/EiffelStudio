@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Save
 
-	save (f_name: NATIVE_STRING)
+	save (f_name: CLI_STRING)
 			-- Save current assembly to file `f_name'.
 		require
 			f_name_not_void: f_name /= Void
@@ -38,7 +38,7 @@ feature -- Save
 
 feature -- Definition: access
 
-	define_assembly_ref (assembly_name: NATIVE_STRING; assembly_info: MD_ASSEMBLY_INFO;
+	define_assembly_ref (assembly_name: CLI_STRING; assembly_info: MD_ASSEMBLY_INFO;
 			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
 			-- Get token reference on referenced assembly `assembly_name'.
 		require
@@ -50,7 +50,7 @@ feature -- Definition: access
 			valid_result: Result > 0
 		end
 
-	define_type_ref (type_name: NATIVE_STRING; resolution_scope: INTEGER): INTEGER
+	define_type_ref (type_name: CLI_STRING; resolution_scope: INTEGER): INTEGER
 			-- Compute new token for `type_name' located in `resolution_scope'.
 		require
 			type_name_not_void: type_name /= Void
@@ -66,7 +66,7 @@ feature -- Definition: access
 			result_valid: Result & Md_mask = Md_type_ref
 		end
 
-	define_member_ref (method_name: NATIVE_STRING; in_class_token: INTEGER;
+	define_member_ref (method_name: CLI_STRING; in_class_token: INTEGER;
 			a_signature: MD_SIGNATURE): INTEGER
 
 			-- Create reference to member in class `in_class_token'.
@@ -83,7 +83,7 @@ feature -- Definition: access
 			result_valid: Result & Md_mask = Md_member_ref
 		end
 
-	define_module_ref (a_name: NATIVE_STRING): INTEGER
+	define_module_ref (a_name: CLI_STRING): INTEGER
 			-- Define a reference to a module of name `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -96,7 +96,7 @@ feature -- Definition: access
 
 feature -- Definition: Creation
 
-	define_assembly (assembly_name: NATIVE_STRING; assembly_flags: INTEGER;
+	define_assembly (assembly_name: CLI_STRING; assembly_flags: INTEGER;
 			assembly_info: MD_ASSEMBLY_INFO; public_key: detachable MD_PUBLIC_KEY): INTEGER
 			-- Add assembly metadata information to the metadata tables.
 			--| the public key could be null.
@@ -111,7 +111,7 @@ feature -- Definition: Creation
 			valid_result: Result & Md_mask = Md_assembly
 		end
 
-	define_manifest_resource (resource_name: NATIVE_STRING; implementation_token: INTEGER;
+	define_manifest_resource (resource_name: CLI_STRING; implementation_token: INTEGER;
 			offset, resource_flags: INTEGER): INTEGER
 
 			-- Define a new assembly.
@@ -128,7 +128,7 @@ feature -- Definition: Creation
 			valid_result: Result & Md_mask = Md_manifest_resource
 		end
 
-	define_type (type_name: NATIVE_STRING; flags: INTEGER; extend_token: INTEGER; implements: detachable ARRAY [INTEGER]): INTEGER
+	define_type (type_name: CLI_STRING; flags: INTEGER; extend_token: INTEGER; implements: detachable ARRAY [INTEGER]): INTEGER
 			-- Define a new type in the metadata.
 		require
 			type_name_not_void: type_name /= Void
@@ -155,7 +155,7 @@ feature -- Definition: Creation
 			result_valid: Result & Md_mask = Md_type_spec
 		end
 
-	define_exported_type (type_name: NATIVE_STRING; implementation_token: INTEGER;
+	define_exported_type (type_name: CLI_STRING; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
 			-- Create a row in ExportedType table.
 		require
@@ -170,7 +170,7 @@ feature -- Definition: Creation
 			valid_result: Result & Md_mask = Md_exported_type
 		end
 
-	define_file (file_name: NATIVE_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
+	define_file (file_name: CLI_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
 			-- Create a row in File table
 		require
 			file_name_not_void: file_name /= Void
@@ -185,7 +185,7 @@ feature -- Definition: Creation
 			valid_result: Result & Md_mask = Md_file
 		end
 
-	define_method (method_name: NATIVE_STRING; in_class_token: INTEGER; method_flags: INTEGER;
+	define_method (method_name: CLI_STRING; in_class_token: INTEGER; method_flags: INTEGER;
 			a_signature: MD_METHOD_SIGNATURE; impl_flags: INTEGER): INTEGER
 			-- Create reference to method in class `in_class_token`.
 		require
@@ -217,7 +217,7 @@ feature -- Definition: Creation
 			is_successful
 		end
 
-	define_property (type_token: INTEGER; name: NATIVE_STRING; flags: NATURAL_32;
+	define_property (type_token: INTEGER; name: CLI_STRING; flags: NATURAL_32;
 			signature: MD_PROPERTY_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER): INTEGER
 			-- Define property `name' for a type `type_token'.
 		require
@@ -234,7 +234,7 @@ feature -- Definition: Creation
 		end
 
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;
-			import_name: NATIVE_STRING; module_ref: INTEGER)
+			import_name: CLI_STRING; module_ref: INTEGER)
 
 			-- Further specification of a pinvoke method location defined by `method_token'.
 		require
@@ -249,7 +249,7 @@ feature -- Definition: Creation
 			is_successful
 		end
 
-	define_parameter (in_method_token: INTEGER; param_name: NATIVE_STRING;
+	define_parameter (in_method_token: INTEGER; param_name: CLI_STRING;
 			param_pos: INTEGER; param_flags: INTEGER): INTEGER
 
 			-- Create a new parameter specification token for method `in_method_token'.
@@ -273,7 +273,7 @@ feature -- Definition: Creation
 			is_successful
 		end
 
-	define_field (field_name: NATIVE_STRING; in_class_token: INTEGER; field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER
+	define_field (field_name: CLI_STRING; in_class_token: INTEGER; field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER
 			-- Create a new field in class `in_class_token'.
 		require
 			field_name_not_void: field_name /= Void
@@ -297,7 +297,7 @@ feature -- Definition: Creation
 			result_valid: Result & Md_mask = Md_signature
 		end
 
-	define_string_constant (field_name: NATIVE_STRING; in_class_token: INTEGER;
+	define_string_constant (field_name: CLI_STRING; in_class_token: INTEGER;
 			field_flags: INTEGER; a_string: STRING): INTEGER
 
 			-- Create a new field in class `in_class_token'.
@@ -312,7 +312,7 @@ feature -- Definition: Creation
 			result_valid: Result & Md_mask = Md_field_def
 		end
 
-	define_string (str: NATIVE_STRING): INTEGER
+	define_string (str: CLI_STRING): INTEGER
 			-- Define a new token for `str'.
 		require
 			str_not_void: str /= Void
@@ -339,7 +339,7 @@ feature -- Definition: Creation
 
 feature -- Settings
 
-	set_module_name (a_name: NATIVE_STRING)
+	set_module_name (a_name: CLI_STRING)
 			-- Set name of current generated module to `a_name'.
 		require
 			a_name_not_void: a_name /= Void

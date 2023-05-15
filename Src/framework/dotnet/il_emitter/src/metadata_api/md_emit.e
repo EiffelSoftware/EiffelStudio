@@ -379,7 +379,7 @@ feature -- Save
 			valid_result: Result /= Void
 		end
 
-	save (f_name: NATIVE_STRING)
+	save (f_name: CLI_STRING)
 			-- Save current assembly to file `f_name'.
 		local
 			l_file: FILE
@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 
 feature -- Settings
 
-	set_module_name (a_name: NATIVE_STRING)
+	set_module_name (a_name: CLI_STRING)
 			-- Set the module name for the compilation unit being emitted.
 		local
 			l_name_index: NATURAL_64
@@ -620,7 +620,7 @@ feature -- Settings
 
 feature -- Definition: Access
 
-	define_assembly_ref (assembly_name: NATIVE_STRING; assembly_info: MD_ASSEMBLY_INFO;
+	define_assembly_ref (assembly_name: CLI_STRING; assembly_info: MD_ASSEMBLY_INFO;
 			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
 			-- Add assembly reference information to the metadata tables.
 		local
@@ -632,7 +632,7 @@ feature -- Definition: Access
 			Result := assembly_emitter.define_assembly_ref (assembly_name, assembly_info, public_key_token)
 		end
 
-	define_type_ref (type_name: NATIVE_STRING; resolution_scope: INTEGER): INTEGER
+	define_type_ref (type_name: CLI_STRING; resolution_scope: INTEGER): INTEGER
 			-- Adds type reference information to the metadata tables.
 		note
 			EIS: "name=TypeRef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=273", "protocol=uri"
@@ -689,7 +689,7 @@ feature -- Definition: Access
 			Result := last_token.to_integer_32
 		end
 
-	define_member_ref (method_name: NATIVE_STRING; in_class_token: INTEGER; a_signature: MD_SIGNATURE): INTEGER
+	define_member_ref (method_name: CLI_STRING; in_class_token: INTEGER; a_signature: MD_SIGNATURE): INTEGER
 			-- Create reference to member in class `in_class_token'.
 		local
 			l_table_type, l_table_row: NATURAL_64
@@ -718,7 +718,7 @@ feature -- Definition: Access
 			Result := last_token.to_integer_32
 		end
 
-	define_module_ref (a_name: NATIVE_STRING): INTEGER
+	define_module_ref (a_name: CLI_STRING): INTEGER
 			-- Define a new module reference for the given `module_name`.
 			-- Returns the generated token.
 		local
@@ -738,7 +738,7 @@ feature -- Definition: Access
 
 feature -- Definition: Creation
 
-	define_assembly (assembly_name: NATIVE_STRING; assembly_flags: INTEGER;
+	define_assembly (assembly_name: CLI_STRING; assembly_flags: INTEGER;
 			assembly_info: MD_ASSEMBLY_INFO; public_key: detachable MD_PUBLIC_KEY): INTEGER
 			-- Add assembly metadata information to the metadata tables.
 			--| the public key could be null.
@@ -746,14 +746,14 @@ feature -- Definition: Creation
 			Result := assembly_emitter.define_assembly (assembly_name, assembly_flags, assembly_info, public_key)
 		end
 
-	define_manifest_resource (resource_name: NATIVE_STRING; implementation_token: INTEGER;
+	define_manifest_resource (resource_name: CLI_STRING; implementation_token: INTEGER;
 			offset, resource_flags: INTEGER): INTEGER
 			-- Define a new assembly.
 		do
 			Result := assembly_emitter.define_manifest_resource (resource_name, implementation_token, offset, resource_flags)
 		end
 
-	define_type (type_name: NATIVE_STRING; flags: INTEGER; extend_token: INTEGER; implements: detachable ARRAY [INTEGER]): INTEGER
+	define_type (type_name: CLI_STRING; flags: INTEGER; extend_token: INTEGER; implements: detachable ARRAY [INTEGER]): INTEGER
 			-- Define a new type in the metadata.
 		note
 			EIS: "name=TypeDef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=270", "protocoo"
@@ -823,20 +823,20 @@ feature -- Definition: Creation
 			Result := last_token.to_integer_32
 		end
 
-	define_exported_type (type_name: NATIVE_STRING; implementation_token: INTEGER;
+	define_exported_type (type_name: CLI_STRING; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
 			-- Create a row in ExportedType table.
 		do
 			Result := assembly_emitter.define_exported_type (type_name, implementation_token, type_def_token, type_flags)
 		end
 
-	define_file (file_name: NATIVE_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
+	define_file (file_name: CLI_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER
 			-- Create a row in File table
 		do
 			Result := assembly_emitter.define_file (file_name, hash_value, file_flags)
 		end
 
-	define_method (method_name: NATIVE_STRING; in_class_token: INTEGER; method_flags: INTEGER;
+	define_method (method_name: CLI_STRING; in_class_token: INTEGER; method_flags: INTEGER;
 			a_signature: MD_METHOD_SIGNATURE; impl_flags: INTEGER): INTEGER
 			-- Create reference to method in class `in_class_token`.
 		local
@@ -891,7 +891,7 @@ feature -- Definition: Creation
 			pe_index := add_table_entry (l_method_impl_entry)
 		end
 
-	define_property (type_token: INTEGER; name: NATIVE_STRING; flags: NATURAL_32;
+	define_property (type_token: INTEGER; name: CLI_STRING; flags: NATURAL_32;
 			signature: MD_PROPERTY_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER): INTEGER
 			-- Define property `name' for a type `type_token'.
 		local
@@ -941,7 +941,7 @@ feature -- Definition: Creation
 		end
 
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;
-			import_name: NATIVE_STRING; module_ref: INTEGER)
+			import_name: CLI_STRING; module_ref: INTEGER)
 			-- Further specification of a pinvoke method location defined by `method_token'.
 		local
 			l_member_forwarded: PE_MEMBER_FORWARDED
@@ -964,7 +964,7 @@ feature -- Definition: Creation
 			pe_index := add_table_entry (l_impl_map_entry)
 		end
 
-	define_parameter (in_method_token: INTEGER; param_name: NATIVE_STRING;
+	define_parameter (in_method_token: INTEGER; param_name: CLI_STRING;
 			param_pos: INTEGER; param_flags: INTEGER): INTEGER
 			-- Create a new parameter specification token for method `in_method_token'.
 		local
@@ -1004,7 +1004,7 @@ feature -- Definition: Creation
 			to_implement ("TODO implement")
 		end
 
-	define_field (field_name: NATIVE_STRING; in_class_token: INTEGER; field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER
+	define_field (field_name: CLI_STRING; in_class_token: INTEGER; field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER
 			-- Create a new field in class `in_class_token'.
 		local
 			l_table_type, l_table_row: NATURAL_64
@@ -1045,13 +1045,13 @@ feature -- Definition: Creation
 			Result := last_token.to_integer_32
 		end
 
-	define_string_constant (field_name: NATIVE_STRING; in_class_token: INTEGER;
+	define_string_constant (field_name: CLI_STRING; in_class_token: INTEGER;
 			field_flags: INTEGER; a_string: STRING): INTEGER
 
 			-- Create a new field in class `in_class_token'.
 		local
 			l_field_signature: MD_FIELD_SIGNATURE
-			l_uni_str: NATIVE_STRING
+			l_uni_str: CLI_STRING
 		do
 			to_implement ("TODO add implementation")
 --			create l_field_signature.make
@@ -1060,7 +1060,7 @@ feature -- Definition: Creation
 --			define_field (field_name, in_class_token, field_flags, a_signature: MD_FIELD_SIGNATURE)
 		end
 
-	define_string (str: NATIVE_STRING): INTEGER
+	define_string (str: CLI_STRING): INTEGER
 			-- Define a new token for `str'.
 		local
 			l_str: STRING_32

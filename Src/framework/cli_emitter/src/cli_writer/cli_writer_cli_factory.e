@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	dbg_writer (emitter: MD_EMIT; name: NATIVE_STRING; full_build: BOOLEAN): DBG_WRITER
+	dbg_writer (emitter: MD_EMIT; name: CLI_STRING; full_build: BOOLEAN): DBG_WRITER
 		do
 			create {CLI_WRITER_DBG_WRITER} Result.make (emitter, name, full_build)
 		end

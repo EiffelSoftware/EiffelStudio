@@ -61,7 +61,7 @@ feature -- Access
 			create Result.make (0)
 		end
 
-	hash_of_file (a_file_path: NATIVE_STRING): MANAGED_POINTER
+	hash_of_file (a_file_path: CLI_STRING): MANAGED_POINTER
 			-- Compute hash of `a_file_path' using default algorithm.
 		local
 			l_file: RAW_FILE

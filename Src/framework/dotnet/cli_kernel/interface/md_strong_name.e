@@ -25,7 +25,7 @@ feature -- Access
 			public_key_token_not_void: Result /= Void
 		end
 
-	hash_of_file (a_file_path: NATIVE_STRING): MANAGED_POINTER
+	hash_of_file (a_file_path: CLI_STRING): MANAGED_POINTER
 			-- Compute hash of `a_file_path' using default algorithm.
 		require
 			a_file_path_not_void: a_file_path /= Void

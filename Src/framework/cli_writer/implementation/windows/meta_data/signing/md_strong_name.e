@@ -108,7 +108,7 @@ feature -- Access
 			strong_name_free_buffer (l_ptr)
 		end
 
-	assembly_signature (a_file: UNI_STRING; a_public_private_key: MANAGED_POINTER): MANAGED_POINTER
+	assembly_signature (a_file: CLI_STRING; a_public_private_key: MANAGED_POINTER): MANAGED_POINTER
 			-- Signature of assembly `a_file' using `a_public_private_key'.
 		require
 			a_file_not_void: a_file /= Void
@@ -134,7 +134,7 @@ feature -- Access
 				a_public_private_key.item, a_public_private_key.count, $Result)
 		end
 
-	hash_of_file (a_file_path: NATIVE_STRING): MANAGED_POINTER
+	hash_of_file (a_file_path: CLI_STRING): MANAGED_POINTER
 			-- Compute hash of `a_file_path' using default algorithm.
 		local
 			l_hash: MANAGED_POINTER

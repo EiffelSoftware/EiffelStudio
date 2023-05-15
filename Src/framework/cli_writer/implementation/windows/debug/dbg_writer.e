@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (emitter: MD_EMIT_I; name: NATIVE_STRING; full_build: BOOLEAN)
+	make (emitter: MD_EMIT_I; name: CLI_STRING; full_build: BOOLEAN)
 			-- Create a new SymUnmanagedWriter object using `emitter' in a file `name'.
 		do
 				-- Initialize COM.
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature -- Definition
 
-	define_document (url: NATIVE_STRING; language, vendor, doc_type: CIL_GUID): DBG_DOCUMENT_WRITER_I
+	define_document (url: CLI_STRING; language, vendor, doc_type: CIL_GUID): DBG_DOCUMENT_WRITER_I
 			-- Create a new document writer needed to generated debug info.
 		local
 			p: POINTER
@@ -134,7 +134,7 @@ feature -- Definition
 			end
 		end
 
-	define_local_variable (name: NATIVE_STRING; pos: INTEGER; signature: MD_TYPE_SIGNATURE)
+	define_local_variable (name: CLI_STRING; pos: INTEGER; signature: MD_TYPE_SIGNATURE)
 			-- Define local variable `name' at position `pos' in current method using
 			-- `signature' of current method.
 		do
@@ -142,7 +142,7 @@ feature -- Definition
 				signature.count, signature.item.item, 1, pos, 0, 0, 0, 0)
 		end
 
-	define_parameter (name: NATIVE_STRING; pos: INTEGER)
+	define_parameter (name: CLI_STRING; pos: INTEGER)
 			-- Define parameter `name' at position `pos' in current method.
 		do
 			last_call_success := c_define_parameter (item, name.item, 0, pos, 1, pos, 0, 0)

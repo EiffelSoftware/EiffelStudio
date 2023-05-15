@@ -237,7 +237,7 @@ feature -- Saving
 --			l_signature: MANAGED_POINTER
 			l_strong_name_location: INTEGER
 --			l_size: INTEGER
-			l_uni_string: NATIVE_STRING
+			l_uni_string: CLI_STRING
 			l_meta_data_file_name: like file_name
 		do
 				-- First compute size of PE file headers and sections.
@@ -306,7 +306,7 @@ feature -- Saving
 				-- to make an IStream from an Eiffel FILE.
 -- Todo save metadata
 			l_meta_data_file_name := file_name + ".pe"
-			emitter.save (create {NATIVE_STRING}.make (l_meta_data_file_name))
+			emitter.save (create {CLI_STRING}.make (l_meta_data_file_name))
 			create l_meta_data_file.make_with_name (l_meta_data_file_name)
 			l_meta_data_file.open_read
 --			check valid_size: l_meta_data_file.count = meta_data_size end

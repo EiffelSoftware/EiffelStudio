@@ -293,7 +293,7 @@ feature -- Saving
 			check valid_size: l_meta_data_file.count = meta_data_size end
 			l_meta_data_file.copy_to (l_pe_file)
 			l_meta_data_file.close
---			l_meta_data_file.delete
+			l_meta_data_file.delete
 
 			if import_table_padding > 0 then
 				create l_padding.make (import_table_padding)

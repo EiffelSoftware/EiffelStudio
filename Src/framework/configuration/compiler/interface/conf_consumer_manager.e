@@ -116,7 +116,7 @@ feature -- Commands
 			o: like old_assemblies
 			an_assembly: CONF_PHYSICAL_ASSEMBLY
 			ca: CONSUMED_ASSEMBLY
-			l_chained_forwarded_types: ARRAYED_LIST [CONSUMED_FORWARDED_TYPE]
+			l_chained_forwarded_types: ARRAYED_LIST [TUPLE [forwarded_type: CONSUMED_FORWARDED_TYPE; physical_assembly: CONF_PHYSICAL_ASSEMBLY]]
 			l_forwarded_assemblies: STRING_TABLE [CONF_ASSEMBLY]
 		do
 			if not l_retried then
@@ -189,7 +189,7 @@ feature -- Commands
 									if l_chained_forwarded_types = Void then
 										create l_chained_forwarded_types.make (1)
 									end
-									l_chained_forwarded_types.force (l_fwd_type)
+									l_chained_forwarded_types.force ([l_fwd_type, an_assembly])
 								end
 							end
 						end
@@ -201,7 +201,11 @@ feature -- Commands
 					across
 						l_chained_forwarded_types as ft
 					loop
-						if attached ft as l_fwd_type then
+						if
+							attached ft as l_fwd_type_tuple and then
+							attached l_fwd_type_tuple.forwarded_type as l_fwd_type
+						then
+							an_assembly := l_fwd_type_tuple.physical_assembly
 							ca := l_fwd_type.assembly
 							if ca /= Void then
 								from

@@ -108,7 +108,7 @@ feature -- Test routines
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
 			md_assembly_info.set_minor_version (2)
-			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("typeref_assembly_com"),
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("typeref_assembly_com"),
 					0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (1)
@@ -116,17 +116,17 @@ feature -- Test routines
 			md_assembly_info.set_build_number (3300)
 			create md_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
-			mscorlib_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("mscorlib"),
+			mscorlib_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("mscorlib"),
 					md_assembly_info, md_pub_key_token)
 
 			system_type_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System"), mscorlib_token)
+					create {CLI_STRING}.make ("System"), mscorlib_token)
 
 			object_type_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Object"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Object"), mscorlib_token)
 
 			tasks_type_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Threading.Tasks"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Threading.Tasks"), mscorlib_token)
 
 			create l_pe_file.make ("test_typeref_assembly_com.dll", True, True, False, md_emit)
 			l_pe_file.save
@@ -157,7 +157,7 @@ feature -- Test routines
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
 			md_assembly_info.set_minor_version (2)
-			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("member_ref_assembly_com"),
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("member_ref_assembly_com"),
 					0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (1)
@@ -165,18 +165,18 @@ feature -- Test routines
 			md_assembly_info.set_build_number (3300)
 			create md_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
-			mscorlib_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("mscorlib"),
+			mscorlib_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("mscorlib"),
 					md_assembly_info, md_pub_key_token)
 
 			object_type_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Object"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Object"), mscorlib_token)
 
 			system_exception_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Exception"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Exception"), mscorlib_token)
 
-			md_emit.set_module_name (create {NATIVE_STRING}.make ("member_ref_assembly_com.dll"))
+			md_emit.set_module_name (create {CLI_STRING}.make ("member_ref_assembly_com.dll"))
 
-			my_type := md_emit.define_type (create {NATIVE_STRING}.make ("TEST"),
+			my_type := md_emit.define_type (create {CLI_STRING}.make ("TEST"),
 					{MD_TYPE_ATTRIBUTES}.Ansi_class | {MD_TYPE_ATTRIBUTES}.Auto_layout |
 					{MD_TYPE_ATTRIBUTES}.Public,
 					object_type_token, Void)
@@ -186,7 +186,7 @@ feature -- Test routines
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			object_ctor := md_emit.define_member_ref (create {NATIVE_STRING}.make (".ctor"),
+			object_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					object_type_token, sig)
 
 			create l_pe_file.make ("test_member_ref_assembly_com.dll", True, True, False, md_emit)
@@ -218,7 +218,7 @@ feature -- Test routines
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
 			md_assembly_info.set_minor_version (2)
-			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("method_assembly_com"),
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("method_assembly_com"),
 					0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (1)
@@ -226,18 +226,18 @@ feature -- Test routines
 			md_assembly_info.set_build_number (3300)
 			create md_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
-			mscorlib_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("mscorlib"),
+			mscorlib_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("mscorlib"),
 					md_assembly_info, md_pub_key_token)
 
 			object_type_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Object"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Object"), mscorlib_token)
 
 			system_exception_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Exception"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Exception"), mscorlib_token)
 
-			md_emit.set_module_name (create {NATIVE_STRING}.make ("method_assembly_com.dll"))
+			md_emit.set_module_name (create {CLI_STRING}.make ("method_assembly_com.dll"))
 
-			my_type := md_emit.define_type (create {NATIVE_STRING}.make ("TEST"),
+			my_type := md_emit.define_type (create {CLI_STRING}.make ("TEST"),
 					{MD_TYPE_ATTRIBUTES}.Ansi_class | {MD_TYPE_ATTRIBUTES}.Auto_layout |
 					{MD_TYPE_ATTRIBUTES}.Public,
 					object_type_token, Void)
@@ -247,10 +247,10 @@ feature -- Test routines
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			object_ctor := md_emit.define_member_ref (create {NATIVE_STRING}.make (".ctor"),
+			object_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					object_type_token, sig)
 
-			my_ctor := md_emit.define_method (create {NATIVE_STRING}.make (".ctor"),
+			my_ctor := md_emit.define_method (create {CLI_STRING}.make (".ctor"),
 					my_type,
 					{MD_METHOD_ATTRIBUTES}.Public |
 					{MD_METHOD_ATTRIBUTES}.Special_name |
@@ -286,7 +286,7 @@ feature -- Test routines
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
 			md_assembly_info.set_minor_version (2)
-			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("field_assembly_com"),
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("field_assembly_com"),
 					0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (1)
@@ -294,18 +294,18 @@ feature -- Test routines
 			md_assembly_info.set_build_number (3300)
 			create md_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
-			mscorlib_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("mscorlib"),
+			mscorlib_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("mscorlib"),
 					md_assembly_info, md_pub_key_token)
 
 			object_type_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Object"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Object"), mscorlib_token)
 
 			system_exception_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Exception"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Exception"), mscorlib_token)
 
-			md_emit.set_module_name (create {NATIVE_STRING}.make ("field_assembly_com.dll"))
+			md_emit.set_module_name (create {CLI_STRING}.make ("field_assembly_com.dll"))
 
-			my_type := md_emit.define_type (create {NATIVE_STRING}.make ("TEST"),
+			my_type := md_emit.define_type (create {CLI_STRING}.make ("TEST"),
 					{MD_TYPE_ATTRIBUTES}.Ansi_class | {MD_TYPE_ATTRIBUTES}.Auto_layout |
 					{MD_TYPE_ATTRIBUTES}.Public,
 					object_type_token, Void)
@@ -315,10 +315,10 @@ feature -- Test routines
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			object_ctor := md_emit.define_member_ref (create {NATIVE_STRING}.make (".ctor"),
+			object_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					object_type_token, sig)
 
-			my_ctor := md_emit.define_method (create {NATIVE_STRING}.make (".ctor"),
+			my_ctor := md_emit.define_method (create {CLI_STRING}.make (".ctor"),
 					my_type,
 					{MD_METHOD_ATTRIBUTES}.Public |
 					{MD_METHOD_ATTRIBUTES}.Special_name |
@@ -328,7 +328,7 @@ feature -- Test routines
 			create field_sig.make
 			field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
-			my_field := md_emit.define_field (create {NATIVE_STRING}.make ("item"), my_type,
+			my_field := md_emit.define_field (create {CLI_STRING}.make ("item"), my_type,
 					{MD_FIELD_ATTRIBUTES}.public, field_sig)
 
 			create l_pe_file.make ("test_field_assembly_com.dll", True, True, False, md_emit)
@@ -360,7 +360,7 @@ feature -- Test routines
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
 			md_assembly_info.set_minor_version (2)
-			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("signature_local_assembly_com"),
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("signature_local_assembly_com"),
 					0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (1)
@@ -368,18 +368,18 @@ feature -- Test routines
 			md_assembly_info.set_build_number (3300)
 			create md_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
-			mscorlib_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("mscorlib"),
+			mscorlib_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("mscorlib"),
 					md_assembly_info, md_pub_key_token)
 
 			object_type_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Object"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Object"), mscorlib_token)
 
 			system_exception_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Exception"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Exception"), mscorlib_token)
 
-			md_emit.set_module_name (create {NATIVE_STRING}.make ("signature_local_assembly_com.dll"))
+			md_emit.set_module_name (create {CLI_STRING}.make ("signature_local_assembly_com.dll"))
 
-			my_type := md_emit.define_type (create {NATIVE_STRING}.make ("TEST"),
+			my_type := md_emit.define_type (create {CLI_STRING}.make ("TEST"),
 					{MD_TYPE_ATTRIBUTES}.Ansi_class | {MD_TYPE_ATTRIBUTES}.Auto_layout |
 					{MD_TYPE_ATTRIBUTES}.Public,
 					object_type_token, Void)
@@ -389,10 +389,10 @@ feature -- Test routines
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			object_ctor := md_emit.define_member_ref (create {NATIVE_STRING}.make (".ctor"),
+			object_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					object_type_token, sig)
 
-			my_ctor := md_emit.define_method (create {NATIVE_STRING}.make (".ctor"),
+			my_ctor := md_emit.define_method (create {CLI_STRING}.make (".ctor"),
 					my_type,
 					{MD_METHOD_ATTRIBUTES}.Public |
 					{MD_METHOD_ATTRIBUTES}.Special_name |
@@ -402,7 +402,7 @@ feature -- Test routines
 			create field_sig.make
 			field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
-			my_field := md_emit.define_field (create {NATIVE_STRING}.make ("item"), my_type,
+			my_field := md_emit.define_field (create {CLI_STRING}.make ("item"), my_type,
 					{MD_FIELD_ATTRIBUTES}.public, field_sig)
 
 			create local_sig.make
@@ -441,7 +441,7 @@ feature -- Test routines
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
 			md_assembly_info.set_minor_version (2)
-			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("method_assembly"),
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("method_assembly"),
 					0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (1)
@@ -449,18 +449,18 @@ feature -- Test routines
 			md_assembly_info.set_build_number (3300)
 			create md_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
-			mscorlib_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("mscorlib"),
+			mscorlib_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("mscorlib"),
 					md_assembly_info, md_pub_key_token)
 
 			object_type_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Object"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Object"), mscorlib_token)
 
 			system_exception_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Exception"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Exception"), mscorlib_token)
 
-			md_emit.set_module_name (create {NATIVE_STRING}.make ("method_assembly.dll"))
+			md_emit.set_module_name (create {CLI_STRING}.make ("method_assembly.dll"))
 
-			my_type := md_emit.define_type (create {NATIVE_STRING}.make ("TEST"),
+			my_type := md_emit.define_type (create {CLI_STRING}.make ("TEST"),
 					{MD_TYPE_ATTRIBUTES}.Ansi_class | {MD_TYPE_ATTRIBUTES}.Auto_layout |
 					{MD_TYPE_ATTRIBUTES}.Public,
 					object_type_token, Void)
@@ -470,10 +470,10 @@ feature -- Test routines
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			object_ctor := md_emit.define_member_ref (create {NATIVE_STRING}.make (".ctor"),
+			object_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					object_type_token, sig)
 
-			my_ctor := md_emit.define_method (create {NATIVE_STRING}.make (".ctor"),
+			my_ctor := md_emit.define_method (create {CLI_STRING}.make (".ctor"),
 					my_type,
 					{MD_METHOD_ATTRIBUTES}.Public |
 					{MD_METHOD_ATTRIBUTES}.Special_name |
@@ -483,7 +483,7 @@ feature -- Test routines
 			create field_sig.make
 			field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
-			my_field := md_emit.define_field (create {NATIVE_STRING}.make ("item"), my_type,
+			my_field := md_emit.define_field (create {CLI_STRING}.make ("item"), my_type,
 					{MD_FIELD_ATTRIBUTES}.public, field_sig)
 
 			create local_sig.make
@@ -509,7 +509,7 @@ feature -- Test routines
 			body.set_local_token (local_token)
 			method_writer.write_current_body
 
-			my_meth := md_emit.define_method (create {NATIVE_STRING}.make ("test"),
+			my_meth := md_emit.define_method (create {CLI_STRING}.make ("test"),
 					my_type,
 					{MD_METHOD_ATTRIBUTES}.Public,
 					sig, {MD_METHOD_ATTRIBUTES}.Managed)
@@ -558,7 +558,7 @@ feature -- Test routines
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
 			md_assembly_info.set_minor_version (2)
-			my_assembly := md_emit.define_assembly (create {NATIVE_STRING}.make ("test"),
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("test"),
 				0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (1)
@@ -567,22 +567,22 @@ feature -- Test routines
 			create md_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
 
-			mscorlib_token := md_emit.define_assembly_ref (create {NATIVE_STRING}.make ("mscorlib"),
+			mscorlib_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("mscorlib"),
 				md_assembly_info, md_pub_key_token)
 
 
 			system_type_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System"), mscorlib_token)
+					create {CLI_STRING}.make ("System"), mscorlib_token)
 
 
 			object_type_token := md_emit.define_type_ref (
-					create {NATIVE_STRING}.make ("System.Object"), mscorlib_token)
+					create {CLI_STRING}.make ("System.Object"), mscorlib_token)
 
 			system_exception_token := md_emit.define_type_ref (
-						create {NATIVE_STRING}.make ("System.Exception"), mscorlib_token)
+						create {CLI_STRING}.make ("System.Exception"), mscorlib_token)
 
 			console_type_token := md_emit.define_type_ref (
-						create {NATIVE_STRING}.make ("System.Console"), mscorlib_token)
+						create {CLI_STRING}.make ("System.Console"), mscorlib_token)
 
 
 			string_type_token := md_emit.define_type_ref (
@@ -601,7 +601,7 @@ feature -- Test routines
 
 
 			l_entry_type_token := md_emit.define_type (
-									create {NATIVE_STRING}.make ("MAIN"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
+									create {CLI_STRING}.make ("MAIN"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
 										{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public,
 									object_type_token, Void)
 
@@ -612,7 +612,7 @@ feature -- Test routines
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			my_main := md_emit.define_method (create {NATIVE_STRING}.make ("main"),
+			my_main := md_emit.define_method (create {CLI_STRING}.make ("main"),
 				l_entry_type_token,
 				{MD_METHOD_ATTRIBUTES}.Public |
 				{MD_METHOD_ATTRIBUTES}.hide_by_signature |
@@ -626,7 +626,7 @@ feature -- Test routines
 
 				-- Load the string "Hello" onto the stack
 
-			string_token := md_emit.define_string (create {NATIVE_STRING}.make ("Hello"))
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("Hello"))
 			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
 
 				-- TODO double check why it fails

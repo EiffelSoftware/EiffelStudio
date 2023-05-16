@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Initialize current.
 		do
 			Precursor {MD_SIGNATURE}
-			item.put_integer_16 ({MD_SIGNATURE_CONSTANTS}.Ca_prolog, 0)
+			item.put_integer_16_le ({MD_SIGNATURE_CONSTANTS}.Ca_prolog, 0)
 			current_position := 2
 		ensure then
 			current_position_set: current_position = 2
@@ -58,7 +58,7 @@ feature -- Settings
 		do
 			l_pos := current_position
 			allocate (l_pos + 4)
-			item.put_real_32 (r, l_pos)
+			item.put_real_32_le (r, l_pos)
 			current_position := l_pos + 4
 		end
 
@@ -69,7 +69,7 @@ feature -- Settings
 		do
 			l_pos := current_position
 			allocate (l_pos + 8)
-			item.put_real_64 (d, l_pos)
+			item.put_real_64_le (d, l_pos)
 			current_position := l_pos + 8
 		end
 
@@ -80,7 +80,7 @@ feature -- Settings
 		do
 			l_pos := current_position
 			allocate (l_pos + 1)
-			item.put_integer_8 (i, l_pos)
+			item.put_integer_8_le (i, l_pos)
 			current_position := l_pos + 1
 		end
 
@@ -91,7 +91,7 @@ feature -- Settings
 		do
 			l_pos := current_position
 			allocate (l_pos + 2)
-			item.put_integer_16 (i, l_pos)
+			item.put_integer_16_le (i, l_pos)
 			current_position := l_pos + 2
 		end
 
@@ -102,7 +102,7 @@ feature -- Settings
 		do
 			l_pos := current_position
 			allocate (l_pos + 4)
-			item.put_integer_32 (i, l_pos)
+			item.put_integer_32_le (i, l_pos)
 			current_position := l_pos + 4
 		end
 
@@ -113,7 +113,7 @@ feature -- Settings
 		do
 			l_pos := current_position
 			allocate (l_pos + 8)
-			item.put_integer_64 (i, l_pos)
+			item.put_integer_64_le (i, l_pos)
 			current_position := l_pos + 8
 		end
 
@@ -124,7 +124,7 @@ feature -- Settings
 		do
 			l_pos := current_position
 			allocate (l_pos + 1)
-			item.put_natural_8 (n, l_pos)
+			item.put_natural_8_le (n, l_pos)
 			current_position := l_pos + 1
 		end
 
@@ -135,7 +135,7 @@ feature -- Settings
 		do
 			l_pos := current_position
 			allocate (l_pos + 2)
-			item.put_natural_16 (n, l_pos)
+			item.put_natural_16_le (n, l_pos)
 			current_position := l_pos + 2
 		end
 
@@ -146,7 +146,7 @@ feature -- Settings
 		do
 			l_pos := current_position
 			allocate (l_pos + 4)
-			item.put_natural_32 (n, l_pos)
+			item.put_natural_32_le (n, l_pos)
 			current_position := l_pos + 4
 		end
 
@@ -157,7 +157,7 @@ feature -- Settings
 		do
 			l_pos := current_position
 			allocate (l_pos + 8)
-			item.put_natural_64 (n, l_pos)
+			item.put_natural_64_le (n, l_pos)
 			current_position := l_pos + 8
 		end
 
@@ -194,7 +194,6 @@ feature -- Settings
 	--| Review the specification and see if we need to create different features like
 	--| put_string_named_arg (arg: READABLE_STRING_GENERAL, value: READABLE_STRING_GENERAL)
 	--| See section 23.3 (EIS)
-
 
 
 note

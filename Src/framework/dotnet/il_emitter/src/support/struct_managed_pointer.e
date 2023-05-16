@@ -56,8 +56,6 @@ feature {NONE} -- Implementation
 		end
 
 	padding (a_byte_size: INTEGER): INTEGER
-		local
-			o: INTEGER
 		do
 			Result := internal_pos \\ a_byte_size
 			if Result /= 0 then

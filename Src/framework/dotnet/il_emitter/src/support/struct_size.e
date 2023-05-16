@@ -46,8 +46,6 @@ feature {NONE} -- Implementation
 feature -- Change
 
 	padding (a_byte_size: INTEGER): INTEGER
-		local
-			o: INTEGER
 		do
 			Result := internal_size \\ a_byte_size
 			if Result /= 0 then

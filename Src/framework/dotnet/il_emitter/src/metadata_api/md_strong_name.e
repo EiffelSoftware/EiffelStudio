@@ -68,7 +68,7 @@ feature -- Access
 			l_s: STRING_8
 			l_converter: BYTE_ARRAY_CONVERTER
 		do
-			create l_file.make_open_read (a_file_path.string)
+			create l_file.make_open_read (a_file_path.string_32)
 			l_s := hash_from_file (l_file)
 			l_file.close
 			create l_converter.make_from_string (l_s)

@@ -389,7 +389,7 @@ feature -- Save
 				-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297
 				-- and the rtv_string.
 
-			create {RAW_FILE} l_file.make_create_read_write (f_name.string)
+			create {RAW_FILE} l_file.make_create_read_write (f_name.string_32)
 			write_metadata_headers (l_file)
 			write_tables (l_file)
 			write_strings (l_file)
@@ -591,7 +591,7 @@ feature -- Settings
 			l_name_index: NATURAL_64
 			l_entry: PE_TABLE_ENTRY_BASE
 		do
-			l_name_index := pe_writer.hash_string (a_name.string)
+			l_name_index := pe_writer.hash_string (a_name.string_32)
 			create {PE_MODULE_TABLE_ENTRY} l_entry.make_with_data (l_name_index, guid_index)
 			pe_index := add_table_entry (l_entry)
 		end
@@ -676,7 +676,7 @@ feature -- Definition: Access
 				-- is stored as the TypeNamespace and that following the “.” is stored as the TypeName. If there is no “.”
 				-- in the full name, then the TypeNamespace shall be the index of the empty string.
 
-			l_type_name := type_name.string
+			l_type_name := type_name.string_32
 			last_dot := l_type_name.last_index_of ('.', l_type_name.count)
 			if last_dot = 0 then
 				l_namespace_index := 0
@@ -710,7 +710,7 @@ feature -- Definition: Access
 			l_member_ref := create_member_ref (in_class_token, l_tuple.table_row_index)
 
 			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
-			l_name_index := pe_writer.hash_string (method_name.string)
+			l_name_index := pe_writer.hash_string (method_name.string_32)
 
 				-- Create a new PE_MEMBER_REF_TABLE_ENTRY instance with the given data
 			create l_member_ref_entry.make_with_data (l_member_ref, l_name_index, l_method_signature)
@@ -730,7 +730,7 @@ feature -- Definition: Access
 			l_module_ref_entry: PE_MODULE_REF_TABLE_ENTRY
 		do
 				-- Hash the module name and create a new PE_MODULE_REF_TABLE_ENTRY instance.
-			l_name_index := pe_writer.hash_string (a_name.string)
+			l_name_index := pe_writer.hash_string (a_name.string_32)
 			create l_module_ref_entry.make_with_data (l_name_index)
 
 				-- Add the new PE_MODULE_REF_TABLE_ENTRY instance to the metadata tables.
@@ -777,7 +777,7 @@ feature -- Definition: Creation
 				-- MethodList (an index into the MethodDef table; it marks the first of a continguous run of Methods owned by this Type).
 			l_method_index := next_table_index ({PE_TABLES}.tmethoddef.value.to_integer_32)
 
-			l_type_name := type_name.string
+			l_type_name := type_name.string_32
 			last_dot := l_type_name.last_index_of ('.', l_type_name.count)
 			if last_dot = 0 then
 				l_namespace_index := 0
@@ -859,7 +859,7 @@ feature -- Definition: Creation
 			l_param_index := next_table_index ({PE_TABLES}.tparam.value.to_integer_32)
 
 			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
-			l_name_index := pe_writer.hash_string (method_name.string)
+			l_name_index := pe_writer.hash_string (method_name.string_32)
 
 				-- Create a new PE_METHOD_DEF_TABLE_ENTRY instance with the given data
 			create l_method_def_entry.make (impl_flags.to_integer_16, method_flags.to_integer_16, l_name_index, l_method_signature, l_param_index)
@@ -914,7 +914,7 @@ feature -- Definition: Creation
 				-- Create a new PE_PROPERTY_TABLE_ENTRY instance with the given data.
 			create {PE_PROPERTY_TABLE_ENTRY} l_property.make_with_data (
 					flags.to_natural_16,
-					pe_writer.hash_string (name.string),
+					pe_writer.hash_string (name.string_32),
 					l_property_signature
 				)
 
@@ -956,7 +956,7 @@ feature -- Definition: Creation
 			l_tuple_method := extract_table_type_and_row (method_token)
 
 				-- Get the name index of the imported function
-			l_name_index := pe_writer.hash_string (import_name.string)
+			l_name_index := pe_writer.hash_string (import_name.string_32)
 
 				-- Create a new PE_MEMBER_FORWARDED instance with the given data
 			create l_member_forwarded.make_with_tag_and_index ({PE_MEMBER_FORWARDED}.MethodDef, l_tuple_method.table_row_index)
@@ -1022,7 +1022,7 @@ feature -- Definition: Creation
 			l_tuple := extract_table_type_and_row (in_class_token)
 
 			l_field_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
-			l_name_index := pe_writer.hash_string (field_name.string)
+			l_name_index := pe_writer.hash_string (field_name.string_32)
 
 				-- Create a new PE_FIELD_TABLE_ENTRY instance with the given data
 			create l_field_def_entry.make_with_data (field_flags, l_name_index, l_field_signature)
@@ -1071,7 +1071,7 @@ feature -- Definition: Creation
 			l_us_index: NATURAL_64
 		do
 				--| add the null character
-			create l_str.make_from_string (str.string)
+			create l_str.make_from_string (str.string_32)
 			l_str.append_character ('%U')
 			l_us_index := pe_writer.hash_us (l_str, l_str.count)
 			Result := (l_us_index | ({NATURAL_64} 0x70 |<< 24)).to_integer_32

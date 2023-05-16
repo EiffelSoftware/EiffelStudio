@@ -42,7 +42,7 @@ feature -- Access
 				-- See section II.22.5 AssemblyRef : 0x23
 
 				-- Compute the indexes of the various strings and tokens in the metadata tables.
-			l_name_index := pe_writer.hash_string (assembly_name.string)
+			l_name_index := pe_writer.hash_string (assembly_name.string_32)
 
 				-- TODO double check the public key
 				-- Clean the way to compute the index.
@@ -84,7 +84,7 @@ feature -- Definition
 			l_name_index: NATURAL_64
 		do
 				-- Section II.22.2 Assembly : 0x20
-			l_name_index := pe_writer.hash_string (assembly_name.string)
+			l_name_index := pe_writer.hash_string (assembly_name.string_32)
 			if attached public_key as l_public_key then
 				l_public_key_or_token :=
 					hash_blob (
@@ -135,7 +135,7 @@ feature -- Definition
 				-- Hash the type name and get the name index
 				-- First we check if we have a namespace (Double check if this is the correct way to
 				-- compute type_name and namespace.
-			l_type_name := type_name.string
+			l_type_name := type_name.string_32
 			last_dot := l_type_name.last_index_of ('.', l_type_name.count)
 			if last_dot = 0 then
 				l_namespace_index := 0 -- empty namespace
@@ -176,7 +176,7 @@ feature -- Definition
 		do
 				-- II.22.19 File : 0x26
 				-- Compute the name index
-			l_file_name := file_name.string
+			l_file_name := file_name.string_32
 			file_name_len := l_file_name.count
 			last_slash := l_file_name.last_index_of ({OPERATING_ENVIRONMENT}.directory_separator, file_name_len)
 			if last_slash > 0 then
@@ -218,7 +218,7 @@ feature -- Definition
 			l_tuple_type := extract_table_type_and_row (implementation_token)
 
 				-- Hash the resource name and get the name index
-			l_name_index := pe_writer.hash_string (resource_name.string)
+			l_name_index := pe_writer.hash_string (resource_name.string_32)
 
 			l_implementation := create_implementation (implementation_token, l_tuple_type.table_type_index)
 

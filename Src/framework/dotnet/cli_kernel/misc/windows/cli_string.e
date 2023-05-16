@@ -11,7 +11,8 @@ inherit
 		rename
 			make_from_pointer as make_by_pointer,
 			unit_size as character_size,
-			unit_count as count
+			unit_count as count,
+			string as string_32
 		redefine
 			character_size
 		end
@@ -160,14 +161,14 @@ feature -- Access
 				create {ARRAYED_LIST [STRING_32]} Result.make (5)
 				current_pos := item
 				create l_str.share_from_pointer (current_pos)
-				current_string := l_str.string
+				current_string := l_str.string_32
 			until
 				current_string.is_empty
 			loop
 				Result.extend (current_string)
 				current_pos := current_pos + (current_string.count + 1) * character_size
 				l_str.set_shared_from_pointer (current_pos)
-				current_string := l_str.string
+				current_string := l_str.string_32
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -205,7 +206,7 @@ feature -- Access
 			-- Retrieve all string contained in `item'. Strings are
 			-- space-separared inside `item'.
 		do
-			Result := string.split (' ')
+			Result := string_32.split (' ')
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -230,7 +231,7 @@ feature -- Measurement
 		end
 
 	occurrences (c: CHARACTER_32): INTEGER
-			-- Number of times `c' appears in `string'.
+			-- Number of times `c' appears in `string_32'.
 		local
 			i: INTEGER
 			m: like managed_data

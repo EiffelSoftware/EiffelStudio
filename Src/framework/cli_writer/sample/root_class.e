@@ -39,7 +39,7 @@ feature -- Initialization
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
 			md_assembly_info.set_minor_version (2)
-			my_assembly := md_emit.define_assembly (create {UNI_STRING}.make ("manu_assembly"),
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("manu_assembly"),
 				0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (1)
@@ -47,18 +47,18 @@ feature -- Initialization
 			md_assembly_info.set_build_number (3300)
 			create md_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
-			mscorlib_token := md_emit.define_assembly_ref (create {UNI_STRING}.make ("mscorlib"),
+			mscorlib_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("mscorlib"),
 				md_assembly_info, md_pub_key_token)
 
 			object_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("System.Object"), mscorlib_token)
+				create {CLI_STRING}.make ("System.Object"), mscorlib_token)
 
 			system_exception_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("System.Exception"), mscorlib_token)
+				create {CLI_STRING}.make ("System.Exception"), mscorlib_token)
 
-			md_emit.set_module_name (create {UNI_STRING}.make ("manu_assembly.dll"))
+			md_emit.set_module_name (create {CLI_STRING}.make ("manu_assembly.dll"))
 
-			my_type := md_emit.define_type (create {UNI_STRING}.make ("TEST"),
+			my_type := md_emit.define_type (create {CLI_STRING}.make ("TEST"),
 				{MD_TYPE_ATTRIBUTES}.Ansi_class | {MD_TYPE_ATTRIBUTES}.Auto_layout |
 				{MD_TYPE_ATTRIBUTES}.Public,
 				object_type_token, Void)
@@ -68,10 +68,10 @@ feature -- Initialization
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			object_ctor := md_emit.define_member_ref (create {UNI_STRING}.make (".ctor"),
+			object_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 				object_type_token, sig)
 
-			my_ctor := md_emit.define_method (create {UNI_STRING}.make (".ctor"),
+			my_ctor := md_emit.define_method (create {CLI_STRING}.make (".ctor"),
 				my_type,
 				{MD_METHOD_ATTRIBUTES}.Public |
 				{MD_METHOD_ATTRIBUTES}.Special_name |
@@ -81,7 +81,7 @@ feature -- Initialization
 			create field_sig.make
 			field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
-			my_field := md_emit.define_field (create {UNI_STRING}.make ("item"), my_type,
+			my_field := md_emit.define_field (create {CLI_STRING}.make ("item"), my_type,
 				{MD_FIELD_ATTRIBUTES}.public, field_sig)
 
 			create local_sig.make
@@ -107,7 +107,7 @@ feature -- Initialization
 			body.set_local_token (local_token)
 			method_writer.write_current_body
 
-			my_meth := md_emit.define_method (create {UNI_STRING}.make ("test"),
+			my_meth := md_emit.define_method (create {CLI_STRING}.make ("test"),
 				my_type,
 				{MD_METHOD_ATTRIBUTES}.Public,
 				sig, {MD_METHOD_ATTRIBUTES}.Managed)
@@ -125,14 +125,14 @@ feature -- Initialization
 			body.set_local_token (local_token)
 			method_writer.write_current_body
 
-			my_meth2 := md_emit.define_method (create {UNI_STRING}.make ("test2"),
+			my_meth2 := md_emit.define_method (create {CLI_STRING}.make ("test2"),
 				my_type,
 				{MD_METHOD_ATTRIBUTES}.Public,
 				sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 			method_writer.write_duplicate_body (my_meth, my_meth2)
 
-			my_meth2 := md_emit.define_method (create {UNI_STRING}.make ("test_rescue"),
+			my_meth2 := md_emit.define_method (create {CLI_STRING}.make ("test_rescue"),
 				my_type,
 				{MD_METHOD_ATTRIBUTES}.Public,
 				sig, {MD_METHOD_ATTRIBUTES}.Managed)
@@ -150,7 +150,7 @@ feature -- Initialization
 			body.exception_block.set_type_token (system_exception_token)
 
 			body.put_opcode ({MD_OPCODES}.pop)
-			string_token := md_emit.define_string (create {UNI_STRING}.make ("Manu is nice"))
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("Manu is nice"))
 			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
 			body.put_opcode ({MD_OPCODES}.pop)
 			body.put_opcode_label ({MD_OPCODES}.Leave, label_id)
@@ -167,7 +167,7 @@ feature -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

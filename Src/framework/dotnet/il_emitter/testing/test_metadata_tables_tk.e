@@ -1010,38 +1010,32 @@ feature -- Test
 			int32_type_token := md_emit.define_type_ref (
 					create {CLI_STRING}.make ("System.Int32"), system_runtime_token)
 
-
 			target_framework_attr_type_token := md_emit.define_type_ref (
 					create {CLI_STRING}.make ("System.Runtime.Versioning.TargetFrameworkAttribute"), system_runtime_token)
 
 			compilation_relaxations_token := md_emit.define_type_ref (
-				create {CLI_STRING}.make ("System.Runtime.CompilerServices.CompilationRelaxationsAttribute"), system_runtime_token)
-
+					create {CLI_STRING}.make ("System.Runtime.CompilerServices.CompilationRelaxationsAttribute"), system_runtime_token)
 
 			runtime_compatibility_token := md_emit.define_type_ref (
-				create {CLI_STRING}.make ("System.Runtime.CompilerServices.RuntimeCompatibilityAttribute"), system_runtime_token)
-
+					create {CLI_STRING}.make ("System.Runtime.CompilerServices.RuntimeCompatibilityAttribute"), system_runtime_token)
 
 			assembly_company_token := md_emit.define_type_ref (
-				create {CLI_STRING}.make ("System.Reflection.AssemblyCompanyAttribute"), system_runtime_token)
-
+					create {CLI_STRING}.make ("System.Reflection.AssemblyCompanyAttribute"), system_runtime_token)
 
 			assembly_configuration_token := md_emit.define_type_ref (
-				create {CLI_STRING}.make ("System.Reflection.AssemblyConfigurationAttribute"), system_runtime_token)
+					create {CLI_STRING}.make ("System.Reflection.AssemblyConfigurationAttribute"), system_runtime_token)
 
 			assembly_file_version_token := md_emit.define_type_ref (
-				create {CLI_STRING}.make ("System.Reflection.AssemblyFileVersionAttribute"), system_runtime_token)
+					create {CLI_STRING}.make ("System.Reflection.AssemblyFileVersionAttribute"), system_runtime_token)
 
+			assembly_info_version_token := md_emit.define_type_ref (
+					create {CLI_STRING}.make ("System.Reflection.AssemblyInformationalVersionAttribute"), system_runtime_token)
 
-			assembly_info_version_token	 := md_emit.define_type_ref (
-				create {CLI_STRING}.make ("System.Reflection.AssemblyInformationalVersionAttribute"), system_runtime_token)
-
-			assembly_product_token	 := md_emit.define_type_ref (
-				create {CLI_STRING}.make ("System.Reflection.AssemblyProductAttribute"), system_runtime_token)
-
+			assembly_product_token := md_emit.define_type_ref (
+					create {CLI_STRING}.make ("System.Reflection.AssemblyProductAttribute"), system_runtime_token)
 
 			assembly_title_token := md_emit.define_type_ref (
-				create {CLI_STRING}.make ("System.Reflection.AssemblyTitleAttribute"), system_runtime_token)
+					create {CLI_STRING}.make ("System.Reflection.AssemblyTitleAttribute"), system_runtime_token)
 
 			md_emit.set_module_name (create {CLI_STRING}.make ("test_main_net6.dll"))
 
@@ -1049,7 +1043,7 @@ feature -- Test
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			sig.set_parameter_count (1)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_token)
 
 			write_line_token := md_emit.define_member_ref (
 					create {CLI_STRING}.make ("WriteLine"),
@@ -1065,7 +1059,7 @@ feature -- Test
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			sig.set_parameter_count (1)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, int32_type_token )
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, int32_type_token)
 
 			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					compilation_relaxations_token, sig)
@@ -1073,9 +1067,6 @@ feature -- Test
 			create ca.make
 			ca.put_integer_32 (8)
 			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
-
-
-
 
 				-- [assembly:RuntimeCompatibilityAttribute(WrapNonExceptionThrows = true)];
 			create sig.make
@@ -1089,23 +1080,22 @@ feature -- Test
 			create ca.make
 				-- Number of named arguments
 			ca.put_integer_16 (1)
-		    	-- We mark it's a property
-		    ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
-		    	-- Fill `FieldOrPropType' in `ca'
-		    ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_boolean)
-		    	-- Put the name of the property
-		    ca.put_string ("WrapNonExceptionThrows")
-		    	-- Put the value
-		    ca.put_boolean (True)
+				-- We mark it's a property
+			ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
+				-- Fill `FieldOrPropType' in `ca'
+			ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_boolean)
+				-- Put the name of the property
+			ca.put_string ("WrapNonExceptionThrows")
+				-- Put the value
+			ca.put_boolean (True)
 			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
-
 
 				-- [assembly: TargetFramework(".NETCoreApp,Version=v6.0", FrameworkDisplayName = "")]
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			sig.set_parameter_count (1)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
 
 			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					target_framework_attr_type_token, sig)
@@ -1115,23 +1105,22 @@ feature -- Test
 
 				-- Number of named arguments
 			ca.put_integer_16 (1)
-			 	-- We mark it's a property
+				-- We mark it's a property
 			ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
-			    -- Fill `FieldOrPropType' in `ca'
+				-- Fill `FieldOrPropType' in `ca'
 			ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_string)
-			    -- Put the name of the property
+				-- Put the name of the property
 			ca.put_string ("FrameworkDisplayName")
-			    -- Put the value
+				-- Put the value
 			ca.put_string ("")
 			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
-
 
 				-- [assembly: AssemblyCompany("test_main_net6")]
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			sig.set_parameter_count (1)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token )
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
 
 			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					assembly_company_token, sig)
@@ -1140,13 +1129,12 @@ feature -- Test
 			ca.put_string ("test_main_net6")
 			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
 
-
 				-- [assembly: AssemblyConfiguration("Debug")]
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			sig.set_parameter_count (1)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token )
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
 
 			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					assembly_configuration_token, sig)
@@ -1155,14 +1143,13 @@ feature -- Test
 			ca.put_string ("Debug")
 			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
 
-
 				-- [assembly: AssemblyFileVersion("1.0.0.0")]
 
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			sig.set_parameter_count (1)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token )
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
 
 			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					assembly_file_version_token, sig)
@@ -1171,13 +1158,12 @@ feature -- Test
 			ca.put_string ("1.0.0.0")
 			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
 
-
 				-- [assembly: AssemblyInformationalVersion("1.0.0")]
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			sig.set_parameter_count (1)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token )
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
 
 			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					assembly_info_version_token, sig)
@@ -1186,14 +1172,12 @@ feature -- Test
 			ca.put_string ("1.0.0")
 			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
 
-
-
 				-- [assembly: AssemblyProduct("test_main_net6")]
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			sig.set_parameter_count (1)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token )
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
 
 			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					assembly_product_token, sig)
@@ -1202,13 +1186,12 @@ feature -- Test
 			ca.put_string ("test_main_net6")
 			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
 
-
 				-- [assembly: AssemblyTitle("test_main_net6")]
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			sig.set_parameter_count (1)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token )
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
 
 			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					assembly_title_token, sig)
@@ -1217,11 +1200,9 @@ feature -- Test
 			ca.put_string ("test_main_net6")
 			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
 
-
 				--
 				-- End  Metadata
 				--
-
 
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
@@ -1254,7 +1235,7 @@ feature -- Test
 
 				-- Load the string "Hello" onto the stack
 
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("Hello"))
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("Hello world from Eiffel!!!"))
 			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
 			body.put_static_call (write_line_token, 1, False)
 			body.put_nop

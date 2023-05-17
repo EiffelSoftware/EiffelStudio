@@ -760,7 +760,7 @@ feature -- Definition: Creation
 	define_type (type_name: CLI_STRING; flags: INTEGER; extend_token: INTEGER; implements: detachable ARRAY [INTEGER]): INTEGER
 			-- Define a new type in the metadata.
 		note
-			EIS: "name=TypeDef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=270", "protocoo"
+			EIS: "name=TypeDef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=270", "protocol=uri"
 		local
 			l_name_index: NATURAL_64
 			l_namespace_index: NATURAL_64

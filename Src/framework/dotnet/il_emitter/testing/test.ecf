@@ -21,7 +21,7 @@
 		</library>
 		<library name="cli_kernel" location="$EIFFEL_SRC\framework\dotnet\cli_kernel\cli_kernel.ecf">
 			<option>
-				<assertions postcondition="true" check="true" invariant="true" loop="true"/>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 			</option>
 			<renaming old_name="MD_STRONG_NAME" new_name="MD_STRONG_NAME_I"/>
 			<renaming old_name="MD_EMIT" new_name="MD_EMIT_I"/>
@@ -35,7 +35,7 @@
 			<option debug="true" warning="none">
 				<debug name="debug-cli" enabled="true"/>
 				<debug name="il_emitter_dbg" enabled="true"/>
-				<assertions postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>
 		</library>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

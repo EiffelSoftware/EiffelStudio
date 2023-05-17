@@ -1070,7 +1070,7 @@ feature -- Test
 
 			string_token := md_emit.define_string (create {CLI_STRING}.make ("Hello"))
 			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_call ({MD_OPCODES}.Call, write_line_token, 1, False)
+			body.put_static_call (write_line_token, 1, False)
 			body.put_nop
 
 			body.put_opcode ({MD_OPCODES}.Ret)
@@ -1091,10 +1091,9 @@ feature -- Test
 
 			body := method_writer.new_method_body (my_ctor)
 			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			body.put_call ({MD_OPCODES}.Call, object_ctor, 0, True)
+			body.put_static_call (object_ctor, 1, False)
 			body.put_nop
 			body.put_opcode ({MD_OPCODES}.Ret)
-			body.set_local_token (local_token)
 			method_writer.write_current_body
 
 			create l_pe_file.make ("test_main_net6.dll", True, False, False, md_emit)

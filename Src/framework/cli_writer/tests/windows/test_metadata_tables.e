@@ -48,7 +48,7 @@ feature -- Test routines
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
 			md_assembly_info.set_minor_version (2)
-			my_assembly := md_emit.define_assembly (create {UNI_STRING}.make ("define_assembly"),
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("define_assembly"),
 					0, md_assembly_info, Void)
 
 			create l_pe_file.make ("test_define_assembly_com.dll", True, True, False, md_emit)
@@ -586,7 +586,7 @@ feature -- Test routines
 
 
 			string_type_token := md_emit.define_type_ref (
-								create {UNI_STRING}.make ("System.String"), mscorlib_token)
+								create {CLI_STRING}.make ("System.String"), mscorlib_token)
 
 			create sig.make
 			sig.set_method_type({MD_SIGNATURE_CONSTANTS}.Default_sig)
@@ -596,7 +596,7 @@ feature -- Test routines
 
 
 			write_line_token := md_emit.define_member_ref (
-						create {UNI_STRING}.make ("WriteLine"),
+						create {CLI_STRING}.make ("WriteLine"),
 						console_type_token, sig)
 
 

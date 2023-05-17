@@ -968,7 +968,12 @@ feature -- Test
 			field_sig: MD_FIELD_SIGNATURE
 			local_sig: MD_LOCAL_SIGNATURE
 			ca: MD_CUSTOM_ATTRIBUTE
-			attribute_ctor, target_framework_attr_type_token: INTEGER
+			int32_type_token, compilation_relaxations_token, attribute_ctor, target_framework_attr_type_token: INTEGER
+			assembly_configuration_token, assembly_company_token, runtime_compatibility_token: INTEGER
+			assembly_file_version_token: INTEGER
+			assembly_info_version_token: INTEGER
+			assembly_product_token: INTEGER
+			assembly_title_token: INTEGER
 		do
 			create md_dispenser.make
 			md_emit := md_dispenser.emit
@@ -1002,8 +1007,41 @@ feature -- Test
 			console_type_token := md_emit.define_type_ref (
 					create {CLI_STRING}.make ("System.Console"), system_console_token)
 
+			int32_type_token := md_emit.define_type_ref (
+					create {CLI_STRING}.make ("System.Int32"), system_runtime_token)
+
+
 			target_framework_attr_type_token := md_emit.define_type_ref (
 					create {CLI_STRING}.make ("System.Runtime.Versioning.TargetFrameworkAttribute"), system_runtime_token)
+
+			compilation_relaxations_token := md_emit.define_type_ref (
+				create {CLI_STRING}.make ("System.Runtime.CompilerServices.CompilationRelaxationsAttribute"), system_runtime_token)
+
+
+			runtime_compatibility_token := md_emit.define_type_ref (
+				create {CLI_STRING}.make ("System.Runtime.CompilerServices.RuntimeCompatibilityAttribute"), system_runtime_token)
+
+
+			assembly_company_token := md_emit.define_type_ref (
+				create {CLI_STRING}.make ("System.Reflection.AssemblyCompanyAttribute"), system_runtime_token)
+
+
+			assembly_configuration_token := md_emit.define_type_ref (
+				create {CLI_STRING}.make ("System.Reflection.AssemblyConfigurationAttribute"), system_runtime_token)
+
+			assembly_file_version_token := md_emit.define_type_ref (
+				create {CLI_STRING}.make ("System.Reflection.AssemblyFileVersionAttribute"), system_runtime_token)
+
+
+			assembly_info_version_token	 := md_emit.define_type_ref (
+				create {CLI_STRING}.make ("System.Reflection.AssemblyInformationalVersionAttribute"), system_runtime_token)
+
+			assembly_product_token	 := md_emit.define_type_ref (
+				create {CLI_STRING}.make ("System.Reflection.AssemblyProductAttribute"), system_runtime_token)
+
+
+			assembly_title_token := md_emit.define_type_ref (
+				create {CLI_STRING}.make ("System.Reflection.AssemblyTitleAttribute"), system_runtime_token)
 
 			md_emit.set_module_name (create {CLI_STRING}.make ("test_main_net6.dll"))
 
@@ -1017,31 +1055,179 @@ feature -- Test
 					create {CLI_STRING}.make ("WriteLine"),
 					console_type_token, sig)
 
---			create sig.make
---			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
---			sig.set_parameter_count (1)
---			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
---			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token)
+				--
+				-- Begin Metadata
+				-- TODO check why adding the metadata cause issues with the Base Relation Table
+				--
 
---				--
---				-- Begin Metadata
---				-- TODO check why adding the metadata cause issues with the Base Relation Table
---				--
---			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
---					target_framework_attr_type_token, sig)
+				-- [assembly: CompilationRelaxations(8)]
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, int32_type_token )
 
---			create ca.make
---			ca.put_string ((create {CLI_STRING}.make (".NETCoreApp,Version=v6.0")).string)
---			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
+			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
+					compilation_relaxations_token, sig)
+
+			create ca.make
+			ca.put_integer_32 (8)
+			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
+
+
+
+
+				-- [assembly:RuntimeCompatibilityAttribute(WrapNonExceptionThrows = true)];
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (0)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+
+			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
+					runtime_compatibility_token, sig)
+
+			create ca.make
+				-- Number of named arguments
+			ca.put_integer_16 (1)
+		    	-- We mark it's a property
+		    ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
+		    	-- Fill `FieldOrPropType' in `ca'
+		    ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_boolean)
+		    	-- Put the name of the property
+		    ca.put_string ("WrapNonExceptionThrows")
+		    	-- Put the value
+		    ca.put_boolean (True)
+			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
+
+
+				-- [assembly: TargetFramework(".NETCoreApp,Version=v6.0", FrameworkDisplayName = "")]
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token)
+
+			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
+					target_framework_attr_type_token, sig)
+
+			create ca.make
+			ca.put_string (".NETCoreApp,Version=v6.0")
+
+				-- Number of named arguments
+			ca.put_integer_16 (1)
+			 	-- We mark it's a property
+			ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
+			    -- Fill `FieldOrPropType' in `ca'
+			ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_string)
+			    -- Put the name of the property
+			ca.put_string ("FrameworkDisplayName")
+			    -- Put the value
+			ca.put_string ("")
+			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
+
+
+				-- [assembly: AssemblyCompany("test_main_net6")]
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token )
+
+			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
+					assembly_company_token, sig)
+
+			create ca.make
+			ca.put_string ("test_main_net6")
+			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
+
+
+				-- [assembly: AssemblyConfiguration("Debug")]
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token )
+
+			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
+					assembly_configuration_token, sig)
+
+			create ca.make
+			ca.put_string ("Debug")
+			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
+
+
+				-- [assembly: AssemblyFileVersion("1.0.0.0")]
+
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token )
+
+			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
+					assembly_file_version_token, sig)
+
+			create ca.make
+			ca.put_string ("1.0.0.0")
+			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
+
+
+				-- [assembly: AssemblyInformationalVersion("1.0.0")]
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token )
+
+			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
+					assembly_info_version_token, sig)
+
+			create ca.make
+			ca.put_string ("1.0.0")
+			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
+
+
+
+				-- [assembly: AssemblyProduct("test_main_net6")]
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token )
+
+			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
+					assembly_product_token, sig)
+
+			create ca.make
+			ca.put_string ("test_main_net6")
+			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
+
+
+				-- [assembly: AssemblyTitle("test_main_net6")]
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, string_type_token )
+
+			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
+					assembly_title_token, sig)
+
+			create ca.make
+			ca.put_string ("test_main_net6")
+			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
+
+
+				--
+				-- End  Metadata
+				--
+
 
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-				--
-				-- End  Metadata
-				--
 			object_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					object_type_token, sig)
 
@@ -1096,7 +1282,7 @@ feature -- Test
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
 
-			create l_pe_file.make ("test_main_net6.dll", True, False, False, md_emit)
+			create l_pe_file.make ("test_main_net6.dll", True, True, False, md_emit)
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save

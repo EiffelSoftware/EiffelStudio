@@ -151,6 +151,16 @@ feature -- Access: IL code generation
 	clr_runtime_version: STRING_32
 			-- Version of IL runtime available.
 
+	is_il_netcore: BOOLEAN
+			-- Is .Net netcore runtime?
+			-- cf `clr_runtime_version`
+		require
+			il_generation
+		do
+				-- TODO: implement a smart netcore detection. [2023-05-19]
+			Result := clr_runtime_version.has ('/')
+		end
+
 	metadata_cache_path: STRING_32
 			-- Alternative EAC metadata path
 
@@ -629,7 +639,7 @@ feature {SYSTEM_I} -- Implementation
 			-- Is the system a multithreaded one?
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

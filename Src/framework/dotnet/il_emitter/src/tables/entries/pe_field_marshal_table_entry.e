@@ -12,7 +12,7 @@
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.17 FieldMarshal : 0x0D"
+	eis: "name=FieldMarshal", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=252&zoom=100,116,324", "protocol=uri"
 
 class
 	PE_FIELD_MARSHAL_TABLE_ENTRY
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Intialization
 
-	make_with_data (a_parent: PE_FIELD_MARSHAL; a_native_type: NATURAL)
+	make_with_data (a_parent: PE_FIELD_MARSHAL; a_native_type: NATURAL_64)
 		do
 			parent := a_parent
 			create native_type.make_with_index (a_native_type)
@@ -35,8 +35,10 @@ feature {NONE} -- Intialization
 feature -- Access
 
 	parent: PE_FIELD_MARSHAL
+		-- index a valid row in the Field or Param table
 
 	native_type: PE_BLOB
+		--  index a non-null 'blob' in the Blob heap
 
 feature -- Operations
 

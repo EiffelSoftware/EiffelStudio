@@ -102,6 +102,7 @@ feature {NONE} -- Helper
 		end
 
 	create_method_def_or_ref (a_token: INTEGER; a_index: NATURAL_64): PE_METHOD_DEF_OR_REF
+			 -- Create a new PE_METHOD_DEF_OR_REF instance with the given `a_token' and `a_index'.
 		local
 			l_tag: INTEGER
 		do
@@ -118,6 +119,7 @@ feature {NONE} -- Helper
 		end
 
 	create_type_def_or_ref (a_token: INTEGER; a_index: NATURAL_64): PE_TYPEDEF_OR_REF
+			-- Create a new PE_TYPEDEF_OR_REF instance with the given `a_token' and `a_index'.
 		local
 			l_tag: INTEGER
 		do
@@ -134,6 +136,7 @@ feature {NONE} -- Helper
 		end
 
 	create_member_ref (a_token: INTEGER; a_index: NATURAL_64): PE_MEMBER_REF_PARENT
+			-- Create a new PE_MEMBER_REF_PARENT instance with the given `a_token' and `a_index'.
 		local
 			l_tag: INTEGER
 		do
@@ -154,6 +157,7 @@ feature {NONE} -- Helper
 		end
 
 	create_implementation (a_token: INTEGER; a_index: NATURAL_64): PE_IMPLEMENTATION
+			-- Create a new PE_IMPLEMENTATION instance with the given `a_token' and `a_index'.
 		local
 			l_tag: INTEGER
 		do
@@ -168,6 +172,7 @@ feature {NONE} -- Helper
 		end
 
 	create_pe_custom_attribute (a_token: INTEGER; a_index: NATURAL_64): PE_CUSTOM_ATTRIBUTE
+		 	-- Create a new PE_CUSTOM_ATTRIBUTE instance with the given `a_token' and `a_index'.
 		local
 			l_tag: INTEGER
 		do
@@ -216,6 +221,7 @@ feature {NONE} -- Helper
 		end
 
 	create_pe_custom_attribute_type (a_token: INTEGER; a_index: NATURAL_64): PE_CUSTOM_ATTRIBUTE_TYPE
+			-- Create a new PE_CUSTOM_ATTRIBUTE_TYPE instance with the given `a_token' and `a_index'.
 		local
 			l_tag: INTEGER
 		do
@@ -229,6 +235,21 @@ feature {NONE} -- Helper
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
 
+
+	create_field_marshal (a_token: INTEGER; a_index: NATURAL_64): PE_FIELD_MARSHAL
+			-- Create a new `PE_FIELD_MARSHAL` instance with the specified `a_token` and `a_index`.
+		local
+			l_tag: INTEGER
+		do
+			if a_token & Md_mask = md_field_def then
+				l_tag := {PE_FIELD_MARSHAL}.Field
+			elseif a_token & Md_mask = md_param_def then
+				l_tag := {PE_FIELD_MARSHAL}.Param
+			else
+				l_tag := 0
+			end
+			create Result.make_with_tag_and_index (l_tag, a_index)
+		end
 feature --
 
 	next_table_index (a_table: INTEGER): NATURAL

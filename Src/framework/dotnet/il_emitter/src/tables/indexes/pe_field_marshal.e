@@ -17,7 +17,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_tag_and_index
 
 feature {NONE} -- Initialization
 

@@ -396,7 +396,7 @@ feature -- Save
 			write_us (l_file)
 			write_guid (l_file)
 			write_blob (l_file)
-			 -- Workaround to align
+				-- Workaround to align
 			align (l_file, 4)
 		end
 
@@ -1012,9 +1012,28 @@ feature -- Definition: Creation
 		end
 
 	set_field_marshal (a_token: INTEGER; a_native_type_sig: MD_NATIVE_TYPE_SIGNATURE)
-			-- Set a particular marshaling for `a_token'. Limited to parameter token for the moment.
+			-- Set a particular marshaling for `a_token'.
+			--| TODO: double check this: Limited to parameter token for the moment.
+		local
+			l_entry: PE_FIELD_MARSHAL_TABLE_ENTRY
+			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_parent: PE_FIELD_MARSHAL
+			l_index_native_type: NATURAL_64
 		do
-			to_implement ("TODO implement")
+				-- Extract the table type and row index from `a_token`.
+			l_tuple := extract_table_type_and_row (a_token)
+
+				-- Create a new `PE_FIELD_MARSHAL` instance with the given `a_token` and row index.
+			l_parent := create_field_marshal (a_token, l_tuple.table_row_index)
+
+				-- Generate an index for the native type by hashing its blob representation.
+			l_index_native_type := hash_blob (a_native_type_sig.as_array, a_native_type_sig.count.to_natural_64)
+
+				-- Create a new `PE_FIELD_MARSHAL_TABLE_ENTRY` instance with the parent and native type index.
+			create l_entry.make_with_data (l_parent, l_index_native_type)
+
+				-- Add the new `PE_FIELD_MARSHAL_TABLE_ENTRY` instance to the metadata tables.
+			pe_index := add_table_entry (l_entry)
 		end
 
 	define_field (field_name: CLI_STRING; in_class_token: INTEGER; field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER

@@ -2,7 +2,8 @@ note
 	description: "Object representing the PropertyMap table."
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.35 PropertyMap : 0x15 "
+	EIS: "name=Property Map", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=268&zoom=100,116,710", "protocol=uri"
+
 class
 	PE_PROPERTY_MAP_TABLE_ENTRY
 
@@ -24,8 +25,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	parent: PE_TYPE_DEF
+			-- an index into the TypeDef table.
 
 	property_list: PE_PROPERTY_LIST
+			-- an index into the Property table.
 
 feature -- Operations
 

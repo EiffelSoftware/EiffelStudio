@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {PE_PARAM_TABLE_ENTRY}."
+	description: "Object representing the Param Table."
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=Param Table", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=266&zoom=100,116,794", "protocol=uri"
 
 class
 	PE_PARAM_TABLE_ENTRY
@@ -25,11 +26,14 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	flags: INTEGER
+			-- A 2-byte bitmask of type MD_PARAM_ATTRIBUTES.
+			-- see https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=279&zoom=100,116,938
 
 	sequence_index: NATURAL_16
 			-- Defined as a Word two bytes.
 
 	name_index: PE_STRING
+			-- An index into the String heap.
 
 feature -- Enum: Flags
 

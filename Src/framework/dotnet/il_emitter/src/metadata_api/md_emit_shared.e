@@ -1061,7 +1061,25 @@ feature -- Heaps
 			end
 		end
 
-	
+	hash_us (a_str: STRING_32; a_len: INTEGER): NATURAL_64
+			-- Converts a UTF-16 string `a_str` to UTF-8, checks for an existing hash value,
+			-- and calculates a new hash value if necessary.
+			-- To replace the use of {PE_WRITER}.hash_us
+		local
+			l_converter: BYTE_ARRAY_CONVERTER
+			l_utf: UTF_CONVERTER
+			l_data: ARRAY [NATURAL_8]
+		do
+			create l_converter.make_from_string (l_utf.string_32_to_utf_8_string_8 (a_str))
+			l_data := l_converter.to_natural_8_array
+
+			Result := check_us (pe_writer.us.base.to_array, l_data).to_natural_64
+			if Result = 0 then
+				Result := pe_writer.hash_us (a_str, a_len)
+			end
+
+		end
+
 	check_blob (blob_heap: ARRAY [NATURAL_8]; target_blob: ARRAY [NATURAL_8]): INTEGER
 			-- Check if `target_blob` exists in `blob_heap` and return its index if found, otherwise return 0.
 		local

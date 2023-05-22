@@ -905,11 +905,12 @@ feature -- Definition: Creation
 			l_table: PE_TABLE_ENTRY_BASE
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_property_index: NATURAL_64
+			l_pe_index_property: NATURAL_64
 		do
 				-- Compute the signature token
 			l_property_signature := hash_blob (signature.as_array, signature.count.to_natural_64)
 
-			l_property_index := pe_writer.next_table_index ({PE_TABLES}.tproperty.value.to_integer_32)
+			l_property_index := next_table_index ({PE_TABLES}.tproperty.value.to_integer_32)
 
 				-- Create a new PE_PROPERTY_TABLE_ENTRY instance with the given data.
 			create {PE_PROPERTY_TABLE_ENTRY} l_property.make_with_data (
@@ -927,7 +928,7 @@ feature -- Definition: Creation
 				create l_semantics.make_with_tag_and_index ({PE_SEMANTICS}.property, l_property_index)
 
 				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data
-					({PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, l_tuple.table_type_index, l_semantics)
+					({PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, l_tuple.table_row_index, l_semantics)
 				pe_index := add_table_entry (l_table)
 			end
 
@@ -936,9 +937,12 @@ feature -- Definition: Creation
 				create l_semantics.make_with_tag_and_index ({PE_SEMANTICS}.property, l_property_index)
 
 				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data
-					({PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_tuple.table_type_index, l_semantics)
+					({PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_tuple.table_row_index, l_semantics)
 				pe_index := add_table_entry (l_table)
 			end
+
+			create {PE_PROPERTY_MAP_TABLE_ENTRY} l_table.make_with_data (pe_index, l_property_index)
+			pe_index := add_table_entry (l_table)
 
 				-- Return the metadata token for the new property.
 			Result := last_token.to_integer_32
@@ -971,6 +975,8 @@ feature -- Definition: Creation
 	define_parameter (in_method_token: INTEGER; param_name: CLI_STRING;
 			param_pos: INTEGER; param_flags: INTEGER): INTEGER
 			-- Create a new parameter specification token for method `in_method_token'.
+		note
+			eis: "name=Param Attributes", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=279&zoom=100,116,938", "protocolo"
 		local
 			l_table_type, l_table_row: NATURAL_64
 			l_param_blob: NATURAL_64
@@ -980,6 +986,7 @@ feature -- Definition: Creation
 			l_dis: NATURAL_64
 			l_param_name_index: INTEGER_32
 			l_param_flags: INTEGER_16
+			l_param_index: NATURAL
 		do
 			to_implement ("Review need ensure every row in the Param table is owned by one, and only one, row in the MethodDef table")
 
@@ -987,13 +994,15 @@ feature -- Definition: Creation
 			l_method_tuple := extract_table_type_and_row (in_method_token)
 
 				-- Convert the parameter name to UTF-16 and add it to the string heap
-			l_param_name_index := define_string (param_name)
+			l_param_name_index := pe_writer.hash_string (param_name.string_32).to_integer_32
 
 			l_param_flags := param_flags.to_integer_16
 
+			l_param_index := next_table_index ({PE_TABLES}.tparam.value.to_integer_32)
+
 				-- Create a new PE_PARAM_TABLE_ENTRY instance with the given data
 			l_method_index := l_method_tuple.table_row_index
-			create l_param_entry.make_with_data (l_param_flags, param_pos.to_natural_16, l_param_name_index.to_natural_64)
+			create l_param_entry.make_with_data (l_param_flags, l_param_index.to_natural_16, l_param_name_index.to_natural_64)
 
 				-- Add the new PE_PARAM_TABLE_ENTRY instance to the metadata tables.
 			pe_index := add_table_entry (l_param_entry)
@@ -1073,7 +1082,7 @@ feature -- Definition: Creation
 				--| add the null character
 			create l_str.make_from_string (str.string_32)
 			l_str.append_character ('%U')
-			l_us_index := pe_writer.hash_us (l_str, l_str.count)
+			l_us_index := hash_us (l_str, l_str.count)
 			Result := (l_us_index | ({NATURAL_64} 0x70 |<< 24)).to_integer_32
 		end
 

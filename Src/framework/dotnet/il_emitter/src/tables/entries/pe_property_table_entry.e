@@ -2,8 +2,7 @@ note
 	description: "Object representing the Property table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.34 Property : 0x17"
-
+	EIS: "name=Property Table", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=267&zoom=100,116,494", "protocol=uri"
 class
 	PE_PROPERTY_TABLE_ENTRY
 
@@ -29,6 +28,7 @@ feature -- Access
 			-- defined as a word two bytes.
 
 	name: PE_STRING
+			-- an index into the String heap
 
 	property_type: PE_BLOB
 			-- Yes this is a signature in the blob.

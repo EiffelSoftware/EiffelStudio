@@ -244,7 +244,7 @@ feature -- Definition: creation
 			l_field_signature.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
 			last_call_success := c_define_field (item, in_class_token,
 				field_name.item, field_flags, l_field_signature.item.item, l_field_signature.count,
-				{MD_SIGNATURE_CONSTANTS}.element_type_string, l_uni_str.item, l_uni_str.bytes_count, $Result)
+				{MD_SIGNATURE_CONSTANTS}.element_type_string, l_uni_str.item, l_uni_str.count, $Result)
 		end
 
 	define_signature (a_signature: MD_LOCAL_SIGNATURE): INTEGER
@@ -261,7 +261,7 @@ feature -- Definition: creation
 	define_string (str: CLI_STRING): INTEGER
 			-- Define a new token for `str'.
 		do
-			last_call_success := c_define_user_string (item, str.item, str.bytes_count, $Result)
+			last_call_success := c_define_user_string (item, str.item, str.count, $Result)
 		end
 
 	define_custom_attribute (owner, constructor: INTEGER; ca: MD_CUSTOM_ATTRIBUTE): INTEGER

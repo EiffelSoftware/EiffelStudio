@@ -396,8 +396,12 @@ feature -- Save
 			write_us (l_file)
 			write_guid (l_file)
 			write_blob (l_file)
+
 				-- Workaround to align
-			align (l_file, 4)
+			if not is_aligned (l_file, 4) then
+				check should_not_happen: False end
+ 				align (l_file, 4)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -558,6 +562,8 @@ feature {NONE} -- Implementation
 			create mp.make (a_data.count)
 			mp.put_array (a_data, 0)
 			a_file.put_managed_pointer (mp, 0, mp.count)
+		ensure
+			a_file.count = old (a_file.count) + a_data.count * {PLATFORM}.natural_8_bytes
 		end
 
 	align (a_file: FILE; a_align: INTEGER)
@@ -581,6 +587,14 @@ feature {NONE} -- Implementation
 				create l_array.make_filled (0, 1, l_bytes_needed.to_integer_32)
 				put_array (a_file, l_array)
 			end
+		ensure
+			is_aligned (a_file, a_align)
+		end
+
+	is_aligned (a_file: FILE; a_align: INTEGER): BOOLEAN
+			-- Is `a_file` content aligned on `a_align` bytes.
+		do
+			Result := (a_file.count \\ a_align) = 0
 		end
 
 feature -- Settings

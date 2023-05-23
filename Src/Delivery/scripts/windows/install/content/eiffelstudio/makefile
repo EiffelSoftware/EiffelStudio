@@ -2,8 +2,8 @@ HALLOW = %INIT_DIR%\install\bin\hallow.exe
 HALLOW_FLAGS = -nologo -de:"\.svn$$" -x64 -c:"EiffelStudio"
 HALLOW_FLAGS_X86 = $(HALLOW_FLAGS) -c:"x86"
 HALLOW_FLAGS_X64 = $(HALLOW_FLAGS) -c:"x64"
-MSBUILD = C:\Windows\Microsoft.NET\Framework\v2.0.50727\msbuild.exe
-MSBUILD_FLAGS = /nologo /verbosity:quiet 
+MSBUILD = C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe
+MSBUILD_FLAGS = /nologo /verbosity:quiet /toolsversion:4.0
 
 ###################################################################
 #

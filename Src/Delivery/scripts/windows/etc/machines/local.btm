@@ -23,3 +23,7 @@ rem set DELIV_SKIP_ERROR="False"
 set ISE_LITE_DELIV="False"
 
 
+set WixToolsPath=%WORK_DIR%\install\wix\v3.0
+set WixTasksPath=%WixToolsPath%\WixTasks.dll
+set WixTargetsPath=%WixToolsPath%\wix.targets
+

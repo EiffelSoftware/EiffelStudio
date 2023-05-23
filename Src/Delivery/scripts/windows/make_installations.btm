@@ -28,7 +28,7 @@ endiff
 
 iff .%1.==.. then
 	iff exist %INIT_DIR%\install\bin\hallow.exe then
-		remtrace Reuse hallow tool
+		remtrace Reuse hallow tool from %INIT_DIR%\install\bin\hallow.exe
 	else
 		remtrace =============================================
 		remtrace Checkout and compile the hallow tool

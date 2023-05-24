@@ -56,7 +56,7 @@ feature -- Status report
 			valid_handler_offset: Result implies handler_offset >= 0
 			valid_handler_length: Result implies handler_length >= 0
 		end
-	
+
 	is_fat: BOOLEAN
 			-- Has this exception clause to be stored using fat form?
 		require
@@ -66,12 +66,12 @@ feature -- Status report
 				try_offset > 65535 or else try_length >= 256 or else
 				handler_offset > 65535 or else handler_length >= 256
 		end
-	
+
 	flags: INTEGER_16
 			-- Flags of exception clause
 		deferred
 		end
-		
+
 feature -- Access
 
 	try_offset: INTEGER
@@ -82,7 +82,7 @@ feature -- Access
 
 	handler_offset: INTEGER
 			-- Location of handler for "try" block
-	
+
 	handler_length: INTEGER
 			-- Length of handler code in bytes
 
@@ -190,19 +190,19 @@ feature -- Saving
 		do
 			fixme ("To be on the safe side (e.g., to avoid sign extension in fat form), `flags' should be declared as NATURAL_16.")
 			if is_fat_form then
-				m.put_integer_32 (flags, pos)
-				m.put_integer_32 (try_offset, pos + 4)
-				m.put_integer_32 (try_length, pos + 8)
-				m.put_integer_32 (handler_offset, pos + 12)
-				m.put_integer_32 (handler_length, pos + 16)
-				m.put_integer_32 (class_token_or_filter_offset, pos + 20)
+				m.put_integer_32_le (flags, pos)
+				m.put_integer_32_le (try_offset, pos + 4)
+				m.put_integer_32_le (try_length, pos + 8)
+				m.put_integer_32_le (handler_offset, pos + 12)
+				m.put_integer_32_le (handler_length, pos + 16)
+				m.put_integer_32_le (class_token_or_filter_offset, pos + 20)
 			else
-				m.put_integer_16 (flags, pos)
-				m.put_integer_16 (try_offset.to_integer_16, pos + 2)
-				m.put_integer_8 (try_length.to_integer_8, pos + 4)
-				m.put_integer_16 (handler_offset.to_integer_16, pos + 5)
-				m.put_integer_8 (handler_length.to_integer_8, pos + 7)
-				m.put_integer_32 (class_token_or_filter_offset, pos + 8)
+				m.put_integer_16_le (flags, pos)
+				m.put_integer_16_le (try_offset.to_integer_16, pos + 2)
+				m.put_integer_8_le (try_length.to_integer_8, pos + 4)
+				m.put_integer_16_le (handler_offset.to_integer_16, pos + 5)
+				m.put_integer_8_le (handler_length.to_integer_8, pos + 7)
+				m.put_integer_32_le (class_token_or_filter_offset, pos + 8)
 			end
 		end
 

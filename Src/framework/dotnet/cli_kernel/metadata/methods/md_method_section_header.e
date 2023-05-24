@@ -13,7 +13,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Creation
 
 	make
@@ -79,10 +79,10 @@ feature -- Saving
 				kind := {MD_METHOD_CONSTANTS}.Section_ehtable
 				size := clause_count * 12 + count
 			end
-			m.put_integer_8 (kind, pos)
-			m.put_integer_8 (size.to_integer_8, pos + 1)
-			m.put_integer_8 ((size |>> 8).to_integer_8, pos + 2)
-			m.put_integer_8 ((size |>> 16).to_integer_8, pos + 3)
+			m.put_integer_8_le (kind, pos)
+			m.put_integer_8_le (size.to_integer_8, pos + 1)
+			m.put_integer_8_le ((size |>> 8).to_integer_8, pos + 2)
+			m.put_integer_8_le ((size |>> 16).to_integer_8, pos + 3)
 		end
 
 feature {NONE} -- Internal data

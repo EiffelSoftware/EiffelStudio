@@ -708,7 +708,7 @@ feature {NONE} -- Opcode insertion helpers
 		do
 			l_pos := current_position
 			allocate (l_pos + 4)
-			item.put_real_32 (val, l_pos)
+			item.put_real_32_le (val, l_pos)
 			current_position := l_pos + 4
 		end
 
@@ -721,7 +721,7 @@ feature {NONE} -- Opcode insertion helpers
 		do
 			l_pos := current_position
 			allocate (l_pos + 8)
-			item.put_real_64 (val, l_pos)
+			item.put_real_64_le (val, l_pos)
 			current_position := l_pos + 8
 		end
 
@@ -732,7 +732,7 @@ feature {NONE} -- Opcode insertion helpers
 			valid_pos: pos >= 0
 		do
 			allocate (pos + 1)
-			item.put_integer_8 (val, pos)
+			item.put_integer_8_le (val, pos)
 		end
 
 feature {NONE} -- Stack depth management

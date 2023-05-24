@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			valid_pos: pos >= 0
 		do
 			allocate (pos + 1)
-			item.put_integer_8 (val, pos)
+			item.put_integer_8_le (val, pos)
 		end
 
 feature {NONE} -- Internal signature

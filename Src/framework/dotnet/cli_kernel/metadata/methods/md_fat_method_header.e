@@ -13,7 +13,7 @@ inherit
 
 create
 	make
-	
+
 feature -- Initialization
 
 	make, remake (a_max_stack: INTEGER_16; a_code_size, a_locals_token: INTEGER)
@@ -22,7 +22,7 @@ feature -- Initialization
 			max_stack := a_max_stack
 			code_size := a_code_size
 			locals_token := a_locals_token
-			
+
 				-- Set internal data with `size' of current structure
 				-- and default flags.
 			internal_data := Header_size | (
@@ -38,10 +38,10 @@ feature -- Access
 
 	max_stack: INTEGER_16
 			-- Stack size.
-			
+
 	code_size: INTEGER
 			-- Size of code.
-			
+
 	locals_token: INTEGER
 			-- Token for local signature.
 
@@ -55,18 +55,18 @@ feature -- Access
 
 	count: INTEGER = 12
 			-- Size of structure once emitted.
-		
+
 feature -- Saving
 
 	write_to_stream (m: MANAGED_POINTER; pos: INTEGER)
 			-- Write to stream `m' at position `pos'.
 		do
-			m.put_integer_16 (internal_data, pos)
-			m.put_integer_16 (max_stack, pos + 2)
-			m.put_integer_32 (code_size, pos + 4)
-			m.put_integer_32 (locals_token, pos + 8)
+			m.put_integer_16_le (internal_data, pos)
+			m.put_integer_16_le (max_stack, pos + 2)
+			m.put_integer_32_le (code_size, pos + 4)
+			m.put_integer_32_le (locals_token, pos + 8)
 		end
-		
+
 feature -- Settings
 
 	set_flags (f: INTEGER_8)
@@ -76,7 +76,7 @@ feature -- Settings
 				{MD_METHOD_CONSTANTS}.Fat_format |
 				{MD_METHOD_CONSTANTS}.Init_locals)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_data: INTEGER_16
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			-- Size of current structure.
 
 invariant
-	valid_flags: flags & {MD_METHOD_CONSTANTS}.Fat_format = 
+	valid_flags: flags & {MD_METHOD_CONSTANTS}.Fat_format =
 			{MD_METHOD_CONSTANTS}.Fat_format
 
 note

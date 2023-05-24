@@ -935,12 +935,12 @@ feature -- Definition: Creation
 
 				-- Add the new PE_PROPERTY_TABLE_ENTRY instance to the metadata tables.
 			pe_index := add_table_entry (l_property)
+			Result := last_token.to_integer_32
 
 				-- Define the method implementations for the getter and setter, if provided.
+			create l_semantics.make_with_tag_and_index ({PE_SEMANTICS}.property, l_property_index)
 			if getter_token /= 0 then
 				l_tuple := extract_table_type_and_row (getter_token)
-				create l_semantics.make_with_tag_and_index ({PE_SEMANTICS}.property, l_property_index)
-
 				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data
 					({PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, l_tuple.table_row_index, l_semantics)
 				pe_index := add_table_entry (l_table)
@@ -948,8 +948,6 @@ feature -- Definition: Creation
 
 			if setter_token /= 0 then
 				l_tuple := extract_table_type_and_row (setter_token)
-				create l_semantics.make_with_tag_and_index ({PE_SEMANTICS}.property, l_property_index)
-
 				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data
 					({PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_tuple.table_row_index, l_semantics)
 				pe_index := add_table_entry (l_table)
@@ -959,7 +957,7 @@ feature -- Definition: Creation
 			pe_index := add_table_entry (l_table)
 
 				-- Return the metadata token for the new property.
-			Result := last_token.to_integer_32
+
 		end
 
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;

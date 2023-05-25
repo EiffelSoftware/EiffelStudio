@@ -2,7 +2,9 @@ note
 	description: "Object representing the File table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.19 File : 0x26"
+	EIS: "name=File", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297", "protocol=uri"
+	EIS: "name=Flags for file", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=277&zoom=100,116,376", "protocol=uri"
+
 class
 	PE_FILE_TABLE_ENTRY
 
@@ -17,7 +19,7 @@ feature {NONE} -- Initialization
 
 	make_with_data (a_flags: NATURAL_32; a_name: NATURAL_64; a_hash: NATURAL_64)
 		do
-			-- See section II.22.19 File : 0x26
+				-- See section II.22.19 File : 0x26
 			flags := a_flags
 			create name.make_with_index (a_name)
 			create hash.make_with_index (a_hash)
@@ -29,14 +31,19 @@ feature -- Access
 			-- Defined as a DWord four bytes.
 
 	name: PE_STRING
+			-- an index into the String heap.
 
 	hash: PE_BLOB
+			-- an index into the Blob heap.
 
-feature -- Flags
+feature -- Flags	
+
 
 	ContainsMetaData: INTEGER = 0
+			-- This is not a resource file.
 
 	ContainsNoMetaData: INTEGER = 1
+			-- This is a resource file or other non-metadata-containing file
 
 feature -- Operations
 
@@ -66,7 +73,7 @@ feature -- Operations
 			l_bytes: NATURAL_64
 		do
 				-- get flags from the buffer.
-			flags :={BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)
+			flags := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)
 				-- Initialize the bytes
 			l_bytes := 4
 
@@ -76,4 +83,5 @@ feature -- Operations
 
 			Result := l_bytes
 		end
+
 end

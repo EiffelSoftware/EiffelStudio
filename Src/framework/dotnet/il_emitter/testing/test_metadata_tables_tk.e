@@ -2067,6 +2067,7 @@ feature -- Test
 			local_sig.add_local_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, l_entry_type_token)
 			local_token := md_emit.define_signature (local_sig)
 			body.set_local_token (local_token)
+			body.update_stack_depth (2)
 
 			body.put_nop
 
@@ -2087,7 +2088,7 @@ feature -- Test
 			body.put_nop
 
 			body.put_opcode ({MD_OPCODES}.Ret)
-			body.update_stack_depth (body.max_stack + 2)
+
 			method_writer.write_current_body
 
 				-- Program.ctor()

@@ -465,6 +465,7 @@ feature {NONE} -- Implementation
 		local
 			mp: MANAGED_POINTER
 		do
+				-- TODO check how to write String as a manifest string instead of a Byte Array.
 			if pe_writer.us.size = 0 then
 				put_array (a_file, pe_writer.default_us)
 			else
@@ -935,6 +936,7 @@ feature -- Definition: Creation
 
 				-- Add the new PE_PROPERTY_TABLE_ENTRY instance to the metadata tables.
 			pe_index := add_table_entry (l_property)
+				-- Return the metadata token for the new property.
 			Result := last_token.to_integer_32
 
 				-- Define the method implementations for the getter and setter, if provided.
@@ -955,9 +957,6 @@ feature -- Definition: Creation
 
 			create {PE_PROPERTY_MAP_TABLE_ENTRY} l_table.make_with_data (pe_index, l_property_index)
 			pe_index := add_table_entry (l_table)
-
-				-- Return the metadata token for the new property.
-
 		end
 
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;
@@ -1091,17 +1090,8 @@ feature -- Definition: Creation
 
 	define_string_constant (field_name: CLI_STRING; in_class_token: INTEGER;
 			field_flags: INTEGER; a_string: STRING): INTEGER
-
-			-- Create a new field in class `in_class_token'.
-		local
-			l_field_signature: MD_FIELD_SIGNATURE
-			l_uni_str: CLI_STRING
 		do
-			to_implement ("TODO add implementation")
---			create l_field_signature.make
---			create l_uni_str.make (a_string)
---			l_field_signature.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
---			define_field (field_name, in_class_token, field_flags, a_signature: MD_FIELD_SIGNATURE)
+			to_implement ("TODO add implementation, not used by cli_writer on EiffelStudio.")
 		end
 
 	define_string (str: CLI_STRING): INTEGER

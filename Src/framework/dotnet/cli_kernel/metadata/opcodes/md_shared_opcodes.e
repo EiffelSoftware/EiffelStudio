@@ -18,9 +18,9 @@ feature -- Access
 				-- Commented lines are because opcodes are not in use.
 				-- If new opcodes are added we should uncomment corresponding lines.
 
-			--	Exception here because `nop' is `0' and HASH_TABLE does not like
-			--  a key whose value is 0.
-			-- 	Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.nop, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.nop)
+				--	Exception here because `nop' is `0' and HASH_TABLE does not like
+				--  a key whose value is 0.
+				-- 	Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.nop, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.nop)
 
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.break, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.break)
 
@@ -66,7 +66,7 @@ feature -- Access
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.ldc_i8, 1, {MD_OPCODE_FORMAT}.i8_arg), {MD_OPCODES}.ldc_i8)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.ldc_r4, 1, {MD_OPCODE_FORMAT}.short_r_arg), {MD_OPCODES}.ldc_r4)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.ldc_r8, 1, {MD_OPCODE_FORMAT}.short_r_arg), {MD_OPCODES}.ldc_r8)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused49, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused49)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused49, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused49)
 
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.dup, 1, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.dup)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.pop, -1, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.pop)
@@ -127,7 +127,6 @@ feature -- Access
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.stind_i4, -2, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.stind_i4)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.stind_i8, -2, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.stind_i8)
 
-
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.stind_r4, -2, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.stind_r4)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.stind_r8, -2, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.stind_r8)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.add, -1, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.add)
@@ -165,8 +164,8 @@ feature -- Access
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.isinst, 0, {MD_OPCODE_FORMAT}.type_arg), {MD_OPCODES}.isinst)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.conv_r_un, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.conv_r_un)
 
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused58, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused58)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused1, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused1)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused58, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused58)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused1, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused1)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.unbox, 0, {MD_OPCODE_FORMAT}.type_arg), {MD_OPCODES}.unbox)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.throw, -1, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.throw)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.ldfld, 0, {MD_OPCODE_FORMAT}.field_arg), {MD_OPCODES}.ldfld)
@@ -213,22 +212,22 @@ feature -- Access
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.stelem_r8, -3, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.stelem_r8)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.stelem_ref, -3, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.stelem_ref)
 
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused2, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused2)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused3, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused3)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused4, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused4)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused5, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused5)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused6, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused6)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused7, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused7)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused8, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused8)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused9, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused9)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused10, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused10)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused11, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused11)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused12, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused12)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused13, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused13)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused14, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused14)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused15, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused15)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused16, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused16)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused17, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused17)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused2, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused2)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused3, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused3)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused4, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused4)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused5, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused5)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused6, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused6)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused7, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused7)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused8, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused8)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused9, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused9)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused10, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused10)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused11, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused11)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused12, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused12)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused13, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused13)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused14, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused14)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused15, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused15)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused16, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused16)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused17, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused17)
 
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.conv_ovf_i1, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.conv_ovf_i1)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.conv_ovf_u1, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.conv_ovf_u1)
@@ -239,31 +238,31 @@ feature -- Access
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.conv_ovf_i8, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.conv_ovf_i8)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.conv_ovf_u8, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.conv_ovf_u8)
 
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused50, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused50)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused18, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused18)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused19, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused19)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused20, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused20)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused21, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused21)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused22, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused22)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused23, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused23)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused50, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused50)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused18, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused18)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused19, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused19)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused20, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused20)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused21, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused21)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused22, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused22)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused23, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused23)
 
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.refanyval, 0, {MD_OPCODE_FORMAT}.type_arg), {MD_OPCODES}.refanyval)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.ckfinite, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.ckfinite)
 
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused24, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused24)
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused25, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused25)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused24, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused24)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused25, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused25)
 
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.mkrefany, 0, {MD_OPCODE_FORMAT}.type_arg), {MD_OPCODES}.mkrefany)
 
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused59, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused59)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused60, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused60)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused61, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused61)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused62, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused62)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused63, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused63)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused64, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused64)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused65, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused65)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused66, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused66)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused67, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused67)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused59, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused59)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused60, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused60)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused61, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused61)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused62, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused62)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused63, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused63)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused64, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused64)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused65, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused65)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused66, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused66)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused67, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused67)
 
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.ldtoken, 1, {MD_OPCODE_FORMAT}.token_arg), {MD_OPCODES}.ldtoken)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.conv_u2, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.conv_u2)
@@ -283,37 +282,37 @@ feature -- Access
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.stind_i, -2, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.stind_i)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.conv_u, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.conv_u)
 
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused26, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused26)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused27, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused27)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused28, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused28)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused29, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused29)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused30, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused30)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused31, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused31)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused32, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused32)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused33, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused33)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused34, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused34)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused35, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused35)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused36, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused36)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused37, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused37)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused38, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused38)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused39, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused39)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused40, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused40)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused41, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused41)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused42, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused42)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused43, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused43)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused44, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused44)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused45, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused45)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused46, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused46)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused47, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused47)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused48, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused48)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix7, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix7)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix6, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix6)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix5, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix5)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix4, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix4)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix3, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix3)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix2, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix2)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix1, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix1)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefixref, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefixref)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused26, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused26)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused27, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused27)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused28, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused28)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused29, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused29)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused30, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused30)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused31, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused31)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused32, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused32)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused33, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused33)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused34, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused34)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused35, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused35)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused36, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused36)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused37, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused37)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused38, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused38)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused39, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused39)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused40, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused40)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused41, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused41)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused42, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused42)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused43, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused43)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused44, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused44)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused45, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused45)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused46, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused46)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused47, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused47)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused48, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused48)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix7, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix7)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix6, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix6)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix5, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix5)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix4, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix4)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix3, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix3)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix2, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix2)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefix1, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefix1)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.prefixref, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.prefixref)
 
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.arglist, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.arglist) -- Argument list instruction
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.ceq, -1, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.ceq) -- Compare equal instruction
@@ -324,7 +323,7 @@ feature -- Access
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.ldftn, 1, {MD_OPCODE_FORMAT}.method_arg), {MD_OPCODES}.ldftn) -- Load function pointer instruction
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.ldvirtftn, 0, {MD_OPCODE_FORMAT}.method_arg), {MD_OPCODES}.ldvirtftn) -- Load virtual function pointer instruction
 
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused56, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused56)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused56, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused56)
 
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.ldarg, 1, {MD_OPCODE_FORMAT}.variable_arg), {MD_OPCODES}.ldarg)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.ldarga, 1, {MD_OPCODE_FORMAT}.variable_arg), {MD_OPCODES}.ldarga)
@@ -333,7 +332,7 @@ feature -- Access
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.ldloca, 1, {MD_OPCODE_FORMAT}.variable_arg), {MD_OPCODES}.ldloca)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.stloc, -1, {MD_OPCODE_FORMAT}.variable_arg), {MD_OPCODES}.stloc)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.localloc, -1, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.localloc)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused57, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused57)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused57, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused57)
 
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.endfilter, -1, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.endfilter)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.unaligned, 0, {MD_OPCODE_FORMAT}.short_i_arg), {MD_OPCODES}.unaligned)
@@ -341,25 +340,25 @@ feature -- Access
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.tailcall, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.tailcall)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.initobj, -1, {MD_OPCODE_FORMAT}.type_arg), {MD_OPCODES}.initobj)
 
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused68, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused68)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused68, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused68)
 
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.cpblk, -3, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.cpblk)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.initblk, -3, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.initblk)
 
-			-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused69, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused69)
+				-- Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused69, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused69)
 
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.rethrow, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.rethrow)
 
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused51, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused51)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused51, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused51)
 
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.sizeof, 1, {MD_OPCODE_FORMAT}.type_arg), {MD_OPCODES}.sizeof)
 			Result.put (create {MD_OPCODE}.make ({MD_OPCODES}.refanytype, 0, {MD_OPCODE_FORMAT}.no_arg), {MD_OPCODES}.refanytype)
 
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused52, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused52)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused53, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused53)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused54, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused54)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused55, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused55)
-			--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused70, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused70)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused52, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused52)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused53, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused53)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused54, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused54)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused55, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused55)
+				--Result.put (create {MD_OPCODE}.make (feature {MD_OPCODES}.unused70, 0, feature {MD_OPCODE_FORMAT}.no_arg), feature {MD_OPCODES}.unused70)
 
 		end
 

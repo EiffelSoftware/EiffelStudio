@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {CLI_STRING}."
+	description: "[
+		CLI_STRING represents String in IL code.
+		According to the ECMA-335 specification, it should use UTF-16 encoding, and little-endians.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,18 +10,13 @@ class
 	CLI_STRING
 
 inherit
-	NATIVE_STRING
-		rename
-			make_from_pointer as make_by_pointer,
-			unit_size as character_size,
-			unit_count as count,
-			string as string_32
+	NATIVE_STRING_HANDLER
 		redefine
-			character_size
+			is_equal
 		end
 
 	STRING_HANDLER
-		undefine
+		redefine
 			is_equal
 		end
 
@@ -33,6 +31,63 @@ create
 	share_from_pointer_and_count
 
 feature --{NONE} -- Initialization
+
+	make (a_string: READABLE_STRING_GENERAL)
+			-- Initialize an instance of Current using `a_string' treated as a sequence
+			-- of Unicode characters.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			make_empty (a_string.count)
+			set_string (a_string)
+		end
+
+	make_empty (a_length: INTEGER)
+			-- Initialize an empty instance of Current that will accommodate `a_length' code units.
+			-- The memory area is not initialized.
+		require
+			a_length_positive: a_length >= 0
+		do
+				-- Allocate for `a_length' code units and the null character.
+			create managed_data.make ((a_length + 1) * character_size)
+			count := 0
+		end
+
+	make_by_pointer (a_pointer: POINTER)
+			-- Initialize current from `a_pointer', a platform system specific null-terminated string.
+		require
+			a_path_pointer_not_null: a_pointer /= default_pointer
+		local
+			l_count: INTEGER
+		do
+				-- Calculate the length of the string pointed by `a_pointer'.
+			l_count := pointer_length_in_bytes (a_pointer)
+				-- Make a copy of `a_pointer' including the null character.
+			create managed_data.make_from_pointer (a_pointer, l_count + character_size)
+				-- Update `count'.
+			count := l_count // character_size
+		end
+
+	make_from_raw_string (a_raw_string: like raw_string)
+			-- Initialize current from `a_raw_string'.
+		require
+			a_raw_string_not_void: a_raw_string /= Void
+		local
+			i: INTEGER
+		do
+				-- Create the memory area including the null-terminating character.
+			create managed_data.make (a_raw_string.count + character_size)
+			across a_raw_string as l_c loop
+				managed_data.put_character (l_c, i)
+				i := i + 1
+			end
+				-- Write null terminator
+			managed_data.put_natural_16_le (0, i)
+				-- Update `count'.
+			count := (managed_data.count - character_size) // character_size
+		ensure
+			set: raw_string.same_string (a_raw_string)
+		end
 
 	make_from_path (a_path: PATH)
 			-- Make a C string from `a_path'.
@@ -83,6 +138,64 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	raw_string: STRING_8
+			-- Sequence of bytes representing `Current'.
+		local
+			l_cstr: C_STRING
+		do
+				-- Alias `managed_data' to be a C string so that we copy the raw sequence
+				-- of bytes into a STRING_8 but we do not include the null-terminating character.
+			create l_cstr.make_shared_from_pointer_and_count (managed_data.item, managed_data.count)
+			Result := l_cstr.substring_8 (1, managed_data.count - character_size)
+		end
+
+	string_32: STRING_32
+			-- Representation of Current up to the first null character.
+		local
+			u: UTF_CONVERTER
+		do
+				-- Taking the `raw_string' representation of Current, we decode it as a Unicode string.
+			Result := u.utf_16_0_pointer_to_escaped_string_32 (managed_data)
+		end
+
+	substring (start_pos, end_pos: INTEGER): STRING_32
+			-- Copy of substring containing all code units at indices
+			-- between `start_pos' and `end_pos'.
+		require
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_position_not_too_big: end_pos <= (capacity // character_size)
+		local
+			u: UTF_CONVERTER
+		do
+			create Result.make (end_pos - start_pos + 1)
+			u.utf_16_0_subpointer_into_escaped_string_32 (managed_data,
+				start_pos - 1, end_pos - 1, False, Result)
+		ensure
+			susbstring_not_void: Result /= Void
+		end
+
+	item: POINTER
+			-- Get pointer to allocated area.
+		do
+			Result := managed_data.item
+		ensure
+			item_not_null: Result /= default_pointer
+		end
+
+	managed_data: MANAGED_POINTER
+			-- Hold data of Current.
+
+feature -- Status Report
+
+	is_empty: BOOLEAN
+			-- Is current empty?
+		do
+			Result := count = 0
+		end
+
+feature -- Access			
 
 	string_discarding_carriage_return: STRING_32
 			-- Eiffel string, ignoring `count' and discarding carriage return '%R' characters. Reads until a null character is read.
@@ -213,6 +326,23 @@ feature -- Access
 
 feature -- Measurement
 
+	capacity: INTEGER
+			-- Number of bytes in Current.
+		do
+			Result := managed_data.count
+		end
+
+	bytes_count: INTEGER
+			-- Number of bytes used by Current not including the null terminating character.
+		do
+			Result := count * character_size
+		ensure
+			bytes_count_non_negative: Result >= 0
+		end
+
+	count: INTEGER
+			-- Number of units used by Current not including the null terminating unit.
+
 	character_capacity: INTEGER
 			-- Number of characters in Current.
 		do
@@ -221,6 +351,7 @@ feature -- Measurement
 
 	character_size: INTEGER = 2
 			-- Size of a code unit.
+			-- UTF-16 encoding
 
 	unicode_character_count: INTEGER
 			-- Size in Unicode character of Current
@@ -270,7 +401,67 @@ feature -- Measurement
 			end
 		end
 
+feature -- Status report
+
+	exists: BOOLEAN = True
+			-- `item' is always valid.
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is content of string identical to content of string `other'?
+		do
+			Result := item.is_equal (other.item)
+		end
+
 feature -- Element change
+
+	set_string (a_string: READABLE_STRING_GENERAL)
+			-- Set `string' with `a_string'	treated as a sequence of Unicode characters.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			set_substring (a_string, 1, a_string.count)
+		end
+
+	set_substring (a_string: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER)
+			-- Set `string' with a subset of `a_string' from `a_start_pos' index to `end_pos' index.
+		require
+			a_string_not_void: a_string /= Void
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_pos_small_enough: end_pos <= a_string.count
+		local
+			u: UTF_CONVERTER
+		do
+			u.escaped_utf_32_substring_into_utf_16_0_pointer (a_string, start_pos, end_pos,
+				managed_data, 0, upper_cell)
+			count := upper_cell.item // character_size
+		end
+
+	set_shared_from_pointer (a_ptr: POINTER)
+			-- New instance sharing `a_ptr'.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+		do
+			set_shared_from_pointer_and_count (a_ptr, pointer_length_in_bytes (a_ptr))
+		end
+
+	set_shared_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
+			-- New instance sharing `a_ptr' of `a_length' byte. Space for an additional
+			-- null terminating code unit is added to `managed_data'.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+			a_length_non_negative: a_length >= 0
+			a_length_valid: (a_length \\ character_size) = 0
+		do
+			count := a_length // character_size
+			if not managed_data.is_shared then
+				create managed_data.share_from_pointer (a_ptr, a_length + character_size)
+			else
+				managed_data.set_from_pointer (a_ptr, a_length + character_size)
+			end
+		end
 
 	set_string_with_newline_conversion (a_string: READABLE_STRING_GENERAL)
 			-- Make a C string from `a_string' guaranteeing that all newline (linefeed) characters '%N'
@@ -321,9 +512,9 @@ feature -- Element change
 					j := 0
 						-- Handle case if %N is at first index.
 					if a_string.code (i) = ('%N').natural_32_code then
-						l_managed_data.put_natural_16 (('%R').natural_32_code.to_natural_16, j)
+						l_managed_data.put_natural_16_le (('%R').natural_32_code.to_natural_16, j)
 						j := j + character_size
-						l_managed_data.put_natural_16 (('%N').natural_32_code.to_natural_16, j)
+						l_managed_data.put_natural_16_le (('%N').natural_32_code.to_natural_16, j)
 						j := j + character_size
 						l_start := l_start + 1
 						i := i + 1
@@ -346,8 +537,8 @@ feature -- Element change
 								-- we just need `j + character_size' bytes to hold %R, %N and NULL.
 							l_managed_data.resize (j + character_size)
 						end
-						l_managed_data.put_natural_16 (('%R').natural_32_code.to_natural_16, j - 2 * character_size)
-						l_managed_data.put_natural_16 (('%N').natural_32_code.to_natural_16, j - character_size)
+						l_managed_data.put_natural_16_le (('%R').natural_32_code.to_natural_16, j - 2 * character_size)
+						l_managed_data.put_natural_16_le (('%N').natural_32_code.to_natural_16, j - character_size)
 						l_start := i + 1
 					end
 					i := i + 1
@@ -357,7 +548,7 @@ feature -- Element change
 					u.escaped_utf_32_substring_into_utf_16_0_pointer (a_string, l_start, nb, l_managed_data, j, upper_cell)
 				else
 						-- Set null character at the end.
-					l_managed_data.put_natural_16 (0, j)
+					l_managed_data.put_natural_16_le (0, j)
 				end
 			else
 				set_string (a_string)
@@ -404,9 +595,9 @@ feature -- Element change
 		require
 			valid_offset: offset >= 0 and offset <= (capacity // character_size)
 		do
-			managed_data.put_integer_16 (0, offset)
+			managed_data.put_integer_16_le (0, offset)
 		ensure
-			string_set: managed_data.read_integer_16 (offset) = 0
+			string_set: managed_data.read_integer_16_le (offset) = 0
 		end
 
 	set_size_in_string (n: INTEGER)
@@ -416,15 +607,16 @@ feature -- Element change
 			valid_size: n > 0
 			small_enough: n <= {INTEGER_16}.Max_value
 		do
-			managed_data.put_integer_16 (n.to_integer_16, 0)
+			managed_data.put_integer_16_le (n.to_integer_16, 0)
 		end
 
-feature -- Status report
-
-	exists: BOOLEAN = True
-			-- `item' is always valid.
-
 feature {NONE} -- Implementation
+
+	upper_cell: CELL [INTEGER]
+			-- Temporary storage for byte index of last insertions when using UTF_CONVERTER routines.
+		once
+			create Result.put (0)
+		end
 
 	buffer_length (a_ptr: POINTER): INTEGER
 			-- Size in bytes pointed by `a_ptr', not including the null-terminating character.
@@ -449,15 +641,27 @@ feature {NONE} -- Implementation
 			Result := buffer_length (a_ptr) // character_size
 		end
 
-	c_strlen (ptr: POINTER): NATURAL_64
-			-- Number of characters in `ptr'.
+	c_strlen (a_ptr: POINTER): NATURAL_64
+			-- Length in bytes of a platform specific file name pointer, not
+			-- including the null-terminating character.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
 		external
-			"C macro signature (wchar_t *): EIF_INTEGER use <tchar.h>"
+			"C inline use %"eif_eiffel.h%""
 		alias
-			"_tcslen"
-		end
+			"{
+			#ifdef EIF_WINDOWS
+				return (EIF_NATURAL_64) wcslen($a_ptr) * sizeof(wchar_t);
+			#else
+				return (EIF_NATURAL_64) _tcslen($a_ptr) * sizeof(char);
+			#endif
+			}"
+		end;
 
 invariant
+	little_endian_windows: {PLATFORM}.is_windows implies {PLATFORM}.is_little_endian
+	even_count: managed_data.count \\ character_size = 0
+
 	managed_data_not_void: managed_data /= Void
 	count_not_negative: count >= 0
 	bytes_count_valid: (bytes_count \\ character_size) = 0

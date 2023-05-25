@@ -10,12 +10,7 @@ class
 	CLI_STRING
 
 inherit
-	NATIVE_STRING_HANDLER
-		redefine
-			is_equal
-		end
-
-	STRING_HANDLER
+	CLI_STRING_HANDLER
 		redefine
 			is_equal
 		end
@@ -640,23 +635,6 @@ feature {NONE} -- Implementation
 		do
 			Result := buffer_length (a_ptr) // character_size
 		end
-
-	c_strlen (a_ptr: POINTER): NATURAL_64
-			-- Length in bytes of a platform specific file name pointer, not
-			-- including the null-terminating character.
-		require
-			a_ptr_not_null: a_ptr /= default_pointer
-		external
-			"C inline use %"eif_eiffel.h%""
-		alias
-			"{
-			#ifdef EIF_WINDOWS
-				return (EIF_NATURAL_64) wcslen($a_ptr) * sizeof(wchar_t);
-			#else
-				return (EIF_NATURAL_64) _tcslen($a_ptr) * sizeof(char);
-			#endif
-			}"
-		end;
 
 invariant
 	little_endian_windows: {PLATFORM}.is_windows implies {PLATFORM}.is_little_endian

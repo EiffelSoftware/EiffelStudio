@@ -9,7 +9,7 @@ deferred class
 
 feature -- Access
 
-	dbg_writer (emitter: MD_EMIT; name: NATIVE_STRING; full_build: BOOLEAN): DBG_WRITER
+	dbg_writer (emitter: MD_EMIT; name: CLI_STRING; full_build: BOOLEAN): DBG_WRITER
 		deferred
 		end
 

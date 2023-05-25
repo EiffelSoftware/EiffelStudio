@@ -29,7 +29,7 @@ feature -- Access
 			create {IL_MD_DISPENSER} Result.make
 		end
 
-	dbg_writer (emitter: MD_EMIT; name: NATIVE_STRING; full_build: BOOLEAN): DBG_WRITER
+	dbg_writer (emitter: MD_EMIT; name: CLI_STRING; full_build: BOOLEAN): DBG_WRITER
 		do
 			debug ("refactor_fixme")
 				to_implement ("TODO: DBG_WRITER")

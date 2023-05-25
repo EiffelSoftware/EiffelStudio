@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (emitter: MD_EMIT; name: NATIVE_STRING; full_build: BOOLEAN)
+	make (emitter: MD_EMIT; name: CLI_STRING; full_build: BOOLEAN)
 		do
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature -- Definition
 
-	define_document (url: NATIVE_STRING; language, vendor, doc_type: CIL_GUID): detachable DBG_DOCUMENT_WRITER
+	define_document (url: CLI_STRING; language, vendor, doc_type: CIL_GUID): detachable DBG_DOCUMENT_WRITER
 			-- Create a new document writer needed to generated debug info.
 		do
 			debug ("refactor_fixme")
@@ -117,7 +117,7 @@ feature -- Definition
 			end
 		end
 
-	define_local_variable (name: NATIVE_STRING; pos: INTEGER; signature: MD_TYPE_SIGNATURE)
+	define_local_variable (name: CLI_STRING; pos: INTEGER; signature: MD_TYPE_SIGNATURE)
 			-- Define local variable `name' at position `pos' in current method using
 			-- `signature' of current method.
 		do
@@ -126,7 +126,7 @@ feature -- Definition
 			end
 		end
 
-	define_parameter (name: NATIVE_STRING; pos: INTEGER)
+	define_parameter (name: CLI_STRING; pos: INTEGER)
 			-- Define parameter `name' at position `pos' in current method.
 		do
 			debug ("refactor_fixme")

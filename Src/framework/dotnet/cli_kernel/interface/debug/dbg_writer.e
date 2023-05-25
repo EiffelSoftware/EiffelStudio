@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Definition
 
-	define_document (url: NATIVE_STRING; language, vendor, doc_type: CIL_GUID): detachable DBG_DOCUMENT_WRITER
+	define_document (url: CLI_STRING; language, vendor, doc_type: CIL_GUID): detachable DBG_DOCUMENT_WRITER
 			-- Create a new document writer needed to generated debug info.
 		require
 			not_is_closed: not is_closed
@@ -117,7 +117,7 @@ feature -- Definition
 			is_successful
 		end
 
-	define_local_variable (name: NATIVE_STRING; pos: INTEGER; signature: MD_TYPE_SIGNATURE)
+	define_local_variable (name: CLI_STRING; pos: INTEGER; signature: MD_TYPE_SIGNATURE)
 			-- Define local variable `name' at position `pos' in current method using
 			-- `signature' of current method.
 		require
@@ -129,7 +129,7 @@ feature -- Definition
 			is_successful
 		end
 
-	define_parameter (name: NATIVE_STRING; pos: INTEGER)
+	define_parameter (name: CLI_STRING; pos: INTEGER)
 			-- Define parameter `name' at position `pos' in current method.
 		require
 			name_not_void: name /= Void

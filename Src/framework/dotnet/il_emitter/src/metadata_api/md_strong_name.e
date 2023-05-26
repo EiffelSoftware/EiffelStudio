@@ -33,7 +33,6 @@ feature -- Access
 			l_buf: ARRAY [NATURAL_8]
 			l_len: CELL [NATURAL_64]
 			rsa_encoder: CIL_RSA_ENCODER
-			l_converter: BYTE_ARRAY_CONVERTER
 		do
 			create l_buf.make_filled (0, 1, 16384)
 			create l_len.put (0)
@@ -67,9 +66,16 @@ feature -- Access
 			l_file: RAW_FILE
 			l_s: STRING_8
 			l_converter: BYTE_ARRAY_CONVERTER
+			b: BOOLEAN
 		do
 			create l_file.make_open_read (a_file_path.string_32)
+
+				-- Disable assertion checking, if any, otherwise `hash_from_file` may be way too slow.
+			b := {ISE_RUNTIME}.check_assert (False)
 			l_s := hash_from_file (l_file)
+				-- Restore assertion checking to previous state
+			b := {ISE_RUNTIME}.check_assert (b)
+
 			l_file.close
 			create l_converter.make_from_string (l_s)
 			create Result.make_from_array (l_converter.to_natural_8_array)

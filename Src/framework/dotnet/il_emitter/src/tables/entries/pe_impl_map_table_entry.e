@@ -75,8 +75,8 @@ feature -- Flags
 feature -- Operations
 
 	table_index: INTEGER
-		do
-			Result := {PE_TABLES}.tImplMap.value.to_integer_32
+		once
+			Result := {PE_TABLES}.tImplMap
 		end
 
 	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64

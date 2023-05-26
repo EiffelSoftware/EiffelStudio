@@ -45,6 +45,10 @@ create
 	tMethodSpec,
 	tGenericParamConstraint
 
+convert
+	integer_value: {INTEGER},
+	value: {NATURAL}
+
 feature {NONE} -- Creation Procedures
 
 	tModule
@@ -71,7 +75,8 @@ feature {NONE} -- Creation Procedures
 			-- definitions of parameters
 		once value := 8 end
 
-	tInterfaceImpl once value := 9 end
+	tInterfaceImpl
+		once value := 9 end
 
 	tMemberRef
 			-- references to external methods once end also the call site references for vararg-style pinvokes
@@ -85,7 +90,8 @@ feature {NONE} -- Creation Procedures
 			-- custom attributes once end we use it for C# style varargs but nothing else
 		once value := 12 end
 
-	tFieldMarshal once value := 13 end
+	tFieldMarshal
+		once value := 13 end
 
 	tDeclSecurity
 			-- we don't use it
@@ -103,12 +109,23 @@ feature {NONE} -- Creation Procedures
 			--?? we don't use it
 		once value := 17 end
 
-	tEventMap once value := 18 end
-	tEvent once value := 20 end
-	tPropertyMap once value := 21 end
-	tProperty once value := 23 end
-	tMethodSemantics once value := 24 end
-	tMethodImpl once value := 25 end
+	tEventMap
+		once value := 18 end
+
+	tEvent
+		once value := 20 end
+
+	tPropertyMap
+		once value := 21 end
+
+	tProperty
+		once value := 23 end
+
+	tMethodSemantics
+		once value := 24 end
+
+	tMethodImpl
+		once value := 25 end
 
 	tModuleRef
 			--?? we don't use it
@@ -135,21 +152,36 @@ feature {NONE} -- Creation Procedures
 			-- any external assemblies
 		once value := 35 end
 
-	tFile once value := 38 end
-	tExportedType once value := 39 end
-	tManifestResource once value := 40 end
+	tFile
+		once value := 38 end
+
+	tExportedType
+		once value := 39 end
+
+	tManifestResource
+		once value := 40 end
 
 	tNestedClass
 			-- list of nested classes and their parents
 		once value := 41 end
 
-	tGenericParam once value := 42 end
-	tMethodSpec once value := 43 end
-	tGenericParamConstraint once value := 44 end
+	tGenericParam
+		once value := 42 end
+
+	tMethodSpec
+		once value := 43 end
+
+	tGenericParamConstraint
+		once value := 44 end
 
 feature -- Value
 
 	value: NATURAL
+
+	integer_value: INTEGER
+		do
+			Result := value.to_integer_32
+		end
 
 feature -- Instances
 
@@ -213,17 +245,41 @@ feature -- Helper
 	tKnownTablesMask: NATURAL_64
 			-- this is naively ignoring the various CIL tables that aren't supposed to be in the file
 			-- may have to revisit that at some point.
-
 		do
-			Result := ({NATURAL_64} 1 |<< {PE_TABLES}.tModule.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tTypeRef.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tTypeDef.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tField.value.to_integer_32) |
-				({NATURAL_64} 1 |<< {PE_TABLES}.tMethodDef.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tParam.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tInterfaceImpl.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tMemberRef.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tConstant.value.to_integer_32) |
-				({NATURAL_64} 1 |<< {PE_TABLES}.tCustomAttribute.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tFieldMarshal.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tDeclSecurity.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tClassLayout.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tFieldLayout.value.to_integer_32) |
-				({NATURAL_64} 1 |<< {PE_TABLES}.tStandaloneSig.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tEventMap.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tEvent.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tPropertyMap.value.to_integer_32) |
-				({NATURAL_64} 1 |<< {PE_TABLES}.tProperty.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tMethodSemantics.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tMethodImpl.value.to_integer_32) |
-				({NATURAL_64} 1 |<< {PE_TABLES}.tModuleRef.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tTypeSpec.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tImplMap.value.to_integer_32) |
-				({NATURAL_64} 1 |<< {PE_TABLES}.tFieldRVA.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tAssemblyDef.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tAssemblyRef.value.to_integer_32) |
-				({NATURAL_64} 1 |<< {PE_TABLES}.tFile.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tExportedType.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tManifestResource.value.to_integer_32) |
-				({NATURAL_64} 1 |<< {PE_TABLES}.tNestedClass.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tGenericParam.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tMethodSpec.value.to_integer_32) | ({NATURAL_64} 1 |<< {PE_TABLES}.tGenericParamConstraint.value.to_integer_32)
+			Result := ({NATURAL_64} 1 |<< {PE_TABLES}.tModule.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tTypeRef.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tTypeDef.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tField.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tMethodDef.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tParam.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tInterfaceImpl.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tMemberRef.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tConstant.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tCustomAttribute.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tFieldMarshal.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tDeclSecurity.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tClassLayout.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tFieldLayout.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tStandaloneSig.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tEventMap.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tEvent.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tPropertyMap.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tProperty.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tMethodSemantics.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tMethodImpl.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tModuleRef.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tTypeSpec.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tImplMap.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tFieldRVA.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tAssemblyDef.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tAssemblyRef.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tFile.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tExportedType.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tManifestResource.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tNestedClass.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tGenericParam.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tMethodSpec.integer_value) 
+					| ({NATURAL_64} 1 |<< {PE_TABLES}.tGenericParamConstraint.integer_value)
 		end
 
 end

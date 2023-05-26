@@ -96,7 +96,6 @@ feature {NONE}
 		local
 			l_type_def: PE_TYPEDEF_OR_REF
 			l_table: PE_TABLE_ENTRY_BASE
-			l_dis: NATURAL_64
 		do
 				-- initializes the necessary metadata tables for the module and type definition entries.
 			module_index := pe_writer.hash_string ({STRING_32} "<Module>")
@@ -146,8 +145,6 @@ feature -- Access
 
 	save_size: INTEGER
 			-- Size of Current emitted assembly in memory if we were to emit it now.
-		local
-			l_count: INTEGER
 		do
 				--| Computes the size of the metadata for the current emitted assembly.
 				--| Iterate through each table and multiplying the size of the table by the number of entries in the table.
@@ -238,7 +235,6 @@ feature {NONE} -- Implementation
 			l_counts: ARRAY [NATURAL_64]
 			l_temp: NATURAL_32
 			l_buffer: ARRAY [NATURAL_8]
-			i: INTEGER
 		do
 
 			l_current_rva := 16
@@ -450,8 +446,6 @@ feature {NONE} -- Implementation
 			-- II.24.2.3 #Strings heap
 		require
 			open_write: a_file.is_open_write
-		local
-			mp: MANAGED_POINTER
 		do
 			put_array_with_size (a_file, pe_writer.strings.base.to_array, pe_writer.strings.size.to_integer_32)
 			align (a_file, 4)
@@ -462,8 +456,6 @@ feature {NONE} -- Implementation
 			-- II.24.2.4 #US heap
 		require
 			open_write: a_file.is_open_write
-		local
-			mp: MANAGED_POINTER
 		do
 				-- TODO check how to write String as a manifest string instead of a Byte Array.
 			if pe_writer.us.size = 0 then
@@ -615,7 +607,6 @@ feature -- Settings
 			-- Set RVA of `method_token' to `rva'.
 		local
 			l_tuple_method: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
-			l_dis: NATURAL_64
 		do
 				-- Extract table type and row index from method token
 			l_tuple_method := extract_table_type_and_row (method_token)
@@ -642,11 +633,6 @@ feature -- Definition: Access
 	define_assembly_ref (assembly_name: CLI_STRING; assembly_info: MD_ASSEMBLY_INFO;
 			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
 			-- Add assembly reference information to the metadata tables.
-		local
-			l_name_index: NATURAL_64
-			l_public_key_token_index: NATURAL_64
-			l_entry: PE_TABLE_ENTRY_BASE
-			l_dis: NATURAL_64
 		do
 			Result := assembly_emitter.define_assembly_ref (assembly_name, assembly_info, public_key_token)
 		end
@@ -711,7 +697,6 @@ feature -- Definition: Access
 	define_member_ref (method_name: CLI_STRING; in_class_token: INTEGER; a_signature: MD_SIGNATURE): INTEGER
 			-- Create reference to member in class `in_class_token'.
 		local
-			l_table_type, l_table_row: NATURAL_64
 			l_member_ref: PE_MEMBER_REF_PARENT
 			l_member_ref_entry: PE_MEMBER_REF_TABLE_ENTRY
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
@@ -788,9 +773,9 @@ feature -- Definition: Creation
 			l_field_index, l_method_index: NATURAL
 		do
 				-- FieldList (an index into the Field table; it marks the first of a contiguous run of Fields owned by this Type).
-			l_field_index := next_table_index ({PE_TABLES}.tfield.value.to_integer_32)
+			l_field_index := next_table_index ({PE_TABLES}.tfield)
 				-- MethodList (an index into the MethodDef table; it marks the first of a continguous run of Methods owned by this Type).
-			l_method_index := next_table_index ({PE_TABLES}.tmethoddef.value.to_integer_32)
+			l_method_index := next_table_index ({PE_TABLES}.tmethoddef)
 
 			l_type_name := type_name.string_32
 			last_dot := l_type_name.last_index_of ('.', l_type_name.count)
@@ -826,7 +811,6 @@ feature -- Definition: Creation
 			-- Define a new token of TypeSpec for a type represented by `a_signature'.
 			-- To be used to define different type for .NET arrays.
 		local
-			l_table_type, l_table_row: NATURAL_64
 			l_type_def_entry: PE_TYPE_SPEC_TABLE_ENTRY
 			l_type_signature: NATURAL_64
 		do
@@ -859,7 +843,6 @@ feature -- Definition: Creation
 			a_signature: MD_METHOD_SIGNATURE; impl_flags: INTEGER): INTEGER
 			-- Create reference to method in class `in_class_token`.
 		local
-			l_table_type, l_table_row: NATURAL_64
 			l_method_def_entry: PE_METHOD_DEF_TABLE_ENTRY
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_method_signature: NATURAL_64
@@ -890,7 +873,6 @@ feature -- Definition: Creation
 			-- Define a method impl from `used_method_declaration_token' from inherited
 			-- class to method `method_token' defined in `in_class_token'.
 		local
-			l_table_type, l_table_row: NATURAL_64
 			l_method_impl_entry: PE_METHOD_IMPL_TABLE_ENTRY
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_method_body: PE_METHOD_DEF_OR_REF
@@ -920,7 +902,6 @@ feature -- Definition: Creation
 			l_table: PE_TABLE_ENTRY_BASE
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_property_index: NATURAL_64
-			l_pe_index_property: NATURAL_64
 		do
 				-- Compute the signature token
 			l_property_signature := hash_blob (signature.as_array, signature.count.to_natural_64)
@@ -989,12 +970,9 @@ feature -- Definition: Creation
 		note
 			eis: "name=Param Attributes", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=279&zoom=100,116,938", "protocolo"
 		local
-			l_table_type, l_table_row: NATURAL_64
-			l_param_blob: NATURAL_64
 			l_method_index: NATURAL_64
 			l_param_entry: PE_PARAM_TABLE_ENTRY
 			l_method_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
-			l_dis: NATURAL_64
 			l_param_name_index: INTEGER_32
 			l_param_flags: INTEGER_16
 			l_param_index: NATURAL
@@ -1050,7 +1028,6 @@ feature -- Definition: Creation
 	define_field (field_name: CLI_STRING; in_class_token: INTEGER; field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER
 			-- Create a new field in class `in_class_token'.
 		local
-			l_table_type, l_table_row: NATURAL_64
 			l_field_def_entry: PE_FIELD_TABLE_ENTRY
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_field_signature: NATURAL_64
@@ -1112,12 +1089,10 @@ feature -- Definition: Creation
 		note
 			eis: "name=CustomAttribute", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=242&zoom=100,116,794", "protocol=uri"
 		local
-			l_table_type, l_table_row: NATURAL_64
 			l_ca_blob: NATURAL_64
 			l_ca_entry: PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY
 			l_owner_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_constructor_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
-			l_dis: NATURAL_64
 			blob_count: INTEGER
 			l_ca: PE_CUSTOM_ATTRIBUTE
 			l_ca_type: PE_CUSTOM_ATTRIBUTE_TYPE

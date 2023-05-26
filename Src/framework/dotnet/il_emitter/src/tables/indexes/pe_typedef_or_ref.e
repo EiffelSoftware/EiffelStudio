@@ -44,9 +44,9 @@ feature -- Operations
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 			-- <Precursor>
 		do
-			Result :=  large(a_sizes[{PE_TABLES}.tTypeDef.value.to_integer_32 + 1].to_natural_32) or else
-					large(a_sizes[{PE_TABLES}.tTypeRef.value.to_integer_32 + 1].to_natural_32) or else
-					large(a_sizes[{PE_TABLES}.tTypeSpec.value.to_integer_32 + 1].to_natural_32)
+			Result :=  large(a_sizes[{PE_TABLES}.tTypeDef + 1].to_natural_32) or else
+					large(a_sizes[{PE_TABLES}.tTypeRef + 1].to_natural_32) or else
+					large(a_sizes[{PE_TABLES}.tTypeSpec + 1].to_natural_32)
 		end
 
 end

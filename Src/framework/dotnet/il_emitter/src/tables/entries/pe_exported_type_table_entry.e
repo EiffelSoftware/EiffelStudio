@@ -43,9 +43,9 @@ feature -- Access
 feature -- Operations
 
 	table_index: INTEGER
-		do
+		once
 			fixme ("Double check if tManifestResource its ok or tExportedType is the correct one. ")
-			Result := {PE_TABLES}.tExportedtype.value.to_integer_32
+			Result := {PE_TABLES}.tExportedtype
 		end
 
 	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64

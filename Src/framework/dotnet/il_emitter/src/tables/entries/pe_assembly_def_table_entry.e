@@ -71,8 +71,8 @@ feature -- Element Change
 feature -- Operations
 
 	table_index: INTEGER
-		do
-			Result := {PE_TABLES}.tAssemblyDef.value.to_integer_32
+		once
+			Result := {PE_TABLES}.tAssemblyDef
 		end
 
 	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64

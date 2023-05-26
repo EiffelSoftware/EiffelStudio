@@ -44,8 +44,8 @@ feature -- Flags
 feature -- Operations
 
 	table_index: INTEGER
-		do
-			Result := {PE_TABLES}.tMethodSemantics.value.to_integer_32
+		once
+			Result := {PE_TABLES}.tMethodSemantics
 		end
 
 	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64

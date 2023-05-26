@@ -45,7 +45,7 @@ feature -- Access
 feature -- Operations
 
 	table_index: INTEGER
-		do
+		once
 			Result := {PE_TABLES}.ttypedef.value.to_integer_32
 		end
 

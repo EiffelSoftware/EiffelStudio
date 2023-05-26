@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 				l_encoding := 2
 			else
 				check
-					error: False
+					known_type_token_header: False
 				end
 			end
 

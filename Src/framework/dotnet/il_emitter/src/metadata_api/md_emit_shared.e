@@ -54,8 +54,10 @@ feature -- Status report
 
 	table_index_size (a_index: PE_TABLES): INTEGER
 			-- Table index size for the given table.
+		require
+			valid_index: tables.valid_index (a_index)
 		do
-			Result := tables [a_index.value.to_integer_32].table.count
+			Result := tables [a_index].table.count
 		end
 
 feature {NONE} -- Change tables
@@ -64,6 +66,8 @@ feature {NONE} -- Change tables
 			-- add an entry to one of the tables
 			-- note the data for the table will be a class inherited from TableEntryBase,
 			--  and this class will self-report the table index to use
+		require
+			valid_entry_table_index: tables.valid_index (a_entry.table_index)
 		local
 			n: INTEGER
 		do
@@ -253,6 +257,8 @@ feature {NONE} -- Helper
 feature --
 
 	next_table_index (a_table: INTEGER): NATURAL
+		require
+			valid_table_index: tables.valid_index (a_table)
 		do
 			Result := (tables [a_table].size + 1).to_natural_32
 		end

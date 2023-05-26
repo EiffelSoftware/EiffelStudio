@@ -171,7 +171,6 @@ feature -- Definition
 			last_slash: INTEGER
 			file_name_len: INTEGER
 			l_flags: NATURAL_32
-			l_dis: NATURAL_64
 			l_file_name: STRING_32
 		do
 				-- II.22.19 File : 0x26
@@ -210,7 +209,6 @@ feature -- Definition
 			l_manifest_resource_entry: PE_MANIFEST_RESOURCE_TABLE_ENTRY
 			l_tuple_type: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_implementation: PE_IMPLEMENTATION
-			l_dis: NATURAL_64
 			l_name_index: NATURAL_64
 		do
 				-- II.22.24 ManifestResource : 0x28

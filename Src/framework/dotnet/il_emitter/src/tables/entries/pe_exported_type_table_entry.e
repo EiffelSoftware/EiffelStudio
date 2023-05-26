@@ -45,7 +45,7 @@ feature -- Operations
 	table_index: INTEGER
 		once
 			fixme ("Double check if tManifestResource its ok or tExportedType is the correct one. ")
-			Result := {PE_TABLES}.tExportedtype
+			Result := {PE_TABLES}.tExportedtype.to_integer_32
 		end
 
 	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64

@@ -41,8 +41,8 @@ feature -- Operations
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
-			Result := large(a_sizes[{PE_TABLES}.tFile + 1].to_natural_32)
-				or else large(a_sizes[{PE_TABLES}.tAssemblyRef + 1].to_natural_32)
+			Result := large(a_sizes[{PE_TABLES}.tFile.to_integer_32 + 1].to_natural_32)
+				or else large(a_sizes[{PE_TABLES}.tAssemblyRef.to_integer_32 + 1].to_natural_32)
 		end
 
 end

@@ -36,7 +36,7 @@ feature -- Operations
 
 	table_index: INTEGER
 		once
-			Result := {PE_TABLES}.ttyperef
+			Result := {PE_TABLES}.ttyperef.to_integer_32
 		end
 
 	render (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64

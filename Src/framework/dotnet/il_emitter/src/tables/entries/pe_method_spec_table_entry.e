@@ -32,7 +32,7 @@ feature -- Operations
 
 	table_index: INTEGER
 		once
-			Result := {PE_TABLES}.tMethodSpec
+			Result := {PE_TABLES}.tMethodSpec.to_integer_32
 		end
 
 	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64

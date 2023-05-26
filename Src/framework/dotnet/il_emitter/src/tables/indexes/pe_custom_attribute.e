@@ -68,19 +68,19 @@ feature -- Operations
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
-			Result := large (a_sizes [{PE_TABLES}.tMethodDef + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tField + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tTypeRef + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tTypeDef + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tParam + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tImplMap + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tMemberRef + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tModule + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tStandaloneSig + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tModuleRef + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tTypeSpec + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tAssemblyDef + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tAssemblyRef + 1].to_natural_32)
+			Result := large (a_sizes [{PE_TABLES}.tMethodDef.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tField.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tTypeRef.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tTypeDef.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tParam.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tImplMap.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tMemberRef.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tModule.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tStandaloneSig.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tModuleRef.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tTypeSpec.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tAssemblyDef.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tAssemblyRef.to_integer_32 + 1].to_natural_32)
 		end
 
 end

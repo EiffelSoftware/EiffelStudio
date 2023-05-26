@@ -447,8 +447,8 @@ feature {NONE} -- Implementation
 				l_typename_index := l_writer.hash_string (name)
 				l_namespace_index := parent_namespace (a_stream)
 				l_extends := if flags.flags & {CIL_QUALIFIERS_ENUM}.value /= 0 then l_writer.value_base else l_writer.object_base end
-				l_field_index := l_writer.next_table_index ({PE_TABLES}.tfield.value.to_integer_32)
-				l_method_index := l_writer.next_table_index ({PE_TABLES}.tmethoddef.value.to_integer_32)
+				l_field_index := l_writer.next_table_index ({PE_TABLES}.tfield.to_integer_32)
+				l_method_index := l_writer.next_table_index ({PE_TABLES}.tmethoddef.to_integer_32)
 				l_parent := parent
 				if attached {CIL_CLASS} extend_from as l_extend_from then
 					if l_extend_from.pe_index = 0 then
@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 				l_result := pe_dump_dc (a_stream)
 					-- properties
 				if not properties.is_empty then
-					l_property_index := l_writer.next_table_index ({PE_TABLES}.tproperty.value.to_integer_32)
+					l_property_index := l_writer.next_table_index ({PE_TABLES}.tproperty.to_integer_32)
 					create {PE_PROPERTY_MAP_TABLE_ENTRY} l_table.make_with_data (pe_index, l_property_index)
 					l_dis := l_writer.add_table_entry (l_table)
 					across properties as p loop

@@ -459,7 +459,7 @@ feature -- Element Change
 				if entry_point /= 0 then
 					{EXCEPTIONS}.raise (generator + "Multiple entry points")
 				else
-					entry_point := a_method.method_def | ({PE_TABLES}.tMethodDef.value |<< 24)
+					entry_point := a_method.method_def | ({PE_TABLES}.tMethodDef |<< 24)
 				end
 			end
 			methods.force (a_method)

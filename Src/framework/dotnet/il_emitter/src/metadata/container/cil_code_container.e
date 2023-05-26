@@ -683,9 +683,9 @@ feature -- Compile
 								then
 									if l_class.in_assembly_ref
 									then
-										l_current.class_token := l_class.pe_index + ({PE_TABLES}.ttyperef.value |<< 24)
+										l_current.class_token := l_class.pe_index + ({PE_TABLES}.ttyperef |<< 24)
 									else
-										l_current.class_token := l_class.pe_index + ({PE_TABLES}.ttypedef.value |<< 24)
+										l_current.class_token := l_class.pe_index + ({PE_TABLES}.ttypedef |<< 24)
 									end
 								end
 								l_current.flags := {CIL_SEH_DATA_ENUM}.exception

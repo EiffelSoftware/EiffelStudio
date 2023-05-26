@@ -57,38 +57,38 @@ feature {NONE}
 	initialize_entry_size
 		do
 			create entry_sizes.make (31)
-			entry_sizes.force (agent module_table_entry_size, {PE_TABLES}.tModule.value.to_integer_32)
-			entry_sizes.force (agent type_ref_entry_size, {PE_TABLES}.tTypeRef.value.to_integer_32)
-			entry_sizes.force (agent type_def_table_entry_size, {PE_TABLES}.tTypeDef.value.to_integer_32)
-			entry_sizes.force (agent field_table_entry_size, {PE_TABLES}.tField.value.to_integer_32)
-			entry_sizes.force (agent method_def_table_entry_size, {PE_TABLES}.tMethodDef.value.to_integer_32)
-			entry_sizes.force (agent param_table_entry_size, {PE_TABLES}.tParam.value.to_integer_32)
-			entry_sizes.force (agent interface_impl_table_entry_size, {PE_TABLES}.tInterfaceImpl.value.to_integer_32)
-			entry_sizes.force (agent member_ref_table_entry_size, {PE_TABLES}.tMemberRef.value.to_integer_32)
-			entry_sizes.force (agent constant_table_entry_size, {PE_TABLES}.tConstant.value.to_integer_32)
-			entry_sizes.force (agent custom_attribute_table_entry_size, {PE_TABLES}.tCustomAttribute.value.to_integer_32)
-			entry_sizes.force (agent field_marshal_table_entry_size, {PE_TABLES}.tFieldMarshal.value.to_integer_32)
-			entry_sizes.force (agent decl_security_table_entry_size, {PE_TABLES}.tDeclSecurity.value.to_integer_32)
-			entry_sizes.force (agent class_layout_table_entry_size, {PE_TABLES}.tClassLayout.value.to_integer_32)
-			entry_sizes.force (agent field_layout_table_entry_size, {PE_TABLES}.tFieldLayout.value.to_integer_32)
-			entry_sizes.force (agent standalone_sig_table_entry_size, {PE_TABLES}.tStandaloneSig.value.to_integer_32)
-			entry_sizes.force (agent property_map_table_entry_size, {PE_TABLES}.tPropertyMap.value.to_integer_32)
-			entry_sizes.force (agent property_table_entry_size, {PE_TABLES}.tProperty.value.to_integer_32)
-			entry_sizes.force (agent method_semantics_table_entry_size, {PE_TABLES}.tMethodSemantics.value.to_integer_32)
-			entry_sizes.force (agent method_impl_table_entry_size, {PE_TABLES}.tMethodImpl.value.to_integer_32)
-			entry_sizes.force (agent module_ref_table_entry_size, {PE_TABLES}.tModuleRef.value.to_integer_32)
-			entry_sizes.force (agent type_spec_table_entry_size, {PE_TABLES}.tTypeSpec.value.to_integer_32)
-			entry_sizes.force (agent impl_map_table_entry_size, {PE_TABLES}.tImplMap.value.to_integer_32)
-			entry_sizes.force (agent field_rva_table_entry_size, {PE_TABLES}.tFieldRVA.value.to_integer_32)
-			entry_sizes.force (agent assembly_table_entry_size, {PE_TABLES}.tAssemblyDef.value.to_integer_32)
-			entry_sizes.force (agent assembly_ref_table_entry_size, {PE_TABLES}.tAssemblyRef.value.to_integer_32)
-			entry_sizes.force (agent file_table_entry_size, {PE_TABLES}.tFile.value.to_integer_32)
-			entry_sizes.force (agent exported_type_table_entry_size, {PE_TABLES}.tExportedType.value.to_integer_32)
-			entry_sizes.force (agent manifest_resource_table_entry_size, {PE_TABLES}.tManifestResource.value.to_integer_32)
-			entry_sizes.force (agent nested_class_table_entry_size, {PE_TABLES}.tNestedClass.value.to_integer_32)
-			entry_sizes.force (agent generic_param_table_entry_size, {PE_TABLES}.tGenericParam.value.to_integer_32)
-			entry_sizes.force (agent method_spec_table_entry_size, {PE_TABLES}.tMethodSpec.value.to_integer_32)
-			entry_sizes.force (agent generic_param_constraint_table_entry_size, {PE_TABLES}.tGenericParamConstraint.value.to_integer_32)
+			entry_sizes.force (agent module_table_entry_size, {PE_TABLES}.tModule.to_integer_32)
+			entry_sizes.force (agent type_ref_entry_size, {PE_TABLES}.tTypeRef.to_integer_32)
+			entry_sizes.force (agent type_def_table_entry_size, {PE_TABLES}.tTypeDef.to_integer_32)
+			entry_sizes.force (agent field_table_entry_size, {PE_TABLES}.tField.to_integer_32)
+			entry_sizes.force (agent method_def_table_entry_size, {PE_TABLES}.tMethodDef.to_integer_32)
+			entry_sizes.force (agent param_table_entry_size, {PE_TABLES}.tParam.to_integer_32)
+			entry_sizes.force (agent interface_impl_table_entry_size, {PE_TABLES}.tInterfaceImpl.to_integer_32)
+			entry_sizes.force (agent member_ref_table_entry_size, {PE_TABLES}.tMemberRef.to_integer_32)
+			entry_sizes.force (agent constant_table_entry_size, {PE_TABLES}.tConstant.to_integer_32)
+			entry_sizes.force (agent custom_attribute_table_entry_size, {PE_TABLES}.tCustomAttribute.to_integer_32)
+			entry_sizes.force (agent field_marshal_table_entry_size, {PE_TABLES}.tFieldMarshal.to_integer_32)
+			entry_sizes.force (agent decl_security_table_entry_size, {PE_TABLES}.tDeclSecurity.to_integer_32)
+			entry_sizes.force (agent class_layout_table_entry_size, {PE_TABLES}.tClassLayout.to_integer_32)
+			entry_sizes.force (agent field_layout_table_entry_size, {PE_TABLES}.tFieldLayout.to_integer_32)
+			entry_sizes.force (agent standalone_sig_table_entry_size, {PE_TABLES}.tStandaloneSig.to_integer_32)
+			entry_sizes.force (agent property_map_table_entry_size, {PE_TABLES}.tPropertyMap.to_integer_32)
+			entry_sizes.force (agent property_table_entry_size, {PE_TABLES}.tProperty.to_integer_32)
+			entry_sizes.force (agent method_semantics_table_entry_size, {PE_TABLES}.tMethodSemantics.to_integer_32)
+			entry_sizes.force (agent method_impl_table_entry_size, {PE_TABLES}.tMethodImpl.to_integer_32)
+			entry_sizes.force (agent module_ref_table_entry_size, {PE_TABLES}.tModuleRef.to_integer_32)
+			entry_sizes.force (agent type_spec_table_entry_size, {PE_TABLES}.tTypeSpec.to_integer_32)
+			entry_sizes.force (agent impl_map_table_entry_size, {PE_TABLES}.tImplMap.to_integer_32)
+			entry_sizes.force (agent field_rva_table_entry_size, {PE_TABLES}.tFieldRVA.to_integer_32)
+			entry_sizes.force (agent assembly_table_entry_size, {PE_TABLES}.tAssemblyDef.to_integer_32)
+			entry_sizes.force (agent assembly_ref_table_entry_size, {PE_TABLES}.tAssemblyRef.to_integer_32)
+			entry_sizes.force (agent file_table_entry_size, {PE_TABLES}.tFile.to_integer_32)
+			entry_sizes.force (agent exported_type_table_entry_size, {PE_TABLES}.tExportedType.to_integer_32)
+			entry_sizes.force (agent manifest_resource_table_entry_size, {PE_TABLES}.tManifestResource.to_integer_32)
+			entry_sizes.force (agent nested_class_table_entry_size, {PE_TABLES}.tNestedClass.to_integer_32)
+			entry_sizes.force (agent generic_param_table_entry_size, {PE_TABLES}.tGenericParam.to_integer_32)
+			entry_sizes.force (agent method_spec_table_entry_size, {PE_TABLES}.tMethodSpec.to_integer_32)
+			entry_sizes.force (agent generic_param_constraint_table_entry_size, {PE_TABLES}.tGenericParamConstraint.to_integer_32)
 		end
 
 	initialize_unit
@@ -773,9 +773,9 @@ feature -- Definition: Creation
 			l_field_index, l_method_index: NATURAL
 		do
 				-- FieldList (an index into the Field table; it marks the first of a contiguous run of Fields owned by this Type).
-			l_field_index := next_table_index ({PE_TABLES}.tfield)
+			l_field_index := next_table_index ({PE_TABLES}.tfield.to_integer_32)
 				-- MethodList (an index into the MethodDef table; it marks the first of a continguous run of Methods owned by this Type).
-			l_method_index := next_table_index ({PE_TABLES}.tmethoddef)
+			l_method_index := next_table_index ({PE_TABLES}.tmethoddef.to_integer_32)
 
 			l_type_name := type_name.string_32
 			last_dot := l_type_name.last_index_of ('.', l_type_name.count)
@@ -854,7 +854,7 @@ feature -- Definition: Creation
 				-- TODO doube check: why we are not using the l_tuple?
 			l_tuple := extract_table_type_and_row (in_class_token)
 
-			l_param_index := next_table_index ({PE_TABLES}.tparam.value.to_integer_32)
+			l_param_index := next_table_index ({PE_TABLES}.tparam.to_integer_32)
 
 			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 			l_name_index := pe_writer.hash_string (method_name.string_32)
@@ -906,7 +906,7 @@ feature -- Definition: Creation
 				-- Compute the signature token
 			l_property_signature := hash_blob (signature.as_array, signature.count.to_natural_64)
 
-			l_property_index := next_table_index ({PE_TABLES}.tproperty.value.to_integer_32)
+			l_property_index := next_table_index ({PE_TABLES}.tproperty.to_integer_32)
 
 				-- Create a new PE_PROPERTY_TABLE_ENTRY instance with the given data.
 			create {PE_PROPERTY_TABLE_ENTRY} l_property.make_with_data (
@@ -987,7 +987,7 @@ feature -- Definition: Creation
 
 			l_param_flags := param_flags.to_integer_16
 
-			l_param_index := next_table_index ({PE_TABLES}.tparam.value.to_integer_32)
+			l_param_index := next_table_index ({PE_TABLES}.tparam.to_integer_32)
 
 				-- Create a new PE_PARAM_TABLE_ENTRY instance with the given data
 			l_method_index := l_method_tuple.table_row_index

@@ -100,8 +100,8 @@ feature -- Output
 					l_typename_index := l_writer.hash_string (name)
 					l_namespace_index := parent_namespace (a_stream)
 					l_extends := l_writer.enum_base
-					l_field_index := l_writer.next_table_index ({PE_TABLES}.tfield.value.to_integer_32)
-					l_method_index := l_writer.next_table_index ({PE_TABLES}.tmethoddef.value.to_integer_32)
+					l_field_index := l_writer.next_table_index ({PE_TABLES}.tfield.to_integer_32)
+					l_method_index := l_writer.next_table_index ({PE_TABLES}.tmethoddef.to_integer_32)
 					create l_extends_class.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typeref, l_extends)
 					if attached {CIL_CLASS} parent as l_parent then
 						l_namespace_index := 0

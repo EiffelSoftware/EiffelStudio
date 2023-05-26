@@ -72,7 +72,7 @@ feature -- Operations
 
 	table_index: INTEGER
 		once
-			Result := {PE_TABLES}.tAssemblyDef
+			Result := {PE_TABLES}.tAssemblyDef.to_integer_32
 		end
 
 	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64

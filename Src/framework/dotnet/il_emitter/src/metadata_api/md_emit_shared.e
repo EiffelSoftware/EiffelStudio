@@ -52,12 +52,12 @@ feature -- Status report
 			Result := pe_writer.strings.size
 		end
 
-	table_index_size (a_index: PE_TABLES): INTEGER
+	table_index_size (a_index: NATURAL_32): INTEGER
 			-- Table index size for the given table.
 		require
-			valid_index: tables.valid_index (a_index)
+			valid_index: tables.valid_index (a_index.to_integer_32)
 		do
-			Result := tables [a_index].table.count
+			Result := tables [a_index.to_integer_32].table.count
 		end
 
 feature {NONE} -- Change tables

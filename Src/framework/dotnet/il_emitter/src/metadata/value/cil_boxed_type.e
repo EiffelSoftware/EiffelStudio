@@ -51,7 +51,7 @@ feature -- Output
 						pe_index := l_class.pe_index
 					end
 				end
-				{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | {PE_TABLES}.ttyperef.value |<< 24, a_offset)
+				{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_bytes, pe_index | {PE_TABLES}.ttyperef |<< 24, a_offset)
 				Result := 4
 			end
 		end

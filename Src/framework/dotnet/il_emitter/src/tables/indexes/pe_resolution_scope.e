@@ -36,10 +36,10 @@ feature -- Operations
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
-			Result := large(a_sizes[{PE_TABLES}.tModule + 1].to_natural_32)
-				or else large(a_sizes[{PE_TABLES}.tModuleRef + 1].to_natural_32)
-				or else large(a_sizes[{PE_TABLES}.tAssemblyRef + 1].to_natural_32)
-				or else large(a_sizes[{PE_TABLES}.tTypeRef + 1].to_natural_32)
+			Result := large(a_sizes[{PE_TABLES}.tModule.to_integer_32 + 1].to_natural_32)
+				or else large(a_sizes[{PE_TABLES}.tModuleRef.to_integer_32 + 1].to_natural_32)
+				or else large(a_sizes[{PE_TABLES}.tAssemblyRef.to_integer_32 + 1].to_natural_32)
+				or else large(a_sizes[{PE_TABLES}.tTypeRef.to_integer_32 + 1].to_natural_32)
 		end
 
 end

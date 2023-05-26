@@ -298,7 +298,7 @@ feature -- Output
 		do
 			if attached {PE_WRITER} a_stream.pe_writer as l_writer then
 					-- TODO chec if the index it's ok or we need to add 1.
-				l_property_index := l_writer.next_table_index ({PE_TABLES}.tproperty.value.to_integer_32)
+				l_property_index := l_writer.next_table_index ({PE_TABLES}.tproperty.to_integer_32)
 				l_name_index := l_writer.hash_string (name)
 				create l_sz.put (0)
 				l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.property_sig (Current, l_sz)

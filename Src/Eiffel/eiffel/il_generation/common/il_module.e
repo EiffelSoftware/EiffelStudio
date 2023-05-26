@@ -221,6 +221,9 @@ feature -- Access: tokens
 	char_type_token: INTEGER
 			-- Token for `System.Char' type in `mscorlib'.
 
+	string_type_token: INTEGER
+			-- Token for `System.String' type in `mscorlib'.
+
 	system_exception_token: INTEGER
 			-- Token for `System.Exception' type in `mscorlib'.
 
@@ -978,7 +981,7 @@ feature -- Cleanup
 		do
 			internal_dbg_documents := Void
 			internal_dbg_pragma_documents := Void
-			if dbg_writer /= Void and then not dbg_writer.is_closed then
+			if attached dbg_writer as l_dbg_writer and then not dbg_writer.is_closed then
 				dbg_writer.close
 			end
 			dbg_writer := Void
@@ -995,7 +998,12 @@ feature -- Code generation
 		local
 			ass: MD_ASSEMBLY_INFO
 			l_assembly_flags: INTEGER
+			target_framework_attr_type_token: INTEGER
 			l_version: VERSION
+			ca: MD_CUSTOM_ATTRIBUTE
+			attribute_ctor: INTEGER
+			sig: MD_METHOD_SIGNATURE
+			ca_token: INTEGER
 		do
 				-- Mark Current has being generated.
 			is_generated := True
@@ -1052,6 +1060,42 @@ feature -- Code generation
 				if is_debug_info_enabled then
 					md_emit.define_custom_attribute (associated_assembly_token,
 						debuggable_ctor_token, enabled_debuggable_ca).do_nothing
+				end
+
+				if system.is_il_netcore then
+						-- TODO: check if this custom attribute should be for any module, or just for the main one. [2023-05-26]
+					target_framework_attr_type_token := md_emit.define_type_ref (
+							create {CLI_STRING}.make ("System.Runtime.Versioning.TargetFrameworkAttribute"),
+							mscorlib_token
+						)
+
+						-- [assembly: TargetFramework(".NETCoreApp,Version=v6.0", FrameworkDisplayName = "")]
+					create sig.make
+					sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+					sig.set_parameter_count (1)
+					sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
+
+					attribute_ctor := md_emit.define_member_ref (
+							create {CLI_STRING}.make (".ctor"),
+							target_framework_attr_type_token,
+							sig
+						)
+
+					create ca.make
+					ca.put_string (".NETCoreApp,Version=v6.0")
+
+						-- Number of named arguments
+					ca.put_integer_16 (1)
+						-- We mark it's a property
+					ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
+						-- Fill `FieldOrPropType' in `ca'
+					ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_string)
+						-- Put the name of the property
+					ca.put_string ("FrameworkDisplayName")
+						-- Put the value
+					ca.put_string ("")
+					ca_token := md_emit.define_custom_attribute (associated_assembly_token, attribute_ctor, ca)
 				end
 			end
 
@@ -3141,6 +3185,8 @@ feature {NONE} -- Once per modules being generated.
 				create {CLI_STRING}.make ("System.Double"), mscorlib_token)
 			char_type_token := md_emit.define_type_ref (
 				create {CLI_STRING}.make ("System.Char"), mscorlib_token)
+			string_type_token := md_emit.define_type_ref (
+				create {CLI_STRING}.make ("System.String"), mscorlib_token)
 			system_exception_token := md_emit.define_type_ref (
 				create {CLI_STRING}.make ("System.Exception"), mscorlib_token)
 			l_debuggable_token := md_emit.define_type_ref (

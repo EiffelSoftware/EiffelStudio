@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": "${CLR_RUNTIME}",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    "${CLR_RUNTIME}": {
+      "${SYSTEM_NAME}/${SYSTEM_VERSION}": {
+        "runtime": {
+          "${SYSTEM_NAME}.${SYSTEM_TYPE}": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "${SYSTEM_NAME}/${SYSTEM_VERSION}": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

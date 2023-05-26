@@ -276,6 +276,7 @@ feature -- Generation
 			l_use_optimized_precomp: BOOLEAN
 			l_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
 			l_state: CONF_STATE
+			vars: STRING_TABLE [READABLE_STRING_GENERAL]
 		do
 			if not retried then
 					-- Create the Assemblies directory if it does not already exist
@@ -334,16 +335,29 @@ feature -- Generation
 
 					-- Copy configuration file to be able to load up local assembly.
 				if l_has_local then
-					l_source_name := eiffel_layout.generation_templates_path.extended ("assembly_config.xml")
+					if system.is_il_netcore then
+							-- FIXME: ... resolve variables !!!
+						vars := project_variables (System)
 
-					if is_finalizing then
-						l_target_name := project_location.final_path
+						l_source_name := eiffel_layout.generation_templates_path.extended ("netcore.runtimeconfig.json.template")
+						copy_template_to_local (l_source_name, vars, l_target_name, System.name.to_string_32 + ".runtimeconfig.json")
+
+						l_source_name := eiffel_layout.generation_templates_path.extended ("netcore.deps.json.template")
+						copy_template_to_local (l_source_name, vars, l_target_name, System.name.to_string_32 + ".deps.json")
 					else
-						l_target_name := project_location.workbench_path
-					end
 						-- Compute name of configuration file: It is `system_name.xxx.config'
 						-- where `xxx' is either `exe' or `dll'.
-					copy_to_local (l_source_name, l_target_name, {STRING_32} "" + System.name + "." + System.msil_generation_type + ".config")
+
+						l_source_name := eiffel_layout.generation_templates_path.extended ("assembly_config.xml")
+
+						if is_finalizing then
+							l_target_name := project_location.final_path
+						else
+							l_target_name := project_location.workbench_path
+						end
+
+						copy_to_local (l_source_name, l_target_name, {STRING_32} "" + System.name + "." + System.msil_generation_type + ".config")
+					end
 				end
 			else
 					-- An error occurred, let's raise an Eiffel compilation
@@ -355,6 +369,76 @@ feature -- Generation
 				retried := True
 				Error_handler.insert_error (create {VIGE}.make ("Could not copy local assemblies."))
 				retry
+			end
+		end
+
+	project_variables (a_system: SYSTEM_I): STRING_TABLE [READABLE_STRING_GENERAL]
+		local
+			s, maj, min, sub: STRING_32
+			i,j: INTEGER
+			l_fmwk_name, l_fmwk_version: STRING_32
+		do
+			create Result.make (7)
+			Result ["SYSTEM_NAME"] := a_system.name
+			if
+				attached a_system.msil_version as l_msil_version and then
+				not l_msil_version.is_empty
+			then
+				Result ["SYSTEM_VERSION"] := l_msil_version
+			else
+				Result ["SYSTEM_VERSION"] := "1.0.0" -- Default?
+			end
+
+			Result ["SYSTEM_TYPE"] := a_system.msil_generation_type -- dll | exe
+
+			s := a_system.clr_runtime_version
+			i := s.index_of ('/', 1)
+			if i > 0 then
+				l_fmwk_name := s.head (i - 1)
+				l_fmwk_version := s.substring (i + 1, s.count)
+			else
+				l_fmwk_name := s
+				l_fmwk_version := ""
+			end
+			Result ["FRAMEWORK_NAME"] := l_fmwk_name -- Microsoft.NETCore.App
+			Result ["FRAMEWORK_VERSION"] := l_fmwk_version -- 6.0.0
+
+				-- FRAMEWORK_TARGET
+				-- tfm: net6.0, net7.0, .... netstandard2.1
+				--  (see: https://learn.microsoft.com/en-us/dotnet/standard/frameworks)
+			i := l_fmwk_version.index_of ('.', 1)
+			if i > 0 then
+				maj := l_fmwk_version.head (i - 1)
+				if maj.is_case_insensitive_equal_general ("6") then
+					j := l_fmwk_version.index_of ('.', i + 1)
+					if j > 0 then
+						min := l_fmwk_version.substring (i + 1, j - 1)
+						sub := l_fmwk_version.substring (j + 1, l_fmwk_version.count)
+					else
+						min := "0"
+						sub := "0"
+					end
+					if maj.to_integer >= 5 then
+						s := "net" + maj + "." + min
+					else
+						s := "netcoreapp" + maj + "." + min
+					end
+					if sub.to_integer > 0 then
+						s := s + "." + sub
+					end
+					Result ["FRAMEWORK_MONIKER"] := s
+
+					-- TODO: support
+					-- tfm: net6.0, net7.0, .... netstandard2.1  (see: https://learn.microsoft.com/en-us/dotnet/standard/frameworks)
+				end
+			end
+
+--			Result ["CLR_RUNTIME_VERSION"] := a_system.clr_runtime_version
+			if l_fmwk_name.has_substring ("NETCore.App") then
+				s := ".NETCoreApp,Version=v" + maj + "." + min
+				Result ["CLR_RUNTIME"] := s
+			else
+				Result ["CLR_RUNTIME"] := ".NETCoreApp,Version=v6.0" -- Default?
 			end
 		end
 
@@ -1122,6 +1206,84 @@ feature {NONE} -- File copying
 					create l_vicf.make (a_source.name, l_target.path.name)
 				else
 					create l_vicf.make (a_source.name, "Target not yet computed")
+				end
+				error_handler.insert_warning (l_vicf, universe.target.options.is_warning_as_error)
+			end
+		rescue
+			l_retried := True
+			retry
+		end
+
+	copy_template_to_local (a_template_source: PATH; a_vars: STRING_TABLE [READABLE_STRING_GENERAL]; a_target_directory: PATH; a_destination_name: detachable READABLE_STRING_GENERAL)
+			-- Copy `a_template_source' into `a_target_directory' directory under `a_destination_name' if specified,
+			-- or under the same name as `a_template_source'.
+		require
+			a_source_not_void: a_template_source /= Void
+			a_source_not_empty: not a_template_source.is_empty
+			a_target_directory_not_void: a_target_directory /= Void
+			a_target_directory_not_empty: not a_target_directory.is_empty
+			a_destination_name_valid: a_destination_name /= Void implies not a_destination_name.is_empty
+		local
+			tpl: STRING_8
+			l_source, l_target: RAW_FILE
+			l_vicf: VICF
+			l_retried: BOOLEAN
+			k,v: STRING_8
+		do
+			if not l_retried then
+				create l_source.make_with_path (a_template_source)
+				if a_destination_name /= Void then
+					create l_target.make_with_path (a_target_directory.extended (a_destination_name))
+				else
+					create l_target.make_with_path (a_target_directory.extended_path (a_template_source.entry))
+				end
+
+					-- Only copy the file if it is not already there or if the original
+					-- file is more recent.
+				if not l_target.exists or else l_target.date < l_source.date then
+					if l_source.exists then
+						create tpl.make (l_source.count)
+						l_source.open_read
+						from
+
+						until
+							l_source.end_of_file or l_source.exhausted
+						loop
+							l_source.read_stream (1024)
+							tpl.append (l_source.last_string)
+						end
+						l_source.close
+
+						across
+							a_vars as ic
+						loop
+							k := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (ic.key)
+							v := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (ic.item)
+							tpl.replace_substring_all ("${"+ k + "}", v)
+						end
+
+						l_target.open_write
+						l_target.put_string (tpl)
+						l_target.close
+						l_target.set_date (l_source.date)
+					else
+							-- Source does not exist, report the error.
+						create l_vicf.make (a_template_source.name, l_target.path.name)
+						error_handler.insert_warning (l_vicf, universe.target.options.is_warning_as_error)
+					end
+				end
+			else
+					-- An exception occurred, report the error.
+				if l_source /= Void and then not l_source.is_closed then
+					l_source.close
+				end
+				if l_target /= Void and then not l_target.is_closed then
+					l_target.close
+				end
+				if l_target /= Void then
+					create l_vicf.make (a_template_source.name, l_target.path.name)
+				else
+					create l_vicf.make (a_template_source.name, "Target not yet computed")
 				end
 				error_handler.insert_warning (l_vicf, universe.target.options.is_warning_as_error)
 			end

@@ -139,7 +139,7 @@ feature -- Generation
 					-- Sign assembly
 					-- Object used for signing assemblies and computing Hash values.
 					--| The signing part of `signing` is optional for NetCORE.		
-			
+
 				signing := md_factory.strong_name (System.clr_runtime_version)
 
 					-- And set a key if provided
@@ -335,6 +335,11 @@ feature -- Generation
 
 					-- Copy configuration file to be able to load up local assembly.
 				if l_has_local then
+					if is_finalizing then
+						l_target_name := project_location.final_path
+					else
+						l_target_name := project_location.workbench_path
+					end
 					if system.is_il_netcore then
 							-- FIXME: ... resolve variables !!!
 						vars := project_variables (System)
@@ -349,13 +354,6 @@ feature -- Generation
 						-- where `xxx' is either `exe' or `dll'.
 
 						l_source_name := eiffel_layout.generation_templates_path.extended ("assembly_config.xml")
-
-						if is_finalizing then
-							l_target_name := project_location.final_path
-						else
-							l_target_name := project_location.workbench_path
-						end
-
 						copy_to_local (l_source_name, l_target_name, {STRING_32} "" + System.name + "." + System.msil_generation_type + ".config")
 					end
 				end

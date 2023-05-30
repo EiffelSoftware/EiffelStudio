@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="il_emitter_test" uuid="322767D0-B971-402C-A921-4CCEE9504DF2">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="il_emitter_test" uuid="322767D0-B971-402C-A921-4CCEE9504DF2">
 	<target name="il_emitter_test">
 		<root class="APPLICATION" feature="make"/>
 		<file_rule>
@@ -10,18 +10,17 @@
 		</file_rule>
 		<option debug="true" warning="warning" manifest_array_type="mismatch_warning">
 			<debug name="il_emitter_dbg" enabled="true"/>
-			<assertions postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			<assertions postcondition="true" check="true" invariant="true" loop="true"/>
 			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="dead_code_removal" value="feature"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
-			<option warning="none">
-			</option>
+			<option warning="none"/>
 		</library>
 		<library name="cli_kernel" location="$EIFFEL_SRC\framework\dotnet\cli_kernel\cli_kernel.ecf">
 			<option>
-				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+				<assertions postcondition="true" check="true" invariant="true" loop="true"/>
 			</option>
 			<renaming old_name="MD_STRONG_NAME" new_name="MD_STRONG_NAME_I"/>
 			<renaming old_name="MD_EMIT" new_name="MD_EMIT_I"/>
@@ -32,7 +31,7 @@
 			<renaming old_name="CLI_PE_FILE" new_name="CLI_PE_FILE_I"/>
 		</library>
 		<library name="il_emitter" location="..\il_emitter.ecf" readonly="false">
-			<option debug="true" warning="none">
+			<option debug="false" warning="none">
 				<debug name="debug-cli" enabled="true"/>
 				<debug name="il_emitter_dbg" enabled="true"/>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
@@ -40,8 +39,7 @@
 		</library>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="il_emitter_test" location=".\" recursive="true">
-			<option warning="none" manifest_array_type="mismatch_warning">
-			</option>
+			<option warning="none" manifest_array_type="mismatch_warning"/>
 		</cluster>
 	</target>
 </system>

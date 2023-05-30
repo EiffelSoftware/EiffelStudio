@@ -417,9 +417,9 @@ feature -- Generation
 						sub := "0"
 					end
 					if maj.to_integer >= 5 then
-						s := "net" + maj + "." + min
+						s := {STRING_32} "net" + maj + "." + min
 					else
-						s := "netcoreapp" + maj + "." + min
+						s := {STRING_32} "netcoreapp" + maj + "." + min
 					end
 					if sub.to_integer > 0 then
 						s := s + "." + sub
@@ -433,16 +433,16 @@ feature -- Generation
 
 --			Result ["CLR_RUNTIME_VERSION"] := a_system.clr_runtime_version
 			if l_fmwk_name.has_substring ("NETCore.App") then
-				s := ".NETCoreApp,Version=v" + maj + "." + min
+				s := {STRING_32} ".NETCoreApp,Version=v" + maj + "." + min
 				Result ["CLR_RUNTIME"] := s
 			else
-				Result ["CLR_RUNTIME"] := ".NETCoreApp,Version=v6.0" -- Default?
+				Result ["CLR_RUNTIME"] := {STRING_32} ".NETCoreApp,Version=v6.0" -- Default?
 			end
 		end
 
 feature {NONE} -- Type description
 
-	generate_all_types (classes: ARRAY [CLASS_C]; a_signing: MD_STRONG_NAME)
+	generate_all_types (classes: ARRAY [detachable CLASS_C]; a_signing: MD_STRONG_NAME)
 			-- Generate all classes in compiled system.
 		require
 			valid_system: System.classes /= Void
@@ -490,7 +490,7 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_types (classes: ARRAY [CLASS_C])
+	generate_types (classes: ARRAY [detachable CLASS_C])
 			-- Generate all classes in compiled system.
 		require
 			valid_system: System.classes /= Void
@@ -517,13 +517,12 @@ feature {NONE} -- Type description
 			generate_creation_classes (classes)
 		end
 
-	generate_class_interfaces (classes: ARRAY [CLASS_C])
+	generate_class_interfaces (classes: ARRAY [detachable CLASS_C])
 			-- Generate mapping between Eiffel and IL generator with `classes' sorted in
 			-- topological order.
 		require
 			classes_not_void: classes /= Void
 		local
-			class_c: CLASS_C
 			i, nb: INTEGER
 			types: TYPE_LIST
 			cl_type: CLASS_TYPE
@@ -536,8 +535,7 @@ feature {NONE} -- Type description
 			until
 				i > nb
 			loop
-				class_c := classes.item (i)
-				if class_c /= Void then
+				if attached classes.item (i) as class_c then
 					if not class_c.is_precompiled then
 						class_c.set_il_name
 					end
@@ -608,13 +606,12 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_class_mappings (classes: ARRAY [CLASS_C]; for_interface: BOOLEAN)
+	generate_class_mappings (classes: ARRAY [detachable CLASS_C]; for_interface: BOOLEAN)
 			-- Generate mapping between Eiffel and IL generator with `classes' sorted in
 			-- topological order.
 		require
 			classes_not_void: classes /= Void
 		local
-			class_c: CLASS_C
 			i, nb: INTEGER
 			types: TYPE_LIST
 			cl_type: CLASS_TYPE
@@ -625,8 +622,11 @@ feature {NONE} -- Type description
 			until
 				i > nb
 			loop
-				class_c := classes.item (i)
-				if is_class_generated (class_c) and then class_c.has_types then
+				if
+					attached classes.item (i) as class_c and then
+					is_class_generated (class_c) and then
+					class_c.has_types
+				then
 					has_root_class := has_root_class or else (root_class_routine /= Void and then
 						class_c.lace_class = root_class_routine.lace_class)
 					types := class_c.types
@@ -669,13 +669,12 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_class_attributes (classes: ARRAY [CLASS_C])
+	generate_class_attributes (classes: ARRAY [detachable CLASS_C])
 			-- Generate mapping between Eiffel and IL generator with `classes' sorted in
 			-- topological order.
 		require
 			classes_not_void: classes /= Void
 		local
-			class_c: CLASS_C
 			i, j, nb: INTEGER
 			types: TYPE_LIST
 			cl_type: CLASS_TYPE
@@ -688,8 +687,11 @@ feature {NONE} -- Type description
 			until
 				i > nb or j = 0
 			loop
-				class_c := classes.item (i)
-				if is_class_generated (class_c) and then class_c.has_types then
+				if
+					attached classes.item (i) as class_c and then
+					is_class_generated (class_c) and then
+					class_c.has_types
+				then
 					System.set_current_class (class_c)
 					from
 						types := class_c.types
@@ -720,13 +722,12 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_features_description (classes: ARRAY [CLASS_C])
+	generate_features_description (classes: ARRAY [detachable CLASS_C])
 			-- Generate mapping between Eiffel and IL generator with `classes'
 			-- sorted in the topological order.
 		require
 			classes_not_void: classes /= Void
 		local
-			class_c: CLASS_C
 			i, j, nb: INTEGER
 			types: TYPE_LIST
 			cl_type: CLASS_TYPE
@@ -746,8 +747,11 @@ feature {NONE} -- Type description
 			until
 				i > nb or j = 0
 			loop
-				class_c := classes.item (i)
-				if is_class_generated (class_c) and then class_c.has_types then
+				if
+					attached classes.item (i) as class_c and then
+					is_class_generated (class_c) and then
+					class_c.has_types
+				then
 					from
 						types := class_c.types
 						types.start
@@ -790,13 +794,12 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_features_implementation (classes: ARRAY [CLASS_C])
+	generate_features_implementation (classes: ARRAY [detachable CLASS_C])
 			-- Generate mapping between Eiffel and IL generator with `classes'
 			-- sorted in the topological order.
 		require
 			classes_not_void: classes /= Void
 		local
-			class_c: CLASS_C
 			i, j, nb: INTEGER
 			types: TYPE_LIST
 			l_class_processed: BOOLEAN
@@ -819,8 +822,11 @@ feature {NONE} -- Type description
 			until
 				i > nb or j = 0
 			loop
-				class_c := classes.item (i)
-				if is_class_generated (class_c) and then class_c.has_types then
+				if
+					attached classes.item (i) as class_c and then
+					is_class_generated (class_c) and then
+					class_c.has_types
+				then
 					from
 						types := class_c.types
 						types.start
@@ -871,13 +877,12 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_creation_classes (classes: ARRAY [CLASS_C])
+	generate_creation_classes (classes: ARRAY [detachable CLASS_C])
 			-- Generate mapping between Eiffel and IL generator with `classes'
 			-- sorted in the topological order.
 		require
 			classes_not_void: classes /= Void
 		local
-			class_c: CLASS_C
 			i, nb: INTEGER
 			types: TYPE_LIST
 			l_class_processed: BOOLEAN
@@ -889,8 +894,11 @@ feature {NONE} -- Type description
 			until
 				i > nb
 			loop
-				class_c := classes.item (i)
-				if is_class_generated (class_c) and then class_c.has_types then
+				if
+					attached classes.item (i) as class_c and then
+					is_class_generated (class_c) and then
+					class_c.has_types
+				then
 					System.set_current_class (class_c)
 					from
 						types := class_c.types
@@ -944,7 +952,7 @@ feature {NONE} -- Type description
 
 feature {NONE} -- Sort
 
-	ordered_classes: HASH_TABLE [ARRAY [CLASS_C], INTEGER]
+	ordered_classes: HASH_TABLE [ARRAY [detachable CLASS_C], INTEGER]
 			-- Classes sorted by their module appartenance.
 
 	prepare_classes (system_classes: CLASS_C_SERVER)
@@ -956,7 +964,6 @@ feature {NONE} -- Sort
 			l_classes: HASH_TABLE [ARRAYED_LIST [CLASS_C], INTEGER]
 			l_list: ARRAYED_LIST [CLASS_C]
 			i, nb, l_packet, l_max_packet: INTEGER
-			l_class: CLASS_C
 			l_is_one_module: BOOLEAN
 		do
 			create l_classes.make (10)
@@ -967,8 +974,7 @@ feature {NONE} -- Sort
 			until
 				i > nb
 			loop
-				l_class := system_classes.item (i)
-				if l_class /= Void then
+				if attached system_classes.item (i) as l_class then
 					if l_is_one_module then
 						l_packet := 1
 					else
@@ -1014,12 +1020,11 @@ feature {NONE} -- Sort
 			-- then for all classes belonging to the same entry in `ordered_classes'
 			-- should be recompiled.
 		local
-			l_class_c: CLASS_C
 			i, nb: INTEGER
 			types: TYPE_LIST
 			l_added: BOOLEAN
-			l_classes: ARRAY [CLASS_C]
-			l_changed_classes: ARRAYED_LIST [ARRAY [CLASS_C]]
+			l_classes: ARRAY [detachable CLASS_C]
+			l_changed_classes: ARRAYED_LIST [ARRAY [detachable CLASS_C]]
 		do
 			if not is_single_module then
 					-- First pass, we collect all modules in which a class needs
@@ -1038,8 +1043,7 @@ feature {NONE} -- Sort
 					until
 						i > nb or l_added
 					loop
-						l_class_c := l_classes.item (i)
-						if l_class_c /= Void then
+						if attached l_classes.item (i) as l_class_c then
 							types := l_class_c.types
 							if not types.is_empty then
 								from
@@ -1077,10 +1081,12 @@ feature {NONE} -- Sort
 					until
 						i > nb
 					loop
-						l_class_c := l_classes.item (i)
 							-- If `l_class_c' is not marked to be generated, we force its addition
 							-- so that it gets compiled.
-						if l_class_c /= Void and then not is_class_generated (l_class_c) then
+						if
+							attached l_classes.item (i) as l_class_c and then
+							not is_class_generated (l_class_c)
+						then
 							System.degree_minus_1.insert_class (l_class_c)
 						end
 						i := i + 1
@@ -1090,7 +1096,7 @@ feature {NONE} -- Sort
 			end
 		end
 
-	sorted_array_from_list (a_list: ARRAYED_LIST [CLASS_C]): SORTABLE_ARRAY [CLASS_C]
+	sorted_array_from_list (a_list: ARRAYED_LIST [detachable CLASS_C]): SORTABLE_ARRAY [detachable CLASS_C]
 			-- Initialize a sorted array of CLASS_C from `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -1100,7 +1106,7 @@ feature {NONE} -- Sort
 			from
 				i := 1
 				nb := a_list.count
-				create Result.make (i, nb)
+				create Result.make_filled (Void, i, nb)
 				a_list.start
 			until
 				i > nb
@@ -1114,7 +1120,7 @@ feature {NONE} -- Sort
 			sorted_array_from_list_not_void: Result /= Void
 		end
 
-	sorted_classes (system_classes: CLASS_C_SERVER): ARRAY [CLASS_C]
+	sorted_classes (system_classes: CLASS_C_SERVER): ARRAY [detachable CLASS_C]
 			-- `system_classes' sorted following their topological
 			-- order.
 		require
@@ -1125,7 +1131,7 @@ feature {NONE} -- Sort
 			from
 				i := 1
 				nb := system_classes.capacity
-				create Result.make (i, nb)
+				create Result.make_filled (Void, i, nb)
 			until
 				i > nb
 			loop
@@ -1301,7 +1307,7 @@ feature {NONE} -- Progression
 	dll_type: STRING = "dll"
 			-- Type of generation
 
-	is_class_generated (a_class: CLASS_C): BOOLEAN
+	is_class_generated (a_class: detachable CLASS_C): BOOLEAN
 			-- Is `a_class' to be generated?
 		do
 				-- We force generation of basic classes even if only the reference version

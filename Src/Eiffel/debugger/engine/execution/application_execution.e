@@ -72,6 +72,7 @@ feature -- Execution event callbacks
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
+			status.resume_execution
 			Debugger_manager.on_application_resumed
 		end
 
@@ -93,6 +94,7 @@ feature -- Execution event callbacks
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
+			status.pause_execution
 			Debugger_manager.on_application_just_stopped
 		end
 
@@ -100,6 +102,7 @@ feature -- Execution event callbacks
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
+			status.quit_execution
 			Debugger_manager.on_application_quit
 		end
 

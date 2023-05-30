@@ -174,6 +174,15 @@ feature -- Output helpers
 			debugger_status_message (m)
 		end
 
+	debugger_output_message_with_timestamp (m: READABLE_STRING_GENERAL)
+			-- Display debugger message `m` on the output
+			-- and include the timestamp information.
+		require
+			m_not_void: m /= Void
+		do
+			debugger_output_message (m)
+		end
+
 	debugger_output_message (m: READABLE_STRING_GENERAL)
 			-- Display debugger message `m' on the output
 		require
@@ -1609,7 +1618,7 @@ feature -- Debugging events
 				s.append (debugger_names.t_space_application_ignoring_breakpoints)
 			end
 			debugger_status_message (s)
-			debugger_output_message (s)
+			debugger_output_message_with_timestamp (s)
 
 				--| Observers
 			observers.do_all (agent {DEBUGGER_MANAGER_OBSERVER}.on_application_launched (Current))
@@ -1654,6 +1663,7 @@ feature -- Debugging events
 		do
 			incremente_debugging_operation_id
 			debugger_status_message (debugger_names.t_Paused)
+			debugger_output_message_with_timestamp (debugger_names.t_Paused)
 
 				--| Reset current stack number to 1 (top level)
 			application.set_current_execution_stack_number (1)
@@ -1701,7 +1711,7 @@ feature -- Debugging events
 
 			was_executing := application_is_executing
 			if was_executing then
-				debugger_output_message (debugger_names.t_Application_exited)
+				debugger_output_message_with_timestamp (debugger_names.t_Application_exited)
 				debugger_status_message (debugger_names.t_Application_exited)
 
 					--| Observers
@@ -1829,7 +1839,7 @@ invariant
 	application_associated_to_current: application /= Void implies application.debugger_manager = Current
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

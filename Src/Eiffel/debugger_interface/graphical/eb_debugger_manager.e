@@ -29,7 +29,8 @@ inherit
 			on_breakpoints_change_event,
 			process_breakpoint,
 			set_maximum_stack_depth,
-			debugger_output_message, debugger_warning_message, debugger_error_message, debugger_status_message,
+			debugger_output_message, debugger_output_message_with_timestamp,
+			debugger_warning_message, debugger_error_message, debugger_status_message,
 			display_application_status, display_system_info, display_debugger_info,
 			set_error_message,
 			display_ignore_contract_violation_dialog,
@@ -1141,6 +1142,60 @@ feature -- Status report
 			-- Is exiting Eiffel Studio now?
 
 feature -- Output
+
+	debugger_output_message_with_timestamp (m: READABLE_STRING_GENERAL)
+			-- <Precursor>
+		local
+			l_formatter: like debugger_formatter
+			dt: DATE_TIME
+			n: INTEGER
+			s: STRING
+			f: FORMAT_DOUBLE
+		do
+			l_formatter := debugger_formatter
+			if attached debugger_output as l_output then
+				l_output.lock
+			end
+			l_formatter.add_string (m)
+			create dt.make_now
+			create s.make (26)
+			s.append_character (' ')
+			s.append_character ('[')
+			s.append (dt.formatted_out ("[0]mm/[0]dd/yyyy [0]hh:[0]mi:[0]ss.ff3"))
+			s.append_character (']')
+			l_formatter.add_comment_text (s)
+			if
+				attached application_status as st and then
+				attached st.execution_duration (dt) as d
+			then
+				create s.make (10)
+				n := d.day
+				if n = 1 then
+					s.append ("1 day ")
+				elseif n > 0 then
+					s.append (n.out + " days ")
+				end
+				n := d.hour
+				if n > 0 or s.count > 1 then
+					s.append (n.out)
+					s.append_character ('H')
+				end
+				n := d.minute
+				if n > 0 or s.count > 1 then
+					s.append (n.out)
+					s.append_character ('M')
+				end
+				create f.make (4, 2)
+				s.append (f.formatted (d.fine_second))
+				s.append_character ('S')
+
+				l_formatter.add_comment_text (" -> " + s)
+			end
+			l_formatter.add_new_line
+			if attached debugger_output as l_output then
+				l_output.unlock
+			end
+		end
 
 	debugger_output_message (m: READABLE_STRING_GENERAL)
 			-- <Precursor>

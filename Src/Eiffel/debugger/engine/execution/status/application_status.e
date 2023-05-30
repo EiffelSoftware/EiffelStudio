@@ -41,6 +41,26 @@ feature -- Properties
 	application: APPLICATION_EXECUTION
 			-- Attached Application execution object.
 
+	start_time: detachable DATE_TIME
+			-- Time of the debugging session start.
+
+	last_stopped_time: detachable DATE_TIME
+			-- Time of the last stopped state.
+
+	stopped_duration: detachable DATE_TIME_DURATION
+			-- Duration of stopped state.
+
+	execution_duration (dt: DATE_TIME): detachable DATE_TIME_DURATION
+			--
+		do
+			if attached start_time as s then
+				Result := dt.relative_duration (s)
+				if attached stopped_duration as dur then
+					Result := Result - dur
+				end
+			end
+		end
+
 feature {NONE} -- Initialization
 
 	initialize
@@ -48,6 +68,66 @@ feature {NONE} -- Initialization
 		do
 			create_kept_objects
 			clear_callstack_data
+			record_start_time
+		end
+
+feature -- Time measurement
+
+	record_start_time
+		do
+			create start_time.make_now
+		end
+
+	pause_execution
+		do
+			check last_stopped_time = Void end
+			create last_stopped_time.make_now
+		end
+
+	quit_execution
+		local
+			d2: DATE_TIME
+			dur: DATE_TIME_DURATION
+		do
+			create d2.make_now
+			if attached start_time as st then
+				if
+					attached last_stopped_time as d1
+				then
+						-- It was stopped
+					dur := stopped_duration
+					if dur = Void then
+						dur := d2.relative_duration (d1)
+					else
+						dur := dur + d2.relative_duration (d1)
+					end
+					stopped_duration := dur
+				else
+					-- no stopped duration.
+				end
+			end
+		end
+
+	resume_execution
+		local
+			d2: DATE_TIME
+			dur: DATE_TIME_DURATION
+		do
+			if
+				attached start_time as st and then
+				attached last_stopped_time as d1
+			then
+				dur := stopped_duration
+				create d2.make_now
+				if dur = Void then
+					dur := d2.relative_duration (d1)
+				else
+					dur := dur + d2.relative_duration (d1)
+				end
+				stopped_duration := dur
+
+				last_stopped_time := Void
+			end
 		end
 
 feature -- Objects kept from session to session

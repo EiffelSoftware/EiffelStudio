@@ -38,6 +38,9 @@ inherit
 feature -- Aspects
 
 	before_starting (param: detachable DEBUGGER_EXECUTION_RESOLVED_PROFILE)
+		local
+			tf: like debugger_formatter
+			s32: READABLE_STRING_GENERAL
 		do
 			if attached debugger_output as l_output then
 				l_output.lock
@@ -50,36 +53,41 @@ feature -- Aspects
 			end
 
 				--| Display information
-			debugger_formatter.add_string ("Launching system :")
+			tf := debugger_formatter
+			tf.add_string ("Launching system :")
 			if param /= Void then
-				debugger_formatter.add_new_line
-				if attached param.working_directory as wd then
-					debugger_formatter.add_comment ("  - directory = ")
-					debugger_formatter.add_quoted_text (wd.name)
+				s32 := param.title
+				if s32 /= Void then
+					tf.add_new_line
+					tf.add_comment ("  - profile = ")
+					tf.add_quoted_text (s32)
 				end
-				if not param.arguments.is_empty then
-					debugger_formatter.add_new_line
-					debugger_formatter.add_comment_text ("  - arguments = ")
-					debugger_formatter.add_quoted_text (param.arguments)
+				if attached param.working_directory as wd then
+					tf.add_new_line
+					tf.add_comment ("  - directory = ")
+					tf.add_quoted_text (wd.name)
+				end
+				s32 := param.arguments
+				if s32 /= Void and then not s32.is_empty then
+					tf.add_new_line
+					tf.add_comment_text ("  - arguments = ")
+					tf.add_quoted_text (s32)
+				end
+				if attached param.environment_variables as l_environment_vars and then not l_environment_vars.is_empty then
+					tf.add_new_line
+					tf.add_comment_text ("  - environment : ")
+					across
+						l_environment_vars as ic
+					loop
+						tf.add_new_line
+						tf.add_indent
+						tf.add_string (ic.key)
+						tf.add_string ("=")
+						tf.add_manifest_string (ic.item)
+					end
 				end
 			end
---| For now useless since the output panel display those info just a few nanoseconds ...
---			if environment_vars /= Void and then not environment_vars.is_empty then
---				output_manager.add_comment_text ("  - environment : ")
---				from
---					environment_vars.start
---				until
---					environment_vars.after
---				loop
---					output_manager.add_new_line
---					output_manager.add_indent
---					output_manager.add_string (environment_vars.key_for_iteration)
---					output_manager.add_string ("=")
---					output_manager.add_quoted_text (environment_vars.item_for_iteration)
---					environment_vars.forth
---				end
---			end
-			debugger_formatter.add_new_line
+			tf.add_new_line
 			if attached debugger_output as l_output then
 				l_output.unlock
 			end
@@ -133,7 +141,7 @@ feature -- {DEBUGGER_MANAGER, SHARED_DEBUGGER_MANAGER} -- Implementation
 	manager: EB_DEBUGGER_MANAGER;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

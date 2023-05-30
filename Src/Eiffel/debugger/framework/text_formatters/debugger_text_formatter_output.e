@@ -83,8 +83,7 @@ feature -- Application status
 			params: detachable DEBUGGER_EXECUTION_RESOLVED_PROFILE
 			ctlr: DEBUGGER_CONTROLLER
 			app: APPLICATION_EXECUTION
-			s: READABLE_STRING_32
-			s32: STRING_32
+			s32: READABLE_STRING_32
 		do
 			ctlr := dbg.controller
 			app := dbg.application
@@ -112,30 +111,25 @@ feature -- Application status
 				end
 				tf.add_new_line
 				tf.add_comment_text ("  - arguments = ")
-				s := params.arguments
-				if s = Void or else s.is_empty then
+				s32 := params.arguments
+				if s32 = Void or else s32.is_empty then
 					tf.add_string ("<Empty>")
 				else
-					tf.add_quoted_text (s)
+					tf.add_quoted_text (s32)
+				end
+				if attached a_params.environment_variables as l_environment_vars and then not l_environment_vars.is_empty then
+					tf.add_comment_text ("  - environment : ")
+					across
+						l_environment_vars as ic
+					loop
+						tf.add_new_line
+						tf.add_indent
+						tf.add_string (ic.key)
+						tf.add_string ("=")
+						tf.add_manifest_string (ic.item)
+					end
 				end
 			end
-
---| For now useless since the output panel display those info just a few nanoseconds ...
---			if ctlr.environment_vars /= Void and then not ctlr.environment_vars.is_empty then
---				tf.add_comment_text ("  - environment : ")
---				from
---					ctlr.environment_vars.start
---				until
---					ctlr.environment_vars.after
---				loop
---					tf.add_new_line
---					tf.add_indent
---					tf.add_string (ctlr.environment_vars.key_for_iteration)
---					tf.add_string ("=")
---					tf.add_quoted_text (ctlr.environment_vars.item_for_iteration)
---					ctlr.environment_vars.forth
---				end
---			end
 			tf.add_new_line
 		end
 

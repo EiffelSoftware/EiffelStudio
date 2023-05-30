@@ -18,8 +18,8 @@ feature -- Testing
 
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
-			--Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.empty_assembly", "tk.define_method_net2", "om.method_assembly">>
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_entry_point_net6">>
+				--Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.empty_assembly", "tk.define_method_net2", "om.method_assembly">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_file">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -45,7 +45,7 @@ feature -- Testing
 			end
 		end
 
-feature -- Token tests		
+feature -- Token tests
 
 	test_metadata_tables_token_interface (a_pattern: READABLE_STRING_GENERAL)
 		do
@@ -94,13 +94,26 @@ feature -- Token tests
 			if is_test_included ("define_entry_point", a_pattern) then
 				(create {TEST_METADATA_TABLES_TK}).test_define_entry_point
 			end
+			if is_test_included ("define_entry_point_net4", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_entry_point_net4
+			end
 			if is_test_included ("define_entry_point_net6", a_pattern) then
 				(create {TEST_METADATA_TABLES_TK}).test_define_entry_point_net6
 			end
+			if is_test_included ("define_property", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_property
+			end
+			if is_test_included ("define_property_access", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_property_access
+			end
+			if is_test_included ("define_file", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_file
+			end
+
 
 		end
 
-feature -- Object model tests		
+feature -- Object model tests
 
 	test_metadata_tables_object_model (a_pattern: READABLE_STRING_GENERAL)
 		do
@@ -121,7 +134,6 @@ feature -- Object model tests
 				(create {TEST_METADATA_TABLES_OM}).test_define_type;
 			end
 
-
 		end
 
 feature -- Initialization
@@ -132,6 +144,7 @@ feature -- Initialization
 			i, n: INTEGER
 			lst: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			tests: ITERABLE [READABLE_STRING_GENERAL]
+			conv: BYTE_ARRAY_CONVERTER
 		do
 			n := argument_count
 			if n > 0 then
@@ -151,7 +164,7 @@ feature -- Initialization
 								create test_directory.make_current
 							end
 						end
-						-- Ignore for now
+							-- Ignore for now
 					else
 						if lst = Void then
 							create lst.make (n)
@@ -175,7 +188,7 @@ feature -- Initialization
 			end
 		end
 
-feature -- Old tests		
+feature -- Old tests
 
 	old_tests (a_pattern: READABLE_STRING_GENERAL)
 			-- Run application.
@@ -759,63 +772,63 @@ feature -- Static
 			"C++ inline use <iostream>, <fstream>"
 		alias
 			"[
-				{
-					typedef uint32_t DIGIT_T;
-					DIGIT_T* dkey = (DIGIT_T*)$a_key;
-					dkey[0] = 0x2400;
-					dkey[1] = 0x8004;
-					dkey[2] = 0x14 + $a_modulus_bits / 8;
-					//
-					//memcpy(dkey + 3, keyPair, dkey[2]);
-					//
-
-					// Code for testing
-					dkey[2] = 0x14 + $a_modulus_bits / 8;
-					dkey[3] = 1;
-					dkey[4] = 2;
-					dkey[5] = 3;
-					dkey[6] = 4;
-					dkey[7] = 5;
-					dkey[8] = 6;
-					dkey[9] = 7;
-					dkey[10] = 8;
-					dkey[11] = 9;
-					dkey[12] = 10;
-					dkey[13] = 11;
-					dkey[14] = 12;
-					dkey[15] = 13;
-					dkey[16] = 14;
-					dkey[17] = 15;
-					dkey[18] = 16;
-					dkey[19] = 17;
-					dkey[20] = 18;
-					dkey[21] = 19;
-					dkey[22] = 20;
-					dkey[23] = 21;
-					dkey[24] = 22;
-
-					((char*)dkey)[12 + 0x0b] = '1';  // change to RSA1 (pub key only)
-					((char*)dkey)[12 + 0] = 6;       // change to pub key only
-					*($a_key_size) = dkey[2] + 12;
-
-					 std::cout << "dkey[12 + 0x0b] = " << dkey[12 + 0x0b] << std::endl;
-					 std::cout << "((char*)dkey)[12 + 0x0b] = " << ((char*)dkey)[12 + 0x0b] << std::endl;
-
-					 std::cout << "dkey[12 + 0] = " << dkey[12 + 0] << std::endl;
-					 std::cout << "((char*)dkey)[12 + 0] = " << ((char*)dkey)[12 + 0] << std::endl;
-
-					std::ofstream outfile;
-	    			outfile.open("carray_key.bin", std::ios::binary);
-
-					outfile.write(((char*)($a_key)), 100);
-    								outfile.close();
-    								std::ofstream outfile2;
-	    			outfile2.open("carray_dkey.bin", std::ios::binary);
-
-					outfile2.write(((char*)(dkey)), 100);
-    								outfile2.close();
-
-				}
+								{
+									typedef uint32_t DIGIT_T;
+									DIGIT_T* dkey = (DIGIT_T*)$a_key;
+									dkey[0] = 0x2400;
+									dkey[1] = 0x8004;
+									dkey[2] = 0x14 + $a_modulus_bits / 8;
+									//
+									//memcpy(dkey + 3, keyPair, dkey[2]);
+									//
+				
+									// Code for testing
+									dkey[2] = 0x14 + $a_modulus_bits / 8;
+									dkey[3] = 1;
+									dkey[4] = 2;
+									dkey[5] = 3;
+									dkey[6] = 4;
+									dkey[7] = 5;
+									dkey[8] = 6;
+									dkey[9] = 7;
+									dkey[10] = 8;
+									dkey[11] = 9;
+									dkey[12] = 10;
+									dkey[13] = 11;
+									dkey[14] = 12;
+									dkey[15] = 13;
+									dkey[16] = 14;
+									dkey[17] = 15;
+									dkey[18] = 16;
+									dkey[19] = 17;
+									dkey[20] = 18;
+									dkey[21] = 19;
+									dkey[22] = 20;
+									dkey[23] = 21;
+									dkey[24] = 22;
+				
+									((char*)dkey)[12 + 0x0b] = '1';  // change to RSA1 (pub key only)
+									((char*)dkey)[12 + 0] = 6;       // change to pub key only
+									*($a_key_size) = dkey[2] + 12;
+				
+									 std::cout << "dkey[12 + 0x0b] = " << dkey[12 + 0x0b] << std::endl;
+									 std::cout << "((char*)dkey)[12 + 0x0b] = " << ((char*)dkey)[12 + 0x0b] << std::endl;
+				
+									 std::cout << "dkey[12 + 0] = " << dkey[12 + 0] << std::endl;
+									 std::cout << "((char*)dkey)[12 + 0] = " << ((char*)dkey)[12 + 0] << std::endl;
+				
+									std::ofstream outfile;
+					    			outfile.open("carray_key.bin", std::ios::binary);
+				
+									outfile.write(((char*)($a_key)), 100);
+				    								outfile.close();
+				    								std::ofstream outfile2;
+					    			outfile2.open("carray_dkey.bin", std::ios::binary);
+				
+									outfile2.write(((char*)(dkey)), 100);
+				    								outfile2.close();
+				
+								}
 			]"
 		end
 
@@ -1018,14 +1031,13 @@ feature -- GUID
 			print (l_guid.to_array_natural_8)
 		end
 
-
 feature -- Settings
 
 	is_using_sub_directory_per_test: BOOLEAN
 
 	test_directory: detachable PATH
 
-feature {NONE} -- Implementation				
+feature {NONE} -- Implementation
 
 	pre_test (tn: READABLE_STRING_GENERAL)
 		local
@@ -1068,10 +1080,9 @@ feature -- Helper
 				Result := True
 			else
 				Result := a_name.is_case_insensitive_equal (s)
-				-- Todo: maybe add wildcart test such as ("*_assembly")
+					-- Todo: maybe add wildcart test such as ("*_assembly")
 			end
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"

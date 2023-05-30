@@ -2007,9 +2007,8 @@ feature -- Test
 					l_entry_type_token,
 					{MD_METHOD_ATTRIBUTES}.Public |
 					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.special_name ,
+					{MD_METHOD_ATTRIBUTES}.special_name,
 					sig, {MD_METHOD_ATTRIBUTES}.Managed)
-
 
 			body := method_writer.new_method_body (my_set_name)
 
@@ -2102,6 +2101,97 @@ feature -- Test
 			create l_pe_file.make ("test_property_access.dll", True, True, False, md_emit)
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
+			l_pe_file.save
+		end
+
+	test_define_file
+		local
+			l_pe_file: CLI_PE_FILE
+			md_dispenser: MD_DISPENSER
+			md_emit: MD_EMIT
+			md_assembly_info: MD_ASSEMBLY_INFO
+			object_type_token, mscorlib_token, object_ctor, tasks_type_token, system_type_token: INTEGER
+			my_type, my_assembly, my_ctor, my_field, my_meth, my_meth2: INTEGER
+			string_token: INTEGER
+			method_writer: MD_METHOD_WRITER
+			body: MD_METHOD_BODY
+			sig: MD_METHOD_SIGNATURE
+			field_sig: MD_FIELD_SIGNATURE
+			local_sig: MD_LOCAL_SIGNATURE
+			local_token: INTEGER
+			label_id, l_id2: INTEGER
+			system_exception_token: INTEGER
+			md_pub_key_token: MD_PUBLIC_KEY_TOKEN
+			ca: MD_CUSTOM_ATTRIBUTE
+			ca_token, system_runtime_token, system_console_token, string_type_token, attribute_ctor: INTEGER
+			target_framework_attr_type_token: INTEGER
+			l_hash_file: MANAGED_POINTER
+			l_signing: MD_STRONG_NAME
+			l_file: CLI_STRING
+			l_token_file: INTEGER
+		do
+			create md_dispenser.make
+			md_emit := md_dispenser.emit
+
+			create md_assembly_info.make
+			md_assembly_info.set_major_version (1) -- set_minor_version
+			md_assembly_info.set_minor_version (0)
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("define_file_tk"), 0, md_assembly_info, Void)
+
+			md_assembly_info.set_major_version (6)
+			md_assembly_info.set_minor_version (0)
+			md_assembly_info.set_build_number (0)
+			create md_pub_key_token.make_from_array (
+				{ARRAY [NATURAL_8]} <<0xB0, 0x3F, 0x5F, 0x7F, 0x11, 0xD5, 0x0A, 0x3A>>)
+				-- b0 3f 5f 7f 11 d5 0a 3a
+				-- b7 7a 5c 56 19 34 e0 89
+
+			system_runtime_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("System.Runtime"), md_assembly_info, md_pub_key_token)
+			system_console_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("System.Console"), md_assembly_info, md_pub_key_token)
+
+			target_framework_attr_type_token := md_emit.define_type_ref (
+							create {CLI_STRING}.make ("System.Runtime.Versioning.TargetFrameworkAttribute"), system_runtime_token)
+
+
+			md_emit.set_module_name (create {CLI_STRING}.make ("define_file_tk.dll"))
+
+			create l_file.make ("struct_test.e")
+			create l_signing.make_with_version ("Net6")
+			l_hash_file := l_signing.hash_of_file (l_file)
+			string_token := md_emit.define_string (l_file)
+			l_token_file := md_emit.define_file (l_file, l_hash_file, {MD_FILE_FLAGS}.Has_meta_data)
+
+				-- [assembly: TargetFramework(".NETCoreApp,Version=v6.0", FrameworkDisplayName = "")]
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
+
+			attribute_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
+					target_framework_attr_type_token, sig)
+
+			create ca.make
+			ca.put_string (".NETCoreApp,Version=v6.0")
+
+				-- Number of named arguments
+			ca.put_integer_16 (1)
+				-- We mark it's a property
+			ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
+				-- Fill `FieldOrPropType' in `ca'
+			ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_string)
+				-- Put the name of the property
+			ca.put_string ("FrameworkDisplayName")
+				-- Put the value
+			ca.put_string ("")
+			ca_token := md_emit.define_custom_attribute (my_assembly, attribute_ctor, ca)
+
+			my_type := md_emit.define_type (create {CLI_STRING}.make ("TEST"),
+					{MD_TYPE_ATTRIBUTES}.Ansi_class | {MD_TYPE_ATTRIBUTES}.Auto_layout |
+					{MD_TYPE_ATTRIBUTES}.Public,
+					object_type_token, Void)
+
+			create l_pe_file.make ("test_define_file_tk.dll", True, True, False, md_emit)
 			l_pe_file.save
 		end
 

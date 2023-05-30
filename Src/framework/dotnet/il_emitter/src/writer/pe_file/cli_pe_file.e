@@ -235,7 +235,7 @@ feature -- Saving
 		local
 			l_pe_file, l_meta_data_file: RAW_FILE
 			l_padding: MANAGED_POINTER
-			l_signature: MANAGED_POINTER
+--			l_signature: MANAGED_POINTER
 			l_strong_name_location: INTEGER
 --			l_size: INTEGER
 			l_uni_string: CLI_STRING

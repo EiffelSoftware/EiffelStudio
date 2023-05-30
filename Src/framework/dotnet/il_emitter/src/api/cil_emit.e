@@ -109,10 +109,10 @@ feature -- Definition: creation
 			create l_assembly_ref.make (a_name, False, create {ARRAY [NATURAL_8]}.make_filled (0, 1, 8))
 			pe_lib.assembly_refs.force (l_assembly_ref)
 			pe_lib.working_assembly.set_snk_file (a_snk_file)
-			pe_lib.working_assembly.set_major (a_assembly_info.major)
-			pe_lib.working_assembly.set_minor (a_assembly_info.minor)
-			pe_lib.working_assembly.set_revision (a_assembly_info.revision)
-			pe_lib.working_assembly.set_build (a_assembly_info.build)
+			pe_lib.working_assembly.set_major (a_assembly_info.major_version)
+			pe_lib.working_assembly.set_minor (a_assembly_info.minor_version)
+			pe_lib.working_assembly.set_revision (a_assembly_info.revision_number)
+			pe_lib.working_assembly.set_build (a_assembly_info.build_number)
 			Result := pe_lib.working_assembly
 		end
 

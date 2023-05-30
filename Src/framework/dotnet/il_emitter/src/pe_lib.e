@@ -860,17 +860,17 @@ feature {NONE} -- Output Implementation
 			l_table: PE_TABLE_ENTRY_BASE
 			l_n: NATURAL_64
 			l_base_types: CELL [INTEGER]
-			l_system_index: NATURAL_64
-			l_object_index: NATURAL_64
-			l_value_index: NATURAL_64
-			l_enum_index: NATURAL_64
-			l_mscorlib_assembly: CIL_ASSEMBLY_DEF
-			l_assembly_index: NATURAL_64
-			l_rs: PE_RESOLUTION_SCOPE
-			l_result: TUPLE [type: CIL_FIND_TYPE; resource: detachable ANY]
+--			l_system_index: NATURAL_64
+--			l_object_index: NATURAL_64
+--			l_value_index: NATURAL_64
+--			l_enum_index: NATURAL_64
+--			l_mscorlib_assembly: CIL_ASSEMBLY_DEF
+--			l_assembly_index: NATURAL_64
+--			l_rs: PE_RESOLUTION_SCOPE
+--			l_result: TUPLE [type: CIL_FIND_TYPE; resource: detachable ANY]
 			l_pos: INTEGER
 			l_file_name: STRING_32
-			l_name_index: NATURAL_64
+--			l_name_index: NATURAL_64
 			l_guid_index: NATURAL_64
 		do
 

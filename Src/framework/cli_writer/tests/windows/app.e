@@ -18,7 +18,7 @@ feature -- Testing
 
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"define_entry_point">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"define_file">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -75,6 +75,9 @@ feature {NONE} -- Implementation
 
 			if is_test_included ("define_entry_point", a_pattern) then
 				(create {TEST_METADATA_TABLES}).test_define_entry_point;
+			end
+			if is_test_included ("define_file", a_pattern) then
+				(create {TEST_METADATA_TABLES}).test_define_file;
 			end
 
 

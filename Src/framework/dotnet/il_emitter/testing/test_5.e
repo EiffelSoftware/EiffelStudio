@@ -67,7 +67,7 @@ feature -- Test
 			cls.add (i8_cls)
 			cls.add (ps)
 
-			ps_init := <<0x25, 0x64, 0x0a, 0>> --%d
+			ps_init := {ARRAY [NATURAL_8]} <<0x25, 0x64, 0x0a, 0>> --%d
 			ps.add_initializer (ps_init)
 
 			create signature_ex.make ("printf", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.vararg, Void)

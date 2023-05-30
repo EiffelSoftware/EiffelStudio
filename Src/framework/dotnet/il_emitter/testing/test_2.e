@@ -47,8 +47,8 @@ feature -- Access
 			working.add (ps)
 			working.add (str)
 
-			ps_init := <<0x25, 0x73, 0x0a, 0>> --%s
-			str_init := <<0x48, 0x49, 0>> -- HI
+			ps_init := {ARRAY [NATURAL_8]} <<0x25, 0x73, 0x0a, 0>> --%s
+			str_init := {ARRAY [NATURAL_8]} <<0x48, 0x49, 0>> -- HI
 
 
 			-- these calls put the strings in the SDATA.		

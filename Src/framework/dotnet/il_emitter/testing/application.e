@@ -19,7 +19,7 @@ feature -- Testing
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
 				--Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.empty_assembly", "tk.define_method_net2", "om.method_assembly">>
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_file">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_interface">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -108,6 +108,9 @@ feature -- Token tests
 			end
 			if is_test_included ("define_file", a_pattern) then
 				(create {TEST_METADATA_TABLES_TK}).test_define_file
+			end
+			if is_test_included ("define_interface", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_interface
 			end
 
 

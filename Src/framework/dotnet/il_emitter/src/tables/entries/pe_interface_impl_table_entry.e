@@ -2,7 +2,7 @@ note
 	description: "Object representing The InterfaceImpl table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see:"II.22.23 InterfaceImpl : 0x09 "
+	EIS: "name=Interface Impl", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=257&zoom=100,116,256", "protocol=uri"
 
 class
 	PE_INTERFACE_IMPL_TABLE_ENTRY
@@ -25,8 +25,10 @@ feature {NONE} -- Intialization
 feature -- Access
 
 	class_: PE_TYPE_DEF
+			-- an index into the TypeDef table
 
 	interface: PE_TYPEDEF_OR_REF
+			-- an index into the TypeDef, TypeRef, or TypeSpec table
 
 feature -- Operations
 

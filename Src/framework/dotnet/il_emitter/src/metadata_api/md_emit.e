@@ -798,7 +798,7 @@ feature -- Definition: Creation
 				-- Adds entries in the PE_INTERFACE_IMPL_TABLE_ENTRY table for each implemented interface, if any.
 			if attached implements then
 				across implements as i loop
-					to_implement ("TODO double check and test this code!!!")
+					l_tuple := extract_table_type_and_row (i)
 					l_extends := create_type_def_or_ref (i, l_tuple.table_row_index)
 					create {PE_INTERFACE_IMPL_TABLE_ENTRY} l_entry.make_with_data (pe_index, l_extends)
 						--note: l_dis is not used.
@@ -936,7 +936,8 @@ feature -- Definition: Creation
 				pe_index := add_table_entry (l_table)
 			end
 
-			create {PE_PROPERTY_MAP_TABLE_ENTRY} l_table.make_with_data (pe_index, l_property_index)
+			l_tuple := extract_table_type_and_row (type_token)
+			create {PE_PROPERTY_MAP_TABLE_ENTRY} l_table.make_with_data (l_tuple.table_row_index, l_property_index)
 			pe_index := add_table_entry (l_table)
 		end
 

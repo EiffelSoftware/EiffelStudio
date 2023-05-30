@@ -36,8 +36,8 @@ feature -- Access
 feature -- Operations
 
 	table_index: INTEGER
-		do
-			Result := {PE_TABLES}.tDeclSecurity.value.to_integer_32
+		once
+			Result := {PE_TABLES}.tDeclSecurity.to_integer_32
 		end
 
 	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64

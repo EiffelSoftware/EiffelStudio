@@ -43,10 +43,10 @@ feature -- Operations
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
 			fixme ("Todo double check this code.")
-			Result := large (a_sizes [{PE_TABLES}.tMethodDef.value.to_integer_32 + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tTypeDef.value.to_integer_32 + 1].to_natural_32) or else
-				large (a_sizes [{PE_TABLES}.tMethodDef.value.to_integer_32 + 1].to_natural_32) or else  -- it seems here there is an issue.
-				large (a_sizes [{PE_TABLES}.tAssemblyDef.value.to_integer_32 + 1].to_natural_32)
+			Result := large (a_sizes [{PE_TABLES}.tMethodDef.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tTypeDef.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tMethodDef.to_integer_32 + 1].to_natural_32) or else  -- it seems here there is an issue.
+				large (a_sizes [{PE_TABLES}.tAssemblyDef.to_integer_32 + 1].to_natural_32)
 		end
 
 end

@@ -15,7 +15,7 @@
 		<setting name="dotnet_naming_convention" value="false"/>
 		<setting name="executable_name" value="EiffelSoftware.MetadataConsumer"/>
 		<setting name="line_generation" value="true"/>
-		<setting name="msil_clr_version" value="v2.0.50727"/>
+		<setting name="msil_clr_version" value="v4.0.30319"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="dll"/>
 		<setting name="msil_key_file_name" value="$EIFFEL_SRC\dotnet\helpers\isekey.snk"/>
@@ -101,8 +101,7 @@
 			<condition>
 				<dotnet value="true"/>
 			</condition>
-			<option namespace="Interop">
-			</option>
+			<option namespace="Interop"/>
 			<visible class="COM_CACHE_MANAGER"/>
 		</cluster>
 	</target>
@@ -112,6 +111,7 @@
 			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 		</option>
 		<setting name="executable_name" value="emdc"/>
+		<setting name="msil_clr_version" value="v2.0.50727"/>
 		<setting name="msil_generation_type" value="exe"/>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf" readonly="false"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf" readonly="false"/>
@@ -122,24 +122,27 @@
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 		</option>
-		<setting name="msil_clr_version" value="v4.0.30319"/>
 		<setting name="executable_name" value="emdc"/>
+		<setting name="msil_clr_version" value="v4.0.30319"/>
 		<setting name="msil_generation_type" value="exe"/>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf" readonly="false"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf" readonly="false"/>
 		<cluster name="main" location="$EIFFEL_SRC\dotnet\consumer\main\"/>
 	</target>
-	<target name="emdc" extends="emdc_20">
+	<target name="emdc" extends="emdc_40">
 	</target>
 	<target name="consumer_20" extends="consumer_library">
+		<setting name="msil_clr_version" value="v2.0.50727"/>
 		<root class="EMITTER" feature="make"/>
 		<setting name="line_generation" value="false"/>
 	</target>
 	<target name="debug_20" extends="consumer_20">
 		<setting name="line_generation" value="true"/>
 	</target>
-	<target name="consumer_40" extends="consumer_20">
+	<target name="consumer_40" extends="consumer_library">
 		<setting name="msil_clr_version" value="v4.0.30319"/>
+		<root class="EMITTER" feature="make"/>
+		<setting name="line_generation" value="false"/>
 	</target>
 	<target name="debug_40" extends="consumer_40">
 		<setting name="line_generation" value="true"/>

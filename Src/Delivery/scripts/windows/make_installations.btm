@@ -43,12 +43,12 @@ iff .%1.==.. then
 		co -r %PUBLIC_SVN_REVISION% %DEFAULT_PUBLIC_SVN%/Src/tools/hallow hallow
 		cd %EIFFEL_SRC%\tools\hallow
 		clean_project
-		iff "%USE_NET40%" EQ "True" then
+		iff "%USE_NET20%" EQ "True" then
+			finalize hallow.ecf hallow_20
+			cleanup_dotnet_eiffel hallow_20 hallow.exe
+		else
 			finalize hallow.ecf hallow_40
 			cleanup_dotnet_eiffel hallow_40 hallow.exe
-		else
-			finalize hallow.ecf hallow
-			cleanup_dotnet_eiffel hallow hallow.exe
 		endiff
 		iff not exist libhallow.dll then
 			remtrace Couldnt generate hallow.exe

@@ -69,10 +69,10 @@ iff not defined ISE_C_COMPILER_VER then
 	)
 endiff
 
-iff not defined USE_NET40 then
-::	Use .net framework v4 instead of v2.0 ?
+iff not defined USE_NET20 then
+::	Use .net framework v2.0 instead of v4.0 ?
 ::	Check ` reg query HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v2.0.50727 `
-	set USE_NET40="False"
+	set USE_NET20="False"
 endiff
 
 iff not defined ISE_NIGHTLY_SCP_HOST then

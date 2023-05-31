@@ -69,6 +69,12 @@ iff not defined ISE_C_COMPILER_VER then
 	)
 endiff
 
+iff not defined ISE_EMDC then
+:: 	By default use .net consumer executable, instead of cli_writer
+	set ISE_EMDC=true
+	set ISE_EMDC_JSON=true
+endiff
+
 iff not defined USE_NET20 then
 ::	Use .net framework v2.0 instead of v4.0 ?
 ::	Check ` reg query HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v2.0.50727 `

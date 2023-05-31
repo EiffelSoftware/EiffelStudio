@@ -11,7 +11,7 @@
 		<setting name="console_application" value="true"/>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="executable_name" value="hallow"/>
-		<setting name="msil_clr_version" value="v2.0.50727"/>
+		<setting name="msil_clr_version" value="v4.0.30319"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="msil_use_optimized_precompile" value="true"/>
@@ -36,5 +36,8 @@
 	</target>
 	<target name="hallow_40" extends="hallow">
 		<setting name="msil_clr_version" value="v4.0.30319"/>
+	</target>
+	<target name="hallow_40" extends="hallow">
+		<setting name="msil_clr_version" value="v2.0.50727"/>
 	</target>
 </system>

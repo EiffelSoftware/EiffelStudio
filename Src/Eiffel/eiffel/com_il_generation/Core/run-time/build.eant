@@ -41,8 +41,8 @@
 		<echo message="- Install .Net framework 4.0 [EiffelSoftware.Runtime.dll]" />
 		<!-- Already done by compile_framework and msbuild_20-->
 	</target>
-	<target name="compile_framework" depend="compile_framework_20"/>
-	<target name="install_framework" depend="install_framework_20"/>
+	<target name="compile_framework" depend="compile_framework_40"/>
+	<target name="install_framework" depend="install_framework_40"/>
 	<target name="compile_netcore" >
 		<echo message="- Compile .Net CORE Eiffel runtime" />
 		<exec executable="dotnet build -c Release runtime_core.csproj --restore --no-incremental" />
@@ -58,7 +58,10 @@
 	</target>
 
 	<target name="compile_20" >
-		<exec executable="nmake dotnet_20" if="${is_windows}"/>
+		<exec executable="nmake dotnet_framework" if="${is_windows}"/>
+	</target>
+	<target name="compile_40" >
+		<exec executable="nmake dotnet_framework" if="${is_windows}"/>
 	</target>
 	<target name="compile_60" >
 		<geant target="compile_netcore" unless="${is_windows}"/>

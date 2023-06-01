@@ -2,6 +2,7 @@ note
 	description: "Summary description for {PE_TYPEDEF_TABLE_ENTRY}."
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=TypeDef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=269&zoom=100,116,985", "protocol=uri"
 
 class
 	PE_TYPE_DEF_TABLE_ENTRY
@@ -18,7 +19,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_data (a_flags: INTEGER; a_type_name_index: NATURAL_64; a_type_name_space_index: NATURAL_64;
-			a_extends: PE_TYPEDEF_OR_REF; a_field_index: NATURAL_64; a_method_index: NATURAL_64)
+			a_extends: detachable PE_TYPEDEF_OR_REF; a_field_index: NATURAL_64; a_method_index: NATURAL_64)
 		do
 			flags := a_flags
 			create type_name_index.make_with_index (a_type_name_index)
@@ -31,16 +32,25 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	flags: INTEGER
+		-- a 4-byte bitmask of type TypeAttributes
 
 	type_name_index: PE_STRING
+		-- an index into the String heap
 
 	type_name_space_index: PE_STRING
+		-- (an index into the String heap
 
-	extends: PE_TYPEDEF_OR_REF
+	extends: detachable PE_TYPEDEF_OR_REF
+		-- an index into the TypeDef, TypeRef, or TypeSpec table; more precisely, a
+		-- TypeDefOrRef
 
 	fields: PE_FIELD_LIST
+		-- an index into the Field table; it marks the first of a contiguous run of
+		-- Fields owned by this Type
 
 	methods: PE_METHOD_LIST
+		-- an index into the MethodDef table; it marks the first of a continguous
+		-- run of Methods owned by this Type
 
 feature -- Operations
 
@@ -65,7 +75,9 @@ feature -- Operations
 
 			l_bytes := l_bytes + type_name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			l_bytes := l_bytes + type_name_space_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + extends.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			if attached extends as l_extends then
+				l_bytes := l_bytes + l_extends.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			end
 			l_bytes := l_bytes + fields.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			l_bytes := l_bytes + methods.render (a_sizes, a_dest, l_bytes.to_integer_32)
 
@@ -88,7 +100,9 @@ feature -- Operations
 
 			l_bytes := l_bytes + type_name_index.get (a_sizes, a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + type_name_space_index.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + extends.get (a_sizes, a_src, l_bytes.to_integer_32)
+			if attached extends as l_extends  then
+				l_bytes := l_bytes + l_extends.get (a_sizes, a_src, l_bytes.to_integer_32)
+			end
 			l_bytes := l_bytes + fields.get (a_sizes, a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + methods.get (a_sizes, a_src, l_bytes.to_integer_32)
 

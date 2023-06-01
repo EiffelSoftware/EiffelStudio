@@ -156,7 +156,9 @@ feature -- Definition
 				l_name_index := pe_writer.hash_string (l_type_name.substring (last_dot + 1, l_type_name.count))
 			end
 
-			l_implementation := create_implementation (implementation_token, l_tuple_type.table_type_index)
+
+				-- Using table_row_index
+			l_implementation := create_implementation (implementation_token, l_tuple_type.table_row_index)
 
 				-- Create a new PE_EXPORTED_TYPE_TABLE_ENTRY instance with the given data
 			create l_exported_type_entry.make_with_data (type_flags.to_natural_32, l_tuple_type_def.table_type_index, l_name_index, l_namespace_index, l_implementation)
@@ -229,7 +231,8 @@ feature -- Definition
 				-- Hash the resource name and get the name index
 			l_name_index := pe_writer.hash_string (resource_name.string_32)
 
-			l_implementation := create_implementation (implementation_token, l_tuple_type.table_type_index)
+				-- Using table_row_index
+			l_implementation := create_implementation (implementation_token, l_tuple_type.table_row_index)
 
 				-- Create a new PE_MANIFEST_RESOURCE_TABLE_ENTRY instance with the given data
 			create l_manifest_resource_entry.make_with_data (offset.to_natural_32, resource_flags.to_natural_32, l_name_index, l_implementation)

@@ -781,6 +781,7 @@ feature -- Definition: Creation
 			last_dot: INTEGER
 			l_type_name: STRING_32
 			l_field_index, l_method_index: NATURAL
+			l_class_index: NATURAL_64
 		do
 				-- FieldList (an index into the Field table; it marks the first of a contiguous run of Fields owned by this Type).
 			l_field_index := next_table_index ({PE_TABLES}.tfield.to_integer_32)
@@ -803,6 +804,7 @@ feature -- Definition: Creation
 
 			create {PE_TYPE_DEF_TABLE_ENTRY} l_entry.make_with_data (flags, l_name_index, l_namespace_index, l_extends, l_field_index, l_method_index)
 			pe_index := add_table_entry (l_entry)
+			l_class_index := pe_index
 			Result := last_token.to_integer_32
 
 				-- Adds entries in the PE_INTERFACE_IMPL_TABLE_ENTRY table for each implemented interface, if any.
@@ -810,7 +812,7 @@ feature -- Definition: Creation
 				across implements as i loop
 					l_tuple := extract_table_type_and_row (i)
 					l_extends := create_type_def_or_ref (i, l_tuple.table_row_index)
-					create {PE_INTERFACE_IMPL_TABLE_ENTRY} l_entry.make_with_data (pe_index, l_extends)
+					create {PE_INTERFACE_IMPL_TABLE_ENTRY} l_entry.make_with_data (l_class_index, l_extends)
 						--note: l_dis is not used.
 					pe_index := add_table_entry (l_entry)
 				end
@@ -892,8 +894,8 @@ feature -- Definition: Creation
 			l_tuple := extract_table_type_and_row (in_class_token)
 
 				-- Get the method body and method declaration from their tokens
-			l_method_body := create_method_def_or_ref (method_token, l_tuple.table_row_index)
-			l_method_declaration := create_method_def_or_ref (used_method_declaration_token, l_tuple.table_row_index)
+			l_method_body := create_method_def_or_ref (method_token, extract_table_type_and_row(method_token).table_row_index)
+			l_method_declaration := create_method_def_or_ref (used_method_declaration_token, extract_table_type_and_row(used_method_declaration_token).table_row_index)
 
 				-- Create a new PE_METHOD_IMPL_TABLE_ENTRY instance with the given data
 			create l_method_impl_entry.make_with_data (l_tuple.table_row_index, l_method_body, l_method_declaration)

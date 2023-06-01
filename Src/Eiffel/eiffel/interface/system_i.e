@@ -2918,6 +2918,10 @@ feature -- IL code generation
 			old_dead_code: like dead_code
 		do
 			create il_generator.make (Degree_output)
+			if is_il_netcore then
+					-- Force IL emitter for .net core projects
+				;(create {CLI_EMITTER_SERVICE}).force_using_il_emitter
+			end
 			il_generator.generate
 			if (in_final_mode or freeze) and then externals.count > 0 then
 				externals.freeze

@@ -24,6 +24,14 @@ feature -- Settings
 			Result := not is_using_il_emitter -- False
 		end
 
+feature -- Settings change
+
+	force_using_il_emitter
+			-- Force `is_using_il_emitter` to True
+		do
+			check is_using_il_emitter end
+		end
+
 feature -- Setup
 
 	setup_cil_code_generation (a_clr_runtime_version: READABLE_STRING_GENERAL)

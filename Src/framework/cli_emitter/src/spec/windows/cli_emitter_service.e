@@ -11,10 +11,8 @@ class
 feature -- Settings
 
 	is_using_il_emitter: BOOLEAN
-			-- Is compiler using IL_EMITTER solution to generate CIL code?
-		once
-			Result := attached {EXECUTION_ENVIRONMENT}.item ("ISE_IL_EMITTER") as v and then
-				v.is_case_insensitive_equal ("true")
+		do
+			Result := is_using_il_emitter_cell.item
 		end
 
 	is_debug_enabled: BOOLEAN
@@ -25,6 +23,26 @@ feature -- Settings
 	is_signing_enabled: BOOLEAN
 		do
 			Result := not is_using_il_emitter
+		end
+
+feature -- Settings change
+
+	force_using_il_emitter 
+			-- Force `is_using_il_emitter` to True
+		do
+			if not is_using_il_emitter then
+				is_using_il_emitter_cell.replace (b)
+				update_md_factory
+			end
+		end
+
+feature {NONE} -- Settings implementation
+
+	is_using_il_emitter_cell: CELL [BOOLEAN]
+			-- Is compiler using IL_EMITTER solution to generate CIL code?
+		once
+			create Result.put (attached {EXECUTION_ENVIRONMENT}.item ("ISE_IL_EMITTER") as v and then
+				v.is_case_insensitive_equal ("true"))
 		end
 
 feature -- Setup
@@ -45,11 +63,27 @@ feature -- Setup
 feature -- Factory
 
 	md_factory: CLI_FACTORY
+		do
+			Result := md_factory_cell.item
+		end
+
+feature {NONE} -- Factory implementation
+
+	update_md_factory
+		do
+			if is_using_il_emitter then
+				md_factory_cell.replace (create {IL_EMITTER_CLI_FACTORY}) 
+			else
+				md_factory_cell.replace (create {CLI_WRITER_CLI_FACTORY})
+			end
+		end
+
+	md_factory_cell: CELL [CLI_FACTORY]
 		once
 			if is_using_il_emitter then
-				create {IL_EMITTER_CLI_FACTORY} Result
+				create Result.put (create {IL_EMITTER_CLI_FACTORY})
 			else
-				create {CLI_WRITER_CLI_FACTORY} Result
+				create Result.put (create {CLI_WRITER_CLI_FACTORY})
 			end
 		end
 

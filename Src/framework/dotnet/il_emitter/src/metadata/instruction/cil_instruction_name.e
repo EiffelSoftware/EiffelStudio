@@ -23,15 +23,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-
 	name: STRING_32 assign set_name
 			-- `name'
-		attribute check False then end end --| Remove line when `name' is initialized in creation procedure.
-
 
 	op1: NATURAL_8 assign set_op1
 			-- `op1'
-
 
 	op2: NATURAL_8 assign set_op2
 			-- `op2'

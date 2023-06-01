@@ -1,12 +1,12 @@
-note
-	description: "Class that provides interface to Eiffel `emitter'"
+﻿note
+	description: "Class that provides interface to Eiffel a COM-based .NET assembly consumer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IL_EMITTER
+	COM_CONSUMER
 
 inherit
 	CONSUMER
@@ -20,16 +20,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: PATH; a_runtime_version: READABLE_STRING_GENERAL)
-			-- Create new instance of IL_EMITTER
+	make (a_cache_path: PATH; a_runtime_version: READABLE_STRING_GENERAL)
+			-- Create new instance of COM_CONSUMER
 		require
-			attached a_path
-			not a_path.is_empty
+			attached a_cache_path
+			not a_cache_path.is_empty
 			attached a_runtime_version
 			not a_runtime_version.is_empty
 		do
-			check
-				False
+			if attached (create {COM_CONSUMER_FACTORY}).new_cache_manager (a_runtime_version) as i then
+				i.initialize_with_path (create {UNI_STRING}.make (a_cache_path.name))
+				implementation := i
 			end
 		end
 
@@ -38,33 +39,33 @@ feature -- Status report
 	exists: BOOLEAN
 			-- <Precursor>
 		do
-			Result := False
+			Result := attached implementation
 		end
 
 	is_initialized: BOOLEAN
 			-- <Precursor>
 		do
-			check
-				False
+			if attached implementation then
+				Result := implementation.is_initialized
 			end
 		end
 
-
 	last_com_code: INTEGER
 			-- Last value of the COM error if any.
-		require
-			exists: exists
 		do
-			check
-				False
+			if attached implementation then
+				Result := implementation.last_call_success
 			end
 		end
 
 	last_error_message: detachable READABLE_STRING_32
 			-- <Precursor>
+		local
+			c: like last_com_code
 		do
-			check
-				False
+			c := last_com_code
+			if c /= 0 then
+				Result := {STRING_32} "COM error 0x" + c.to_hex_string
 			end
 		end
 
@@ -73,30 +74,68 @@ feature -- Clean up
 	unload
 			-- <Precursor>
 		do
-			check
-				False
+			if attached implementation then
+				implementation.unload
 			end
 		end
 
 feature -- XML generation
 
-	consume_assembly_from_path (a_assembly_paths: ITERABLE [READABLE_STRING_32]; a_info_only: BOOLEAN; a_references: detachable ITERABLE [READABLE_STRING_32])
+	consume_assembly_from_path (a_assemblies_path: ITERABLE [READABLE_STRING_32]; a_info_only: BOOLEAN; a_references: detachable ITERABLE [READABLE_STRING_32])
 			-- <Precursor>
+		local
+			l_refs: detachable UNI_STRING
+			paths: STRING_32
+			refs: STRING_32
 		do
-			check
-				False
+			create paths.make_empty
+			across
+				a_assemblies_path as p
+			loop
+				paths.append (p)
+				paths.append_character (';')
+			end
+			if not paths.is_empty then
+				paths.remove_tail (1)
+			end
+			if a_references /= Void then
+				create refs.make_empty
+				across
+					a_references as p
+				loop
+					refs.append_character (';')
+					refs.append (p)
+				end
+				create l_refs.make (refs)
+			end
+			check attached implementation then
+				implementation.consume_assembly_from_path (
+					create {UNI_STRING}.make (paths),
+					a_info_only,
+					l_refs)
 			end
 		end
 
 	consume_assembly (a_name, a_version, a_culture, a_key: READABLE_STRING_GENERAL; a_info_only: BOOLEAN)
 			-- <Precursor>
 		do
-			check
-				False
+			check attached implementation then
+				implementation.consume_assembly (
+					create {UNI_STRING}.make (a_name),
+					create {UNI_STRING}.make (a_version),
+					create {UNI_STRING}.make (a_culture),
+					create {UNI_STRING}.make (a_key),
+					a_info_only)
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	implementation: detachable COM_CACHE_MANAGER note option: stable attribute end
+			-- Com object to get information about assemblies and emitting them.
+
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

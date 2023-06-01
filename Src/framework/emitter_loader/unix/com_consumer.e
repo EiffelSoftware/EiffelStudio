@@ -1,52 +1,103 @@
 note
-	description: "Create COM_CACHE_MANAGER instances"
+	description: "Class that provides interface to Eiffel `consumer'"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EMITTER_FACTORY
+	COM_CONSUMER
 
 inherit
-	CLI_COM
-
-	CLR_HOST_FACTORY
-		export
-			{NONE} all
+	CONSUMER
+		rename
+			is_available as exists,
+			release as unload
 		end
 
-feature -- Initialization
+create
+	make
 
-	new_emitter (runtime_version: READABLE_STRING_GENERAL): detachable COM_CACHE_MANAGER
-			-- Create a new instance of COM_CACHE_MANAGER.
-		local
-			p: POINTER
-			l_host: detachable CLR_HOST
+feature {NONE} -- Initialization
+
+	make (a_path: PATH; a_runtime_version: READABLE_STRING_GENERAL)
+			-- Create new instance of COM_CONSUMER
+		require
+			attached a_path
+			not a_path.is_empty
+			attached a_runtime_version
+			not a_runtime_version.is_empty
 		do
-			initialize_com
-			l_host := runtime_host (runtime_version)
 			check
-				l_host_not_void: l_host /= Void
-			end
-			p := c_new_cache_manager
-			if p /= default_pointer then
-				create Result.make_by_pointer (p)
+				False
 			end
 		end
 
-feature {NONE} -- Externals
+feature -- Status report
 
-	c_new_cache_manager: POINTER
-			-- Creates new instance of EiffelSoftware_MetadataConsumer_ComCacheManager.
-		external
-			"C use %"cli_writer.h%""
-		alias
-			"new_cache_manager"
+	exists: BOOLEAN
+			-- <Precursor>
+		do
+			Result := False
+		end
+
+	is_initialized: BOOLEAN
+			-- <Precursor>
+		do
+			check
+				False
+			end
+		end
+
+
+	last_com_code: INTEGER
+			-- Last value of the COM error if any.
+		require
+			exists: exists
+		do
+			check
+				False
+			end
+		end
+
+	last_error_message: detachable READABLE_STRING_32
+			-- <Precursor>
+		do
+			check
+				False
+			end
+		end
+
+feature -- Clean up
+
+	unload
+			-- <Precursor>
+		do
+			check
+				False
+			end
+		end
+
+feature -- XML generation
+
+	consume_assembly_from_path (a_assembly_paths: ITERABLE [READABLE_STRING_32]; a_info_only: BOOLEAN; a_references: detachable ITERABLE [READABLE_STRING_32])
+			-- <Precursor>
+		do
+			check
+				False
+			end
+		end
+
+	consume_assembly (a_name, a_version, a_culture, a_key: READABLE_STRING_GENERAL; a_info_only: BOOLEAN)
+			-- <Precursor>
+		do
+			check
+				False
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -77,4 +128,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EMITTER_FACTORY
+end

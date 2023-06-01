@@ -1,37 +1,54 @@
-﻿note
-	description: "A factory to instantiate a .NET assembly consumer."
+note
+	description: "Create COM_CACHE_MANAGER instances"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	CONSUMER_FACTORY
+	COM_CONSUMER_FACTORY
 
 inherit
-	EIFFEL_LAYOUT
+	CLI_COM
 
-feature -- Basic operations
+	CLR_HOST_FACTORY
+		export
+			{NONE} all
+		end
 
-	consumer (cache_path: PATH; version: READABLE_STRING_32): detachable CONSUMER
-			-- A .NET assembly consumer with the given cache path `cache_path` and .NET run-time version `version`
-			-- or `Void` if not found.
+feature -- Initialization
+
+	new_cache_manager (runtime_version: READABLE_STRING_GENERAL): detachable COM_CACHE_MANAGER
+			-- Create a new instance of COM_CACHE_MANAGER.
+		local
+			p: POINTER
+			l_host: detachable CLR_HOST
 		do
-			if
-				is_eiffel_layout_defined and then 
-				eiffel_layout.use_emdc_consumer
-			then
-					-- use emdc executable to consume dotnet assemblies.
-				create {MD_CONSUMER_PROCESS} Result.make (cache_path, version)
-			else
-				create {COM_CONSUMER} Result.make (cache_path, version)
+			initialize_com
+			l_host := runtime_host (runtime_version)
+			check
+				l_host_not_void: l_host /= Void
 			end
-		ensure
-			class
+			p := c_new_cache_manager
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
+			end
+		end
+
+feature {NONE} -- Externals
+
+	c_new_cache_manager: POINTER
+			-- Creates new instance of EiffelSoftware_MetadataConsumer_ComCacheManager.
+		external
+			"C use %"cli_writer.h%""
+		alias
+			"new_cache_manager"
 		end
 
 note
-	date: "$Date$"
-	revision: "$Revision$"
-	copyright: "Copyright (c) 2022, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options: "http://www.eiffel.com/licensing"
+	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -59,4 +76,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

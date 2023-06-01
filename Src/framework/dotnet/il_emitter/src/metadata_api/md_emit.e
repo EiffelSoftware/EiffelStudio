@@ -882,8 +882,8 @@ feature -- Definition: Creation
 			l_tuple := extract_table_type_and_row (in_class_token)
 
 				-- Get the method body and method declaration from their tokens
-			l_method_body := create_method_def_or_ref (method_token, l_tuple.table_type_index)
-			l_method_declaration := create_method_def_or_ref (used_method_declaration_token, l_tuple.table_type_index)
+			l_method_body := create_method_def_or_ref (method_token, l_tuple.table_row_index)
+			l_method_declaration := create_method_def_or_ref (used_method_declaration_token, l_tuple.table_row_index)
 
 				-- Create a new PE_METHOD_IMPL_TABLE_ENTRY instance with the given data
 			create l_method_impl_entry.make_with_data (l_tuple.table_row_index, l_method_body, l_method_declaration)

@@ -2,7 +2,8 @@ note
 	description: "Object representing the MethodImpl table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.27 MethodImpl : 0x19 "
+	EIS: "name=MethodImpl", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=262&zoom=100,116,838", "protocol=uri"
+
 class
 	PE_METHOD_IMPL_TABLE_ENTRY
 
@@ -25,10 +26,15 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	class_: PE_TYPE_DEF
+		-- an index into the TypeDef table.
 
 	method_body: PE_METHOD_DEF_OR_REF
+		-- an index into the MethodDef or MemberRef table;
+		-- more precisely a MethodDefOrRef
 
 	method_declaration: PE_METHOD_DEF_OR_REF
+		-- an index into the MethodDef or MemberRef table
+		-- more precisely, a MethodDefOrRef
 
 feature -- Operations
 

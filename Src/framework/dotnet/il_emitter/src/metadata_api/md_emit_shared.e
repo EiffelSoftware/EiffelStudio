@@ -14,16 +14,20 @@ feature -- Access
 
 	tables: SPECIAL [MD_TABLES]
 			--  in-memory metadata tables
+		deferred
+		end
 
 	pe_writer: PE_WRITER
 			-- class to generate the PE file.
 			--| using as a helper class to access needed features.
 			--| TODO, we don't need the full class we need to extract the needed features.
+		deferred
+		end
 
 	pe_index: NATURAL_64
 			-- metatable index in the PE file for this data container.
 
-	Heap_size_: INTEGER = 65536
+--	Heap_size_: INTEGER = 65536
 			--   If the maximum size of the heap is less than 2^16, then the heap offset size is 2 bytes (16 bits), otherwise it is 4 bytes
 
 feature -- Status report

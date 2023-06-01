@@ -23,11 +23,27 @@ feature -- Access
 	minor_version: NATURAL_16 assign set_minor_version
 			-- Minor version
 
+	build_number: NATURAL_16 assign set_build_number
+			-- Build number	
+
 	revision_number: NATURAL_16 assign set_revision_number
 			-- Revision number
 
-	build_number: NATURAL_16 assign set_build_number
-			-- Build number	
+feature -- Conversion
+
+	string: STRING_8
+		do
+			create Result.make (10)
+			Result.append (major_version.out)
+			Result.append_character ('.')
+			Result.append (minor_version.out)
+			Result.append_character ('.')
+			Result.append (build_number.out)
+			Result.append_character ('.')
+			Result.append (revision_number.out)
+		end
+
+feature -- Obsolete
 
 	major: like major_version
 		obsolete "Use major_version"

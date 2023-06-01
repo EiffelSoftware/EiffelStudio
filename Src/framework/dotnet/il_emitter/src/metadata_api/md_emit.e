@@ -115,6 +115,16 @@ feature {NONE}
 
 feature -- Access
 
+	tables: SPECIAL [MD_TABLES]
+			--  in-memory metadata tables
+
+	pe_writer: PE_WRITER
+			-- class to generate the PE file.
+			--| using as a helper class to access needed features.
+			--| TODO, we don't need the full class we need to extract the needed features.
+
+feature -- Access
+
 	module_GUID: ARRAY [NATURAL_8]
 			-- Unique GUID
 			--|the length should be 16.

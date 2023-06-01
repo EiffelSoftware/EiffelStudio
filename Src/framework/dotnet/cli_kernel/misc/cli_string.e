@@ -15,6 +15,13 @@ inherit
 			is_equal
 		end
 
+	DEBUG_OUTPUT
+		rename
+			debug_output as string_32
+		redefine
+			is_equal
+		end
+
 create
 	make,
 	make_empty,

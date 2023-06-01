@@ -20,9 +20,13 @@ feature -- Scope Definition
 	make
 			-- Create a new instance of METADATA_DISPENSER
 		do
-			create emit.make
+			-- create emit.make
 		end
 
 	emit: MD_EMIT
-		-- Emit metadata
+			-- Emit metadata
+		do
+			create Result.make
+		end
+
 end

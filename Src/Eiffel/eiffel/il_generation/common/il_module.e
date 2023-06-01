@@ -2238,9 +2238,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			if defined_assemblies.has_key (a_name) then
 				Result := defined_assemblies.found_item
 			else
-				if a_name.same_string_general ("mscorlib") then
+				if a_name.same_string_general ("mscorlib") and mscorlib_token > 0 then
 					Result := mscorlib_token
-				elseif a_name.same_string_general (runtime_namespace) then
+				elseif a_name.same_string_general (runtime_namespace) and ise_runtime_token > 0 then
 					Result := ise_runtime_token
 				else
 					l_ass_info := md_factory.assembly_info
@@ -3124,7 +3124,7 @@ feature {NONE} -- Once per modules being generated.
 			system_object_compiled: System.system_object_class.is_compiled
 		local
 			l_ass_info: MD_ASSEMBLY_INFO
-			l_pub_key: MD_PUBLIC_KEY_TOKEN
+--			l_pub_key: MD_PUBLIC_KEY_TOKEN
 			l_mscorlib: ASSEMBLY_I
 			l_version: VERSION
 		do
@@ -3145,10 +3145,8 @@ feature {NONE} -- Once per modules being generated.
 			l_ass_info.set_build_number (l_version.build.to_natural_16)
 			l_ass_info.set_revision_number (l_version.revision.to_natural_16)
 
-			create l_pub_key.make_from_string (l_mscorlib.assembly_public_key_token)
-
-			mscorlib_token := md_emit.define_assembly_ref (
-				create {CLI_STRING}.make (l_mscorlib.assembly_name), l_ass_info, l_pub_key)
+--			create l_pub_key.make_from_string (l_mscorlib.assembly_public_key_token)
+			mscorlib_token := define_assembly_reference (l_mscorlib.assembly_name, l_ass_info.string, "", l_mscorlib.assembly_public_key_token)
 
 			type_handle_class_token := md_emit.define_type_ref (
 				create {CLI_STRING}.make (Type_handle_class_name), mscorlib_token)
@@ -3327,11 +3325,11 @@ feature {NONE} -- Once per modules being generated.
 			create l_pub_key.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)
 
-			ise_runtime_token := md_emit.define_assembly_ref (
-				create {CLI_STRING}.make (runtime_namespace), l_ass_info, l_pub_key)
-
-			ise_runtime_type_token := md_emit.define_type_ref (
-				create {CLI_STRING}.make (runtime_class_name), ise_runtime_token)
+			ise_runtime_token := define_assembly_reference (runtime_namespace, l_ass_info.string, "",
+					{STRING_32} "def26f296efef469"
+				)
+--			ise_runtime_token := md_emit.define_assembly_ref (create {CLI_STRING}.make (runtime_class_name), l_ass_info, l_pub_key)
+			ise_runtime_type_token := md_emit.define_type_ref (create {CLI_STRING}.make (runtime_class_name), ise_runtime_token)
 
 			ise_exception_manager_type_token := md_emit.define_type_ref (
 				create {CLI_STRING}.make (exception_manager_interface_name), ise_runtime_token)

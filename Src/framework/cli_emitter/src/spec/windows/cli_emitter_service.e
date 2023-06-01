@@ -31,7 +31,7 @@ feature -- Settings change
 			-- Force `is_using_il_emitter` to True
 		do
 			if not is_using_il_emitter then
-				is_using_il_emitter_cell.replace (b)
+				is_using_il_emitter_cell.replace (True)
 				update_md_factory
 			end
 		end

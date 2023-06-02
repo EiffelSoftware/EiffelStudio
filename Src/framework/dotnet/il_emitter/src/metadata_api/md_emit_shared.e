@@ -74,10 +74,17 @@ feature {NONE} -- Change tables
 			valid_entry_table_index: tables.valid_index (a_entry.table_index)
 		local
 			n: INTEGER
+			l_md_tables: MD_TABLES
+			lst: LIST [PE_TABLE_ENTRY_BASE]
 		do
 			n := a_entry.table_index
-			tables [n].table.force (a_entry)
-			Result := tables [n].table.count.to_natural_32
+			l_md_tables := tables [n]
+			Result := a_entry.token_from_tables (l_md_tables)
+			if Result = 0 then
+				lst := l_md_tables.table
+				lst.force (a_entry)
+				Result := lst.count.to_natural_32
+			end
 			last_token := (n |<< 24).to_natural_32 | Result.to_natural_32
 		end
 

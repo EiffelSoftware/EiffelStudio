@@ -16,6 +16,15 @@ feature -- Access
 		deferred
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		do
+			-- To redefine ...
+			Result := {NATURAL_64} 0
+		end
+
 feature -- Operations
 
 	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64

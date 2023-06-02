@@ -11,8 +11,10 @@ class
 	PE_MEMBER_REF_TABLE_ENTRY
 
 inherit
-
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -36,6 +38,33 @@ feature -- Access
 
 	signature_index: PE_BLOB
 			-- index in the blob heap.
+		
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if 
+					attached {like Current} i as e and then
+					e.parent_index.index = parent_index.index and then
+					e.name_index.index = name_index.index and then
+					e.signature_index.index = signature_index.index
+				then
+					Result := n
+				end
+			end
+		end
 
 feature -- Operations
 

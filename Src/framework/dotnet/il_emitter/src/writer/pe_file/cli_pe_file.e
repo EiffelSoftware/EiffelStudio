@@ -299,21 +299,24 @@ feature -- Saving
 				l_pe_file.put_managed_pointer (p, 0, resources_size)
 			end
 
+			if emitter.appending_to_file_supported then
+				emitter.append_to_file (l_pe_file)
+			else
 				-- Save the metadata to `l_pe_file'. We cannot use `MD_EMIT.assembly_memory'
 				-- because on some platforms the amount of required memory cannot be allocated
 				-- in one chunk.
 				-- Instead we save it to disk and then copy it over. This is not efficient
 				-- but we cannot use the stream version of the API since we do not have a way
 				-- to make an IStream from an Eiffel FILE.
--- Todo save metadata
-			l_meta_data_file_name := file_name + ".pe"
-			emitter.save (create {CLI_STRING}.make (l_meta_data_file_name))
-			create l_meta_data_file.make_with_name (l_meta_data_file_name)
-			l_meta_data_file.open_read
-			check valid_size: l_meta_data_file.count = meta_data_size end
-			l_meta_data_file.copy_to (l_pe_file)
-			l_meta_data_file.close
---			l_meta_data_file.delete
+				l_meta_data_file_name := file_name + ".pe"
+				emitter.save (create {CLI_STRING}.make (l_meta_data_file_name))
+				create l_meta_data_file.make_with_name (l_meta_data_file_name)
+				l_meta_data_file.open_read
+				check valid_size: l_meta_data_file.count = meta_data_size end
+				l_meta_data_file.copy_to (l_pe_file)
+				l_meta_data_file.close
+				safe_delete (l_meta_data_file)
+			end
 
 			if import_table_padding > 0 then
 				create l_padding.make (import_table_padding)
@@ -357,6 +360,23 @@ feature -- Saving
 				l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
 				l_pe_file.close
 			end
+		end
+
+	safe_delete (f: FILE)
+		local
+			nb: INTEGER
+		do
+			if nb = 0 then
+				f.delete
+			elseif nb = 1 then
+				{EXECUTION_ENVIRONMENT}.sleep (5_000) -- 5 ms
+				f.delete
+			else
+				-- Keep the file ...
+			end
+		rescue
+			nb := nb + 1
+			retry
 		end
 
 feature {NONE} -- Saving

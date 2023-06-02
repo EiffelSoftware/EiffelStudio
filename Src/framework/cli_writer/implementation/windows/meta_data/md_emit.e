@@ -32,6 +32,12 @@ feature {NONE} -- Initialization
 			create assembly_emitter.make_by_pointer (c_query_assembly_emit (item))
 		end
 
+feature -- Status report
+
+	appending_to_file_supported: BOOLEAN = False
+			-- <Precursor>
+			-- COM interface does not support appending current emit content to PE file.
+
 feature -- Access
 
 	save_size: INTEGER
@@ -60,6 +66,13 @@ feature -- Save
 			-- Save current assembly to file `f_name'.
 		do
 			last_call_success := c_save (item, f_name.item, 0)
+		end
+
+	append_to_file (f: FILE)
+			-- <Precursor>
+		do
+			check not_supported: False then
+			end
 		end
 
 feature -- Definition: access

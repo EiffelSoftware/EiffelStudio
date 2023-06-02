@@ -151,6 +151,9 @@ feature -- Status report
 			Result := True
 		end
 
+	appending_to_file_supported: BOOLEAN = True
+			-- Is `append_to_file` supported?
+
 feature -- Access
 
 	save_size: INTEGER
@@ -396,17 +399,29 @@ feature -- Save
 				-- and the rtv_string.
 
 			create {RAW_FILE} l_file.make_create_read_write (f_name.string_32)
-			write_metadata_headers (l_file)
-			write_tables (l_file)
-			write_strings (l_file)
-			write_us (l_file)
-			write_guid (l_file)
-			write_blob (l_file)
+			append_to_file (l_file)
+			l_file.close
+		end
+
+	append_to_file (f: FILE)
+			-- Append current assembly to file `f`.
+		do
+				-- This code also writes the PE_DOTNET_META_HEADER
+				-- see II.24.2 File headers, II.24.2.1 Metadata root
+				-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297
+				-- and the rtv_string.
+
+			write_metadata_headers (f)
+			write_tables (f)
+			write_strings (f)
+			write_us (f)
+			write_guid (f)
+			write_blob (f)
 
 				-- Workaround to align
-			if not is_aligned (l_file, 4) then
+			if not is_aligned (f, 4) then
 				check should_not_happen: False end
- 				align (l_file, 4)
+ 				align (f, 4)
 			end
 		end
 

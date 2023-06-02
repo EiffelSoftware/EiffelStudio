@@ -17,6 +17,11 @@ feature -- Status report
 		deferred
 		end
 
+	appending_to_file_supported: BOOLEAN
+			-- Is `append_to_file` supported?
+		deferred
+		end
+
 feature -- Access
 
 	save_size: INTEGER
@@ -33,6 +38,14 @@ feature -- Save
 		require
 			f_name_not_void: f_name /= Void
 			f_name_not_empty: not f_name.is_empty
+		deferred
+		end
+
+	append_to_file (f: FILE)
+			-- Append current assembly to file `f`.
+		require
+			writable: f.is_open_write
+			appending_to_file_supported
 		deferred
 		end
 

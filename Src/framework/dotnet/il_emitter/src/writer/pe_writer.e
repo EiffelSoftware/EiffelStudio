@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			create snk_file.make_from_string (a_snk_file)
 			create meta_header.make_from_other (meta_header1)
 			create string_map.make (0)
+			create user_string_map.make (0)
 			initialize_dnl_tables
 			create {ARRAYED_LIST [PE_METHOD]} methods.make (0)
 			create rva.make
@@ -66,6 +67,7 @@ feature {NONE} -- Initialization
 			cor_base_zero: cor_base = 0
 			snk_base = 0
 			string_map_empty: string_map.is_empty
+			user_string_map_empty: user_string_map.is_empty
 			methods_empty: methods.is_empty
 		end
 
@@ -214,6 +216,10 @@ feature -- Access
 
 	string_map: STRING_TABLE [NATURAL_64]
 			-- reflection of the String stream so that we can keep from doing duplicates.
+			-- right now we don't check duplicates on any of the other streams...
+
+	user_string_map: STRING_TABLE [NATURAL_64]
+			-- reflection of the UserString stream so that we can keep from doing duplicates.
 			-- right now we don't check duplicates on any of the other streams...
 
 		--tables: LIST [DNL_TABLE]
@@ -505,46 +511,53 @@ feature -- Stream functions
 			l_blob_len: INTEGER
 			n: INTEGER
 		do
-			if us.size = 0 then
-				us.increment_size
-			end
-			us.confirm ((a_len * 2 + 5).to_natural_32)
-			Result := us.size
-			l_blob_len := a_len * 2 + 1
-			if l_blob_len < 0x80 then
-				us.base [us.size.to_integer_32] := l_blob_len.to_natural_8
-				us.increment_size
-			elseif l_blob_len <= 0x3fff then
-				us.base [us.size.to_integer_32] := ((l_blob_len |>> 8) | 0x80).to_natural_8
-				us.increment_size
-				us.base [us.size.to_integer_32] := l_blob_len.to_natural_8
-				us.increment_size
+				-- For now, keep the user_string_map
+				-- TODO: once the MD_EMIT_SHARED.check_us is fixed, remove it.
+			if user_string_map.has_key (a_str) and then attached user_string_map.item (a_str) as l_val then
+				Result := l_val
 			else
-				l_blob_len := l_blob_len & 0x1fffffff
-				us.base [us.size.to_integer_32] := ((l_blob_len |>> 24) | 0xc0).to_natural_8
-				us.increment_size
-				us.base [us.size.to_integer_32] := (l_blob_len |>> 16).to_natural_8
-				us.increment_size
-				us.base [us.size.to_integer_32] := (l_blob_len |>> 8).to_natural_8
-				us.increment_size
-				us.base [us.size.to_integer_32] := (l_blob_len |>> 0).to_natural_8
-				us.increment_size
-			end
-
-			across a_str as i loop
-				n := i.code
-				if (n & 0xff00) /= 0 then
-					l_flag := 1
-				elseif (n <= 8 or else (n >= 0x0e and then n < 0x20) or else n = 0x27 or else n = 0x2d or else n = 0x7f) then
-					l_flag := 1
+				if us.size = 0 then
+					us.increment_size
 				end
-				us.base [us.size.to_integer_32] := (n & 0xff).to_natural_8
+				us.confirm ((a_len * 2 + 5).to_natural_32)
+				Result := us.size
+				l_blob_len := a_len * 2 + 1
+				if l_blob_len < 0x80 then
+					us.base [us.size.to_integer_32] := l_blob_len.to_natural_8
+					us.increment_size
+				elseif l_blob_len <= 0x3fff then
+					us.base [us.size.to_integer_32] := ((l_blob_len |>> 8) | 0x80).to_natural_8
+					us.increment_size
+					us.base [us.size.to_integer_32] := l_blob_len.to_natural_8
+					us.increment_size
+				else
+					l_blob_len := l_blob_len & 0x1fffffff
+					us.base [us.size.to_integer_32] := ((l_blob_len |>> 24) | 0xc0).to_natural_8
+					us.increment_size
+					us.base [us.size.to_integer_32] := (l_blob_len |>> 16).to_natural_8
+					us.increment_size
+					us.base [us.size.to_integer_32] := (l_blob_len |>> 8).to_natural_8
+					us.increment_size
+					us.base [us.size.to_integer_32] := (l_blob_len |>> 0).to_natural_8
+					us.increment_size
+				end
+
+				across a_str as i loop
+					n := i.code
+					if (n & 0xff00) /= 0 then
+						l_flag := 1
+					elseif (n <= 8 or else (n >= 0x0e and then n < 0x20) or else n = 0x27 or else n = 0x2d or else n = 0x7f) then
+						l_flag := 1
+					end
+					us.base [us.size.to_integer_32] := (n & 0xff).to_natural_8
+					us.increment_size
+					us.base [us.size.to_integer_32] := (n |>> 8).to_natural_8
+					us.increment_size
+				end
+				us.base [us.size.to_integer_32] := l_flag.to_natural_8
 				us.increment_size
-				us.base [us.size.to_integer_32] := (n |>> 8).to_natural_8
-				us.increment_size
+				user_string_map.force (Result, a_str)
 			end
-			us.base [us.size.to_integer_32] := l_flag.to_natural_8
-			us.increment_size
 		end
 
 	hash_guid (a_guid: ARRAY [NATURAL_8]): NATURAL_64

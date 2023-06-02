@@ -1092,11 +1092,15 @@ feature -- Heaps
 			-- Computes the hash of a blob `a_blob_data'
 			-- if the blob already exists in a heap, returns the index of the existing blob
 			-- otherwise computes the hash and returns the index of the new blob.
+		local
+			r: NATURAL_64
 		do
-			Result := check_blob (pe_writer.blob.base.to_array, a_blob_data).to_natural_64
+			Result := check_blob (pe_writer.blob.base, a_blob_data).to_natural_64
 			if Result = 0 then
 				Result := pe_writer.hash_blob (a_blob_data, a_blob_len)
 			end
+		ensure
+			hashed: Result = check_blob (pe_writer.blob.base, a_blob_data).to_natural_64
 		end
 
 	hash_us (a_str: STRING_32; a_len: INTEGER): NATURAL_64
@@ -1105,28 +1109,30 @@ feature -- Heaps
 			-- To replace the use of {PE_WRITER}.hash_us
 		local
 			l_converter: BYTE_ARRAY_CONVERTER
-			l_utf: UTF_CONVERTER
 			l_data: ARRAY [NATURAL_8]
+			r: NATURAL_64
 		do
-			create l_converter.make_from_string (l_utf.string_32_to_utf_8_string_8 (a_str))
+			create l_converter.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_16le_string_8 (a_str))
 			l_data := l_converter.to_natural_8_array
-
-			Result := check_us (pe_writer.us.base.to_array, l_data).to_natural_64
+			Result := check_us (pe_writer.us.base, l_data).to_natural_64
 			if Result = 0 then
 				Result := pe_writer.hash_us (a_str, a_len)
 			end
-
+			check
+				hashed: check_us (pe_writer.us.base, l_data).to_natural_64 = Result
+			end
 		end
 
-	check_blob (blob_heap: ARRAY [NATURAL_8]; target_blob: ARRAY [NATURAL_8]): INTEGER
+	check_blob (blob_heap: SPECIAL [NATURAL_8]; target_blob: ARRAY [NATURAL_8]): INTEGER
 			-- Check if `target_blob` exists in `blob_heap` and return its index if found, otherwise return 0.
 		local
 			i, j, k, target_size, current_size: INTEGER
 		do
 			target_size := target_blob.count
 			from
-				i := 2
-			until i > blob_heap.count or else Result /= 0
+				i := 1 --| 2 - 1  Special are 0-based
+			until
+				i >= blob_heap.count or else Result /= 0
 			loop
 					-- Check if the blob header matches the target blob size.
 				if blob_heap [i] < 128 then -- 0x80
@@ -1141,18 +1147,16 @@ feature -- Heaps
 				end
 					-- Check if the current blob matches the target blob.
 				if current_size = target_size then
-
 					from
 						k := 1
 					until
-						j > blob_heap.count or else k > target_size or else target_blob [k] /= blob_heap [j]
+						j + k - 1 > blob_heap.count or else k > target_size or else target_blob [k] /= blob_heap [j + k - 1]
 					loop
-						j := j + 1
 						k := k + 1
 					end
 					if (k - 1) = target_size then
 							-- Found a match.
-						Result := i - 1
+						Result := i
 					end
 				end
 				i := j + current_size
@@ -1161,15 +1165,16 @@ feature -- Heaps
 			valid_result: Result >= 0
 		end
 
-	check_us (us_heap: ARRAY [NATURAL_8]; target_us: ARRAY [NATURAL_8]): INTEGER
+	check_us (us_heap: SPECIAL [NATURAL_8]; target_us: ARRAY [NATURAL_8]): INTEGER
 			-- Check if `target_us` exists in `us_heap` and return its index if found, otherwise return 0.
 		local
 			i, j, k, target_size, current_size: INTEGER
 		do
 			target_size := target_us.count
 			from
-				i := 2
-			until i > us_heap.count or else Result /= 0
+				i := 1 -- SPECIAL are 0-based
+			until
+				i >= us_heap.count or else Result /= 0
 			loop
 					-- Check if the current user string matches the target user string.
 				if us_heap [i] = 0 then
@@ -1182,21 +1187,19 @@ feature -- Heaps
 					current_size := us_heap [i] - 1
 					j := i + 1
 				end
-
-				from
-					k := 1
-				until
-					j > us_heap.count or else k > target_size or else target_us [k] /= us_heap [j]
-				loop
-					j := j + 1
-					k := k + 1
+				if current_size = target_size then
+					from
+						k := 1
+					until
+						j + k - 1 >= us_heap.count or else k > target_size or else target_us [k] /= us_heap [j + k - 1]
+					loop
+						k := k + 1
+					end
+					if (k - 1) = target_size then
+							-- Found a match.
+						Result := i
+					end
 				end
-
-				if (k - 1) = target_size then
-						-- Found a match.
-					Result := i - 1
-				end
-
 				i := j + current_size + 1
 			end
 		ensure

@@ -19,7 +19,7 @@ feature -- Testing
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
 				--Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.empty_assembly", "tk.define_method_net2", "om.method_assembly">>
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_implementation">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.blob_heap_duplicates">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -114,6 +114,12 @@ feature -- Token tests
 			end
 			if is_test_included ("define_implementation", a_pattern) then
 				(create {TEST_METADATA_TABLES_TK}).test_define_implementation
+			end
+			if is_test_included ("user_string_heap_duplicates", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_user_string_heap_duplicates
+			end
+			if is_test_included ("blob_heap_duplictes", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_blob_heap_duplicates
 			end
 		end
 

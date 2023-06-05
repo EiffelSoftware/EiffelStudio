@@ -149,6 +149,56 @@ feature -- Test
 			check l_token2 = l_token4 end
 		end
 
+	test_blob_heap_duplicates
+		local
+			md_dispenser: MD_DISPENSER
+			md_emit: MD_EMIT
+			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
+			l_pub_key1, l_pub_key2: NATURAL_64
+			l_pub_key3, l_pub_key4: NATURAL_64
+			sig: MD_METHOD_SIGNATURE
+			sig_token1, sig_token2: NATURAL_64
+		do
+			create md_dispenser.make
+			md_emit := md_dispenser.emit
+
+			create l_pub_key_token.make_from_array (
+				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
+			l_pub_key1 := md_emit.hash_blob (l_pub_key_token.item.read_array (0, l_pub_key_token.item.count), l_pub_key_token.item.count.to_natural_64)
+
+			create l_pub_key_token.make_from_array (
+				{ARRAY [NATURAL_8]} <<0xB0, 0x3F, 0x5F, 0x7F, 0x11, 0xD5, 0x0A, 0x3A>>)
+			l_pub_key2 := md_emit.hash_blob (l_pub_key_token.item.read_array (0, l_pub_key_token.item.count), l_pub_key_token.item.count.to_natural_64)
+
+			check l_pub_key1 /= l_pub_key2 end
+
+			create l_pub_key_token.make_from_array (
+				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
+			l_pub_key3 := md_emit.hash_blob (l_pub_key_token.item.read_array (0, l_pub_key_token.item.count), l_pub_key_token.item.count.to_natural_64)
+
+			check l_pub_key1 = l_pub_key3 end
+
+			create l_pub_key_token.make_from_array (
+				{ARRAY [NATURAL_8]} <<0xB0, 0x3F, 0x5F, 0x7F, 0x11, 0xD5, 0x0A, 0x3A>>)
+			l_pub_key4 := md_emit.hash_blob (l_pub_key_token.item.read_array (0, l_pub_key_token.item.count), l_pub_key_token.item.count.to_natural_64)
+			check l_pub_key2 = l_pub_key4 end
+
+				-- signature like void f()
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
+			sig.set_parameter_count (0)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig_token1 := md_emit.hash_blob (sig.as_array, sig.count.to_natural_64)
+
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
+			sig.set_parameter_count (0)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig_token2 := md_emit.hash_blob (sig.as_array, sig.count.to_natural_64)
+
+			check sig_token1 = sig_token2 end
+
+		end
 
 	test_define_module
 		local

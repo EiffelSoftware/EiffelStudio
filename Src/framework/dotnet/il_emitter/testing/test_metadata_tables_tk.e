@@ -99,6 +99,57 @@ feature -- Test
 			check same_string: l_str.same_string_general ("TEST_METADATA_TABLES_TK") end
 		end
 
+	test_user_string_heap_duplicates
+		local
+			l_token1, l_token2, l_token3, l_token4: NATURAL_64
+			md_dispenser: MD_DISPENSER
+			md_emit: MD_EMIT
+		do
+			create md_dispenser.make
+			md_emit := md_dispenser.emit
+
+			l_token1 := md_emit.define_string (create {CLI_STRING}.make ("Eiffel")).to_natural_64
+			l_token2 := md_emit.define_string (create {CLI_STRING}.make ("Java")).to_natural_64
+			l_token3 := md_emit.define_string (create {CLI_STRING}.make ("Eiffel")).to_natural_64
+			l_token4 := md_emit.define_string (create {CLI_STRING}.make ("Java")).to_natural_64
+
+			check l_token1 = l_token3 end
+			check l_token2 = l_token4 end
+
+			l_token1 := md_emit.define_string (create {CLI_STRING}.make ("Eiffel?")).to_natural_64
+			l_token2 := md_emit.define_string (create {CLI_STRING}.make ("Java!")).to_natural_64
+			l_token3 := md_emit.define_string (create {CLI_STRING}.make ("Eiffel?")).to_natural_64
+			l_token4 := md_emit.define_string (create {CLI_STRING}.make ("Java!")).to_natural_64
+
+			check l_token1 = l_token3 end
+			check l_token2 = l_token4 end
+
+			l_token1 := md_emit.define_string (create {CLI_STRING}.make ("Eiffel_1")).to_natural_64
+			l_token2 := md_emit.define_string (create {CLI_STRING}.make ("Java_2")).to_natural_64
+			l_token3 := md_emit.define_string (create {CLI_STRING}.make ("Eiffel_1")).to_natural_64
+			l_token4 := md_emit.define_string (create {CLI_STRING}.make ("Java_2")).to_natural_64
+
+			check l_token1 = l_token3 end
+			check l_token2 = l_token4 end
+
+			l_token1 := md_emit.define_string (create {CLI_STRING}.make ("Eiffel_1!")).to_natural_64
+			l_token2 := md_emit.define_string (create {CLI_STRING}.make ("Java_2!")).to_natural_64
+			l_token3 := md_emit.define_string (create {CLI_STRING}.make ("Eiffel_1!")).to_natural_64
+			l_token4 := md_emit.define_string (create {CLI_STRING}.make ("Java_2!")).to_natural_64
+
+			check l_token1 = l_token3 end
+			check l_token2 = l_token4 end
+
+			l_token1 := md_emit.define_string (create {CLI_STRING}.make ("Eiffel_*")).to_natural_64
+			l_token2 := md_emit.define_string (create {CLI_STRING}.make ("Java_*")).to_natural_64
+			l_token3 := md_emit.define_string (create {CLI_STRING}.make ("Eiffel_*")).to_natural_64
+			l_token4 := md_emit.define_string (create {CLI_STRING}.make ("Java_*")).to_natural_64
+
+			check l_token1 = l_token3 end
+			check l_token2 = l_token4 end
+		end
+
+
 	test_define_module
 		local
 			l_pe_file: CLI_PE_FILE
@@ -2781,7 +2832,7 @@ feature -- Test
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			sig.set_parameter_count (1)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_token)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
 
 			write_line_token := md_emit.define_member_ref (
 					create {CLI_STRING}.make ("WriteLine"),
@@ -2890,8 +2941,6 @@ feature -- Test
 			body.put_static_call (write_line_token, 1, False)
 			body.put_nop
 			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
 			method_writer.write_current_body
 
 				-- J.M

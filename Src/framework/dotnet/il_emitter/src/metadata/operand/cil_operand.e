@@ -262,7 +262,6 @@ feature -- Output
 					check not_null_character: not l_str.has ('%U') end
 
 						--| add the null character
-					l_str.append_character ('%U')
 					l_us_index := l_writer.hash_us (l_str, l_str.count)
 					{BYTE_ARRAY_HELPER}.put_array_integer_32_with_natural_64 (a_result, l_us_index | ({NATURAL_64} 0x70 |<< 24), a_offset)
 					l_sz := l_sz + 4

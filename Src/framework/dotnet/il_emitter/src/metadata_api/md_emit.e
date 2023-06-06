@@ -179,11 +179,10 @@ feature -- Access
 		local
 			l_index: INTEGER_32
 			l_length: INTEGER_32
-			l_bytes: ARRAY [CHARACTER_32]
-			l_str_length: INTEGER_32
+			l_bytes: STRING_8
 			i: INTEGER_32
 			j: INTEGER_32
-			l_us_heap: ARRAY [NATURAL_8]
+			us_heap: SPECIAL [NATURAL_8]
 		do
 				-- <<0, 1, 58, 0, 36, 0, ..... >>
 				--      ^   - -
@@ -192,39 +191,45 @@ feature -- Access
 				-- TODO check if we have an efficient algorithm to
 				-- convert an array of bytes to utf-16.
 
-			l_us_heap := pe_writer.us.base.to_array
+			us_heap := pe_writer.us.base
 
 				-- Compute the index.
 			l_index := a_token - 0x70000000 -- 0x70 table type: UserString heap
 
 				-- Get the length of the string, reading the next byte.
 				-- Per character we use two bytes and it ends with a null character.
-			l_length := array_item (l_us_heap, l_index + 1)
+			l_length := us_heap [l_index] -- 0-based container
 
-				-- The length of the target string is
-			l_str_length := (l_length // 2) - 1
-
-			create l_bytes.make_filled (' ', 1, l_str_length)
-			from
-				i := l_index + 2
-				j := 1
-			until
-				j > l_str_length
-			loop
-				l_bytes [j] := (array_item (l_us_heap, i) + array_item (l_us_heap, i + 1) * 256).to_character_32
+			i := l_index
+			if us_heap [i] < 128 then -- 0x80 = 1000 0000
+				l_length := us_heap [i]
+				i := i + 1
+			elseif us_heap [i] < 192 then -- 0xC0 = 1100 0000
+				-- 256 = 0x100 = 1 0000 0000
+				l_length := (us_heap [i] - 128) * 256 + us_heap [i + 1]
 				i := i + 2
+			else
+				-- 16777216 = 0x100 0000 = 1 00000000 00000000 00000000
+				-- 65536 	=   0x1 0000 =          1 00000000 00000000
+				-- 256 		=      0x100 =                   1 00000000
+				l_length := (us_heap [i] - 192) * 16777216
+							+ us_heap [i + 1] * 65536
+							+ us_heap [i + 2] * 256
+							+ us_heap [i + 3]
+				i := i + 4
+			end
+
+			create l_bytes.make (l_length - 1)
+			from
+				j := 0
+			until
+				j > l_length - 1 --| Do not load the final flag 0 or 1
+			loop
+				l_bytes.append_character (us_heap[i + j].to_character_8)
 				j := j + 1
 			end
-				-- Convert the bytes array to String_32
-			create Result.make_filled (' ', l_str_length)
-			from
-				i := 1
-			until
-				i > l_bytes.count
-			loop
-				Result [i] := l_bytes [i]
-				i := i + 1
-			end
+
+			Result := {UTF_CONVERTER}.utf_16le_string_8_to_string_32 (l_bytes)
 		end
 
 	is_user_string_token (a_token: INTEGER_32): BOOLEAN
@@ -369,11 +374,6 @@ feature {NONE} -- Implementation
 			stream_headers [5, 2] := l_current_rva - stream_headers [5, 1]
 
 			Result := l_current_rva.to_integer_32
-		end
-
-	array_item (a_heap: ARRAY [NATURAL_8]; a_offset: INTEGER_32): INTEGER_32
-		do
-			Result := a_heap [a_offset]
 		end
 
 feature -- Save
@@ -1107,7 +1107,6 @@ feature -- Definition: Creation
 		do
 				--| add the null character
 			create l_str.make_from_string (str.string_32)
-			l_str.append_character ('%U')
 			l_us_index := hash_us (l_str, l_str.count)
 			Result := (l_us_index | ({NATURAL_64} 0x70 |<< 24)).to_integer_32
 		end

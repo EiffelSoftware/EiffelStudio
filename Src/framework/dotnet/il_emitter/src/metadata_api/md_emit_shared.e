@@ -1092,15 +1092,13 @@ feature -- Heaps
 			-- Computes the hash of a blob `a_blob_data'
 			-- if the blob already exists in a heap, returns the index of the existing blob
 			-- otherwise computes the hash and returns the index of the new blob.
-		local
-			r: NATURAL_64
 		do
-			Result := check_blob (pe_writer.blob.base, a_blob_data).to_natural_64
+			Result := check_blob (pe_writer.blob, a_blob_data)
 			if Result = 0 then
 				Result := pe_writer.hash_blob (a_blob_data, a_blob_len)
 			end
 		ensure
-			hashed: Result = check_blob (pe_writer.blob.base, a_blob_data).to_natural_64
+			hashed: Result = check_blob (pe_writer.blob, a_blob_data)
 		end
 
 	hash_us (a_str: STRING_32; a_len: INTEGER): NATURAL_64
@@ -1109,40 +1107,51 @@ feature -- Heaps
 			-- To replace the use of {PE_WRITER}.hash_us
 		local
 			l_converter: BYTE_ARRAY_CONVERTER
-			l_data: ARRAY [NATURAL_8]
-			r: NATURAL_64
 		do
 			create l_converter.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_16le_string_8 (a_str))
-			l_data := l_converter.to_natural_8_array
-			Result := check_us (pe_writer.us.base, l_data).to_natural_64
+			Result := check_us (pe_writer.us, l_converter.to_natural_8_array)
 			if Result = 0 then
 				Result := pe_writer.hash_us (a_str, a_len)
 			end
-			check
-				hashed: check_us (pe_writer.us.base, l_data).to_natural_64 = Result
-			end
+		ensure
+			hashed: check_us (pe_writer.us, (create {BYTE_ARRAY_CONVERTER}.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_16le_string_8 (a_str))).to_natural_8_array) = Result
 		end
 
-	check_blob (blob_heap: SPECIAL [NATURAL_8]; target_blob: ARRAY [NATURAL_8]): INTEGER
+	check_blob (blob: PE_POOL; target_blob: ARRAY [NATURAL_8]): NATURAL_64
 			-- Check if `target_blob` exists in `blob_heap` and return its index if found, otherwise return 0.
 		local
+			blob_heap: SPECIAL [NATURAL_8]
+			blob_size: NATURAL_64
 			i, j, k, target_size, current_size: INTEGER
 		do
+--			Result := 0 -- not found (yet)
+			blob_heap := blob.base
+			blob_size := blob.size
 			target_size := target_blob.count
 			from
 				i := 1 --| 2 - 1  Special are 0-based
 			until
-				i >= blob_heap.count or else Result /= 0
+				i.to_natural_64 >= blob_size or else Result /= 0
 			loop
 					-- Check if the blob header matches the target blob size.
-				if blob_heap [i] < 128 then -- 0x80
+				if blob_heap [i] < 0x80 then
+					-- 128 = 0x80 = 1000 0000
 					current_size := blob_heap [i]
 					j := i + 1
-				elseif blob_heap [i] < 192 then
-					current_size := (blob_heap [i] - 128) * 256 + blob_heap [i + 1]
+				elseif blob_heap [i] < 0xC0 then -- 0xC0 = 1100 0000
+					-- 192 = 0xC0  =   1100 0000
+					-- 256 = 0x100 = 1 0000 0000
+					current_size := (blob_heap [i] - 0x80) * 0x100
+									+ blob_heap [i + 1]
 					j := i + 2
 				else
-					current_size := (blob_heap [i] - 192) * 16777216 + blob_heap [i + 1] * 65536 + blob_heap [i + 2] * 256 + blob_heap [i + 3]
+					-- 16777216 = 0x100 0000 = 1 00000000 00000000 00000000
+					-- 65536 	=   0x1 0000 =          1 00000000 00000000
+					-- 256 		=      0x100 =                   1 00000000
+					current_size := (blob_heap [i] - 0xC0) * 0x1000000
+									+ blob_heap [i + 1] * 0x10000
+									+ blob_heap [i + 2] * 0x100
+									+ blob_heap [i + 3]
 					j := i + 4
 				end
 					-- Check if the current blob matches the target blob.
@@ -1150,13 +1159,15 @@ feature -- Heaps
 					from
 						k := 1
 					until
-						j + k - 1 > blob_heap.count or else k > target_size or else target_blob [k] /= blob_heap [j + k - 1]
+						(j + k - 1).to_natural_64 > blob_size
+						or else k > target_size
+						or else target_blob [k] /= blob_heap [j + k - 1]
 					loop
 						k := k + 1
 					end
 					if (k - 1) = target_size then
 							-- Found a match.
-						Result := i
+						Result := i.to_natural_64
 					end
 				end
 				i := j + current_size
@@ -1165,42 +1176,66 @@ feature -- Heaps
 			valid_result: Result >= 0
 		end
 
-	check_us (us_heap: SPECIAL [NATURAL_8]; target_us: ARRAY [NATURAL_8]): INTEGER
-			-- Check if `target_us` exists in `us_heap` and return its index if found, otherwise return 0.
+	check_us (us: PE_POOL; target_us: ARRAY [NATURAL_8]): NATURAL_64
+			-- Check if `target_us` exists in `us` and return its index if found, otherwise return 0.
 		local
+			us_heap: SPECIAL [NATURAL_8]
+			us_size: NATURAL_64;
 			i, j, k, target_size, current_size: INTEGER
 		do
+			us_heap := us.base
+			us_size := us.size
+
+--			Result := 0 -- not found (yet)
+
 			target_size := target_us.count
 			from
-				i := 1 -- SPECIAL are 0-based
+					-- note: The first entry in both these heaps is the empty 'blob' that consists of the single byte 0x00.
+					-- SPECIAL are 0-based, skip first entry.
+				i := 1
 			until
-				i >= us_heap.count or else Result /= 0
+				i.to_natural_64 >= us_size or else Result > 0
 			loop
 					-- Check if the current user string matches the target user string.
-				if us_heap [i] = 0 then
-					current_size := 0
+				if us_heap [i] < 0x80 then
+					-- 128 = 0x80 = 1000 0000
+					current_size := us_heap [i]
 					j := i + 1
-				elseif (us_heap [i] \\ 2) = 0 then
-					current_size := us_heap [i] - 1
+				elseif us_heap [i] < 0xC0 then -- 0xC0 = 1100 0000
+					-- 192 = 0xC0  =   1100 0000
+					-- 256 = 0x100 = 1 0000 0000
+					current_size := (us_heap [i] - 0x80) * 0x100
+									+ us_heap [i + 1]
 					j := i + 2
 				else
-					current_size := us_heap [i] - 1
-					j := i + 1
+					-- 16777216 = 0x100 0000 = 1 00000000 00000000 00000000
+					-- 65536 	=   0x1 0000 =          1 00000000 00000000
+					-- 256 		=      0x100 =                   1 00000000
+					current_size := (us_heap [i] - 0xC0) * 0x1000000
+									+ us_heap [i + 1] * 0x10000
+									+ us_heap [i + 2] * 0x100
+									+ us_heap [i + 3]
+					j := i + 4
 				end
-				if current_size = target_size then
+
+					-- Note: the `current_size` for #US includes the final byte 0 or 1.
+				if current_size - 1 = target_size then
+						-- Exclude the final byte from the comparison: 0 or 1
 					from
 						k := 1
 					until
-						j + k - 1 >= us_heap.count or else k > target_size or else target_us [k] /= us_heap [j + k - 1]
+						(j + k - 1).to_natural_64 >= us_size
+						or else k > target_size
+						or else target_us [k] /= us_heap [j + k - 1]
 					loop
 						k := k + 1
 					end
 					if (k - 1) = target_size then
 							-- Found a match.
-						Result := i
+						Result := i.to_natural_64
 					end
 				end
-				i := j + current_size + 1
+				i := j + current_size
 			end
 		ensure
 			valid_result: Result >= 0

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "This is the main class for generating a PE file"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 			create snk_file.make_from_string (a_snk_file)
 			create meta_header.make_from_other (meta_header1)
 			create string_map.make (0)
-			create user_string_map.make (0)
 			initialize_dnl_tables
 			create {ARRAYED_LIST [PE_METHOD]} methods.make (0)
 			create rva.make
@@ -67,7 +66,6 @@ feature {NONE} -- Initialization
 			cor_base_zero: cor_base = 0
 			snk_base = 0
 			string_map_empty: string_map.is_empty
-			user_string_map_empty: user_string_map.is_empty
 			methods_empty: methods.is_empty
 		end
 
@@ -218,11 +216,6 @@ feature -- Access
 			-- reflection of the String stream so that we can keep from doing duplicates.
 			-- right now we don't check duplicates on any of the other streams...
 
-	user_string_map: STRING_TABLE [NATURAL_64]
-			-- reflection of the UserString stream so that we can keep from doing duplicates.
-			-- right now we don't check duplicates on any of the other streams...
-
-		--tables: LIST [DNL_TABLE]
 	tables: SPECIAL [DNL_TABLE]
 			-- tables that can appear in a PE file.
 
@@ -504,60 +497,76 @@ feature -- Stream functions
 			end
 		end
 
-	hash_us (a_str: STRING_32; a_len: INTEGER): NATURAL_64
-			-- return the stream index
+	hash_us (a_str: STRING_32; a_length: INTEGER): NATURAL_64
+			-- UserString (US) stream index
+			-- See: ECMA-335 6th edition, II.24.2.4 #US and #Blob heaps
 		local
-			l_flag: INTEGER
-			l_blob_len: INTEGER
+			l_flag: NATURAL_8
+			len: NATURAL_64
 			n: INTEGER
+			l_converter: BYTE_ARRAY_CONVERTER
+			l_data: ARRAY [NATURAL_8]
+			r: NATURAL_64
 		do
-				-- For now, keep the user_string_map
-				-- TODO: once the MD_EMIT_SHARED.check_us is fixed, remove it.
-			if user_string_map.has_key (a_str) and then attached user_string_map.item (a_str) as l_val then
-				Result := l_val
-			else
-				if us.size = 0 then
-					us.increment_size
-				end
-				us.confirm ((a_len * 2 + 5).to_natural_32)
-				Result := us.size
-				l_blob_len := a_len * 2 + 1
-				if l_blob_len < 0x80 then
-					us.base [us.size.to_integer_32] := l_blob_len.to_natural_8
-					us.increment_size
-				elseif l_blob_len <= 0x3fff then
-					us.base [us.size.to_integer_32] := ((l_blob_len |>> 8) | 0x80).to_natural_8
-					us.increment_size
-					us.base [us.size.to_integer_32] := l_blob_len.to_natural_8
-					us.increment_size
-				else
-					l_blob_len := l_blob_len & 0x1fffffff
-					us.base [us.size.to_integer_32] := ((l_blob_len |>> 24) | 0xc0).to_natural_8
-					us.increment_size
-					us.base [us.size.to_integer_32] := (l_blob_len |>> 16).to_natural_8
-					us.increment_size
-					us.base [us.size.to_integer_32] := (l_blob_len |>> 8).to_natural_8
-					us.increment_size
-					us.base [us.size.to_integer_32] := (l_blob_len |>> 0).to_natural_8
-					us.increment_size
-				end
-
-				across a_str as i loop
-					n := i.code
-					if (n & 0xff00) /= 0 then
-						l_flag := 1
-					elseif (n <= 8 or else (n >= 0x0e and then n < 0x20) or else n = 0x27 or else n = 0x2d or else n = 0x7f) then
-						l_flag := 1
-					end
-					us.base [us.size.to_integer_32] := (n & 0xff).to_natural_8
-					us.increment_size
-					us.base [us.size.to_integer_32] := (n |>> 8).to_natural_8
-					us.increment_size
-				end
-				us.base [us.size.to_integer_32] := l_flag.to_natural_8
+			if us.size = 0 then
 				us.increment_size
-				user_string_map.force (Result, a_str)
 			end
+			check a_str.count = a_length end
+			create l_converter.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_16le_string_8 (a_str))
+			l_data := l_converter.to_natural_8_array
+			len := (l_data.count + 1).to_natural_64 -- +1 for the flag
+
+			us.confirm (len + 5)
+			Result := us.size
+			if len < 0x80 then
+				us.base [us.size.to_integer_32] := len.to_natural_8
+				us.increment_size
+			elseif len <= 0x3fff then
+				us.base [us.size.to_integer_32] := ((len |>> 8) | 0x80).to_natural_8
+				us.increment_size
+				us.base [us.size.to_integer_32] := len.to_natural_8
+				us.increment_size
+			else
+				len := len & 0x1fffffff
+				us.base [us.size.to_integer_32] := ((len |>> 24) | 0xc0).to_natural_8
+				us.increment_size
+				us.base [us.size.to_integer_32] := (len |>> 16).to_natural_8
+				us.increment_size
+				us.base [us.size.to_integer_32] := (len |>> 8).to_natural_8
+				us.increment_size
+				us.base [us.size.to_integer_32] := (len |>> 0).to_natural_8
+				us.increment_size
+			end
+
+			us.copy_data ((us.size).to_integer_32, l_data, len - 1) -- -1: len include the flag  byte.
+			us.increment_size_by ((len - 1).to_natural_64)
+
+				-- See II.24.2.4 from ECMA-335 6th Edition
+				-- This final byte holds the value 1 if and only if any UTF16 character within the string has any bit
+				-- set in its top byte, or its low byte is any of the following:
+				--  0x01–0x08, 0x0E–0x1F, 0x27, 0x2D, 0x7F.
+				-- Otherwise, it holds 0. The 1 signifies Unicode characters that require handling beyond that normally
+				-- provided for 8-bit encoding sets.
+
+			across a_str as i until l_flag = {NATURAL_8} 1 loop
+				n := i.code
+				if (n & 0xff00) /= 0 then
+					l_flag := {NATURAL_8} 1
+				else
+					inspect n
+					when 0x01 .. 0x08 then
+						l_flag := {NATURAL_8} 1
+					when 0x0e .. 0x1F then
+						l_flag := {NATURAL_8} 1
+					when 0x27, 0x2d, 0x7f then
+						l_flag := {NATURAL_8} 1
+					else
+						l_flag := {NATURAL_8} 0
+					end
+				end
+			end
+			us.base [us.size.to_integer_32] := l_flag -- 0 or 1
+			us.increment_size
 		end
 
 	hash_guid (a_guid: ARRAY [NATURAL_8]): NATURAL_64
@@ -571,7 +580,8 @@ feature -- Stream functions
 		end
 
 	hash_blob (a_blob_data: ARRAY [NATURAL_8]; a_blob_len: NATURAL_64): NATURAL_64
-			-- return the stream index.
+			-- Blob stream index.
+			-- See: ECMA-335 6th edition, II.24.2.4 #US and #Blob heaps
 		local
 			l_rv: NATURAL_64
 			l_blob_len: NATURAL_64
@@ -591,7 +601,7 @@ feature -- Stream functions
 				blob.base [blob.size.to_integer_32] := l_blob_len.to_natural_8
 				blob.increment_size
 			else
-				l_blob_len := (l_blob_len & 0x1fffffff).to_natural_8
+				l_blob_len := l_blob_len & 0x1fffffff
 				blob.base [blob.size.to_integer_32] := ((l_blob_len |>> 24) | 0xc0).to_natural_8
 				blob.increment_size
 				blob.base [blob.size.to_integer_32] := (l_blob_len |>> 16).to_natural_8
@@ -602,7 +612,7 @@ feature -- Stream functions
 				blob.increment_size
 			end
 			blob.copy_data ((blob.size).to_integer_32, a_blob_data, l_blob_len)
-			blob.increment_size_by (l_blob_len.to_natural_8)
+			blob.increment_size_by (l_blob_len.to_natural_64)
 			Result := l_rv
 		end
 

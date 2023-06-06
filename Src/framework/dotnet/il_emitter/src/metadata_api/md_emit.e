@@ -50,7 +50,7 @@ feature {NONE}
 		do
 			create tables.make_empty ({PE_TABLE_CONSTANTS}.max_tables)
 			across 0 |..| ({PE_TABLE_CONSTANTS}.max_tables - 1) as i loop
-				tables.force ((create {MD_TABLES}.make), i)
+				tables.force ((create {MD_TABLES}.make (i)), i)
 			end
 		end
 

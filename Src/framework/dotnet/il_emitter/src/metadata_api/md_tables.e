@@ -6,17 +6,23 @@ note
 class
 	MD_TABLES
 
+inherit
+	DEBUG_OUTPUT
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_id: INTEGER)
 		do
+			table_id := a_id
 			create {ARRAYED_LIST [PE_TABLE_ENTRY_BASE]} table.make (0)
 		end
 
 feature -- Access
+
+	table_id: INTEGER
 
 	table: LIST [PE_TABLE_ENTRY_BASE]
 			-- vector of tables that can appear in a PE file
@@ -29,7 +35,13 @@ feature -- Element Change
 		do
 			table.put_i_th (a_entry, i)
 		end
+
 feature -- Status Report
+
+	debug_output: STRING
+		do
+			Result := "["+ table_id.out +"] size=" + size.out
+		end
 
 	size: INTEGER
 			-- Table size

@@ -75,6 +75,12 @@ feature -- Test
 		end
 
 	test_user_string_heap
+			-- Test the UserString heap , related to MD_EMIT.define_string
+			--| Goals:
+			--|	- test with small strings, big and really big strings
+			--|	- also empty strings.
+			--| - ensure no duplicated entries exists,
+			--| - ensure the retrieve_user_string is valid and same as the original source.
 		local
 			lst: ARRAY [STRING_32]
 			tb: STRING_TABLE [INTEGER_32]

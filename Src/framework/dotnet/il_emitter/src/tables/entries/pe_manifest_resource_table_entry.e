@@ -2,7 +2,7 @@ note
 	description: "Object Representing the ManifestResource table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.24 ManifestResource : 0x28"
+	EIS: "name=ManifestResource", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=257&zoom=100,116,746", "protocol=uri"
 
 class
 	PE_MANIFEST_RESOURCE_TABLE_ENTRY
@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -24,15 +27,48 @@ feature {NONE} -- Implementation
 			implementation := a_implementation
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.offset = offset and then
+					e.flags = flags and then
+					e.name.is_equal (name) and then
+					e.implementation.is_equal (implementation)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	offset: NATURAL
+			-- a 4-byte constant.
 
 	flags: NATURAL
+			-- a 4-byte bitmask of type ManifestResourceAttributes
 
 	name: PE_STRING
+			-- an index into the String heap
 
 	implementation: PE_IMPLEMENTATION
+			-- an index into a File table, a AssemblyRef table, or null; more
+			-- precisely, an Implementation index.
 
 feature -- Flags
 

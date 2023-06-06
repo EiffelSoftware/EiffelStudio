@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -22,17 +25,43 @@ feature {NONE} -- Implementation
 			create guid_index.make_with_index (a_guid_index)
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.name_index.is_equal (name_index) and then
+					e.guid_index.is_equal (guid_index)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	name_index: PE_STRING
+			-- an index into the String heap.
 
 	guid_index: PE_GUID
-		-- Mvid (an index into the Guid heap; simply a Guid used to distinguish between two
-		-- versions of the same module)
+			-- Mvid (an index into the Guid heap; simply a Guid used to distinguish between two
+			-- versions of the same module)
 
-
-	--  EncId (an index into the Guid heap; reserved, shall be zero)
-	--  EncBaseId (an index into the Guid heap; reserved, shall be zero)
+		--  EncId (an index into the Guid heap; reserved, shall be zero)
+		--  EncBaseId (an index into the Guid heap; reserved, shall be zero)
 
 feature -- Operations
 

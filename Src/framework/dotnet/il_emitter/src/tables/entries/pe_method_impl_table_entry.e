@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -23,18 +26,45 @@ feature {NONE} -- Initialization
 			method_declaration := a_method_dec
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.class_.is_equal (class_) and then
+					e.method_body.is_equal (method_body) and then
+					e.method_declaration.is_equal (method_declaration)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	class_: PE_TYPE_DEF
-		-- an index into the TypeDef table.
+			-- an index into the TypeDef table.
 
 	method_body: PE_METHOD_DEF_OR_REF
-		-- an index into the MethodDef or MemberRef table;
-		-- more precisely a MethodDefOrRef
+			-- an index into the MethodDef or MemberRef table;
+			-- more precisely a MethodDefOrRef
 
 	method_declaration: PE_METHOD_DEF_OR_REF
-		-- an index into the MethodDef or MemberRef table
-		-- more precisely, a MethodDefOrRef
+			-- an index into the MethodDef or MemberRef table
+			-- more precisely, a MethodDefOrRef
 
 feature -- Operations
 

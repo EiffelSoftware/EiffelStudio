@@ -2,7 +2,7 @@ note
 	description: "Object representing The AssemblyRef table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.5 AssemblyRef : 0x23 "
+	EIS: "name=AssemblyRef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=238&zoom=100,116,793", "protocol=uri"
 
 class
 	PE_ASSEMBLY_REF_TABLE_ENTRY
@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -33,25 +36,69 @@ feature {NONE} -- Initialization
 
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.major = major and then
+					e.minor = minor and then
+					e.build = build and then
+					e.revision = revision and then
+					e.flags = flags and then
+					e.public_key_index.is_equal (public_key_index) and then
+					e.name_index.is_equal (name_index) and then
+					e.culture_index.is_equal (culture_index) and then
+					e.hash_index.is_equal (hash_index)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	major: NATURAL_16
+			-- 2 byte constant.
 
 	minor: NATURAL_16
+			-- 2 byte constant.
 
 	build: NATURAL_16
+			-- 2 byte constant.
 
 	revision: NATURAL_16
+			-- 2 byte constant.
 
 	flags: INTEGER
+			-- a 4-byte bitmask of type AssemblyFlags
+			-- see https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=275&zoom=100,116,337
 
 	public_key_index: PE_BLOB
+			-- an index into the Blob heap, indicating the public key or token
+			-- that identifies the author of this Assembly
 
 	name_index: PE_STRING
+			-- an index into the String heap
 
 	culture_index: PE_STRING
+			-- an index into the String heap
 
 	hash_index: PE_BLOB
+			-- an index into the Blob heap.
 
 feature -- Operations
 

@@ -2,7 +2,7 @@ note
 	description: "Object representing the FieldRVA table."
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.18 FieldRVA : 0x1D "
+	EIS: "name=FieldRVA", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=253&zoom=100,116,310", "protocol=uri"
 
 class
 	PE_FIELD_RVA_TABLE_ENTRY
@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -22,13 +25,39 @@ feature {NONE} -- Initialization
 			create field_index.make_with_index (a_field_index)
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.rva = rva and then
+					e.field_index.is_equal (field_index)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	rva: NATURAL_64
-		-- (a 4-byte constant)
+			-- (a 4-byte constant)
 
 	field_index: PE_FIELD_LIST
-		-- An index into the Field table.
+			-- An index into the Field table.
 
 feature -- Operations
 
@@ -50,7 +79,7 @@ feature -- Operations
 
 				-- Write field_index
 				-- to the buffer and update the number of bytes.
- 			l_bytes := l_bytes + field_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + field_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
 
 				-- Return the total number of bytes written.
 			Result := l_bytes

@@ -3,13 +3,17 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	see: "II.22.26 MethodDef : 0x06 "
-	EIS: "name=MethodDef","src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=259", "protocol=uri"
+	EIS: "name=MethodDef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=259", "protocol=uri"
+
 class
 	PE_METHOD_DEF_TABLE_ENTRY
 
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make,
@@ -38,6 +42,36 @@ feature {NONE} -- Initialization
 			create name_index.make_with_index (a_name_index)
 			create signature_index.make_with_index (a_signature_index)
 			create param_index.make_with_index (a_param_index)
+		end
+
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.signature_index.is_equal (signature_index) and then
+					e.param_index.is_equal (param_index) and then
+					e.name_index.is_equal (name_index) and then
+					e.flags = flags and then
+					e.impl_flags = impl_flags and then
+					e.rva = rva
+				then
+					Result := n
+				end
+			end
 		end
 
 feature -- Access
@@ -126,7 +160,7 @@ feature -- Enum: flags
 
 feature -- Set Rva
 
-	set_rva(a_value: like rva)
+	set_rva (a_value: like rva)
 			-- Set rva with a_value.
 		require
 			valid_value: a_value > 0

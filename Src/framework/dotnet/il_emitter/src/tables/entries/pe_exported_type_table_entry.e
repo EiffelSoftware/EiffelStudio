@@ -2,7 +2,7 @@ note
 	description: "Object representing The ExportedType table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see:"II.22.14 ExportedType : 0x27"
+	EIS: "name=ExportedType", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=248&zoom=100,116,324", "protocol=uri"
 
 class
 	PE_EXPORTED_TYPE_TABLE_ENTRY
@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 	PE_TYPE_DEF_FLAGS
 
@@ -27,18 +30,53 @@ feature {NONE} -- Initialization
 			implementation := a_implementation
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.flags = flags and then
+					e.type_def_id.is_equal (type_def_id) and then
+					e.type_name.is_equal (type_name) and then
+					e.type_name_space.is_equal (type_name_space) and then
+					e.implementation.is_equal (implementation)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	flags: NATURAL_32
 			-- Defined as a DWord four bytes.
+			-- see TypeAttributes https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=280&zoom=100,116,400
 
 	type_def_id: PE_TYPE_DEF
+			-- a 4-byte index into a TypeDef
 
 	type_name: PE_STRING
+			-- an index into the String heap.
 
 	type_name_space: PE_STRING
+			-- an index into the String heap.
 
 	implementation: PE_IMPLEMENTATION
+			-- an index into one of the following tables
+			-- File, ExportedType, AssemblyRef
 
 feature -- Operations
 

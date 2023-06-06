@@ -2,13 +2,17 @@ note
 	description: "Object representing the ModuleRef table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.31 ModuleRef : 0x1A"
+	EIS: "name=ModuleRef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=265&zoom=100,116,945", "protocol=uri"
+
 class
 	PE_MODULE_REF_TABLE_ENTRY
 
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -20,9 +24,35 @@ feature {NONE} -- Initialization
 			create name_index.make_with_index(a_name_index)
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.name_index.is_equal (name_index)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	name_index: PE_STRING
+			-- an index into the String heap.
 
 feature -- Operations
 

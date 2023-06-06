@@ -2,7 +2,7 @@ note
 	description: "Object representing The NestedClass table "
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.32 NestedClass : 0x29 "
+	EIS: "name=NestedClass",  "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=266&zoom=100,116,320", "protocol=uri"
 
 class
 	PE_NESTED_CLASS_TABLE_ENTRY
@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -22,11 +25,38 @@ feature {NONE} -- Implementation
 			create enclosing_index.make_with_index (a_enclosing)
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.nested_index.is_equal (nested_index) and then
+					e.enclosing_index.is_equal (enclosing_index)
+				then
+					Result := n
+				end
+			end
+		end
 feature -- Access
 
 	nested_index: PE_TYPE_DEF
+			-- an index into the TypeDef table.
 
 	enclosing_index: PE_TYPE_DEF
+			-- an index into the TypeDef table
 
 feature -- Operations
 

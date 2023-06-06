@@ -20,6 +20,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -32,13 +35,39 @@ feature {NONE} -- Intialization
 			create native_type.make_with_index (a_native_type)
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.parent.is_equal (parent) and then
+					e.native_type.is_equal (native_type)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	parent: PE_FIELD_MARSHAL
-		-- index a valid row in the Field or Param table
+			-- index a valid row in the Field or Param table
 
 	native_type: PE_BLOB
-		--  index a non-null 'blob' in the Blob heap
+			--  index a non-null 'blob' in the Blob heap
 
 feature -- Operations
 

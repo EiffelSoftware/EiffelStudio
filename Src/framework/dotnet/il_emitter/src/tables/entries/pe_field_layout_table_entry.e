@@ -2,7 +2,7 @@ note
 	description: "Object representing the FieldLayout table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.16 FieldLayout : 0x10 "
+	EIS: "name=FieldLayout", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=251&zoom=100,116,504", "protocol=uri"
 
 class
 	PE_FIELD_LAYOUT_TABLE_ENTRY
@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -22,11 +25,40 @@ feature {NONE} -- Initialization
 			create parent.make_with_index (a_parent)
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.offset = offset and then
+					e.parent.is_equal (parent)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	offset: NATURAL_64
+			-- a 4-byte constant.
+			-- TODO: check what we need to do to use NATURAL_32
 
 	parent: PE_FIELD_LIST
+			-- an index into the Field table.
 
 feature -- Operations
 

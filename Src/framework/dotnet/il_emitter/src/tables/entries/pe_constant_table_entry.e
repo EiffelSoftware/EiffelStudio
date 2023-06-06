@@ -2,7 +2,7 @@ note
 	description: "Object representing the Constant table is used to store compile-time, constant values for fields, parameters, and properties. "
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.9 Constant : 0x0B "
+	EIS: "name=Constant", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=242&zoom=100,116,169", "protocol=uri"
 
 class
 	PE_CONSTANT_TABLE_ENTRY
@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -23,14 +26,47 @@ feature {NONE} -- Intialization
 			create value_index.make_with_index (a_value_index)
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.type = type and then
+					e.parent_index.is_equal (parent_index) and then
+					e.value_index.is_equal (value_index)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	type: NATURAL_8
-		-- Defined as a Byte 1 byte.
+			-- Defined as a Byte 1 byte.
+			-- a 1-byte constant, followed by a 1-byte padding zero). The
+			-- encoding of Type for the nullref value for FieldInit in ilasm is
+			-- ELEMENT_TYPE_CLASS with a Value of a 4-byte zero
 
 	parent_index: PE_CONSTANT
+			-- an index into the Param, Field, or Property table; more precisely, a
+			-- HasConstant coded index
 
 	value_index: PE_BLOB
+			-- an index into the Blob heap
 
 feature -- Operations
 

@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -23,13 +26,43 @@ feature {NONE} -- Intialization
 			create value_index.make_with_index (a_value_index)
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.parent_index.is_equal (parent_index) and then
+					e.type_index.is_equal (type_index) and then
+					e.value_index.is_equal (value_index)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	parent_index: PE_CUSTOM_ATTRIBUTE
+			-- an index into a metadata table that has an associated HasCustomAttribute index.
 
 	type_index: PE_CUSTOM_ATTRIBUTE_TYPE
+			-- an index into the MethodDef or MemberRef table; more precisely, a CustomAttributeType index.
 
 	value_index: PE_BLOB
+			-- an index into the Blob heap.
 
 feature -- Operations
 

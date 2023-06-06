@@ -2,7 +2,7 @@ note
 	description: "Object representing The Field table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.15 Field : 0x04 "
+	EIS: "name=Field Table", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=249&zoom=100,116,324", "protocol=uri"
 
 class
 	PE_FIELD_TABLE_ENTRY
@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -23,13 +26,44 @@ feature {NONE} -- Initialization
 			create signature_index.make_with_index (a_signature_index)
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.flags = flags and then
+					e.name_index.is_equal (name_index) and then
+					e.signature_index.is_equal (signature_index)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	flags: INTEGER
+			-- a 2-byte bitmask of type FieldAttributes
+			-- see https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=276&zoom=100,116,708
 
 	name_index: PE_STRING
+			-- an index into the String heap.
 
 	signature_index: PE_BLOB
+			-- an index into the Blob heap.
 
 feature -- Enum: Flags
 
@@ -80,7 +114,7 @@ feature -- Operations
 
 				-- Write the name_index, signature_index
 				-- to the buffer and update the number of bytes.
- 			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			l_bytes := l_bytes + signature_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
 
 				-- Return the total number of bytes written.

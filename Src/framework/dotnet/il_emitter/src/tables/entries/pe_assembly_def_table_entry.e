@@ -2,7 +2,7 @@ note
 	description: "Object Representing th Assembly table "
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.2 Assembly : 0x20"
+	EIS: "name=Assembly", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=237&zoom=100,116,848", "protocol=uri"
 
 class
 	PE_ASSEMBLY_DEF_TABLE_ENTRY
@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -31,20 +34,60 @@ feature {NONE} -- Initialization
 			create culture_index.make_with_index (0)
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.hash_alg_id = hash_alg_id and then
+					e.major = major and then
+					e.minor = minor and then
+					e.build = build and then
+					e.revision = revision and then
+					e.flags = flags and then
+					e.public_key_index.is_equal (public_key_index) and then
+					e.name_index.is_equal (name_index) and then
+					e.culture_index.is_equal (culture_index)
+				then
+					Result := n
+				end
+			end
+		end
 feature -- Access
 
 	hash_alg_id: NATURAL_16
 			-- Defined as word two bytes.
 			-- (a 4-byte constant of type AssemblyHashAlgorithm, §II.23.1.1)
+			-- see https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=275&zoom=100,116,200
 
 	major, minor, build, revision: NATURAL_16
 			-- Defined as word two bytes.
 
 	flags: INTEGER assign set_flags
+			-- (a 4-byte bitmask of type AssemblyFlags
+			-- see https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=275&zoom=100,116,337
 
 	public_key_index: PE_BLOB assign set_public_key_index
+			-- an index into the Blob heap.
+
 	name_index: PE_STRING
+			-- and index into the String Heap.
+
 	culture_index: PE_STRING
+			-- and index into the String Heap.
 
 feature -- flags
 

@@ -38,7 +38,7 @@ feature -- Access
 
 	signature_index: PE_BLOB
 			-- index in the blob heap.
-		
+
 feature -- Status
 
 	token_from_tables (tables: MD_TABLES): NATURAL_64
@@ -55,11 +55,11 @@ feature -- Status
 				Result /= {NATURAL_64} 0
 			loop
 				n := n + 1
-				if 
+				if
 					attached {like Current} i as e and then
-					e.parent_index.index = parent_index.index and then
-					e.name_index.index = name_index.index and then
-					e.signature_index.index = signature_index.index
+					e.parent_index.is_equal (parent_index) and then
+					e.name_index.is_equal (name_index) and then
+					e.signature_index.is_equal (signature_index)
 				then
 					Result := n
 				end

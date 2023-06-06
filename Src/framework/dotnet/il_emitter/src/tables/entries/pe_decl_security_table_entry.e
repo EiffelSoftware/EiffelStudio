@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {PE_DECL_SECURITY_TABLE_ENTRY}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

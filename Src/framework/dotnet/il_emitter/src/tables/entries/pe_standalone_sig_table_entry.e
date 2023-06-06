@@ -2,7 +2,7 @@ note
 	description: "Object representing the table StandAloneSig"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.36 StandAloneSig : 0x11 "
+	EIS: "name=StandAloneSig", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=269&zoom=100,116,169", "protocol=uri"
 
 class
 	PE_STANDALONE_SIG_TABLE_ENTRY
@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	signature_index: PE_BLOB
+			-- an index into the Blob heap.
 
 feature -- Status
 
@@ -43,14 +44,14 @@ feature -- Status
 				Result /= {NATURAL_64} 0
 			loop
 				n := n + 1
-				if 
+				if
 					attached {like Current} i as e and then
-					e.signature_index.index = signature_index.index
+					e.signature_index.is_equal (signature_index)
 				then
 					Result := n
 				end
 			end
-		end	
+		end
 
 feature -- Operations
 

@@ -40,14 +40,14 @@ feature -- Status
 				Result /= {NATURAL_64} 0
 			loop
 				n := n + 1
-				if 
+				if
 					attached {like Current} i as e and then
-					e.signature_index.index = signature_index.index 
+					e.signature_index.is_equal (signature_index)
 				then
 					Result := n
 				end
 			end
-		end		
+		end
 
 feature -- Access
 

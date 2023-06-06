@@ -2,7 +2,7 @@ note
 	description: "Objects representing The MethodSemantics table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.28 MethodSemantics : 0x18 "
+	EIS: "name=MethodSemantics", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=263&zoom=100,116,764", "protocol=uri"
 
 class
 	PE_METHOD_SEMANTICS_TABLE_ENTRY
@@ -10,6 +10,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -23,14 +26,45 @@ feature {NONE} -- Initialization
 			association := a_association
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.semantics = semantics and then
+					e.method.is_equal (method) and then
+					e.association.is_equal (association)
+				then
+					Result := n
+				end
+			end
+		end
+
 feature -- Access
 
 	semantics: NATURAL_16
 			-- Defined as a word two bytes.
+			-- see MethodSemanticsAttributes https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=279&zoom=100,116,684
 
 	method: PE_METHOD_LIST
+			-- an index into the MethodDef table
 
 	association: PE_SEMANTICS
+			-- an index into the Event or Property table
+			-- more precisely, a HasSemantics index.
 
 feature -- Flags
 

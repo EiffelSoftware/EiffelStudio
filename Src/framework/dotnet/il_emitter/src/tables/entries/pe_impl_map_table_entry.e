@@ -7,7 +7,7 @@ note
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.22 ImplMap : 0x1C"
+	EIS: "name=ImplMap", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=256&zoom=100,116,440", "protocol=uri"
 
 class
 	PE_IMPL_MAP_TABLE_ENTRY
@@ -15,6 +15,9 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
+		redefine
+			token_from_tables
+		end
 
 create
 	make_with_data
@@ -29,16 +32,50 @@ feature {NONE} -- Initialization
 			create module_index.make_with_index (a_module_index)
 		end
 
+feature -- Status
+
+	token_from_tables (tables: MD_TABLES): NATURAL_64
+			-- If Current was already defined in `tables` return the associated token.
+		local
+			lst: LIST [PE_TABLE_ENTRY_BASE]
+			n: NATURAL_64
+		do
+			lst := tables.table
+			n := 0
+			across
+				lst as i
+			until
+				Result /= {NATURAL_64} 0
+			loop
+				n := n + 1
+				if
+					attached {like Current} i as e and then
+					e.flags = flags and then
+					e.method_index.is_equal (method_index) and then
+					e.import_name_index.is_equal (import_name_index) and then
+					e.module_index.is_equal (module_index)
+				then
+					Result := n
+				end
+			end
+		end
+
+
 feature -- Access
 
 	flags: INTEGER_16
+			-- a 2-byte bitmask of type PInvokeAttributes
+			-- see https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=277&zoom=100,116,740
 
 	method_index: PE_MEMBER_FORWARDED
+			-- an index into the Field or MethodDef table; more precisely, a MemberForwarded
 
 	import_name_index: PE_STRING
 			-- The name of the unmanaged method as it is defined in the export table of the unmanaged module
+			-- an index into the String heap
 
 	module_index: PE_MODULE_REF
+			-- an index into the ModuleRef table
 
 feature -- Flags
 

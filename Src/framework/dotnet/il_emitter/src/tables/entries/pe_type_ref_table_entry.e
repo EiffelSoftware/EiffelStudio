@@ -49,10 +49,10 @@ feature -- Status
 				Result /= {NATURAL_64} 0
 			loop
 				n := n + 1
-				if 
+				if
 					attached {like Current} i as e and then
-					e.type_name_index.index = type_name_index.index and then
-					e.type_name_space_index.index = type_name_space_index.index
+					e.type_name_index.is_equal (type_name_index) and then
+					e.type_name_space_index.is_equal (type_name_space_index)
 				then
 					Result := n
 				end

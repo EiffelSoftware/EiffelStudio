@@ -506,7 +506,6 @@ feature -- Stream functions
 			n: INTEGER
 			l_converter: BYTE_ARRAY_CONVERTER
 			l_data: ARRAY [NATURAL_8]
-			r: NATURAL_64
 		do
 			if us.size = 0 then
 				us.increment_size

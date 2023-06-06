@@ -76,7 +76,9 @@ feature -- Test
 
 	test_user_string_heap
 		local
-			l_token1, l_token2, l_token3: NATURAL_64
+			lst: ARRAY [STRING_32]
+			tb: STRING_TABLE [INTEGER_32]
+			l_token1, l_token2, l_token3, l_token4, tok, rtok: INTEGER_32
 			l_str: STRING_32
 			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
@@ -86,17 +88,53 @@ feature -- Test
 		do
 			create md_dispenser.make
 			md_emit := md_dispenser.emit
-
-			l_token1 := md_emit.define_string (create {CLI_STRING}.make ("Eiffel")).to_natural_64
-			l_token2 := md_emit.define_string (create {CLI_STRING}.make ("Java")).to_natural_64
-			l_token3 := md_emit.define_string (create {CLI_STRING}.make ("TEST_METADATA_TABLES_TK")).to_natural_64
-			l_str := md_emit.retrieve_user_string (l_token1.to_integer_32)
-			check same_string: l_str.same_string_general ("Eiffel") end
-
-			l_str := md_emit.retrieve_user_string (l_token2.to_integer_32)
-			check same_string: l_str.same_string_general ("Java") end
-			l_str := md_emit.retrieve_user_string (l_token3.to_integer_32)
-			check same_string: l_str.same_string_general ("TEST_METADATA_TABLES_TK") end
+			lst := <<
+						{STRING_32} "(attached pure_implementation_type (type_id) as l_current_rt_type and then attached {ISE_RUNTIME}.create_type (l_current_rt_type) as l_object and then attached {SYSTEM_TYPE}.get_type_from_handle (l_current_rt_type.type) as l_current_type)(attached pure_implementation_type (type_id) as l_current_rt_type and then attached {ISE_RUNTIME}.create_type (l_current_rt_type) as l_object and then attached {SYSTEM_TYPE}.get_type_from_handle (l_current_rt_type.type) as l_current_type)",
+						{STRING_32} "abc",
+						{STRING_32} "", -- Manifest empty string...
+						{STRING_32} "DEF",
+						{STRING_32} "",
+						{STRING_32} "abc",
+						{STRING_32} "Next",
+						{STRING_32} "TEST_METADATA_TABLES_TK",
+						{STRING_32} "1234567890123456789012345678901234567890123456789012345678901234"
+			 		>>
+			create tb.make (lst.count)
+			across
+				lst as s
+			loop
+				print ({STRING_32} "Define string %"" + s + "%"")
+				tok := md_emit.define_string (create {CLI_STRING}.make (s))
+				print (" -> tok=" + tok.out + "%N")
+				rtok := md_emit.define_string (create {CLI_STRING}.make (s))
+				if tok /= rtok then
+					check same_token: False end
+					print ("ERROR: different token for same string: %"")
+					print (s)
+					print ("%"%N")
+				end
+				tb [s] := tok
+			end
+			across
+				tb as t
+			loop
+				l_str := md_emit.retrieve_user_string (t)
+				if l_str.ends_with_general ("%U") then
+					l_str.remove_tail (1)
+				end
+				if l_str.same_string (@t.key) then
+					print ("VALID: same string fetch using token%"")
+					print (t.out)
+					print ("%" -> %"")
+					print (@t.key)
+					print ("%"%N")
+				else
+					check same_string: False end
+					print ("ERROR: string fetch using token is different from original string: %"")
+					print (@t.key)
+					print ("%"%N")
+				end
+			end
 		end
 
 	test_user_string_heap_duplicates

@@ -1004,7 +1004,8 @@ feature -- Definition: Creation
 			param_pos: INTEGER; param_flags: INTEGER): INTEGER
 			-- Create a new parameter specification token for method `in_method_token'.
 		note
-			eis: "name=Param Attributes", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=279&zoom=100,116,938", "protocolo"
+			eis: "name=Param Attributes", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=279&zoom=100,116,938", "protocol"
+			eis: "name=Param table II.22.33", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=266", "protocol"
 		local
 			l_method_index: NATURAL_64
 			l_param_entry: PE_PARAM_TABLE_ENTRY
@@ -1023,7 +1024,10 @@ feature -- Definition: Creation
 
 			l_param_flags := param_flags.to_integer_16
 
-			l_param_index := next_table_index ({PE_TABLES}.tparam.to_integer_32)
+				-- Sequence shall have a value >= 0 and <= number of parameters in owner method. A
+				-- Sequence value of 0 refers to the owner method’s return type; its parameters are then
+				-- numbered from 1 onwards [ERROR]
+			l_param_index := param_pos.to_natural_16
 
 				-- Create a new PE_PARAM_TABLE_ENTRY instance with the given data
 			l_method_index := l_method_tuple.table_row_index

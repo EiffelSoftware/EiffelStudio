@@ -825,11 +825,19 @@ feature -- Definition: Creation
 				-- Adds entries in the PE_INTERFACE_IMPL_TABLE_ENTRY table for each implemented interface, if any.
 			if attached implements then
 				across implements as i loop
-					l_tuple := extract_table_type_and_row (i)
-					l_extends := create_type_def_or_ref (i, l_tuple.table_row_index)
-					create {PE_INTERFACE_IMPL_TABLE_ENTRY} l_entry.make_with_data (l_class_index, l_extends)
-						--note: l_dis is not used.
-					pe_index := add_table_entry (l_entry)
+					if i /= 0 then
+						l_tuple := extract_table_type_and_row (i)
+						l_extends := create_type_def_or_ref (i, l_tuple.table_row_index)
+						create {PE_INTERFACE_IMPL_TABLE_ENTRY} l_entry.make_with_data (l_class_index, l_extends)
+							--note: l_dis is not used.
+						pe_index := add_table_entry (l_entry)
+					else
+						-- '0' seems to be passed as the end of the container
+						-- but more for the cli_writer implementation, that
+						-- passes the native C array ending with 0.
+						-- For the il_emitter, no need for final 0
+						-- thus ignore it.
+					end
 				end
 			end
 		end

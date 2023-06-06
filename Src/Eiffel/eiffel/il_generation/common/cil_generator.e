@@ -407,7 +407,7 @@ feature -- Generation
 			i := l_fmwk_version.index_of ('.', 1)
 			if i > 0 then
 				maj := l_fmwk_version.head (i - 1)
-				if maj.is_case_insensitive_equal_general ("6") then
+				if maj.is_integer then
 					j := l_fmwk_version.index_of ('.', i + 1)
 					if j > 0 then
 						min := l_fmwk_version.substring (i + 1, j - 1)
@@ -421,9 +421,9 @@ feature -- Generation
 					else
 						s := {STRING_32} "netcoreapp" + maj + "." + min
 					end
-					if sub.to_integer > 0 then
-						s := s + "." + sub
-					end
+--					if sub.to_integer > 0 then
+--						s := s + "." + sub
+--					end
 					Result ["FRAMEWORK_MONIKER"] := s
 
 					-- TODO: support

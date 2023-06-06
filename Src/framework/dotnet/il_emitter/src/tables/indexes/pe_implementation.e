@@ -29,8 +29,14 @@ feature {NONE} -- Initialization
 feature -- Enum: tags
 
 	TagBits: INTEGER = 2
+			-- Implementation
+			-- 2 bits to encode.
+
 	File: INTEGER = 0
 	AssemblyRef: INTEGER = 1
+
+		--Not used at the moment
+	ExportedType: INTEGER = 2
 
 feature -- Operations
 

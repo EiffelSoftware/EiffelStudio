@@ -5,7 +5,7 @@ note
 			Based on the specific type of index being rendered, the index is shifted left by a constant and
 			the tag is added in the lower bits.
 			Note that these indexes are used in tables and also in the blobs, however, in the actual intermediate
-			code a token is used.  the index in the is 24 bits unshifted, bits 24-31 holding the table number
+			code a token is used.  The index in the is 24 bits unshifted, bits 24-31 holding the table number
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,11 @@ class
 inherit
 
 	PE_META_BASE
+		redefine
+			is_equal
+		end
+
+
 
 create
 	make,
@@ -51,8 +56,19 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	tag: INTEGER
+			-- Indicate which table the index belongs to.
 
 	index: NATURAL_64
+			-- The index used in tables and blobs.
+
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is `other' equal to the current object?
+		do
+			Result := index = other.index and then tag = other.tag
+		end
 
 feature -- Operations
 

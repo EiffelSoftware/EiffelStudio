@@ -17,6 +17,9 @@ inherit
 		end
 
 	HASHABLE
+		undefine
+			is_equal
+		end
 
 create
 	make_with_tag_and_index,
@@ -31,6 +34,9 @@ feature {NONE} -- Initialization
 feature -- Enum: tags
 
 	TagBits: INTEGER = 5
+			-- HasCutomAttribute
+			-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=299&zoom=100,116,96
+
 	MethodDef: INTEGER = 0
 	FieldDef: INTEGER = 1
 	TypeRef: INTEGER = 2
@@ -50,6 +56,12 @@ feature -- Enum: tags
 	File: INTEGER = 16
 	ExportedType: INTEGER = 17
 	ManifestResource: INTEGER = 18
+
+		-- Not used now but needed in the future
+	GenericParam: INTEGER = 19
+	GenericParamConstraint: INTEGER = 20
+	MethodSpec: INTEGER = 21
+
 
 feature -- Access
 

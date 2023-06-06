@@ -29,6 +29,9 @@ feature {NONE} -- Initialization
 feature -- Enum: tags
 
 	TagBits: INTEGER = 2
+			-- HasDeclSecurity
+			-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=300
+
 	TypeDef: INTEGER = 0
 	MethodDef: INTEGER = 1
 	Assembly: INTEGER = 2

@@ -30,12 +30,14 @@ feature {NONE} -- Initialization
 
 feature -- Enum: tags
 
-		-- HasConstant
 	TagBits: INTEGER = 2
+			-- HasConstant
+			-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=299&zoom=100,116,96
+			
 	FieldDef: INTEGER = 0
 	ParamDef: INTEGER = 1
 			--TagProperty : INTEGER =2
-
+			-- TODO double check why TagProperty is not used.
 feature -- Operations
 
 	get_index_shift: INTEGER

@@ -29,6 +29,10 @@ feature {NONE} -- Initialization
 feature -- Enum: tags
 
 	TagBits: INTEGER = 1
+			-- HasSemantic
+			-- 1 bit to encode.
+			-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=301
+			
 	Event: INTEGER = 0
 	Property: INTEGER = 1
 

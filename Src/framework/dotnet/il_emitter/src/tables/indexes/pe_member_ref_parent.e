@@ -33,6 +33,9 @@ feature -- Enum: tags
 
 		-- memberrefparent
 	TagBits: INTEGER = 3
+			-- MemberRefParent
+			-- 1 bit to encode.
+			
 	TypeDef: INTEGER = 0
 	TypeRef: INTEGER = 1
 	ModuleRef: INTEGER = 2

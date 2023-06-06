@@ -22,6 +22,9 @@ create
 feature -- Enum: tags
 
 	TagBits: INTEGER = 2
+			-- ResolutionScope
+			-- 2 bits to encode.
+			
 	Module: INTEGER = 0
 	ModuleRef: INTEGER = 1
 	AssemblyRef: INTEGER = 2

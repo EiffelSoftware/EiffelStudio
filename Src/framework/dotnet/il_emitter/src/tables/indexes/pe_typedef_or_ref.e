@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 feature -- Enum: tags
 
 	TagBits: INTEGER = 2
+			-- 2 bits to encode tag.
+			-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=299&zoom=100,116,96
 	TypeDef: INTEGER = 0
 	TypeRef: INTEGER = 1
 	TypeSpec: INTEGER = 2
@@ -44,9 +46,9 @@ feature -- Operations
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 			-- <Precursor>
 		do
-			Result :=  large(a_sizes[{PE_TABLES}.tTypeDef.to_integer_32 + 1].to_natural_32) or else
-					large(a_sizes[{PE_TABLES}.tTypeRef.to_integer_32 + 1].to_natural_32) or else
-					large(a_sizes[{PE_TABLES}.tTypeSpec.to_integer_32 + 1].to_natural_32)
+			Result := large (a_sizes [{PE_TABLES}.tTypeDef.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tTypeRef.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tTypeSpec.to_integer_32 + 1].to_natural_32)
 		end
 
 end

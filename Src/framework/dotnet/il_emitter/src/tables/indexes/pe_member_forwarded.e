@@ -28,8 +28,11 @@ feature {NONE} -- Initialization
 
 feature -- Enum: tags
 
-		-- custom attribute type
 	TagBits: INTEGER = 1
+		-- MemberForwarded
+		-- 1 bit to encode.
+		-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=301
+
 	FieldDef: INTEGER = 0
 	MethodDef: INTEGER = 1
 

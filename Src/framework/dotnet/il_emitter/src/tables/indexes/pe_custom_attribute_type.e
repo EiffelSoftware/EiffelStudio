@@ -30,6 +30,11 @@ feature -- Enum: tags
 
 		-- custom attribute type
 	TagBits: INTEGER = 3
+			-- CustomAttributeType
+			-- 3 bits to encode.
+			-- 0, 1, and 4 are not used.
+			-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=301
+
 	MethodDef: INTEGER = 2
 	MemberRef: INTEGER = 3
 
@@ -42,8 +47,8 @@ feature -- Operations
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
-			Result := large(a_sizes[{PE_TABLES}.tMethodDef.to_integer_32 + 1].to_natural_32) or else
-					  large(a_sizes[{PE_TABLES}.tMemberRef.to_integer_32 + 1].to_natural_32)
+			Result := large (a_sizes [{PE_TABLES}.tMethodDef.to_integer_32 + 1].to_natural_32) or else
+				large (a_sizes [{PE_TABLES}.tMemberRef.to_integer_32 + 1].to_natural_32)
 		end
 
 end

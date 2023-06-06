@@ -61,7 +61,7 @@ feature -- Status report
 		require
 			valid_index: tables.valid_index (a_index.to_integer_32)
 		do
-			Result := tables [a_index.to_integer_32].table.count
+			Result := tables [a_index.to_integer_32].size
 		end
 
 feature {NONE} -- Change tables
@@ -75,15 +75,13 @@ feature {NONE} -- Change tables
 		local
 			n: INTEGER
 			l_md_tables: MD_TABLES
-			lst: LIST [PE_TABLE_ENTRY_BASE]
 		do
 			n := a_entry.table_index
 			l_md_tables := tables [n]
 			Result := a_entry.token_from_tables (l_md_tables)
 			if Result = 0 then
-				lst := l_md_tables.table
-				lst.force (a_entry)
-				Result := lst.count.to_natural_32
+				l_md_tables.force (a_entry)
+				Result := l_md_tables.size.to_natural_32
 			end
 			last_token := (n |<< 24).to_natural_32 | Result.to_natural_32
 		end

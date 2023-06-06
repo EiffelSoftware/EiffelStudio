@@ -7,6 +7,8 @@ class
 	MD_TABLES
 
 inherit
+	ITERABLE [PE_TABLE_ENTRY_BASE]
+
 	DEBUG_OUTPUT
 
 create
@@ -24,11 +26,32 @@ feature -- Access
 
 	table_id: INTEGER
 
+feature {NONE} -- Access	
+
 	table: LIST [PE_TABLE_ENTRY_BASE]
 			-- vector of tables that can appear in a PE file
 			-- empty tables are elided / pass over?
 
+feature -- Access
+
+	item alias "[]" (i: INTEGER): PE_TABLE_ENTRY_BASE
+		do
+			Result := table [i]
+		end
+
+	new_cursor: ITERATION_CURSOR [PE_TABLE_ENTRY_BASE]
+			-- Fresh cursor associated with current structure
+		do
+			Result := table.new_cursor
+		end
+
 feature -- Element Change
+
+	force (a_entry: PE_TABLE_ENTRY_BASE)
+			-- Force `a_entry'
+		do
+			table.force (a_entry)
+		end
 
 	replace (a_entry: PE_TABLE_ENTRY_BASE; i: INTEGER)
 			-- Put `a_entry' at `i'-th position.

@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			across 0 |..| (max_tables - 1) as ic loop
 				if l_counts [ic + 1] /= 0 then
 					create l_buffer.make_filled (0, 1, 512)
-					l_temp := tables [ic].table [1].render (l_counts, l_buffer).to_natural_32
+					l_temp := tables [ic][1].render (l_counts, l_buffer).to_natural_32
 					l_temp := l_temp * (l_counts [ic + 1]).to_natural_32
 					l_current_rva := l_current_rva + l_temp
 				end
@@ -457,7 +457,7 @@ feature {NONE} -- Implementation
 				l_item := tables [i].size.to_natural_32
 				across 0 |..| (l_item - 1).to_integer_32 as j loop
 					create l_buffer.make_filled (0, 1, 512)
-					l_sz := tables [i].table [j + 1].render (l_counts, l_buffer).to_natural_32
+					l_sz := tables [i][j + 1].render (l_counts, l_buffer).to_natural_32
 						-- TODO double check
 						-- this is not efficient.
 					put_array (a_file, l_buffer.subarray (1, l_sz.as_integer_32))
@@ -640,7 +640,7 @@ feature -- Settings
 				-- TODO create a helper features
 				-- 		retrieve_table_entry (from the metadata tables),
 				--  	retrieve_table_row (from specific table entry)
-			if attached {PE_METHOD_DEF_TABLE_ENTRY} tables [l_tuple_method.table_type_index.to_integer_32].table [l_tuple_method.table_row_index.to_integer_32] as l_method_def then
+			if attached {PE_METHOD_DEF_TABLE_ENTRY} tables [l_tuple_method.table_type_index.to_integer_32].item (l_tuple_method.table_row_index.to_integer_32) as l_method_def then
 
 					-- Set RVA value in method definition table entry
 				l_method_def.set_rva (rva)
@@ -683,7 +683,7 @@ feature -- Definition: Access
 				--| {PE_TABLES}.is_valid_table (l_table_type)
 				--|
 				--| l_table_row: exists.
-			check exist_table_row: attached tables [l_tuple.table_type_index.to_integer_32].table [l_tuple.table_row_index.to_integer_32] end
+			check exist_table_row: attached tables [l_tuple.table_type_index.to_integer_32].item (l_tuple.table_row_index.to_integer_32) end
 
 				-- ResolutionScope : an index into a Module, ModuleRef, AssemblyRef or TypeRef table,or null
 			if resolution_scope & Md_mask = md_module then
@@ -802,6 +802,8 @@ feature -- Definition: Creation
 			l_field_index := next_table_index ({PE_TABLES}.tfield.to_integer_32)
 				-- MethodList (an index into the MethodDef table; it marks the first of a continguous run of Methods owned by this Type).
 			l_method_index := next_table_index ({PE_TABLES}.tmethoddef.to_integer_32)
+
+			print ({STRING_32} "TYPE=" + l_type_name + " methodDef=" + l_method_index.out + "%N")
 
 			l_type_name := type_name.string_32
 			last_dot := l_type_name.last_index_of ('.', l_type_name.count)

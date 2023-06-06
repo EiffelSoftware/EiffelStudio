@@ -254,7 +254,6 @@ feature {NONE} -- Implementation
 			l_temp: NATURAL_32
 			l_buffer: ARRAY [NATURAL_8]
 		do
-
 			l_current_rva := 16
 				-- metadata header offest
 				-- Signature + Major Version + MinorVersion + Reserved + Length
@@ -803,9 +802,8 @@ feature -- Definition: Creation
 				-- MethodList (an index into the MethodDef table; it marks the first of a continguous run of Methods owned by this Type).
 			l_method_index := next_table_index ({PE_TABLES}.tmethoddef.to_integer_32)
 
-			print ({STRING_32} "TYPE=" + l_type_name + " methodDef=" + l_method_index.out + "%N")
-
 			l_type_name := type_name.string_32
+
 			last_dot := l_type_name.last_index_of ('.', l_type_name.count)
 			if last_dot = 0 then
 				l_namespace_index := 0

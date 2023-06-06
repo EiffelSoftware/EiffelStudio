@@ -31,26 +31,27 @@ feature -- Status
 	token_from_tables (tables: MD_TABLES): NATURAL_64
 			-- If Current was already defined in `tables` return the associated token.
 		local
-			lst: LIST [PE_TABLE_ENTRY_BASE]
-			n: NATURAL_64
+--			lst: LIST [PE_TABLE_ENTRY_BASE]
+--			n: NATURAL_64
 		do
-			lst := tables.table
-			n := 0
-			across
-				lst as i
-			until
-				Result /= {NATURAL_64} 0
-			loop
-				n := n + 1
-				if
-					attached {like Current} i as e and then
-					e.flags = flags and then
-					e.name_index.is_equal (name_index) and then
-					e.signature_index.is_equal (signature_index)
-				then
-					Result := n
-				end
-			end
+-- FIXME: for now, it seems this excludes too many entries in Field table
+--			lst := tables.table
+--			n := 0
+--			across
+--				lst as i
+--			until
+--				Result /= {NATURAL_64} 0
+--			loop
+--				n := n + 1
+--				if
+--					attached {like Current} i as e and then
+--					e.flags = flags and then
+--					e.name_index.is_equal (name_index) and then
+--					e.signature_index.is_equal (signature_index)
+--				then
+--					Result := n
+--				end
+--			end
 		end
 
 feature -- Access

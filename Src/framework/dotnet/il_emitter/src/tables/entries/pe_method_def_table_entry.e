@@ -49,29 +49,30 @@ feature -- Status
 	token_from_tables (tables: MD_TABLES): NATURAL_64
 			-- If Current was already defined in `tables` return the associated token.
 		local
-			lst: LIST [PE_TABLE_ENTRY_BASE]
-			n: NATURAL_64
+--			lst: LIST [PE_TABLE_ENTRY_BASE]
+--			n: NATURAL_64
 		do
-			lst := tables.table
-			n := 0
-			across
-				lst as i
-			until
-				Result /= {NATURAL_64} 0
-			loop
-				n := n + 1
-				if
-					attached {like Current} i as e and then
-					e.signature_index.is_equal (signature_index) and then
-					e.param_index.is_equal (param_index) and then
-					e.name_index.is_equal (name_index) and then
-					e.flags = flags and then
-					e.impl_flags = impl_flags and then
-					e.rva = rva
-				then
-					Result := n
-				end
-			end
+-- TODO: for now, it seems this excludes too many entries in Method table			
+--			lst := tables.table
+--			n := 0
+--			across
+--				lst as i
+--			until
+--				Result /= {NATURAL_64} 0
+--			loop
+--				n := n + 1
+--				if
+--					attached {like Current} i as e and then
+--					e.signature_index.is_equal (signature_index) and then
+--					e.param_index.is_equal (param_index) and then
+--					e.name_index.is_equal (name_index) and then
+--					e.flags = flags and then
+--					e.impl_flags = impl_flags and then
+--					e.rva = rva
+--				then
+--					Result := n
+--				end
+--			end
 		end
 
 feature -- Access

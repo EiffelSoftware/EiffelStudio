@@ -24,15 +24,6 @@ create
 
 	make_with_index
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-		do
-		end
-
 feature -- Operations
 
 	get_index_shift: INTEGER

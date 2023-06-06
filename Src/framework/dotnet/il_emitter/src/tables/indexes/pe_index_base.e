@@ -45,6 +45,8 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_tag_and_index (a_tag: INTEGER; a_index: NATURAL_64)
+		require
+			a_tag /= 0
 		do
 			make_with_index (a_index)
 			tag := a_tag

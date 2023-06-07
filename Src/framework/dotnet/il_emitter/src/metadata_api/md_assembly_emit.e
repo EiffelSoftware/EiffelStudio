@@ -127,8 +127,8 @@ feature -- Definition
 			type_name_not_void: type_name /= Void
 		local
 			l_exported_type_entry: PE_EXPORTED_TYPE_TABLE_ENTRY
-			l_tuple_type: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
-			l_tuple_type_def: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_tuple_type: like extract_table_type_and_row
+			l_tuple_type_def: like extract_table_type_and_row
 			l_name_index: NATURAL_64
 			l_implementation: PE_IMPLEMENTATION
 			l_namespace_index: NATURAL_64
@@ -220,7 +220,7 @@ feature -- Definition
 			resource_name_not_void: resource_name /= Void
 		local
 			l_manifest_resource_entry: PE_MANIFEST_RESOURCE_TABLE_ENTRY
-			l_tuple_type: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_tuple_type: like extract_table_type_and_row
 			l_implementation: PE_IMPLEMENTATION
 			l_name_index: NATURAL_64
 		do

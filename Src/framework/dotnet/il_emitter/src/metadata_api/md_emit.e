@@ -118,7 +118,7 @@ feature -- Access
 	tables: SPECIAL [MD_TABLES]
 			--  in-memory metadata tables
 
-	md_tables (idx: NATURAL_64): MD_TABLES
+	md_tables (idx: NATURAL_32): MD_TABLES
 		require
 			tables.valid_index (idx.to_integer_32)
 		do
@@ -315,10 +315,10 @@ feature {NONE} -- Implementation
 			l_counts [t_blob + 1] := blob_heap_size
 
 			from
-				i := 1
+				i := 0
 				n := tables.count
 			until
-				i > n
+				i >= n
 			loop
 				if not tables [i].is_empty then
 					l_counts [i + 1] := tables [i].size
@@ -334,10 +334,10 @@ feature {NONE} -- Implementation
 				-- Dword is 4 bytes.
 
 			from
-				i := 1
+				i := 0
 				n := tables.count
 			until
-				i > n
+				i >= n
 			loop
 				if l_counts [i + 1] /= 0 then
 					create l_buffer.make_filled (0, 1, 512)
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation
 			until
 				i > n
 			loop
-				tb := md_tables (i.to_natural_64)
+				tb := md_tables (i.to_natural_32)
 				l_sz := tb.size
 				l_counts [i + 1] := l_sz
 				if l_sz /= 0 then
@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 			until
 				i > n
 			loop
-				tb := md_tables (i.to_natural_64)
+				tb := md_tables (i.to_natural_32)
 				check valid_size: l_counts [i + 1] /= 0 end
 				from
 					j := 0
@@ -675,26 +675,27 @@ feature -- Settings
 
 	set_method_rva (method_token, rva: INTEGER)
 			-- Set RVA of `method_token' to `rva'.
-		local
-			l_tuple_method: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 		do
 				-- Extract table type and row index from method token
-			l_tuple_method := extract_table_type_and_row (method_token)
 
 				-- Retrieve method definition table entry using row index
 				-- TODO create a helper features
 				-- 		retrieve_table_entry (from the metadata tables),
 				--  	retrieve_table_row (from specific table entry)
-			if attached {PE_METHOD_DEF_TABLE_ENTRY} tables [l_tuple_method.table_type_index.to_integer_32].item (l_tuple_method.table_row_index) as l_method_def then
+			if
+				attached extract_table_type_and_row (method_token) as d and then
+				attached {PE_METHOD_DEF_TABLE_ENTRY} md_tables (d.table_type_index)[d.table_row_index] as l_method_def
+			then
 
 					-- Set RVA value in method definition table entry
 				l_method_def.set_rva (rva)
 
 					-- Update method definition table entry in metadata tables
 					-- Create a helper feature to update an entry in a table row.
-				md_tables (l_tuple_method.table_type_index).replace (l_method_def, l_tuple_method.table_row_index)
+				md_tables (d.table_type_index).replace (l_method_def, d.table_row_index)
 			else
 					-- TODO
+				check todo: False end
 			end
 		end
 
@@ -716,7 +717,7 @@ feature -- Definition: Access
 			l_entry: PE_TABLE_ENTRY_BASE
 			l_scope: INTEGER
 			l_namespace_index: NATURAL_64
-			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_tuple: like extract_table_type_and_row
 			last_dot: INTEGER
 			l_type_name: STRING_32
 		do
@@ -728,7 +729,7 @@ feature -- Definition: Access
 				--| {PE_TABLES}.is_valid_table (l_table_type)
 				--|
 				--| l_table_row: exists.
-			check exist_table_row: attached tables [l_tuple.table_type_index.to_integer_32][l_tuple.table_row_index] end
+			check exist_table_row: attached md_tables (l_tuple.table_type_index)[l_tuple.table_row_index] end
 
 				-- ResolutionScope : an index into a Module, ModuleRef, AssemblyRef or TypeRef table,or null
 			if resolution_scope & Md_mask = md_module then
@@ -769,7 +770,7 @@ feature -- Definition: Access
 		local
 			l_member_ref: PE_MEMBER_REF_PARENT
 			l_member_ref_entry: PE_MEMBER_REF_TABLE_ENTRY
-			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_tuple: like extract_table_type_and_row
 			l_method_signature: NATURAL_64
 			l_name_index: NATURAL_64
 		do
@@ -837,7 +838,7 @@ feature -- Definition: Creation
 			l_entry: PE_TABLE_ENTRY_BASE
 				--i: INTEGER
 			l_extends: PE_TYPEDEF_OR_REF
-			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_tuple: like extract_table_type_and_row
 			last_dot: INTEGER
 			l_type_name: STRING_32
 			l_field_index, l_method_index: NATURAL
@@ -948,7 +949,7 @@ feature -- Definition: Creation
 				-- Extract table type and row from the in_class_token
 			if
 				attached extract_table_type_and_row (in_class_token) as d and then
-				attached {PE_TYPE_DEF_TABLE_ENTRY} tables [d.table_type_index.to_integer_32][d.table_row_index] as e
+				attached {PE_TYPE_DEF_TABLE_ENTRY} md_tables (d.table_type_index)[d.table_row_index] as e
 			then
 				if not e.is_method_list_index_set then
 					e.set_method_list_index (l_method_index)
@@ -965,7 +966,7 @@ feature -- Definition: Creation
 			-- class to method `method_token' defined in `in_class_token'.
 		local
 			l_method_impl_entry: PE_METHOD_IMPL_TABLE_ENTRY
-			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_tuple: like extract_table_type_and_row
 			l_method_body: PE_METHOD_DEF_OR_REF
 			l_method_declaration: PE_METHOD_DEF_OR_REF
 		do
@@ -991,7 +992,7 @@ feature -- Definition: Creation
 			l_property_signature: NATURAL_64
 			l_semantics: PE_SEMANTICS
 			l_table: PE_TABLE_ENTRY_BASE
-			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_tuple: like extract_table_type_and_row
 			l_property_index: like next_table_index
 		do
 				-- Compute the signature token
@@ -1038,7 +1039,7 @@ feature -- Definition: Creation
 			l_member_forwarded: PE_MEMBER_FORWARDED
 			l_name_index: NATURAL_64
 			l_impl_map_entry: PE_IMPL_MAP_TABLE_ENTRY
-			l_tuple_method: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_tuple_method: like extract_table_type_and_row
 		do
 			l_tuple_method := extract_table_type_and_row (method_token)
 
@@ -1064,7 +1065,7 @@ feature -- Definition: Creation
 		local
 			l_method_index: NATURAL_64
 			l_param_entry: PE_PARAM_TABLE_ENTRY
-			l_method_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_method_tuple: like extract_table_type_and_row
 			l_param_name_index: INTEGER_32
 			l_param_flags: INTEGER_16
 			l_param_index: NATURAL
@@ -1095,7 +1096,7 @@ feature -- Definition: Creation
 
 			if
 				attached extract_table_type_and_row (in_method_token) as d and then
-				attached {PE_METHOD_DEF_TABLE_ENTRY} tables [d.table_type_index.to_integer_32][d.table_row_index] as e
+				attached {PE_METHOD_DEF_TABLE_ENTRY} md_tables (d.table_type_index)[d.table_row_index] as e
 			then
 				if not e.is_param_list_index_set then
 					e.set_param_list_index (l_param_entry_index)
@@ -1111,7 +1112,7 @@ feature -- Definition: Creation
 			--| TODO: double check this: Limited to parameter token for the moment.
 		local
 			l_entry: PE_FIELD_MARSHAL_TABLE_ENTRY
-			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_tuple: like extract_table_type_and_row
 			l_parent: PE_FIELD_MARSHAL
 			l_index_native_type: NATURAL_64
 		do
@@ -1135,7 +1136,7 @@ feature -- Definition: Creation
 			-- Create a new field in class `in_class_token'.
 		local
 			l_field_def_entry: PE_FIELD_TABLE_ENTRY
-			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_tuple: like extract_table_type_and_row
 			l_field_signature: NATURAL_64
 			l_name_index: NATURAL_64
 			l_field_index: like next_table_index
@@ -1156,7 +1157,7 @@ feature -- Definition: Creation
 
 			if
 				attached extract_table_type_and_row (in_class_token) as d and then
-				attached {PE_TYPE_DEF_TABLE_ENTRY} tables [d.table_type_index.to_integer_32][d.table_row_index] as e
+				attached {PE_TYPE_DEF_TABLE_ENTRY} md_tables (d.table_type_index)[d.table_row_index] as e
 			then
 				if not e.is_field_list_index_set then
 					e.set_field_list_index (l_field_index)
@@ -1207,8 +1208,8 @@ feature -- Definition: Creation
 		local
 			l_ca_blob: NATURAL_64
 			l_ca_entry: PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY
-			l_owner_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
-			l_constructor_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+			l_owner_tuple: like extract_table_type_and_row
+			l_constructor_tuple: like extract_table_type_and_row
 			blob_count: INTEGER
 			l_ca: PE_CUSTOM_ATTRIBUTE
 			l_ca_type: PE_CUSTOM_ATTRIBUTE_TYPE

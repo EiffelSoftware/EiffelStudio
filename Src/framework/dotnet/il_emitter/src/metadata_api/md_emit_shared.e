@@ -82,7 +82,7 @@ feature {NONE} -- Change tables
 
 feature {NONE} -- Helper
 
-	extract_table_type_and_row (a_token: INTEGER): TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
+	extract_table_type_and_row (a_token: INTEGER): TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_64]
 			-- Given a token `a_token' return a TUPLE with the table_type_index and the
 			-- table_row_index.
 			--| Metadata tokens
@@ -96,11 +96,11 @@ feature {NONE} -- Helper
 			--| one upwards, whilst offsets in the heap are numbered zero upwards. (So, for example, the
 			--| metadata token with value 0x02000007 specifies row number 7 in the TypeDef table)
 		local
-			l_table_type_index: NATURAL_64
+			l_table_type_index: NATURAL_32
 			l_table_row_index: NATURAL_64
 		do
 				-- 2^8 -1 = 255
-			l_table_type_index := ((a_token |>> 24) & 255).to_natural_64
+			l_table_type_index := ((a_token |>> 24) & 255).to_natural_32
 				-- 2^ 24 -1 = 16777215
 			l_table_row_index := (a_token & 16777215).to_natural_64
 			Result := [l_table_type_index, l_table_row_index]

@@ -668,10 +668,10 @@ feature -- Various Operations
 			Result := new_random_guid
 		end
 
-	next_table_index (a_table: INTEGER): NATURAL
+	next_table_index (a_table: NATURAL_32): NATURAL
 		do
 				-- TODO double check if we need the + 1.
-			Result := (tables [a_table].size + 1).to_natural_32
+			Result := (tables [a_table.to_integer_32].size + 1).to_natural_32
 		end
 
 	write_file (a_corFlags: INTEGER; a_out: FILE_STREAM): BOOLEAN
@@ -1371,7 +1371,6 @@ feature -- Write operations
 			n: INTEGER
 			l_flags: NATURAL_16
 			l_data: NATURAL_16
-			l_names: STRING_32
 			l_rvt_string: STRING_32
 		do
 			align (4)
@@ -1397,9 +1396,7 @@ feature -- Write operations
 
 					-- Adding a null character a the end of the string
 					-- C++ code uses put(streamNames_[i], strlen(streamNames_[i]) + 1);
-				l_names := stream_names [i].twin
-				l_names.append_character ('%U')
-				put_string (l_names)
+				put_string (stream_names [i] + "%U")
 				align (4)
 			end
 			Result := True
@@ -1408,11 +1405,14 @@ feature -- Write operations
 	write_tables: BOOLEAN
 		local
 			l_counts: ARRAY [NATURAL_64]
-			l_item: NATURAL_32
 			l_buffer: ARRAY [NATURAL_8]
-			l_sz: NATURAL_32
+			l_sz: NATURAL_64
+			i,n: INTEGER
+			j,m: NATURAL_64
+			tb: DNL_TABLE
 		do
-			if attached tables_header as l_tables_header
+			if
+				attached tables_header as l_tables_header
 			then
 				create l_counts.make_filled (0, 1, max_tables + extra_indexes)
 				l_counts [t_string + 1] := strings.size
@@ -1422,23 +1422,41 @@ feature -- Write operations
 
 				put_tables_header (l_tables_header)
 
-				across 0 |..| (max_tables - 1) as i loop
-					l_counts [i + 1] := tables [i].size.to_natural_64
-					l_item := l_counts [i + 1].to_natural_32
-					if l_item /= 0 then
-						put_natural_32 (l_item)
+				from
+					i := 0
+					n := tables.count
+				until
+					i > n
+				loop
+					l_sz := tables [i].size.to_natural_64
+					l_counts [i + 1] := l_sz
+					if l_sz /= 0 then
+						put_natural_32 (l_sz.to_natural_32)
 					end
+					i := i + 1
 				end
 
-				across 0 |..| (max_tables - 1) as i loop
-					l_item := tables [i].size.to_natural_32
-					across 0 |..| (l_item - 1).to_integer_32 as j loop
+				from
+					i := 0
+					n := tables.count
+				until
+					i > n
+				loop
+					tb := tables [i]
+					from
+						j := 0
+						m := tb.size.to_natural_64
+					until
+						j > m
+					loop
 						create l_buffer.make_filled (0, 1, 512)
-						l_sz := tables [i].table [j + 1].render (l_counts, l_buffer).to_natural_32
+						l_sz := tb.table [(j + 1).to_integer_32].render (l_counts, l_buffer)
 							-- TODO double check
 							-- this is not efficient.
-						put_array (l_buffer.subarray (1, l_sz.as_integer_32))
+						put_array (l_buffer.subarray (1, l_sz.to_integer_32))
+						j := j + 1
 					end
+					i := i + 1
 				end
 				align (4)
 					-- Commented code in C++ implementation to be double check.

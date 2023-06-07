@@ -729,7 +729,7 @@ feature {NONE} -- Implementation
 
 			check rendering = Void end
 
-			l_method_def := if attached {PE_WRITER} a_stream.pe_writer as l_writer then l_writer.next_table_index ({PE_TABLES}.tmethoddef.to_integer_32) else {NATURAL_32} 0 end
+			l_method_def := if attached {PE_WRITER} a_stream.pe_writer as l_writer then l_writer.next_table_index ({PE_TABLES}.tmethoddef) else {NATURAL_32} 0 end
 			l_local_count := if attached l_last then (l_last.offset + l_last.instruction_size) else 0 end
 			if l_method_signature /= 0 then
 				l_signature := l_method_signature | ({PE_TABLES}.tstandalonesig |<< 24).to_natural_64
@@ -801,7 +801,7 @@ feature {NONE} -- Implementation
 				if not import_name.is_empty then
 					l_import_name_index := l_writer.hash_string (import_name)
 				end
-				l_param_index := l_writer.next_table_index ({PE_TABLES}.tparam.to_integer_32)
+				l_param_index := l_writer.next_table_index ({PE_TABLES}.tparam)
 
 				l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.method_def_sig (prototype, l_sz)
 				l_method_signature := l_writer.hash_blob (l_sig, l_sz.item.to_natural_8)

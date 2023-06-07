@@ -11,7 +11,6 @@ class
 	PE_STRING
 
 inherit
-
 	PE_INDEX_BASE
 		rename
 			make as make_base
@@ -21,7 +20,6 @@ inherit
 		end
 
 create
-
 	make_with_index
 
 feature -- Operations

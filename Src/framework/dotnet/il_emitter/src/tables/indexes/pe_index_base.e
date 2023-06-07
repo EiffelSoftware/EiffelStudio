@@ -14,13 +14,15 @@ class
 	PE_INDEX_BASE
 
 inherit
-
 	PE_META_BASE
 		redefine
 			is_equal
 		end
 
-
+	DEBUG_OUTPUT
+		redefine
+			is_equal
+		end
 
 create
 	make,
@@ -61,6 +63,12 @@ feature -- Access
 	index: NATURAL_64
 			-- The index used in tables and blobs.
 
+feature -- Status report
+
+	debug_output: STRING
+		do
+			Result := "tag["+tag.out+"] index="+ index.out
+		end
 
 feature -- Comparison
 

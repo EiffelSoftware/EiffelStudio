@@ -98,6 +98,36 @@ feature -- Status report
 						+ " fields:" + fields.index.out
 		end
 
+	is_field_list_index_set: BOOLEAN
+		do
+			Result := fields.index = 0
+		end
+
+	is_method_list_index_set: BOOLEAN
+		do
+			Result := methods.index = 0
+		end
+
+feature -- Element change
+
+	set_field_list_index (idx: NATURAL_64)
+		require
+			not is_field_list_index_set
+		do
+			fields.update_index (idx)
+		ensure
+			is_field_list_index_set
+		end
+
+	set_method_list_index (idx: NATURAL_64)
+		require
+			not is_method_list_index_set
+		do
+			methods.update_index (idx)
+		ensure
+			is_method_list_index_set
+		end
+
 feature -- Operations
 
 	table_index: INTEGER

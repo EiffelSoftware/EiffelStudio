@@ -98,6 +98,24 @@ feature -- Access
 	param_index: PE_PARAM_LIST
 			-- index into the Param table
 
+feature -- Status report			
+
+	is_param_list_index_set: BOOLEAN
+		do
+			Result := param_index.index = 0
+		end
+
+feature -- Element change
+
+	set_param_list_index (idx: NATURAL_64)
+		require
+			not is_param_list_index_set
+		do
+			param_index.update_index (idx)
+		ensure
+			is_param_list_index_set
+		end
+
 feature -- Enum: Implementation Flags
 
 	CodeTypeMask: INTEGER = 0x0003 -- Flags about code type.

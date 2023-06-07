@@ -16,6 +16,8 @@ inherit
 
 	PE_TYPE_DEF_FLAGS
 
+	DEBUG_OUTPUT
+
 create
 	make_with_data
 
@@ -85,6 +87,16 @@ feature -- Access
 	methods: PE_METHOD_LIST
 			-- an index into the MethodDef table; it marks the first of a continguous
 			-- run of Methods owned by this Type
+
+feature -- Status report
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := "{TypeDef} "
+						+ " methods:" + methods.index.out
+						+ " fields:" + fields.index.out
+		end
 
 feature -- Operations
 

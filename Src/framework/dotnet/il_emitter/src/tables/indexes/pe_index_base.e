@@ -90,7 +90,6 @@ feature -- Operations
 				--  Calculate the value to be written to the destintation `a_dest`.
 			l_val := ((index |<< get_index_shift) + tag.to_natural_64).to_natural_32
 
-
 			if has_index_overflow (a_sizes) then
 					-- write the value as NATURAL_32 to the destination `a_dest`
 					-- and set the return value to 4.

@@ -260,6 +260,7 @@ feature {NONE} -- Implementation
 			l_counts: ARRAY [NATURAL_64]
 			l_temp: NATURAL_32
 			l_buffer: ARRAY [NATURAL_8]
+			i,n: INTEGER
 		do
 			l_current_rva := 16
 				-- metadata header offest
@@ -313,26 +314,38 @@ feature {NONE} -- Implementation
 			l_counts [t_guid + 1] := guid_heap_size
 			l_counts [t_blob + 1] := blob_heap_size
 
-			across 0 |..| (max_tables - 1) as ic loop
-				if not tables [ic].is_empty then
-					l_counts [ic + 1] := tables [ic].size
-					tables_header.mask_valid := tables_header.mask_valid | ({INTEGER_64} 1 |<< ic)
+			from
+				i := 1
+				n := tables.count
+			until
+				i > n
+			loop
+				if not tables [i].is_empty then
+					l_counts [i + 1] := tables [i].size
+					tables_header.mask_valid := tables_header.mask_valid | ({INTEGER_64} 1 |<< i)
 					l_temp := l_temp + 1
 				end
+				i := i + 1
 			end
 			l_current_rva := l_current_rva + {PE_DOTNET_META_TABLES_HEADER}.size_of.to_natural_32
 				-- tables header
 			l_current_rva := l_current_rva + (l_temp * ({PLATFORM}.natural_32_bytes).to_natural_32)
-				--table counts
+				-- table counts
 				-- Dword is 4 bytes.
 
-			across 0 |..| (max_tables - 1) as ic loop
-				if l_counts [ic + 1] /= 0 then
+			from
+				i := 1
+				n := tables.count
+			until
+				i > n
+			loop
+				if l_counts [i + 1] /= 0 then
 					create l_buffer.make_filled (0, 1, 512)
-					l_temp := tables [ic][{NATURAL_64} 1].render (l_counts, l_buffer).to_natural_32
-					l_temp := l_temp * (l_counts [ic + 1]).to_natural_32
+					l_temp := tables [i][{NATURAL_64} 1].render (l_counts, l_buffer).to_natural_32
+					l_temp := l_temp * (l_counts [i + 1]).to_natural_32
 					l_current_rva := l_current_rva + l_temp
 				end
+				i := i + 1
 			end
 
 			if (l_current_rva \\ 4) /= 0 then
@@ -439,10 +452,11 @@ feature {NONE} -- Implementation
 			open_write: a_file.is_open_write
 		local
 			l_counts: ARRAY [NATURAL_64]
-			l_item: NATURAL_32
 			l_buffer: ARRAY [NATURAL_8]
-			l_sz: NATURAL_32
+			l_sz: NATURAL_64
 			tb: MD_TABLES
+			i,n: INTEGER
+			j,m: NATURAL_64
 		do
 			create l_counts.make_filled (0, 1, max_tables + extra_indexes)
 			l_counts [t_string + 1] := strings_heap_size
@@ -452,25 +466,47 @@ feature {NONE} -- Implementation
 
 			put_tables_header (a_file, tables_header)
 
-			across 0 |..| (max_tables - 1) as i loop
+				-- Write table size
+			from
+				i := 0
+				n := max_tables
+			until
+				i > n
+			loop
 				tb := md_tables (i.to_natural_64)
-				l_counts [i + 1] := tb.size
-				l_item := l_counts [i + 1].to_natural_32
-				if l_item /= 0 then
-					a_file.put_natural_32 (l_item)
+				l_sz := tb.size
+				l_counts [i + 1] := l_sz
+				if l_sz /= 0 then
+					check no_truncation: l_sz.to_natural_32.to_natural_64 = l_sz end
+					a_file.put_natural_32 (l_sz.to_natural_32)
 				end
+				i := i + 1
 			end
 
-			across 0 |..| (max_tables - 1) as i loop
+				-- Write table entries
+			from
+				i := 0
+				n := max_tables
+			until
+				i > n
+			loop
 				tb := md_tables (i.to_natural_64)
-				l_item := tb.size.to_natural_32
-				across 0 |..| (l_item - 1).to_integer_32 as j loop
+				check valid_size: l_counts [i + 1] /= 0 end
+				from
+					j := 0
+					m := tb.size
+				until
+					j > m
+				loop
 					create l_buffer.make_filled (0, 1, 512)
-					l_sz := tb[(j + 1).to_natural_64].render (l_counts, l_buffer).to_natural_32
+					l_sz := tb [j + 1].render (l_counts, l_buffer)
 						-- TODO double check
 						-- this is not efficient.
-					put_array (a_file, l_buffer.subarray (1, l_sz.as_integer_32))
+					put_array (a_file, l_buffer.subarray (1, l_sz.to_integer_32))
+					check no_truncation: l_sz = l_sz.to_integer_32.to_natural_64 end
+					j := j + 1
 				end
+				i := i + 1
 			end
 			align (a_file, 4)
 		end
@@ -808,9 +844,9 @@ feature -- Definition: Creation
 			l_class_index: NATURAL_64
 		do
 				-- FieldList (an index into the Field table; it marks the first of a contiguous run of Fields owned by this Type).
-			l_field_index := next_table_index ({PE_TABLES}.tfield)
+			l_field_index := 0 -- Not yet initialized
 				-- MethodList (an index into the MethodDef table; it marks the first of a continguous run of Methods owned by this Type).
-			l_method_index := next_table_index ({PE_TABLES}.tmethoddef)
+			l_method_index := 0 -- Not yet initialized
 
 			l_type_name := type_name.string_32
 
@@ -892,12 +928,12 @@ feature -- Definition: Creation
 			l_method_signature: NATURAL_64
 			l_name_index: NATURAL_64
 			l_param_index: NATURAL_64
-			l_method_index: NATURAL_64
+			l_method_index: like next_table_index
 		do
 				-- See II.22.26 MethodDef : 0x06
 
 
-			l_param_index := next_table_index ({PE_TABLES}.tparam)
+			l_param_index := 0 -- Not yet initialized
 
 			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 			l_name_index := pe_writer.hash_string (method_name.string_32)
@@ -914,7 +950,10 @@ feature -- Definition: Creation
 				attached extract_table_type_and_row (in_class_token) as d and then
 				attached {PE_TYPE_DEF_TABLE_ENTRY} tables [d.table_type_index.to_integer_32][d.table_row_index] as e
 			then
-				-- See to update TypeDef entry with l_method_index
+				if not e.is_method_list_index_set then
+					e.set_method_list_index (l_method_index)
+					do_nothing
+				end
 			end
 
 				-- Return the generated token.
@@ -953,12 +992,10 @@ feature -- Definition: Creation
 			l_semantics: PE_SEMANTICS
 			l_table: PE_TABLE_ENTRY_BASE
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
-			l_property_index: NATURAL_64
+			l_property_index: like next_table_index
 		do
 				-- Compute the signature token
 			l_property_signature := hash_blob (signature.as_array, signature.count.to_natural_64)
-
-			l_property_index := next_table_index ({PE_TABLES}.tproperty)
 
 				-- Create a new PE_PROPERTY_TABLE_ENTRY instance with the given data.
 			create {PE_PROPERTY_TABLE_ENTRY} l_property.make_with_data (
@@ -968,6 +1005,7 @@ feature -- Definition: Creation
 				)
 
 				-- Add the new PE_PROPERTY_TABLE_ENTRY instance to the metadata tables.
+			l_property_index := next_table_index ({PE_TABLES}.tproperty)
 			pe_index := add_table_entry (l_property)
 				-- Return the metadata token for the new property.
 			Result := last_token.to_integer_32
@@ -1030,6 +1068,7 @@ feature -- Definition: Creation
 			l_param_name_index: INTEGER_32
 			l_param_flags: INTEGER_16
 			l_param_index: NATURAL
+			l_param_entry_index: like next_table_index
 		do
 			to_implement ("Review need ensure every row in the Param table is owned by one, and only one, row in the MethodDef table")
 
@@ -1051,7 +1090,17 @@ feature -- Definition: Creation
 			create l_param_entry.make_with_data (l_param_flags, l_param_index.to_natural_16, l_param_name_index.to_natural_64)
 
 				-- Add the new PE_PARAM_TABLE_ENTRY instance to the metadata tables.
+			l_param_entry_index := next_table_index ({PE_TABLES}.tparam)
 			pe_index := add_table_entry (l_param_entry)
+
+			if
+				attached extract_table_type_and_row (in_method_token) as d and then
+				attached {PE_METHOD_DEF_TABLE_ENTRY} tables [d.table_type_index.to_integer_32][d.table_row_index] as e
+			then
+				if not e.is_param_list_index_set then
+					e.set_param_list_index (l_param_entry_index)
+				end
+			end
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
@@ -1089,6 +1138,7 @@ feature -- Definition: Creation
 			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_field_signature: NATURAL_64
 			l_name_index: NATURAL_64
+			l_field_index: like next_table_index
 		do
 				-- Extract table type and row from the in_class_token
 				-- TODO double check: Why we are not using l_tuple?
@@ -1101,7 +1151,17 @@ feature -- Definition: Creation
 			create l_field_def_entry.make_with_data (field_flags, l_name_index, l_field_signature)
 
 				-- Add the new PE_FIELD_TABLE_ENTRY instance to the metadata tables.
+			l_field_index := next_table_index ({PE_TABLES}.tfield)
 			pe_index := add_table_entry (l_field_def_entry)
+
+			if
+				attached extract_table_type_and_row (in_class_token) as d and then
+				attached {PE_TYPE_DEF_TABLE_ENTRY} tables [d.table_type_index.to_integer_32][d.table_row_index] as e
+			then
+				if not e.is_field_list_index_set then
+					e.set_field_list_index (l_field_index)
+				end
+			end
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32

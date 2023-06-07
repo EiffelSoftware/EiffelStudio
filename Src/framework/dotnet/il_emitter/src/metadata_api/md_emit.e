@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 				i := 0
 				n := max_tables
 			until
-				i > n
+				i >= n
 			loop
 				tb := md_tables (i.to_natural_32)
 				l_sz := tb.size
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 				i := 0
 				n := max_tables
 			until
-				i > n
+				i >= n
 			loop
 				tb := md_tables (i.to_natural_32)
 				check valid_size: l_counts [i + 1] /= 0 end

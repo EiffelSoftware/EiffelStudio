@@ -100,12 +100,12 @@ feature -- Status report
 
 	is_field_list_index_set: BOOLEAN
 		do
-			Result := fields.index = 0
+			Result := fields.is_list_index_set
 		end
 
 	is_method_list_index_set: BOOLEAN
 		do
-			Result := methods.index = 0
+			Result := methods.is_list_index_set
 		end
 
 feature -- Element change

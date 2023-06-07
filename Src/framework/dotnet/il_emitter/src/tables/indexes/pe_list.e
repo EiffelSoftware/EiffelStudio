@@ -34,7 +34,19 @@ feature -- Operations
 			valid_index: idx > 0
 		do
 			index := idx
+		ensure
+			is_list_index_set
 		end
+
+feature -- Status report
+
+	is_list_index_set: BOOLEAN
+			-- Is first index of Current list set ?
+		do
+			Result := index /= 0
+		end
+
+feature -- Access
 
 	get_index_shift: INTEGER
 		do

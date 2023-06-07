@@ -102,7 +102,7 @@ feature -- Status report
 
 	is_param_list_index_set: BOOLEAN
 		do
-			Result := param_index.index = 0
+			Result := param_index.is_list_index_set
 		end
 
 feature -- Element change

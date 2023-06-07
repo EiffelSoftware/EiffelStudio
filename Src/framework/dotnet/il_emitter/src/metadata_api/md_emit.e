@@ -491,15 +491,15 @@ feature {NONE} -- Implementation
 				i >= n
 			loop
 				tb := md_tables (i.to_natural_32)
-				check valid_size: l_counts [i + 1] /= 0 end
+				-- TODO: what if l_counts [i + 1] = 0 ?
 				from
-					j := 0
+					j := 1
 					m := tb.size
 				until
 					j > m
 				loop
 					create l_buffer.make_filled (0, 1, 512)
-					l_sz := tb [j + 1].render (l_counts, l_buffer)
+					l_sz := tb [j].render (l_counts, l_buffer)
 						-- TODO double check
 						-- this is not efficient.
 					put_array (a_file, l_buffer.subarray (1, l_sz.to_integer_32))

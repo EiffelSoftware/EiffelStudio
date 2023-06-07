@@ -118,6 +118,13 @@ feature -- Access
 	tables: SPECIAL [MD_TABLES]
 			--  in-memory metadata tables
 
+	md_tables (idx: NATURAL_64): MD_TABLES
+		require
+			tables.valid_index (idx.to_integer_32)
+		do
+			Result := tables [idx.to_integer_32]
+		end
+
 	pe_writer: PE_WRITER
 			-- class to generate the PE file.
 			--| using as a helper class to access needed features.
@@ -308,7 +315,7 @@ feature {NONE} -- Implementation
 
 			across 0 |..| (max_tables - 1) as ic loop
 				if not tables [ic].is_empty then
-					l_counts [ic + 1] := tables [ic].size.to_natural_32
+					l_counts [ic + 1] := tables [ic].size
 					tables_header.mask_valid := tables_header.mask_valid | ({INTEGER_64} 1 |<< ic)
 					l_temp := l_temp + 1
 				end
@@ -322,7 +329,7 @@ feature {NONE} -- Implementation
 			across 0 |..| (max_tables - 1) as ic loop
 				if l_counts [ic + 1] /= 0 then
 					create l_buffer.make_filled (0, 1, 512)
-					l_temp := tables [ic][1].render (l_counts, l_buffer).to_natural_32
+					l_temp := tables [ic][{NATURAL_64} 1].render (l_counts, l_buffer).to_natural_32
 					l_temp := l_temp * (l_counts [ic + 1]).to_natural_32
 					l_current_rva := l_current_rva + l_temp
 				end
@@ -435,6 +442,7 @@ feature {NONE} -- Implementation
 			l_item: NATURAL_32
 			l_buffer: ARRAY [NATURAL_8]
 			l_sz: NATURAL_32
+			tb: MD_TABLES
 		do
 			create l_counts.make_filled (0, 1, max_tables + extra_indexes)
 			l_counts [t_string + 1] := strings_heap_size
@@ -445,7 +453,8 @@ feature {NONE} -- Implementation
 			put_tables_header (a_file, tables_header)
 
 			across 0 |..| (max_tables - 1) as i loop
-				l_counts [i + 1] := tables [i].size.to_natural_64
+				tb := md_tables (i.to_natural_64)
+				l_counts [i + 1] := tb.size
 				l_item := l_counts [i + 1].to_natural_32
 				if l_item /= 0 then
 					a_file.put_natural_32 (l_item)
@@ -453,10 +462,11 @@ feature {NONE} -- Implementation
 			end
 
 			across 0 |..| (max_tables - 1) as i loop
-				l_item := tables [i].size.to_natural_32
+				tb := md_tables (i.to_natural_64)
+				l_item := tb.size.to_natural_32
 				across 0 |..| (l_item - 1).to_integer_32 as j loop
 					create l_buffer.make_filled (0, 1, 512)
-					l_sz := tables [i][j + 1].render (l_counts, l_buffer).to_natural_32
+					l_sz := tb[(j + 1).to_natural_64].render (l_counts, l_buffer).to_natural_32
 						-- TODO double check
 						-- this is not efficient.
 					put_array (a_file, l_buffer.subarray (1, l_sz.as_integer_32))
@@ -639,14 +649,14 @@ feature -- Settings
 				-- TODO create a helper features
 				-- 		retrieve_table_entry (from the metadata tables),
 				--  	retrieve_table_row (from specific table entry)
-			if attached {PE_METHOD_DEF_TABLE_ENTRY} tables [l_tuple_method.table_type_index.to_integer_32].item (l_tuple_method.table_row_index.to_integer_32) as l_method_def then
+			if attached {PE_METHOD_DEF_TABLE_ENTRY} tables [l_tuple_method.table_type_index.to_integer_32].item (l_tuple_method.table_row_index) as l_method_def then
 
 					-- Set RVA value in method definition table entry
 				l_method_def.set_rva (rva)
 
 					-- Update method definition table entry in metadata tables
 					-- Create a helper feature to update an entry in a table row.
-				tables [l_tuple_method.table_type_index.to_integer_32].replace (l_method_def, l_tuple_method.table_row_index.to_integer_32)
+				md_tables (l_tuple_method.table_type_index).replace (l_method_def, l_tuple_method.table_row_index)
 			else
 					-- TODO
 			end
@@ -682,7 +692,7 @@ feature -- Definition: Access
 				--| {PE_TABLES}.is_valid_table (l_table_type)
 				--|
 				--| l_table_row: exists.
-			check exist_table_row: attached tables [l_tuple.table_type_index.to_integer_32].item (l_tuple.table_row_index.to_integer_32) end
+			check exist_table_row: attached tables [l_tuple.table_type_index.to_integer_32][l_tuple.table_row_index] end
 
 				-- ResolutionScope : an index into a Module, ModuleRef, AssemblyRef or TypeRef table,or null
 			if resolution_scope & Md_mask = md_module then
@@ -798,9 +808,9 @@ feature -- Definition: Creation
 			l_class_index: NATURAL_64
 		do
 				-- FieldList (an index into the Field table; it marks the first of a contiguous run of Fields owned by this Type).
-			l_field_index := next_table_index ({PE_TABLES}.tfield.to_integer_32)
+			l_field_index := next_table_index ({PE_TABLES}.tfield)
 				-- MethodList (an index into the MethodDef table; it marks the first of a continguous run of Methods owned by this Type).
-			l_method_index := next_table_index ({PE_TABLES}.tmethoddef.to_integer_32)
+			l_method_index := next_table_index ({PE_TABLES}.tmethoddef)
 
 			l_type_name := type_name.string_32
 
@@ -879,17 +889,15 @@ feature -- Definition: Creation
 			-- Create reference to method in class `in_class_token`.
 		local
 			l_method_def_entry: PE_METHOD_DEF_TABLE_ENTRY
-			l_tuple: TUPLE [table_type_index: NATURAL_64; table_row_index: NATURAL_64]
 			l_method_signature: NATURAL_64
 			l_name_index: NATURAL_64
 			l_param_index: NATURAL_64
+			l_method_index: NATURAL_64
 		do
 				-- See II.22.26 MethodDef : 0x06
-				-- Extract table type and row from the in_class_token
-				-- TODO doube check: why we are not using the l_tuple?
-			l_tuple := extract_table_type_and_row (in_class_token)
 
-			l_param_index := next_table_index ({PE_TABLES}.tparam.to_integer_32)
+
+			l_param_index := next_table_index ({PE_TABLES}.tparam)
 
 			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 			l_name_index := pe_writer.hash_string (method_name.string_32)
@@ -898,7 +906,16 @@ feature -- Definition: Creation
 			create l_method_def_entry.make (impl_flags.to_integer_16, method_flags.to_integer_16, l_name_index, l_method_signature, l_param_index)
 
 				-- Add the new PE_METHOD_DEF_TABLE_ENTRY instance to the metadata tables.
+			l_method_index := next_table_index ({PE_TABLES}.tmethoddef)
 			pe_index := add_table_entry (l_method_def_entry)
+
+				-- Extract table type and row from the in_class_token
+			if
+				attached extract_table_type_and_row (in_class_token) as d and then
+				attached {PE_TYPE_DEF_TABLE_ENTRY} tables [d.table_type_index.to_integer_32][d.table_row_index] as e
+			then
+				-- See to update TypeDef entry with l_method_index
+			end
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
@@ -941,7 +958,7 @@ feature -- Definition: Creation
 				-- Compute the signature token
 			l_property_signature := hash_blob (signature.as_array, signature.count.to_natural_64)
 
-			l_property_index := next_table_index ({PE_TABLES}.tproperty.to_integer_32)
+			l_property_index := next_table_index ({PE_TABLES}.tproperty)
 
 				-- Create a new PE_PROPERTY_TABLE_ENTRY instance with the given data.
 			create {PE_PROPERTY_TABLE_ENTRY} l_property.make_with_data (

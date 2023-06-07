@@ -56,14 +56,6 @@ feature -- Status report
 			Result := pe_writer.strings.size
 		end
 
-	table_index_size (a_index: NATURAL_32): INTEGER
-			-- Table index size for the given table.
-		require
-			valid_index: tables.valid_index (a_index.to_integer_32)
-		do
-			Result := tables [a_index.to_integer_32].size
-		end
-
 feature {NONE} -- Change tables
 
 	add_table_entry (a_entry: PE_TABLE_ENTRY_BASE): NATURAL_64
@@ -81,9 +73,9 @@ feature {NONE} -- Change tables
 			Result := a_entry.token_from_tables (l_md_tables)
 			if Result = 0 then
 				l_md_tables.force (a_entry)
-				Result := l_md_tables.size.to_natural_32
+				Result := l_md_tables.size
 			end
-			last_token := (n |<< 24).to_natural_32 | Result.to_natural_32
+			last_token := (n |<< 24).to_natural_32 | Result.to_natural_32 --| FIXME: why .to_natural_32 ? the index and size of MD_TABLES are NATURAL_64 ...
 		end
 
 	last_token: NATURAL_32
@@ -263,13 +255,16 @@ feature {NONE} -- Helper
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
-feature --
 
-	next_table_index (a_table: INTEGER): NATURAL
+feature -- Access
+
+	next_table_index (a_table_id: NATURAL_32): NATURAL_64
+			-- Table for id `a_table_id`
+			-- See `{PE_TABLES}` for table ids.
 		require
-			valid_table_index: tables.valid_index (a_table)
+			valid_table_index: tables.valid_index (a_table_id.to_integer_32)
 		do
-			Result := (tables [a_table].size + 1).to_natural_32
+			Result := tables [a_table_id.to_integer_32].size + 1
 		end
 
 feature -- Metadata Table Sizes

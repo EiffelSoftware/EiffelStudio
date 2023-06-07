@@ -7,35 +7,17 @@ class
 	PE_PROPERTY_LIST
 
 inherit
-
-	PE_INDEX_BASE
-		rename
-			make as make_base
-		redefine
-			get_index_shift,
-			has_index_overflow
-		end
+	PE_LIST
 
 create
 	make_with_index,
 	make
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	make
+	associated_table_index: NATURAL_32
 		do
-		end
-
-feature -- Operations
-
-	get_index_shift: INTEGER
-		do
-			Result := 0
-		end
-
-	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
-		do
-			Result := large(a_sizes[{PE_TABLES}.tProperty.to_integer_32 + 1].to_natural_32)
+			Result := {PE_TABLES}.tProperty
 		end
 
 end

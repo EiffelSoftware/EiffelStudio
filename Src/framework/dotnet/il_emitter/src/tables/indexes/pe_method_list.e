@@ -28,6 +28,11 @@ feature {NONE} -- Initialization
 
 feature -- Operations
 
+	update_index (idx: like index)
+		do
+			index := idx
+		end
+
 	get_index_shift: INTEGER
 		do
 			Result := 0

@@ -4,6 +4,7 @@ note
 			The ClassLayout table is used to define how the fields of a class or value type shall be laid out by the
 			CLI. (Normally, the CLI is free to reorder and/or insert gaps between the fields defined for a class or
 			value type.)
+			A ClassLayout table can contain zero or more rows.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,9 +16,6 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
-		redefine
-			same_as
-		end
 
 create
 	make_with_data
@@ -33,17 +31,6 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	same_as (e: like Current): BOOLEAN
-			-- Is `e` same as `Current`?
-			-- note: used to detect if an entry is already recorded.
-		do
-			Result := Precursor (e)
-				or else (
-					e.pack = pack and then
-					e.size = size and then
-					e.parent.is_equal (parent)
-				)
-		end
 
 feature -- Access
 

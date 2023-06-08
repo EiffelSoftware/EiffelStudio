@@ -33,6 +33,7 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			--| Duplicate rows are allowed.
 		do
 			Result := Precursor (e)
 				or else (

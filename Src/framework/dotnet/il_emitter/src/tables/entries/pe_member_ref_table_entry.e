@@ -46,6 +46,8 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			--| The MemberRef table shall contain no duplicates, where duplicate rows have the
+			--| same Class (parent in this impl), Name, and Signature
 		do
 			Result := Precursor (e)
 				or else (

@@ -31,7 +31,17 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			--
+			--| There should be no duplicates in the InterfaceImpl table, based upon non-null Class
+			--|	and Interface values.
+			--| There can be many rows with the same value for Class (since a class can implement
+			--| many interfaces)
+			--| There can be many rows with the same value for Interface (since many classes can
+			--| implement the same interface)
 		do
+				-- TODO review the implementation.
+				-- Double check if we need to check for
+				-- class_ index is not valid (ie. index -> 0)
 			Result := Precursor (e)
 				or else (
 					e.class_.is_equal (class_) and then
@@ -43,6 +53,7 @@ feature -- Access
 
 	class_: PE_TYPE_DEF
 			-- an index into the TypeDef table
+			-- Class shall be non-null.
 
 	interface: PE_TYPEDEF_OR_REF
 			-- an index into the TypeDef, TypeRef, or TypeSpec table

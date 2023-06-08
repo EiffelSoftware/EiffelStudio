@@ -39,18 +39,12 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			--| There shall be no duplicate rows in the TypeDef table, based on TypeNamespace + TypeName
 		do
 			Result := Precursor (e)
 				or else (
-					e.flags = flags and then
 					e.type_name_index.is_equal (type_name_index) and then
-					e.type_name_space_index.is_equal (type_name_space_index) and then
-					e.fields.is_equal (fields) and then
-					e.methods.is_equal (methods) and then
-					((e.extends = Void and extends = Void) or else
-					(attached e.extends as e_extends and then
-					 attached extends as l_extends and then
-					 e_extends.is_equal(l_extends)))
+					e.type_name_space_index.is_equal (type_name_space_index)
 				)
 		end
 

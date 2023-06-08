@@ -33,6 +33,8 @@ feature -- Status
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
 		do
+				-- TODO: not sure if we have support for events.
+				-- So we only need to check for duplication of Properties.
 			Result := Precursor (e)
 				or else (
 					e.semantics = semantics and then

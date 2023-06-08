@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Object representing the PropertyMap table."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,10 +30,14 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			--| There shall be no duplicate rows, based upon Parent (a given class has only one
+			--| ‘pointer’ to the start of its property list)
+			--| There shall be no duplicate rows, based upon PropertyList (different classes cannot
+			--|	share rows in the Property table)
 		do
 			Result := Precursor (e)
 				or else (
-					e.parent.is_equal (parent) and then
+					e.parent.is_equal (parent) or else
 					e.property_list.is_equal (property_list)
 				)
 		end

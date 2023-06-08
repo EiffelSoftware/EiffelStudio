@@ -2,7 +2,7 @@ note
 	description: "Object representing the TypeRef table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see: "II.22.38 TypeRef : 0x01"
+	EIS: "name=TypeRef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=273&zoom=100,116,885", "protocol=uri"
 
 class
 	PE_TYPE_REF_TABLE_ENTRY
@@ -38,9 +38,12 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			-- | There shall be no duplicate rows, where a duplicate has the same ResolutionScope,
+			-- | TypeName and TypeNamespace
 		do
 			Result := Precursor (e)
 				or else (
+					e.resolution.is_equal (resolution) and then
 					e.type_name_index.is_equal (type_name_index) and then
 					e.type_name_space_index.is_equal (type_name_space_index)
 				)

@@ -76,7 +76,19 @@ feature {NONE} -- Change tables
 			when
 				{PE_TABLES}.tmethoddef,
 				{PE_TABLES}.tparam,
-				{PE_TABLES}.tfield
+				{PE_TABLES}.tfield,
+				{PE_TABLES}.tassemblydef,
+				{PE_TABLES}.tClassLayout, -- Not used.
+				{PE_TABLES}.tconstant, -- Not used.
+				{PE_TABLES}.tcustomattribute,
+				{PE_TABLES}.tfieldmarshal,
+				{PE_TABLES}.tfieldrva,
+				{PE_TABLES}.tGenericParam, -- Not used.
+				{PE_TABLES}.tImplMap,
+				{PE_TABLES}.tMethodSemantics,
+				{PE_TABLES}.tMethodSpec, -- Not used
+				{PE_TABLES}.tNestedClass, -- Not used
+				{PE_TABLES}.tStandaloneSig
 			then
 				-- No duplication checking
 			else

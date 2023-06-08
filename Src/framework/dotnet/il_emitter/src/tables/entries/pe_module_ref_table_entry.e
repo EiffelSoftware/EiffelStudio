@@ -28,13 +28,15 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			--| There should be no duplicate rows.
+
 		do
 			Result := Precursor (e)
 				or else (
 					e.name_index.is_equal (name_index)
 				)
 		end
-		
+
 feature -- Access
 
 	name_index: PE_STRING

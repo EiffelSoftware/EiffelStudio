@@ -40,6 +40,10 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+
+			--| The AssemblyRef table shall contain no duplicates (where duplicate rows are deemd
+			--| to be those having the same MajorVersion, MinorVersion, BuildNumber,
+			--| RevisionNumber, PublicKeyOrToken, Name, and Culture)
 		do
 			Result := Precursor (e)
 				or else (
@@ -47,12 +51,10 @@ feature -- Status
 					e.minor = minor and then
 					e.build = build and then
 					e.revision = revision and then
-					e.flags = flags and then
 					e.public_key_index.is_equal (public_key_index) and then
 					e.name_index.is_equal (name_index) and then
-					e.culture_index.is_equal (culture_index) and then
-					e.hash_index.is_equal (hash_index)
-				)
+					e.culture_index.is_equal (culture_index)
+					)
 		end
 
 feature -- Access
@@ -76,15 +78,18 @@ feature -- Access
 	public_key_index: PE_BLOB
 			-- an index into the Blob heap, indicating the public key or token
 			-- that identifies the author of this Assembly
+			-- PublicKeyOrToken can be null, or non-null.
 
 	name_index: PE_STRING
 			-- an index into the String heap
 
 	culture_index: PE_STRING
 			-- an index into the String heap
+			-- Culture can be null or non-null.
 
 	hash_index: PE_BLOB
 			-- an index into the Blob heap.
+			-- HashValue can be null or non-null.
 
 feature -- Operations
 

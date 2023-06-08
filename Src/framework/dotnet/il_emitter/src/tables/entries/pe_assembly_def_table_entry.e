@@ -1,5 +1,9 @@
 note
-	description: "Object Representing th Assembly table "
+	description: "[
+			Object Representing th Assembly table 
+			Note:
+				The Assembly table shall contain zero or one row.
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "name=Assembly", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=237&zoom=100,116,848", "protocol=uri"

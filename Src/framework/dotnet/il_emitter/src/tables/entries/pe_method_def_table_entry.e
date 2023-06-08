@@ -49,16 +49,20 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			--| If Flags.CompilerControlled = 1, then this row is ignored completely in duplicate
+			--| checking.
+			--|	There shall be no duplicate rows in the MethodDef table, based upon owner + Name
+			--| + Signature (where owner is the owning row in the TypeDef table). (Note that the
+			--| Signature encodes whether or not the method is generic, and for generic methods, it
+			--| encodes the number of generic parameters.) (Note, however, that if
+			--| Flags.CompilerControlled = 1, then this row is excluded from duplicate checking)
 		do
 			Result := Precursor (e)
 				or else (
+					e.impl_flags /= 1 and then
 					e.signature_index.is_equal (signature_index) and then
-					e.param_index.is_equal (param_index) and then
-					e.name_index.is_equal (name_index) and then
-					e.flags = flags and then
-					e.impl_flags = impl_flags and then
-					e.rva = rva
-				)
+					e.name_index.is_equal (name_index)
+						)
 		end
 
 feature -- Access

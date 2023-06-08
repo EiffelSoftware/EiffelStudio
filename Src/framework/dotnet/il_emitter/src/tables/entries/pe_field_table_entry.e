@@ -1,5 +1,8 @@
 note
-	description: "Object representing The Field table"
+	description: "[
+		Object representing The Field table
+		Conceptually, each row in the Field table is owned by one, and only one, row in the TypeDef table
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "name=Field Table", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=249&zoom=100,116,324", "protocol=uri"
@@ -32,9 +35,14 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			--| Flags.CompilerControlled = 1 then this row is ignored completely in duplicate checking
+			--| There shall be no duplicate rows in the Field table, based upon  owner+Name+Signature (where owner is the owning row in the TypeDef table, as
+			--| described above) (Note however that if Flags.CompilerControlled = 1, then this
+			--| row is completely excluded from duplicate checking)
 		do
 			Result := Precursor (e)
 				or else (
+					e.flags /= 1 and then
 					e.flags = flags and then
 					e.name_index.is_equal (name_index) and then
 					e.signature_index.is_equal (signature_index)

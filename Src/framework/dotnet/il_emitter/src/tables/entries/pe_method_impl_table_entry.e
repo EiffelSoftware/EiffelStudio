@@ -30,11 +30,11 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			--| There shall be no duplicate rows, based upon Class + MethodDeclaration
 		do
 			Result := Precursor (e)
 				or else (
 					e.class_.is_equal (class_) and then
-					e.method_body.is_equal (method_body) and then
 					e.method_declaration.is_equal (method_declaration)
 				)
 		end

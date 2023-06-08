@@ -35,14 +35,14 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			-- There shall be no duplicate rows, in this concatenated table, based upon FullName
+			--| The term FullName: refers to the string created as follows: if the TypeNamespace is null, then
+			--| use the TypeName, otherwise use the concatenation of Typenamespace, '.', and TypeName.
 		do
 			Result := Precursor (e)
 				or else (
-					e.flags = flags and then
-					e.type_def_id.is_equal (type_def_id) and then
 					e.type_name.is_equal (type_name) and then
-					e.type_name_space.is_equal (type_name_space) and then
-					e.implementation.is_equal (implementation)
+					e.type_name_space.is_equal (type_name_space)
 				)
 		end
 

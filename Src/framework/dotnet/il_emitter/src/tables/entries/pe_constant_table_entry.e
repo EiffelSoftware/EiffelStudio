@@ -31,12 +31,11 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			-- There shall be no duplicate rows, based upon Parent
 		do
 			Result := Precursor (e)
 				or else (
-					e.type = type and then
-					e.parent_index.is_equal (parent_index) and then
-					e.value_index.is_equal (value_index)
+					e.parent_index.is_equal (parent_index)
 				)
 		end
 

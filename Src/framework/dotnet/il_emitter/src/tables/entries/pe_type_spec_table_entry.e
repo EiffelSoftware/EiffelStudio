@@ -2,8 +2,7 @@ note
 	description: "Object representing theTypeSpe table"
 	date: "$Date$"
 	revision: "$Revision$"
-	see:  "II.22.39 TypeSpec : 0x1B "
-
+	EIS: "name=TypeSpec", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=274&zoom=100,116,540", "protocol=uri"
 
 class
 	PE_TYPE_SPEC_TABLE_ENTRY
@@ -29,6 +28,7 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			--| There shall be no duplicate rows, based upon Signature
 		do
 			Result := Precursor (e)
 				or else (

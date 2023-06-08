@@ -1,5 +1,8 @@
 ﻿note
-	description: "Class desribing the module table."
+	description: "[
+		Class desribing the module table.
+		The Module table shall contain one and only one row	
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "name=Module", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=265&zoom=100,116,350", "protocol=uri"
@@ -29,6 +32,8 @@ feature -- Status
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.
+			--| The Module table shall contain one and only one row.
+
 		do
 			Result := Precursor (e)
 				or else (

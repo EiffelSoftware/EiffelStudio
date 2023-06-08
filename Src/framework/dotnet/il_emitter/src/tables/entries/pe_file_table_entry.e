@@ -74,7 +74,7 @@ feature -- Operations
 			l_bytes: NATURAL_64
 		do
 				-- Set flags to the buffer.
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest.to_special, flags, 0)
+			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, flags, 0)
 				-- Initialize the bytes
 			l_bytes := 4
 

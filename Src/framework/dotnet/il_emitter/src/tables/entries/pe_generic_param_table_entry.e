@@ -75,9 +75,10 @@ feature -- Operations
 		local
 			l_bytes: NATURAL_64
 		do
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest.to_special, number, 0)
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest.to_special, flags, 2)
-			l_bytes := 4
+			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, number, 0)
+			l_bytes := 2
+			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, flags, 2)
+			l_bytes := l_bytes + 2
 
 			l_bytes := l_bytes + owner.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			l_bytes := l_bytes + name.render (a_sizes, a_dest, l_bytes.to_integer_32)
@@ -90,8 +91,9 @@ feature -- Operations
 			l_bytes: NATURAL_64
 		do
 			number := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, 0)
+			l_bytes := 2
 			flags := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, 2)
-			l_bytes := 4
+			l_bytes := l_bytes + 2
 
 			l_bytes := l_bytes + owner.get (a_sizes, a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + name.get (a_sizes, a_src, l_bytes.to_integer_32)

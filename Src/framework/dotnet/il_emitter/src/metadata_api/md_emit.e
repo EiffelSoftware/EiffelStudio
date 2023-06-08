@@ -884,8 +884,7 @@ feature -- Definition: Creation
 								--note: l_dis is not used.
 							pe_index := add_table_entry (l_entry)
 						else
-							check has_info: False end
-						end
+							check has_info: False end						end
 					else
 						-- '0' seems to be passed as the end of the container
 						-- but more for the cli_writer implementation, that
@@ -1075,7 +1074,7 @@ feature -- Definition: Creation
 			l_param_entry: PE_PARAM_TABLE_ENTRY
 			l_method_tuple: like extract_table_type_and_row
 			l_param_name_index: INTEGER_32
-			l_param_flags: INTEGER_16
+			l_param_flags: INTEGER
 			l_param_index: NATURAL
 			l_param_entry_index: like next_table_index
 		do
@@ -1087,7 +1086,7 @@ feature -- Definition: Creation
 				-- Convert the parameter name to UTF-16 and add it to the string heap
 			l_param_name_index := pe_writer.hash_string (param_name.string_32).to_integer_32
 
-			l_param_flags := param_flags.to_integer_16
+			l_param_flags := param_flags
 
 				-- Sequence shall have a value >= 0 and <= number of parameters in owner method. A
 				-- Sequence value of 0 refers to the owner method’s return type; its parameters are then

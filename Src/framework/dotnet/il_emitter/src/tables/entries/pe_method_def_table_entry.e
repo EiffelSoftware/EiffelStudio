@@ -191,16 +191,21 @@ feature -- Operations
 			l_bytes: NATURAL_64
 		do
 				-- Write the method.rva to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_dest.to_special, if attached method as l_method then l_method.rva else rva.to_natural_64 end, 0)
+			if attached method as l_method then
+				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, l_method.rva.to_natural_32, 0)
+			else
+				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, rva.to_natural_32, 0)
+			end
 
 				-- Initialize the number of bytes written
 			l_bytes := 4
+
 				-- Write implementation flags to the destination buffer.
-			{BYTE_ARRAY_HELPER}.put_array_natural_16_with_integer_32 (a_dest.to_special, impl_flags, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_array_integer_16 (a_dest, impl_flags, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
 
 				-- Write flags to the destination buffer.
-			{BYTE_ARRAY_HELPER}.put_array_natural_16_with_integer_32 (a_dest.to_special, flags, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_array_integer_16 (a_dest, flags, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
 
 				-- Write the name_index, signature_index, param_index

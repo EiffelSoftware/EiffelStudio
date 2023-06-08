@@ -63,7 +63,7 @@ feature -- Operations
 			l_bytes_written: NATURAL_64
 		do
 				-- Initialize the first two bytes of dest to zero
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest.to_special, 0, 0)
+			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, 0, 0)
 
 				-- Set the initial number of bytes written to 2
 			l_bytes_written := 2
@@ -102,7 +102,8 @@ feature -- Operations
 		local
 			l_bytes: NATURAL_64
 		do
-				-- Initilize the number of bytes read to 2.
+				-- Initialize the number of bytes read to 2.
+				-- TODO: why ?
 			l_bytes := 2
 
 				-- Read the name_index.

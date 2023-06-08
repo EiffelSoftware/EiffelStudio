@@ -18,9 +18,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flags: INTEGER; a_name_index: NATURAL_64; a_signature_index: NATURAL_64)
+	make_with_data (a_flags: INTEGER_32; a_name_index: NATURAL_64; a_signature_index: NATURAL_64)
 		do
-			flags := a_flags
+			flags := a_flags.to_integer_16
+			check no_truncation: flags.to_integer_32 = a_flags end
+
 			create name_index.make_with_index (a_name_index)
 			create signature_index.make_with_index (a_signature_index)
 		end
@@ -45,7 +47,7 @@ feature -- Status
 
 feature -- Access
 
-	flags: INTEGER
+	flags: INTEGER_16
 			-- a 2-byte bitmask of type FieldAttributes
 			-- see https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=276&zoom=100,116,708
 
@@ -97,7 +99,7 @@ feature -- Operations
 			l_bytes: NATURAL_64
 		do
 				-- Write the flags to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_16_with_integer_32 (a_dest.to_special, flags, 0)
+			{BYTE_ARRAY_HELPER}.put_array_integer_16 (a_dest, flags, 0)
 
 				-- Initialize the number of bytes written
 			l_bytes := 2

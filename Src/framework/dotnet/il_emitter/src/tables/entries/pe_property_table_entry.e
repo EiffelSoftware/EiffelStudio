@@ -70,7 +70,7 @@ feature -- Operations
 			l_bytes: NATURAL_64
 		do
 				-- Write flags to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest.to_special, flags, 0)
+			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, flags, 0)
 
 				-- Intialize the number of bytes written
 			l_bytes := 2

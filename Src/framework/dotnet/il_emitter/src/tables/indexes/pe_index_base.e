@@ -98,9 +98,8 @@ feature -- Operations
 				Result := 4
 			else
 					-- write the value as NATURAL_16 to the destination `a_dest`
-					-- and return value 2.
-				{BYTE_ARRAY_HELPER}.put_array_natural_16_with_natural_32 (a_dest, v, a_pos)
-
+					-- and return value 4.
+				{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, v.to_natural_16, a_pos)
 				Result := 2
 			end
 		end
@@ -116,12 +115,12 @@ feature -- Operations
 			if has_index_overflow (a_sizes) then
 					-- Use a 32-bit Natural to store the value
 					-- and set the return value to 4.
-				v := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src.to_special, a_pos)
+				v := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, a_pos)
 				Result := 4
 			else
 					-- Use a 16-bit Natural to store the value
 					-- and set the return value to 2.
-				v := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src.to_special, a_pos)
+				v := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, a_pos).to_natural_64
 				Result := 2
 			end
 				-- Compute the index and tag values

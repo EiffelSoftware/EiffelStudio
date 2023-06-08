@@ -46,7 +46,7 @@ feature -- Status
 					e.parent.is_equal (parent)
 				)
 		end
-		
+
 feature -- Access
 
 	pack: NATURAL_16
@@ -72,12 +72,12 @@ feature -- Operations
 			l_bytes: NATURAL_64
 		do
 				-- Write pack to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest.to_special, pack, 0)
+			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, pack, 0)
 				-- Intialize the number of bytes written
 			l_bytes := 2
 
 				-- Write size to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest.to_special, size, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, size, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
 
 				-- Write parent to the buffer and update the number of bytes.
@@ -96,7 +96,9 @@ feature -- Operations
 
 				-- Initialize the number of bytes
 			l_bytes := 2
+
 			size := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + 4
 
 				-- Read parent from the buffer and update the number of bytes.
 			l_bytes := l_bytes + parent.get (a_sizes, a_src, l_bytes.to_integer_32)

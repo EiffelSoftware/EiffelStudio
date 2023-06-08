@@ -41,7 +41,7 @@ feature -- Status
 					e.value_index.is_equal (value_index)
 				)
 		end
-		
+
 feature -- Access
 
 	type: NATURAL_8
@@ -69,11 +69,10 @@ feature -- Operations
 			l_bytes: NATURAL_64
 		do
 				-- Write the type to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_8 (a_dest.to_special, type, 0)
-			{BYTE_ARRAY_HELPER}.put_array_natural_8 (a_dest.to_special, 0, 1)
-
-				-- Initialize the number of bytes written
-			l_bytes := 2
+			{BYTE_ARRAY_HELPER}.put_array_natural_8 (a_dest, type, 0)
+			l_bytes := 1
+			{BYTE_ARRAY_HELPER}.put_array_natural_8 (a_dest, 0, 1)
+			l_bytes := l_bytes + 1
 
 				-- Write the parent_index and value_index to the buffer and update the number of bytes
 			l_bytes := l_bytes + parent_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
@@ -89,6 +88,7 @@ feature -- Operations
 		do
 				-- Set the type (from a_src)  to the type
 			type := {BYTE_ARRAY_HELPER}.byte_array_to_natural_8 (a_src, 0)
+				-- also unused byte +1
 
 				-- Initialize the number of bytes readad
 			l_bytes := 2

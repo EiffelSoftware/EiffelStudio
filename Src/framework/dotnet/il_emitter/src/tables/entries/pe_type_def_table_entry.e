@@ -132,7 +132,7 @@ feature -- Operations
 			l_bytes: NATURAL_64
 		do
 				-- Write the flags to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_integer_32 (a_dest.to_special, flags, 0)
+			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_integer_32 (a_dest, flags, 0)
 
 				-- Initialize the number of bytes written
 			l_bytes := 4
@@ -145,8 +145,9 @@ feature -- Operations
 			if attached extends as l_extends then
 				l_bytes := l_bytes + l_extends.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			else
+				check has_extends: False end
 					-- TODO: check if correct
-				{BYTE_ARRAY_HELPER}.put_array_natural_16_with_natural_32 (a_dest, 0, l_bytes.to_integer_32)
+				{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, 0, l_bytes.to_integer_32)
 				l_bytes := l_bytes + 2
 			end
 			l_bytes := l_bytes + fields.render (a_sizes, a_dest, l_bytes.to_integer_32)
@@ -173,6 +174,9 @@ feature -- Operations
 			l_bytes := l_bytes + type_name_space_index.get (a_sizes, a_src, l_bytes.to_integer_32)
 			if attached extends as l_extends then
 				l_bytes := l_bytes + l_extends.get (a_sizes, a_src, l_bytes.to_integer_32)
+			else
+				check has_extends: False end
+				l_bytes := l_bytes + 2 ;
 			end
 			l_bytes := l_bytes + fields.get (a_sizes, a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + methods.get (a_sizes, a_src, l_bytes.to_integer_32)

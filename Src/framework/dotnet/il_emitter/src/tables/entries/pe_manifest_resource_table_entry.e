@@ -43,7 +43,7 @@ feature -- Status
 					e.implementation.is_equal (implementation)
 				)
 		end
-		
+
 feature -- Access
 
 	offset: NATURAL
@@ -78,9 +78,9 @@ feature -- Operations
 		do
 				-- Initialize the bytes to write and set offset and flags to the buffer.
 			l_bytes := 0
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest.to_special, offset, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, offset, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest.to_special, flags, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, flags, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
 
 				-- Write name and implemention to the buffer and update the bytes.

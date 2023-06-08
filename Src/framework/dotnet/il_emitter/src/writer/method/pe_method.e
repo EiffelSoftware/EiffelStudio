@@ -90,13 +90,13 @@ feature -- Access
 				create l_dest.make_filled (0, 1, 512)
 				if (flags & 3) = tinyformat then
 					n := 1
-					{BYTE_ARRAY_HELPER}.put_array_natural_8_with_natural_64 (l_dest.to_special, (flags & 3).to_natural_64 + (code_size |<< 2), 0)
+					{BYTE_ARRAY_HELPER}.put_array_natural_8_with_natural_64 (l_dest, (flags & 3).to_natural_64 + (code_size |<< 2), 0)
 				else
 					n := 12
-					{BYTE_ARRAY_HELPER}.put_array_natural_16_with_natural_64 (l_dest.to_special, 0x3000 + (flags & 0xfff).to_natural_64 + if seh_data.is_empty then {NATURAL_64} 0 else moresects.to_natural_64 end, 0)
-					{BYTE_ARRAY_HELPER}.put_array_natural_16 (l_dest.to_special, max_stack, 2)
-					{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (l_dest.to_special, code_size, 4)
-					{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (l_dest.to_special, signature_token, 8)
+					{BYTE_ARRAY_HELPER}.put_array_natural_16_with_natural_64 (l_dest, 0x3000 + (flags & 0xfff).to_natural_64 + if seh_data.is_empty then {NATURAL_64} 0 else moresects.to_natural_64 end, 0)
+					{BYTE_ARRAY_HELPER}.put_array_natural_16 (l_dest, max_stack, 2)
+					{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (l_dest, code_size, 4)
+					{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (l_dest, signature_token, 8)
 				end
 					-- Todo check
 				a_stream.put_managed_pointer (create {MANAGED_POINTER}.make_from_array (l_dest.subarray (1, n)))

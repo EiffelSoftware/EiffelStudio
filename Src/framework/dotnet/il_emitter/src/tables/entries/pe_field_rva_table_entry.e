@@ -61,7 +61,7 @@ feature -- Operations
 		do
 				-- note that when reading rva_ holds the rva, when writing it holds an offset into the CIL section
 				-- Write the flags to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_dest.to_special, rva + {PE_WRITER}.cildata_rva.value, 0)
+			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, (rva + {PE_WRITER}.cildata_rva.value).to_natural_32, 0)
 
 				-- Initialize the number of bytes written
 			l_bytes := 4
@@ -80,7 +80,7 @@ feature -- Operations
 		do
 				-- note that when reading rva_ holds the rva, when writing it holds an offset into the CIL section
 				-- Set the rva (from a_src)  to the rva.
-			rva := {BYTE_ARRAY_HELPER}.byte_array_to_natural_64 (a_src, 0)
+			rva := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)
 
 				-- Initialize the number of bytes readed.
 			l_bytes := 4

@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Operations
 
-	table_index: INTEGER
+	table_index: NATURAL_32
 		once
 			Result := {PE_TABLES}.tEvent.to_integer_32
 		end

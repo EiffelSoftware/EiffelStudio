@@ -431,9 +431,11 @@ feature -- Element Change
 		local
 			n: INTEGER
 			l_token: NATURAL_32
+			tb: DNL_TABLE
 		do
-			n := a_entry.table_index
-			tables [n].table.force (a_entry)
+			n := a_entry.table_index.to_integer_32
+			tb := tables [n]
+			tb.table.force (a_entry)
 			debug ("pe_writer")
 					-- Check C++ code  PEWriter::AddTableEntry
 --					#if 0
@@ -447,8 +449,8 @@ feature -- Element Change
 --					#endif
 				to_implement ("Double check if its requried.")
 			end
-			Result := tables [n].table.count.to_natural_32
-			l_token := ((n |<< 24).to_natural_32 | Result.to_natural_32)
+			Result := tb.size.to_natural_32
+			l_token := (n |<< 24).to_natural_32 | Result
 		end
 
 	add_method (a_method: PE_METHOD)

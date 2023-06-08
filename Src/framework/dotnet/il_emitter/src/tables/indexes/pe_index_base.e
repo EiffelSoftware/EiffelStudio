@@ -92,13 +92,11 @@ feature -- Operations
 
 			if has_index_overflow (a_sizes) then
 					-- write the value as NATURAL_32 to the destination `a_dest`
-					-- and return value 4.
 				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, v, a_pos)
 
 				Result := 4
 			else
 					-- write the value as NATURAL_16 to the destination `a_dest`
-					-- and return value 4.
 				{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, v.to_natural_16, a_pos)
 				Result := 2
 			end

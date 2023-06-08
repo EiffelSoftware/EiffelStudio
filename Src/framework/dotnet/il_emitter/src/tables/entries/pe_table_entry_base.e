@@ -11,7 +11,7 @@ inherit
 
 feature -- Access
 
-	table_index: INTEGER
+	table_index: NATURAL_32
 		deferred
 		end
 

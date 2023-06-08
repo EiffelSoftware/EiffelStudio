@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Operations
 
-	table_index: INTEGER
+	table_index: NATURAL_32
 		once
 			Result := {PE_TABLES}.tGenericParam.to_integer_32
 		end

@@ -181,9 +181,9 @@ feature -- Set Rva
 
 feature -- Operations
 
-	table_index: INTEGER
+	table_index: NATURAL_32
 		once
-			Result := {PE_TABLES}.tmethoddef.to_integer_32
+			Result := {PE_TABLES}.tmethoddef
 		end
 
 	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
@@ -196,7 +196,6 @@ feature -- Operations
 			else
 				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, rva, 0)
 			end
-
 				-- Initialize the number of bytes written
 			l_bytes := 4
 

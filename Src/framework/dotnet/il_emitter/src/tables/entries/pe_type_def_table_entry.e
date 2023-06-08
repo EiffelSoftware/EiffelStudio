@@ -113,15 +113,16 @@ feature -- Element change
 
 feature -- Operations
 
-	table_index: INTEGER
+	table_index: NATURAL_32
 		once
-			Result := {PE_TABLES}.ttypedef.to_integer_32
+			Result := {PE_TABLES}.ttypedef
 		end
 
 	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 			-- <Precursor>
 		local
 			l_bytes: NATURAL_32
+			fake_extends: PE_TYPEDEF_OR_REF
 		do
 				-- Write the flags to the destination buffer `a_dest`.
 			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_integer_32 (a_dest, flags, 0)
@@ -137,9 +138,8 @@ feature -- Operations
 			if attached extends as l_extends then
 				l_bytes := l_bytes + l_extends.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			else
-					-- TODO: check if correct
-				{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, 0, l_bytes.to_integer_32)
-				l_bytes := l_bytes + 2
+				create fake_extends.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
+				l_bytes := l_bytes + fake_extends.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			end
 			l_bytes := l_bytes + fields.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			l_bytes := l_bytes + methods.render (a_sizes, a_dest, l_bytes.to_integer_32)

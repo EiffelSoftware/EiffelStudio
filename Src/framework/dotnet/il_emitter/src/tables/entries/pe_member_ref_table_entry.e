@@ -59,9 +59,9 @@ feature -- Status
 
 feature -- Operations
 
-	table_index: INTEGER
+	table_index: NATURAL_32
 		once
-			Result := {PE_TABLES}.tmemberref.to_integer_32
+			Result := {PE_TABLES}.tmemberref
 		end
 
 	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32

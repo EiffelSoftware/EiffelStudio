@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {MD_EMIT_SHARED}."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ feature -- Access
 	pe_index: NATURAL_32
 			-- metatable index in the PE file for this data container.
 
---	Heap_size_: INTEGER = 0x1000
+--	Heap_size_: INTEGER = 0x10000
 			--   If the maximum size of the heap is less than 2^16, then the heap offset size is 2 bytes (16 bits), otherwise it is 4 bytes
 
 feature -- Status report
@@ -64,12 +64,12 @@ feature {NONE} -- Change tables
 			-- note the data for the table will be a class inherited from TableEntryBase,
 			--  and this class will self-report the table index to use
 		require
-			valid_entry_table_index: tables.valid_index (a_entry.table_index)
+			valid_entry_table_index: tables.valid_index (a_entry.table_index.to_integer_32)
 		local
 			n: INTEGER
 			l_md_table: MD_TABLE
 		do
-			n := a_entry.table_index
+			n := a_entry.table_index.to_integer_32
 			l_md_table := tables [n]
 
 			inspect a_entry.table_index
@@ -100,7 +100,7 @@ feature {NONE} -- Change tables
 			end
 			last_token := (n |<< 24).to_natural_32 | Result
 		ensure
-			entry_added: a_entry.token_from_table (tables [a_entry.table_index]) = last_token
+			entry_added: a_entry.token_from_table (tables [a_entry.table_index.to_integer_32]) > 0
 		end
 
 	last_token: NATURAL_32
@@ -300,19 +300,19 @@ feature -- Metadata Table Sizes
 		local
 			string_index_size, guid_index_size, blob_index_size: NATURAL_32
 		do
-			if strings_heap_size < 0x1000 then
+			if strings_heap_size < 0x10000 then
 				string_index_size := 2
 			else
 				string_index_size := 4
 			end
 
-			if guid_heap_size < 0x1000 then
+			if guid_heap_size < 0x10000 then
 				guid_index_size := 2
 			else
 				guid_index_size := 4
 			end
 
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				blob_index_size := 2
 			else
 				blob_index_size := 4
@@ -329,23 +329,30 @@ feature -- Metadata Table Sizes
 			EIS: "name={PE_TYPE_REF_TABLE_ENTRY}.type_name_space_index", "protocol=uri", "src=eiffel:?class=PE_TYPE_REF_ENTRY&feature=type_name_space_index"
 
 		local
-			index_size, heap_offset_size: NATURAL_32
+			index_size, index_string_size: NATURAL_32
 		do
 				-- Resolution scope
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- Type name index and type_name_space_index
-			if strings_heap_size < 0x1000 then
-				heap_offset_size := 2
+			if strings_heap_size < 0x10000 then
+				index_string_size := 2
 			else
-				heap_offset_size := 4
+				index_string_size := 4
 			end
 
-			Result := index_size + 2 * heap_offset_size
+				--	II.22.38 TypeRef : 0x01
+				--	The TypeRef table has the following columns:
+				--	index: ResolutionScope (an index into a Module, ModuleRef, AssemblyRef or TypeRef table,
+				--			or null; more precisely, a ResolutionScope (§II.24.2.6) coded index)
+				--	string: TypeName (an index into the String heap)
+				--	string: TypeNamespace (an index into the String heap)
+
+			Result := index_size + 2 * index_string_size
 		end
 
 	type_def_table_entry_size: NATURAL_32
@@ -357,24 +364,42 @@ feature -- Metadata Table Sizes
 			EIS: "name={PE_TYPE_DEF_TABLE_ENTRY}.fields", "protocol=uri", "src=eiffel:?class=PE_TYPE_DEF_TABLE_ENTRY&feature=fields"
 			EIS: "name={PE_TYPE_DEF_TABLE_ENTRY}.methods", "protocol=uri", "src=eiffel:?class=PE_TYPE_DEF_TABLE_ENTRY&feature=methods"
 		local
-			index_size, heap_offset_size: NATURAL_32
+			index_size, index_string_size: NATURAL_32
 		do
 				-- extends, fields and methods
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- type_name_index and type_name_space_index
-			if strings_heap_size < 0x1000 then
-				heap_offset_size := 2
+			if strings_heap_size < 0x10000 then
+				index_string_size := 2
 			else
-				heap_offset_size := 4
+				index_string_size := 4
 			end
 
+				--	II.22.37 TypeDef : 0x02
+				--	The TypeDef table has the following columns:
+				--	4 : Flags (a 4-byte bitmask of type TypeAttributes, §II.23.1.15)
+				--	string: TypeName (an index into the String heap)
+				--	string: TypeNamespace (an index into the String heap)
+				--	index: Extends (an index into the TypeDef, TypeRef, or TypeSpec table; more precisely, a
+				--			TypeDefOrRef (§II.24.2.6) coded index)
+				--	index: FieldList (an index into the Field table; it marks the first of a contiguous run of
+				--		Fields owned by this Type). The run continues to the smaller of:
+				--		- the last row of the Field table
+				--		- the next run of Fields, found by inspecting the FieldList of the next row
+				--			in this TypeDef table
+				--	index: MethodList (an index into the MethodDef table; it marks the first of a continguous
+				--		run of Methods owned by this Type). The run continues to the smaller of:
+				--		- the last row of the MethodDef table
+				--		- the next run of Methods, found by inspecting the MethodList of the next
+				--			row in this TypeDef table
+
 				-- 4 is the size of the flags
-			Result := 4 + 2 * heap_offset_size + 3 * index_size
+			Result := 4 + 2 * index_string_size + 3 * index_size
 		end
 
 	field_table_entry_size: NATURAL_32
@@ -388,22 +413,24 @@ feature -- Metadata Table Sizes
 			string_offset_size, blob_offset_size: NATURAL_32
 		do
 				-- Name
-			if strings_heap_size < 0x1000 then
+			if strings_heap_size < 0x10000 then
 				string_offset_size := 2
 			else
 				string_offset_size := 4
 			end
 
 				-- Signature
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				blob_offset_size := 2
 			else
 				blob_offset_size := 4
 			end
 
-				-- Flags (a 2-byte bitmask of type FieldAttributes)
-				-- Name (an index into the String heap)
-				-- Signature (an index into the Blob heap)
+				-- II.22.15 Field : 0x04
+				-- The Field table has the following columns:
+				-- 2 : Flags (a 2-byte bitmask of type FieldAttributes, §II.23.1.5)
+				-- size of Name (an index into the String heap)
+				-- size of Signature (an index into the Blob heap)				
 			Result := 2 + string_offset_size + blob_offset_size
 		end
 
@@ -420,21 +447,21 @@ feature -- Metadata Table Sizes
 			index_size, string_heap_offset_size, blob_heap_offset_size: NATURAL_32
 		do
 				-- param_index
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- name_index
-			if strings_heap_size < 0x1000 then
+			if strings_heap_size < 0x10000 then
 				string_heap_offset_size := 2
 			else
 				string_heap_offset_size := 4
 			end
 
 				-- signature_index
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				blob_heap_offset_size := 2
 			else
 				blob_heap_offset_size := 4
@@ -443,7 +470,23 @@ feature -- Metadata Table Sizes
 				-- Size of impl_flags column 2
 				-- Size of flags column 2
 				-- 8
-			Result := 8 + string_heap_offset_size + blob_heap_offset_size + index_size
+				-- II.22.26 MethodDef : 0x06
+				-- The MethodDef table has the following columns:
+				-- 4: RVA (a 4-byte constant)
+				-- 2:  ImplFlags (a 2-byte bitmask of type MethodImplAttributes, §II.23.1.10)
+				-- 2: Flags (a 2-byte bitmask of type MethodAttributes, §II.23.1.10)
+				-- Name (an index into the String heap)
+				-- Signature (an index into the Blob heap)
+				-- ParamList (an index into the Param table).
+				--		It marks the first of a contiguous run of Parameters owned by this method.
+				--		The run continues to the smaller of:
+				--  	 - the last row of the Param table
+				--  	 - the next run of Parameters, found by inspecting the ParamList of the next row in the MethodDef table
+
+			Result := (4 + 2 + 2).to_natural_32
+					+ string_heap_offset_size
+					+ blob_heap_offset_size
+					+ index_size
 		end
 
 	param_table_entry_size: NATURAL_32
@@ -453,19 +496,22 @@ feature -- Metadata Table Sizes
 			EIS: "name={PE_PARAM_TABLE_ENTRY}.sequence_index", "protocol=uri", "src=eiffel:?class=PE_PARAM_TABLE_ENTRY&feature=sequence_index"
 			EIS: "name={PE_PARAM_TABLE_ENTRY}.name_index", "protocol=uri", "src=eiffel:?class=PE_PARAM_TABLE_ENTRY&feature=name_index"
 		local
-			index_size: NATURAL_32
+			string_index_size: NATURAL_32
 		do
 				-- name_index
-			if strings_heap_size < 0x1000 then
-				index_size := 2
+			if strings_heap_size < 0x10000 then
+				string_index_size := 2
 			else
-				index_size := 4
+				string_index_size := 4
 			end
 
-				-- Size of flags column 2
-				-- Size of sequence_index column 2
-				-- 4
-			Result := 4 + index_size
+				--	II.22.33 Param : 0x08
+				--	The Param table has the following columns:
+				--	2 : Flags (a 2-byte bitmask of type ParamAttributes, §II.23.1.13)
+				--	2 : Sequence (a 2-byte constant)
+				--	size of Name (an index into the String heap)
+
+			Result := (2 + 2).to_natural_32 + string_index_size
 		end
 
 	interface_impl_table_entry_size: NATURAL_32
@@ -477,13 +523,16 @@ feature -- Metadata Table Sizes
 		local
 			index_size: NATURAL_32
 		do
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
-				-- Size of class_ and interface index..
+				-- II.22.23 InterfaceImpl : 0x09
+				-- The InterfaceImpl table has the following columns:
+				--  size of Class (an index into the TypeDef table)
+				--  size of Interface (an index into the TypeDef, TypeRef, or TypeSpec table; more precisely, a TypeDefOrRef (§II.24.2.6) coded index)				
 			Result := 2 * index_size
 		end
 
@@ -497,25 +546,34 @@ feature -- Metadata Table Sizes
 			index_size, string_heap_offset_size, blob_heap_offset_size: NATURAL_32
 		do
 				-- parent_index or class_index see spec.
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- name_index
-			if strings_heap_size < 0x1000 then
+			if strings_heap_size < 0x10000 then
 				string_heap_offset_size := 2
 			else
 				string_heap_offset_size := 4
 			end
 
 				-- signature_index
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				blob_heap_offset_size := 2
 			else
 				blob_heap_offset_size := 4
 			end
+
+				-- II.22.25 MemberRef : 0x0A
+				-- The MemberRef table combines two sorts of references, to Methods and to Fields of a class,
+				-- known as ‘MethodRef’ and ‘FieldRef’, respectively.
+				-- The MemberRef table has the following columns:
+				--   Class (an index into the MethodDef, ModuleRef,TypeDef, TypeRef, or TypeSpec tables;
+				--			more precisely, a MemberRefParent (§II.24.2.6) coded index)
+				--   Name (an index into the String heap)
+				--   Signature (an index into the Blob heap)			
 
 			Result := index_size + string_heap_offset_size + blob_heap_offset_size
 		end
@@ -530,14 +588,14 @@ feature -- Metadata Table Sizes
 			index_size, blob_heap_offset_size: NATURAL_32
 		do
 				-- parent_index
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- value_index
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				blob_heap_offset_size := 2
 			else
 				blob_heap_offset_size := 4
@@ -558,18 +616,24 @@ feature -- Metadata Table Sizes
 			index_size, blob_heap_offset_size: NATURAL_32
 		do
 				-- parent_index and type_index
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- value_index
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				blob_heap_offset_size := 2
 			else
 				blob_heap_offset_size := 4
 			end
+
+				-- II.22.10 CustomAttribute : 0x0C
+				-- The CustomAttribute table has the following columns:
+				-- size of Parent (an index into a metadata table that has an associated HasCustomAttribute (§II.24.2.6) coded index).
+				-- size of Type (an index into the MethodDef or MemberRef table; more precisely, a CustomAttributeType (§II.24.2.6) coded index).
+				-- size of Value (an index into the Blob heap)
 
 			Result := 2 * index_size + blob_heap_offset_size
 		end
@@ -582,14 +646,14 @@ feature -- Metadata Table Sizes
 		local
 			index_size, blob_heap_offset_size: NATURAL_32
 		do
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- native_type
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				blob_heap_offset_size := 2
 			else
 				blob_heap_offset_size := 4
@@ -607,13 +671,13 @@ feature -- Metadata Table Sizes
 		local
 			index_size, blob_heap_offset_size: NATURAL_32
 		do
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 				-- permission_set
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				blob_heap_offset_size := 2
 			else
 				blob_heap_offset_size := 4
@@ -632,7 +696,7 @@ feature -- Metadata Table Sizes
 		local
 			index_size: NATURAL_32
 		do
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -650,12 +714,12 @@ feature -- Metadata Table Sizes
 		local
 			index_size: NATURAL_32
 		do
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
-				-- 4 bytes for pffset column + size of parent column
+				-- 4 bytes for offset column + size of parent column
 			Result := 4 + index_size
 		end
 
@@ -664,14 +728,14 @@ feature -- Metadata Table Sizes
 		note
 			EIS: "name={PE_STANDALONE_SIG_TABLE_ENTRY}.signature_index", "protocol=uri", "src=eiffel:?class=PE_STANDALONE_SIG_TABLE_ENTRY&feature=signature_index"
 		local
-			index_size: NATURAL_32
+			index_blob_size: NATURAL_32
 		do
-			if blob_heap_size < 0x1000 then
-				index_size := 2
+			if blob_heap_size < 0x10000 then
+				index_blob_size := 2
 			else
-				index_size := 4
+				index_blob_size := 4
 			end
-			Result := index_size
+			Result := index_blob_size
 		end
 
 	property_map_table_entry_size: NATURAL_32
@@ -683,7 +747,7 @@ feature -- Metadata Table Sizes
 			index_size: NATURAL_32
 		do
 				-- parent and property_list
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -702,18 +766,25 @@ feature -- Metadata Table Sizes
 		local
 			name_index_size, type_index_size: NATURAL_32
 		do
-			if strings_heap_size < 0x1000 then
+			if strings_heap_size < 0x10000 then
 				name_index_size := 2
 			else
 				name_index_size := 4
 			end
 
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				type_index_size := 2
 			else
 				type_index_size := 4
 			end
 				-- 2 bytes for flag	+ name index and type index
+
+				--	The Property ( 0x17 ) table has the following columns:
+				--	2 : Flags (a 2-byte bitmask of type PropertyAttributes, §II.23.1.14)
+				--	size of Name (an index into the String heap)
+				--	size of Type (an index into the Blob heap) (The name of this column is misleading. It does
+				--			not index a TypeDef or TypeRef table—instead it indexes the signature in the Blob
+				--			heap of the Property)				
 			Result := 2 + name_index_size + type_index_size
 		end
 
@@ -728,7 +799,7 @@ feature -- Metadata Table Sizes
 			index_size: NATURAL_32
 		do
 				-- method and association
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -747,11 +818,16 @@ feature -- Metadata Table Sizes
 		local
 			index_size: NATURAL_32
 		do
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
+
+				--II.22.27 MethodImpl : 0x19
+				-- Class (an index into the TypeDef table)
+				-- MethodBody (an index into the MethodDef or MemberRef table; more precisely, a MethodDefOrRef (§II.24.2.6) coded index)
+				-- MethodDeclaration (an index into the MethodDef or MemberRef table; more precisely, a MethodDefOrRef (§II.24.2.6) coded index)
 
 			Result := 3 * index_size
 		end
@@ -761,14 +837,17 @@ feature -- Metadata Table Sizes
 		note
 			EIS: "name={PE_MODULE_REF_TABLE_ENTRY}.name_index", "protocol=uri", "src=eiffel:?class=PE_MODULE_REF_TABLE_ENTRY&feature=name_index"
 		local
-			index_size: NATURAL_32
+			name_index_size: NATURAL_32
 		do
-			if strings_heap_size < 0x1000 then
-				index_size := 2
+			if strings_heap_size < 0x10000 then
+				name_index_size := 2
 			else
-				index_size := 4
+				name_index_size := 4
 			end
-			Result := index_size
+				-- II.22.31 ModuleRef : 0x1A
+				-- The ModuleRef table has the following column:
+				--  Name (an index into the String heap)			
+			Result := name_index_size
 		end
 
 	type_spec_table_entry_size: NATURAL_32
@@ -778,7 +857,7 @@ feature -- Metadata Table Sizes
 		local
 			index_size: NATURAL_32
 		do
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -799,14 +878,14 @@ feature -- Metadata Table Sizes
 		do
 				-- method_index MemberForwarded and
 				-- module_index ImportScope
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- import_name_index Index ImportName
-			if strings_heap_size < 0x1000 then
+			if strings_heap_size < 0x10000 then
 				string_index_size := 2
 			else
 				string_index_size := 4
@@ -824,7 +903,7 @@ feature -- Metadata Table Sizes
 		local
 			index_size: NATURAL_32
 		do
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -835,6 +914,7 @@ feature -- Metadata Table Sizes
 
 	assembly_table_entry_size: NATURAL_32
 			-- Compute the table entry size for the Assembly table
+			-- II.22.2 Assembly : 0x20
 		note
 			EIS: "name={PE_ASSEMBLY_TABLE_ENTRY}.hash_alg_id", "protocol=uri", "src=eiffel:?class=PE_ASSEMBLY_TABLE_ENTRY&feature=hash_alg_id"
 			EIS: "name={PE_ASSEMBLY_TABLE_ENTRY}.major", "protocol=uri", "src=eiffel:?class=PE_ASSEMBLY_TABLE_ENTRY&feature=major"
@@ -849,24 +929,25 @@ feature -- Metadata Table Sizes
 			blob_index_size, string_index_size: NATURAL_32
 		do
 				-- PublicKey
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				blob_index_size := 2
 			else
 				blob_index_size := 4
 			end
 				-- Name and Culture.
-			if strings_heap_size < 0x1000 then
+			if strings_heap_size < 0x10000 then
 				string_index_size := 2
 			else
 				string_index_size := 4
 			end
-
-				-- 4 bytes for HashAlgId column
-				-- 2 bytes for each of MajorVersion, MinorVersion, BuildNumber, and RevisionNumber columns
-				-- 4 bytes for Flags column
-				-- size of PublicKey
-				-- size of NameIndex
-				-- size of CultureIndex.
+				-- II.22.2 Assembly : 0x20
+				-- The Assembly table has the following columns:
+				-- 4 : HashAlgId (a 4-byte constant of type AssemblyHashAlgorithm, §II.23.1.1)
+				-- 4 * 2: MajorVersion, MinorVersion, BuildNumber, RevisionNumber (each being 2-byte constants)
+				-- 4 : Flags (a 4-byte bitmask of type AssemblyFlags, §II.23.1.2)
+				-- size of PublicKey (an index into the Blob heap)
+				-- size of Name (an index into the String heap)
+				-- size of Culture (an index into the String heap)
 			Result := (4 + (2 * 4) + 4).to_natural_32 + blob_index_size + 2 * string_index_size
 		end
 
@@ -887,26 +968,31 @@ feature -- Metadata Table Sizes
 		do
 				-- public_key_index
 				-- hash_index
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				blob_index_size := 2
 			else
 				blob_index_size := 4
 			end
 				-- name_index
 				-- culture_index
-			if strings_heap_size < 0x1000 then
+			if strings_heap_size < 0x10000 then
 				string_index_size := 2
 			else
 				string_index_size := 4
 			end
 
-				-- 2 bytes for each of MajorVersion, MinorVersion, BuildNumber, and RevisionNumber columns
-				-- 4 bytes for Flags column
-				-- size of PublicKeyOrToken column
-				-- size of Name column
-				-- size of Culture column
-				-- size of HashValue column
-			Result := (2 * 4).to_natural_32 + 4 + 2 * blob_index_size + 2 * string_index_size
+				-- II.22.5 AssemblyRef : 0x23
+				-- The AssemblyRef table has the following columns:
+				-- 4 * 2 : MajorVersion, MinorVersion, BuildNumber, RevisionNumber (each being 2-byte constants)
+				-- 4 : Flags (a 4-byte bitmask of type AssemblyFlags, §II.23.1.2)
+				-- size of PublicKeyOrToken (an index into the Blob heap, indicating the public key or token that identifies the author of this Assembly)
+				-- size of Name (an index into the String heap)
+				-- size of Culture (an index into the String heap)
+				-- size of HashValue (an index into the Blob heap)				
+
+			Result := (4 * 2 + 4).to_natural_32
+					+ 2 * blob_index_size
+					+ 2 * string_index_size
 		end
 
 	file_table_entry_size: NATURAL_32
@@ -919,14 +1005,14 @@ feature -- Metadata Table Sizes
 			blob_offset_size, string_offset_size: NATURAL_32
 		do
 				-- Name
-			if strings_heap_size < 0x1000 then
+			if strings_heap_size < 0x10000 then
 				string_offset_size := 2
 			else
 				string_offset_size := 4
 			end
 
 				-- Hash Value
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				blob_offset_size := 2
 			else
 				blob_offset_size := 4
@@ -950,26 +1036,38 @@ feature -- Metadata Table Sizes
 			string_offset_size, index_size: NATURAL_32
 		do
 				-- TypeName and TypeNamespace
-			if strings_heap_size < 0x1000 then
+			if strings_heap_size < 0x10000 then
 				string_offset_size := 2
 			else
 				string_offset_size := 4
 			end
 
 				-- Implementation
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
-				-- Flags (a 4-byte bitmask of type TypeAttributes)
-				-- TypeDefId (a 4-byte index into a TypeDef table of another module in this Assembly)
-				-- TypeName (an index into the String heap)
-				-- TypeNamespace (an index into the String heap)
-				-- Implementation (an Implementation coded index into either the File table,
-				-- the ExportedType table, or the AssemblyRef table)
-			Result := {NATURAL_32} 4 + 4 + 2 * string_offset_size + index_size
+				-- II.22.14 ExportedType : 0x27
+				-- The ExportedType table has the following columns:
+				-- 4: Flags (a 4-byte bitmask of type TypeAttributes, §II.23.1.15)
+				-- 4: TypeDefId (a 4-byte index into a TypeDef table of another module in this Assembly).
+				-- 		This column is used as a hint only. If the entry in the target TypeDef table matches
+				-- 		the TypeName and TypeNamespace entries in this table, resolution has succeeded.
+				-- 		But if there is a mismatch, the CLI shall fall back to a search of the target TypeDef
+				-- 		table. Ignored and should be zero if Flags has IsTypeForwarder set.
+				-- size of TypeName (an index into the String heap)
+				-- size of TypeNamespace (an index into the String heap)
+				-- size of Implementation. This is an index (more precisely, an Implementation (§II.24.2.6) coded index)
+				--     into either of the following tables:
+				--   - File table, where that entry says which module in the current assembly holds the TypeDef
+				--   - ExportedType table, where that entry is the enclosing Type of the current nested Type
+				--   - AssemblyRef table, where that entry says in which assembly the type may now be found (Flags must have the IsTypeForwarder flag set).				
+
+			Result := (4 + 4).to_natural_32
+						+ 2 * string_offset_size -- TypeName, TypeNamespace
+						+ index_size -- Implementation
 		end
 
 	manifest_resource_table_entry_size: NATURAL_32
@@ -984,14 +1082,14 @@ feature -- Metadata Table Sizes
 			string_offset_size, index_size: NATURAL_32
 		do
 				-- Name
-			if strings_heap_size < 0x1000 then
+			if strings_heap_size < 0x10000 then
 				string_offset_size := 2
 			else
 				string_offset_size := 4
 			end
 
 				-- Implementation
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -1014,7 +1112,7 @@ feature -- Metadata Table Sizes
 			index_size: NATURAL_32
 		do
 				-- NestedClass and EnclosingClass
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -1036,14 +1134,14 @@ feature -- Metadata Table Sizes
 			string_offset_size, index_size: NATURAL_32
 		do
 				-- Name
-			if strings_heap_size < 0x1000 then
+			if strings_heap_size < 0x10000 then
 				string_offset_size := 2
 			else
 				string_offset_size := 4
 			end
 
 				-- Owner
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -1065,14 +1163,14 @@ feature -- Metadata Table Sizes
 			blob_offset_size, index_size: NATURAL_32
 		do
 				-- Instantiation
-			if blob_heap_size < 0x1000 then
+			if blob_heap_size < 0x10000 then
 				blob_offset_size := 2
 			else
 				blob_offset_size := 4
 			end
 
 				-- Method
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -1092,7 +1190,7 @@ feature -- Metadata Table Sizes
 			index_size: NATURAL_32
 		do
 				-- Owner and Constraint
-			if pe_index < 0x1000 then
+			if pe_index < 0x10000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -1163,7 +1261,7 @@ feature -- Heaps
 					j := i + 2
 				else
 					-- 16777216 = 0x100 0000 = 1 00000000 00000000 00000000
-					-- 0x1000 	=   0x1 0000 =          1 00000000 00000000
+					-- 65 536 	=   0x1 0000 =          1 00000000 00000000
 					-- 256 		=      0x100 =                   1 00000000
 					current_size := (blob_heap [i] - 0xC0) * 0x1000000
 									+ blob_heap [i + 1] * 0x10000
@@ -1226,7 +1324,7 @@ feature -- Heaps
 					j := i + 2
 				else
 					-- 16777216 = 0x100 0000 = 1 00000000 00000000 00000000
-					-- 0x1000 	=   0x1 0000 =          1 00000000 00000000
+					-- 65 536  	=   0x1 0000 =          1 00000000 00000000
 					-- 256 		=      0x100 =                   1 00000000
 					current_size := (us_heap [i] - 0xC0) * 0x1000000
 									+ us_heap [i + 1] * 0x10000

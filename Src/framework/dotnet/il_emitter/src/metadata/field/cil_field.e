@@ -40,16 +40,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	definitions: NATURAL_64
+	definitions: NATURAL_32
 			-- `definitions' count.
 
 	is_external: BOOLEAN assign set_is_external
 			-- Not locally defined.
 
-	explicit_offset: NATURAL_64 assign set_explicit_offset
+	explicit_offset: NATURAL_32 assign set_explicit_offset
 			-- Field offset for explicit structures
 
-	pe_index: NATURAL_64 assign set_pe_index
+	pe_index: NATURAL_32 assign set_pe_index
 			-- Index in the `fielddef` table
 
 	ref: BOOLEAN assign set_ref
@@ -293,18 +293,18 @@ feature -- Output
 
 	pe_dump (a_stream: FILE_STREAM): BOOLEAN
 		local
-			l_sz: CELL [NATURAL_64]
+			l_sz: CELL [NATURAL_32]
 			l_sig: ARRAY [NATURAL_8]
-			l_sig_index: NATURAL_64
-			l_name_index: NATURAL_64
+			l_sig_index: NATURAL_32
+			l_name_index: NATURAL_32
 			l_ref_parent: PE_MEMBER_REF_PARENT
 			l_table: PE_TABLE_ENTRY_BASE
 			l_pe_flags: INTEGER
 			l_buf: SPECIAL [NATURAL_8]
 			l_type: INTEGER
-			l_value_index: NATURAL_64
+			l_value_index: NATURAL_32
 			l_constant: PE_CONSTANT
-			l_dis: NATURAL_64
+			l_dis: NATURAL_32
 		do
 			if type.basic_type = {CIL_BASIC_TYPE}.class_ref then
 				if attached {CIL_DATA_CONTAINER} type.type_ref as l_class and then
@@ -323,7 +323,7 @@ feature -- Output
 					if attached parent as l_parent then
 						Result := l_parent.pe_dump (a_stream)
 					end
-					create l_ref_parent.make_with_tag_and_index ({PE_MEMBER_REF_PARENT}.typeref, if attached parent as l_parent then l_parent.pe_index else {NATURAL_64} 0 end)
+					create l_ref_parent.make_with_tag_and_index ({PE_MEMBER_REF_PARENT}.typeref, if attached parent as l_parent then l_parent.pe_index else {NATURAL_32} 0 end)
 					create {PE_MEMBER_REF_TABLE_ENTRY} l_table.make_with_data (l_ref_parent, l_name_index, l_sig_index)
 					pe_index := l_writer.add_table_entry (l_table)
 				else
@@ -397,14 +397,14 @@ feature -- Output
 						l_dis := l_writer.add_table_entry (l_table)
 						if not byte_value.is_empty and then
 							byte_length /= 0 then
-							l_value_index := l_writer.rva_bytes (byte_value, byte_length.to_natural_64)
+							l_value_index := l_writer.rva_bytes (byte_value, byte_length.to_natural_32)
 							create {PE_FIELD_RVA_TABLE_ENTRY} l_table.make_with_data (l_value_index, pe_index)
 							l_dis := l_writer.add_table_entry (l_table)
 						end
 					when {CIL_VALUE_MODE}.bytes then
 						if not byte_value.is_empty and then
 							byte_length /= 0 then
-							l_value_index := l_writer.rva_bytes (byte_value, byte_length.to_natural_64)
+							l_value_index := l_writer.rva_bytes (byte_value, byte_length.to_natural_32)
 							create {PE_FIELD_RVA_TABLE_ENTRY} l_table.make_with_data (l_value_index, pe_index)
 							l_dis := l_writer.add_table_entry (l_table)
 						end

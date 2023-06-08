@@ -70,7 +70,7 @@ feature -- Output
 			Result := True
 		end
 
-	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_result: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_64
+	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_result: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_32
 		local
 			l_sz: INTEGER
 		do
@@ -81,7 +81,7 @@ feature -- Output
 				{BYTE_SPECIAL_HELPER}.put_special_natural_16_with_integer_32 (a_result, index, a_offset)
 				l_sz := 2
 			end
-			Result := l_sz.to_natural_64
+			Result := l_sz.to_natural_32
 		end
 
 end

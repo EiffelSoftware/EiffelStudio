@@ -28,15 +28,15 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	size: NATURAL_64
+	size: NATURAL_32
 
-	max_size: NATURAL_64
+	max_size: NATURAL_32
 
 	base: SPECIAL [NATURAL_8]
 			-- todo double check if we need to use
 			-- SPECIAL instead of ARRAY
 
-	confirm (new_size: NATURAL_64)
+	confirm (new_size: NATURAL_32)
 			-- C++ uses ensure
 		do
 			if size + new_size > max_size then
@@ -61,7 +61,7 @@ feature -- Element Change
 			size_incremented: old size + 1 = size
 		end
 
-	increment_size_by (a_value: NATURAL_64)
+	increment_size_by (a_value: NATURAL_32)
 			-- Increment size by `a_value`.
 		do
 			size := size + a_value
@@ -69,7 +69,7 @@ feature -- Element Change
 			size_incremented: old size + a_value = size
 		end
 
-	copy_data (a_index: INTEGER; a_data: ARRAY [NATURAL_8]; a_count: NATURAL_64)
+	copy_data (a_index: INTEGER; a_data: ARRAY [NATURAL_8]; a_count: NATURAL_32)
 		local
 			l_index: INTEGER
 			i,n: INTEGER

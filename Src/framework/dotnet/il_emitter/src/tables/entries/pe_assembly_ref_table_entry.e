@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flags: INTEGER; a_major, a_minor, a_build, a_revision: NATURAL_16; a_name_index: NATURAL_64; a_key_index: NATURAL_64)
+	make_with_data (a_flags: INTEGER; a_major, a_minor, a_build, a_revision: NATURAL_16; a_name_index: NATURAL_32; a_key_index: NATURAL_32)
 			-- Defaul value for a_key_index = 0
 		do
 			flags := a_flags
@@ -93,9 +93,9 @@ feature -- Operations
 			Result := {PE_TABLES}.tassemblyref.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Initialize the number of bytes written
 			l_bytes := 0
@@ -123,9 +123,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Initialize the number of bytes readed
 			l_bytes := 0

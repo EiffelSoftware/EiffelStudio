@@ -21,12 +21,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (has_seh: BOOLEAN; a_flags: INTEGER; a_method_def: NATURAL_64; a_max_stack: INTEGER; a_local_count: INTEGER; a_code_size: INTEGER; a_signature: NATURAL_64)
+	make (has_seh: BOOLEAN; a_flags: INTEGER; a_method_def: NATURAL_32; a_max_stack: INTEGER; a_local_count: INTEGER; a_code_size: INTEGER; a_signature: NATURAL_32)
 		do
 			flags := a_flags
 			hrd_size := 3
 			max_stack := a_max_stack.to_natural_16
-			code_size := a_code_size.to_natural_64
+			code_size := a_code_size.to_natural_32
 			signature_token := a_signature
 			method_def := a_method_def
 			create {ARRAYED_LIST [CIL_SEH_DATA]} seh_data.make (0)
@@ -59,17 +59,17 @@ feature -- Access
 	max_stack: NATURAL_16
 			-- Defined as Word = 2 bytes.
 
-	code_size: NATURAL_64 assign set_code_size
+	code_size: NATURAL_32 assign set_code_size
 
 	code: detachable ARRAY [NATURAL_8] assign set_code
 
-	signature_token: NATURAL_64
+	signature_token: NATURAL_32
 
-	rva: NATURAL_64
+	rva: NATURAL_32
 
-	method_def: NATURAL_64
+	method_def: NATURAL_32
 
-	write (a_sizes: ARRAY [NATURAL_64]; a_stream: FILE_STREAM): NATURAL_64
+	write (a_sizes: ARRAY [NATURAL_32]; a_stream: FILE_STREAM): NATURAL_32
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		local
@@ -90,10 +90,10 @@ feature -- Access
 				create l_dest.make_filled (0, 1, 512)
 				if (flags & 3) = tinyformat then
 					n := 1
-					{BYTE_ARRAY_HELPER}.put_array_natural_8_with_natural_64 (l_dest, (flags & 3).to_natural_64 + (code_size |<< 2), 0)
+					{BYTE_ARRAY_HELPER}.put_array_natural_8_with_natural_64 (l_dest, (flags & 3).to_natural_32 + (code_size |<< 2), 0)
 				else
 					n := 12
-					{BYTE_ARRAY_HELPER}.put_array_natural_16_with_natural_64 (l_dest, 0x3000 + (flags & 0xfff).to_natural_64 + if seh_data.is_empty then {NATURAL_64} 0 else moresects.to_natural_64 end, 0)
+					{BYTE_ARRAY_HELPER}.put_array_natural_16_with_natural_64 (l_dest, 0x3000 + (flags & 0xfff).to_natural_32 + if seh_data.is_empty then {NATURAL_32} 0 else moresects.to_natural_32 end, 0)
 					{BYTE_ARRAY_HELPER}.put_array_natural_16 (l_dest, max_stack, 2)
 					{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (l_dest, code_size, 4)
 					{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (l_dest, signature_token, 8)
@@ -204,7 +204,7 @@ feature -- Access
 					end
 				end
 			end
-			Result := n.to_natural_64
+			Result := n.to_natural_32
 		end
 
 feature -- Element Change

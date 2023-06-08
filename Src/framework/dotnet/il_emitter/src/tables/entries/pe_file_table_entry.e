@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flags: NATURAL_32; a_name: NATURAL_64; a_hash: NATURAL_64)
+	make_with_data (a_flags: NATURAL_32; a_name: NATURAL_32; a_hash: NATURAL_32)
 		do
 				-- See section II.22.19 File : 0x26
 			flags := a_flags
@@ -67,9 +67,9 @@ feature -- Operations
 			Result := {PE_TABLES}.tfile.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Set flags to the buffer.
 			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, flags, 0)
@@ -83,9 +83,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- get flags from the buffer.
 			flags := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)

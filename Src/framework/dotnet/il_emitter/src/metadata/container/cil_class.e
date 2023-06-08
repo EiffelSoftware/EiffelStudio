@@ -353,10 +353,10 @@ feature {NONE} -- Implementation
 		local
 			l_val: SPECIAL [NATURAL_8]
 			l_dis: INTEGER
-			l_sz: CELL [NATURAL_64]
+			l_sz: CELL [NATURAL_32]
 			l_type: CIL_TYPE
 			l_sig: ARRAY [NATURAL_8]
-			l_signature: NATURAL_64
+			l_signature: NATURAL_32
 			l_table: PE_TYPE_SPEC_TABLE_ENTRY
 			l_result: BOOLEAN
 		do
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 								-- we create an special object with 8 slots
 								-- since size_t could have 8 bytes.
 							l_dis := l_gen.render (a_stream, l_val, 0)
-							l_gen.set_pe_index ({BYTE_SPECIAL_HELPER}.byte_special_to_natural_64 (l_val, 0))
+							l_gen.set_pe_index ({BYTE_SPECIAL_HELPER}.byte_special_to_natural_32 (l_val, 0))
 						end
 					end
 				end
@@ -391,9 +391,9 @@ feature {NONE} -- Implementation
 	pe_dump_assembly_ref (a_stream: FILE_STREAM)
 		local
 			l_resolution: PE_RESOLUTION_SCOPE
-			l_typename_index: NATURAL_64
+			l_typename_index: NATURAL_32
 			l_table: PE_TABLE_ENTRY_BASE
-			l_namespace_index: NATURAL_64
+			l_namespace_index: NATURAL_32
 			l_result: BOOLEAN
 		do
 			if pe_index = 0 then
@@ -422,11 +422,11 @@ feature {NONE} -- Implementation
 	pe_dump_default (a_stream: FILE_STREAM)
 		local
 			l_pe_flags: INTEGER
-			l_typename_index: NATURAL_64
-			l_namespace_index: NATURAL_64
-			l_extends: NATURAL_64
-			l_field_index: NATURAL_64
-			l_method_index: NATURAL_64
+			l_typename_index: NATURAL_32
+			l_namespace_index: NATURAL_32
+			l_extends: NATURAL_32
+			l_field_index: NATURAL_32
+			l_method_index: NATURAL_32
 			l_parent: CIL_DATA_CONTAINER
 			l_result: BOOLEAN
 			l_type_type: INTEGER
@@ -434,13 +434,13 @@ feature {NONE} -- Implementation
 			l_table: PE_TABLE_ENTRY_BASE
 			l_my_pack: INTEGER
 			l_my_size: INTEGER
-			l_dis: NATURAL_64
-			l_enclosing: NATURAL_64
-			l_property_index: NATURAL_64
+			l_dis: NATURAL_32
+			l_enclosing: NATURAL_32
+			l_property_index: NATURAL_32
 			l_owner: PE_TYPE_OR_METHOD_DEF
 			l_name: STRING_32
 			l_char_A: CHARACTER_32
-			l_name_str: NATURAL_64
+			l_name_str: NATURAL_32
 		do
 			l_pe_flags := transfer_flags
 			if attached {PE_WRITER} a_stream.pe_writer as l_writer then

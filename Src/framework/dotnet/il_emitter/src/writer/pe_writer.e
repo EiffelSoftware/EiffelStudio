@@ -95,7 +95,7 @@ feature -- Access
 	pe_base: NATURAL assign set_pe_base
 			-- `pe_base'
 
-	snk_len: NATURAL_64 assign set_snk_len
+	snk_len: NATURAL_32 assign set_snk_len
 			-- `snk_len'
 
 	snk_file: STRING_32
@@ -119,34 +119,34 @@ feature -- Access
 			-- C++ defined as four bytes
 			-- DWord language_;
 
-	image_base: NATURAL_64 assign set_image_base
+	image_base: NATURAL_32 assign set_image_base
 			-- `image_base'
 
-	object_align: NATURAL_64 assign set_object_align
+	object_align: NATURAL_32 assign set_object_align
 			-- `object_align'
 
-	file_align: NATURAL_64 assign set_file_align
+	file_align: NATURAL_32 assign set_file_align
 			-- `file_align'
 
-	param_attribute_data: NATURAL_64 assign set_param_attribute_data
+	param_attribute_data: NATURAL_32 assign set_param_attribute_data
 			-- `param_attribute_data'
 
-	param_attribute_type: NATURAL_64 assign set_param_attribute_type
+	param_attribute_type: NATURAL_32 assign set_param_attribute_type
 			-- `param_attribute_type'
 
-	entry_point: NATURAL_64 assign set_entry_point
+	entry_point: NATURAL_32 assign set_entry_point
 			-- `entry_point'
 
-	system_index: NATURAL_64 assign set_system_index
+	system_index: NATURAL_32 assign set_system_index
 			-- `system_index'
 
-	enum_base: NATURAL_64 assign set_enum_base
+	enum_base: NATURAL_32 assign set_enum_base
 			-- `enum_base'
 
-	value_base: NATURAL_64 assign set_value_base
+	value_base: NATURAL_32 assign set_value_base
 			-- `value_base'
 
-	object_base: NATURAL_64 assign set_object_base
+	object_base: NATURAL_32 assign set_object_base
 			-- `object_base'
 
 	gui: BOOLEAN assign set_gui
@@ -165,7 +165,7 @@ feature -- Access
 
 	product_version: ARRAY [NATURAL_16]
 
-	stream_headers: ARRAY2 [NATURAL_64]
+	stream_headers: ARRAY2 [NATURAL_32]
 			-- defined as streamHeaders_[5][2];
 
 	rsa_encoder: CIL_RSA_ENCODER
@@ -212,7 +212,7 @@ feature -- Access
 			Result.conservative_resize_with_default (0, 1, 8)
 		end
 
-	string_map: STRING_TABLE [NATURAL_64]
+	string_map: STRING_TABLE [NATURAL_32]
 			-- reflection of the String stream so that we can keep from doing duplicates.
 			-- right now we don't check duplicates on any of the other streams...
 
@@ -424,7 +424,7 @@ feature -- Element change
 
 feature -- Element Change
 
-	add_table_entry (a_entry: PE_TABLE_ENTRY_BASE): NATURAL_64
+	add_table_entry (a_entry: PE_TABLE_ENTRY_BASE): NATURAL_32
 			-- add an entry to one of the tables
 			-- note the data for the table will be a class inherited from TableEntryBase,
 			--  and this class will self-report the table index to use
@@ -473,7 +473,7 @@ feature -- Status Report
 
 feature -- Stream functions
 
-	hash_string (a_utf8: STRING_32): NATURAL_64
+	hash_string (a_utf8: STRING_32): NATURAL_32
 			-- return the stream index
 			--| TODO add a precondition to verify a_utf8 is a valid UTF_8
 		local
@@ -491,18 +491,18 @@ feature -- Stream functions
 				l_str := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_utf8)
 				create l_converter.make_from_string (l_str)
 
-				strings.copy_data (strings.size.to_integer_32, l_converter.to_natural_8_array, (l_str.count + 1).to_natural_64)
+				strings.copy_data (strings.size.to_integer_32, l_converter.to_natural_8_array, (l_str.count + 1).to_natural_32)
 				strings.increment_size_by ((a_utf8.count + 1).to_natural_32)
 				string_map.force (Result, a_utf8)
 			end
 		end
 
-	hash_us (a_str: STRING_32; a_length: INTEGER): NATURAL_64
+	hash_us (a_str: STRING_32; a_length: INTEGER): NATURAL_32
 			-- UserString (US) stream index
 			-- See: ECMA-335 6th edition, II.24.2.4 #US and #Blob heaps
 		local
 			l_flag: NATURAL_8
-			len: NATURAL_64
+			len: NATURAL_32
 			n: INTEGER
 			l_converter: BYTE_ARRAY_CONVERTER
 			l_data: ARRAY [NATURAL_8]
@@ -513,7 +513,7 @@ feature -- Stream functions
 			check a_str.count = a_length end
 			create l_converter.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_16le_string_8 (a_str))
 			l_data := l_converter.to_natural_8_array
-			len := (l_data.count + 1).to_natural_64 -- +1 for the flag
+			len := (l_data.count + 1).to_natural_32 -- +1 for the flag
 
 			us.confirm (len + 5)
 			Result := us.size
@@ -538,7 +538,7 @@ feature -- Stream functions
 			end
 
 			us.copy_data ((us.size).to_integer_32, l_data, len - 1) -- -1: len include the flag  byte.
-			us.increment_size_by ((len - 1).to_natural_64)
+			us.increment_size_by (len - 1)
 
 				-- See II.24.2.4 from ECMA-335 6th Edition
 				-- This final byte holds the value 1 if and only if any UTF16 character within the string has any bit
@@ -568,7 +568,7 @@ feature -- Stream functions
 			us.increment_size
 		end
 
-	hash_guid (a_guid: ARRAY [NATURAL_8]): NATURAL_64
+	hash_guid (a_guid: ARRAY [NATURAL_8]): NATURAL_32
 			-- return the stream index
 		do
 			guid.confirm (16) -- 128 // 8
@@ -578,12 +578,12 @@ feature -- Stream functions
 			Result := Result // 16 + 1
 		end
 
-	hash_blob (a_blob_data: ARRAY [NATURAL_8]; a_blob_len: NATURAL_64): NATURAL_64
+	hash_blob (a_blob_data: ARRAY [NATURAL_8]; a_blob_len: NATURAL_32): NATURAL_32
 			-- Blob stream index.
 			-- See: ECMA-335 6th edition, II.24.2.4 #US and #Blob heaps
 		local
-			l_rv: NATURAL_64
-			l_blob_len: NATURAL_64
+			l_rv: NATURAL_32
+			l_blob_len: NATURAL_32
 		do
 			l_blob_len := a_blob_len
 			if blob.size = 0 then
@@ -611,28 +611,28 @@ feature -- Stream functions
 				blob.increment_size
 			end
 			blob.copy_data ((blob.size).to_integer_32, a_blob_data, l_blob_len)
-			blob.increment_size_by (l_blob_len.to_natural_64)
+			blob.increment_size_by (l_blob_len)
 			Result := l_rv
 		end
 
 feature -- Various Operations
 
-	RVA_bytes (a_bytes: ARRAY [NATURAL_8]; a_data_len: NATURAL_64): NATURAL_64
+	RVA_bytes (a_bytes: ARRAY [NATURAL_8]; a_data_len: NATURAL_32): NATURAL_32
 			--  this is the 'cildata' contents.   Again we emit into the cildata and it returns the offset in
 			--  the cildata to use.  It does NOT return the rva immediately, that is calculated later.
 		local
 			l_pos: INTEGER
-			l_rv: NATURAL_64
+			l_rv: NATURAL_32
 		do
 			l_pos := rva.size.to_integer_32
-			rva.confirm (a_data_len + l_pos.to_natural_64 - rva.size)
+			rva.confirm (a_data_len + l_pos.to_natural_32 - rva.size)
 			l_rv := rva.size
-			rva.increment_size_by (l_pos.to_natural_64 - rva.size + a_data_len)
+			rva.increment_size_by (l_pos.to_natural_32 - rva.size + a_data_len)
 			a_bytes.make_from_special (rva.base)
 			Result := l_rv
 		end
 
-	set_base_classes (a_object_index: NATURAL_64; a_value_index: NATURAL_64; a_enum_index: NATURAL_64; a_system_index: NATURAL_64)
+	set_base_classes (a_object_index: NATURAL_32; a_value_index: NATURAL_32; a_enum_index: NATURAL_32; a_system_index: NATURAL_32)
 			--  Set the indexes of the various classes which can be extended to make new classes
 			--  these are typically in the typeref table
 			--  Also set the index of the System namespace entry which is t
@@ -650,7 +650,7 @@ feature -- Various Operations
 			system_index_set: system_index = a_system_index
 		end
 
-	set_param_attribute (a_param_attribute_type: NATURAL_64; a_param_attribute_data: NATURAL_64)
+	set_param_attribute (a_param_attribute_type: NATURAL_32; a_param_attribute_data: NATURAL_32)
 			-- this sets the data for the paramater attribute we support
 			-- we aren't generally supporting attributes in this version but we do need to be able to
 			-- set a single attribute that means a function has a variable length argument list
@@ -682,7 +682,7 @@ feature -- Various Operations
 			l_sz: INTEGER
 			l_dis: INTEGER
 			l_sig_hash: ARRAY [NATURAL_8]
-			l_sig_len: CELL [NATURAL_64]
+			l_sig_len: CELL [NATURAL_32]
 			l_output_file: like output_file
 		do
 			l_output_file := a_out
@@ -715,7 +715,7 @@ feature -- Various Operations
 				hash_part_of_file (l_context, 0x80, 0xf8)
 
 				fixme ("Double check this call to hash_part_of_file")
-				hash_part_of_file (l_context, (0x80 + 0xf8).to_natural_64, ({PE_OBJECT}.size_of * if attached pe_header as l_header then l_header.num_objects else {INTEGER_16} 0 end).to_natural_64)
+				hash_part_of_file (l_context, (0x80 + 0xf8).to_natural_32, ({PE_OBJECT}.size_of * if attached pe_header as l_header then l_header.num_objects else {INTEGER_16} 0 end).to_natural_32)
 
 					-- yes we do NOT hash the gap between the objects table and the first section.
 				if attached pe_header as l_header and then attached pe_objects as l_objects and then
@@ -726,10 +726,10 @@ feature -- Various Operations
 						then
 							l_off := l_cor20_header.strong_name_signature [1].to_integer_32 - l_objects [i].virtual_addr
 							l_sz := l_cor20_header.strong_name_signature [2].to_integer_32
-							hash_part_of_file (l_context, l_objects [i + 1].raw_ptr.to_natural_64, l_off.to_natural_64)
-							hash_part_of_file (l_context, (l_objects [i + 1].raw_ptr + l_off + l_sz).to_natural_64, (l_objects [i + 1].raw_size - l_off - l_sz).to_natural_64)
+							hash_part_of_file (l_context, l_objects [i + 1].raw_ptr.to_natural_32, l_off.to_natural_32)
+							hash_part_of_file (l_context, (l_objects [i + 1].raw_ptr + l_off + l_sz).to_natural_32, (l_objects [i + 1].raw_size - l_off - l_sz).to_natural_32)
 						else
-							hash_part_of_file (l_context, l_objects [i + 1].raw_ptr.to_natural_64, l_objects [i + 1].raw_size.to_natural_64)
+							hash_part_of_file (l_context, l_objects [i + 1].raw_ptr.to_natural_32, l_objects [i + 1].raw_size.to_natural_32)
 						end
 					end
 				end
@@ -748,7 +748,7 @@ feature -- Various Operations
 			Result := l_rv
 		end
 
-	hash_part_of_file (a_context: CIL_SHA1_CONTEXT; a_offset: NATURAL_64; a_len: NATURAL_64)
+	hash_part_of_file (a_context: CIL_SHA1_CONTEXT; a_offset: NATURAL_32; a_len: NATURAL_32)
 		local
 			l_buf: ARRAY [NATURAL_8]
 			l_sz: INTEGER
@@ -794,19 +794,19 @@ feature -- Operations
 			l_pe_header: PE_HEADER
 			l_pe_objects: like pe_objects
 			l_n: INTEGER
-			l_current_rva: NATURAL_64
+			l_current_rva: NATURAL_32
 			l_core_20_header: PE_DOTNET_COR20_HEADER
-			l_last_rva: NATURAL_64
+			l_last_rva: NATURAL_32
 			l_end: INTEGER
 			l_data: CIL_SEH_DATA
 			l_edata: CIL_SEH_DATA
 			l_exit: BOOLEAN
 			l_etiny: BOOLEAN
 			l_tables_header: PE_DOTNET_META_TABLES_HEADER
-			l_counts: ARRAY [NATURAL_64]
+			l_counts: ARRAY [NATURAL_32]
 			l_buffer: ARRAY [NATURAL_8]
 			l_buf: ARRAY [NATURAL_8]
-			l_len: CELL [NATURAL_64]
+			l_len: CELL [NATURAL_32]
 			l_sect: INTEGER
 		do
 				-- pe_header setup.
@@ -871,7 +871,7 @@ feature -- Operations
 			l_pe_header.code_base := l_current_rva.to_integer_32
 			l_pe_header.iat_rva := l_current_rva.to_integer_32
 			l_pe_header.iat_size := 8
-			l_current_rva := l_current_rva + l_pe_header.iat_size.to_natural_64
+			l_current_rva := l_current_rva + l_pe_header.iat_size.to_natural_32
 			l_pe_header.com_rva := l_current_rva.to_integer_32
 			l_pe_header.com_size := {PE_DOTNET_COR20_HEADER}.size_of
 			l_current_rva := l_current_rva + l_pe_header.com_size.to_natural_32
@@ -887,7 +887,7 @@ feature -- Operations
 				-- for interoperability with the microsoft runtimes.
 
 			l_core_20_header.flags := a_cor_flags.to_natural_32
-			l_core_20_header.entry_point_token := entry_point.to_natural_32
+			l_core_20_header.entry_point_token := entry_point
 
 			if not snk_file.is_empty then
 
@@ -974,7 +974,7 @@ feature -- Operations
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
 
-			l_core_20_header.metadata [1] := l_current_rva.to_natural_32
+			l_core_20_header.metadata [1] := l_current_rva
 				-- metadata root
 
 			l_current_rva := l_current_rva + 12
@@ -1093,16 +1093,16 @@ feature -- Operations
 			end
 
 			stream_headers [5, 2] := l_current_rva - stream_headers [5, 1] - l_core_20_header.metadata [1]
-			l_core_20_header.metadata [2] := l_current_rva.to_natural_32 - l_core_20_header.metadata [1]
+			l_core_20_header.metadata [2] := l_current_rva - l_core_20_header.metadata [1]
 			l_pe_header.import_rva := l_current_rva.to_integer_32
 			l_current_rva := l_current_rva + ({PE_IMPORT_DIR}.size_of * 2).to_natural_32 + 8
 
 			if (l_current_rva \\ 16) /= 0 then
-				l_current_rva := l_current_rva + 16 - (l_current_rva \\ 16).to_natural_32
+				l_current_rva := l_current_rva + 16 - (l_current_rva \\ 16)
 			end
 
-			l_current_rva := l_current_rva + 2 + (create {STRING}.make_from_string ("_CorXXXMain%U")).count.to_natural_64 +
-				(create {STRING}.make_from_string ("mscoree.dll%U")).count.to_natural_64 + 1
+			l_current_rva := l_current_rva + 2 + (create {STRING}.make_from_string ("_CorXXXMain%U")).count.to_natural_32 +
+				(create {STRING}.make_from_string ("mscoree.dll%U")).count.to_natural_32 + 1
 
 			l_pe_header.import_size := l_current_rva.to_integer_32 - l_pe_header.import_rva
 
@@ -1114,8 +1114,8 @@ feature -- Operations
 			l_pe_header.entry_point := l_current_rva.to_integer_32
 			l_current_rva := l_current_rva + 6
 			if snk_len /= 0 then
-				l_core_20_header.strong_name_signature [1] := l_current_rva.to_natural_32
-				l_core_20_header.strong_name_signature [2] := snk_len.to_natural_32
+				l_core_20_header.strong_name_signature [1] := l_current_rva
+				l_core_20_header.strong_name_signature [2] := snk_len
 				l_current_rva := l_current_rva + snk_len
 			end
 
@@ -1340,8 +1340,8 @@ feature -- Write operations
 
 	write_methods: BOOLEAN
 		local
-			l_counts: ARRAY [NATURAL_64]
-			l_dis: NATURAL_64
+			l_counts: ARRAY [NATURAL_32]
+			l_dis: NATURAL_32
 		do
 			if attached output_file as l_stream then
 				create l_counts.make_filled (0, 1, max_tables + extra_indexes)
@@ -1351,7 +1351,7 @@ feature -- Write operations
 				l_counts [t_blob + 1] := blob.size
 
 				across 0 |..| (max_tables - 1) as i loop
-					l_counts [i + 1] := tables [i].size.to_natural_64
+					l_counts [i + 1] := tables [i].size.to_natural_32
 				end
 
 				across methods as m loop
@@ -1391,8 +1391,8 @@ feature -- Write operations
 
 					-- TODO double check
 					-- C++ code uses put(&streamHeaders_[i][0], 4);
-				put_natural_32 (stream_headers [i, 1].to_natural_32)
-				put_natural_32 (stream_headers [i, 2].to_natural_32)
+				put_natural_32 (stream_headers [i, 1])
+				put_natural_32 (stream_headers [i, 2])
 
 					-- Adding a null character a the end of the string
 					-- C++ code uses put(streamNames_[i], strlen(streamNames_[i]) + 1);
@@ -1404,11 +1404,11 @@ feature -- Write operations
 
 	write_tables: BOOLEAN
 		local
-			l_counts: ARRAY [NATURAL_64]
+			l_counts: ARRAY [NATURAL_32]
 			l_buffer: ARRAY [NATURAL_8]
-			l_sz: NATURAL_64
+			l_sz: NATURAL_32
 			i,n: INTEGER
-			j,m: NATURAL_64
+			j,m: NATURAL_32
 			tb: DNL_TABLE
 		do
 			if
@@ -1428,10 +1428,10 @@ feature -- Write operations
 				until
 					i > n
 				loop
-					l_sz := tables [i].size.to_natural_64
+					l_sz := tables [i].size.to_natural_32
 					l_counts [i + 1] := l_sz
 					if l_sz /= 0 then
-						put_natural_32 (l_sz.to_natural_32)
+						put_natural_32 (l_sz)
 					end
 					i := i + 1
 				end
@@ -1445,7 +1445,7 @@ feature -- Write operations
 					tb := tables [i]
 					from
 						j := 0
-						m := tb.size.to_natural_64
+						m := tb.size.to_natural_32
 					until
 						j > m
 					loop
@@ -1561,7 +1561,7 @@ feature -- Write operations
 			l_resource_data: PE_RESOURCE_DATA_ENTRY
 			l_n1: NATURAL_16
 			l_version_info: PE_FIXED_VERSION_INFO
-			l_n: NATURAL_64
+			l_n: NATURAL_32
 			l_path: PATH
 			l_index: INTEGER
 			l_file_name: STRING_32
@@ -1656,7 +1656,7 @@ feature -- Write operations
 				put_string_32 ({STRING_32} "Translation")
 				align (4)
 				l_n := language |<< 16
-				put_natural_32 (l_n.to_natural_32)
+				put_natural_32 (l_n)
 
 					-- C++ code leave the \ in the filename, seems to be wrong.
 					-- Check PEWriter::WriteVersionInfo
@@ -1664,16 +1664,16 @@ feature -- Write operations
 				l_index := l_path.components.count
 				l_file_name := l_path.components [l_index].name
 
-				l_n := l_file_name.count.to_natural_64
+				l_n := l_file_name.count.to_natural_32
 				l_n := l_n + 368
 
 				create l_versions.make (3)
 				l_versions.force (file_version [1].out + "." + file_version [2].out + "." + file_version [3].out + "." + file_version [4].out)
-				l_n := l_n + l_versions [1].count.to_natural_64
+				l_n := l_n + l_versions [1].count.to_natural_32
 				l_versions.force (file_version [1].out + "." + file_version [2].out + "." + file_version [3].out + "." + file_version [4].out)
-				l_n := l_n + l_versions [2].count.to_natural_64
+				l_n := l_n + l_versions [2].count.to_natural_32
 				l_versions.force (file_version [1].out + "." + file_version [2].out + "." + file_version [3].out + "." + file_version [4].out)
-				l_n := l_n + l_versions [3].count.to_natural_64
+				l_n := l_n + l_versions [3].count.to_natural_32
 
 					-- outer length
 				l_n1 := (l_n + 0x24).to_natural_16
@@ -1854,7 +1854,7 @@ feature {NONE} -- Output Helpers
 			end
 		end
 
-	put_natural_64 (a_value: NATURAL_64)
+	put_natural_64 (a_value: NATURAL_32)
 		do
 			if attached output_file as l_stream then
 				l_stream.put_natural_64 (a_value)
@@ -1956,16 +1956,16 @@ feature {NONE} -- Output Helpers
 			end
 		end
 
-	align (a_align: NATURAL_64)
+	align (a_align: NATURAL_32)
 		local
-			l_current_offset: NATURAL_64
+			l_current_offset: NATURAL_32
 			l_array: ARRAY [NATURAL_8]
-			l_bytes_needed: NATURAL_64
+			l_bytes_needed: NATURAL_32
 
 		do
 			if attached output_file as l_stream then
 					-- Current offset.
-				l_current_offset := l_stream.count.to_natural_64
+				l_current_offset := l_stream.count.to_natural_32
 
 					-- Check if the current offset is align with the desired value.
 				if (l_current_offset \\ a_align) /= 0 then

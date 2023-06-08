@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_method: PE_METHOD; a_iflags: INTEGER_16; a_mflags: INTEGER_16; a_name_index: NATURAL_64; a_signature_index: NATURAL_64; a_param_index: NATURAL_64)
+	make_with_data (a_method: PE_METHOD; a_iflags: INTEGER_16; a_mflags: INTEGER_16; a_name_index: NATURAL_32; a_signature_index: NATURAL_32; a_param_index: NATURAL_32)
 		do
 			rva := 0
 			method := a_method
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			method_set: method = a_method
 		end
 
-	make (a_iflags: INTEGER_16; a_mflags: INTEGER_16; a_name_index: NATURAL_64; a_signature_index: NATURAL_64; a_param_index: NATURAL_64)
+	make (a_iflags: INTEGER_16; a_mflags: INTEGER_16; a_name_index: NATURAL_32; a_signature_index: NATURAL_32; a_param_index: NATURAL_32)
 		do
 			rva := 0
 			impl_flags := a_iflags
@@ -66,7 +66,7 @@ feature -- Access
 	method: detachable PE_METHOD
 			-- write for rva.
 
-	rva: INTEGER
+	rva: NATURAL_32
 			-- rva
 
 	impl_flags: INTEGER_16
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_param_list_index (idx: NATURAL_64)
+	set_param_list_index (idx: NATURAL_32)
 		require
 			not is_param_list_index_set
 		do
@@ -182,15 +182,15 @@ feature -- Operations
 			Result := {PE_TABLES}.tmethoddef.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Write the method.rva to the destination buffer `a_dest`.
 			if attached method as l_method then
-				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, l_method.rva.to_natural_32, 0)
+				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, l_method.rva, 0)
 			else
-				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, rva.to_natural_32, 0)
+				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, rva, 0)
 			end
 
 				-- Initialize the number of bytes written
@@ -215,12 +215,12 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Set the rva (from a_src)  to rva.
-			rva := {BYTE_ARRAY_HELPER}.byte_array_to_integer_32 (a_src, 0)
+			rva := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)
 
 				-- Initialize the number of bytes readed.
 			l_bytes := 4

@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flags: NATURAL_32; a_type_def_id: NATURAL_64; a_type_name: NATURAL_64; a_type_name_space: NATURAL_64; a_implementation: PE_IMPLEMENTATION)
+	make_with_data (a_flags: NATURAL_32; a_type_def_id: NATURAL_32; a_type_name: NATURAL_32; a_type_name_space: NATURAL_32; a_implementation: PE_IMPLEMENTATION)
 		do
 			flags := a_flags
 			create type_def_id.make_with_index (a_type_def_id)
@@ -73,9 +73,9 @@ feature -- Operations
 			Result := {PE_TABLES}.tExportedtype.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, flags, 0)
 
@@ -91,9 +91,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 			flags := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)
 

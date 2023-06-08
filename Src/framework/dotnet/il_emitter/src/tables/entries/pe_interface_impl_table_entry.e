@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Intialization	
 
-	make_with_data (a_cls: NATURAL_64; a_interface: PE_TYPEDEF_OR_REF)
+	make_with_data (a_cls: NATURAL_32; a_interface: PE_TYPEDEF_OR_REF)
 		do
 			create class_.make_with_index (a_cls)
 			interface := a_interface
@@ -54,9 +54,9 @@ feature -- Operations
 			Result := {PE_TABLES}.tinterfaceimpl.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Write the class_ to the buffer and update the number
 				-- of bytes.
@@ -70,9 +70,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Get the class_ from the buffer and update the number
 				-- of bytes.

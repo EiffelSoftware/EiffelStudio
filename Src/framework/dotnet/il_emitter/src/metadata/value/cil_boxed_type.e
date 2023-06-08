@@ -34,8 +34,8 @@ feature -- Output
 
 	render (a_stream: FILE_STREAM; a_bytes: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_8
 		local
-			l_system: NATURAL_64
-			l_name: NATURAL_64
+			l_system: NATURAL_32
+			l_name: NATURAL_32
 			l_result: ANY
 			l_res: BOOLEAN
 		do

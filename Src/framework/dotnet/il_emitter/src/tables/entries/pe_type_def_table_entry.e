@@ -23,8 +23,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flags: INTEGER; a_type_name_index: NATURAL_64; a_type_name_space_index: NATURAL_64;
-			a_extends: detachable PE_TYPEDEF_OR_REF; a_field_index: NATURAL_64; a_method_index: NATURAL_64)
+	make_with_data (a_flags: INTEGER; a_type_name_index: NATURAL_32; a_type_name_space_index: NATURAL_32;
+			a_extends: detachable PE_TYPEDEF_OR_REF; a_field_index: NATURAL_32; a_method_index: NATURAL_32)
 		do
 			flags := a_flags
 			create type_name_index.make_with_index (a_type_name_index)
@@ -99,7 +99,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_field_list_index (idx: NATURAL_64)
+	set_field_list_index (idx: NATURAL_32)
 		require
 			not is_field_list_index_set
 		do
@@ -108,7 +108,7 @@ feature -- Element change
 			is_field_list_index_set
 		end
 
-	set_method_list_index (idx: NATURAL_64)
+	set_method_list_index (idx: NATURAL_32)
 		require
 			not is_method_list_index_set
 		do
@@ -124,10 +124,10 @@ feature -- Operations
 			Result := {PE_TABLES}.ttypedef.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 			-- <Precursor>
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Write the flags to the destination buffer `a_dest`.
 			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_integer_32 (a_dest, flags, 0)
@@ -154,9 +154,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Set the flags (from a_src)  to the flags.
 			flags := {BYTE_ARRAY_HELPER}.byte_array_to_integer_32 (a_src, 0)

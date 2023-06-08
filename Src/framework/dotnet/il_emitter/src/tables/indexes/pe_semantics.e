@@ -32,7 +32,7 @@ feature -- Enum: tags
 			-- HasSemantic
 			-- 1 bit to encode.
 			-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=301
-			
+
 	Event: INTEGER = 0
 	Property: INTEGER = 1
 
@@ -43,10 +43,10 @@ feature -- Operations
 			Result := tagbits
 		end
 
-	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
+	has_index_overflow (a_sizes: ARRAY [NATURAL_32]): BOOLEAN
 		do
-			Result := large(a_sizes[{PE_TABLES}.tEvent.to_integer_32 + 1].to_natural_32)
-				or else large(a_sizes[{PE_TABLES}.tProperty.to_integer_32 + 1].to_natural_32)
+			Result := large(a_sizes[{PE_TABLES}.tEvent.to_integer_32 + 1])
+				or else large(a_sizes[{PE_TABLES}.tProperty.to_integer_32 + 1])
 		end
 
 end

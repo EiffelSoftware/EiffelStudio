@@ -25,7 +25,7 @@ feature -- Access
 	name: STRING_32
 		-- the name.
 
-	size: NATURAL_64
+	size: NATURAL_32
 
 	data: detachable ARRAY [NATURAL_8]
 

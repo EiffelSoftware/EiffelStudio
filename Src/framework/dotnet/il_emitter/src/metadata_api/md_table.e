@@ -34,7 +34,7 @@ feature {NONE} -- Access
 
 feature -- Access
 
-	item alias "[]" (i: NATURAL_64): PE_TABLE_ENTRY_BASE
+	item alias "[]" (i: NATURAL_32): PE_TABLE_ENTRY_BASE
 		do
 			Result := items [i.to_integer_32]
 		end
@@ -53,7 +53,7 @@ feature -- Element Change
 			items.force (a_entry)
 		end
 
-	replace (a_entry: PE_TABLE_ENTRY_BASE; i: NATURAL_64)
+	replace (a_entry: PE_TABLE_ENTRY_BASE; i: NATURAL_32)
 			-- Put `a_entry' at `i'-th position.
 		do
 			items.put_i_th (a_entry, i.to_integer_32)
@@ -66,10 +66,10 @@ feature -- Status Report
 			Result := "["+ table_id.out +"] size=" + size.out
 		end
 
-	size: NATURAL_64
+	size: NATURAL_32
 			-- Table size
 		do
-			Result := items.count.to_natural_64
+			Result := items.count.to_natural_32
 		end
 
 	is_empty: BOOLEAN

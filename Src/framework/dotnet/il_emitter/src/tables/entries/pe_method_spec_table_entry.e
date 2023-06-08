@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make_with_data (a_method: PE_METHOD_DEF_OR_REF; a_instantiation: NATURAL_64)
+	make_with_data (a_method: PE_METHOD_DEF_OR_REF; a_instantiation: NATURAL_32)
 		do
 			method := a_method
 			create instantiation.make_with_index (a_instantiation)
@@ -56,9 +56,9 @@ feature -- Operations
 			Result := {PE_TABLES}.tMethodSpec.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 			l_bytes := method.render (a_sizes, a_dest, 0)
 			l_bytes := l_bytes + instantiation.render (a_sizes, a_dest, l_bytes.to_integer_32)
@@ -66,9 +66,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 			l_bytes := method.get (a_sizes, a_src, 0)
 			l_bytes := l_bytes + instantiation.get (a_sizes, a_src, l_bytes.to_integer_32)

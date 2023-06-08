@@ -48,7 +48,7 @@ feature -- Access
 			end
 		end
 
-	has (a_attribute: PE_CUSTOM_ATTRIBUTE; a_name: STRING_32; a_data: detachable ARRAY [NATURAL_8]; a_size: NATURAL_64): BOOLEAN
+	has (a_attribute: PE_CUSTOM_ATTRIBUTE; a_name: STRING_32; a_data: detachable ARRAY [NATURAL_8]; a_size: NATURAL_32): BOOLEAN
 		do
 			fixme ("To be checked")
 			attributes.compare_objects

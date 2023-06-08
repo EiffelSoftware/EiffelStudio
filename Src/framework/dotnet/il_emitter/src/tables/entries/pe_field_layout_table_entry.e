@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_offset: NATURAL_64; a_parent: NATURAL_64)
+	make_with_data (a_offset: NATURAL_32; a_parent: NATURAL_32)
 		do
 			offset := a_offset
 			create parent.make_with_index (a_parent)
@@ -40,7 +40,7 @@ feature -- Status
 
 feature -- Access
 
-	offset: NATURAL_64
+	offset: NATURAL_32
 			-- a 4-byte constant.
 			-- TODO: check what we need to do to use NATURAL_32
 
@@ -54,12 +54,12 @@ feature -- Operations
 			Result := {PE_TABLES}.tFieldLayout.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Write offset to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, offset.to_natural_32, 0)
+			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, offset, 0)
 
 				-- Intialize the number of bytes written
 			l_bytes := 4
@@ -71,9 +71,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Set the offset (from a_src)  to action
 			offset := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)

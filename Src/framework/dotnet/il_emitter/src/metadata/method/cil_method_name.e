@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Output
 
-	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_byte: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_64
+	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_byte: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_32
 		local
 			l_res: BOOLEAN
 		do
@@ -49,17 +49,17 @@ feature -- Output
 				if signature.pe_index_type = 0 then
 					l_res := signature.pe_dump (a_stream, True)
 				end
-				{BYTE_SPECIAL_HELPER}.put_special_natural_32_with_natural_64 (a_byte, signature.pe_index_type | ({PE_TABLES}.tstandalonesig |<< 24).to_natural_64, a_offset)
+				{BYTE_SPECIAL_HELPER}.put_special_natural_32_with_natural_64 (a_byte, signature.pe_index_type | ({PE_TABLES}.tstandalonesig |<< 24), a_offset)
 			else
 				if signature.pe_index = 0 and then signature.pe_index_call_site = 0 then
 					l_res := signature.pe_dump (a_stream, False)
 				end
 				if signature.pe_index /= 0 then
-					{BYTE_SPECIAL_HELPER}.put_special_natural_32_with_natural_64 (a_byte, signature.pe_index | ({PE_TABLES}.tmethoddef |<< 24).to_natural_64, a_offset)
+					{BYTE_SPECIAL_HELPER}.put_special_natural_32_with_natural_64 (a_byte, signature.pe_index | ({PE_TABLES}.tmethoddef |<< 24), a_offset)
 				elseif not signature.generic.is_empty then
-					{BYTE_SPECIAL_HELPER}.put_special_natural_32_with_natural_64 (a_byte, signature.pe_index_call_site | ({PE_TABLES}.tmethodspec |<< 24).to_natural_64, a_offset)
+					{BYTE_SPECIAL_HELPER}.put_special_natural_32_with_natural_64 (a_byte, signature.pe_index_call_site | ({PE_TABLES}.tmethodspec |<< 24), a_offset)
 				else
-					{BYTE_SPECIAL_HELPER}.put_special_natural_32_with_natural_64 (a_byte, signature.pe_index_call_site | ({PE_TABLES}.tmemberref |<< 24).to_natural_64, a_offset)
+					{BYTE_SPECIAL_HELPER}.put_special_natural_32_with_natural_64 (a_byte, signature.pe_index_call_site | ({PE_TABLES}.tmemberref |<< 24), a_offset)
 				end
 			end
 			Result := 4

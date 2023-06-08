@@ -217,7 +217,7 @@ feature -- Output
 		local
 			l_sz: INTEGER
 			l_str: STRING_32
-			l_us_index: NATURAL_64
+			l_us_index: NATURAL_32
 		do
 			if attached {PE_WRITER} a_stream.pe_writer as l_writer then
 				l_sz := 0
@@ -263,7 +263,7 @@ feature -- Output
 
 						--| add the null character
 					l_us_index := l_writer.hash_us (l_str, l_str.count)
-					{BYTE_SPECIAL_HELPER}.put_special_integer_32_with_natural_64 (a_result, l_us_index | ({NATURAL_64} 0x70 |<< 24), a_offset)
+					{BYTE_SPECIAL_HELPER}.put_special_integer_32_with_natural_64 (a_result, l_us_index | ({NATURAL_32} 0x70 |<< 24), a_offset)
 					l_sz := l_sz + 4
 				end
 				Result := l_sz.to_natural_32

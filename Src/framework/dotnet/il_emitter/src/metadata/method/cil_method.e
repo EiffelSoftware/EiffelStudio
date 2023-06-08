@@ -82,7 +82,7 @@ feature -- Access
 			Result := var_list [a_index]
 		end
 
-	token: NATURAL_64
+	token: NATURAL_32
 			-- redundant from `rendering.method_def` because PE_WRITER deletes all PE_METHODS
 
 feature -- Status Report
@@ -236,7 +236,7 @@ feature -- Write Body
 			add_instruction (create {CIL_INSTRUCTION}.make (a_opcode, l_operand))
 		end
 
-	put_opcode_natural_64(a_opcode: CIL_INSTRUCTION_OPCODES; a_natural: NATURAL_64)
+	put_opcode_natural_64(a_opcode: CIL_INSTRUCTION_OPCODES; a_natural: NATURAL_32)
 			-- Insert the `a_opcode` with a natural `a_natural' in the current Method.
 		local
 			l_operand: CIL_OPERAND
@@ -624,7 +624,7 @@ feature -- Output
 
 	compile (a_stream: FILE_STREAM)
 		local
-			l_sz: CELL [NATURAL_64]
+			l_sz: CELL [NATURAL_32]
 		do
 			if attached {PE_METHOD} rendering as l_rendering then
 				create l_sz.put (l_rendering.code_size)
@@ -639,8 +639,8 @@ feature {NONE} -- Implementation
 
 	pe_dump_imp (a_stream: FILE_STREAM): BOOLEAN
 		local
-			l_sz: CELL [NATURAL_64]
-			l_method_signature: NATURAL_64
+			l_sz: CELL [NATURAL_32]
+			l_method_signature: NATURAL_32
 			l_sig: ARRAY [NATURAL_8]
 			l_table: PE_TABLE_ENTRY_BASE
 			l_res: NATURAL_8
@@ -650,25 +650,25 @@ feature {NONE} -- Implementation
 			l_rendering: like rendering
 			l_impl_flags: INTEGER
 			l_mf_flags: INTEGER
-			l_name_index: NATURAL_64
-			l_import_name_index: NATURAL_64
+			l_name_index: NATURAL_32
+			l_import_name_index: NATURAL_32
 			l_param_index: NATURAL
 			i: INTEGER
-			l_last_param_index: NATURAL_64
+			l_last_param_index: NATURAL_32
 			l_flags: INTEGER
-			l_module_name: NATURAL_64
-			l_module_ref: NATURAL_64
+			l_module_name: NATURAL_32
+			l_module_ref: NATURAL_32
 			l_method_index: PE_MEMBER_FORWARDED
-			l_attribute_type: NATURAL_64
-			l_attribute_data: NATURAL_64
-			l_ctor_index: NATURAL_64
+			l_attribute_type: NATURAL_32
+			l_attribute_data: NATURAL_32
+			l_ctor_index: NATURAL_32
 			l_data: ARRAY [NATURAL_8]
-			l_data_sig: NATURAL_64
+			l_data_sig: NATURAL_32
 			l_attribute: PE_CUSTOM_ATTRIBUTE
 			l_type: PE_CUSTOM_ATTRIBUTE_TYPE
-			l_method_def: NATURAL_64
+			l_method_def: NATURAL_32
 			l_local_count: INTEGER
-			l_signature: NATURAL_64
+			l_signature: NATURAL_32
 		do
 			create l_sz.put (0)
 			if attached {CIL_TYPE} prototype.return_type as l_return_type then
@@ -732,7 +732,7 @@ feature {NONE} -- Implementation
 			l_method_def := if attached {PE_WRITER} a_stream.pe_writer as l_writer then l_writer.next_table_index ({PE_TABLES}.tmethoddef) else {NATURAL_32} 0 end
 			l_local_count := if attached l_last then (l_last.offset + l_last.instruction_size) else 0 end
 			if l_method_signature /= 0 then
-				l_signature := l_method_signature | ({PE_TABLES}.tstandalonesig |<< 24).to_natural_64
+				l_signature := l_method_signature | ({PE_TABLES}.tstandalonesig |<< 24)
 			else
 				l_signature := 0
 			end
@@ -743,7 +743,7 @@ feature {NONE} -- Implementation
 				l_local_count,
 				l_signature)
 
-			token := l_rendering.method_def | ({PE_TABLES}.tmethoddef |<< 24).to_natural_64
+			token := l_rendering.method_def | ({PE_TABLES}.tmethoddef |<< 24)
 
 			if invoke_mode = {CIL_INVOKE_MODE}.cil then
 				if l_is_runtime and then not instructions.is_empty or else not l_is_runtime and then instructions.is_empty then

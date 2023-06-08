@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_pack: NATURAL_16; a_size: NATURAL; a_parent: NATURAL_64)
+	make_with_data (a_pack: NATURAL_16; a_size: NATURAL; a_parent: NATURAL_32)
 		do
 			pack := a_pack
 			size := a_size
@@ -65,9 +65,9 @@ feature -- Operations
 			Result := {PE_TABLES}.tClassLayout.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Write pack to the destination buffer `a_dest`.
 			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, pack, 0)
@@ -85,9 +85,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Set the pack (from a_src)  to pack
 			pack := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, 0)

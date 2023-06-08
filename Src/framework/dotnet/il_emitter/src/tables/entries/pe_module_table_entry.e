@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make_with_data (a_name_index: NATURAL_64; a_guid_index: NATURAL_64)
+	make_with_data (a_name_index: NATURAL_32; a_guid_index: NATURAL_32)
 		do
 			create name_index.make_with_index (a_name_index)
 			create guid_index.make_with_index (a_guid_index)
@@ -56,9 +56,9 @@ feature -- Operations
 			Result := {PE_TABLES}.tmodule.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes_written: NATURAL_64
+			l_bytes_written: NATURAL_32
 		do
 				-- Initialize the first two bytes of dest to zero
 			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, 0, 0)
@@ -96,9 +96,9 @@ feature -- Operations
 			Result := l_bytes_written
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Initialize the number of bytes read to 2.
 				-- TODO: why ?

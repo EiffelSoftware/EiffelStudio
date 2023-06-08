@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			index_zet: index = 0
 		end
 
-	make_with_index (a_index: NATURAL_64)
+	make_with_index (a_index: NATURAL_32)
 		do
 			index := a_index
 		ensure
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			tag_zero: tag = 0
 		end
 
-	make_with_tag_and_index (a_tag: INTEGER; a_index: NATURAL_64)
+	make_with_tag_and_index (a_tag: INTEGER; a_index: NATURAL_32)
 		do
 			make_with_index (a_index)
 			tag := a_tag
@@ -60,7 +60,7 @@ feature -- Access
 	tag: INTEGER
 			-- Indicate which table the index belongs to.
 
-	index: NATURAL_64
+	index: NATURAL_32
 			-- The index used in tables and blobs.
 
 feature -- Status report
@@ -80,7 +80,7 @@ feature -- Comparison
 
 feature -- Operations
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]; a_pos: INTEGER): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]; a_pos: INTEGER): NATURAL_32
 			-- Number of bytes written to the destination `a_dest`
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
@@ -88,7 +88,7 @@ feature -- Operations
 			v: NATURAL_32
 		do
 				--  Calculate the value to be written to the destintation `a_dest`.
-			v := ((index |<< get_index_shift) + tag.to_natural_64).to_natural_32
+			v := ((index |<< get_index_shift) + tag.to_natural_32)
 
 			if has_index_overflow (a_sizes) then
 					-- write the value as NATURAL_32 to the destination `a_dest`
@@ -104,12 +104,12 @@ feature -- Operations
 			end
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]; a_pos: INTEGER): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]; a_pos: INTEGER): NATURAL_32
 			-- Number of bytes read from the source `a_src`	at position `a_pos`
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		local
-			v: NATURAL_64
+			v: NATURAL_32
 		do
 				-- Determine the size of the value to read from the source `a_src`
 			if has_index_overflow (a_sizes) then
@@ -120,12 +120,12 @@ feature -- Operations
 			else
 					-- Use a 16-bit Natural to store the value
 					-- and set the return value to 2.
-				v := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, a_pos).to_natural_64
+				v := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, a_pos).to_natural_32
 				Result := 2
 			end
 				-- Compute the index and tag values
 			index := v |>> get_index_shift
-			tag := (v & (({INTEGER} 1 |<< get_index_shift - 1)).to_natural_64).to_integer_32
+			tag := (v & (({INTEGER} 1 |<< get_index_shift - 1)).to_natural_32).to_integer_32
 
 		end
 
@@ -138,7 +138,7 @@ feature -- Operations
 				--| In Eiffel we could declared it as deferred.
 		end
 
-	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
+	has_index_overflow (a_sizes: ARRAY [NATURAL_32]): BOOLEAN
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		do

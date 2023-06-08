@@ -34,9 +34,9 @@ feature -- Operations
 			Result := {PE_TABLES}.tEventMap.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Write parent and event_list to the buffer and update the number of bytes.
 			l_bytes := parent.render (a_sizes, a_dest, 0)
@@ -45,9 +45,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Read parent and event_list from the buffer and update the number of bytes.
 			l_bytes := parent.render (a_sizes, a_src, 0)

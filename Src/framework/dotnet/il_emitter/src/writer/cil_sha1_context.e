@@ -194,7 +194,7 @@ feature {NONE} -- implementation
 
 			across 17 |..| 80 as t loop
 					-- The ⊕ operator is the bitwise XOR operator
-				W [t] := sha1_circular_shift (1, W [t - 3] ⊕ W [t - 8] ⊕ W [t - 14] ⊕ W [t - 16]).to_natural_32
+				W [t] := sha1_circular_shift (1, W [t - 3] ⊕ W [t - 8] ⊕ W [t - 14] ⊕ W [t - 16])
 			end
 
 			A := message_digest [1]

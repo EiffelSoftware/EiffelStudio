@@ -35,18 +35,18 @@ feature -- Operations
 			Result := {PE_TABLES}.tGenericParam.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 			l_bytes := owner.render (a_sizes, a_dest, 0)
 			l_bytes := l_bytes + constraint.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 			l_bytes := owner.get (a_sizes, a_src, 0)
 			l_bytes := l_bytes + constraint.get (a_sizes, a_src, l_bytes.to_integer_32)

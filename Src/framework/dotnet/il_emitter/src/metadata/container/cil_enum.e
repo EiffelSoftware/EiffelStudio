@@ -76,22 +76,22 @@ feature -- Output
 	pe_dump (a_stream: FILE_STREAM): BOOLEAN
 		local
 			l_pe_flags: INTEGER
-			l_typename_index: NATURAL_64
-			l_namespace_index: NATURAL_64
-			l_field_index: NATURAL_64
-			l_method_index: NATURAL_64
-			l_extends: NATURAL_64
+			l_typename_index: NATURAL_32
+			l_namespace_index: NATURAL_32
+			l_field_index: NATURAL_32
+			l_method_index: NATURAL_32
+			l_extends: NATURAL_32
 			l_extends_class: PE_TYPEDEF_OR_REF
 			l_table: PE_TABLE_ENTRY_BASE
-			l_enclosing: NATURAL_64
-			l_dis: NATURAL_64
-			l_sz: CELL [NATURAL_64]
+			l_enclosing: NATURAL_32
+			l_dis: NATURAL_32
+			l_sz: CELL [NATURAL_32]
 			l_tsize: CIL_BASIC_TYPE
 			l_type: CIL_TYPE
 			l_field: CIL_FIELD
 			l_sig: ARRAY [NATURAL_8]
-			l_sig_index: NATURAL_64
-			l_name_index: NATURAL_64
+			l_sig_index: NATURAL_32
+			l_name_index: NATURAL_32
 			l_resolution: PE_RESOLUTION_SCOPE
 		do
 			if not in_assembly_ref then

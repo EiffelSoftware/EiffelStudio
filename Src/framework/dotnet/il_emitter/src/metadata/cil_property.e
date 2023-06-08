@@ -287,14 +287,14 @@ feature -- Output
 
 	pe_dump (a_stream: FILE_STREAM): BOOLEAN
 		local
-			l_property_index: NATURAL_64
-			l_name_index: NATURAL_64
+			l_property_index: NATURAL_32
+			l_name_index: NATURAL_32
 			l_sig: ARRAY [NATURAL_8]
-			l_sz:  CELL [NATURAL_64]
-			l_property_signature: NATURAL_64
+			l_sz:  CELL [NATURAL_32]
+			l_property_signature: NATURAL_32
 			l_table: PE_TABLE_ENTRY_BASE
 			l_semantics: PE_SEMANTICS
-			l_dis: NATURAL_64
+			l_dis: NATURAL_32
 		do
 			if attached {PE_WRITER} a_stream.pe_writer as l_writer then
 					-- TODO chec if the index it's ok or we need to add 1.
@@ -313,7 +313,7 @@ feature -- Output
 			    -- the design is that the related constructors have side effects and the whole point of the new is to invoke those
 			    -- however, this is an awkard design that is hard to maintain and should probably be reworked.
 
-			    create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data ({PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, if attached getter as l_getter  then l_getter.prototype.pe_index else {NATURAL_64} 0 end, l_semantics)
+			    create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data ({PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, if attached getter as l_getter  then l_getter.prototype.pe_index else {NATURAL_32} 0 end, l_semantics)
 				l_dis := l_writer.add_table_entry (l_table)
 				if attached setter as l_setter then
 					create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data ({PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_setter.prototype.pe_index, l_semantics)

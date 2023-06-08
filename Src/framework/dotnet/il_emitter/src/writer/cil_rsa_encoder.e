@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	modulus_bits: NATURAL_64
+	modulus_bits: NATURAL_32
 
 	public_exponent: INTEGER
 
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status Report
 
-	load_strong_name_keys (a_file: STRING_32): NATURAL_64
+	load_strong_name_keys (a_file: STRING_32): NATURAL_32
 		local
 			l_rv: INTEGER
 			l_file: RAW_FILE
@@ -54,7 +54,7 @@ feature -- Status Report
 				l_buf := (create {BYTE_ARRAY_CONVERTER}.make_from_string (l_file.last_string)).to_natural_8_array
 				if l_buf.count = 0x14 and then
 					l_test.is_equal (l_buf.subarray (1, l_test.count)) then
-					modulus_bits := {BYTE_ARRAY_HELPER}.byte_array_to_natural_64 (l_buf, l_test.count + 1)
+					modulus_bits := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (l_buf, l_test.count + 1)
 					public_exponent := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (l_buf, l_test.count + 5).to_integer_32 -- the original code uses + 4.
 					l_file.read_stream ((modulus_bits // 8).to_integer_32)
 					if l_file.last_string.count = (modulus_bits // 8).to_integer_32 then
@@ -79,13 +79,13 @@ feature -- Status Report
 
 				end
 			end
-			Result := l_rv.to_natural_64
+			Result := l_rv.to_natural_32
 			l_file.close
 		end
 
-	get_public_key_data (a_key: ARRAY [NATURAL_8]; a_len: CELL [NATURAL_64])
+	get_public_key_data (a_key: ARRAY [NATURAL_8]; a_len: CELL [NATURAL_32])
 		local
-			l_size: NATURAL_64
+			l_size: NATURAL_32
 		do
 			debug ("cil_fixme")
 				fixme ("Check how to implement c_get_public_key_data in pure Eiffel")
@@ -94,7 +94,7 @@ feature -- Status Report
 			a_len.put (l_size)
 		end
 
-	get_strong_name_signature (a_sig: ARRAY [NATURAL_8]; a_sig_len: CELL [NATURAL_64]; a_hash: ARRAY [NATURAL_8]; a_hash_size: NATURAL_64)
+	get_strong_name_signature (a_sig: ARRAY [NATURAL_8]; a_sig_len: CELL [NATURAL_32]; a_hash: ARRAY [NATURAL_8]; a_hash_size: NATURAL_32)
 			-- Defined as void RSAEncoder::GetStrongNameSignature(Byte* sig, size_t* sigSize, const Byte* hash, size_t hashSize)
 		local
 			x: ARRAY [NATURAL_8]
@@ -104,13 +104,13 @@ feature -- Status Report
 			create x.make_filled (0, 1, (modulus_bits // 8).to_integer_8)
 			create l_formatter.make (a_hash)
 			l_formatter.calculate (x)
-			l_dis := c_mp_mod_exp (a_sig.area.base_address, x.area.base_address, private_exponent.area.base_address, modulus.area.base_address, modulus_bits // 8 // {PLATFORM}.natural_32_bytes.to_natural_64  )
+			l_dis := c_mp_mod_exp (a_sig.area.base_address, x.area.base_address, private_exponent.area.base_address, modulus.area.base_address, modulus_bits // 8 // {PLATFORM}.natural_32_bytes.to_natural_32  )
 			a_sig_len.put (modulus_bits // 8)
 		end
 
 feature -- C/C++ wrapper
 
-	c_get_public_key_data (a_key: POINTER; a_key_size: TYPED_POINTER [NATURAL_64]; a_key_pair: POINTER; a_modulus_bits: NATURAL_64)
+	c_get_public_key_data (a_key: POINTER; a_key_size: TYPED_POINTER [NATURAL_32]; a_key_pair: POINTER; a_modulus_bits: NATURAL_32)
 		external
 			"C inline "
 		alias
@@ -131,7 +131,7 @@ feature -- C/C++ wrapper
 		end
 
 
-	c_mp_mod_exp (a_sig: POINTER; a_x: POINTER; a_private_exponent: POINTER; a_modulus: POINTER; a_size: NATURAL_64): INTEGER
+	c_mp_mod_exp (a_sig: POINTER; a_x: POINTER; a_private_exponent: POINTER; a_modulus: POINTER; a_size: NATURAL_32): INTEGER
 		external
 			"C inline use bigdigits.h"
 			alias

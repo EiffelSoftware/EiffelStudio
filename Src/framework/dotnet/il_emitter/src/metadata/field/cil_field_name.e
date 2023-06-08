@@ -55,7 +55,7 @@ feature -- Output
 			Result := True
 		end
 
-	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_code: INTEGER; a_result: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_64
+	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_code: INTEGER; a_result: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_32
 		local
 			l_res: BOOLEAN
 		do

@@ -43,8 +43,8 @@ feature -- Access
 			assembly_info_not_void: assembly_info /= Void
 		local
 			l_assembly_ref_entry: PE_ASSEMBLY_REF_TABLE_ENTRY
-			l_name_index: NATURAL_64
-			l_public_key_or_token_index: NATURAL_64
+			l_name_index: NATURAL_32
+			l_public_key_or_token_index: NATURAL_32
 			l_major_version: NATURAL_16
 			l_minor_version: NATURAL_16
 			l_build_number: NATURAL_16
@@ -57,7 +57,7 @@ feature -- Access
 
 				-- TODO double check the public key
 				-- Clean the way to compute the index.
-			l_public_key_or_token_index := hash_blob (public_key_token.item.read_array (0, public_key_token.item.count), public_key_token.item.count.to_natural_64)
+			l_public_key_or_token_index := hash_blob (public_key_token.item.read_array (0, public_key_token.item.count), public_key_token.item.count.to_natural_32)
 
 				-- Extract the version information from the assembly info.
 			l_major_version := assembly_info.major_version
@@ -91,8 +91,8 @@ feature -- Definition
 				{MD_ASSEMBLY_FLAGS}.public_key = {MD_ASSEMBLY_FLAGS}.public_key
 		local
 			l_assembly_def_entry: PE_ASSEMBLY_DEF_TABLE_ENTRY
-			l_public_key_or_token: NATURAL_64
-			l_name_index: NATURAL_64
+			l_public_key_or_token: NATURAL_32
+			l_name_index: NATURAL_32
 		do
 				-- Section II.22.2 Assembly : 0x20
 			l_name_index := pe_writer.hash_string (assembly_name.string_32)
@@ -102,7 +102,7 @@ feature -- Definition
 						(create {BYTE_ARRAY_CONVERTER}.
 							make_from_string (l_public_key.public_key_token_string.to_string_8)).  -- TODO doubel check if to_string_8 is ok.
 						to_natural_8_array,
-						l_public_key.public_key_token_string.count.to_natural_64)
+						l_public_key.public_key_token_string.count.to_natural_32)
 			else
 				l_public_key_or_token := 0
 			end
@@ -129,9 +129,9 @@ feature -- Definition
 			l_exported_type_entry: PE_EXPORTED_TYPE_TABLE_ENTRY
 			l_tuple_type: like extract_table_type_and_row
 			l_tuple_type_def: like extract_table_type_and_row
-			l_name_index: NATURAL_64
+			l_name_index: NATURAL_32
 			l_implementation: PE_IMPLEMENTATION
-			l_namespace_index: NATURAL_64
+			l_namespace_index: NATURAL_32
 			last_dot: INTEGER
 			l_type_name: STRING_32
 		do
@@ -179,8 +179,8 @@ feature -- Definition
 			hash_value_not_empty: hash_value.count > 0
 		local
 			l_file_entry: PE_FILE_TABLE_ENTRY
-			l_name_index: NATURAL_64
-			l_hash_value_index: NATURAL_64
+			l_name_index: NATURAL_32
+			l_hash_value_index: NATURAL_32
 			last_slash: INTEGER
 			file_name_len: INTEGER
 			l_flags: NATURAL_32
@@ -198,7 +198,7 @@ feature -- Definition
 
 				-- Compute the hash value index
 			if hash_value.count > 0 then
-				l_hash_value_index := hash_blob (hash_value.read_array (0, hash_value.count), hash_value.count.to_natural_64)
+				l_hash_value_index := hash_blob (hash_value.read_array (0, hash_value.count), hash_value.count.to_natural_32)
 			else
 				check has_non_empty_hash_value: False end
 				l_hash_value_index := hash_blob (create {ARRAY [NATURAL_8]}.make_empty, 0)
@@ -222,7 +222,7 @@ feature -- Definition
 			l_manifest_resource_entry: PE_MANIFEST_RESOURCE_TABLE_ENTRY
 			l_tuple_type: like extract_table_type_and_row
 			l_implementation: PE_IMPLEMENTATION
-			l_name_index: NATURAL_64
+			l_name_index: NATURAL_32
 		do
 				-- II.22.24 ManifestResource : 0x28
 				-- Extract table type and row from the implementation_token

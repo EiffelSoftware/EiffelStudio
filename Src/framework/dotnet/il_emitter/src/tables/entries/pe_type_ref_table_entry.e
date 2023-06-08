@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make_with_data (a_resolution: PE_RESOLUTION_SCOPE; a_type_name_index: NATURAL_64; a_type_name_space_index: NATURAL_64)
+	make_with_data (a_resolution: PE_RESOLUTION_SCOPE; a_type_name_index: NATURAL_32; a_type_name_space_index: NATURAL_32)
 		do
 			resolution := a_resolution
 			create type_name_index.make_with_index (a_type_name_index)
@@ -53,9 +53,9 @@ feature -- Operations
 			Result := {PE_TABLES}.ttyperef.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- render the resolution and store the number of writen bytes.
 			l_bytes := resolution.render (a_sizes, a_src, 0)
@@ -70,9 +70,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- read the number of bytes from resolution.
 			l_bytes := resolution.get (a_sizes, a_src, 0)

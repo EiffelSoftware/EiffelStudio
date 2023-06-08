@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_rva: NATURAL_64; a_field_index: NATURAL_64)
+	make_with_data (a_rva: NATURAL_32; a_field_index: NATURAL_32)
 		do
 			rva := a_rva
 			create field_index.make_with_index (a_field_index)
@@ -40,7 +40,7 @@ feature -- Status
 
 feature -- Access
 
-	rva: NATURAL_64
+	rva: NATURAL_32
 			-- (a 4-byte constant)
 
 	field_index: PE_FIELD_LIST
@@ -53,13 +53,13 @@ feature -- Operations
 			Result := {PE_TABLES}.tfieldrva.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- note that when reading rva_ holds the rva, when writing it holds an offset into the CIL section
 				-- Write the flags to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, (rva + {PE_WRITER}.cildata_rva.value).to_natural_32, 0)
+			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, (rva + {PE_WRITER}.cildata_rva.value), 0)
 
 				-- Initialize the number of bytes written
 			l_bytes := 4
@@ -72,9 +72,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- note that when reading rva_ holds the rva, when writing it holds an offset into the CIL section
 				-- Set the rva (from a_src)  to the rva.

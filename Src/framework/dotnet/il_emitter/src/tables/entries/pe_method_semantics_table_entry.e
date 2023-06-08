@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_semantics: NATURAL_16; a_method: NATURAL_64; a_association: PE_SEMANTICS)
+	make_with_data (a_semantics: NATURAL_16; a_method: NATURAL_32; a_association: PE_SEMANTICS)
 		do
 			semantics := a_semantics
 			create method.make_with_index (a_method)
@@ -70,9 +70,9 @@ feature -- Operations
 			Result := {PE_TABLES}.tMethodSemantics.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Write semantics to the destination buffer `a_dest`.
 			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, semantics, 0)
@@ -88,9 +88,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Set the semantiics (from a_src)  to semantics
 			semantics := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, 0)

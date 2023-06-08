@@ -94,11 +94,11 @@ feature -- Access
 	ref: BOOLEAN
 			-- is ref?
 
-	pe_index: NATURAL_64
+	pe_index: NATURAL_32
 
-	pe_index_call_site: NATURAL_64
+	pe_index_call_site: NATURAL_32
 
-	pe_index_type: NATURAL_64
+	pe_index_type: NATURAL_32
 
 	is_external: BOOLEAN
 			-- not locally defined.
@@ -254,15 +254,15 @@ feature -- Element change
 
 feature -- Status Report
 
-	param_count: NATURAL_64
+	param_count: NATURAL_32
 			-- Return parameter count.
 		do
-			Result := params.count.to_natural_64
+			Result := params.count.to_natural_32
 		end
 
-	vararg_param_count: NATURAL_64
+	vararg_param_count: NATURAL_32
 		do
-			Result := vararg_params.count.to_natural_64
+			Result := vararg_params.count.to_natural_32
 		end
 
 	instance: BOOLEAN
@@ -510,19 +510,19 @@ feature -- Output
 
 	pe_dump (a_stream: FILE_STREAM; as_type: BOOLEAN): BOOLEAN
 		local
-			l_sz: CELL [NATURAL_64]
+			l_sz: CELL [NATURAL_32]
 			l_sig: ARRAY [NATURAL_8]
-			l_method_signature: NATURAL_64
+			l_method_signature: NATURAL_32
 			l_method_ref: PE_METHOD_DEF_OR_REF
 			l_table: PE_TABLE_ENTRY_BASE
-			l_function: NATURAL_64
+			l_function: NATURAL_32
 			l_cls: CIL_CLASS
 			l_member_ref: PE_MEMBER_REF_PARENT
-			l_parent_index: NATURAL_64
+			l_parent_index: NATURAL_32
 			l_method_ref_type: INTEGER
 			l_buf: SPECIAL [NATURAL_8]
-			l_dis: NATURAL_64
-			l_parent: NATURAL_64
+			l_dis: NATURAL_32
+			l_parent: NATURAL_32
 			l_exit: BOOLEAN
 		do
 			if attached container as l_container and then l_container.in_assembly_ref then
@@ -562,7 +562,7 @@ feature -- Output
 							if attached {PE_WRITER} a_stream.pe_writer as l_writer  then
 								l_method_signature := l_writer.hash_blob (l_sig, l_sz.item)
 								create l_method_ref.make_with_tag_and_index ({PE_METHOD_DEF_OR_REF}.memberref,
-									if attached generic_parent as ll_generic_parent then ll_generic_parent.pe_index_call_site else {NATURAL_64}0 end)
+									if attached generic_parent as ll_generic_parent then ll_generic_parent.pe_index_call_site else {NATURAL_32}0 end)
 								create {PE_METHOD_SPEC_TABLE_ENTRY} l_table.make_with_data (l_method_ref, l_method_signature)
 								pe_index_call_site := l_writer.add_table_entry (l_table)
 							end
@@ -581,12 +581,12 @@ feature -- Output
 						if attached l_cls then
 							create l_member_ref.make_with_tag_and_index (
 								if not l_cls.generics.is_empty then {PE_MEMBER_REF_PARENT}.typespec else {PE_MEMBER_REF_PARENT}.typeref end,
-								if attached container as ll_container then ll_container.pe_index		else {NATURAL_64}0 end)
+								if attached container as ll_container then ll_container.pe_index		else {NATURAL_32}0 end)
 
 						else
 							create l_member_ref.make_with_tag_and_index (
 													0,
-													if attached container as ll_container then ll_container.pe_index else {NATURAL_64}0 end)
+													if attached container as ll_container then ll_container.pe_index else {NATURAL_32}0 end)
 
 						end
 						create {PE_MEMBER_REF_TABLE_ENTRY} l_table.make_with_data (l_member_ref, l_function, l_method_signature)
@@ -610,7 +610,7 @@ feature -- Output
 					create l_sz.put (0)
 					if attached {PE_WRITER} a_stream.pe_writer as l_write then
 						l_function := l_write.hash_string (name)
-						l_parent_index := if attached method_parent as l_method_parent then l_method_parent.pe_index_type else {NATURAL_64}0 end
+						l_parent_index := if attached method_parent as l_method_parent then l_method_parent.pe_index_type else {NATURAL_32}0 end
 						l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.method_ref_sig (Current, l_sz)
 						l_method_signature := l_write.hash_blob (l_sig, l_sz.item)
 						pe_index_call_site := l_write.add_table_entry (

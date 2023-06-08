@@ -57,38 +57,38 @@ feature {NONE}
 	initialize_entry_size
 		do
 			create entry_sizes.make (31)
-			entry_sizes.force (agent module_table_entry_size, {PE_TABLES}.tModule.to_integer_32)
-			entry_sizes.force (agent type_ref_entry_size, {PE_TABLES}.tTypeRef.to_integer_32)
-			entry_sizes.force (agent type_def_table_entry_size, {PE_TABLES}.tTypeDef.to_integer_32)
-			entry_sizes.force (agent field_table_entry_size, {PE_TABLES}.tField.to_integer_32)
-			entry_sizes.force (agent method_def_table_entry_size, {PE_TABLES}.tMethodDef.to_integer_32)
-			entry_sizes.force (agent param_table_entry_size, {PE_TABLES}.tParam.to_integer_32)
-			entry_sizes.force (agent interface_impl_table_entry_size, {PE_TABLES}.tInterfaceImpl.to_integer_32)
-			entry_sizes.force (agent member_ref_table_entry_size, {PE_TABLES}.tMemberRef.to_integer_32)
-			entry_sizes.force (agent constant_table_entry_size, {PE_TABLES}.tConstant.to_integer_32)
-			entry_sizes.force (agent custom_attribute_table_entry_size, {PE_TABLES}.tCustomAttribute.to_integer_32)
-			entry_sizes.force (agent field_marshal_table_entry_size, {PE_TABLES}.tFieldMarshal.to_integer_32)
-			entry_sizes.force (agent decl_security_table_entry_size, {PE_TABLES}.tDeclSecurity.to_integer_32)
-			entry_sizes.force (agent class_layout_table_entry_size, {PE_TABLES}.tClassLayout.to_integer_32)
-			entry_sizes.force (agent field_layout_table_entry_size, {PE_TABLES}.tFieldLayout.to_integer_32)
-			entry_sizes.force (agent standalone_sig_table_entry_size, {PE_TABLES}.tStandaloneSig.to_integer_32)
-			entry_sizes.force (agent property_map_table_entry_size, {PE_TABLES}.tPropertyMap.to_integer_32)
-			entry_sizes.force (agent property_table_entry_size, {PE_TABLES}.tProperty.to_integer_32)
-			entry_sizes.force (agent method_semantics_table_entry_size, {PE_TABLES}.tMethodSemantics.to_integer_32)
-			entry_sizes.force (agent method_impl_table_entry_size, {PE_TABLES}.tMethodImpl.to_integer_32)
-			entry_sizes.force (agent module_ref_table_entry_size, {PE_TABLES}.tModuleRef.to_integer_32)
-			entry_sizes.force (agent type_spec_table_entry_size, {PE_TABLES}.tTypeSpec.to_integer_32)
-			entry_sizes.force (agent impl_map_table_entry_size, {PE_TABLES}.tImplMap.to_integer_32)
-			entry_sizes.force (agent field_rva_table_entry_size, {PE_TABLES}.tFieldRVA.to_integer_32)
-			entry_sizes.force (agent assembly_table_entry_size, {PE_TABLES}.tAssemblyDef.to_integer_32)
-			entry_sizes.force (agent assembly_ref_table_entry_size, {PE_TABLES}.tAssemblyRef.to_integer_32)
-			entry_sizes.force (agent file_table_entry_size, {PE_TABLES}.tFile.to_integer_32)
-			entry_sizes.force (agent exported_type_table_entry_size, {PE_TABLES}.tExportedType.to_integer_32)
-			entry_sizes.force (agent manifest_resource_table_entry_size, {PE_TABLES}.tManifestResource.to_integer_32)
-			entry_sizes.force (agent nested_class_table_entry_size, {PE_TABLES}.tNestedClass.to_integer_32)
-			entry_sizes.force (agent generic_param_table_entry_size, {PE_TABLES}.tGenericParam.to_integer_32)
-			entry_sizes.force (agent method_spec_table_entry_size, {PE_TABLES}.tMethodSpec.to_integer_32)
-			entry_sizes.force (agent generic_param_constraint_table_entry_size, {PE_TABLES}.tGenericParamConstraint.to_integer_32)
+			entry_sizes.force (agent module_table_entry_size, {PE_TABLES}.tModule)
+			entry_sizes.force (agent type_ref_entry_size, {PE_TABLES}.tTypeRef)
+			entry_sizes.force (agent type_def_table_entry_size, {PE_TABLES}.tTypeDef)
+			entry_sizes.force (agent field_table_entry_size, {PE_TABLES}.tField)
+			entry_sizes.force (agent method_def_table_entry_size, {PE_TABLES}.tMethodDef)
+			entry_sizes.force (agent param_table_entry_size, {PE_TABLES}.tParam)
+			entry_sizes.force (agent interface_impl_table_entry_size, {PE_TABLES}.tInterfaceImpl)
+			entry_sizes.force (agent member_ref_table_entry_size, {PE_TABLES}.tMemberRef)
+			entry_sizes.force (agent constant_table_entry_size, {PE_TABLES}.tConstant)
+			entry_sizes.force (agent custom_attribute_table_entry_size, {PE_TABLES}.tCustomAttribute)
+			entry_sizes.force (agent field_marshal_table_entry_size, {PE_TABLES}.tFieldMarshal)
+			entry_sizes.force (agent decl_security_table_entry_size, {PE_TABLES}.tDeclSecurity)
+			entry_sizes.force (agent class_layout_table_entry_size, {PE_TABLES}.tClassLayout)
+			entry_sizes.force (agent field_layout_table_entry_size, {PE_TABLES}.tFieldLayout)
+			entry_sizes.force (agent standalone_sig_table_entry_size, {PE_TABLES}.tStandaloneSig)
+			entry_sizes.force (agent property_map_table_entry_size, {PE_TABLES}.tPropertyMap)
+			entry_sizes.force (agent property_table_entry_size, {PE_TABLES}.tProperty)
+			entry_sizes.force (agent method_semantics_table_entry_size, {PE_TABLES}.tMethodSemantics)
+			entry_sizes.force (agent method_impl_table_entry_size, {PE_TABLES}.tMethodImpl)
+			entry_sizes.force (agent module_ref_table_entry_size, {PE_TABLES}.tModuleRef)
+			entry_sizes.force (agent type_spec_table_entry_size, {PE_TABLES}.tTypeSpec)
+			entry_sizes.force (agent impl_map_table_entry_size, {PE_TABLES}.tImplMap)
+			entry_sizes.force (agent field_rva_table_entry_size, {PE_TABLES}.tFieldRVA)
+			entry_sizes.force (agent assembly_table_entry_size, {PE_TABLES}.tAssemblyDef)
+			entry_sizes.force (agent assembly_ref_table_entry_size, {PE_TABLES}.tAssemblyRef)
+			entry_sizes.force (agent file_table_entry_size, {PE_TABLES}.tFile)
+			entry_sizes.force (agent exported_type_table_entry_size, {PE_TABLES}.tExportedType)
+			entry_sizes.force (agent manifest_resource_table_entry_size, {PE_TABLES}.tManifestResource)
+			entry_sizes.force (agent nested_class_table_entry_size, {PE_TABLES}.tNestedClass)
+			entry_sizes.force (agent generic_param_table_entry_size, {PE_TABLES}.tGenericParam)
+			entry_sizes.force (agent method_spec_table_entry_size, {PE_TABLES}.tMethodSpec)
+			entry_sizes.force (agent generic_param_constraint_table_entry_size, {PE_TABLES}.tGenericParamConstraint)
 		end
 
 	initialize_unit
@@ -136,17 +136,17 @@ feature -- Access
 			-- Unique GUID
 			--|the length should be 16.
 
-	guid_index: NATURAL_64
+	guid_index: NATURAL_32
 			-- Guid index
 
-	module_index: NATURAL_64
+	module_index: NATURAL_32
 			-- Index of the GUID
 			-- where it should be located in the metadata tables.
 
 	tables_header: PE_DOTNET_META_TABLES_HEADER
 			-- `tables_header'
 
-	stream_headers: ARRAY2 [NATURAL_64]
+	stream_headers: ARRAY2 [NATURAL_32]
 			-- defined as streamHeaders_[5][2];
 
 feature -- Status report
@@ -172,10 +172,10 @@ feature -- Access
 				--| The size of the metadata header and table header.
 				--| The final result is the size of the metadata in bytes.
 
-			Result := compute_metadata_size
+			Result := compute_metadata_size.to_integer_32
 		end
 
-	entry_sizes: HASH_TABLE [FUNCTION [INTEGER], INTEGER]
+	entry_sizes: HASH_TABLE [FUNCTION [NATURAL_32], NATURAL_32]
 			-- Hash table of functions to compute the size of a Metadata Table.
 			-- The key is the Metadata Table Key.
 
@@ -247,7 +247,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	compute_metadata_size: INTEGER
+	compute_metadata_size: NATURAL_32
 			--| Computes the size of the metadata for the current emitted assembly.
 			--| Iterate through each table and multiplying the size of the table by the number of entries in the table.
 			--| Adds the size of each heap (string, user string, blob, and GUID)
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			EIS: "name=Metadata Root", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297", "protocol=uri"
 		local
 			l_current_rva: NATURAL_32
-			l_counts: ARRAY [NATURAL_64]
+			l_counts: ARRAY [NATURAL_32]
 			l_temp: NATURAL_32
 			l_buffer: ARRAY [NATURAL_8]
 			i,n: INTEGER
@@ -341,8 +341,8 @@ feature {NONE} -- Implementation
 			loop
 				if l_counts [i + 1] /= 0 then
 					create l_buffer.make_filled (0, 1, 512)
-					l_temp := tables [i][{NATURAL_64} 1].render (l_counts, l_buffer).to_natural_32
-					l_temp := l_temp * (l_counts [i + 1]).to_natural_32
+					l_temp := tables [i][{NATURAL_32} 1].render (l_counts, l_buffer)
+					l_temp := l_temp * (l_counts [i + 1])
 					l_current_rva := l_current_rva + l_temp
 				end
 				i := i + 1
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 
 			stream_headers [1, 2] := l_current_rva - stream_headers [1, 1]
 			stream_headers [2, 1] := l_current_rva
-			l_current_rva := l_current_rva + pe_writer.strings.size.to_natural_32
+			l_current_rva := l_current_rva + pe_writer.strings.size
 
 			if (l_current_rva \\ 4) /= 0 then
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 				l_current_rva := l_current_rva + pe_writer.default_us.count.to_natural_32
 					-- US May be empty in our implementation we put an empty string there
 			else
-				l_current_rva := l_current_rva + pe_writer.us.size.to_natural_32
+				l_current_rva := l_current_rva + pe_writer.us.size
 			end
 
 				-- TODO refactor this code into a feature.
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 
 			stream_headers [3, 2] := l_current_rva - stream_headers [3, 1]
 			stream_headers [4, 1] := l_current_rva
-			l_current_rva := l_current_rva + pe_writer.guid.size.to_natural_32
+			l_current_rva := l_current_rva + pe_writer.guid.size
 
 			if (l_current_rva \\ 4) /= 0 then
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 
 			stream_headers [4, 2] := l_current_rva - stream_headers [4, 1]
 			stream_headers [5, 1] := l_current_rva
-			l_current_rva := l_current_rva + pe_writer.blob.size.to_natural_32
+			l_current_rva := l_current_rva + pe_writer.blob.size
 
 			if (l_current_rva \\ 4) /= 0 then
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 
 			stream_headers [5, 2] := l_current_rva - stream_headers [5, 1]
 
-			Result := l_current_rva.to_integer_32
+			Result := l_current_rva.to_natural_32
 		end
 
 feature -- Save
@@ -451,12 +451,12 @@ feature {NONE} -- Implementation
 		require
 			open_write: a_file.is_open_write
 		local
-			l_counts: ARRAY [NATURAL_64]
+			l_counts: ARRAY [NATURAL_32]
 			l_buffer: ARRAY [NATURAL_8]
-			l_sz: NATURAL_64
+			l_sz: NATURAL_32
 			tb: MD_TABLE
 			i,n: INTEGER
-			j,m: NATURAL_64
+			j,m: NATURAL_32
 		do
 			create l_counts.make_filled (0, 1, max_tables + extra_indexes)
 			l_counts [t_string + 1] := strings_heap_size
@@ -477,8 +477,7 @@ feature {NONE} -- Implementation
 				l_sz := tb.size
 				l_counts [i + 1] := l_sz
 				if l_sz /= 0 then
-					check no_truncation: l_sz.to_natural_32.to_natural_64 = l_sz end
-					a_file.put_natural_32 (l_sz.to_natural_32)
+					a_file.put_natural_32 (l_sz)
 				end
 				i := i + 1
 			end
@@ -506,7 +505,6 @@ feature {NONE} -- Implementation
 						-- TODO double check
 						-- this is not efficient.
 					put_array (a_file, l_buffer.subarray (1, l_sz.to_integer_32))
-					check no_truncation: l_sz = l_sz.to_integer_32.to_natural_64 end
 					j := j + 1
 				end
 				i := i + 1
@@ -590,8 +588,8 @@ feature {NONE} -- Implementation
 
 					-- TODO double check
 					-- C++ code uses put(&streamHeaders_[i][0], 4);
-				a_file.put_natural_32 (stream_headers [i, 1].to_natural_32)
-				a_file.put_natural_32 (stream_headers [i, 2].to_natural_32)
+				a_file.put_natural_32 (stream_headers [i, 1])
+				a_file.put_natural_32 (stream_headers [i, 2])
 
 					-- Adding a null character a the end of the string
 					-- C++ code uses put(streamNames_[i], strlen(streamNames_[i]) + 1);
@@ -668,7 +666,7 @@ feature -- Settings
 	set_module_name (a_name: CLI_STRING)
 			-- Set the module name for the compilation unit being emitted.
 		local
-			l_name_index: NATURAL_64
+			l_name_index: NATURAL_32
 			l_entry: PE_TABLE_ENTRY_BASE
 		do
 			l_name_index := pe_writer.hash_string (a_name.string_32)
@@ -691,7 +689,7 @@ feature -- Settings
 			then
 
 					-- Set RVA value in method definition table entry
-				l_method_def.set_rva (rva)
+				l_method_def.set_rva (rva.to_natural_32)
 
 					-- Update method definition table entry in metadata tables
 					-- Create a helper feature to update an entry in a table row.
@@ -716,10 +714,10 @@ feature -- Definition: Access
 		note
 			EIS: "name=TypeRef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=273", "protocol=uri"
 		local
-			l_name_index: NATURAL_64
+			l_name_index: NATURAL_32
 			l_entry: PE_TABLE_ENTRY_BASE
 			l_scope: INTEGER
-			l_namespace_index: NATURAL_64
+			l_namespace_index: NATURAL_32
 			l_tuple: like extract_table_type_and_row
 			last_dot: INTEGER
 			l_type_name: STRING_32
@@ -774,8 +772,8 @@ feature -- Definition: Access
 			l_member_ref: PE_MEMBER_REF_PARENT
 			l_member_ref_entry: PE_MEMBER_REF_TABLE_ENTRY
 			l_tuple: like extract_table_type_and_row
-			l_method_signature: NATURAL_64
-			l_name_index: NATURAL_64
+			l_method_signature: NATURAL_32
+			l_name_index: NATURAL_32
 		do
 				-- Extract table type and row from the in_class_token
 			l_tuple := extract_table_type_and_row (in_class_token)
@@ -783,7 +781,7 @@ feature -- Definition: Access
 				-- Create a new PE_MEMBER_REF_PARENT instance with the extracted table row index and the in_class_tokebn
 			l_member_ref := create_member_ref (in_class_token, l_tuple.table_row_index)
 
-			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 			l_name_index := pe_writer.hash_string (method_name.string_32)
 
 				-- Create a new PE_MEMBER_REF_TABLE_ENTRY instance with the given data
@@ -800,7 +798,7 @@ feature -- Definition: Access
 			-- Define a new module reference for the given `module_name`.
 			-- Returns the generated token.
 		local
-			l_name_index: NATURAL_64
+			l_name_index: NATURAL_32
 			l_module_ref_entry: PE_MODULE_REF_TABLE_ENTRY
 		do
 				-- Hash the module name and create a new PE_MODULE_REF_TABLE_ENTRY instance.
@@ -836,15 +834,15 @@ feature -- Definition: Creation
 		note
 			EIS: "name=TypeDef", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=270", "protocol=uri"
 		local
-			l_name_index: NATURAL_64
-			l_namespace_index: NATURAL_64
+			l_name_index: NATURAL_32
+			l_namespace_index: NATURAL_32
 			l_entry: PE_TABLE_ENTRY_BASE
 				--i: INTEGER
 			l_extends: PE_TYPEDEF_OR_REF
 			last_dot: INTEGER
 			l_type_name: STRING_32
 			l_field_index, l_method_index: NATURAL
-			l_class_index: NATURAL_64
+			l_class_index: NATURAL_32
 		do
 				-- FieldList (an index into the Field table; it marks the first of a contiguous run of Fields owned by this Type).
 			l_field_index := 0 -- Not yet initialized
@@ -908,9 +906,9 @@ feature -- Definition: Creation
 			-- To be used to define different type for .NET arrays.
 		local
 			l_type_def_entry: PE_TYPE_SPEC_TABLE_ENTRY
-			l_type_signature: NATURAL_64
+			l_type_signature: NATURAL_32
 		do
-			l_type_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+			l_type_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 
 				-- Create a new PE_TYPE_SPEC_TABLE_ENTRY instance with the given data
 			create l_type_def_entry.make_with_data (l_type_signature)
@@ -940,9 +938,9 @@ feature -- Definition: Creation
 			-- Create reference to method in class `in_class_token`.
 		local
 			l_method_def_entry: PE_METHOD_DEF_TABLE_ENTRY
-			l_method_signature: NATURAL_64
-			l_name_index: NATURAL_64
-			l_param_index: NATURAL_64
+			l_method_signature: NATURAL_32
+			l_name_index: NATURAL_32
+			l_param_index: NATURAL_32
 			l_method_index: like next_table_index
 		do
 			debug ("il_emitter_table")
@@ -953,7 +951,7 @@ feature -- Definition: Creation
 
 			l_param_index := 0 -- Not yet initialized
 
-			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 			l_name_index := pe_writer.hash_string (method_name.string_32)
 
 				-- Create a new PE_METHOD_DEF_TABLE_ENTRY instance with the given data
@@ -1009,14 +1007,14 @@ feature -- Definition: Creation
 			-- Define property `name' for a type `type_token'.
 		local
 			l_property: PE_PROPERTY_TABLE_ENTRY
-			l_property_signature: NATURAL_64
+			l_property_signature: NATURAL_32
 			l_semantics: PE_SEMANTICS
 			l_table: PE_TABLE_ENTRY_BASE
 			l_tuple: like extract_table_type_and_row
 			l_property_index: like next_table_index
 		do
 				-- Compute the signature token
-			l_property_signature := hash_blob (signature.as_array, signature.count.to_natural_64)
+			l_property_signature := hash_blob (signature.as_array, signature.count.to_natural_32)
 
 				-- Create a new PE_PROPERTY_TABLE_ENTRY instance with the given data.
 			create {PE_PROPERTY_TABLE_ENTRY} l_property.make_with_data (
@@ -1057,7 +1055,7 @@ feature -- Definition: Creation
 			-- Further specification of a pinvoke method location defined by `method_token'.
 		local
 			l_member_forwarded: PE_MEMBER_FORWARDED
-			l_name_index: NATURAL_64
+			l_name_index: NATURAL_32
 			l_impl_map_entry: PE_IMPL_MAP_TABLE_ENTRY
 			l_tuple_method: like extract_table_type_and_row
 		do
@@ -1070,7 +1068,7 @@ feature -- Definition: Creation
 			create l_member_forwarded.make_with_tag_and_index ({PE_MEMBER_FORWARDED}.MethodDef, l_tuple_method.table_row_index)
 
 				-- Create a new PE_IMPL_MAP_TABLE_ENTRY instance with the given data
-			create l_impl_map_entry.make_with_data (mapping_flags.to_integer_16, l_member_forwarded, l_name_index, module_ref.to_natural_64)
+			create l_impl_map_entry.make_with_data (mapping_flags.to_integer_16, l_member_forwarded, l_name_index, module_ref.to_natural_32)
 
 				-- Add the PE_IMPL_MAP_TABLE_ENTRY instance to the table
 			pe_index := add_table_entry (l_impl_map_entry)
@@ -1083,7 +1081,7 @@ feature -- Definition: Creation
 			eis: "name=Param Attributes", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=279&zoom=100,116,938", "protocol"
 			eis: "name=Param table II.22.33", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=266", "protocol"
 		local
-			l_method_index: NATURAL_64
+			l_method_index: NATURAL_32
 			l_param_entry: PE_PARAM_TABLE_ENTRY
 			l_method_tuple: like extract_table_type_and_row
 			l_param_name_index: INTEGER_32
@@ -1108,7 +1106,7 @@ feature -- Definition: Creation
 
 				-- Create a new PE_PARAM_TABLE_ENTRY instance with the given data
 			l_method_index := l_method_tuple.table_row_index
-			create l_param_entry.make_with_data (l_param_flags, l_param_index.to_natural_16, l_param_name_index.to_natural_64)
+			create l_param_entry.make_with_data (l_param_flags, l_param_index.to_natural_16, l_param_name_index.to_natural_32)
 
 				-- Add the new PE_PARAM_TABLE_ENTRY instance to the metadata tables.
 			l_param_entry_index := next_table_index ({PE_TABLES}.tparam)
@@ -1134,7 +1132,7 @@ feature -- Definition: Creation
 			l_entry: PE_FIELD_MARSHAL_TABLE_ENTRY
 			l_tuple: like extract_table_type_and_row
 			l_parent: PE_FIELD_MARSHAL
-			l_index_native_type: NATURAL_64
+			l_index_native_type: NATURAL_32
 		do
 				-- Extract the table type and row index from `a_token`.
 			l_tuple := extract_table_type_and_row (a_token)
@@ -1143,7 +1141,7 @@ feature -- Definition: Creation
 			l_parent := create_field_marshal (a_token, l_tuple.table_row_index)
 
 				-- Generate an index for the native type by hashing its blob representation.
-			l_index_native_type := hash_blob (a_native_type_sig.as_array, a_native_type_sig.count.to_natural_64)
+			l_index_native_type := hash_blob (a_native_type_sig.as_array, a_native_type_sig.count.to_natural_32)
 
 				-- Create a new `PE_FIELD_MARSHAL_TABLE_ENTRY` instance with the parent and native type index.
 			create l_entry.make_with_data (l_parent, l_index_native_type)
@@ -1156,11 +1154,11 @@ feature -- Definition: Creation
 			-- Create a new field in class `in_class_token'.
 		local
 			l_field_def_entry: PE_FIELD_TABLE_ENTRY
-			l_field_signature: NATURAL_64
-			l_name_index: NATURAL_64
+			l_field_signature: NATURAL_32
+			l_name_index: NATURAL_32
 			l_field_index: like next_table_index
 		do
-			l_field_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+			l_field_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 			l_name_index := pe_writer.hash_string (field_name.string_32)
 
 				-- Create a new PE_FIELD_TABLE_ENTRY instance with the given data
@@ -1187,10 +1185,10 @@ feature -- Definition: Creation
 			-- Define a new token for `a_signature'. To be used only for
 			-- local signature.
 		local
-			l_signature_hash: NATURAL_64
+			l_signature_hash: NATURAL_32
 			l_signature_entry: PE_STANDALONE_SIG_TABLE_ENTRY
 		do
-			l_signature_hash := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
+			l_signature_hash := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 
 			create l_signature_entry.make_with_data (l_signature_hash)
 			pe_index := add_table_entry (l_signature_entry)
@@ -1208,12 +1206,12 @@ feature -- Definition: Creation
 			-- Define a new token for `str'.
 		local
 			l_str: STRING_32
-			l_us_index: NATURAL_64
+			l_us_index: NATURAL_32
 		do
 				--| add the null character
 			create l_str.make_from_string (str.string_32)
 			l_us_index := hash_us (l_str, l_str.count)
-			Result := (l_us_index | ({NATURAL_64} 0x70 |<< 24)).to_integer_32
+			Result := (l_us_index | ({NATURAL_32} 0x70 |<< 24)).to_integer_32
 		end
 
 	define_custom_attribute (owner, constructor: INTEGER; ca: MD_CUSTOM_ATTRIBUTE): INTEGER
@@ -1221,7 +1219,7 @@ feature -- Definition: Creation
 		note
 			eis: "name=CustomAttribute", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=242&zoom=100,116,794", "protocol=uri"
 		local
-			l_ca_blob: NATURAL_64
+			l_ca_blob: NATURAL_32
 			l_ca_entry: PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY
 			l_owner_tuple: like extract_table_type_and_row
 			l_constructor_tuple: like extract_table_type_and_row
@@ -1236,7 +1234,7 @@ feature -- Definition: Creation
 			if ca /= Void then
 				blob_count := ca.count
 					-- Compute the blob signature of the custom attribute
-				l_ca_blob := hash_blob (ca.item.read_array (0, blob_count), blob_count.to_natural_64)
+				l_ca_blob := hash_blob (ca.item.read_array (0, blob_count), blob_count.to_natural_32)
 			end
 
 				-- Create a new PE_CUSTOM_ATTRIBUTE instance with the corresponding tag and index

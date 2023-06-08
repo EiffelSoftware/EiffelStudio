@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Intialization
 
-	make_with_data (a_parent: PE_FIELD_MARSHAL; a_native_type: NATURAL_64)
+	make_with_data (a_parent: PE_FIELD_MARSHAL; a_native_type: NATURAL_32)
 		do
 			parent := a_parent
 			create native_type.make_with_index (a_native_type)
@@ -62,9 +62,9 @@ feature -- Operations
 			Result := {PE_TABLES}.tfieldmarshal.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Write parent and native_type to the buffer and update
 				-- the number of bytes
@@ -75,9 +75,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Read parent and native_type  from the buffer and update
 				-- the number of bytes

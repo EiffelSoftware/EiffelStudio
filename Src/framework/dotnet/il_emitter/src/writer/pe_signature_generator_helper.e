@@ -17,7 +17,7 @@ inherit
 
 feature -- Access: Signature Generators
 
-	method_def_sig (a_signature: CIL_METHOD_SIGNATURE; a_size: CELL [NATURAL_64]): ARRAY [NATURAL_8]
+	method_def_sig (a_signature: CIL_METHOD_SIGNATURE; a_size: CELL [NATURAL_32]): ARRAY [NATURAL_8]
 		local
 			l_size: INTEGER
 		do
@@ -27,7 +27,7 @@ feature -- Access: Signature Generators
 			instance_free: class
 		end
 
-	method_ref_sig (a_signature: CIL_METHOD_SIGNATURE; a_size: CELL [NATURAL_64]): ARRAY [NATURAL_8]
+	method_ref_sig (a_signature: CIL_METHOD_SIGNATURE; a_size: CELL [NATURAL_32]): ARRAY [NATURAL_8]
 		local
 			l_size: INTEGER
 		do
@@ -49,7 +49,7 @@ feature -- Access: Signature Generators
 			instance_free: class
 		end
 
-	method_spec_sig (a_signature: CIL_METHOD_SIGNATURE; a_size: CELL [NATURAL_64]): ARRAY [NATURAL_8]
+	method_spec_sig (a_signature: CIL_METHOD_SIGNATURE; a_size: CELL [NATURAL_32]): ARRAY [NATURAL_8]
 		local
 			l_size: INTEGER
 		do
@@ -67,7 +67,7 @@ feature -- Access: Signature Generators
 			instance_free: class
 		end
 
-	property_sig (a_property: CIL_PROPERTY; a_size: CELL [NATURAL_64]): ARRAY [NATURAL_8]
+	property_sig (a_property: CIL_PROPERTY; a_size: CELL [NATURAL_32]): ARRAY [NATURAL_8]
 		local
 			l_size: INTEGER
 			l_getter: CIL_METHOD
@@ -95,7 +95,7 @@ feature -- Access: Signature Generators
 			instance_free: class
 		end
 
-	field_sig (a_field: CIL_FIELD; a_size: CELL [NATURAL_64]): ARRAY [NATURAL_8]
+	field_sig (a_field: CIL_FIELD; a_size: CELL [NATURAL_32]): ARRAY [NATURAL_8]
 		local
 			l_size: INTEGER
 		do
@@ -111,7 +111,7 @@ feature -- Access: Signature Generators
 			instance_free: class
 		end
 
-	local_var_sig (a_method: CIL_METHOD; a_size: CELL [NATURAL_64]): ARRAY [NATURAL_8]
+	local_var_sig (a_method: CIL_METHOD; a_size: CELL [NATURAL_32]): ARRAY [NATURAL_8]
 		local
 			l_size: INTEGER
 		do
@@ -132,7 +132,7 @@ feature -- Access: Signature Generators
 			instance_free: class
 		end
 
-	type_sig (a_type: CIL_TYPE; a_size: CELL [NATURAL_64]): ARRAY [NATURAL_8]
+	type_sig (a_type: CIL_TYPE; a_size: CELL [NATURAL_32]): ARRAY [NATURAL_8]
 		local
 			l_size: INTEGER
 		do
@@ -324,7 +324,7 @@ feature -- Access: Signature Generators
 
 feature -- Convert
 
-	convert_to_blob (a_buf: SPECIAL [INTEGER]; a_size: INTEGER; a_sz: CELL [NATURAL_64]): ARRAY [NATURAL_8]
+	convert_to_blob (a_buf: SPECIAL [INTEGER]; a_size: INTEGER; a_sz: CELL [NATURAL_32]): ARRAY [NATURAL_8]
 			-- this function converts a signature buffer to a blob entry, by compressing
 			-- the integer values in the signature.
 		local
@@ -369,7 +369,7 @@ feature -- Convert
 			instance_free: class
 		end
 
-	set_object_type (a_object_base: NATURAL_64)
+	set_object_type (a_object_base: NATURAL_32)
 		do
 			signature_generator.object_base := a_object_base.to_integer_32
 		ensure

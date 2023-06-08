@@ -589,11 +589,11 @@ feature -- Output
 
 feature -- Compile
 
-	compile_cc (a_stream: FILE_STREAM; a_sz: CELL [NATURAL_64]): detachable ARRAY [NATURAL_8]
+	compile_cc (a_stream: FILE_STREAM; a_sz: CELL [NATURAL_32]): detachable ARRAY [NATURAL_8]
 			--| Correspond to CodeContainer::Compile(Stream& peLib, size_t& sz)
 		local
 			l_last: CIL_INSTRUCTION
-			l_sz: NATURAL_64
+			l_sz: NATURAL_32
 			l_pos: INTEGER
 			l_result: SPECIAL [NATURAL_8]
 		do
@@ -642,7 +642,7 @@ feature -- Compile
 				Result := 1
 			else
 				create l_current.make
-				l_current.try_offset := a_tags [l_offset].offset.to_natural_64
+				l_current.try_offset := a_tags [l_offset].offset.to_natural_32
 				l_offset := l_offset + 1
 				from
 				until
@@ -674,7 +674,7 @@ feature -- Compile
 								l_exit := True
 							when {CIL_SEH}.seh_filter then
 									-- assumes there are no try catch block within a filter expression
-								l_current.filter_offset := a_tags [l_offset].offset.to_natural_64
+								l_current.filter_offset := a_tags [l_offset].offset.to_natural_32
 								l_offset := l_offset + 2
 								l_current.flags := {CIL_SEH_DATA_ENUM}.filter
 							when {CIL_SEH}.seh_catch then
@@ -696,7 +696,7 @@ feature -- Compile
 							end
 						end
 						if not l_exit and then l_offset <= a_tags.count then
-							l_current.handler_offset := a_tags [l_offset].offset.to_natural_64
+							l_current.handler_offset := a_tags [l_offset].offset.to_natural_32
 							l_offset := l_offset + 1
 							from until l_offset > a_tags.count or else not a_tags [l_offset].seh_begin
 							loop

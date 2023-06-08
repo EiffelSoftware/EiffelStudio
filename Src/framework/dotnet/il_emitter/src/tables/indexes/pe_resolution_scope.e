@@ -24,7 +24,7 @@ feature -- Enum: tags
 	TagBits: INTEGER = 2
 			-- ResolutionScope
 			-- 2 bits to encode.
-			
+
 	Module: INTEGER = 0
 	ModuleRef: INTEGER = 1
 	AssemblyRef: INTEGER = 2
@@ -37,12 +37,12 @@ feature -- Operations
 			Result := tagbits
 		end
 
-	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
+	has_index_overflow (a_sizes: ARRAY [NATURAL_32]): BOOLEAN
 		do
-			Result := large(a_sizes[{PE_TABLES}.tModule.to_integer_32 + 1].to_natural_32)
-				or else large(a_sizes[{PE_TABLES}.tModuleRef.to_integer_32 + 1].to_natural_32)
-				or else large(a_sizes[{PE_TABLES}.tAssemblyRef.to_integer_32 + 1].to_natural_32)
-				or else large(a_sizes[{PE_TABLES}.tTypeRef.to_integer_32 + 1].to_natural_32)
+			Result := large(a_sizes[{PE_TABLES}.tModule.to_integer_32 + 1])
+				or else large(a_sizes[{PE_TABLES}.tModuleRef.to_integer_32 + 1])
+				or else large(a_sizes[{PE_TABLES}.tAssemblyRef.to_integer_32 + 1])
+				or else large(a_sizes[{PE_TABLES}.tTypeRef.to_integer_32 + 1])
 		end
 
 end

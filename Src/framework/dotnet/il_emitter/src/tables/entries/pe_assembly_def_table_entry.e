@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flags: INTEGER; a_major, a_minor, a_build, a_revision: NATURAL_16; a_name_index: NATURAL_64; a_key_index: NATURAL_64)
+	make_with_data (a_flags: INTEGER; a_major, a_minor, a_build, a_revision: NATURAL_16; a_name_index: NATURAL_32; a_key_index: NATURAL_32)
 			-- key_index default value = 0
 			--|ECMA II.22.2 Assembly : 0x20
 		do
@@ -105,9 +105,9 @@ feature -- Operations
 			Result := {PE_TABLES}.tAssemblyDef.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 		do
 				-- Write the defaulthashalgid to the destination buffer `a_dest`.
 			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_integer_32 (a_dest, defaulthashalgid, 0)
@@ -137,9 +137,9 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
-			l_bytes: NATURAL_64
+			l_bytes: NATURAL_32
 -- 			hash_alg_id: NATURAL_32
 		do
 				-- always assume the right hash algorithm as there is currently only one spec'd

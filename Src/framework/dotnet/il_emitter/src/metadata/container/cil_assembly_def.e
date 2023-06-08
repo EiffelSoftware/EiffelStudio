@@ -345,9 +345,9 @@ feature -- Output
 
 	pe_header_dump (a_stream: FILE_STREAM): BOOLEAN
 		local
-			l_name_index: NATURAL_64
+			l_name_index: NATURAL_32
 			l_table: PE_TABLE_ENTRY_BASE
-			l_blob_index: NATURAL_64
+			l_blob_index: NATURAL_32
 			l_exit: BOOLEAN
 		do
 			if attached {PE_WRITER} a_stream.pe_writer as l_writer then

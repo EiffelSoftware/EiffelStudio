@@ -69,7 +69,7 @@ feature -- Output
 			Result := True
 		end
 
-	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_result: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_64
+	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_result: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_32
 		do
 			if attached type as l_type then
 				Result := l_type.render (a_stream, a_result, a_offset)

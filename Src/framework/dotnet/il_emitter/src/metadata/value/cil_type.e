@@ -94,7 +94,7 @@ feature -- Access
 
 	mod_opt: detachable CIL_TYPE
 
-	pe_index: NATURAL_64
+	pe_index: NATURAL_32
 
 	show_type: BOOLEAN assign set_show_type
 
@@ -240,7 +240,7 @@ feature -- Element Change
 			basic_type_set: basic_type = a_type
 		end
 
-	set_pe_index (a_val: NATURAL_64)
+	set_pe_index (a_val: NATURAL_32)
 			-- Set `pe_index` with `a_val`.
 		do
 			pe_index := a_val
@@ -362,8 +362,8 @@ feature -- Output
 	render (a_stream: FILE_STREAM; a_bytes: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_8
 		local
 			l_sig: ARRAY [NATURAL_8]
-			l_sz: CELL [NATURAL_64]
-			l_signature: NATURAL_64
+			l_sz: CELL [NATURAL_32]
+			l_signature: NATURAL_32
 			l_table: PE_TYPE_SPEC_TABLE_ENTRY
 		do
 			if attached {CIL_DATA_CONTAINER} type_ref as l_type_ref and then
@@ -385,7 +385,7 @@ feature -- Output
 						create l_table.make_with_data (l_signature)
 						pe_index := l_writer.add_table_entry (l_table)
 					end
-					{BYTE_SPECIAL_HELPER}.put_special_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec |<< 24).to_natural_64, a_offset)
+					{BYTE_SPECIAL_HELPER}.put_special_natural_32 (a_bytes, pe_index | ({PE_TABLES}.ttypespec |<< 24), a_offset)
 					Result := 4
 				else
 					if pe_index = 0 then
@@ -397,7 +397,7 @@ feature -- Output
 						create l_table.make_with_data (l_signature)
 						pe_index := l_writer.add_table_entry (l_table)
 					end
-					{BYTE_SPECIAL_HELPER}.put_special_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec |<< 24).to_natural_64, a_offset)
+					{BYTE_SPECIAL_HELPER}.put_special_natural_32 (a_bytes, pe_index | ({PE_TABLES}.ttypespec |<< 24), a_offset)
 					Result := 4
 				end
 			end
@@ -408,8 +408,8 @@ feature -- Output
 			l_is_ref: BOOLEAN
 			l_res: BOOLEAN
 			l_sig: ARRAY [NATURAL_8]
-			l_sz: CELL [NATURAL_64]
-			l_signature: NATURAL_64
+			l_sz: CELL [NATURAL_32]
+			l_signature: NATURAL_32
 			l_table: PE_TYPE_SPEC_TABLE_ENTRY
 		do
 				-- this one generate newarr [NAppCore]NAppCore/Thread*
@@ -425,11 +425,11 @@ feature -- Output
 					create l_table.make_with_data (l_signature)
 					pe_index := a_writer.add_table_entry (l_table)
 				end
-				{BYTE_SPECIAL_HELPER}.put_special_integer_32_with_natural_64 (a_bytes, pe_index | ({PE_TABLES}.ttypespec |<< 24).to_natural_64, a_offset)
+				{BYTE_SPECIAL_HELPER}.put_special_natural_32 (a_bytes, pe_index | ({PE_TABLES}.ttypespec |<< 24), a_offset)
 			elseif l_is_ref then
-				{BYTE_SPECIAL_HELPER}.put_special_integer_32_with_natural_64 (a_bytes, a_type_ref.pe_index | ({PE_TABLES}.ttyperef |<< 24).to_natural_64, a_offset)
+				{BYTE_SPECIAL_HELPER}.put_special_natural_32 (a_bytes, a_type_ref.pe_index | ({PE_TABLES}.ttyperef |<< 24), a_offset)
 			else
-				{BYTE_SPECIAL_HELPER}.put_special_integer_32_with_natural_64 (a_bytes, a_type_ref.pe_index | ({PE_TABLES}.ttypedef |<< 24).to_natural_64, a_offset)
+				{BYTE_SPECIAL_HELPER}.put_special_natural_32 (a_bytes, a_type_ref.pe_index | ({PE_TABLES}.ttypedef |<< 24), a_offset)
 			end
 		end
 

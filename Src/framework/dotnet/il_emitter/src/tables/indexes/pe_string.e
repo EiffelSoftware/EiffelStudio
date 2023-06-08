@@ -29,10 +29,10 @@ feature -- Operations
 			Result := 0
 		end
 
-	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
+	has_index_overflow (a_sizes: ARRAY [NATURAL_32]): BOOLEAN
 		do
 			fixme ("Todo double check if we need + 1 in this case.")
-			Result := large(a_sizes[{PE_TABLE_CONSTANTS}.t_string + 1].to_natural_32)
+			Result := large(a_sizes[{PE_TABLE_CONSTANTS}.t_string + 1])
 		end
 
 end

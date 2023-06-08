@@ -56,7 +56,7 @@ feature -- Access
 	instantiated: BOOLEAN
 			-- use to tell if the class has been instantiated, for example it might be used after a forward reference is resolved.
 
-	pe_index: NATURAL_64
+	pe_index: NATURAL_32
 			-- metatable index in the PE file for this data container.
 
 	assembly_ref: BOOLEAN
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Access
 
-	parent_namespace (a_lib: FILE_STREAM): NATURAL_64
+	parent_namespace (a_lib: FILE_STREAM): NATURAL_32
 			-- The inner namespace parent.
 		local
 			l_current: CIL_DATA_CONTAINER
@@ -86,7 +86,7 @@ feature -- Access
 				-- by default Result is 0
 		end
 
-	parent_class (a_lib: FILE_STREAM): NATURAL_64
+	parent_class (a_lib: FILE_STREAM): NATURAL_32
 			-- The closest parent class.
 		local
 			l_current: CIL_DATA_CONTAINER
@@ -102,7 +102,7 @@ feature -- Access
 				-- by default Result is 0
 		end
 
-	parent_assembly (a_lib: FILE_STREAM): NATURAL_64
+	parent_assembly (a_lib: FILE_STREAM): NATURAL_32
 			-- The parent assembly.
 		local
 			l_current: CIL_DATA_CONTAINER
@@ -238,7 +238,7 @@ feature --Element Change
 			is_instantiated: instantiated = True
 		end
 
-	set_peindex (a_index: NATURAL_64)
+	set_peindex (a_index: NATURAL_32)
 			-- Set `pe_index` with `a_index`.
 		do
 			pe_index := a_index

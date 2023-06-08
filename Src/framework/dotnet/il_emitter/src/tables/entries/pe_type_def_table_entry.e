@@ -145,7 +145,6 @@ feature -- Operations
 			if attached extends as l_extends then
 				l_bytes := l_bytes + l_extends.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			else
-				check has_extends: False end
 					-- TODO: check if correct
 				{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, 0, l_bytes.to_integer_32)
 				l_bytes := l_bytes + 2

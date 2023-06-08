@@ -859,15 +859,12 @@ feature -- Definition: Creation
 				l_name_index := pe_writer.hash_string (l_type_name.substring (last_dot + 1, l_type_name.count))
 			end
 
-			if 
+			if
 				extend_token /= 0 and then
-				attached extract_table_type_and_row (extend_token) as ext_tuple 
+				attached extract_table_type_and_row (extend_token) as ext_tuple
 			then
 				l_extends := create_type_def_or_ref (extend_token, ext_tuple.table_row_index)
-			else
-				l_extends := create_type_def_or_ref (0, 0) -- TODO: maybe avoid this, and handle in the related render feature.
 			end
-
 
 			create {PE_TYPE_DEF_TABLE_ENTRY} l_entry.make_with_data (flags, l_name_index, l_namespace_index, l_extends, l_field_index, l_method_index)
 			pe_index := add_table_entry (l_entry)
@@ -884,7 +881,8 @@ feature -- Definition: Creation
 								--note: l_dis is not used.
 							pe_index := add_table_entry (l_entry)
 						else
-							check has_info: False end						end
+							check has_info: False end
+						end
 					else
 						-- '0' seems to be passed as the end of the container
 						-- but more for the cli_writer implementation, that

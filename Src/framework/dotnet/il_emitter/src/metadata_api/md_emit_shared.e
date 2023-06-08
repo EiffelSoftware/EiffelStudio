@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	tables: SPECIAL [MD_TABLES]
+	tables: SPECIAL [MD_TABLE]
 			--  in-memory metadata tables
 		deferred
 		end
@@ -59,6 +59,7 @@ feature -- Status report
 feature {NONE} -- Change tables
 
 	add_table_entry (a_entry: PE_TABLE_ENTRY_BASE): NATURAL_64
+			-- Index in related MD_TABLE
 			-- add an entry to one of the tables
 			-- note the data for the table will be a class inherited from TableEntryBase,
 			--  and this class will self-report the table index to use
@@ -66,16 +67,18 @@ feature {NONE} -- Change tables
 			valid_entry_table_index: tables.valid_index (a_entry.table_index)
 		local
 			n: INTEGER
-			l_md_tables: MD_TABLES
+			l_md_table: MD_TABLE
 		do
 			n := a_entry.table_index
-			l_md_tables := tables [n]
-			Result := a_entry.token_from_tables (l_md_tables)
-			if Result = 0 then
-				l_md_tables.force (a_entry)
-				Result := l_md_tables.size
+			l_md_table := tables [n]
+			if a_entry.token_searching_supported then
+				Result := a_entry.token_from_table (l_md_table)
 			end
-			last_token := (n |<< 24).to_natural_32 | Result.to_natural_32 --| FIXME: why .to_natural_32 ? the index and size of MD_TABLES are NATURAL_64 ...
+			if Result = 0 then
+				l_md_table.force (a_entry)
+				Result := l_md_table.size
+			end
+			last_token := (n |<< 24).to_natural_32 | Result.to_natural_32 --| FIXME: why .to_natural_32 ? the index and size of MD_TABLE are NATURAL_64 ...
 		end
 
 	last_token: NATURAL_32
@@ -106,19 +109,19 @@ feature {NONE} -- Helper
 			Result := [l_table_type_index, l_table_row_index]
 		end
 
+feature -- Factory		
+
 	create_method_def_or_ref (a_token: INTEGER; a_index: NATURAL_64): PE_METHOD_DEF_OR_REF
 			 -- Create a new PE_METHOD_DEF_OR_REF instance with the given `a_token' and `a_index'.
 		local
 			l_tag: INTEGER
 		do
-			if a_token & Md_mask = Md_method_def
-			then
+			if a_token & Md_mask = Md_method_def then
 				l_tag := {PE_METHOD_DEF_OR_REF}.methoddef
-			elseif a_token & Md_mask = Md_member_ref
-			then
+			elseif a_token & Md_mask = Md_member_ref then
 				l_tag := {PE_METHOD_DEF_OR_REF}.memberref
 			else
-				l_tag := 0
+				l_tag := {PE_METHOD_DEF_OR_REF}.methoddef -- Default?
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
@@ -135,7 +138,7 @@ feature {NONE} -- Helper
 			elseif a_token & Md_mask = Md_type_spec then
 				l_tag := {PE_TYPEDEF_OR_REF}.typespec
 			else
-				l_tag := 0
+				l_tag := {PE_TYPEDEF_OR_REF}.typedef -- Default
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
@@ -156,7 +159,7 @@ feature {NONE} -- Helper
 			elseif a_token & Md_mask = Md_method_def then
 				l_tag := {PE_MEMBER_REF_PARENT}.methoddef
 			else
-				l_tag := 0
+				l_tag := {PE_MEMBER_REF_PARENT}.typedef -- Default?
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
@@ -171,7 +174,7 @@ feature {NONE} -- Helper
 			elseif a_token & Md_mask = Md_assembly_ref then
 				l_tag := {PE_IMPLEMENTATION}.AssemblyRef
 			else
-				l_tag := 0
+				l_tag := {PE_IMPLEMENTATION}.File -- Default?
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
@@ -220,7 +223,7 @@ feature {NONE} -- Helper
 			elseif a_token & Md_mask = Md_manifest_resource then
 				l_tag := {PE_CUSTOM_ATTRIBUTE}.ManifestResource
 			else
-				l_tag := 0
+				l_tag := {PE_CUSTOM_ATTRIBUTE}.MethodDef -- Default?
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
@@ -235,11 +238,12 @@ feature {NONE} -- Helper
 			elseif a_token & Md_mask = md_member_ref then
 				l_tag := {PE_CUSTOM_ATTRIBUTE_TYPE}.MemberRef
 			else
-				l_tag := 0
+				check should_not_occur: False end
+--				l_tag := 0
+				l_tag := {PE_CUSTOM_ATTRIBUTE_TYPE}.MethodDef -- Default?
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
-
 
 	create_field_marshal (a_token: INTEGER; a_index: NATURAL_64): PE_FIELD_MARSHAL
 			-- Create a new `PE_FIELD_MARSHAL` instance with the specified `a_token` and `a_index`.
@@ -251,7 +255,7 @@ feature {NONE} -- Helper
 			elseif a_token & Md_mask = md_param_def then
 				l_tag := {PE_FIELD_MARSHAL}.Param
 			else
-				l_tag := 0
+				l_tag := {PE_FIELD_MARSHAL}.Field -- Default?
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end

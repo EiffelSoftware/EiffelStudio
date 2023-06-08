@@ -8,10 +8,9 @@ class
 	PE_PROPERTY_MAP_TABLE_ENTRY
 
 inherit
-
 	PE_TABLE_ENTRY_BASE
 		redefine
-			token_from_tables
+			same_as
 		end
 
 
@@ -28,26 +27,17 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	token_from_tables (tables: MD_TABLES): NATURAL_64
-			-- If Current was already defined in `tables` return the associated token.
-		local
-			n: NATURAL_64
+	token_searching_supported: BOOLEAN = True
+
+	same_as (e: like Current): BOOLEAN
+			-- Is `e` same as `Current`?
+			-- note: used to detect if an entry is already recorded.
 		do
-			n := 0
-			across
-				tables as i
-			until
-				Result /= {NATURAL_64} 0
-			loop
-				n := n + 1
-				if
-					attached {like Current} i as e and then
+			Result := Precursor (e)
+				or else (
 					e.parent.is_equal (parent) and then
 					e.property_list.is_equal (property_list)
-				then
-					Result := n
-				end
-			end
+				)
 		end
 
 feature -- Access

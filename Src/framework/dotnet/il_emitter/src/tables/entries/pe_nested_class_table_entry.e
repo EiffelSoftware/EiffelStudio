@@ -11,7 +11,7 @@ inherit
 
 	PE_TABLE_ENTRY_BASE
 		redefine
-			token_from_tables
+			same_as
 		end
 
 create
@@ -27,27 +27,19 @@ feature {NONE} -- Implementation
 
 feature -- Status
 
-	token_from_tables (tables: MD_TABLES): NATURAL_64
-			-- If Current was already defined in `tables` return the associated token.
-		local
-			n: NATURAL_64
+	token_searching_supported: BOOLEAN = True
+
+	same_as (e: like Current): BOOLEAN
+			-- Is `e` same as `Current`?
+			-- note: used to detect if an entry is already recorded.
 		do
-			n := 0
-			across
-				tables as i
-			until
-				Result /= {NATURAL_64} 0
-			loop
-				n := n + 1
-				if
-					attached {like Current} i as e and then
+			Result := Precursor (e)
+				or else (
 					e.nested_index.is_equal (nested_index) and then
 					e.enclosing_index.is_equal (enclosing_index)
-				then
-					Result := n
-				end
-			end
+				)
 		end
+
 feature -- Access
 
 	nested_index: PE_TYPE_DEF

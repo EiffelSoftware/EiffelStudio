@@ -50,7 +50,7 @@ feature {NONE}
 		do
 			create tables.make_empty ({PE_TABLE_CONSTANTS}.max_tables)
 			across 0 |..| ({PE_TABLE_CONSTANTS}.max_tables - 1) as i loop
-				tables.force ((create {MD_TABLES}.make (i)), i)
+				tables.force ((create {MD_TABLE}.make (i)), i)
 			end
 		end
 
@@ -115,10 +115,10 @@ feature {NONE}
 
 feature -- Access
 
-	tables: SPECIAL [MD_TABLES]
+	tables: SPECIAL [MD_TABLE]
 			--  in-memory metadata tables
 
-	md_tables (idx: NATURAL_32): MD_TABLES
+	md_table (idx: NATURAL_32): MD_TABLE
 		require
 			tables.valid_index (idx.to_integer_32)
 		do
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 			l_counts: ARRAY [NATURAL_64]
 			l_buffer: ARRAY [NATURAL_8]
 			l_sz: NATURAL_64
-			tb: MD_TABLES
+			tb: MD_TABLE
 			i,n: INTEGER
 			j,m: NATURAL_64
 		do
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation
 			until
 				i >= n
 			loop
-				tb := md_tables (i.to_natural_32)
+				tb := md_table (i.to_natural_32)
 				l_sz := tb.size
 				l_counts [i + 1] := l_sz
 				if l_sz /= 0 then
@@ -490,8 +490,8 @@ feature {NONE} -- Implementation
 			until
 				i >= n
 			loop
-				tb := md_tables (i.to_natural_32)
-				-- TODO: what if l_counts [i + 1] = 0 ?
+				tb := md_table (i.to_natural_32)
+					-- TODO: what if l_counts [i + 1] = 0 ?
 				from
 					j := 1
 					m := tb.size
@@ -684,7 +684,7 @@ feature -- Settings
 				--  	retrieve_table_row (from specific table entry)
 			if
 				attached extract_table_type_and_row (method_token) as d and then
-				attached {PE_METHOD_DEF_TABLE_ENTRY} md_tables (d.table_type_index)[d.table_row_index] as l_method_def
+				attached {PE_METHOD_DEF_TABLE_ENTRY} md_table (d.table_type_index)[d.table_row_index] as l_method_def
 			then
 
 					-- Set RVA value in method definition table entry
@@ -692,7 +692,7 @@ feature -- Settings
 
 					-- Update method definition table entry in metadata tables
 					-- Create a helper feature to update an entry in a table row.
-				md_tables (d.table_type_index).replace (l_method_def, d.table_row_index)
+				md_table (d.table_type_index).replace (l_method_def, d.table_row_index)
 			else
 					-- TODO
 				check todo: False end
@@ -729,7 +729,7 @@ feature -- Definition: Access
 				--| {PE_TABLES}.is_valid_table (l_table_type)
 				--|
 				--| l_table_row: exists.
-			check exist_table_row: attached md_tables (l_tuple.table_type_index)[l_tuple.table_row_index] end
+			check exist_table_row: attached md_table (l_tuple.table_type_index)[l_tuple.table_row_index] end
 
 				-- ResolutionScope : an index into a Module, ModuleRef, AssemblyRef or TypeRef table,or null
 			if resolution_scope & Md_mask = md_module then
@@ -838,7 +838,6 @@ feature -- Definition: Creation
 			l_entry: PE_TABLE_ENTRY_BASE
 				--i: INTEGER
 			l_extends: PE_TYPEDEF_OR_REF
-			l_tuple: like extract_table_type_and_row
 			last_dot: INTEGER
 			l_type_name: STRING_32
 			l_field_index, l_method_index: NATURAL
@@ -860,9 +859,15 @@ feature -- Definition: Creation
 				l_name_index := pe_writer.hash_string (l_type_name.substring (last_dot + 1, l_type_name.count))
 			end
 
-			l_tuple := extract_table_type_and_row (extend_token)
+			if 
+				extend_token /= 0 and then
+				attached extract_table_type_and_row (extend_token) as ext_tuple 
+			then
+				l_extends := create_type_def_or_ref (extend_token, ext_tuple.table_row_index)
+			else
+				l_extends := create_type_def_or_ref (0, 0) -- TODO: maybe avoid this, and handle in the related render feature.
+			end
 
-			l_extends := create_type_def_or_ref (extend_token, l_tuple.table_row_index)
 
 			create {PE_TYPE_DEF_TABLE_ENTRY} l_entry.make_with_data (flags, l_name_index, l_namespace_index, l_extends, l_field_index, l_method_index)
 			pe_index := add_table_entry (l_entry)
@@ -873,11 +878,14 @@ feature -- Definition: Creation
 			if attached implements then
 				across implements as i loop
 					if i /= 0 then
-						l_tuple := extract_table_type_and_row (i)
-						l_extends := create_type_def_or_ref (i, l_tuple.table_row_index)
-						create {PE_INTERFACE_IMPL_TABLE_ENTRY} l_entry.make_with_data (l_class_index, l_extends)
-							--note: l_dis is not used.
-						pe_index := add_table_entry (l_entry)
+						if attached extract_table_type_and_row (i) as imp_tuple then
+							l_extends := create_type_def_or_ref (i, imp_tuple.table_row_index)
+							create {PE_INTERFACE_IMPL_TABLE_ENTRY} l_entry.make_with_data (l_class_index, l_extends)
+								--note: l_dis is not used.
+							pe_index := add_table_entry (l_entry)
+						else
+							check has_info: False end
+						end
 					else
 						-- '0' seems to be passed as the end of the container
 						-- but more for the cli_writer implementation, that
@@ -949,7 +957,7 @@ feature -- Definition: Creation
 				-- Extract table type and row from the in_class_token
 			if
 				attached extract_table_type_and_row (in_class_token) as d and then
-				attached {PE_TYPE_DEF_TABLE_ENTRY} md_tables (d.table_type_index)[d.table_row_index] as e
+				attached {PE_TYPE_DEF_TABLE_ENTRY} md_table (d.table_type_index)[d.table_row_index] as e
 			then
 				if not e.is_method_list_index_set then
 					e.set_method_list_index (l_method_index)
@@ -1096,7 +1104,7 @@ feature -- Definition: Creation
 
 			if
 				attached extract_table_type_and_row (in_method_token) as d and then
-				attached {PE_METHOD_DEF_TABLE_ENTRY} md_tables (d.table_type_index)[d.table_row_index] as e
+				attached {PE_METHOD_DEF_TABLE_ENTRY} md_table (d.table_type_index)[d.table_row_index] as e
 			then
 				if not e.is_param_list_index_set then
 					e.set_param_list_index (l_param_entry_index)
@@ -1136,15 +1144,10 @@ feature -- Definition: Creation
 			-- Create a new field in class `in_class_token'.
 		local
 			l_field_def_entry: PE_FIELD_TABLE_ENTRY
-			l_tuple: like extract_table_type_and_row
 			l_field_signature: NATURAL_64
 			l_name_index: NATURAL_64
 			l_field_index: like next_table_index
 		do
-				-- Extract table type and row from the in_class_token
-				-- TODO double check: Why we are not using l_tuple?
-			l_tuple := extract_table_type_and_row (in_class_token)
-
 			l_field_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_64)
 			l_name_index := pe_writer.hash_string (field_name.string_32)
 
@@ -1157,7 +1160,7 @@ feature -- Definition: Creation
 
 			if
 				attached extract_table_type_and_row (in_class_token) as d and then
-				attached {PE_TYPE_DEF_TABLE_ENTRY} md_tables (d.table_type_index)[d.table_row_index] as e
+				attached {PE_TYPE_DEF_TABLE_ENTRY} md_table (d.table_type_index)[d.table_row_index] as e
 			then
 				if not e.is_field_list_index_set then
 					e.set_field_list_index (l_field_index)

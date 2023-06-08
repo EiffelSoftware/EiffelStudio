@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tables: SPECIAL [MD_TABLES]; a_writer: PE_WRITER)
+	make (a_tables: SPECIAL [MD_TABLE]; a_writer: PE_WRITER)
 		do
 			-- TODO: maybe use as parameter the instance of MD_EMIT
 			tables := a_tables
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tables: SPECIAL [MD_TABLES]
+	tables: SPECIAL [MD_TABLE]
 			--  in-memory metadata tables
 
 	pe_writer: PE_WRITER

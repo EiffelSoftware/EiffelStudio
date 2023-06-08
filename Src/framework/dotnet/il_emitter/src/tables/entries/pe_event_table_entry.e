@@ -38,6 +38,10 @@ feature -- Enum: Flags
 	ReservedMask: INTEGER = 0x400
 	RTSpecialName: INTEGER = 0x400
 
+feature -- Status report 
+
+	token_searching_supported: BOOLEAN = False
+
 feature -- Operations
 
 	table_index: INTEGER

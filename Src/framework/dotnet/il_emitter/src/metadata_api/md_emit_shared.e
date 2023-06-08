@@ -121,7 +121,7 @@ feature -- Factory
 			elseif a_token & Md_mask = Md_member_ref then
 				l_tag := {PE_METHOD_DEF_OR_REF}.memberref
 			else
-				l_tag := {PE_METHOD_DEF_OR_REF}.methoddef -- Default?
+				check should_not_occur: False end
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
@@ -138,7 +138,7 @@ feature -- Factory
 			elseif a_token & Md_mask = Md_type_spec then
 				l_tag := {PE_TYPEDEF_OR_REF}.typespec
 			else
-				l_tag := {PE_TYPEDEF_OR_REF}.typedef -- Default
+				check should_not_occur: False end
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
@@ -159,7 +159,7 @@ feature -- Factory
 			elseif a_token & Md_mask = Md_method_def then
 				l_tag := {PE_MEMBER_REF_PARENT}.methoddef
 			else
-				l_tag := {PE_MEMBER_REF_PARENT}.typedef -- Default?
+				check should_not_occur: False end
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
@@ -174,7 +174,7 @@ feature -- Factory
 			elseif a_token & Md_mask = Md_assembly_ref then
 				l_tag := {PE_IMPLEMENTATION}.AssemblyRef
 			else
-				l_tag := {PE_IMPLEMENTATION}.File -- Default?
+				check should_not_occur: False end
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
@@ -223,7 +223,7 @@ feature -- Factory
 			elseif a_token & Md_mask = Md_manifest_resource then
 				l_tag := {PE_CUSTOM_ATTRIBUTE}.ManifestResource
 			else
-				l_tag := {PE_CUSTOM_ATTRIBUTE}.MethodDef -- Default?
+				check should_not_occur: False end
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
@@ -239,8 +239,6 @@ feature -- Factory
 				l_tag := {PE_CUSTOM_ATTRIBUTE_TYPE}.MemberRef
 			else
 				check should_not_occur: False end
---				l_tag := 0
-				l_tag := {PE_CUSTOM_ATTRIBUTE_TYPE}.MethodDef -- Default?
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end
@@ -255,7 +253,7 @@ feature -- Factory
 			elseif a_token & Md_mask = md_param_def then
 				l_tag := {PE_FIELD_MARSHAL}.Param
 			else
-				l_tag := {PE_FIELD_MARSHAL}.Field -- Default?
+				check should_not_occur: False end
 			end
 			create Result.make_with_tag_and_index (l_tag, a_index)
 		end

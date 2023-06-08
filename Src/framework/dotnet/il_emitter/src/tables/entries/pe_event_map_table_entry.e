@@ -27,10 +27,6 @@ feature -- Access
 
 	event_list: PE_EVENT_LIST
 
-feature -- Status report 
-
-	token_searching_supported: BOOLEAN = False
-
 feature -- Operations
 
 	table_index: INTEGER

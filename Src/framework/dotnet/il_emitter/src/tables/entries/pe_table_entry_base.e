@@ -17,17 +17,9 @@ feature -- Access
 
 feature -- Status
 
-	token_searching_supported: BOOLEAN
-			-- Is token searching supported?
-			--| note: used to know if duplicated entries should be rejected?
-		deferred
-		end
-
 	token_from_table (tb: MD_TABLE): NATURAL_64
 			-- If Current was already defined in `tb` return the associated token.
 			-- It may not be implemented, this is mainly used to avoid duplicated entries.
-		require
-			token_searching_supported
 		local
 			n: NATURAL_64
 		do

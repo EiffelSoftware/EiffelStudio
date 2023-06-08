@@ -31,10 +31,6 @@ feature -- Access
 
 	permission_set: PE_BLOB
 
-feature -- Status report 
-
-	token_searching_supported: BOOLEAN = False
-
 feature -- Operations
 
 	table_index: INTEGER

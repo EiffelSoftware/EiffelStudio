@@ -492,6 +492,9 @@ feature {NONE} -- Implementation
 			loop
 				tb := md_table (i.to_natural_32)
 					-- TODO: what if l_counts [i + 1] = 0 ?
+				debug ("il_emitter_table")
+					if tb.size /= 0 and l_counts [i + 1] = 0 then check potential_issue: False end end
+				end
 				from
 					j := 1
 					m := tb.size
@@ -849,6 +852,9 @@ feature -- Definition: Creation
 			l_method_index := 0 -- Not yet initialized
 
 			l_type_name := type_name.string_32
+			debug ("il_emitter_table")
+				print ({STRING_32} "TypeDef: " + l_type_name + " -> Method index="+ l_method_index.out)
+			end
 
 			last_dot := l_type_name.last_index_of ('.', l_type_name.count)
 			if last_dot = 0 then
@@ -870,6 +876,9 @@ feature -- Definition: Creation
 			pe_index := add_table_entry (l_entry)
 			l_class_index := pe_index
 			Result := last_token.to_integer_32
+			debug ("il_emitter_table")
+				print ({STRING_32} " -> index=" + l_class_index.out + " token="+ Result.to_hex_string + "%N")
+			end
 
 				-- Adds entries in the PE_INTERFACE_IMPL_TABLE_ENTRY table for each implemented interface, if any.
 			if attached implements then
@@ -936,6 +945,9 @@ feature -- Definition: Creation
 			l_param_index: NATURAL_64
 			l_method_index: like next_table_index
 		do
+			debug ("il_emitter_table")
+				print ({STRING_32} "Method: " + method_name.string_32 + " (class:"+ in_class_token.to_hex_string)
+			end
 				-- See II.22.26 MethodDef : 0x06
 
 
@@ -964,6 +976,9 @@ feature -- Definition: Creation
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
+			debug ("il_emitter_table")
+				print ({STRING_32} " -> index=" + pe_index.out + " token=" + Result.to_hex_string +"%N")
+			end
 		end
 
 	define_method_impl (in_class_token, method_token, used_method_declaration_token: INTEGER)

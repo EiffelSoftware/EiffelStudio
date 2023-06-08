@@ -71,7 +71,15 @@ feature {NONE} -- Change tables
 		do
 			n := a_entry.table_index
 			l_md_table := tables [n]
-			if a_entry.token_searching_supported then
+
+			inspect a_entry.table_index
+			when
+				{PE_TABLES}.tmethoddef,
+				{PE_TABLES}.tparam,
+				{PE_TABLES}.tfield
+			then
+				-- No duplication checking
+			else
 				Result := a_entry.token_from_table (l_md_table)
 			end
 			if Result = 0 then
@@ -79,6 +87,8 @@ feature {NONE} -- Change tables
 				Result := l_md_table.size
 			end
 			last_token := (n |<< 24).to_natural_32 | Result.to_natural_32 --| FIXME: why .to_natural_32 ? the index and size of MD_TABLE are NATURAL_64 ...
+		ensure
+			entry_added: a_entry.token_from_table (tables [a_entry.table_index]) = a_entry
 		end
 
 	last_token: NATURAL_32

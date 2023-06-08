@@ -46,10 +46,6 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	token_searching_supported: BOOLEAN = False
-			-- <Precursor>
-			-- TODO: for now, it seems this excludes too many entries in Method table			
-
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.

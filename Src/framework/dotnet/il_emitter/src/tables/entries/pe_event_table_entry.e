@@ -40,8 +40,6 @@ feature -- Enum: Flags
 
 feature -- Status report 
 
-	token_searching_supported: BOOLEAN = False
-
 feature -- Operations
 
 	table_index: INTEGER

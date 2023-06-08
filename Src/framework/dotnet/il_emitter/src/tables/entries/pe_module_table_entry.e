@@ -26,8 +26,6 @@ feature {NONE} -- Implementation
 
 feature -- Status
 
-	token_searching_supported: BOOLEAN = True
-
 	same_as (e: like Current): BOOLEAN
 			-- Is `e` same as `Current`?
 			-- note: used to detect if an entry is already recorded.

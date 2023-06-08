@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 								-- we create an special object with 8 slots
 								-- since size_t could have 8 bytes.
 							l_dis := l_gen.render (a_stream, l_val, 0)
-							l_gen.set_pe_index ({BYTE_ARRAY_HELPER}.byte_array_to_natural_64 (l_val, 0))
+							l_gen.set_pe_index ({BYTE_SPECIAL_HELPER}.byte_special_to_natural_64 (l_val, 0))
 						end
 					end
 				end

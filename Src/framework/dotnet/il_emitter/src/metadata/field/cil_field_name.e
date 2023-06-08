@@ -61,9 +61,9 @@ feature -- Output
 		do
 			if attached {CIL_DATA_CONTAINER} field.parent as l_container and then l_container.in_assembly_ref then
 				l_res := field.pe_dump (a_stream)
-				{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_result, field.pe_index | {PE_TABLES}.tmemberref |<< 24, a_offset)
+				{BYTE_SPECIAL_HELPER}.put_special_natural_32_with_natural_64 (a_result, field.pe_index | {PE_TABLES}.tmemberref |<< 24, a_offset)
 			else
-				{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_result, field.pe_index | {PE_TABLES}.tfield |<< 24, a_offset)
+				{BYTE_SPECIAL_HELPER}.put_special_natural_32_with_natural_64 (a_result, field.pe_index | {PE_TABLES}.tfield |<< 24, a_offset)
 			end
 			Result := 4
 		end

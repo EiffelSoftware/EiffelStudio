@@ -390,10 +390,10 @@ feature -- Output
 					n := if attached labels [l_branch_label] as l_ins then l_ins.offset - l_cur else 0 - l_cur end
 						-- calculate offset to target
 					if is_rel4 then
-						{BYTE_ARRAY_HELPER}.put_array_natural_8_with_integer_32 (a_result, n, l_sz + a_offset)
+						{BYTE_SPECIAL_HELPER}.put_special_natural_8_with_integer_32 (a_result, n, l_sz + a_offset)
 						l_sz := l_sz + 4
 					else
-						{BYTE_ARRAY_HELPER}.put_array_natural_8_with_integer_32 (a_result, n, l_sz + a_offset)
+						{BYTE_SPECIAL_HELPER}.put_special_natural_8_with_integer_32 (a_result, n, l_sz + a_offset)
 						l_sz := l_sz + 1
 					end
 				else

@@ -68,10 +68,10 @@ feature -- Output
 			l_sz: INTEGER
 		do
 			if a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_index1) then
-				{BYTE_ARRAY_HELPER}.put_array_natural_8_with_integer_32 (a_result, index, a_offset)
+				{BYTE_SPECIAL_HELPER}.put_special_natural_8_with_integer_32 (a_result, index, a_offset)
 				l_sz := 1
 			elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_index2)  then
-				{BYTE_ARRAY_HELPER}.put_array_natural_16_with_integer_32 (a_result, index, a_offset)
+				{BYTE_SPECIAL_HELPER}.put_special_natural_16_with_integer_32 (a_result, index, a_offset)
 				l_sz := 2
 			end
 			Result := l_sz.to_natural_64

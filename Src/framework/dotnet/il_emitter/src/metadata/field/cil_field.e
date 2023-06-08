@@ -366,7 +366,7 @@ feature -- Output
 					end
 
 					create l_buf.make_filled (0, 8)
-					{BYTE_ARRAY_HELPER}.put_array_integer_64 (l_buf, enum_value, 0)
+					{BYTE_SPECIAL_HELPER}.put_special_integer_64 (l_buf, enum_value, 0)
 
 					inspect mode
 					when {CIL_VALUE_MODE}.none then

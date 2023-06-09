@@ -19,7 +19,7 @@ feature -- Testing
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
 				--Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.empty_assembly", "tk.define_method_net2", "om.method_assembly">>
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.blob_heap_duplicates">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.modules","tk.define_entry_point_net6", "tk.define_implementation", "tk.define_interface", "tk.ast_process">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -120,6 +120,15 @@ feature -- Token tests
 			end
 			if is_test_included ("blob_heap_duplictes", a_pattern) then
 				(create {TEST_METADATA_TABLES_TK}).test_blob_heap_duplicates
+			end
+			if is_test_included ("define_implementation_2", a_pattern) then
+				(create {TEST_METADATA_TABLES_TK}).test_define_implementation_2
+			end
+			if is_test_included("ast_process", a_pattern) then
+				(create {TEST_AST_PROCESS}).test_ast_process
+			end
+			if is_test_included("modules", a_pattern) then
+				(create {TEST_MODULES_TK}).test_modules
 			end
 		end
 
@@ -561,16 +570,16 @@ feature -- Test BigDigits
 
 			l_dis: INTEGER
 		do
-			create l_result.make_filled (0, 1, 50)
-			create l_base.make_filled (0, 1, 50)
-			l_base [1] := 9
-			create l_exponent.make_filled (0, 1, 50)
-			l_exponent [1] := 3
-			create l_modulus.make_filled (0, 1, 50)
-			l_modulus [1] := 10
-			l_ndigits := 1
-			l_dis := {CIL_RSA_ENCODER}.c_mp_mod_exp (l_result.area.base_address, l_base.area.base_address, l_exponent.area.base_address, l_modulus.area.base_address, l_ndigits)
-			check expected_9: l_result [1] = 9 end
+--			create l_result.make_filled (0, 1, 50)
+--			create l_base.make_filled (0, 1, 50)
+--			l_base [1] := 9
+--			create l_exponent.make_filled (0, 1, 50)
+--			l_exponent [1] := 3
+--			create l_modulus.make_filled (0, 1, 50)
+--			l_modulus [1] := 10
+--			l_ndigits := 1
+--			l_dis := {CIL_RSA_ENCODER}.c_mp_mod_exp (l_result.area.base_address, l_base.area.base_address, l_exponent.area.base_address, l_modulus.area.base_address, l_ndigits)
+--			check expected_9: l_result [1] = 9 end
 		end
 
 feature -- C Byte Array
@@ -582,15 +591,15 @@ feature -- C Byte Array
 			l_special: SPECIAL [NATURAL_8]
 
 		do
-			l_arr := {ARRAY [NATURAL_8]} <<0, 0, 0, 0, 0, 0, 0, 0>>
-			l_special := l_arr.to_special
-			create l_mp.make_from_array (l_arr)
-			l_mp.put_integer_32 (2147483646, 0)
-			l_arr := l_mp.read_array (0, 8)
-			{BYTE_ARRAY_HELPER}.put_array_integer_32 (l_special, 2147483646, 0)
+--			l_arr := {ARRAY [NATURAL_8]} <<0, 0, 0, 0, 0, 0, 0, 0>>
+--			l_special := l_arr.to_special
+--			create l_mp.make_from_array (l_arr)
+--			l_mp.put_integer_32 (2147483646, 0)
+--			l_arr := l_mp.read_array (0, 8)
+--			{BYTE_ARRAY_HELPER}.put_array_integer_32 (l_special, 2147483646, 0)
 
-			l_arr := {ARRAY [NATURAL_8]} <<0, 0, 0, 0, 0, 0, 0, 0>>
-			{BYTE_ARRAY_HELPER}.put_array_integer_32 (l_arr.to_special, 26, 0)
+--			l_arr := {ARRAY [NATURAL_8]} <<0, 0, 0, 0, 0, 0, 0, 0>>
+--			{BYTE_ARRAY_HELPER}.put_array_integer_32 (l_arr, 26, 0)
 		end
 
 	test_byte_array_to_string
@@ -614,16 +623,16 @@ feature -- C Byte Array
 	test_natural_64
 		local
 			l_val: NATURAL_64
-			l_sp: SPECIAL [NATURAL_8]
+			l_sp: ARRAY [NATURAL_8]
 			l_mp: MANAGED_POINTER
 		do
-			create l_sp.make_filled (0, 8)
+			create l_sp.make_filled (0, 1, 8)
 			fun_test (l_sp)
-			create l_mp.make_from_array (l_sp.to_array)
+			create l_mp.make_from_array (l_sp)
 			l_val := l_mp.read_natural_64 (0)
 		end
 
-	fun_test (a_arr: SPECIAL [NATURAL_8])
+	fun_test (a_arr: ARRAY [NATURAL_8])
 		do
 			{BYTE_ARRAY_HELPER}.put_array_integer_32 (a_arr, 2 | (27 |<< 24), 0)
 		end

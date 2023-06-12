@@ -38,13 +38,13 @@ feature -- Enum: Flags
 	ReservedMask: INTEGER = 0x400
 	RTSpecialName: INTEGER = 0x400
 
-feature -- Status report 
+feature -- Status report
 
 feature -- Operations
 
 	table_index: NATURAL_32
 		once
-			Result := {PE_TABLES}.tEvent.to_integer_32
+			Result := {PE_TABLES}.tEvent
 		end
 
 	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
@@ -52,7 +52,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- Write falgs to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest.to_special, flags, 0)
+			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, flags, 0)
 
 				-- Intialize the number of bytes written
 			l_bytes := 2

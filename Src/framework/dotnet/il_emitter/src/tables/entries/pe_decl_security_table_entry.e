@@ -35,7 +35,7 @@ feature -- Operations
 
 	table_index: NATURAL_32
 		once
-			Result := {PE_TABLES}.tDeclSecurity.to_integer_32
+			Result := {PE_TABLES}.tDeclSecurity
 		end
 
 	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
@@ -43,7 +43,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- Write action to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest.to_special, action, 0)
+			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, action, 0)
 
 				-- Intialize the number of bytes written
 			l_bytes := 2

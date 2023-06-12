@@ -309,7 +309,7 @@ feature -- app_module
 			l_hash_file := l_signing.hash_of_file (l_file)
 			l_token_file_m2 := md_emit.define_file (l_file, l_hash_file, {MD_FILE_FLAGS}.Has_meta_data)
 
-			module_2_token := md_emit.define_module_ref (create {CLI_STRING}.make ("module_2"))
+			module_2_token := md_emit.define_module_ref (create {CLI_STRING}.make ("module_2.dll"))
 
 			class_b_m2 := md_emit.define_type_ref (
 							create {CLI_STRING}.make ("B"), module_2_token)
@@ -691,6 +691,7 @@ feature -- Modules
 					l_class_b_token,
 					{MD_METHOD_ATTRIBUTES}.Public |
 					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.special_name |
 					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
 					sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
@@ -702,7 +703,7 @@ feature -- Modules
 			method_writer.write_current_body
 
 				-- Set module name
-			md_emit.set_module_name (create {CLI_STRING}.make ("module_2"))
+			md_emit.set_module_name (create {CLI_STRING}.make ("module_2.dll"))
 
 				-- Save Module
 

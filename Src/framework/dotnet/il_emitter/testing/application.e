@@ -19,7 +19,7 @@ feature -- Testing
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
 				--Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.empty_assembly", "tk.define_method_net2", "om.method_assembly">>
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.modules","tk.define_entry_point_net6", "tk.define_implementation", "tk.define_interface", "tk.ast_process">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.interface_inheritance","tk.modules","tk.define_entry_point_net6", "tk.define_implementation", "tk.define_interface", "tk.ast_process">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -130,6 +130,11 @@ feature -- Token tests
 			if is_test_included("modules", a_pattern) then
 				(create {TEST_MODULES_TK}).test_modules
 			end
+			if is_test_included("interface_inheritance", a_pattern) then
+				(create {TEST_INTERFACE_INHERITANCE}).test_inheritance
+			end
+
+
 		end
 
 feature -- Object model tests

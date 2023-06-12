@@ -5,8 +5,12 @@ interface IPrintable
 {
     void Print();
 }
+interface IMark
+{
 
-public class Program : IPrintable
+}
+
+public class Program : IPrintable, IMark
 {
     // A private field name
     private string name;
@@ -29,7 +33,7 @@ public class Program : IPrintable
         Program program = new Program();
 
         // Set the Name property
-        program.Name = "John Doe";
+        program.Name = "John Doe with IMark";
 
         // Call the Print method to output the Name property to the console
         program.Print();

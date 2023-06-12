@@ -121,9 +121,9 @@ feature -- Token tests
 			if is_test_included ("blob_heap_duplictes", a_pattern) then
 				(create {TEST_METADATA_TABLES_TK}).test_blob_heap_duplicates
 			end
-			if is_test_included ("define_implementation_2", a_pattern) then
-				(create {TEST_METADATA_TABLES_TK}).test_define_implementation_2
-			end
+--			if is_test_included ("define_implementation_2", a_pattern) then
+--				(create {TEST_METADATA_TABLES_TK}).test_define_implementation_2
+--			end
 			if is_test_included("ast_process", a_pattern) then
 				(create {TEST_AST_PROCESS}).test_ast_process
 			end

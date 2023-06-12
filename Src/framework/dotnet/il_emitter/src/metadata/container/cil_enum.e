@@ -83,6 +83,7 @@ feature -- Output
 			l_extends: NATURAL_32
 			l_extends_class: PE_TYPEDEF_OR_REF
 			l_table: PE_TABLE_ENTRY_BASE
+			l_typedef_entry: PE_TYPE_DEF_TABLE_ENTRY
 			l_enclosing: NATURAL_32
 			l_dis: NATURAL_32
 			l_sz: CELL [NATURAL_32]
@@ -106,8 +107,8 @@ feature -- Output
 					if attached {CIL_CLASS} parent as l_parent then
 						l_namespace_index := 0
 					end
-					create {PE_TYPE_DEF_TABLE_ENTRY} l_table.make_with_data (l_pe_flags, l_typename_index, l_namespace_index, l_extends_class, l_field_index, l_method_index)
-					pe_index := l_writer.add_table_entry (l_table)
+					create {PE_TYPE_DEF_TABLE_ENTRY} l_typedef_entry.make_with_data (l_pe_flags, l_typename_index, l_namespace_index, l_extends_class, l_field_index, l_method_index)
+					pe_index := l_writer.add_table_entry (l_typedef_entry)
 
 					if attached {CIL_CLASS} parent as l_parent then
 						l_enclosing := parent_class (a_stream)

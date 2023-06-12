@@ -432,6 +432,7 @@ feature {NONE} -- Implementation
 			l_type_type: INTEGER
 			l_extends_class: PE_TYPEDEF_OR_REF
 			l_table: PE_TABLE_ENTRY_BASE
+			l_typedef_entry: PE_TYPE_DEF_TABLE_ENTRY
 			l_my_pack: INTEGER
 			l_my_size: INTEGER
 			l_dis: NATURAL_32
@@ -464,8 +465,8 @@ feature {NONE} -- Implementation
 					l_type_type := {PE_TYPEDEF_OR_REF}.typedef
 				end
 				create l_extends_class.make_with_tag_and_index (l_type_type, l_extends)
-				create {PE_TYPE_DEF_TABLE_ENTRY} l_table.make_with_data (l_pe_flags, l_typename_index, l_namespace_index, l_extends_class, l_field_index, l_method_index)
-				pe_index := l_writer.add_table_entry (l_table)
+				create l_typedef_entry.make_with_data (l_pe_flags, l_typename_index, l_namespace_index, l_extends_class, l_field_index, l_method_index)
+				pe_index := l_writer.add_table_entry (l_typedef_entry)
 
 				if pack > 0 or else size > 0 then
 					l_my_pack := pack

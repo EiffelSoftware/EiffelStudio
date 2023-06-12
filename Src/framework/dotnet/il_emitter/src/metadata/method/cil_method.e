@@ -806,7 +806,7 @@ feature {NONE} -- Implementation
 				l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.method_def_sig (prototype, l_sz)
 				l_method_signature := l_writer.hash_blob (l_sig, l_sz.item.to_natural_8)
 
-				create {PE_METHOD_DEF_TABLE_ENTRY} l_table.make_with_data (l_rendering, l_impl_flags.to_integer_16, l_mf_flags.to_integer_16, l_name_index, l_method_signature, l_param_index)
+				create {PE_METHOD_DEF_TABLE_ENTRY} l_table.make_with_method (l_rendering, l_impl_flags.to_integer_16, l_mf_flags.to_integer_16, l_name_index, l_method_signature, l_param_index)
 				prototype.set_pe_index (l_writer.add_table_entry (l_table))
 
 				i := 1

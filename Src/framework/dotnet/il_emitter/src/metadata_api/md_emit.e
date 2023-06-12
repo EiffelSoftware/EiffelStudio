@@ -95,13 +95,13 @@ feature {NONE}
 			-- Initialize the compilation unit
 		local
 			l_type_def: PE_TYPEDEF_OR_REF
-			l_table: PE_TABLE_ENTRY_BASE
+			l_table: PE_TYPE_DEF_TABLE_ENTRY
 		do
 				-- initializes the necessary metadata tables for the module and type definition entries.
 			module_index := pe_writer.hash_string ({STRING_32} "<Module>")
 
 			create l_type_def.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
-			create {PE_TYPE_DEF_TABLE_ENTRY} l_table.make_with_data (0, module_index, 0, l_type_def, 1, 1)
+			create l_table.make_with_data (0, module_index, 0, l_type_def, 1, 1)
 			pe_index := add_table_entry (l_table)
 		end
 
@@ -841,17 +841,12 @@ feature -- Definition: Creation
 			l_extends: PE_TYPEDEF_OR_REF
 			last_dot: INTEGER
 			l_type_name: STRING_32
-			l_field_index, l_method_index: NATURAL
+--			l_field_index, l_method_index: NATURAL
 			l_class_index: NATURAL_32
 		do
-				-- FieldList (an index into the Field table; it marks the first of a contiguous run of Fields owned by this Type).
-			l_field_index := 0 -- Not yet initialized
-				-- MethodList (an index into the MethodDef table; it marks the first of a continguous run of Methods owned by this Type).
-			l_method_index := 0 -- Not yet initialized
-
 			l_type_name := type_name.string_32
 			debug ("il_emitter_table")
-				print ({STRING_32} "TypeDef: " + l_type_name + " -> Method index="+ l_method_index.out)
+				print ({STRING_32} "TypeDef: " + l_type_name)
 			end
 
 			last_dot := l_type_name.last_index_of ('.', l_type_name.count)
@@ -870,7 +865,12 @@ feature -- Definition: Creation
 				l_extends := create_type_def_or_ref (extend_token, ext_tuple.table_row_index)
 			end
 
-			create {PE_TYPE_DEF_TABLE_ENTRY} l_entry.make_with_data (flags, l_name_index, l_namespace_index, l_extends, l_field_index, l_method_index)
+--				-- FieldList (an index into the Field table; it marks the first of a contiguous run of Fields owned by this Type).
+--			l_field_index := 1 -- Not yet initialized
+--				-- MethodList (an index into the MethodDef table; it marks the first of a continguous run of Methods owned by this Type).
+--			l_method_index := 1 -- Not yet initialized			
+
+			create {PE_TYPE_DEF_TABLE_ENTRY} l_entry.make_with_uninitialized_field_and_method (flags, l_name_index, l_namespace_index, l_extends)
 			pe_index := add_table_entry (l_entry)
 			l_class_index := pe_index
 			Result := last_token.to_integer_32
@@ -940,7 +940,7 @@ feature -- Definition: Creation
 			l_method_def_entry: PE_METHOD_DEF_TABLE_ENTRY
 			l_method_signature: NATURAL_32
 			l_name_index: NATURAL_32
-			l_param_index: NATURAL_32
+--			l_param_index: NATURAL_32
 			l_method_index: like next_table_index
 		do
 			debug ("il_emitter_table")
@@ -949,13 +949,13 @@ feature -- Definition: Creation
 				-- See II.22.26 MethodDef : 0x06
 
 
-			l_param_index := 0 -- Not yet initialized
-
 			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 			l_name_index := pe_writer.hash_string (method_name.string_32)
 
+--			l_param_index := 1 -- Not yet initialized
+
 				-- Create a new PE_METHOD_DEF_TABLE_ENTRY instance with the given data
-			create l_method_def_entry.make (impl_flags.to_integer_16, method_flags.to_integer_16, l_name_index, l_method_signature, l_param_index)
+			create l_method_def_entry.make_without_param_index (impl_flags.to_integer_16, method_flags.to_integer_16, l_name_index, l_method_signature)
 
 				-- Add the new PE_METHOD_DEF_TABLE_ENTRY instance to the metadata tables.
 			l_method_index := next_table_index ({PE_TABLES}.tmethoddef)

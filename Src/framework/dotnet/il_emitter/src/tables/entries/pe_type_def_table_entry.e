@@ -19,7 +19,8 @@ inherit
 	DEBUG_OUTPUT
 
 create
-	make_with_data
+	make_with_data,
+	make_with_uninitialized_field_and_method
 
 feature {NONE} -- Initialization
 
@@ -31,7 +32,20 @@ feature {NONE} -- Initialization
 			create type_name_space_index.make_with_index (a_type_name_space_index)
 			extends := a_extends
 			create fields.make_with_index (a_field_index)
+			is_field_list_index_set := True
 			create methods.make_with_index (a_method_index)
+			is_method_list_index_set := True
+		end
+
+	make_with_uninitialized_field_and_method (a_flags: INTEGER; a_type_name_index: NATURAL_32; a_type_name_space_index: NATURAL_32;
+			a_extends: detachable PE_TYPEDEF_OR_REF)
+		do
+			make_with_data (a_flags, a_type_name_index, a_type_name_space_index, a_extends, 1, 1)
+				-- check if the values are acceptable:
+				--	  FieldList: 1
+				--	  MethodList: 1
+			is_field_list_index_set := False
+			is_method_list_index_set := False
 		end
 
 feature -- Status
@@ -82,14 +96,8 @@ feature -- Status report
 		end
 
 	is_field_list_index_set: BOOLEAN
-		do
-			Result := fields.is_list_index_set
-		end
 
 	is_method_list_index_set: BOOLEAN
-		do
-			Result := methods.is_list_index_set
-		end
 
 feature -- Element change
 
@@ -98,6 +106,7 @@ feature -- Element change
 			not is_field_list_index_set
 		do
 			fields.update_index (idx)
+			is_field_list_index_set := True
 		ensure
 			is_field_list_index_set
 		end
@@ -107,6 +116,7 @@ feature -- Element change
 			not is_method_list_index_set
 		do
 			methods.update_index (idx)
+			is_method_list_index_set := True
 		ensure
 			is_method_list_index_set
 		end

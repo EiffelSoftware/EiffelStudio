@@ -16,12 +16,12 @@ inherit
 		end
 
 create
-	make,
-	make_with_data
+	make_with_method,
+	make_without_param_index
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_method: PE_METHOD; a_iflags: INTEGER_16; a_mflags: INTEGER_16; a_name_index: NATURAL_32; a_signature_index: NATURAL_32; a_param_index: NATURAL_32)
+	make_with_method (a_method: PE_METHOD; a_iflags: INTEGER_16; a_mflags: INTEGER_16; a_name_index: NATURAL_32; a_signature_index: NATURAL_32; a_param_index: NATURAL_32)
 		do
 			rva := 0
 			method := a_method
@@ -30,18 +30,20 @@ feature {NONE} -- Initialization
 			create name_index.make_with_index (a_name_index)
 			create signature_index.make_with_index (a_signature_index)
 			create param_index.make_with_index (a_param_index)
+			is_param_list_index_set := True
 		ensure
 			method_set: method = a_method
 		end
 
-	make (a_iflags: INTEGER_16; a_mflags: INTEGER_16; a_name_index: NATURAL_32; a_signature_index: NATURAL_32; a_param_index: NATURAL_32)
+	make_without_param_index (a_iflags: INTEGER_16; a_mflags: INTEGER_16; a_name_index: NATURAL_32; a_signature_index: NATURAL_32)
 		do
 			rva := 0
 			impl_flags := a_iflags
 			flags := a_mflags
 			create name_index.make_with_index (a_name_index)
 			create signature_index.make_with_index (a_signature_index)
-			create param_index.make_with_index (a_param_index)
+			create param_index.make_with_index (1) -- Fake data
+			is_param_list_index_set := False
 		end
 
 feature -- Status
@@ -91,9 +93,6 @@ feature -- Access
 feature -- Status report			
 
 	is_param_list_index_set: BOOLEAN
-		do
-			Result := param_index.is_list_index_set
-		end
 
 feature -- Element change
 
@@ -102,6 +101,7 @@ feature -- Element change
 			not is_param_list_index_set
 		do
 			param_index.update_index (idx)
+			is_param_list_index_set := True
 		ensure
 			is_param_list_index_set
 		end

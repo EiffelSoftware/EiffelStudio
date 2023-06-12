@@ -128,27 +128,14 @@ feature -- Managed Pointer
 feature -- Measurement
 
 	size_of: INTEGER
-		local
-			l_internal: INTERNAL
-			n: INTEGER
-			l_obj: PE_DOTNET_META_TABLES_HEADER
 		do
-			create l_obj
-			create l_internal
-			n := l_internal.field_count (l_obj)
-			across 1 |..| n as ic loop
-				if attached l_internal.field (ic, l_obj) as l_field then
-					if attached {NATURAL_8} l_field then
-						Result := Result + {PLATFORM}.natural_8_bytes
-					elseif attached {NATURAL_32} l_field as l_arr then
-						Result := Result + {PLATFORM}.natural_32_bytes
-					elseif attached {INTEGER_64} l_field as l_arr then
-						Result := Result + {PLATFORM}.integer_64_bytes
-					end
-				end
-			end
+			Result := {PLATFORM}.natural_32_bytes
+					+ 4 * {PLATFORM}.natural_8_bytes
+					+ {PLATFORM}.integer_64_bytes
+					+ {PLATFORM}.integer_64_bytes
 		ensure
 			instance_free: class
 		end
+
 
 end

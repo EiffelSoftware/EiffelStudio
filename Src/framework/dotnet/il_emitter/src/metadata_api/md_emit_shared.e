@@ -27,7 +27,7 @@ feature -- Access
 	pe_index: NATURAL_32
 			-- metatable index in the PE file for this data container.
 
---	Heap_size_: INTEGER = 0x10000
+--	Heap_size_: INTEGER = 0x1_0000
 			--   If the maximum size of the heap is less than 2^16, then the heap offset size is 2 bytes (16 bits), otherwise it is 4 bytes
 
 feature -- Status report
@@ -124,10 +124,10 @@ feature {NONE} -- Helper
 			l_table_type_index: NATURAL_32
 			l_table_row_index: NATURAL_32
 		do
-				-- 2^8 -1 = 255
-			l_table_type_index := ((a_token |>> 24) & 255).to_natural_32
-				-- 2^ 24 -1 = 16777215
-			l_table_row_index := (a_token & 16777215).to_natural_32
+				-- 2^8 -1 = 255 = 0xFF
+			l_table_type_index := ((a_token |>> 24) & 0xFF).to_natural_32
+				-- 2^ 24 -1 = 16777215 = 0xFF_FFFF
+			l_table_row_index := (a_token & 0xFF_FFFF).to_natural_32
 			Result := [l_table_type_index, l_table_row_index]
 		end
 
@@ -300,19 +300,19 @@ feature -- Metadata Table Sizes
 		local
 			string_index_size, guid_index_size, blob_index_size: NATURAL_32
 		do
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				string_index_size := 2
 			else
 				string_index_size := 4
 			end
 
-			if guid_heap_size < 0x10000 then
+			if guid_heap_size < 0x1_0000 then
 				guid_index_size := 2
 			else
 				guid_index_size := 4
 			end
 
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				blob_index_size := 2
 			else
 				blob_index_size := 4
@@ -332,14 +332,14 @@ feature -- Metadata Table Sizes
 			index_size, index_string_size: NATURAL_32
 		do
 				-- Resolution scope
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- Type name index and type_name_space_index
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				index_string_size := 2
 			else
 				index_string_size := 4
@@ -367,14 +367,14 @@ feature -- Metadata Table Sizes
 			index_size, index_string_size: NATURAL_32
 		do
 				-- extends, fields and methods
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- type_name_index and type_name_space_index
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				index_string_size := 2
 			else
 				index_string_size := 4
@@ -413,14 +413,14 @@ feature -- Metadata Table Sizes
 			string_offset_size, blob_offset_size: NATURAL_32
 		do
 				-- Name
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				string_offset_size := 2
 			else
 				string_offset_size := 4
 			end
 
 				-- Signature
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				blob_offset_size := 2
 			else
 				blob_offset_size := 4
@@ -447,21 +447,21 @@ feature -- Metadata Table Sizes
 			index_size, string_heap_offset_size, blob_heap_offset_size: NATURAL_32
 		do
 				-- param_index
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- name_index
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				string_heap_offset_size := 2
 			else
 				string_heap_offset_size := 4
 			end
 
 				-- signature_index
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				blob_heap_offset_size := 2
 			else
 				blob_heap_offset_size := 4
@@ -499,7 +499,7 @@ feature -- Metadata Table Sizes
 			string_index_size: NATURAL_32
 		do
 				-- name_index
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				string_index_size := 2
 			else
 				string_index_size := 4
@@ -523,7 +523,7 @@ feature -- Metadata Table Sizes
 		local
 			index_size: NATURAL_32
 		do
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -546,21 +546,21 @@ feature -- Metadata Table Sizes
 			index_size, string_heap_offset_size, blob_heap_offset_size: NATURAL_32
 		do
 				-- parent_index or class_index see spec.
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- name_index
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				string_heap_offset_size := 2
 			else
 				string_heap_offset_size := 4
 			end
 
 				-- signature_index
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				blob_heap_offset_size := 2
 			else
 				blob_heap_offset_size := 4
@@ -588,14 +588,14 @@ feature -- Metadata Table Sizes
 			index_size, blob_heap_offset_size: NATURAL_32
 		do
 				-- parent_index
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- value_index
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				blob_heap_offset_size := 2
 			else
 				blob_heap_offset_size := 4
@@ -616,14 +616,14 @@ feature -- Metadata Table Sizes
 			index_size, blob_heap_offset_size: NATURAL_32
 		do
 				-- parent_index and type_index
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- value_index
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				blob_heap_offset_size := 2
 			else
 				blob_heap_offset_size := 4
@@ -646,14 +646,14 @@ feature -- Metadata Table Sizes
 		local
 			index_size, blob_heap_offset_size: NATURAL_32
 		do
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- native_type
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				blob_heap_offset_size := 2
 			else
 				blob_heap_offset_size := 4
@@ -671,13 +671,13 @@ feature -- Metadata Table Sizes
 		local
 			index_size, blob_heap_offset_size: NATURAL_32
 		do
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 				-- permission_set
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				blob_heap_offset_size := 2
 			else
 				blob_heap_offset_size := 4
@@ -696,7 +696,7 @@ feature -- Metadata Table Sizes
 		local
 			index_size: NATURAL_32
 		do
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -714,7 +714,7 @@ feature -- Metadata Table Sizes
 		local
 			index_size: NATURAL_32
 		do
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -730,7 +730,7 @@ feature -- Metadata Table Sizes
 		local
 			index_blob_size: NATURAL_32
 		do
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				index_blob_size := 2
 			else
 				index_blob_size := 4
@@ -747,7 +747,7 @@ feature -- Metadata Table Sizes
 			index_size: NATURAL_32
 		do
 				-- parent and property_list
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -766,13 +766,13 @@ feature -- Metadata Table Sizes
 		local
 			name_index_size, type_index_size: NATURAL_32
 		do
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				name_index_size := 2
 			else
 				name_index_size := 4
 			end
 
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				type_index_size := 2
 			else
 				type_index_size := 4
@@ -799,7 +799,7 @@ feature -- Metadata Table Sizes
 			index_size: NATURAL_32
 		do
 				-- method and association
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -818,7 +818,7 @@ feature -- Metadata Table Sizes
 		local
 			index_size: NATURAL_32
 		do
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -839,7 +839,7 @@ feature -- Metadata Table Sizes
 		local
 			name_index_size: NATURAL_32
 		do
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				name_index_size := 2
 			else
 				name_index_size := 4
@@ -857,7 +857,7 @@ feature -- Metadata Table Sizes
 		local
 			index_size: NATURAL_32
 		do
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -878,14 +878,14 @@ feature -- Metadata Table Sizes
 		do
 				-- method_index MemberForwarded and
 				-- module_index ImportScope
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
 			end
 
 				-- import_name_index Index ImportName
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				string_index_size := 2
 			else
 				string_index_size := 4
@@ -903,7 +903,7 @@ feature -- Metadata Table Sizes
 		local
 			index_size: NATURAL_32
 		do
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -929,13 +929,13 @@ feature -- Metadata Table Sizes
 			blob_index_size, string_index_size: NATURAL_32
 		do
 				-- PublicKey
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				blob_index_size := 2
 			else
 				blob_index_size := 4
 			end
 				-- Name and Culture.
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				string_index_size := 2
 			else
 				string_index_size := 4
@@ -968,14 +968,14 @@ feature -- Metadata Table Sizes
 		do
 				-- public_key_index
 				-- hash_index
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				blob_index_size := 2
 			else
 				blob_index_size := 4
 			end
 				-- name_index
 				-- culture_index
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				string_index_size := 2
 			else
 				string_index_size := 4
@@ -1005,14 +1005,14 @@ feature -- Metadata Table Sizes
 			blob_offset_size, string_offset_size: NATURAL_32
 		do
 				-- Name
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				string_offset_size := 2
 			else
 				string_offset_size := 4
 			end
 
 				-- Hash Value
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				blob_offset_size := 2
 			else
 				blob_offset_size := 4
@@ -1036,14 +1036,14 @@ feature -- Metadata Table Sizes
 			string_offset_size, index_size: NATURAL_32
 		do
 				-- TypeName and TypeNamespace
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				string_offset_size := 2
 			else
 				string_offset_size := 4
 			end
 
 				-- Implementation
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -1082,14 +1082,14 @@ feature -- Metadata Table Sizes
 			string_offset_size, index_size: NATURAL_32
 		do
 				-- Name
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				string_offset_size := 2
 			else
 				string_offset_size := 4
 			end
 
 				-- Implementation
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -1112,7 +1112,7 @@ feature -- Metadata Table Sizes
 			index_size: NATURAL_32
 		do
 				-- NestedClass and EnclosingClass
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -1134,14 +1134,14 @@ feature -- Metadata Table Sizes
 			string_offset_size, index_size: NATURAL_32
 		do
 				-- Name
-			if strings_heap_size < 0x10000 then
+			if strings_heap_size < 0x1_0000 then
 				string_offset_size := 2
 			else
 				string_offset_size := 4
 			end
 
 				-- Owner
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -1163,14 +1163,14 @@ feature -- Metadata Table Sizes
 			blob_offset_size, index_size: NATURAL_32
 		do
 				-- Instantiation
-			if blob_heap_size < 0x10000 then
+			if blob_heap_size < 0x1_0000 then
 				blob_offset_size := 2
 			else
 				blob_offset_size := 4
 			end
 
 				-- Method
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -1190,7 +1190,7 @@ feature -- Metadata Table Sizes
 			index_size: NATURAL_32
 		do
 				-- Owner and Constraint
-			if pe_index < 0x10000 then
+			if pe_index < 0x1_0000 then
 				index_size := 2
 			else
 				index_size := 4
@@ -1263,8 +1263,8 @@ feature -- Heaps
 					-- 16777216 = 0x100 0000 = 1 00000000 00000000 00000000
 					-- 65 536 	=   0x1 0000 =          1 00000000 00000000
 					-- 256 		=      0x100 =                   1 00000000
-					current_size := (blob_heap [i] - 0xC0) * 0x1000000
-									+ blob_heap [i + 1] * 0x10000
+					current_size := (blob_heap [i] - 0xC0) * 0x100_0000
+									+ blob_heap [i + 1] * 0x1_0000
 									+ blob_heap [i + 2] * 0x100
 									+ blob_heap [i + 3]
 					j := i + 4
@@ -1323,11 +1323,11 @@ feature -- Heaps
 									+ us_heap [i + 1]
 					j := i + 2
 				else
-					-- 16777216 = 0x100 0000 = 1 00000000 00000000 00000000
-					-- 65 536  	=   0x1 0000 =          1 00000000 00000000
+					-- 16777216 = 0x100_0000 = 1 00000000 00000000 00000000
+					-- 65 536  	=   0x1_0000 =          1 00000000 00000000
 					-- 256 		=      0x100 =                   1 00000000
-					current_size := (us_heap [i] - 0xC0) * 0x1000000
-									+ us_heap [i + 1] * 0x10000
+					current_size := (us_heap [i] - 0xC0) * 0x100_0000
+									+ us_heap [i + 1] * 0x1_0000
 									+ us_heap [i + 2] * 0x100
 									+ us_heap [i + 3]
 					j := i + 4

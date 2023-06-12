@@ -15,7 +15,9 @@ feature
 			--     method M, P, N
 			-- Interface J
 			--    method M
-			-- Class C: I, J
+			-- Interface L
+			-- 	  no methods.
+			-- Class C: I, J, L
 			--     implements I.M, P, N, I.J
 			-- Class Programs that uses C
 			-- following this process
@@ -68,7 +70,7 @@ feature
 			iprintable_token: INTEGER
 			iprint_method_token: INTEGER
 			imp_print_method_token: INTEGER
-			interface_i_token, interface_j_token: INTEGER
+			interface_i_token, interface_j_token, interface_l_token: INTEGER
 			im_method_token, jm_method_token: INTEGER
 			ip_method_token, in_method_token: INTEGER
 			l_class_c_token: INTEGER
@@ -173,11 +175,20 @@ feature
 					0,
 					Void)
 
-				-- Define Class C: I, J
+				-- Define interface L
+			interface_l_token := md_emit.define_type (
+					create {CLI_STRING}.make ("L"),
+					{MD_TYPE_ATTRIBUTES}.Abstract |
+					{MD_TYPE_ATTRIBUTES}.is_interface |
+					{MD_TYPE_ATTRIBUTES}.Auto_layout,
+					0,
+					Void)
+
+				-- Define Class C: I, J, L
 			l_class_c_token := md_emit.define_type (
 					create {CLI_STRING}.make ("C"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
 					{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public | {MD_TYPE_ATTRIBUTES}.before_field_init,
-					object_type_token, <<interface_i_token, interface_j_token>>)
+					object_type_token, <<interface_i_token, interface_j_token, interface_l_token>>)
 
 
 				-- Define the Root Class Program

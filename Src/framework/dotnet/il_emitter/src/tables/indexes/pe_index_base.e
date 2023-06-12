@@ -88,7 +88,7 @@ feature -- Operations
 			v: NATURAL_32
 		do
 				--  Calculate the value to be written to the destintation `a_dest`.
-			v := ((index |<< get_index_shift) + tag.to_natural_32)
+			v := (index |<< get_index_shift) + tag.to_natural_32
 
 			if has_index_overflow (a_sizes) then
 					-- write the value as NATURAL_32 to the destination `a_dest`

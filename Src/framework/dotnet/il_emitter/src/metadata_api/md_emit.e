@@ -47,16 +47,24 @@ feature {NONE}
 
 	initialize_metadata_tables
 			-- Initialize an in-memory metadata tables
+		local
+			i,n: INTEGER
 		do
-			create tables.make_empty ({PE_TABLE_CONSTANTS}.max_tables)
-			across 0 |..| ({PE_TABLE_CONSTANTS}.max_tables - 1) as i loop
-				tables.force ((create {MD_TABLE}.make (i)), i)
+			from
+				i := 0
+				n := {PE_TABLE_CONSTANTS}.max_tables
+				create tables.make_empty (n)
+			until
+				i >= n
+			loop
+				tables.force (create {MD_TABLE}.make (i), i)
+				i := i + 1
 			end
 		end
 
 	initialize_entry_size
 		do
-			create entry_sizes.make (31)
+			create entry_sizes.make (32)
 			entry_sizes.force (agent module_table_entry_size, {PE_TABLES}.tModule)
 			entry_sizes.force (agent type_ref_entry_size, {PE_TABLES}.tTypeRef)
 			entry_sizes.force (agent type_def_table_entry_size, {PE_TABLES}.tTypeDef)
@@ -101,7 +109,7 @@ feature {NONE}
 			module_index := pe_writer.hash_string ({STRING_32} "<Module>")
 
 			create l_type_def.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
-			create l_table.make_with_data (0, module_index, 0, l_type_def, 1, 1)
+			create l_table.make_with_data (0, module_index, 0, l_type_def, 1, 1) -- TODO: check why 1 ?
 			pe_index := add_table_entry (l_table)
 		end
 
@@ -201,7 +209,7 @@ feature -- Access
 			us_heap := pe_writer.us.base
 
 				-- Compute the index.
-			l_index := a_token - 0x70000000 -- 0x70 table type: UserString heap
+			l_index := a_token - 0x7000_0000 -- 0x70 table type: UserString heap
 
 				-- Get the length of the string, reading the next byte.
 				-- Per character we use two bytes and it ends with a null character.
@@ -216,13 +224,13 @@ feature -- Access
 				l_length := (us_heap [i] - 128) * 256 + us_heap [i + 1]
 				i := i + 2
 			else
-				-- 16777216 = 0x100 0000 = 1 00000000 00000000 00000000
-				-- 65536 	=   0x1 0000 =          1 00000000 00000000
+				-- 16777216 = 0x100_0000 = 1 00000000 00000000 00000000
+				-- 65536 	=   0x1_0000 =          1 00000000 00000000
 				-- 256 		=      0x100 =                   1 00000000
-				l_length := (us_heap [i] - 192) * 16777216
-							+ us_heap [i + 1] * 65536
-							+ us_heap [i + 2] * 256
-							+ us_heap [i + 3]
+				l_length := (us_heap [i] - 192) * 0x100_0000
+							  + us_heap [i + 1] * 0x1_0000
+							  + us_heap [i + 2] * 0x100
+							  + us_heap [i + 3]
 				i := i + 4
 			end
 
@@ -242,7 +250,7 @@ feature -- Access
 	is_user_string_token (a_token: INTEGER_32): BOOLEAN
 			-- Checks if the given integer value `a_token` corresponds to a valid user string token.
 		do
-			Result := (a_token >= 0x70000000) and (a_token < (0x70000000 + pe_writer.us.size.to_integer_32))
+			Result := (a_token >= 0x7000_0000) and (a_token < (0x7000_0000 + pe_writer.us.size.to_integer_32))
 		end
 
 feature {NONE} -- Implementation
@@ -475,6 +483,11 @@ feature {NONE} -- Implementation
 			loop
 				tb := md_table (i.to_natural_32)
 				l_sz := tb.size
+				debug("il_emitter_table")
+					if l_sz /= 0 then
+						print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables: Table #" + i.out + " -> count=" + l_sz.out + "%N")
+					end
+				end
 				l_counts [i + 1] := l_sz
 				if l_sz /= 0 then
 					a_file.put_natural_32 (l_sz)
@@ -490,6 +503,7 @@ feature {NONE} -- Implementation
 				i >= n
 			loop
 				tb := md_table (i.to_natural_32)
+
 					-- TODO: what if l_counts [i + 1] = 0 ?
 				debug ("il_emitter_table")
 					if tb.size /= 0 and l_counts [i + 1] = 0 then check potential_issue: False end end
@@ -502,9 +516,15 @@ feature {NONE} -- Implementation
 				loop
 					create l_buffer.make_filled (0, 1, 512)
 					l_sz := tb [j].render (l_counts, l_buffer)
+					debug("il_emitter_table")
+						if l_sz /= 0 then
+							print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables[" + i.out + "] -> entry size=" + l_sz.out
+								+ " content=" + {MD_DEBUG}.dump_special (l_buffer.to_special, 0, l_sz.to_integer_32) + "%N")
+						end
+					end
 						-- TODO double check
 						-- this is not efficient.
-					put_array (a_file, l_buffer.subarray (1, l_sz.to_integer_32))
+					put_subarray (a_file, l_buffer, l_buffer.lower, l_sz.to_integer_32)
 					j := j + 1
 				end
 				i := i + 1
@@ -518,7 +538,7 @@ feature {NONE} -- Implementation
 		require
 			open_write: a_file.is_open_write
 		do
-			put_array_with_size (a_file, pe_writer.strings.base.to_array, pe_writer.strings.size.to_integer_32)
+			put_subspecial (a_file, pe_writer.strings.base, 0, pe_writer.strings.size.to_integer_32)
 			align (a_file, 4)
 		end
 
@@ -532,7 +552,7 @@ feature {NONE} -- Implementation
 			if pe_writer.us.size = 0 then
 				put_array (a_file, pe_writer.default_us)
 			else
-				put_array_with_size (a_file, pe_writer.us.base.to_array, pe_writer.us.size.to_integer_32)
+				put_subspecial (a_file, pe_writer.us.base, 0, pe_writer.us.size.to_integer_32)
 			end
 			align (a_file, 4)
 		end
@@ -543,7 +563,7 @@ feature {NONE} -- Implementation
 		require
 			open_write: a_file.is_open_write
 		do
-			put_array_with_size (a_file, pe_writer.guid.base.to_array, pe_writer.guid.size.to_integer_32)
+			put_subspecial (a_file, pe_writer.guid.base, 0, pe_writer.guid.size.to_integer_32)
 			align (a_file, 4)
 		end
 
@@ -553,7 +573,7 @@ feature {NONE} -- Implementation
 		require
 			open_write: a_file.is_open_write
 		do
-			put_array_with_size (a_file, pe_writer.blob.base.to_array, pe_writer.blob.size.to_integer_32)
+			put_subspecial (a_file, pe_writer.blob.base, 0, pe_writer.blob.size.to_integer_32)
 			align (a_file, 4)
 		end
 
@@ -610,13 +630,19 @@ feature {NONE} -- Implementation
 		end
 
 	put_metadata_headers (a_file: FILE; a_header: PE_DOTNET_META_HEADER)
+		local
+			mp: MANAGED_POINTER
 		do
-			a_file.put_managed_pointer (a_header.managed_pointer, 0, a_header.managed_pointer.count)
+			mp := a_header.managed_pointer
+			a_file.put_managed_pointer (mp, 0, mp.count)
 		end
 
 	put_tables_header (a_file: FILE; a_header: PE_DOTNET_META_TABLES_HEADER)
+		local
+			mp: MANAGED_POINTER
 		do
-			a_file.put_managed_pointer (a_header.managed_pointer, 0, a_header.managed_pointer.count)
+			mp := a_header.managed_pointer
+			a_file.put_managed_pointer (mp, 0, mp.count)
 		end
 
 	put_array (a_file: FILE; a_data: ARRAY [NATURAL_8])
@@ -628,6 +654,30 @@ feature {NONE} -- Implementation
 			a_file.put_managed_pointer (mp, 0, mp.count)
 		ensure
 			a_file.count = old (a_file.count) + a_data.count * {PLATFORM}.natural_8_bytes
+		end
+
+	put_subarray (a_file: FILE; a_data: ARRAY [NATURAL_8]; a_start_index: INTEGER; a_count: INTEGER)
+		require
+			valid_start_index: a_data.valid_index (a_start_index)
+			valid_count: a_start_index + a_count <= a_data.upper
+		do
+			put_subspecial (a_file, a_data.to_special, a_start_index - a_data.lower, a_count)
+		ensure
+			a_file.count = old (a_file.count) + a_count * {PLATFORM}.natural_8_bytes
+		end
+
+	put_subspecial (a_file: FILE; a_data: SPECIAL [NATURAL_8]; a_start_index: INTEGER; a_count: INTEGER)
+		require
+			valid_start_index: a_data.valid_index (a_start_index)
+			valid_count: a_start_index + a_count <= a_data.count
+		local
+			mp: MANAGED_POINTER
+		do
+			create mp.make (a_count)
+			mp.put_special_natural_8 (a_data, a_start_index, 0, a_count)
+			a_file.put_managed_pointer (mp, 0, mp.count)
+		ensure
+			a_file.count = old (a_file.count) + a_count * {PLATFORM}.natural_8_bytes
 		end
 
 	align (a_file: FILE; a_align: INTEGER)
@@ -1208,7 +1258,6 @@ feature -- Definition: Creation
 			l_str: STRING_32
 			l_us_index: NATURAL_32
 		do
-				--| add the null character
 			create l_str.make_from_string (str.string_32)
 			l_us_index := hash_us (l_str, l_str.count)
 			Result := (l_us_index | ({NATURAL_32} 0x70 |<< 24)).to_integer_32

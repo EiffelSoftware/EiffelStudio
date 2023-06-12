@@ -2340,6 +2340,14 @@ feature -- Test
 		end
 
 	test_define_interface
+			-- Build an interface example with properties
+			-- Define interface IPrintable
+			-- 	with a method Print()
+			-- Define interface IMark
+			-- 	no methods
+			-- Class Program: IPrintable, IMark
+			-- Follow the AST process
+			-- Compare the output with the cs\interface example.
 		local
 			l_pe_file: CLI_PE_FILE
 			md_dispenser: MD_DISPENSER
@@ -2373,6 +2381,7 @@ feature -- Test
 			iprintable_token: INTEGER
 			iprint_method_token: INTEGER
 			imp_print_method_token: INTEGER
+			imark_token: INTEGER
 		do
 			create md_dispenser.make
 			md_emit := md_dispenser.emit
@@ -2438,30 +2447,7 @@ feature -- Test
 
 			md_emit.set_module_name (create {CLI_STRING}.make ("test_interface.dll"))
 
-				-- Define IPrintable interface
-			iprintable_token := md_emit.define_type (
-					create {CLI_STRING}.make ("IPrintable"),
-					{MD_TYPE_ATTRIBUTES}.is_interface |
-					{MD_TYPE_ATTRIBUTES}.Abstract |
-					{MD_TYPE_ATTRIBUTES}.Auto_layout,
-					0,
-					Void)
 
-				-- Define method in IPrintable interface
-			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
-			sig.set_parameter_count (0)
-			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-
-			iprint_method_token := md_emit.define_method (create {CLI_STRING}.make ("Print"),
-					iprintable_token,
-					{MD_METHOD_ATTRIBUTES}.Abstract |
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
 
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
@@ -2636,20 +2622,74 @@ feature -- Test
 			object_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					object_type_token, sig)
 
+				-- Types:
+				--  {IPrintable, IMark, Program}		
+
+				-- Define IPrintable interface
+			iprintable_token := md_emit.define_type (
+						create {CLI_STRING}.make ("IPrintable"),
+						{MD_TYPE_ATTRIBUTES}.public |
+						{MD_TYPE_ATTRIBUTES}.is_interface |
+						{MD_TYPE_ATTRIBUTES}.Abstract |
+						{MD_TYPE_ATTRIBUTES}.Auto_layout,
+						0,
+						Void)
+
+
+				-- Define IMark interface
+			imark_token := md_emit.define_type (
+							create {CLI_STRING}.make ("IMark"),
+							{MD_TYPE_ATTRIBUTES}.public |
+							{MD_TYPE_ATTRIBUTES}.is_interface |
+							{MD_TYPE_ATTRIBUTES}.Abstract |
+							{MD_TYPE_ATTRIBUTES}.Auto_layout,
+							0,
+							Void)
+
+				--Define class Program: IPrintable, IMark
 			l_entry_type_token := md_emit.define_type (
-					create {CLI_STRING}.make ("Program"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
-					{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public | {MD_TYPE_ATTRIBUTES}.before_field_init,
-					object_type_token, <<iprintable_token>>)
+							create {CLI_STRING}.make ("Program"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
+							{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public | {MD_TYPE_ATTRIBUTES}.before_field_init,
+							object_type_token, <<iprintable_token, imark_token>>)
+
+
+					-- Methods per Types :
+					-- Define method in IPrintable interface: Print
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
+			sig.set_parameter_count (0)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+
+			iprint_method_token := md_emit.define_method (create {CLI_STRING}.make ("Print"),
+						iprintable_token,
+						{MD_METHOD_ATTRIBUTES}.Abstract |
+						{MD_METHOD_ATTRIBUTES}.Public |
+						{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+						{MD_METHOD_ATTRIBUTES}.virtual |
+						{MD_METHOD_ATTRIBUTES}.new_slot,
+						sig,
+						{MD_METHOD_ATTRIBUTES}.Managed)
+
+				-- Interface Mark is emtpy {} no methods.
 
 			create method_writer.make
 
-			create field_sig.make
-			field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_token)
+				-- Type Program
+				-- Define  Program.ctor signature
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (0)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			my_field := md_emit.define_field (create {CLI_STRING}.make ("name"), l_entry_type_token,
-					{MD_FIELD_ATTRIBUTES}.private, field_sig)
+			my_ctor := md_emit.define_method (create {CLI_STRING}.make (".ctor"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.Special_name |
+					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
+					sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
-				-- get_Name
+				-- Define Method Program.get_Name
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			sig.set_parameter_count (0)
@@ -2662,6 +2702,74 @@ feature -- Test
 					{MD_METHOD_ATTRIBUTES}.special_name,
 					sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
+
+				-- Define Method Program.set_Name()
+
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (1)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
+
+			my_set_name := md_emit.define_method (create {CLI_STRING}.make ("set_Name"),
+						l_entry_type_token,
+						{MD_METHOD_ATTRIBUTES}.Public |
+						{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+						{MD_METHOD_ATTRIBUTES}.special_name,
+						sig, {MD_METHOD_ATTRIBUTES}.Managed)
+
+
+				-- Define method Program.Print implement from IPrintable interface.
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
+			sig.set_parameter_count (0)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+
+			imp_print_method_token := md_emit.define_method (create {CLI_STRING}.make ("Print"),
+						l_entry_type_token,
+						{MD_METHOD_ATTRIBUTES}.Public |
+						{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+						{MD_METHOD_ATTRIBUTES}.virtual |
+						{MD_METHOD_ATTRIBUTES}.new_slot,
+						sig,
+						{MD_METHOD_ATTRIBUTES}.Managed)
+
+
+
+				-- Define Program.Main
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			sig.set_parameter_count (0)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+
+			my_main := md_emit.define_method (create {CLI_STRING}.make ("Main"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.Static,
+					sig, {MD_METHOD_ATTRIBUTES}.Managed)
+
+				-- Define Properties
+			create property_sig.make
+			property_sig.set_property_type ({MD_SIGNATURE_CONSTANTS}.property_sig | {MD_SIGNATURE_CONSTANTS}.has_current)
+			property_sig.set_parameter_count (0)
+			property_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_token)
+
+					-- Set Properties
+			property_token := md_emit.define_property (l_entry_type_token, create {CLI_STRING}.make ("Name"), 0, property_sig, my_set_name, my_get_name)
+
+
+				-- Define Field
+			create field_sig.make
+			field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_token)
+
+			my_field := md_emit.define_field (create {CLI_STRING}.make ("name"), l_entry_type_token,
+								{MD_FIELD_ATTRIBUTES}.private, field_sig)
+
+
+
+
+				-- Method GetName Implementation	
 			body := method_writer.new_method_body (my_get_name)
 
 			create local_sig.make
@@ -2680,24 +2788,9 @@ feature -- Test
 			body.mark_label (l_id2)
 			body.put_opcode ({MD_OPCODES}.Ldloc_0)
 			body.put_opcode ({MD_OPCODES}.Ret)
-
 			method_writer.write_current_body
 
-				-- set_Name()
-
-			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-			sig.set_parameter_count (1)
-			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
-
-			my_set_name := md_emit.define_method (create {CLI_STRING}.make ("set_Name"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.special_name,
-					sig, {MD_METHOD_ATTRIBUTES}.Managed)
-
+				-- Define Method SetName Implementation
 			body := method_writer.new_method_body (my_set_name)
 
 			body.put_nop
@@ -2707,36 +2800,15 @@ feature -- Test
 			body.put_opcode_integer ({MD_OPCODES}.Stfld, my_field)
 
 			body.put_opcode ({MD_OPCODES}.Ret)
-
 			method_writer.write_current_body
 
+
+
+				--Define Parameters
 			md_emit.define_parameter (my_set_name, create {CLI_STRING}.make ("value"), 1, 0).do_nothing
 
-			create property_sig.make
-			property_sig.set_property_type ({MD_SIGNATURE_CONSTANTS}.property_sig | {MD_SIGNATURE_CONSTANTS}.has_current)
-			property_sig.set_parameter_count (0)
-			property_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_token)
-
-				-- Set Properties
-			property_token := md_emit.define_property (l_entry_type_token, create {CLI_STRING}.make ("Name"), 0, property_sig, my_set_name, my_get_name)
 
 				-- Implement the Print method
-
-				-- Define method in IPrintable interface
-			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
-			sig.set_parameter_count (0)
-			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-
-			imp_print_method_token := md_emit.define_method (create {CLI_STRING}.make ("Print"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
-
 			body := method_writer.new_method_body (imp_print_method_token)
 			body.put_nop
 
@@ -2747,35 +2819,20 @@ feature -- Test
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
 
-				-- Program.ctor signature
-			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-			sig.set_parameter_count (0)
-			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			my_ctor := md_emit.define_method (create {CLI_STRING}.make (".ctor"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.Special_name |
-					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
-					sig, {MD_METHOD_ATTRIBUTES}.Managed)
+			-- Implement Program.ctor	
+			-- Program.ctor()
+			body := method_writer.new_method_body (my_ctor)
+			body.put_opcode ({MD_OPCODES}.Ldarg_0)
+			body.put_static_call (object_ctor, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
 
-				-- Main
-			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
-			sig.set_parameter_count (0)
-			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			my_main := md_emit.define_method (create {CLI_STRING}.make ("Main"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.Static,
-					sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
+				-- Implement Main Method
 			body := method_writer.new_method_body (my_main)
-
 			create local_sig.make
 			local_sig.set_local_count (1)
 			local_sig.add_local_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, l_entry_type_token)
@@ -2801,16 +2858,9 @@ feature -- Test
 			body.put_nop
 
 			body.put_opcode ({MD_OPCODES}.Ret)
-
 			method_writer.write_current_body
 
-				-- Program.ctor()
-			body := method_writer.new_method_body (my_ctor)
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			body.put_static_call (object_ctor, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
+
 
 			create l_pe_file.make ("test_interface.dll", True, True, False, md_emit)
 			l_pe_file.set_method_writer (method_writer)

@@ -19,7 +19,7 @@
 
 	<target name="clean" >
 		<echo message="- Clean [IL Emitter] CLib" />
-		<delete directory="C\spec\${ISE_PLATFORM}" if="${is_windows}"/>
+		<delete directory="C\spec\${ISE_C_COMPILER}\${ISE_PLATFORM}" if="${is_windows}"/>
 		<delete directory="C/spec/${ISE_PLATFORM}" unless="${is_windows}"/>
 	</target>
 

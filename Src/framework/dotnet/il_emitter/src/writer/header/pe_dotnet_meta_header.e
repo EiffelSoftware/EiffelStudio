@@ -94,23 +94,11 @@ feature -- Managed Pointer
 feature -- Measurement
 
 	size_of: INTEGER
-		local
-			l_internal: INTERNAL
-			n: INTEGER
-			l_obj: PE_DOTNET_META_HEADER
 		do
-			create l_obj
-			create l_internal
-			n := l_internal.field_count (l_obj)
-			across 1 |..| n as ic loop
-				if attached l_internal.field (ic, l_obj) as l_field then
-					if attached {NATURAL_32} l_field then
-						Result := Result + {PLATFORM}.natural_32_bytes
-					elseif attached {NATURAL_16} l_field then
-						Result := Result + {PLATFORM}.natural_16_bytes
-					end
-				end
-			end
+			Result := {PLATFORM}.natural_32_bytes
+				+ {PLATFORM}.natural_16_bytes
+				+ {PLATFORM}.natural_16_bytes
+				+ {PLATFORM}.natural_32_bytes
 		ensure
 			instance_free: class
 		end

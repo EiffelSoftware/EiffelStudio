@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 	make_with_uninitialized_field_and_method (a_flags: INTEGER; a_type_name_index: NATURAL_32; a_type_name_space_index: NATURAL_32;
 			a_extends: detachable PE_TYPEDEF_OR_REF)
 		do
-			make_with_data (a_flags, a_type_name_index, a_type_name_space_index, a_extends, 1, 1)
+			make_with_data (a_flags, a_type_name_index, a_type_name_space_index, a_extends, 0, 0)
 				-- check if the values are acceptable:
-				--	  FieldList: 1
-				--	  MethodList: 1
+				--	  FieldList: 0
+				--	  MethodList: 0
 			is_field_list_index_set := False
 			is_method_list_index_set := False
 		end

@@ -174,7 +174,11 @@ feature -- Settings
 				put_integer_8 (0xFF)
 			else
 					-- Convert our strings to UTF-8
-				l_s := u.utf_32_string_to_utf_8_string_8 (s)
+				if s.ends_with ("%U") then
+					l_s := u.utf_32_string_to_utf_8_string_8 (s)
+				else
+					l_s := u.utf_32_string_to_utf_8_string_8 (s + {STRING_32} "%U")
+				end
 					-- Store count.
 				l_count := l_s.count
 				compress_data (l_count)

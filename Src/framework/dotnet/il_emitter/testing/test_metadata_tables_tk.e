@@ -2249,7 +2249,7 @@ feature -- Test
 			l_pe_file.save
 		end
 
-	test_define_file
+	test_define_file (dir: PATH)
 		local
 			l_pe_file: CLI_PE_FILE
 			md_dispenser: MD_DISPENSER
@@ -2299,7 +2299,7 @@ feature -- Test
 
 			md_emit.set_module_name (create {CLI_STRING}.make ("define_file_tk.dll"))
 
-			create l_file.make ("struct_test.e")
+			create l_file.make (dir.extended ("struct_test.e").name)
 			create l_signing.make_with_version ("Net6")
 			l_hash_file := l_signing.hash_of_file (l_file)
 			string_token := md_emit.define_string (l_file)

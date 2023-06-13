@@ -107,7 +107,7 @@ feature -- Token tests
 				launch_test (cat, "define_property_access", agent (create {TEST_METADATA_TABLES_TK}).test_define_property_access)
 			end
 			if is_test_included ("define_file", a_pattern) then
-				launch_test (cat, "define_file", agent (create {TEST_METADATA_TABLES_TK}).test_define_file)
+				launch_test (cat, "define_file", agent (create {TEST_METADATA_TABLES_TK}).test_define_file (starting_directory))
 			end
 			if is_test_included ("define_interface", a_pattern) then
 				launch_test (cat, "define_interface", agent (create {TEST_METADATA_TABLES_TK}).test_define_interface)
@@ -172,6 +172,9 @@ feature -- Initialization
 			conv: BYTE_ARRAY_CONVERTER
 			p: PATH
 		do
+			create p.make_current
+			starting_directory := p.absolute_path
+
 			n := argument_count
 			if n > 0 then
 				from
@@ -327,6 +330,8 @@ feature -- Settings
 	is_using_sub_directory_per_test: BOOLEAN
 
 	test_directory: detachable PATH
+
+	starting_directory: PATH
 
 feature {NONE} -- Implementation
 

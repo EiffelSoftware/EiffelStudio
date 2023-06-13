@@ -241,7 +241,9 @@ feature -- Saving
 			l_uni_string: CLI_STRING
 			l_meta_data_file_name: like file_name
 		do
-			print ({STRING_32} "%N>> " + generator + ".save -> " + file_name + "%N")
+			debug ("il_emitter")
+				print ({STRING_32} "%N>> " + generator + ".save -> " + file_name + "%N")
+			end
 				-- First compute size of PE file headers and sections.
 			compute_sizes
 

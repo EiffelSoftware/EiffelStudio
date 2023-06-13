@@ -1025,7 +1025,7 @@ feature -- Definition: Creation
 				-- Return the generated token.
 			Result := last_token.to_integer_32
 			debug ("il_emitter_table")
-				print ({STRING_32} " -> index=" + pe_index.out + " token=" + Result.to_hex_string +"%N")
+				print ({STRING_32} " -> ("+ l_method_index.out +") index=" + pe_index.out + " token=" + Result.to_hex_string +"%N")
 			end
 		end
 
@@ -1038,18 +1038,26 @@ feature -- Definition: Creation
 			l_method_body: PE_METHOD_DEF_OR_REF
 			l_method_declaration: PE_METHOD_DEF_OR_REF
 		do
-				-- Extract table type and row from the in_class_token
-			l_tuple := extract_table_type_and_row (in_class_token)
+			debug ("il_emitter_table")
+				print ({STRING_32} "MethodImpl: class=" + in_class_token.to_hex_string + " method="+ method_token.to_hex_string + " used_method_declaration_token=" + used_method_declaration_token.to_hex_string)
+			end
 
 				-- Get the method body and method declaration from their tokens
-			l_method_body := create_method_def_or_ref (method_token, extract_table_type_and_row(method_token).table_row_index)
+			l_method_body := create_method_def_or_ref (method_token, extract_table_type_and_row (method_token).table_row_index)
 			l_method_declaration := create_method_def_or_ref (used_method_declaration_token, extract_table_type_and_row(used_method_declaration_token).table_row_index)
+
+				-- Extract table type and row from the in_class_token
+			l_tuple := extract_table_type_and_row (in_class_token)
 
 				-- Create a new PE_METHOD_IMPL_TABLE_ENTRY instance with the given data
 			create l_method_impl_entry.make_with_data (l_tuple.table_row_index, l_method_body, l_method_declaration)
 
 				-- Add the new PE_METHOD_IMPL_TABLE_ENTRY instance to the metadata tables.
 			pe_index := add_table_entry (l_method_impl_entry)
+
+			debug ("il_emitter_table")
+				print ({STRING_32} " -> index=" + pe_index.out + " token=" + last_token.to_hex_string +"%N")
+			end
 		end
 
 	define_property (type_token: INTEGER; name: CLI_STRING; flags: NATURAL_32;
@@ -1063,6 +1071,9 @@ feature -- Definition: Creation
 			l_tuple: like extract_table_type_and_row
 			l_property_index: like next_table_index
 		do
+			debug ("il_emitter_table")
+				print ({STRING_32} "Property: type=" + type_token.to_hex_string + " name="+ name.string_32 + " .. ")
+			end
 				-- Compute the signature token
 			l_property_signature := hash_blob (signature.as_array, signature.count.to_natural_32)
 
@@ -1078,6 +1089,10 @@ feature -- Definition: Creation
 			pe_index := add_table_entry (l_property)
 				-- Return the metadata token for the new property.
 			Result := last_token.to_integer_32
+
+			debug ("il_emitter_table")
+				print ({STRING_32} " -> index=" + pe_index.out + " token=" + last_token.to_hex_string +"%N")
+			end
 
 				-- Define the method implementations for the getter and setter, if provided.
 			create l_semantics.make_with_tag_and_index ({PE_SEMANTICS}.property, l_property_index)
@@ -1133,16 +1148,22 @@ feature -- Definition: Creation
 		local
 			l_method_index: NATURAL_32
 			l_param_entry: PE_PARAM_TABLE_ENTRY
-			l_method_tuple: like extract_table_type_and_row
+			d: like extract_table_type_and_row
 			l_param_name_index: INTEGER_32
 			l_param_flags: INTEGER
 			l_param_index: NATURAL
 			l_param_entry_index: like next_table_index
 		do
+
 			to_implement ("Review need ensure every row in the Param table is owned by one, and only one, row in the MethodDef table")
 
 				-- Extract table type and row from the method token
-			l_method_tuple := extract_table_type_and_row (in_method_token)
+			d := extract_table_type_and_row (in_method_token)
+			l_method_index := d.table_row_index
+
+			debug ("il_emitter_table")
+				print ({STRING_32} "Param: method=" + in_method_token.to_hex_string + " method.index="+ l_method_index.out + " name=" + param_name.string_32 + " pos=" + param_pos.out)
+			end
 
 				-- Convert the parameter name to UTF-16 and add it to the string heap
 			l_param_name_index := pe_writer.hash_string (param_name.string_32).to_integer_32
@@ -1155,7 +1176,6 @@ feature -- Definition: Creation
 			l_param_index := param_pos.to_natural_16
 
 				-- Create a new PE_PARAM_TABLE_ENTRY instance with the given data
-			l_method_index := l_method_tuple.table_row_index
 			create l_param_entry.make_with_data (l_param_flags, l_param_index.to_natural_16, l_param_name_index.to_natural_32)
 
 				-- Add the new PE_PARAM_TABLE_ENTRY instance to the metadata tables.
@@ -1163,7 +1183,6 @@ feature -- Definition: Creation
 			pe_index := add_table_entry (l_param_entry)
 
 			if
-				attached extract_table_type_and_row (in_method_token) as d and then
 				attached {PE_METHOD_DEF_TABLE_ENTRY} md_table (d.table_type_index)[d.table_row_index] as e
 			then
 				if not e.is_param_list_index_set then
@@ -1173,6 +1192,9 @@ feature -- Definition: Creation
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
+			debug ("il_emitter_table")
+				print ({STRING_32} " -> index=" + l_param_index.out + " token="+ Result.to_hex_string + "%N")
+			end
 		end
 
 	set_field_marshal (a_token: INTEGER; a_native_type_sig: MD_NATIVE_TYPE_SIGNATURE)

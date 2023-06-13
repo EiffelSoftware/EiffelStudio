@@ -370,7 +370,9 @@ feature {NONE} -- Implementation
 
 	post_test (tn: READABLE_STRING_GENERAL)
 		do
-
+			if attached test_directory as p then
+				execution_environment.change_working_path (p)
+			end
 		end
 
 feature -- Helper

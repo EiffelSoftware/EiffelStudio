@@ -936,7 +936,6 @@ feature -- Tests
 
 			iprint_method_token := md_emit.define_method (create {CLI_STRING}.make ("Print"),
 					iprintable_token,
-					{MD_METHOD_ATTRIBUTES}.Abstract |
 					{MD_METHOD_ATTRIBUTES}.Public |
 					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
 					{MD_METHOD_ATTRIBUTES}.virtual |
@@ -955,23 +954,6 @@ feature -- Tests
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-			my_ctor := md_emit.define_method (create {CLI_STRING}.make (".ctor"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.Special_name |
-					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
-					sig, {MD_METHOD_ATTRIBUTES}.Managed)
-
-				-- Implement Program.ctor
-				-- Program.ctor()
-			body := method_writer.new_method_body (my_ctor)
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			body.put_static_call (object_ctor, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
 				-- Define method Program.Print implement from IPrintable interface.
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
@@ -986,6 +968,8 @@ feature -- Tests
 					{MD_METHOD_ATTRIBUTES}.new_slot,
 					sig,
 					{MD_METHOD_ATTRIBUTES}.Managed)
+
+			-- md_emit.define_method_impl (l_entry_type_token, imp_print_method_token, iprint_method_token )
 
 				-- Implement the Print method
 			body := method_writer.new_method_body (imp_print_method_token)
@@ -1027,12 +1011,31 @@ feature -- Tests
 			body.put_opcode ({MD_OPCODES}.stloc_0)
 
 			body.put_opcode ({MD_OPCODES}.ldloc_0)
-			body.put_call ({MD_OPCODES}.callvirt, imp_print_method_token, 0, True)
+			body.put_call ({MD_OPCODES}.call, imp_print_method_token, 0, True)
 
 			body.put_nop
 
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
+
+				-- Define Method .ctor
+			my_ctor := md_emit.define_method (create {CLI_STRING}.make (".ctor"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.Special_name |
+					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
+					sig, {MD_METHOD_ATTRIBUTES}.Managed)
+
+				-- Implement Program.ctor
+				-- Program.ctor()
+			body := method_writer.new_method_body (my_ctor)
+			body.put_opcode ({MD_OPCODES}.Ldarg_0)
+			body.put_static_call (object_ctor, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
+
 
 			create l_pe_file.make ("test_basic_interface.dll", True, True, False, md_emit)
 			l_pe_file.set_method_writer (method_writer)

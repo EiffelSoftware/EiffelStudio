@@ -810,6 +810,7 @@ feature -- Operations
 			l_buf: ARRAY [NATURAL_8]
 			l_len: CELL [NATURAL_32]
 			l_sect: INTEGER
+			i,n: INTEGER
 		do
 				-- pe_header setup.
 			check pe_header = Void end
@@ -850,8 +851,14 @@ feature -- Operations
 			check pe_objects = Void end
 
 			create {ARRAYED_LIST [PE_OBJECT]} l_pe_objects.make (max_pe_objects)
-			across (1 |..| Max_pe_objects) as i loop
+			from
+				i := 1
+				n := Max_pe_objects
+			until
+				i > n
+			loop
 				l_pe_objects.force (create {PE_OBJECT})
+				i := i + 1
 			end
 
 			l_n := 1
@@ -1023,19 +1030,25 @@ feature -- Operations
 				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 4
 			end
 
-			l_n := 0
 			create l_counts.make_filled (0, 1, Max_tables + Extra_indexes)
 			l_counts [t_string + 1] := strings.size
 			l_counts [t_us + 1] := us.size
 			l_counts [t_guid + 1] := guid.size
 			l_counts [t_blob + 1] := blob.size
 
-			across 0 |..| (max_tables - 1) as ic loop
-				if not tables [ic].is_empty then
-					l_counts [ic + 1] := tables [ic].size.to_natural_32
-					l_tables_header.mask_valid := l_tables_header.mask_valid | ({INTEGER_64} 1 |<< ic)
+			l_n := 0
+			from
+				i := 0
+				n := max_tables
+			until
+				i >= n
+			loop
+				if not tables [i].is_empty then
+					l_counts [i + 1] := tables [i].size.to_natural_32
+					l_tables_header.mask_valid := l_tables_header.mask_valid | ({INTEGER_64} 1 |<< i)
 					l_n := l_n + 1
 				end
+				i := i + 1
 			end
 			l_current_rva := l_current_rva + {PE_DOTNET_META_TABLES_HEADER}.size_of.to_natural_32
 				-- tables header
@@ -1043,13 +1056,21 @@ feature -- Operations
 				--table counts
 				-- Dword is 4 bytes.
 
-			across 0 |..| (max_tables - 1) as ic loop
-				if l_counts [ic + 1] /= 0 then
+
+			from
+				i := 0
+				n := max_tables
+			until
+				i >= n
+			loop
+				if l_counts [i + 1] /= 0 then
 					create l_buffer.make_filled (0, 1, 512)
-					l_n := tables [ic].table [1].render (l_counts, l_buffer).to_integer_32
-					l_n := l_n * (l_counts [ic + 1]).to_integer_32
+					check tables [i].table.valid_index (1)  end
+					l_n := tables [i].table [1].render (l_counts, l_buffer).to_integer_32
+					l_n := l_n * (l_counts [i + 1]).to_integer_32
 					l_current_rva := l_current_rva + l_n.to_natural_32
 				end
+				i := i + 1
 			end
 
 			if (l_current_rva \\ 4) /= 0 then

@@ -1190,7 +1190,7 @@ feature -- Test
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			sig.set_parameter_count (1)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_token)
+			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
 
 			write_line_token := md_emit.define_member_ref (
 					create {CLI_STRING}.make ("WriteLine"),

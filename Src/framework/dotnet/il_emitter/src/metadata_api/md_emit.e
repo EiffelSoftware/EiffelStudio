@@ -109,7 +109,7 @@ feature {NONE}
 			module_index := pe_writer.hash_string ({STRING_32} "<Module>")
 
 			create l_type_def.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
-			create l_table.make_with_data (0, module_index, 0, l_type_def, 1, 1) -- TODO: check why 1 ?
+			create l_table.make_with_uninitialized_field_and_method (0, module_index, 0, l_type_def)
 			pe_index := add_table_entry (l_table)
 		end
 

@@ -27,6 +27,9 @@ feature -- Access
 		deferred
 		end
 
+	default_index: NATURAL_32 = 0
+			-- Index value for uninitialized `index`.
+
 feature -- Operations
 
 	update_index (idx: like index)

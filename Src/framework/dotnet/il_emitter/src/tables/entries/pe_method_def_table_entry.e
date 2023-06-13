@@ -9,7 +9,6 @@ class
 	PE_METHOD_DEF_TABLE_ENTRY
 
 inherit
-
 	PE_TABLE_ENTRY_BASE
 		redefine
 			same_as
@@ -42,7 +41,7 @@ feature {NONE} -- Initialization
 			flags := a_mflags
 			create name_index.make_with_index (a_name_index)
 			create signature_index.make_with_index (a_signature_index)
-			create param_index.make_with_index (0) -- Fake data
+			create param_index.make_with_index ({PE_PARAM_LIST}.default_index) -- Fake data
 			is_param_list_index_set := False
 		end
 

@@ -278,6 +278,8 @@ feature -- Test
 		end
 
 	test_define_module_net6
+			-- Build a basic assembly defining the module name.
+			-- Targeting .Net6.
 		local
 			l_pe_file: CLI_PE_FILE
 			md_dispenser: MD_DISPENSER
@@ -294,9 +296,9 @@ feature -- Test
 			md_assembly_info.set_minor_version (1)
 			md_assembly_info.set_build_number (28)
 
-			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("module_assembly_net6"), 0, md_assembly_info, Void)
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("define_module_net6"), 0, md_assembly_info, Void)
 
-			md_assembly_info.set_major_version (1)
+			md_assembly_info.set_major_version (6)
 			md_assembly_info.set_minor_version (0)
 			md_assembly_info.set_build_number (0)
 			create l_pub_key_token.make_from_array (
@@ -304,9 +306,9 @@ feature -- Test
 
 			system_runtime_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("System.Runtime"), md_assembly_info, l_pub_key_token)
 
-			md_emit.set_module_name (create {CLI_STRING}.make ("module_assembly_net6.dll"))
+			md_emit.set_module_name (create {CLI_STRING}.make ("define_module_net6.dll"))
 
-			create l_pe_file.make ("module_assembly_net6.dll", True, True, False, md_emit)
+			create l_pe_file.make ("define_module_net6.dll", True, True, False, md_emit)
 			l_pe_file.save
 		end
 

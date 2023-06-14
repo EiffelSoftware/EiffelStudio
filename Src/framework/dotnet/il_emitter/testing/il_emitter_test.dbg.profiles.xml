@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<execution_parameters xmlns="http://www.eiffel.com/developers/xml/execution-parameters-1-0-0" last_profile="BA8356B5-11F8-4E5D-ABAD-4A5DE9050821">
+<execution_parameters xmlns="http://www.eiffel.com/developers/xml/execution-parameters-1-0-0" last_profile="9FA2FCD4-FAC2-4048-B51A-EC07DACF8246">
  <profile uuid="87E34963-6D69-49EE-8C26-B4B566291091" title="tk.empty_assembly" arguments="tk.empty_assembly --testdir output" working_directory="">
  </profile>
  <profile uuid="BA6690B0-D150-4478-A171-A6BF26AEFCB3" title="tk.define_module" arguments="tk.define_module --testdir output" working_directory="">
@@ -9,5 +9,25 @@
  <profile uuid="F89BE74D-1523-4BE6-BA75-2AD810EAF879" title="tk.all om.all --testdir output" arguments="tk.all om.all --testdir output" working_directory="">
  </profile>
  <profile uuid="BA8356B5-11F8-4E5D-ABAD-4A5DE9050821" title="tk.all om.all all --testdir output" arguments="tk.all om.all all --testdir output" working_directory="">
+ </profile>
+ <profile uuid="E344BD0F-41DD-486F-B288-CC7C76977AAC" title=" --testdir output" arguments=" --testdir output" working_directory="">
+ </profile>
+ <profile uuid="39B3327F-9766-44AE-9E48-45DAEC1F7788" title="tk.user_string_heap --testdir output" arguments="tk.user_string_heap --testdir output" working_directory="">
+ </profile>
+ <profile uuid="90ADC70B-BEA9-4B4B-9BB6-79A77F625371" title="tk.define_implementation --testdir output" arguments="tk.define_implementation --testdir output" working_directory="">
+ </profile>
+ <profile uuid="C13FC11F-3F3E-43C5-928A-8E784EA64BB7" title="tk.define_entry_point_net6 --testdir output" arguments="tk.define_entry_point_net6 --testdir output" working_directory="">
+ </profile>
+ <profile uuid="F933D780-FF6E-43F8-BA65-7CA37D43161B" title="tk.ast_process --testdir output" arguments="tk.ast_process --testdir output" working_directory="">
+ </profile>
+ <profile uuid="C57AD1CA-6E09-48F7-864D-77697FF74DFE" title="tk.inheritance --testdir output" arguments="tk.interface_inheritance --testdir output" working_directory="">
+ </profile>
+ <profile uuid="9FA2FCD4-FAC2-4048-B51A-EC07DACF8246" title="tk.all --testdir output" arguments="tk.all --testdir output" working_directory="">
+ </profile>
+ <profile uuid="69A1FDB5-4105-4B08-A144-D75F23520155" title="tk.define_module_net6 --testdir output" arguments="tk.define_module_net6 --testdir output" working_directory="">
+ </profile>
+ <profile uuid="C08CD70E-ECFA-44BF-9646-EE08238AD017" title="tk.define_class --testdir output" arguments="tk.define_class --testdir output" working_directory="">
+ </profile>
+ <profile uuid="996A6886-BA1C-4EAA-B239-621926DE4D5E" title="tk.define_property_access --testdir output" arguments="tk.define_property_access --testdir output" working_directory="">
  </profile>
 </execution_parameters>

@@ -617,6 +617,8 @@ feature -- Tests
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save
+
+			{NETCORE_UTILITIES}.deploy (l_pe_file, "Microsoft.NETCore.App/6.0.0", md_assembly_info)
 		end
 
 	test_define_basic_interface
@@ -1040,6 +1042,8 @@ feature -- Tests
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save
+
+			{NETCORE_UTILITIES}.deploy (l_pe_file, "Microsoft.NETCore.App/6.0.0", md_assembly_info)
 		end
 
 	test_define_class
@@ -1085,7 +1089,7 @@ feature -- Tests
 			md_emit := md_dispenser.emit
 
 			create md_assembly_info.make
-			md_assembly_info.set_major_version (1) 
+			md_assembly_info.set_major_version (1)
 			md_assembly_info.set_minor_version (0)
 			md_assembly_info.set_build_number (0)
 
@@ -1630,6 +1634,8 @@ feature -- Tests
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (method_main)
 			l_pe_file.save
+
+			{NETCORE_UTILITIES}.deploy (l_pe_file, "Microsoft.NETCore.App/6.0.0", md_assembly_info)
 		end
 
 end

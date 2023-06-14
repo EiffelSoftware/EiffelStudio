@@ -1414,6 +1414,8 @@ feature -- Test
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save
+
+			{NETCORE_UTILITIES}.deploy (l_pe_file, "Microsoft.NETCore.App/6.0.0", md_assembly_info)
 		end
 
 	test_define_property
@@ -1824,6 +1826,8 @@ feature -- Test
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save
+
+			{NETCORE_UTILITIES}.deploy (l_pe_file, "Microsoft.NETCore.App/6.0.0", md_assembly_info)
 		end
 
 	test_define_property_access
@@ -2249,6 +2253,8 @@ feature -- Test
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save
+
+			{NETCORE_UTILITIES}.deploy (l_pe_file, "Microsoft.NETCore.App/6.0.0", md_assembly_info)
 		end
 
 	test_define_file (dir: PATH)
@@ -2868,6 +2874,8 @@ feature -- Test
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save
+
+			{NETCORE_UTILITIES}.deploy (l_pe_file, "Microsoft.NETCore.App/6.0.0", md_assembly_info)
 		end
 
 	test_define_implementation
@@ -3352,6 +3360,8 @@ feature -- Test
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save
+
+			{NETCORE_UTILITIES}.deploy (l_pe_file, "Microsoft.NETCore.App/6.0.0", md_assembly_info)
 		end
 
 end

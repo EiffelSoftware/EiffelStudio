@@ -65,7 +65,7 @@ feature -- Operations
 			l_bytes := 4
 
 				-- Write parent and premission set to the buffer and update the number of bytes.
-			l_bytes := l_bytes + parent.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + parent.render (a_sizes, a_dest, l_bytes)
 
 				-- Return the number of bytes written
 			Result := l_bytes
@@ -82,7 +82,7 @@ feature -- Operations
 			l_bytes := 4
 
 				-- Read parent from the buffer and update the number of bytes.
-			l_bytes := l_bytes + parent.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + parent.get (a_sizes, a_src, l_bytes)
 				-- Return the number of bytes readed
 			Result := l_bytes
 		end

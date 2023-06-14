@@ -82,8 +82,8 @@ feature -- Operations
 			l_bytes := l_bytes + 4
 
 				-- Write name and implemention to the buffer and update the bytes.
-			l_bytes := l_bytes + name.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + implementation.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + name.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + implementation.render (a_sizes, a_dest, l_bytes)
 
 			Result := l_bytes
 		end
@@ -100,8 +100,8 @@ feature -- Operations
 			l_bytes := l_bytes + 4
 
 				-- Get name and implemention to the buffer and update the bytes.
-			l_bytes := l_bytes + name.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + implementation.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + name.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + implementation.get (a_sizes, a_src, l_bytes)
 
 			Result := l_bytes
 		end

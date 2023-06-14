@@ -10,8 +10,8 @@ inherit
 	PE_LIST
 
 create
-	make_with_index,
-	make
+	make_default,
+	make_with_index
 
 feature -- Access
 

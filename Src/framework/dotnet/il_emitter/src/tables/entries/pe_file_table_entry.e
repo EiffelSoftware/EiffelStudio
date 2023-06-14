@@ -76,8 +76,8 @@ feature -- Operations
 			l_bytes := 4
 
 				-- Render name and hash and update the bytes.
-			l_bytes := l_bytes + name.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + hash.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + name.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + hash.render (a_sizes, a_dest, l_bytes)
 
 			Result := l_bytes
 		end
@@ -92,8 +92,8 @@ feature -- Operations
 			l_bytes := 4
 
 				-- Get name and hash and update the bytes.
-			l_bytes := l_bytes + name.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + hash.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + name.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + hash.get (a_sizes, a_src, l_bytes)
 
 			Result := l_bytes
 		end

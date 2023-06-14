@@ -990,8 +990,7 @@ feature -- Definition: Creation
 			l_method_def_entry: PE_METHOD_DEF_TABLE_ENTRY
 			l_method_signature: NATURAL_32
 			l_name_index: NATURAL_32
---			l_param_index: NATURAL_32
-			l_method_index: like next_table_index
+			l_method_index: NATURAL_32
 		do
 			debug ("il_emitter_table")
 				print ({STRING_32} "Method: " + method_name.string_32 + " (class:"+ in_class_token.to_hex_string)
@@ -1001,8 +1000,6 @@ feature -- Definition: Creation
 
 			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 			l_name_index := pe_writer.hash_string (method_name.string_32)
-
---			l_param_index := 1 -- Not yet initialized
 
 				-- Create a new PE_METHOD_DEF_TABLE_ENTRY instance with the given data
 			create l_method_def_entry.make_without_param_index (impl_flags.to_integer_16, method_flags.to_integer_16, l_name_index, l_method_signature)
@@ -1069,7 +1066,7 @@ feature -- Definition: Creation
 			l_semantics: PE_SEMANTICS
 			l_table: PE_TABLE_ENTRY_BASE
 			l_tuple: like extract_table_type_and_row
-			l_property_index: like next_table_index
+			l_property_index: NATURAL_32
 		do
 			debug ("il_emitter_table")
 				print ({STRING_32} "Property: type=" + type_token.to_hex_string + " name="+ name.string_32 + " .. ")
@@ -1152,7 +1149,7 @@ feature -- Definition: Creation
 			l_param_name_index: INTEGER_32
 			l_param_flags: INTEGER
 			l_param_index: NATURAL
-			l_param_entry_index: like next_table_index
+			l_param_entry_index: NATURAL_32
 		do
 
 			to_implement ("Review need ensure every row in the Param table is owned by one, and only one, row in the MethodDef table")
@@ -1228,7 +1225,7 @@ feature -- Definition: Creation
 			l_field_def_entry: PE_FIELD_TABLE_ENTRY
 			l_field_signature: NATURAL_32
 			l_name_index: NATURAL_32
-			l_field_index: like next_table_index
+			l_field_index: NATURAL_32
 		do
 			l_field_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 			l_name_index := pe_writer.hash_string (field_name.string_32)

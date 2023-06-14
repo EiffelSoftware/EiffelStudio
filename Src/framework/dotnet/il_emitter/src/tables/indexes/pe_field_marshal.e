@@ -7,24 +7,14 @@ class
 	PE_FIELD_MARSHAL
 
 inherit
-
 	PE_INDEX_BASE
-		rename
-			make as make_base
 		redefine
 			get_index_shift,
 			has_index_overflow
 		end
 
 create
-	make,
 	make_with_tag_and_index
-
-feature {NONE} -- Initialization
-
-	make
-		do
-		end
 
 feature -- Enum: tags
 

@@ -83,8 +83,8 @@ feature -- Operations
 			l_bytes := 2
 
 				-- Write method and association to the buffer and update the number of bytes.
-			l_bytes := l_bytes + method.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + association.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + method.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + association.render (a_sizes, a_dest, l_bytes)
 
 				-- Return the number of bytes written
 			Result := l_bytes
@@ -101,8 +101,8 @@ feature -- Operations
 			l_bytes := 2
 
 				-- Read method and association from the buffer and update the number of bytes.
-			l_bytes := l_bytes + method.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + association.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + method.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + association.get (a_sizes, a_src, l_bytes)
 				-- Return the number of bytes readed
 			Result := l_bytes
 		end

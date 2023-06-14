@@ -8,17 +8,36 @@ deferred class
 
 inherit
 	PE_INDEX_BASE
-		rename
-			make as make_base
 		redefine
+			make_with_index,
+			make_with_tag_and_index,
 			get_index_shift,
 			has_index_overflow
 		end
 
 feature {NONE} -- Initialization
 
-	make
+	make_with_index (a_index: NATURAL_32)
 		do
+			Precursor (a_index)
+			is_list_index_set := True
+		ensure then
+			is_list_index_set
+		end
+
+	make_with_tag_and_index (a_tag: INTEGER; a_index: NATURAL_32)
+		do
+			Precursor (a_tag, a_index)
+			is_list_index_set := True
+		ensure then
+			is_list_index_set
+		end
+
+	make_default
+		do
+				-- TODO: also use a default `tag`?
+			make_with_index (default_index)
+			is_list_index_set := False
 		end
 
 feature -- Access
@@ -34,9 +53,10 @@ feature -- Operations
 
 	update_index (idx: like index)
 		require
-			valid_index: idx > 0
+			valid_index: idx >= 0
 		do
 			index := idx
+			is_list_index_set := True
 		ensure
 			is_list_index_set
 		end
@@ -45,9 +65,6 @@ feature -- Status report
 
 	is_list_index_set: BOOLEAN
 			-- Is first index of Current list set ?
-		do
-			Result := index /= 0
-		end
 
 feature -- Access
 

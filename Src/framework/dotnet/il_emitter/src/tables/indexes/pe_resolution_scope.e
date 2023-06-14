@@ -7,7 +7,6 @@ class
 	PE_RESOLUTION_SCOPE
 
 inherit
-
 	PE_INDEX_BASE
 		redefine
 			get_index_shift,
@@ -15,9 +14,7 @@ inherit
 		end
 
 create
-	make,
 	make_with_tag_and_index
-
 
 feature -- Enum: tags
 

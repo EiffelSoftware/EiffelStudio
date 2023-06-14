@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 			create name_index.make_with_index (a_name_index)
 			create signature_index.make_with_index (a_signature_index)
 			create param_index.make_with_index (a_param_index)
-			is_param_list_index_set := True
 		ensure
 			method_set: method = a_method
 		end
@@ -41,8 +40,9 @@ feature {NONE} -- Initialization
 			flags := a_mflags
 			create name_index.make_with_index (a_name_index)
 			create signature_index.make_with_index (a_signature_index)
-			create param_index.make_with_index ({PE_PARAM_LIST}.default_index) -- Fake data
-			is_param_list_index_set := False
+			create param_index.make_default -- Fake data
+		ensure
+			not is_param_list_index_set
 		end
 
 feature -- Status
@@ -92,6 +92,9 @@ feature -- Access
 feature -- Status report			
 
 	is_param_list_index_set: BOOLEAN
+		do
+			Result := param_index.is_list_index_set
+		end
 
 feature -- Element change
 
@@ -100,7 +103,6 @@ feature -- Element change
 			not is_param_list_index_set
 		do
 			param_index.update_index (idx)
-			is_param_list_index_set := True
 		ensure
 			is_param_list_index_set
 		end
@@ -209,9 +211,9 @@ feature -- Operations
 				-- Write the name_index, signature_index, param_index
 				-- to the buffer and update the number of bytes.
 
-			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + signature_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + param_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + signature_index.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + param_index.render (a_sizes, a_dest, l_bytes)
 
 				-- Return the total number of bytes written.
 			Result := l_bytes
@@ -238,9 +240,9 @@ feature -- Operations
 				-- Get the name_index, signature_index, param_index
 				-- to the buffer and update the number of bytes.
 
-			l_bytes := l_bytes + name_index.render (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + signature_index.render (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + param_index.render (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + name_index.render (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + signature_index.render (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + param_index.render (a_sizes, a_src, l_bytes)
 
 				-- Return the number of bytes readed.
 			Result := l_bytes

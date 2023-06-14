@@ -114,9 +114,9 @@ feature -- Operations
 			l_bytes := 2
 
 				-- Write method_index, import_name_index and module_index to the buffer and update the number of bytes.
-			l_bytes := l_bytes + method_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + import_name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + module_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + method_index.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + import_name_index.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + module_index.render (a_sizes, a_dest, l_bytes)
 
 				-- Return the number of bytes written
 			Result := l_bytes
@@ -133,9 +133,9 @@ feature -- Operations
 			l_bytes := 2
 
 				-- Read method_index, import_name_index and module_index from the buffer and update the number of bytes.
-			l_bytes := l_bytes + method_index.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + import_name_index.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + module_index.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + method_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + import_name_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + module_index.get (a_sizes, a_src, l_bytes)
 
 				-- Return the number of bytes readed
 			Result := l_bytes

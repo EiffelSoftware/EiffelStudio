@@ -7,10 +7,7 @@ class
 	PE_CUSTOM_ATTRIBUTE
 
 inherit
-
 	PE_INDEX_BASE
-		rename
-			make as make_base
 		redefine
 			get_index_shift,
 			has_index_overflow
@@ -22,14 +19,7 @@ inherit
 		end
 
 create
-	make_with_tag_and_index,
-	make
-
-feature {NONE} -- Initialization
-
-	make
-		do
-		end
+	make_with_tag_and_index
 
 feature -- Enum: tags
 

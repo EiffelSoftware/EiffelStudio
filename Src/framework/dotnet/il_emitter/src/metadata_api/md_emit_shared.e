@@ -288,7 +288,7 @@ feature -- Access
 		require
 			valid_table_index: tables.valid_index (a_table_id.to_integer_32)
 		do
-			Result := tables [a_table_id.to_integer_32].size + 1
+			Result := tables [a_table_id.to_integer_32].next_index
 		end
 
 feature -- Metadata Table Sizes

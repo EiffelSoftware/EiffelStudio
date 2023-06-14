@@ -7,10 +7,7 @@ class
 	PE_CONSTANT
 
 inherit
-
 	PE_INDEX_BASE
-		rename
-			make as make_base
 		redefine
 			get_index_shift,
 			has_index_overflow
@@ -18,15 +15,6 @@ inherit
 
 create
 	make_with_tag_and_index
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-		do
-		end
 
 feature -- Enum: tags
 

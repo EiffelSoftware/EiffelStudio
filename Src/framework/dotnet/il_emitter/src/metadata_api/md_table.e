@@ -72,6 +72,11 @@ feature -- Status Report
 			Result := items.count.to_natural_32
 		end
 
+	next_index: NATURAL_32
+		do
+			Result := size + 1
+		end
+
 	is_empty: BOOLEAN
 			-- Is the table empty?
 		do

@@ -64,10 +64,10 @@ feature -- Operations
 			l_bytes := resolution.render (a_sizes, a_src, 0)
 
 				-- render the type_name_index and add the number of writen bytes to l_bytes.
-			l_bytes := l_bytes + type_name_index.render (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + type_name_index.render (a_sizes, a_src, l_bytes)
 
 				-- render the type_name_space_index and add the number of writen bytes to l_bytes.
-			l_bytes := l_bytes + type_name_space_index.render (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + type_name_space_index.render (a_sizes, a_src, l_bytes)
 
 				--  Return the total number of bytes written to the destination `a_src`
 			Result := l_bytes
@@ -81,10 +81,10 @@ feature -- Operations
 			l_bytes := resolution.get (a_sizes, a_src, 0)
 
 				-- read the number of bytes from type_name_index and update the readed bytes.
-			l_bytes := l_bytes + type_name_index.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + type_name_index.get (a_sizes, a_src, l_bytes)
 
 				-- read the number of bytes from type_name_space_index and update the readed bytes.
-			l_bytes := l_bytes + type_name_space_index.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + type_name_space_index.get (a_sizes, a_src, l_bytes)
 
 				-- Return the number of bytes readad.
 			Result := l_bytes

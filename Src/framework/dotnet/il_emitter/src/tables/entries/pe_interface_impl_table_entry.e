@@ -75,7 +75,7 @@ feature -- Operations
 
 				-- Write the interface to the buffer and update the number
 				-- of bytes.
-			l_bytes := l_bytes +  interface.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes +  interface.render (a_sizes, a_dest, l_bytes)
 
 				-- Return the number of bytes written
 			Result := l_bytes
@@ -91,7 +91,7 @@ feature -- Operations
 
 				-- Read the interface to the buffer and update the number
 				-- of bytes.
-			l_bytes := l_bytes + interface.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + interface.get (a_sizes, a_src, l_bytes)
 
 				-- Return the number of bytes readed
 			Result := l_bytes

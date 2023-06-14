@@ -62,7 +62,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 			l_bytes := method.render (a_sizes, a_dest, 0)
-			l_bytes := l_bytes + instantiation.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + instantiation.render (a_sizes, a_dest, l_bytes)
 
 			Result := l_bytes
 		end
@@ -72,7 +72,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 			l_bytes := method.get (a_sizes, a_src, 0)
-			l_bytes := l_bytes + instantiation.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + instantiation.get (a_sizes, a_src, l_bytes)
 
 			Result := l_bytes
 		end

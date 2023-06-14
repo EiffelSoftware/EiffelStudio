@@ -72,8 +72,8 @@ feature -- Operations
 			l_bytes := l_bytes + 1
 
 				-- Write the parent_index and value_index to the buffer and update the number of bytes
-			l_bytes := l_bytes + parent_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + value_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + parent_index.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + value_index.render (a_sizes, a_dest, l_bytes)
 
 				-- Return the total number of bytes written
 			Result := l_bytes
@@ -91,8 +91,8 @@ feature -- Operations
 			l_bytes := 2
 
 				-- Read the parent_index and value_index from the buffer and update the number of bytes
-			l_bytes := l_bytes + parent_index.render (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + value_index.render (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + parent_index.render (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + value_index.render (a_sizes, a_src, l_bytes)
 
 				-- Return the total number of bytes readed
 			Result := l_bytes

@@ -133,9 +133,9 @@ feature -- Operations
 
 				-- Write public_key_index, name_index, culture_index to the buffer and update the number of bytes.
 
-			l_bytes := l_bytes + public_key_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + culture_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + public_key_index.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + culture_index.render (a_sizes, a_dest, l_bytes)
 
 				-- Return the total number of bytes written.
 			Result := l_bytes
@@ -169,9 +169,9 @@ feature -- Operations
 				-- Get the public_key_index, name_index  culture_index and
 				-- update the number of bytes.
 
-			l_bytes := l_bytes + public_key_index.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + name_index.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + culture_index.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + public_key_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + name_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + culture_index.get (a_sizes, a_src, l_bytes)
 
 				-- Return the number of bytes readed.
 			Result := l_bytes

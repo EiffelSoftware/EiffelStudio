@@ -1,7 +1,7 @@
 ﻿note
 	description: "[
 		Class desribing the module table.
-		The Module table shall contain one and only one row	
+		The Module table shall contain one and only one row
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,10 +72,10 @@ feature -- Operations
 			l_bytes_written := 2
 
 				-- Render the name_index and add the number of bytes written to l_bytes_written
-			l_bytes_written := l_bytes_written + name_index.render (a_sizes, a_dest, l_bytes_written.to_integer_32)
+			l_bytes_written := l_bytes_written + name_index.render (a_sizes, a_dest, l_bytes_written)
 
 				-- Render the guid_index and add the number of bytes written to l_bytes_written
-			l_bytes_written := l_bytes_written + guid_index.render (a_sizes, a_dest, l_bytes_written.to_integer_32)
+			l_bytes_written := l_bytes_written + guid_index.render (a_sizes, a_dest, l_bytes_written)
 
 				--  EncId (an index into the Guid heap; reserved, shall be zero)
 				--  EncBaseId (an index into the Guid heap; reserved, shall be zero)
@@ -110,10 +110,10 @@ feature -- Operations
 			l_bytes := 2
 
 				-- Read the name_index.
-			l_bytes := l_bytes + name_index.get (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + name_index.get (a_sizes, a_dest, l_bytes)
 
 				-- Read the guid_index.
-			l_bytes := l_bytes + guid_index.get (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + guid_index.get (a_sizes, a_dest, l_bytes)
 
 			if a_sizes [{PE_TABLE_CONSTANTS}.t_guid + 1] > 65535 then
 					-- If the size of the GUID index is greater than 65535,

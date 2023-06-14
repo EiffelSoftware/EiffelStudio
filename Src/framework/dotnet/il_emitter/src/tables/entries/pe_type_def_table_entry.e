@@ -32,21 +32,21 @@ feature {NONE} -- Initialization
 			create type_name_space_index.make_with_index (a_type_name_space_index)
 			extends := a_extends
 			create fields.make_with_index (a_field_index)
-			is_field_list_index_set := True
 			create methods.make_with_index (a_method_index)
-			is_method_list_index_set := True
 		end
 
 	make_with_uninitialized_field_and_method (a_flags: INTEGER; a_type_name_index: NATURAL_32; a_type_name_space_index: NATURAL_32;
 			a_extends: detachable PE_TYPEDEF_OR_REF)
 		do
-			make_with_data (a_flags, a_type_name_index, a_type_name_space_index, a_extends,
-				{PE_FIELD_LIST}.default_index, {PE_METHOD_LIST}.default_index)
-				-- check if the values are acceptable:
-				--	  FieldList: 0
-				--	  MethodList: 0
-			is_field_list_index_set := False
-			is_method_list_index_set := False
+			flags := a_flags
+			create type_name_index.make_with_index (a_type_name_index)
+			create type_name_space_index.make_with_index (a_type_name_space_index)
+			extends := a_extends
+			create fields.make_default
+			create methods.make_default
+		ensure
+			not is_field_list_index_set
+			not is_method_list_index_set
 		end
 
 feature -- Status
@@ -97,8 +97,14 @@ feature -- Status report
 		end
 
 	is_field_list_index_set: BOOLEAN
+		do
+			Result := fields.is_list_index_set
+		end
 
 	is_method_list_index_set: BOOLEAN
+		do
+			Result := methods.is_list_index_set
+		end
 
 feature -- Element change
 
@@ -107,7 +113,6 @@ feature -- Element change
 			not is_field_list_index_set
 		do
 			fields.update_index (idx)
-			is_field_list_index_set := True
 		ensure
 			is_field_list_index_set
 		end
@@ -117,7 +122,6 @@ feature -- Element change
 			not is_method_list_index_set
 		do
 			methods.update_index (idx)
-			is_method_list_index_set := True
 		ensure
 			is_method_list_index_set
 		end
@@ -144,16 +148,16 @@ feature -- Operations
 				-- Write the type_name_index, type_name_space_index, extends, fields and methods
 				-- to the buffer and update the number of bytes.
 
-			l_bytes := l_bytes + type_name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + type_name_space_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + type_name_index.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + type_name_space_index.render (a_sizes, a_dest, l_bytes)
 			if attached extends as l_extends then
-				l_bytes := l_bytes + l_extends.render (a_sizes, a_dest, l_bytes.to_integer_32)
+				l_bytes := l_bytes + l_extends.render (a_sizes, a_dest, l_bytes)
 			else
 				create fake_extends.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
-				l_bytes := l_bytes + fake_extends.render (a_sizes, a_dest, l_bytes.to_integer_32)
+				l_bytes := l_bytes + fake_extends.render (a_sizes, a_dest, l_bytes)
 			end
-			l_bytes := l_bytes + fields.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + methods.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + fields.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + methods.render (a_sizes, a_dest, l_bytes)
 
 				-- Return the total number of bytes written.
 			Result := l_bytes
@@ -162,6 +166,7 @@ feature -- Operations
 	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
+			fake_extends: PE_TYPEDEF_OR_REF
 		do
 				-- Set the flags (from a_src)  to the flags.
 			flags := {BYTE_ARRAY_HELPER}.byte_array_to_integer_32 (a_src, 0)
@@ -172,16 +177,16 @@ feature -- Operations
 				-- Get the type_name_index, type_namespace_index, extends, fields, and methods and
 				-- update the number of bytes.
 
-			l_bytes := l_bytes + type_name_index.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + type_name_space_index.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + type_name_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + type_name_space_index.get (a_sizes, a_src, l_bytes)
 			if attached extends as l_extends then
-				l_bytes := l_bytes + l_extends.get (a_sizes, a_src, l_bytes.to_integer_32)
+				l_bytes := l_bytes + l_extends.get (a_sizes, a_src, l_bytes)
 			else
-				check has_extends: False end
-				l_bytes := l_bytes + 2 ;
+				create fake_extends.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
+				l_bytes := l_bytes + fake_extends.get (a_sizes, a_src, l_bytes)
 			end
-			l_bytes := l_bytes + fields.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + methods.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + fields.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + methods.get (a_sizes, a_src, l_bytes)
 
 				-- Return the number of bytes readed.
 			Result := l_bytes

@@ -66,7 +66,7 @@ feature -- Operations
 
 				-- Write field_index
 				-- to the buffer and update the number of bytes.
-			l_bytes := l_bytes + field_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + field_index.render (a_sizes, a_dest, l_bytes)
 
 				-- Return the total number of bytes written.
 			Result := l_bytes
@@ -86,7 +86,7 @@ feature -- Operations
 				-- Get the field_index and
 				-- update the number of bytes.
 
-			l_bytes := l_bytes + field_index.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + field_index.get (a_sizes, a_src, l_bytes)
 
 				-- Return the number of bytes readed.
 			Result := l_bytes

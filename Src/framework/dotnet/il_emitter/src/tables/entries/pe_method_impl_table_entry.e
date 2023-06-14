@@ -65,8 +65,8 @@ feature -- Operations
 		do
 				-- Write class, method_body and method_declaration to the buffer and update the number of bytes.
 			l_bytes := class_.render (a_sizes, a_dest, 0)
-			l_bytes := l_bytes + method_body.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + method_declaration.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + method_body.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + method_declaration.render (a_sizes, a_dest, l_bytes)
 
 				-- Return the number of bytes written
 			Result := l_bytes
@@ -78,8 +78,8 @@ feature -- Operations
 		do
 				-- Read class, method_body and method_declaration from the buffer and update the number of bytes.
 			l_bytes := class_.get (a_sizes, a_src, 0)
-			l_bytes := l_bytes + method_body.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + method_declaration.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + method_body.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + method_declaration.get (a_sizes, a_src, l_bytes)
 
 				-- Return the number of bytes written
 			Result := l_bytes

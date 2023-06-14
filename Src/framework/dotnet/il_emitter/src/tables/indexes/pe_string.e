@@ -12,8 +12,6 @@ class
 
 inherit
 	PE_INDEX_BASE
-		rename
-			make as make_base
 		redefine
 			get_index_shift,
 			has_index_overflow

@@ -63,7 +63,7 @@ feature -- Operations
 		do
 				-- Write parent and propety_list to the buffer and update the bytes.
 			l_bytes := parent.render (a_sizes, a_dest, 0)
-			l_bytes := l_bytes + property_list.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + property_list.render (a_sizes, a_dest, l_bytes)
 
 				-- Return the number of bytes.
 			Result := l_bytes
@@ -75,7 +75,7 @@ feature -- Operations
 		do
 				-- Read parent and propety_list from the buffer and update the bytes.
 			l_bytes := parent.get (a_sizes, a_src, 0)
-			l_bytes := l_bytes + property_list.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + property_list.get (a_sizes, a_src, l_bytes)
 
 				-- Return the number of bytes.
 			Result := l_bytes

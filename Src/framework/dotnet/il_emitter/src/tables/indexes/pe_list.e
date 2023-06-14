@@ -12,7 +12,8 @@ inherit
 			make_with_index,
 			make_with_tag_and_index,
 			get_index_shift,
-			has_index_overflow
+			has_index_overflow,
+			debug_output
 		end
 
 feature {NONE} -- Initialization
@@ -46,7 +47,7 @@ feature -- Access
 		deferred
 		end
 
-	default_index: NATURAL_32 = 0
+	default_index: NATURAL_32 = 1
 			-- Index value for uninitialized `index`.
 
 feature -- Operations
@@ -65,6 +66,14 @@ feature -- Status report
 
 	is_list_index_set: BOOLEAN
 			-- Is first index of Current list set ?
+
+	debug_output: STRING
+		do
+			Result := Precursor
+			if not is_list_index_set then
+				Result := Result + "?"
+			end
+		end
 
 feature -- Access
 

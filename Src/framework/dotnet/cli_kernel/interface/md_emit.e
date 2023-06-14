@@ -33,6 +33,12 @@ feature -- Access
 
 feature -- Save
 
+	prepare_to_save
+			-- Prepare data to be save
+		do
+			-- To redefine if needed
+		end
+
 	save (f_name: CLI_STRING)
 			-- Save current assembly to file `f_name'.
 		require

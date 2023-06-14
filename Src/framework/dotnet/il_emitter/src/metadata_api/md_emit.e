@@ -12,6 +12,9 @@ class
 inherit
 
 	MD_EMIT_I
+		redefine
+			prepare_to_save
+		end
 
 	MD_EMIT_SHARED
 
@@ -413,6 +416,120 @@ feature -- Save
 			to_implement ("TODO implement, double check if we really need it")
 		ensure
 			valid_result: Result /= Void
+		end
+
+feature -- Save
+
+	prepare_to_save
+			-- Prepare data to be save
+		local
+			field_idx, meth_idx, param_idx: NATURAL_32
+			l_missing_field_index_entries: ARRAYED_LIST [PE_TYPE_DEF_TABLE_ENTRY]
+			l_missing_method_index_entries: ARRAYED_LIST [PE_TYPE_DEF_TABLE_ENTRY]
+			l_missing_param_index_entries: ARRAYED_LIST [PE_METHOD_DEF_TABLE_ENTRY]
+		do
+			Precursor
+				-- Update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)			
+
+				-- TypeDef table
+			if attached md_table ({PE_TABLES}.ttypedef) as typedef_tb then
+				across
+					typedef_tb as e
+				loop
+					if attached {PE_TYPE_DEF_TABLE_ENTRY} e as l_type_def_entry then
+							-- FieldList
+						if l_type_def_entry.is_field_list_index_set then
+							field_idx := l_type_def_entry.fields.index
+							if l_missing_field_index_entries /= Void then
+								across
+									l_missing_field_index_entries as t
+								loop
+									t.set_field_list_index (l_type_def_entry.fields.index)
+								end
+								l_missing_field_index_entries.wipe_out
+							end
+						else
+							if l_missing_field_index_entries = Void then
+								create l_missing_field_index_entries.make (10)
+							end
+							l_missing_field_index_entries.force (l_type_def_entry)
+						end
+
+							-- MethodList
+						if l_type_def_entry.is_method_list_index_set then
+							meth_idx := l_type_def_entry.methods.index
+							if l_missing_method_index_entries /= Void then
+								across
+									l_missing_method_index_entries as t
+								loop
+									t.set_method_list_index (l_type_def_entry.methods.index)
+								end
+								l_missing_method_index_entries.wipe_out
+							end
+						else
+							if l_missing_method_index_entries = Void then
+								create l_missing_method_index_entries.make (10)
+							end
+							l_missing_method_index_entries.force (l_type_def_entry)
+						end
+					else
+						check is_type_def: False end
+					end
+				end
+				if l_missing_field_index_entries /= Void then
+					across
+						l_missing_field_index_entries as t
+					loop
+						t.set_field_list_index (field_idx + 1)
+					end
+					l_missing_field_index_entries := Void
+				end
+				if l_missing_method_index_entries /= Void then
+					across
+						l_missing_method_index_entries as t
+					loop
+						t.set_method_list_index (meth_idx + 1)
+					end
+					l_missing_method_index_entries := Void
+				end
+			end
+
+				-- MethodDef table
+			if attached md_table ({PE_TABLES}.tmethoddef) as methoddef_tb then
+				across
+					methoddef_tb as e
+				loop
+					if attached {PE_METHOD_DEF_TABLE_ENTRY} e as l_method_def_entry then
+							-- ParamList
+						if l_method_def_entry.is_param_list_index_set then
+							param_idx := l_method_def_entry.param_index.index
+							if l_missing_param_index_entries /= Void then
+								across
+									l_missing_param_index_entries as m
+								loop
+									m.set_param_list_index (l_method_def_entry.param_index.index)
+								end
+								l_missing_param_index_entries.wipe_out
+							end
+						else
+							if l_missing_param_index_entries = Void then
+								create l_missing_param_index_entries.make (10)
+							end
+							l_missing_param_index_entries.force (l_method_def_entry)
+						end
+					else
+						check is_method_def: False end
+					end
+				end
+				if l_missing_param_index_entries /= Void then
+					across
+						l_missing_param_index_entries as t
+					loop
+						t.set_param_list_index (param_idx + 1)
+					end
+					l_missing_param_index_entries := Void
+				end
+			end
 		end
 
 	save (f_name: CLI_STRING)

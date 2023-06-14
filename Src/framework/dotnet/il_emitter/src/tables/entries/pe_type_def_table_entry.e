@@ -92,8 +92,8 @@ feature -- Status report
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := "{TypeDef} "
-						+ " methods:" + methods.index.out
-						+ " fields:" + fields.index.out
+			Result := Result + " methods[" + methods.debug_output+ "]"
+			Result := Result + " fields[" + fields.debug_output + "]"
 		end
 
 	is_field_list_index_set: BOOLEAN

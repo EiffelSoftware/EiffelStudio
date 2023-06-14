@@ -59,7 +59,7 @@ feature -- Status report
 
 	debug_output: STRING
 		do
-			Result := "tag["+tag.out+"] index="+ index.out
+			Result := "#" + index.out + "<"+ tag.out +">" 
 		end
 
 feature -- Comparison

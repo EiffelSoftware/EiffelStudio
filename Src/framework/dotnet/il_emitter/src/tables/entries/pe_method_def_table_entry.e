@@ -14,6 +14,8 @@ inherit
 			same_as
 		end
 
+	DEBUG_OUTPUT
+
 create
 	make_with_method,
 	make_without_param_index
@@ -94,6 +96,13 @@ feature -- Status report
 	is_param_list_index_set: BOOLEAN
 		do
 			Result := param_index.is_list_index_set
+		end
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := "{MethofDef} "
+			Result := Result + " params[" + param_index.debug_output + "]"
 		end
 
 feature -- Element change

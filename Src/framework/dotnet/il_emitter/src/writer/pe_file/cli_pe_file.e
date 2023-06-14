@@ -244,6 +244,10 @@ feature -- Saving
 			debug ("il_emitter")
 				print ({STRING_32} "%N>> " + generator + ".save -> " + file_name + "%N")
 			end
+
+				-- First update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)
+			prepare
+
 				-- First compute size of PE file headers and sections.
 			compute_sizes
 
@@ -383,6 +387,12 @@ feature -- Saving
 		end
 
 feature {NONE} -- Saving
+
+	prepare
+			-- Prepare emitter data before save.
+		do
+			emitter.prepare_to_save
+		end
 
 	compute_sizes
 			-- Compute sizes and basic locations of headers and sections,

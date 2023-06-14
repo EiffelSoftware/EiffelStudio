@@ -1145,7 +1145,7 @@ feature -- Tests
 					create {CLI_STRING}.make ("System.Reflection.AssemblyTitleAttribute"), system_runtime_token)
 
 				-- Module Name
-			md_emit.set_module_name (create {CLI_STRING}.make ("define_class_net6"))
+			md_emit.set_module_name (create {CLI_STRING}.make ("define_class_net6.dll"))
 
 				--
 				-- Begin Metadata
@@ -1334,7 +1334,211 @@ feature -- Tests
 					{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public | {MD_TYPE_ATTRIBUTES}.before_field_init,
 					object_type_token, Void)
 
-				-- Define the Signature commont to all the methods of the Class MyClass
+				-- Define the Signature common to all the methods of the Class MyClass
+
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (0)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+
+				-- MyClass.A() implementation
+
+			method_a := md_emit.define_method (create {CLI_STRING}.make ("A"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature,
+					sig,
+					{MD_METHOD_ATTRIBUTES}.Managed)
+
+			body := method_writer.new_method_body (method_a)
+			body.put_nop
+
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("A"))
+			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
+			body.put_static_call (write_line_token, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
+
+				-- MyClass.B() implementation
+			method_b := md_emit.define_method (create {CLI_STRING}.make ("B"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature,
+					sig,
+					{MD_METHOD_ATTRIBUTES}.Managed)
+
+			body := method_writer.new_method_body (method_b)
+			body.put_nop
+
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("B"))
+			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
+			body.put_static_call (write_line_token, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
+
+				-- MyClass.C() implementation
+			method_c := md_emit.define_method (create {CLI_STRING}.make ("C"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature ,
+					sig,
+					{MD_METHOD_ATTRIBUTES}.Managed)
+
+			body := method_writer.new_method_body (method_c)
+			body.put_nop
+
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("C"))
+			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
+			body.put_static_call (write_line_token, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
+
+				-- MyClass.D() implementation
+			method_d := md_emit.define_method (create {CLI_STRING}.make ("D"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature,
+					sig,
+					{MD_METHOD_ATTRIBUTES}.Managed)
+
+			body := method_writer.new_method_body (method_d)
+			body.put_nop
+
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("D"))
+			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
+			body.put_static_call (write_line_token, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
+
+				-- MyClass.E() implementation
+			method_e := md_emit.define_method (create {CLI_STRING}.make ("E"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature ,
+					sig,
+					{MD_METHOD_ATTRIBUTES}.Managed)
+
+			body := method_writer.new_method_body (method_e)
+			body.put_nop
+
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("E"))
+			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
+			body.put_static_call (write_line_token, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
+
+				-- MyClass.F() implementation
+			method_f := md_emit.define_method (create {CLI_STRING}.make ("F"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature,
+					sig,
+					{MD_METHOD_ATTRIBUTES}.Managed)
+
+			body := method_writer.new_method_body (method_f)
+			body.put_nop
+
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("F"))
+			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
+			body.put_static_call (write_line_token, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
+
+				-- MyClass.G() implementation
+			method_g := md_emit.define_method (create {CLI_STRING}.make ("G"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature,
+					sig,
+					{MD_METHOD_ATTRIBUTES}.Managed)
+
+			body := method_writer.new_method_body (method_g)
+			body.put_nop
+
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("G"))
+			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
+			body.put_static_call (write_line_token, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
+
+				-- MyClass.H() implementation
+			method_h := md_emit.define_method (create {CLI_STRING}.make ("H"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature,
+					sig,
+					{MD_METHOD_ATTRIBUTES}.Managed)
+
+			body := method_writer.new_method_body (method_h)
+			body.put_nop
+
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("H"))
+			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
+			body.put_static_call (write_line_token, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
+
+				-- MyClass.I() implementation
+			method_i := md_emit.define_method (create {CLI_STRING}.make ("I"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature,
+					sig,
+					{MD_METHOD_ATTRIBUTES}.Managed)
+
+			body := method_writer.new_method_body (method_i)
+			body.put_nop
+
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("I"))
+			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
+			body.put_static_call (write_line_token, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
+
+				-- MyClass.J() implementation
+			method_j := md_emit.define_method (create {CLI_STRING}.make ("J"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature,
+					sig,
+					{MD_METHOD_ATTRIBUTES}.Managed)
+
+			body := method_writer.new_method_body (method_j)
+			body.put_nop
+
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("J"))
+			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
+			body.put_static_call (write_line_token, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
+
+				-- MyClass.K() implementation
+			method_k := md_emit.define_method (create {CLI_STRING}.make ("K"),
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.hide_by_signature,
+					sig,
+					{MD_METHOD_ATTRIBUTES}.Managed)
+
+			body := method_writer.new_method_body (method_k)
+			body.put_nop
+
+			string_token := md_emit.define_string (create {CLI_STRING}.make ("K"))
+			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
+			body.put_static_call (write_line_token, 1, False)
+			body.put_nop
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
 
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
@@ -1349,249 +1553,6 @@ feature -- Tests
 					{MD_METHOD_ATTRIBUTES}.Special_name |
 					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
 					sig, {MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (my_class_ctor)
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			body.put_static_call (object_ctor, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- MyClass.A() implementation
-			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-			sig.set_parameter_count (0)
-			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-
-			method_a := md_emit.define_method (create {CLI_STRING}.make ("A"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (method_a)
-			body.put_nop
-
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("A"))
-			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_static_call (write_line_token, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- MyClass.B() implementation
-			method_b := md_emit.define_method (create {CLI_STRING}.make ("B"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (method_b)
-			body.put_nop
-
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("B"))
-			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_static_call (write_line_token, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- MyClass.C() implementation
-			method_c := md_emit.define_method (create {CLI_STRING}.make ("C"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (method_c)
-			body.put_nop
-
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("C"))
-			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_static_call (write_line_token, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- MyClass.D() implementation
-			method_d := md_emit.define_method (create {CLI_STRING}.make ("D"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (method_d)
-			body.put_nop
-
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("D"))
-			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_static_call (write_line_token, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- MyClass.E() implementation
-			method_e := md_emit.define_method (create {CLI_STRING}.make ("E"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (method_e)
-			body.put_nop
-
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("E"))
-			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_static_call (write_line_token, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- MyClass.F() implementation
-			method_f := md_emit.define_method (create {CLI_STRING}.make ("F"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (method_f)
-			body.put_nop
-
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("F"))
-			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_static_call (write_line_token, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- MyClass.G() implementation
-			method_g := md_emit.define_method (create {CLI_STRING}.make ("G"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (method_g)
-			body.put_nop
-
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("G"))
-			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_static_call (write_line_token, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- MyClass.H() implementation
-			method_h := md_emit.define_method (create {CLI_STRING}.make ("H"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (method_h)
-			body.put_nop
-
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("H"))
-			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_static_call (write_line_token, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- MyClass.I() implementation
-			method_i := md_emit.define_method (create {CLI_STRING}.make ("I"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (method_i)
-			body.put_nop
-
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("I"))
-			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_static_call (write_line_token, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- MyClass.J() implementation
-			method_j := md_emit.define_method (create {CLI_STRING}.make ("J"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (method_j)
-			body.put_nop
-
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("J"))
-			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_static_call (write_line_token, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- MyClass.K() implementation
-			method_k := md_emit.define_method (create {CLI_STRING}.make ("K"),
-					l_entry_type_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (method_k)
-			body.put_nop
-
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("K"))
-			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_static_call (write_line_token, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
 
 				-- Define method Main
 			create sig.make
@@ -1620,13 +1581,24 @@ feature -- Tests
 			body.put_opcode ({MD_OPCODES}.stloc_0)
 
 			body.put_opcode ({MD_OPCODES}.ldloc_0)
-			body.put_call ({MD_OPCODES}.call, method_a, 0, False)
+			body.put_call ({MD_OPCODES}.callvirt, method_a, 0, False)
 			body.put_nop
 
 			body.put_opcode ({MD_OPCODES}.ldloc_0)
-			body.put_call ({MD_OPCODES}.call, method_b, 0, False)
+			body.put_call ({MD_OPCODES}.callvirt, method_b, 0, False)
 			body.put_nop
 
+			body.put_opcode ({MD_OPCODES}.ldloc_0)
+			body.put_call ({MD_OPCODES}.callvirt, method_c, 0, False)
+			body.put_nop
+
+			body.put_opcode ({MD_OPCODES}.Ret)
+			method_writer.write_current_body
+
+			body := method_writer.new_method_body (my_class_ctor)
+			body.put_opcode ({MD_OPCODES}.Ldarg_0)
+			body.put_static_call (object_ctor, 1, False)
+			body.put_nop
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
 

@@ -16,6 +16,8 @@ inherit
 			same_as
 		end
 
+	DEBUG_OUTPUT
+
 create
 	make_with_data
 
@@ -60,6 +62,16 @@ feature -- Access
 
 	signature_index: PE_BLOB
 			-- an index into the Blob heap.
+
+feature -- Status report	
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := "{Field} "
+			Result := Result + " name[" + name_index.debug_output + "]"
+			Result := Result + " signature[" + signature_index.debug_output + "]"
+		end
 
 feature -- Enum: Flags
 

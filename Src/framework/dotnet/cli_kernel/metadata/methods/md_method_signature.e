@@ -17,6 +17,8 @@ inherit
 			make
 		end
 
+	DEBUG_OUTPUT
+
 create
 	make
 
@@ -51,6 +53,14 @@ feature -- Access
 
 	parameter_count: INTEGER
 			-- Number of parameters
+
+feature -- Status report
+
+	debug_output: STRING
+		do
+			Result := parameter_count.out + " params"
+					+ " (type:" + method_type.to_hex_string + ")"
+		end
 
 feature -- Settings
 

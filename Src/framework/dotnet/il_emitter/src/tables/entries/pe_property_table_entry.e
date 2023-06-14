@@ -49,6 +49,16 @@ feature -- Access
 	property_type: PE_BLOB
 			-- Yes this is a signature in the blob.
 
+feature -- Status report	
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := "{Property} "
+			Result := Result + " name[" + name.debug_output + "]"
+			Result := Result + " type[" + property_type.debug_output + "]"
+		end
+
 feature -- Flags
 
 	SpecialName: INTEGER = 0x200

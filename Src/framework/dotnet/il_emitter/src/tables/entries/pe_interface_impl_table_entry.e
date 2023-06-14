@@ -13,6 +13,8 @@ inherit
 			same_as
 		end
 
+	DEBUG_OUTPUT
+
 create
 	make_with_data
 
@@ -57,6 +59,16 @@ feature -- Access
 
 	interface: PE_TYPEDEF_OR_REF
 			-- an index into the TypeDef, TypeRef, or TypeSpec table
+
+feature -- Status report	
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := "{InterfaceImpl} "
+			Result := Result + " class[" + class_.debug_output + "]"
+			Result := Result + " interface[" + interface.debug_output + "]"
+		end
 
 feature -- Operations
 

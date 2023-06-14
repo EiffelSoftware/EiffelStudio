@@ -101,7 +101,7 @@ feature -- Status report
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			Result := "{MethofDef} "
+			Result := "{Method} "
 			Result := Result + " params[" + param_index.debug_output + "]"
 		end
 

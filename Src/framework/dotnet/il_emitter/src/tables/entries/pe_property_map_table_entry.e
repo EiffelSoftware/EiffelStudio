@@ -13,6 +13,8 @@ inherit
 			same_as
 		end
 
+	DEBUG_OUTPUT
+
 
 create
 	make_with_data
@@ -49,6 +51,16 @@ feature -- Access
 
 	property_list: PE_PROPERTY_LIST
 			-- an index into the Property table.
+
+feature -- Status report	
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := "{Field} "
+			Result := Result + " parent[" + parent.debug_output + "]"
+			Result := Result + " properties[" + property_list.debug_output + "]"
+		end
 
 feature -- Operations
 

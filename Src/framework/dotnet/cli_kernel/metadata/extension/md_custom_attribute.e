@@ -167,20 +167,20 @@ feature -- Settings
 		local
 			l_count: INTEGER
 			i: INTEGER
-			l_s: STRING
+			utf8: STRING
 			u: UTF_CONVERTER
 		do
-			if s = Void then
+			if s = Void or else s.is_empty then
 				put_integer_8 (0xFF)
 			else
 					-- Convert our strings to UTF-8
-				if s.ends_with ("%U") then
-					l_s := u.utf_32_string_to_utf_8_string_8 (s)
+				if s [s.count] = '%U' then
+					utf8 := u.utf_32_string_to_utf_8_string_8 (s)
 				else
-					l_s := u.utf_32_string_to_utf_8_string_8 (s + {STRING_32} "%U")
+					utf8 := u.utf_32_string_to_utf_8_string_8 (s.to_string_32 + {STRING_32} "%U")
 				end
 					-- Store count.
-				l_count := l_s.count
+				l_count := utf8.count
 				compress_data (l_count)
 
 				from
@@ -188,7 +188,7 @@ feature -- Settings
 				until
 					i > l_count
 				loop
-					put_integer_8 (l_s.code (i).to_integer_8)
+					put_integer_8 (utf8.code (i).to_integer_8)
 					i := i + 1
 				end
 			end

@@ -59,7 +59,12 @@ feature -- Status report
 
 	debug_output: STRING
 		do
-			Result := "#" + index.out + "<"+ tag.out +">" 
+			Result := "#" + index.out + "<"+ tag.out +">"
+		end
+
+	is_ready_for_render: BOOLEAN
+		do
+			Result := True
 		end
 
 feature -- Comparison
@@ -76,6 +81,7 @@ feature -- Operations
 			-- Number of bytes written to the destination `a_dest`
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
+			is_ready_for_render: is_ready_for_render
 		local
 			v: NATURAL_32
 		do

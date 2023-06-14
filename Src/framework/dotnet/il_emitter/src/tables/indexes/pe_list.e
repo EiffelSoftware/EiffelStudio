@@ -13,6 +13,7 @@ inherit
 			make_with_tag_and_index,
 			get_index_shift,
 			has_index_overflow,
+			is_ready_for_render,
 			debug_output
 		end
 
@@ -66,6 +67,11 @@ feature -- Status report
 
 	is_list_index_set: BOOLEAN
 			-- Is first index of Current list set ?
+
+	is_ready_for_render: BOOLEAN
+		do
+			Result := Precursor and is_list_index_set
+		end
 
 	debug_output: STRING
 		do

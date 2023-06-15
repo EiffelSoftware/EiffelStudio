@@ -58,8 +58,8 @@ feature -- Operations
 			l_bytes := 2
 
 				-- Write name and event_type to the buffer and update the number of bytes.
-			l_bytes := l_bytes + name.render (a_sizes, a_dest, l_bytes.to_integer_32)
-			l_bytes := l_bytes + event_type.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + name.render (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + event_type.render (a_sizes, a_dest, l_bytes)
 
 				-- Return the number of bytes written
 			Result := l_bytes
@@ -77,8 +77,8 @@ feature -- Operations
 			l_bytes := 2
 
 				-- Read name and event_type from the buffer and update the number of bytes.
-			l_bytes := l_bytes + name.get (a_sizes, a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + event_type.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + name.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + event_type.get (a_sizes, a_src, l_bytes)
 
 				-- Return the number of bytes readed
 			Result := l_bytes

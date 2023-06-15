@@ -40,7 +40,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 			l_bytes := owner.render (a_sizes, a_dest, 0)
-			l_bytes := l_bytes + constraint.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + constraint.render (a_sizes, a_dest, l_bytes)
 			Result := l_bytes
 		end
 
@@ -49,7 +49,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 			l_bytes := owner.get (a_sizes, a_src, 0)
-			l_bytes := l_bytes + constraint.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + constraint.get (a_sizes, a_src, l_bytes)
 			Result := l_bytes
 		end
 

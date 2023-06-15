@@ -11,10 +11,11 @@ class
 inherit
 	MD_UTILITIES
 
-
 feature -- Net Target
 
-	is_net_core: BOOLEAN = True
+	is_netcore: BOOLEAN = True
+			-- Is IL emitter target netcore ?
+			-- (as opposed to .Net framework v4.0)
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -11,13 +11,11 @@ class
 	CLI_OPTIONAL_HEADER
 
 inherit
-
 	CLI_UTILITIES
 		export
 			{NONE} all
 			{ANY} file_alignment
 		end
-
 
 create
 	make
@@ -27,14 +25,14 @@ feature {NONE} -- Initialization
 	make
 			-- Allocate `item' and initialize default values for CLI
 		do
-			if is_net_core then
-				make_net_core
+			if is_netcore then
+				make_netcore
 			else
-				make_net_framework_v4
+				make_dotnet_framework
 			end
 		end
 
-	make_net_core
+	make_netcore
 			-- Optional Header for version greather than 6
 		do
 			set_magic (0x10B)
@@ -45,7 +43,7 @@ feature {NONE} -- Initialization
 				-- Shall be greater than File Alignment.
 			set_file_alignment (file_alignment)
 				-- Should be 0x200
-			set_major_operating_system_version (4) 
+			set_major_operating_system_version (4)
 			set_minor_operating_system_version (0)
 			set_major_image_version (0)
 			set_minor_image_version (0)
@@ -72,9 +70,9 @@ feature {NONE} -- Initialization
 			initialize_directories
 		end
 
-	make_net_framework_v4
+	make_dotnet_framework
 			-- Optional header compatible with older .Net version
-			-- less than equal to Net v4
+			-- less than equal to .NET v4.0
 		do
 			set_magic (0x10B)
 			set_major_linker_version (6)

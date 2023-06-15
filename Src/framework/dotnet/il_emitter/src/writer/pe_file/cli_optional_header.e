@@ -18,6 +18,7 @@ inherit
 			{ANY} file_alignment
 		end
 
+
 create
 	make
 
@@ -26,13 +27,57 @@ feature {NONE} -- Initialization
 	make
 			-- Allocate `item' and initialize default values for CLI
 		do
-				-- TODO check if we need to configure this HEADER with
-				-- a CLI_CONFIG_OPTIONS.
-				-- CLI_CONFIG_32
-				-- CLI_CONFIG_64
+			if is_net_core then
+				make_net_core
+			else
+				make_net_framework_v4
+			end
+		end
 
+	make_net_core
+			-- Optional Header for version greather than 6
+		do
 			set_magic (0x10B)
-			set_major_linker_version (6) --48
+			set_major_linker_version ({CLI_CONFIG_NETCORE}.major_linked_version)
+			set_minor_linker_version (0)
+			set_image_base (0x400000)
+			set_section_alignment (section_alignment)
+				-- Shall be greater than File Alignment.
+			set_file_alignment (file_alignment)
+				-- Should be 0x200
+			set_major_operating_system_version (4) 
+			set_minor_operating_system_version (0)
+			set_major_image_version (0)
+			set_minor_image_version (0)
+			set_major_subsystem_version (4)
+			set_minor_subsystem_version (0)
+			set_win32_version_value (0)
+				-- Reserved
+			set_check_sum (0)
+			set_dll_characteristics ({CLI_CONFIG_NETCORE}.default_dll_characteristics)
+
+				-- Changed the default stack size to be 5MB instead of 1MB the same way it is done
+				--  in classic Eiffel. It certainly vary from the ECMA CLI specification but on 64 bits
+				--  platform 1MB is certainly not enough.
+			set_size_of_stack_reserve (0x500000)
+				-- 1 Mb
+			set_size_of_stack_commit (0x1000)
+				-- 4k
+			set_size_of_heap_reserve (0x100000)
+				-- 1 Mb
+			set_size_of_heap_commit (0x1000)
+				-- 4k
+			set_loader_flags (0)
+			set_number_of_rva_and_sizes ({CLI_DIRECTORY_CONSTANTS}.Image_number_of_directory_entries)
+			initialize_directories
+		end
+
+	make_net_framework_v4
+			-- Optional header compatible with older .Net version
+			-- less than equal to Net v4
+		do
+			set_magic (0x10B)
+			set_major_linker_version (6)
 			set_minor_linker_version (0)
 			set_image_base (0x400000)
 			set_section_alignment (section_alignment)

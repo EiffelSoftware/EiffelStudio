@@ -112,6 +112,9 @@ feature -- Element change
 		require
 			not is_field_list_index_set
 		do
+			debug ("il_emitter_table")
+				print ("  -> TypeDef: Update FieldList (" + fields.index.to_hex_string + " -> " + idx.to_hex_string + ") TypeName=" + type_name_index.debug_output + "%N")
+			end
 			fields.update_index (idx)
 		ensure
 			is_field_list_index_set
@@ -121,6 +124,9 @@ feature -- Element change
 		require
 			not is_method_list_index_set
 		do
+			debug ("il_emitter_table")
+				print ("  -> TypeDef: Update MethodList (" + methods.index.to_hex_string + " -> " + idx.to_hex_string + ") TypeName=" + type_name_index.debug_output + "%N")
+			end
 			methods.update_index (idx)
 		ensure
 			is_method_list_index_set

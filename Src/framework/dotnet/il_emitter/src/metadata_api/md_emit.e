@@ -602,7 +602,7 @@ feature {NONE} -- Implementation
 				l_sz := tb.size
 				debug("il_emitter_table")
 					if l_sz /= 0 then
-						print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables: Table #" + i.out + " -> count=" + l_sz.out + "%N")
+						print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables: Table #" + i.to_natural_8.to_hex_string + " -> count=" + l_sz.out + "%N")
 					end
 				end
 				l_counts [i + 1] := l_sz
@@ -635,7 +635,7 @@ feature {NONE} -- Implementation
 					l_sz := tb [j].render (l_counts, l_buffer)
 					debug("il_emitter_table")
 						if l_sz /= 0 then
-							print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables[" + i.out + "] -> entry size=" + l_sz.out
+							print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables[0x" + i.to_natural_8.to_hex_string + "]["+ j.out +"] -> entry size=" + l_sz.out
 								+ " content=" + {MD_DEBUG}.dump_special (l_buffer.to_special, 0, l_sz.to_integer_32) + "%N")
 						end
 					end
@@ -1125,6 +1125,12 @@ feature -- Definition: Creation
 			l_method_index := next_table_index ({PE_TABLES}.tmethoddef)
 			pe_index := add_table_entry (l_method_def_entry)
 
+				-- Return the generated token.
+			Result := last_token.to_integer_32
+			debug ("il_emitter_table")
+				print ({STRING_32} " -> ("+ l_method_index.out +") index=" + pe_index.out + " token=" + Result.to_hex_string +"%N")
+			end
+
 				-- Extract table type and row from the in_class_token
 			if
 				attached extract_table_type_and_row (in_class_token) as d and then
@@ -1134,12 +1140,6 @@ feature -- Definition: Creation
 					e.set_method_list_index (l_method_index)
 					do_nothing
 				end
-			end
-
-				-- Return the generated token.
-			Result := last_token.to_integer_32
-			debug ("il_emitter_table")
-				print ({STRING_32} " -> ("+ l_method_index.out +") index=" + pe_index.out + " token=" + Result.to_hex_string +"%N")
 			end
 		end
 
@@ -1296,18 +1296,18 @@ feature -- Definition: Creation
 			l_param_entry_index := next_table_index ({PE_TABLES}.tparam)
 			pe_index := add_table_entry (l_param_entry)
 
+				-- Return the generated token.
+			Result := last_token.to_integer_32
+			debug ("il_emitter_table")
+				print ({STRING_32} " -> index=" + l_param_index.out + " token="+ Result.to_hex_string + "%N")
+			end
+
 			if
 				attached {PE_METHOD_DEF_TABLE_ENTRY} md_table (d.table_type_index)[d.table_row_index] as e
 			then
 				if not e.is_param_list_index_set then
 					e.set_param_list_index (l_param_entry_index)
 				end
-			end
-
-				-- Return the generated token.
-			Result := last_token.to_integer_32
-			debug ("il_emitter_table")
-				print ({STRING_32} " -> index=" + l_param_index.out + " token="+ Result.to_hex_string + "%N")
 			end
 		end
 
@@ -1344,6 +1344,10 @@ feature -- Definition: Creation
 			l_name_index: NATURAL_32
 			l_field_index: NATURAL_32
 		do
+			debug ("il_emitter_table")
+				print ({STRING_32} "Field: " + field_name.string_32 + " (class:"+ in_class_token.to_hex_string)
+			end
+
 			l_field_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 			l_name_index := pe_writer.hash_string (field_name.string_32)
 
@@ -1353,6 +1357,11 @@ feature -- Definition: Creation
 				-- Add the new PE_FIELD_TABLE_ENTRY instance to the metadata tables.
 			l_field_index := next_table_index ({PE_TABLES}.tfield)
 			pe_index := add_table_entry (l_field_def_entry)
+				-- Return the generated token.
+			Result := last_token.to_integer_32
+			debug ("il_emitter_table")
+				print ({STRING_32} " -> ("+ l_field_index.out +") index=" + pe_index.out + " token=" + Result.to_hex_string +"%N")
+			end
 
 			if
 				attached extract_table_type_and_row (in_class_token) as d and then
@@ -1362,9 +1371,6 @@ feature -- Definition: Creation
 					e.set_field_list_index (l_field_index)
 				end
 			end
-
-				-- Return the generated token.
-			Result := last_token.to_integer_32
 		end
 
 	define_signature (a_signature: MD_LOCAL_SIGNATURE): INTEGER
@@ -1413,8 +1419,13 @@ feature -- Definition: Creation
 			l_ca_type: PE_CUSTOM_ATTRIBUTE_TYPE
 		do
 				-- See II.22.10 CustomAttribute : 0x0C
+
 				-- Extract table type and row from the owner token
 			l_owner_tuple := extract_table_type_and_row (owner)
+--			pe_index := l_owner_tuple.table_row_index
+
+				-- Extract table type and row from the l_constructor_tuple token
+			l_constructor_tuple := extract_table_type_and_row (constructor)
 
 			if ca /= Void then
 				blob_count := ca.count
@@ -1425,13 +1436,15 @@ feature -- Definition: Creation
 				-- Create a new PE_CUSTOM_ATTRIBUTE instance with the corresponding tag and index
 			l_ca := create_pe_custom_attribute (owner, l_owner_tuple.table_row_index)
 
-				-- Extract table type and row from the l_constructor_tuple token
-			l_constructor_tuple := extract_table_type_and_row (constructor)
-
 				-- Create a new PE_CUSTOM_ATTRIBUTE_TYPE instance with the corresponding tag and index
 			l_ca_type := create_pe_custom_attribute_type (constructor, l_constructor_tuple.table_row_index)
 
-			pe_index := l_owner_tuple.table_row_index
+			debug ("il_emitter_table")
+				print ({STRING_32} "CustomAttribute: "
+						+ " owner="+ owner.to_hex_string +" [" + l_owner_tuple.table_row_index.to_natural_32.to_hex_string + "]"
+						+ " ctor="+ constructor.to_hex_string +" [" + l_constructor_tuple.table_row_index.to_natural_32.to_hex_string + "]"
+						)
+			end
 
 			create l_ca_entry.make_with_data (l_ca, l_ca_type, l_ca_blob)
 
@@ -1440,6 +1453,9 @@ feature -- Definition: Creation
 
 				-- Return the generated token.
 			Result := last_token.to_integer_32
+			debug ("il_emitter_table")
+				print ({STRING_32} " -> ("+ pe_index.out +") index=" + pe_index.out + " token=" + Result.to_hex_string +"%N")
+			end
 		end
 
 feature -- Constants

@@ -111,6 +111,9 @@ feature -- Element change
 		require
 			not is_param_list_index_set
 		do
+			debug ("il_emitter_table")
+				print ("  -> Method: Update ParamList (" + param_index.index.to_hex_string + " -> " + idx.to_hex_string + ") MethodName=" + name_index.debug_output + "%N")
+			end
 			param_index.update_index (idx)
 		ensure
 			is_param_list_index_set

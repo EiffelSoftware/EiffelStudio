@@ -10,14 +10,19 @@ class
 
 feature -- PE header constants
 
-	image_file_dll: INTEGER_16 = 0x2000
-			-- File is DLL.
+	image_file_reloc_stripped: INTEGER_16 = 0x0001
+
+	image_file_executable_image: INTEGER_16 = 0x0002
+			-- File is executable (i.e. no unresolved external references).
+
+	image_file_large_address_aware: INTEGER_16 = 0x0020
+			-- 32 bit word machine.
 
 	image_file_32bit_machine: INTEGER_16 = 0x0100
 			-- 32 bit word machine.
 
-	image_file_executable_image: INTEGER_16 = 0x0002
-			-- File is executable (i.e. no unresolved external references).
+	image_file_dll: INTEGER_16 = 0x2000
+			-- File is DLL.
 
 	image_file_line_nums_stripped: INTEGER_16 = 0x0004
 			-- Line numbers stripped from file.

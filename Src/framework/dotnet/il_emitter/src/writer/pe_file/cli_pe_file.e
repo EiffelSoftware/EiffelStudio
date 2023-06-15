@@ -46,10 +46,15 @@ feature {NONE} -- Initialization
 				-- PE file header basic initialization.
 			create pe_header.make
 			pe_header.set_number_of_sections (2)
-			l_characteristics := {CLI_PE_FILE_CONSTANTS}.Image_file_32bit_machine |
-				{CLI_PE_FILE_CONSTANTS}.Image_file_executable_image |
-				{CLI_PE_FILE_CONSTANTS}.Image_file_line_nums_stripped |
-				{CLI_PE_FILE_CONSTANTS}.Image_file_local_syms_stripped
+			l_characteristics := 
+				{CLI_PE_FILE_CONSTANTS}.Image_file_executable_image
+				| {CLI_PE_FILE_CONSTANTS}.image_file_large_address_aware
+--				| {CLI_PE_FILE_CONSTANTS}.Image_file_line_nums_stripped
+--				| {CLI_PE_FILE_CONSTANTS}.Image_file_local_syms_stripped
+
+			if is_32bits then
+				l_characteristics := l_characteristics | {CLI_PE_FILE_CONSTANTS}.Image_file_32bit_machine
+			end
 
 			if is_dll then
 				l_characteristics := l_characteristics | {CLI_PE_FILE_CONSTANTS}.Image_file_dll

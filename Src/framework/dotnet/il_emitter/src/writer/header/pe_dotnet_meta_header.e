@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {PE_DOTNET_META_HEADER}."
+	description: "Object representing the Metadata Root"
 	date: "$Date$"
 	revision: "$Revision$"
-
+	EIS: "nmae=Metadata Root", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297&zoom=100,116,308", "protocol=uri"
 class
 	PE_DOTNET_META_HEADER
 

@@ -17,10 +17,9 @@ feature -- Access
 		deferred
 		end
 
-	pe_writer: PE_WRITER
-			-- class to generate the PE file.
+	pe_writer: PE_GENERATOR
+			-- helper class to generate the PE file.
 			--| using as a helper class to access needed features.
-			--| TODO, we don't need the full class we need to extract the needed features.
 		deferred
 		end
 

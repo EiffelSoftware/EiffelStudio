@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tables: SPECIAL [MD_TABLE]; a_writer: PE_WRITER)
+	make (a_tables: SPECIAL [MD_TABLE]; a_writer: PE_GENERATOR)
 		do
 			-- TODO: maybe use as parameter the instance of MD_EMIT
 			tables := a_tables
@@ -29,10 +29,10 @@ feature -- Access
 	tables: SPECIAL [MD_TABLE]
 			--  in-memory metadata tables
 
-	pe_writer: PE_WRITER
-			-- class to generate the PE file.
+	--pe_writer: PE_WRITER
+	pe_writer: PE_GENERATOR
+			-- helper class to generate the PE file.
 			--| using as a helper class to access needed features.
-			--| TODO, we don't need the full class we need to extract the needed features.
 
 feature -- Access
 

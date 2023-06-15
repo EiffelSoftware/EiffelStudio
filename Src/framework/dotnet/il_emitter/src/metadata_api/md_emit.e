@@ -33,8 +33,8 @@ feature {NONE}
 			--| creates a set of in-memory metadata tables,
 			--| generates a unique GUID (module version identifier, or MVID) for the metadata,
 		do
-				-- Using PE_WRITER to get access helper features.
-			create pe_writer.make (True, False, "")
+				-- Using PE_GENERATOR to get access helper features.
+			create pe_writer.make
 			create stream_headers.make_filled (0, 5, 2)
 			initialize_metadata_tables
 			initialize_guid
@@ -136,10 +136,10 @@ feature -- Access
 			Result := tables [idx.to_integer_32]
 		end
 
-	pe_writer: PE_WRITER
-			-- class to generate the PE file.
+	--pe_writer: PE_WRITER
+	pe_writer: PE_GENERATOR
+			-- helper class to generate the PE file.
 			--| using as a helper class to access needed features.
-			--| TODO, we don't need the full class we need to extract the needed features.
 
 feature -- Access
 

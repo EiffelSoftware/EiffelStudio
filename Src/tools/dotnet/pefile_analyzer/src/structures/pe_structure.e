@@ -1,0 +1,292 @@
+note
+	description: "Summary description for {PE_STRUCTURE}."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	PE_STRUCTURE
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (nb: INTEGER; lab: like label)
+		do
+			label := lab
+			create structure_items.make (nb)
+			create items.make (structure_items.count)
+		end
+
+feature -- Access
+
+	label: READABLE_STRING_8
+
+	structure_items: ARRAYED_LIST [PE_STRUCTURE_ITEM]
+
+	items: ARRAYED_LIST [PE_ITEM]
+
+feature -- Access
+
+	index_item (lab: READABLE_STRING_GENERAL): detachable PE_INDEX_ITEM
+		require
+			is_index_item (lab)
+		do
+			if attached {PE_INDEX_ITEM} item (lab) as i then
+				Result := i
+			end
+		end
+
+	string_item (lab: READABLE_STRING_GENERAL): detachable PE_STRING_ITEM
+		require
+			is_string_item (lab)
+		do
+			if attached {PE_STRING_ITEM} item (lab) as i then
+				Result := i
+			end
+		end
+
+	item (lab: READABLE_STRING_GENERAL): detachable PE_ITEM
+		do
+			across
+				items as ic
+			until
+				Result /= Void
+			loop
+				if lab.is_case_insensitive_equal (ic.item.label) then
+					Result := ic.item
+				end
+			end
+		end
+
+feature -- Status report
+
+	is_string_item (lab: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			Result := attached {PE_STRING_ITEM} item (lab)
+		end
+
+	is_index_item (lab: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			Result := attached {PE_INDEX_ITEM} item (lab)
+		end
+
+feature -- Constants
+
+--	column_separator: STRING = " | "
+	column_separator: STRING = "|"
+
+feature -- Read
+
+	read (pe: PE_FILE)
+		local
+			l_pe_item: PE_ITEM
+		do
+			across
+				structure_items as ic
+			loop
+				l_pe_item := ic.item.read (pe)
+				items.force (l_pe_item)
+			end
+			check structure_items.count = items.count end
+		end
+
+	has_error: BOOLEAN
+		do
+			across
+				items as ic
+			until
+				Result
+			loop
+				Result := ic.item.has_error
+			end
+		end
+
+	errors: ARRAYED_LIST [PE_ERROR]
+		require
+			has_error
+		do
+			create Result.make (1)
+			across
+				items as ic
+			loop
+				if attached ic.item.error as err then
+					Result.force (err)
+				end
+			end
+		end
+
+feature -- Conversion
+
+	to_string: STRING_32
+		local
+			l_is_first: BOOLEAN
+		do
+			Result := {STRING_32} "{"+ label +"}:"
+			l_is_first := True
+			across
+				items as ic
+			loop
+				if l_is_first then
+					l_is_first := False
+				else
+					Result.append (column_separator)
+				end
+				Result.append (item_to_string (ic.item))
+			end
+		end
+
+	item_to_string (i: PE_ITEM): STRING_32
+		do
+			Result := i.to_string
+			if attached i.info as inf then
+				Result := Result + {STRING_32} " %"" + inf.representation + "%""
+			end
+		end
+
+	dump: STRING_8
+		do
+			create Result.make (items.count * 3)
+			across
+				items as ic
+			loop
+				if not Result.is_empty then
+					Result.append (column_separator)
+				end
+				Result.append (ic.item.dump)
+			end
+		end
+
+	description: STRING_8
+		do
+			create Result.make (structure_items.count * 5)
+			across
+				structure_items as ic
+			loop
+				if not Result.is_empty then
+					Result.append (column_separator)
+				end
+				Result.append (ic.item.label)
+			end
+		end
+
+feature -- Element change
+
+	add (i: PE_STRUCTURE_ITEM)
+		do
+			structure_items.force (i)
+		end
+
+	add_rva (lab: STRING)
+		do
+			add (create {PE_RVA}.make (lab))
+		end
+
+	add_flags_16 (lab: STRING)
+		do
+			add (create {PE_FLAGS_16}.make (lab))
+		end
+
+	add_flags_32 (lab: STRING)
+		do
+			add (create {PE_FLAGS_32}.make (lab))
+		end
+
+	add_string_index (lab: STRING)
+		do
+			add (create {PE_STRING_INDEX}.make (lab))
+		end
+
+	add_index (lab: STRING)
+		do
+			add (create {PE_INDEX}.make (lab))
+		end
+
+	add_blob_index (lab: STRING)
+		do
+			add (create {PE_BLOB_INDEX}.make (lab))
+		end
+
+	add_guid_index (lab: STRING)
+		do
+			add (create {PE_GUID_INDEX}.make (lab))
+		end
+
+	add_type_def_index (lab: STRING)
+		do
+			add (create {PE_TYPE_DEF_INDEX}.make (lab))
+		end
+
+	add_type_def_or_ref_or_spec (lab: STRING)
+		do
+			add (create {PE_TYPE_DEF_OR_REF_OR_SPEC_INDEX}.make (lab))
+		end
+
+	add_has_constant (lab: STRING)
+		do
+			add (create {PE_HAS_CONSTANT_INDEX}.make (lab))
+		end
+
+	add_resolution_scope (lab: STRING)
+		do
+			add (create {PE_RESOLUTION_SCOPE_INDEX}.make (lab))
+		end
+
+	add_custom_attribute_type_index (lab: STRING)
+		do
+			add (create {PE_CUSTOM_ATTRIBUTE_TYPE_INDEX}.make (lab))
+		end
+
+	add_has_custom_attribute_index (lab: STRING)
+		do
+			add (create {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.make (lab))
+		end
+
+	add_has_semantic (lab: STRING)
+		do
+			add (create {PE_HAS_SEMANTIC_INDEX}.make (lab))
+		end
+
+	add_field_index (lab: STRING)
+		do
+			add (create {PE_FIELD_INDEX}.make (lab))
+		end
+
+	add_method_def_index (lab: STRING)
+		do
+			add (create {PE_METHOD_DEF_INDEX}.make (lab))
+		end
+
+	add_method_def_or_member_ref_index (lab: STRING)
+		do
+			-- FIXME
+			add (create {PE_METHOD_DEF_OR_MEMBER_REF_INDEX}.make (lab))
+		end
+
+	add_param_index (lab: STRING)
+		do
+			add (create {PE_PARAM_INDEX}.make (lab))
+		end
+
+	add_property_index (lab: STRING)
+		do
+			add (create {PE_PROPERTY_INDEX}.make (lab))
+		end
+
+	add_natural_32 (lab: STRING)
+		do
+			add (create {PE_NATURAL_32}.make (lab))
+		end
+
+	add_natural_16 (lab: STRING)
+		do
+			add (create {PE_NATURAL_16}.make (lab))
+		end
+
+	add_natural_8 (lab: STRING)
+		do
+			add (create {PE_NATURAL_8}.make (lab))
+		end
+
+end

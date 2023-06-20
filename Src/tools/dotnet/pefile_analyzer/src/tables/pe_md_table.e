@@ -28,6 +28,11 @@ feature -- Access
 
 	entries: ARRAYED_LIST [G]
 
+	entries_count: INTEGER
+		do
+			Result := entries.count
+		end
+
 	count: INTEGER
 
 	table_id: NATURAL_32
@@ -38,6 +43,13 @@ feature -- Access
 			Result := False
 		end
 
+	first: detachable G
+		do
+			if not entries.is_empty then
+				Result := entries.first
+			end
+		end
+
 feature -- Read
 
 	read (pe: PE_FILE)
@@ -45,7 +57,7 @@ feature -- Read
 			i, n: INTEGER
 		do
 			address := pe.position.to_natural_32
-			
+
 			entries.wipe_out
 			from
 				i := 1

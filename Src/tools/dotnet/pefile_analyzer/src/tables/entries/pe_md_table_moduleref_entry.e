@@ -18,4 +18,11 @@ feature {NONE} -- Initialization
 			struct.add_string_index ("Name")
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tmoduleref
+		end
+
 end

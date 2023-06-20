@@ -85,5 +85,29 @@ feature -- Operation
 			end
 		end
 
+	put_line_divider
+		do
+			put_string (line_divider)
+		end
+
+	line_divider: STRING_8
+		local
+			i: INTEGER
+		once
+			create Result.make (30 + 2)
+			from
+				i := 30
+				create Result.make (i + 2)
+--				Result.append_character ('%N')
+			until
+				i = 0
+			loop
+				Result.append_character ('_')
+				i := i - 1
+			end
+			Result.append_character ('%N')
+			Result.append_character ('%N')
+		end
+
 
 end

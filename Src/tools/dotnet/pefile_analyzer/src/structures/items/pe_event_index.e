@@ -1,5 +1,5 @@
 class
-	PE_PARAM_INDEX
+	PE_EVENT_INDEX
 
 inherit
 	PE_STRUCTURE_ITEM
@@ -11,7 +11,7 @@ feature -- Read
 
 	read (pe: PE_FILE): PE_ITEM
 		do
-			Result := pe.read_param_index (label)
+			Result := pe.read_event_index (label)		
 		end
 
 end

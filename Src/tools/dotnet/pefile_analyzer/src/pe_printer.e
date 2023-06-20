@@ -70,6 +70,7 @@ feature -- Visitor
 			output.put_string (" - Metadata table: 0x" + short_hex_string (o.metadata_tables_address.to_hex_string) + "%N")
 
 			output.exdent
+			output.put_line_divider
 			Precursor (o)
 		end
 
@@ -97,7 +98,7 @@ feature -- Visitor
 				end
 				i := i + 1
 			end
-			output.put_string ("%N")
+			output.put_line_divider
 			Precursor (o)
 		end
 
@@ -119,6 +120,7 @@ feature -- Visitor
 			table_entry_index := 0
 			Precursor (o)
 			output.exdent
+			output.put_line_divider
 			output.flush
 		end
 
@@ -174,6 +176,7 @@ feature -- Visitor
 
 			Precursor (o)
 			output.exdent
+			output.put_line_divider
 			output.flush
 		end
 	visit_user_string_heap (o: PE_USER_STRING_HEAP)
@@ -220,6 +223,7 @@ feature -- Visitor
 
 			Precursor (o)
 			output.exdent
+			output.put_line_divider
 			output.flush
 		end
 	visit_blob_heap (o: PE_BLOB_HEAP)
@@ -249,6 +253,7 @@ feature -- Visitor
 			end
 			Precursor (o)
 			output.exdent
+			output.put_line_divider
 			output.flush
 		end
 

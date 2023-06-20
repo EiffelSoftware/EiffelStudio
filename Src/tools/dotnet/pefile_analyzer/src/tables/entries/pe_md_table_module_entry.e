@@ -22,4 +22,11 @@ feature {NONE} -- Initialization
 			struct.add_guid_index ("EncBaseId")
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tmodule
+		end
+
 end

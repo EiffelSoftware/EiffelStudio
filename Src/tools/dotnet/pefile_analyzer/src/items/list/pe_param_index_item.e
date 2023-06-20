@@ -11,4 +11,13 @@ deferred class
 inherit
 	PE_INDEX_ITEM
 
+	PE_INDEX_ITEM_WITH_TABLE
+
+feature -- Access
+
+	associated_table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tparam
+		end
+
 end

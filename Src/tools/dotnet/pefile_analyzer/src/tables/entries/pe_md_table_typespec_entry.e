@@ -18,4 +18,11 @@ feature {NONE} -- Initialization
 			struct.add_blob_index ("Signature")
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.ttypespec
+		end
+
 end

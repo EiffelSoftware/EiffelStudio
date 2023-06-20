@@ -75,7 +75,9 @@ feature -- Status report
 feature -- Constants
 
 --	column_separator: STRING = " | "
-	column_separator: STRING = "|"
+	column_separator: STRING = "%T|"
+	first_column_separator: STRING = "|"
+	last_column_separator: STRING = "%T|"
 
 feature -- Read
 
@@ -129,12 +131,14 @@ feature -- Conversion
 				items as ic
 			loop
 				if l_is_first then
+					Result.append (first_column_separator)
 					l_is_first := False
 				else
 					Result.append (column_separator)
 				end
 				Result.append (item_to_string (ic.item))
 			end
+			Result.append (last_column_separator)
 		end
 
 	item_to_string (i: PE_ITEM): STRING_32
@@ -151,11 +155,14 @@ feature -- Conversion
 			across
 				items as ic
 			loop
-				if not Result.is_empty then
+				if Result.is_empty then
+					Result.append (first_column_separator)
+				else
 					Result.append (column_separator)
 				end
 				Result.append (ic.item.dump)
 			end
+			Result.append (last_column_separator)
 		end
 
 	description: STRING_8
@@ -164,11 +171,14 @@ feature -- Conversion
 			across
 				structure_items as ic
 			loop
-				if not Result.is_empty then
+				if Result.is_empty then
+					Result.append (first_column_separator)
+				else
 					Result.append (column_separator)
 				end
 				Result.append (ic.item.label)
 			end
+			Result.append (last_column_separator)
 		end
 
 feature -- Element change
@@ -248,6 +258,16 @@ feature -- Element change
 			add (create {PE_HAS_SEMANTIC_INDEX}.make (lab))
 		end
 
+	add_event_list_index (lab: STRING)
+		do
+			add (create {PE_EVENT_LIST_INDEX}.make (lab))
+		end
+
+	add_field_list_index (lab: STRING)
+		do
+			add (create {PE_FIELD_LIST_INDEX}.make (lab))
+		end
+
 	add_field_index (lab: STRING)
 		do
 			add (create {PE_FIELD_INDEX}.make (lab))
@@ -258,20 +278,34 @@ feature -- Element change
 			add (create {PE_METHOD_DEF_INDEX}.make (lab))
 		end
 
+	add_method_def_list_index (lab: STRING)
+		do
+			add (create {PE_METHOD_DEF_LIST_INDEX}.make (lab))
+		end
+
 	add_method_def_or_member_ref_index (lab: STRING)
 		do
-			-- FIXME
 			add (create {PE_METHOD_DEF_OR_MEMBER_REF_INDEX}.make (lab))
 		end
 
-	add_param_index (lab: STRING)
+--	add_param_index (lab: STRING)
+--		do
+--			add (create {PE_PARAM_INDEX}.make (lab))
+--		end
+
+	add_param_list_index (lab: STRING)
 		do
-			add (create {PE_PARAM_INDEX}.make (lab))
+			add (create {PE_PARAM_LIST_INDEX}.make (lab))
 		end
 
 	add_property_index (lab: STRING)
 		do
 			add (create {PE_PROPERTY_INDEX}.make (lab))
+		end
+
+	add_property_list_index (lab: STRING)
+		do
+			add (create {PE_PROPERTY_LIST_INDEX}.make (lab))
 		end
 
 	add_natural_32 (lab: STRING)

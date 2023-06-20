@@ -19,4 +19,11 @@ feature -- Access
 			struct.add_type_def_or_ref_or_spec ("Interface")
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tinterfaceimpl
+		end
+
 end

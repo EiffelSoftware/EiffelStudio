@@ -19,4 +19,11 @@ feature {NONE} -- Initialization
 			struct.add_type_def_index ("EnclosingClass")
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tnestedclass
+		end
+
 end

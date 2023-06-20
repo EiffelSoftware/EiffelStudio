@@ -21,7 +21,13 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
-feature -- Display
+feature -- Access
+
+	table_id: NATURAL_32
+		deferred
+		ensure
+			{PE_TABLES}.valid (Result)
+		end
 
 	description: STRING_8
 		do

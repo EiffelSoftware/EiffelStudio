@@ -9,6 +9,11 @@ create
 
 feature -- Access
 
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tclasslayout
+		end
+
 	read (pe: PE_FILE)
 		do
 			report_not_implemented

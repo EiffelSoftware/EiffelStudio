@@ -32,5 +32,12 @@ feature -- Access
 			Result := structure.index_item ("TypeNamespace")
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.ttyperef
+		end
+
 
 end

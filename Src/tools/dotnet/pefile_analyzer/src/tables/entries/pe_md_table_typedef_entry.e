@@ -18,9 +18,9 @@ feature -- Access
 			struct.add_flags_32 ("Flags")
 			struct.add_string_index ("Name")
 			struct.add_string_index ("Namespace")
-			struct.add_type_def_or_ref_or_spec ("Extends") -- TODO Def,Ref,Spec?
-			struct.add_field_index ("FieldList")
-			struct.add_method_def_index ("MethodList")
+			struct.add_type_def_or_ref_or_spec ("Extends")
+			struct.add_field_list_index ("FieldList")
+			struct.add_method_def_list_index ("MethodList")
 		end
 
 feature -- Access
@@ -38,6 +38,13 @@ feature -- Access
 	namespace_index: detachable PE_INDEX_ITEM
 		do
 			Result := structure.index_item ("Namespace")
+		end
+
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.ttypedef
 		end
 
 end

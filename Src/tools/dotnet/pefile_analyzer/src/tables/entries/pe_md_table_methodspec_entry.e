@@ -20,4 +20,11 @@ feature {NONE} -- Initialization
 
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tmethodspec
+		end
+
 end

@@ -14,4 +14,11 @@ feature -- Access
 			report_not_implemented
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {NATURAL_32}.max_value
+		end
+
 end

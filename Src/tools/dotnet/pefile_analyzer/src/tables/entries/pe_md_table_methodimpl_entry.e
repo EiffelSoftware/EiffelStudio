@@ -20,4 +20,11 @@ feature {NONE} -- Initialization
 			struct.add_method_def_or_member_ref_index ("MethodDeclaration")
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tmethodimpl
+		end
+
 end

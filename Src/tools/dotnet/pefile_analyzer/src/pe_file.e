@@ -271,6 +271,21 @@ feature -- Metadata
 			end
 		end
 
+	event (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_EVENT_ENTRY
+		local
+			tb_id: NATURAL_32
+			i: NATURAL_32
+		do
+			tb_id := {PE_TABLES}.tevent
+			i := idx.index
+			if
+				attached {PE_MD_TABLE_EVENT} metadata_tables [tb_id] as tb and then
+				tb.valid_index (i)
+			then
+				Result := tb [i]
+			end
+		end
+
 	string_heap_item (idx: PE_INDEX_ITEM): detachable READABLE_STRING_GENERAL
 		local
 			i: NATURAL_32
@@ -1223,6 +1238,19 @@ feature -- PE MD reader
 				create {PE_PARAM_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
 			else
 				create {PE_PARAM_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_event_index (lab: like {PE_ITEM}.label): PE_EVENT_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+		do
+			b := file.position.to_natural_32
+			if is_param_table_using_4_bytes then
+				create {PE_EVENT_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
+			else
+				create {PE_EVENT_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
 			end
 			e := file.position.to_natural_32
 		end

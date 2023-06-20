@@ -30,5 +30,12 @@ feature -- Access
 			Result := structure.index_item ("Name")
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tmemberref
+		end
+
 
 end

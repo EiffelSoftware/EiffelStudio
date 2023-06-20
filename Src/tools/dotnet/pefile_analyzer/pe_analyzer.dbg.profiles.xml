@@ -8,6 +8,8 @@
  </profile>
  <profile uuid="06EBB83E-F627-45BE-94C7-41EC6D34DEB0" title="c:\work\eiffel\studio\trunk\Src\framework\dotnet\il_emitter\testing\cs\net_sample\bin\Debug\net6.0\net_sample.dll binary_2.txt" arguments="c:\work\eiffel\studio\trunk\Src\framework\dotnet\il_emitter\testing\cs\net_sample\bin\Debug\net6.0\net_sample.dll binary_2.txt" working_directory="">
  </profile>
- <profile uuid="90AF74CF-8722-4A8B-BF17-B8E19CCFE112" title="Copy of EIFGENs\app_netcore\W_code\module_1.dll module_1.txt" arguments="EIFGENs\app_netcore\W_code\module_1.dll" working_directory="C:\work\eiffel\debug\app_dotnet\w">
+ <profile uuid="90AF74CF-8722-4A8B-BF17-B8E19CCFE112" title="EIFGENs\app_netcore\W_code\module_1.dll netcore_module_1.txt" arguments="EIFGENs\app_netcore\W_code\module_1.dll netcore_module_1.txt" working_directory="C:\work\eiffel\debug\app_dotnet\w">
+ </profile>
+ <profile uuid="9D0BDFBF-F132-41D2-BA44-56D1B8193127" title="EIFGENs\app_fmwkv40\W_code\module_1.dll" arguments="EIFGENs\app_fmwkv40\W_code\module_1.dll v4_module_1.txt" working_directory="C:\work\eiffel\debug\app_dotnet">
  </profile>
 </execution_parameters>

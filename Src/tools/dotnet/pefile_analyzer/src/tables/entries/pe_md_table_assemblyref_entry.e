@@ -26,4 +26,11 @@ feature -- Access
 			struct.add_blob_index ("HashValue")
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tassemblyref
+		end
+
 end

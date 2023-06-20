@@ -14,4 +14,11 @@ feature -- Access
 			report_not_implemented
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tgenericparamconstraint
+		end
+
 end

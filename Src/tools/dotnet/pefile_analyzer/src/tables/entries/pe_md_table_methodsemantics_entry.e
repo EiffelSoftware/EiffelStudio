@@ -20,4 +20,11 @@ feature {NONE} -- Initialization
 			struct.add_has_semantic ("Association")
 		end
 
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tmethodsemantics
+		end
+
 end

@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			struct.add_flags_16 ("ImplFlags")
 			struct.add_string_index ("Name")
 			struct.add_blob_index ("Signature")
-			struct.add_param_index ("ParamList")
+			struct.add_param_list_index ("ParamList")
 		end
 
 feature -- Access
@@ -33,6 +33,13 @@ feature -- Access
 	namespace_index: detachable PE_INDEX_ITEM
 		do
 			Result := structure.index_item ("Namespace")
+		end
+
+feature -- Access
+
+	table_id: NATURAL_32
+		once
+			Result := {PE_TABLES}.tmethoddef
 		end
 
 end

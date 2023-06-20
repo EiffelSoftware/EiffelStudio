@@ -15,7 +15,7 @@ feature -- Access
 		do
 			create struct.make (6, "TypeDef")
 			structure := struct
-			struct.add_flags_32 ("Flags")
+			struct.add_type_attributes ("Flags")
 			struct.add_string_index ("Name")
 			struct.add_string_index ("Namespace")
 			struct.add_type_def_or_ref_or_spec ("Extends")
@@ -30,6 +30,15 @@ feature -- Access
 			Result := structure.index_item ("Extends")
 		end
 
+	type_attributes: detachable PE_TYPE_ATTRIBUTES_ITEM
+		do
+			if attached {PE_TYPE_ATTRIBUTES_ITEM} structure.item ("Flags") as ta then
+				Result := ta
+			else
+				check False end
+			end
+		end
+
 	name_index: detachable PE_INDEX_ITEM
 		do
 			Result := structure.index_item ("Name")
@@ -38,6 +47,16 @@ feature -- Access
 	namespace_index: detachable PE_INDEX_ITEM
 		do
 			Result := structure.index_item ("Namespace")
+		end
+
+	field_list: detachable PE_INDEX_ITEM
+		do
+			Result := structure.index_item ("FieldList")
+		end
+
+	method_list: detachable PE_INDEX_ITEM
+		do
+			Result := structure.index_item ("MethodList")
 		end
 
 feature -- Access

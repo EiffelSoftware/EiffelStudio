@@ -20,7 +20,7 @@ feature -- Access
 				--tables; more precisely, a MemberRefParent (§II.24.2.6) coded index
 
 			struct.add_string_index ("Name")
-			struct.add_blob_index ("Signature")
+			struct.add_signature_blob_index ("Signature")
 		end
 
 feature -- Access

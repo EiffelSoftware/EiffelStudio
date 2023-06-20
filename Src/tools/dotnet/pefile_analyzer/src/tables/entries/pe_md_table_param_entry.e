@@ -27,6 +27,11 @@ feature -- Access
 			Result := structure.index_item ("Name")
 		end
 
+	sequence: detachable PE_NATURAL_16_ITEM
+		do
+			Result := structure.natural_16_item ("Sequence")
+		end
+
 feature -- Access
 
 	table_id: NATURAL_32

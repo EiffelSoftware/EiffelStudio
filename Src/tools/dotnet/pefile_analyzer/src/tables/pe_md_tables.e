@@ -74,6 +74,20 @@ feature -- Item
 			Result := tables [tid.to_integer_32]
 		end
 
+	typedef_table: detachable PE_MD_TABLE_TYPEDEF
+		do
+			if attached {like typedef_table} item ({PE_TABLES}.ttypedef) as tb then
+				Result := tb
+			end
+		end
+
+	methoddef_table: detachable PE_MD_TABLE_METHODDEF
+		do
+			if attached {like methoddef_table} item ({PE_TABLES}.tmethoddef) as tb then
+				Result := tb
+			end
+		end
+
 feature -- Access
 
 	starting_address: NATURAL_32

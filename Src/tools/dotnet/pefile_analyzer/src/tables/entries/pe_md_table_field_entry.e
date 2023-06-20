@@ -17,7 +17,7 @@ feature -- Access
 			structure := struct
 			struct.add_flags_16 ("Flags")
 			struct.add_string_index ("Name")
-			struct.add_blob_index ("Signature")
+			struct.add_signature_blob_index ("Signature")
 		end
 
 feature -- Access

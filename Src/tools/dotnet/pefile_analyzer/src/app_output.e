@@ -16,6 +16,7 @@ feature {NONE} -- Initialization
 		do
 			output := f
 			create offset.make_empty
+			tab := "    "
 		end
 
 feature -- Access
@@ -24,20 +25,22 @@ feature -- Access
 
 	offset: STRING
 
+	tab: STRING
+
 feature -- Operation
 
 	indent
 		do
-			offset.append ("  ")
+			offset.append (tab)
 		ensure
-			old (offset.count) + 2 = offset.count
+			old (offset.count) + tab.count = offset.count
 		end
 
 	exdent
 		require
-			offset.count >= 2
+			offset.count >= tab.count
 		do
-			offset.remove_tail (2)
+			offset.remove_tail (tab.count)
 		end
 
 	flush
@@ -47,7 +50,7 @@ feature -- Operation
 
 	last_was_newline: BOOLEAN
 
-	put_string (s: STRING)
+	put_string (s: READABLE_STRING_32)
 		local
 			i,j,n: INTEGER
 			c: CHARACTER
@@ -66,7 +69,7 @@ feature -- Operation
 				loop
 					i := s.index_of ('%N', j)
 					if i > 0 then
-						output.put_string (s.substring (j, i))
+						output.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s.substring (j, i)))
 						if i = n then
 							last_was_newline := True
 						else
@@ -74,14 +77,14 @@ feature -- Operation
 						end
 						j := i + 1
 					else
-						output.put_string (s.substring (j, n))
+						output.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s.substring (j, n)))
 					end
 				end
 				if s [s.count] = '%N' then
 					last_was_newline := True
 				end
 			else
-				output.put_string (s)
+				output.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s))
 			end
 		end
 

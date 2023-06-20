@@ -20,7 +20,7 @@ feature -- Initialization
 	read (pe: PE_FILE)
 		local
 			i,n: NATURAL_32
-			str: PE_BYTES_ITEM
+			str: PE_BLOB_ITEM
 			ch: CHARACTER_8
 			sz: NATURAL_32
 			b: INTEGER
@@ -68,7 +68,7 @@ feature -- Initialization
 				else
 					check should_not_occurred: False end
 				end
-				str := pe.read_bytes_item (i.out, nb.to_natural_32, i_start_addr)
+				str := pe.read_blob_item (i.out, nb.to_natural_32, i_start_addr)
 				sz := sz + str.size --+ 1
 				items.force (str)
 				i := i + 1
@@ -77,9 +77,9 @@ feature -- Initialization
 
 feature -- Access
 
-	items: ARRAYED_LIST [PE_BYTES_ITEM]
+	items: ARRAYED_LIST [PE_BLOB_ITEM]
 
-	item alias "[]" (i: NATURAL_32): PE_BYTES_ITEM
+	item alias "[]" (i: NATURAL_32): PE_BLOB_ITEM
 		do
 			Result := items.i_th (i.to_integer_32)
 		end

@@ -151,6 +151,21 @@ feature -- Metadata
 			end
 		end
 
+	type_def_or_ref_or_spec (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_ENTRY
+		local
+			tb_id: NATURAL_32
+			i: NATURAL_32
+		do
+			tb_id := {PE_TABLES}.ttypedef
+			i := idx.index
+			if
+				attached {PE_MD_TABLE_TYPEDEF} metadata_tables [tb_id] as tb and then
+				tb.valid_index (i)
+			then
+				Result := tb [i]
+			end
+		end
+
 	type_def (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_TYPEDEF_ENTRY
 		local
 			tb_id: NATURAL_32
@@ -256,6 +271,81 @@ feature -- Metadata
 			end
 		end
 
+	fields (idx: PE_INDEX_ITEM; nb: NATURAL_32): ARRAYED_LIST [PE_MD_TABLE_FIELD_ENTRY]
+		local
+			tb_id: NATURAL_32
+			i, n: NATURAL_32
+		do
+			create Result.make (nb.to_integer_32)
+			tb_id := {PE_TABLES}.tfield
+			if attached {PE_MD_TABLE_FIELD} metadata_tables [tb_id] as tb then
+				from
+					n := nb
+					i := idx.index
+				until
+					n = 0
+				loop
+					if tb.valid_index (i) and then attached tb [i] as item then
+						Result.force (item)
+					end
+					i := i + 1
+					n := n - 1
+				end
+			end
+		ensure
+			Result.count = nb.to_integer_32
+		end
+
+	methods (idx: PE_INDEX_ITEM; nb: NATURAL_32): ARRAYED_LIST [PE_MD_TABLE_METHODDEF_ENTRY]
+		local
+			tb_id: NATURAL_32
+			i, n: NATURAL_32
+		do
+			create Result.make (nb.to_integer_32)
+			tb_id := {PE_TABLES}.tmethoddef
+			if attached {PE_MD_TABLE_METHODDEF} metadata_tables [tb_id] as tb then
+				from
+					n := nb
+					i := idx.index
+				until
+					n = 0
+				loop
+					if tb.valid_index (i) and then attached tb [i] as item then
+						Result.force (item)
+					end
+					i := i + 1
+					n := n - 1
+				end
+			end
+		ensure
+			Result.count = nb.to_integer_32
+		end
+
+	params (idx: PE_INDEX_ITEM; nb: NATURAL_32): ARRAYED_LIST [PE_MD_TABLE_PARAM_ENTRY]
+		local
+			tb_id: NATURAL_32
+			i, n: NATURAL_32
+		do
+			create Result.make (nb.to_integer_32)
+			tb_id := {PE_TABLES}.tparam
+			if attached {PE_MD_TABLE_PARAM} metadata_tables [tb_id] as tb then
+				from
+					n := nb
+					i := idx.index
+				until
+					n = 0
+				loop
+					if tb.valid_index (i) and then attached tb [i] as item then
+						Result.force (item)
+					end
+					i := i + 1
+					n := n - 1
+				end
+			end
+		ensure
+			Result.count = nb.to_integer_32
+		end
+
 	param (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_PARAM_ENTRY
 		local
 			tb_id: NATURAL_32
@@ -283,6 +373,27 @@ feature -- Metadata
 				tb.valid_index (i)
 			then
 				Result := tb [i]
+			end
+		end
+
+	signature_blob_heap_item (idx: PE_INDEX_ITEM): detachable PE_SIGNATURE_BLOB_ITEM
+		do
+			if attached blob_heap_item (idx) as blob then
+				create Result.make_from_item (blob)
+			end
+		end
+
+	blob_heap_item (idx: PE_INDEX_ITEM): detachable PE_BLOB_ITEM
+		local
+			i: NATURAL_32
+		do
+			i := idx.index
+			if
+				attached metadata_blob_heap as h and then
+--				h.valid_index (i) and then
+				attached h [i] as blb
+			then
+				Result := blb
 			end
 		end
 
@@ -521,6 +632,17 @@ feature -- Read item
 		end
 
 	read_bytes_item (lab: like {PE_ITEM}.label; nb: NATURAL_32; a_declaration_start_address: NATURAL_32): PE_BYTES_ITEM
+		local
+			b,e: NATURAL_32
+			mp: MANAGED_POINTER
+		do
+			b := file.position.to_natural_32
+			mp := read_bytes (nb)
+			e := file.position.to_natural_32
+			create Result.make (a_declaration_start_address, b, e, mp, lab)
+		end
+
+	read_blob_item (lab: like {PE_ITEM}.label; nb: NATURAL_32; a_declaration_start_address: NATURAL_32): PE_BLOB_ITEM
 		local
 			b,e: NATURAL_32
 			mp: MANAGED_POINTER

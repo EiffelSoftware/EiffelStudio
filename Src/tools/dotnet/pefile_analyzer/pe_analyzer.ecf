@@ -14,8 +14,12 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
 			<option warning="none"/>
 		</library>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<cluster name="src" location="src\" recursive="true">
 			<option warning="none" is_obsolete_iteration="true"/>
+		</cluster>
+		<cluster name="tests" location="testing\" recursive="true">
 		</cluster>
 	</target>
 </system>

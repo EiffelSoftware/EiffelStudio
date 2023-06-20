@@ -9,9 +9,9 @@ create
 
 feature -- Read
 
-	read (pe: PE_FILE): PE_ITEM
+	read (pe: PE_FILE): PE_INTEGER_32_ITEM
 		do
-			Result := pe.read_flags_32 (label)		
+			Result := pe.read_flags_32 (label)
 		end
 
 end

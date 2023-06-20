@@ -47,6 +47,24 @@ feature -- Access
 			end
 		end
 
+	natural_16_item (lab: READABLE_STRING_GENERAL): detachable PE_NATURAL_16_ITEM
+		require
+			is_natural_16_item (lab)
+		do
+			if attached {PE_NATURAL_16_ITEM} item (lab) as i then
+				Result := i
+			end
+		end
+
+	natural_32_item (lab: READABLE_STRING_GENERAL): detachable PE_NATURAL_32_ITEM
+		require
+			is_natural_32_item (lab)
+		do
+			if attached {PE_NATURAL_32_ITEM} item (lab) as i then
+				Result := i
+			end
+		end
+
 	item (lab: READABLE_STRING_GENERAL): detachable PE_ITEM
 		do
 			across
@@ -67,6 +85,16 @@ feature -- Status report
 			Result := attached {PE_STRING_ITEM} item (lab)
 		end
 
+	is_natural_16_item (lab: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			Result := attached {PE_NATURAL_16_ITEM} item (lab)
+		end
+
+	is_natural_32_item (lab: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			Result := attached {PE_NATURAL_32_ITEM} item (lab)
+		end
+
 	is_index_item (lab: READABLE_STRING_GENERAL): BOOLEAN
 		do
 			Result := attached {PE_INDEX_ITEM} item (lab)
@@ -84,11 +112,15 @@ feature -- Read
 	read (pe: PE_FILE)
 		local
 			l_pe_item: PE_ITEM
+			sti: PE_STRUCTURE_ITEM
 		do
 			across
 				structure_items as ic
 			loop
-				l_pe_item := ic.item.read (pe)
+				sti := ic.item
+				l_pe_item := sti.read (pe)
+				l_pe_item.set_associated_structure (sti)
+
 				items.force (l_pe_item)
 			end
 			check structure_items.count = items.count end
@@ -207,6 +239,11 @@ feature -- Element change
 			add (create {PE_FLAGS_32}.make (lab))
 		end
 
+	add_type_attributes (lab: STRING)
+		do
+			add (create {PE_TYPE_ATTRIBUTES}.make (lab))
+		end
+
 	add_string_index (lab: STRING)
 		do
 			add (create {PE_STRING_INDEX}.make (lab))
@@ -220,6 +257,11 @@ feature -- Element change
 	add_blob_index (lab: STRING)
 		do
 			add (create {PE_BLOB_INDEX}.make (lab))
+		end
+
+	add_signature_blob_index (lab: STRING)
+		do
+			add (create {PE_SIGNATURE_BLOB_INDEX}.make (lab))
 		end
 
 	add_guid_index (lab: STRING)

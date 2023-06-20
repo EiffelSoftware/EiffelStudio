@@ -26,6 +26,13 @@ feature {NONE} -- Initialization
 			label := lab
 		end
 
+	make_from_item (a_item: PE_ITEM)
+		do
+				-- Use carefully !!!
+				-- WARNING: update the caller class to get the value if needed.!!!
+			make (a_item.declaration_address, a_item.value_begin_address, a_item.value_end_address, a_item.pointer, a_item.label)
+		end
+
 feature -- Access
 
 	declaration_address: NATURAL_32
@@ -39,6 +46,17 @@ feature -- Access
 	size: NATURAL_32
 		do
 			Result := value_end_address - value_begin_address
+		end
+
+feature -- Access
+
+	associated_structure: detachable PE_STRUCTURE_ITEM
+
+feature -- Element change
+
+	set_associated_structure (i: like associated_structure)
+		do
+			associated_structure := i
 		end
 
 feature -- Error		

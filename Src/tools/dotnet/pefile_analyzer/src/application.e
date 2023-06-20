@@ -50,7 +50,7 @@ feature -- Execution
 			o: APP_OUTPUT
 			printer: PE_PRINTER
 			analyzer: PE_ANALYZER
-			resolver: PE_RESOLVER
+			explorer: PE_EXPLORER
 		do
 			create pe.make (fn.name)
 			create o.make (of)
@@ -60,14 +60,15 @@ feature -- Execution
 			rt := pe.metadata_root
 
 			md_tables := rt.metadata_tables (pe)
---			create resolver.make (pe)
---			pe.accepts (resolver)
 
 			create analyzer.make (pe)
 			pe.accepts (analyzer)
 
 			create printer.make (o)
 			pe.accepts (printer)
+
+			create explorer.make (o, pe)
+			pe.accepts (explorer)
 		end
 
 end

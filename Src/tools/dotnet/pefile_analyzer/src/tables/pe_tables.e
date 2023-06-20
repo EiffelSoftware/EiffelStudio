@@ -20,8 +20,15 @@ feature -- Creation Procedures
 	tTypeDef: NATURAL_32 = 2
 			-- definitions of classes and enumerations
 
+	tFieldPointer: NATURAL_32 = 3
+			-- UNDOCUMENTED
+
 	tField: NATURAL_32 = 4
 			-- definitions of fields
+
+
+	tMethodPointer: NATURAL_32 = 5
+			-- UNDOCUMENTED			
 
 	tMethodDef: NATURAL_32 = 6
 			-- definitions of methods once end includes both managed and unmanaged
@@ -142,108 +149,13 @@ feature -- Instances
 					tGenericParamConstraint
 			then
 				Result := True
+			when tFieldPointer, tMethodPointer then
+				Result := True
 			else
 
 			end
 		ensure
 			class
-		end
-
-	instances: ITERABLE [NATURAL_32]
-			-- All known indexes to PE_TABLES.
-		do
-			Result := <<
-					tModule,
-					tTypeRef,
-					tTypeDef,
-					tField,
-					tMethodDef,
-					tParam,
-					tInterfaceImpl,
-					tMemberRef,
-					tConstant,
-					tCustomAttribute,
-					tFieldMarshal,
-					tDeclSecurity,
-					tClassLayout,
-					tFieldLayout,
-					tStandaloneSig,
-					tEventMap,
-					tEvent,
-					tPropertyMap,
-					tProperty,
-					tMethodSemantics,
-					tMethodImpl,
-					tModuleRef,
-					tTypeSpec,
-					tImplMap,
-					tFieldRVA,
-					tAssemblyDef,
-					tAssemblyRef,
-					tFile,
-					tExportedType,
-					tManifestResource,
-					tNestedClass,
-					tGenericParam,
-					tMethodSpec,
-					tGenericParamConstraint
-				>>
-		ensure
-			instance_free: class
-		end
-
-	index_of (a_value: NATURAL_32): NATURAL_8
-			-- Index of first occurrence of item identical to `a_value'.
-			-- -1 if none.
-		local
-			l_area: SPECIAL [NATURAL_32]
-		do
-			l_area := (create {ARRAYED_LIST [NATURAL_32]}.make_from_iterable ({PE_TABLES}.instances)).area
-			Result := l_area.index_of (a_value, l_area.lower).to_natural_8
-		ensure
-			instance_free: class
-		end
-
-feature -- Helper
-
-	tKnownTablesMask: NATURAL_64
-			-- this is naively ignoring the various CIL tables that aren't supposed to be in the file
-			-- may have to revisit that at some point.
-		do
-			Result := ({NATURAL_64} 1 |<< tModule.to_integer_32)
-					| ({NATURAL_64} 1 |<< tTypeRef.to_integer_32)
-					| ({NATURAL_64} 1 |<< tTypeDef.to_integer_32)
-					| ({NATURAL_64} 1 |<< tField.to_integer_32)
-					| ({NATURAL_64} 1 |<< tMethodDef.to_integer_32)
-					| ({NATURAL_64} 1 |<< tParam.to_integer_32)
-					| ({NATURAL_64} 1 |<< tInterfaceImpl.to_integer_32)
-					| ({NATURAL_64} 1 |<< tMemberRef.to_integer_32)
-					| ({NATURAL_64} 1 |<< tConstant.to_integer_32)
-					| ({NATURAL_64} 1 |<< tCustomAttribute.to_integer_32)
-					| ({NATURAL_64} 1 |<< tFieldMarshal.to_integer_32)
-					| ({NATURAL_64} 1 |<< tDeclSecurity.to_integer_32)
-					| ({NATURAL_64} 1 |<< tClassLayout.to_integer_32)
-					| ({NATURAL_64} 1 |<< tFieldLayout.to_integer_32)
-					| ({NATURAL_64} 1 |<< tStandaloneSig.to_integer_32)
-					| ({NATURAL_64} 1 |<< tEventMap.to_integer_32)
-					| ({NATURAL_64} 1 |<< tEvent.to_integer_32)
-					| ({NATURAL_64} 1 |<< tPropertyMap.to_integer_32)
-					| ({NATURAL_64} 1 |<< tProperty.to_integer_32)
-					| ({NATURAL_64} 1 |<< tMethodSemantics.to_integer_32)
-					| ({NATURAL_64} 1 |<< tMethodImpl.to_integer_32)
-					| ({NATURAL_64} 1 |<< tModuleRef.to_integer_32)
-					| ({NATURAL_64} 1 |<< tTypeSpec.to_integer_32)
-					| ({NATURAL_64} 1 |<< tImplMap.to_integer_32)
-					| ({NATURAL_64} 1 |<< tFieldRVA.to_integer_32)
-					| ({NATURAL_64} 1 |<< tAssemblyDef.to_integer_32)
-					| ({NATURAL_64} 1 |<< tAssemblyRef.to_integer_32)
-					| ({NATURAL_64} 1 |<< tFile.to_integer_32)
-					| ({NATURAL_64} 1 |<< tExportedType.to_integer_32)
-					| ({NATURAL_64} 1 |<< tManifestResource.to_integer_32)
-					| ({NATURAL_64} 1 |<< tNestedClass.to_integer_32)
-					| ({NATURAL_64} 1 |<< tGenericParam.to_integer_32)
-					| ({NATURAL_64} 1 |<< tMethodSpec.to_integer_32)
-					| ({NATURAL_64} 1 |<< tGenericParamConstraint.to_integer_32)
 		end
 
 end

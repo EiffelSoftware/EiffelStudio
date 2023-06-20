@@ -56,6 +56,11 @@ feature -- Display
 			Result := structure.to_string
 		end
 
+	to_link_string: STRING_32
+		do
+			Result := {STRING_32} "{" + structure.label + "}"
+		end
+
 	description: STRING_8
 		do
 			Result := structure.description

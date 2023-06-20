@@ -11,7 +11,7 @@ feature -- Access
 
 	read (pe: PE_FILE)
 		do
-			report_not_implemented
+--			report_not_implemented
 		end
 
 feature -- Access

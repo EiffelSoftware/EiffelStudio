@@ -18,14 +18,17 @@ feature {NONE} -- Initialization
 			-- Instantiate Current object.
 		local
 			o: FILE
-			fn: READABLE_STRING_GENERAL
+			fn, dest: PATH
 		do
 			if argument_count = 0 then
 				print ("Usage: path-to-dll {output-file}%N")
 			else
-				fn := argument (1)
+				create fn.make_from_string (argument (1))
+				fn := fn.absolute_path
 				if argument_count > 1 then
-					create {PLAIN_TEXT_FILE} o.make_with_name (argument (2))
+					create dest.make_from_string (argument (2))
+					dest := dest.absolute_path
+					create {PLAIN_TEXT_FILE} o.make_with_path (dest)
 				end
 				if o /= Void then
 					o.open_write
@@ -39,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	process_file (fn: READABLE_STRING_GENERAL; of: FILE)
+	process_file (fn: PATH; of: FILE)
 		local
 			pe: PE_FILE
 			rt: PE_MD_ROOT
@@ -49,9 +52,9 @@ feature -- Execution
 			analyzer: PE_ANALYZER
 			resolver: PE_RESOLVER
 		do
-			create pe.make (fn)
+			create pe.make (fn.name)
 			create o.make (of)
-			o.put_string ("File: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn) + "%N")
+			o.put_string ("File: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
 
 
 			rt := pe.metadata_root

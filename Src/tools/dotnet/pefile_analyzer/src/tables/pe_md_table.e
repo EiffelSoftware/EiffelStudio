@@ -24,6 +24,8 @@ feature -- Access
 
 	address: NATURAL_32
 
+	size: NATURAL_32
+
 	tables: PE_MD_TABLES
 
 	entries: ARRAYED_LIST [G]

@@ -146,12 +146,16 @@ feature -- Helpers
 			when {PE_TABLES}.tGenericParam then Result := "GenericParam"
 			when {PE_TABLES}.tMethodSpec then Result := "MethodSpec"
 			when {PE_TABLES}.tGenericParamConstraint then Result := "GenericParamConstraint"
+
+
+			when {PE_TABLES}.tFieldPointer then Result := "FieldPointer"
+			when {PE_TABLES}.tMethodPointer then Result := "MethodPointer"
 			else
 				Result := "#" + tb.to_natural_8.to_hex_string
 			end
 		end
 
-	read_table (a_tables: PE_MD_TABLES; pe: PE_FILE; tb: NATURAL_32; nb: NATURAL_32): PE_MD_TABLE [PE_MD_TABLE_ENTRY]
+	read_table (a_tables: PE_MD_TABLES; pe: PE_FILE; tb: NATURAL_32; nb: NATURAL_32): detachable PE_MD_TABLE [PE_MD_TABLE_ENTRY]
 		do
 			if last_read_table_error then
 				create {PE_MD_TABLE_ERROR} Result.make (a_tables, pe, tb, nb)
@@ -191,6 +195,10 @@ feature -- Helpers
 				when {PE_TABLES}.tGenericParam then create {PE_MD_TABLE_GENERICPARAM} Result.make (a_tables, pe, tb, nb)
 				when {PE_TABLES}.tMethodSpec then create {PE_MD_TABLE_METHODSPEC} Result.make (a_tables, pe, tb, nb)
 				when {PE_TABLES}.tGenericParamConstraint then create {PE_MD_TABLE_GENERICPARAMCONSTRAINT} Result.make (a_tables, pe, tb, nb)
+
+				when {PE_TABLES}.tFieldPointer then create {PE_MD_TABLE_FIELDPOINTER} Result.make (a_tables, pe, tb, nb)
+				when {PE_TABLES}.tMethodPointer then create {PE_MD_TABLE_METHODPOINTER} Result.make (a_tables, pe, tb, nb)
+
 				else
 					last_read_table_error := True
 					check knowned: False end

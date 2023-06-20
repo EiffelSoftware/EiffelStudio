@@ -18,7 +18,7 @@ feature -- Initialization
 	make (pe: PE_FILE)
 		local
 			n: NATURAL_32
-			o: ANY
+			o: PE_BYTES_ITEM
 			i: NATURAL_16
 			n32, offset, sz: PE_NATURAL_32_ITEM
 			s: READABLE_STRING_8
@@ -34,7 +34,8 @@ feature -- Initialization
 --			n := version.size \\ 4
 			n := pe.position.to_natural_32 \\ 4
 --			if n > 0 then
-				o := pe.read_bytes (4 - n)
+--				o := pe.read_bytes (4 - n)
+				o := pe.read_bytes_item ("align-4", 4 - n, pe.position.to_natural_32)
 --			end
 
 
@@ -53,11 +54,12 @@ feature -- Initialization
 				sz := pe.read_natural_32_item ("Size")
 					-- Size
 				str := pe.read_null_ended_string_item ("Name")
-				streams[str.string_32] := [offset, sz, str]
+				record_stream ([offset, sz, str], str.string_32)
 --				n := str.size \\ 4
 				n := pe.position.to_natural_32 \\ 4
 --				if n > 0 then
-					o := pe.read_bytes (4 - n)
+--					o := pe.read_bytes (4 - n)
+					o := pe.read_bytes_item ("align-4", 4 - n, pe.position.to_natural_32)
 --				end
 				i := i +1
 			end
@@ -75,7 +77,7 @@ feature -- Access
 			a, sz: NATURAL_32
 		do
 			a := starting_address
-			if attached streams ["#Strings"] as tu then
+			if attached stream_info ("#Strings") as tu then
 				a := a + tu.offset
 				sz := tu.size.value
 			end
@@ -87,7 +89,7 @@ feature -- Access
 			a, sz: NATURAL_32
 		do
 			a := starting_address
-			if attached streams ["#US"] as tu then
+			if attached stream_info ("#US") as tu then
 				a := a + tu.offset
 				sz := tu.size.value
 			end
@@ -99,7 +101,7 @@ feature -- Access
 			a, sz: NATURAL_32
 		do
 			a := starting_address
-			if attached streams ["#GUID"] as tu then
+			if attached stream_info ("#GUID") as tu then
 				a := a + tu.offset
 				sz := tu.size.value
 			end
@@ -111,7 +113,7 @@ feature -- Access
 			a, sz: NATURAL_32
 		do
 			a := starting_address
-			if attached streams ["#Blob"] as tu then
+			if attached stream_info ("#Blob") as tu then
 				a := a + tu.offset
 				sz := tu.size.value
 			end
@@ -119,10 +121,16 @@ feature -- Access
 		end
 
 	metadata_tables_address: NATURAL_32
+		local
+			d: like stream_info
 		do
 			Result := starting_address
-			if attached streams ["#~"] as tu then
-				Result := Result + tu.offset
+			d := stream_info ("#~")
+			if d = Void then
+				d := stream_info ("#-") -- TODO: check why this occurs?
+			end
+			if d /= Void then
+				Result := Result + d.offset
 			end
 		end
 
@@ -146,7 +154,21 @@ feature -- Access
 	flags: PE_NATURAL_16_ITEM
 	streams_count: PE_NATURAL_16_ITEM
 
-	streams: STRING_TABLE [TUPLE [offset, size: PE_NATURAL_32_ITEM; name: PE_STRING_ITEM]]
+	streams: STRING_TABLE [attached like stream_info]
+
+	record_stream (d: attached like stream_info; n: READABLE_STRING_GENERAL)
+		do
+			if n.ends_with ("%U") then
+				streams [n.substring (1, n.count - 1)] := d
+			else
+				streams [n] := d
+			end
+		end
+
+	stream_info (n: READABLE_STRING_GENERAL): detachable TUPLE [offset, size: PE_NATURAL_32_ITEM; name: PE_STRING_ITEM]
+		do
+			Result := streams [n]
+		end
 
 	internal_metadata_tables: detachable like metadata_tables
 

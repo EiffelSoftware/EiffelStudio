@@ -39,8 +39,7 @@ feature -- Visitor
 		local
 			i: INTEGER
 		do
-			output.put_string (short_hex_string (o.starting_address.to_hex_string) + ":")
-			output.put_string ("[Metadata Root]%N")
+			output.put_string ("[Metadata Root] 0x"+short_hex_string (o.starting_address.to_hex_string)+"%N")
 			output.indent
 			output.put_string (" - signature: " + o.signature.to_string + "%N")
 			output.put_string (" - major.minor: " + o.major_version.value.out
@@ -78,15 +77,12 @@ feature -- Visitor
 		local
 			i,u: INTEGER
 		do
-			output.put_string ("Metadata tables%N")
-
-			output.put_string (short_hex_string (o.starting_address.to_hex_string) + ":")
-			output.put_string ("[Metadata Tables]%N")
+			output.put_string ("[Metadata Tables] 0x"+short_hex_string (o.starting_address.to_hex_string)+"%N")
 			output.put_string (" - major.minor: " + o.major_version.to_string + "." + o.minor_version.to_string + "%N")
 			output.put_string (" - HeapSizes: " + o.heap_sizes.to_string + "%N")
-			output.put_string (" - Valid: " + o.valid.to_binary_string + "%N")
+			output.put_string (" - Valid : " + o.valid.to_binary_string + "%N")
 			output.put_string (" - Sorted: " + o.sorted.to_binary_string + "%N")
-			output.put_string (" - Counts:")
+			output.put_string (" - Counts: ")
 			from
 				i := o.tables.lower
 				u := o.tables.upper
@@ -94,10 +90,14 @@ feature -- Visitor
 				i > u
 			loop
 				if o.tables [i] /= Void then
-					output.put_string (" #"+ i.to_natural_8.to_hex_string + " "+ o.table_name (i.to_natural_32) +" (" + o.tables_counts[i].out + ")")
+					output.put_string (
+						i.to_natural_8.to_hex_string + "."
+						+ o.table_name (i.to_natural_32)
+						+ "(" + o.tables_counts[i].out + ") ")
 				end
 				i := i + 1
 			end
+			output.put_string ("%N")
 			output.put_line_divider
 			Precursor (o)
 		end
@@ -106,7 +106,6 @@ feature -- Visitor
 		local
 			i: INTEGER
 		do
---			output.put_string (short_hex_string (o.address.to_hex_string) + ":")
 			output.put_string ("[Table " + o.tables.table_name (o.table_id)+ " " + o.table_id.to_natural_8.to_hex_string +"]("+ o.count.out +")"
 								+ " 0x"+ short_hex_string (o.address.to_hex_string)
 								+ "%N")

@@ -218,7 +218,7 @@ feature -- Visitor
 					then
 						idx.set_info (create {PE_ITEM_INFO}.make (s))
 					else
-						idx.set_info (create {PE_ITEM_INFO}.make (m.to_string))
+						idx.set_info (create {PE_ITEM_INFO}.make_link (m.to_link_string))
 					end
 				else
 					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
@@ -238,7 +238,7 @@ feature -- Visitor
 					then
 						idx.set_info (create {PE_ITEM_INFO}.make (s))
 					else
-						idx.set_info (create {PE_ITEM_INFO}.make (m.to_string))
+						idx.set_info (create {PE_ITEM_INFO}.make_link (m.to_link_string))
 					end
 				else
 					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
@@ -331,15 +331,21 @@ feature -- Visitor
 			if
 				idx.index > 0 -- and then idx.index /= table_count ({PE_TABLES}.ttypedef) + 1
 			then
-
 				if attached pe_file.type_def (idx) as tdef then
 					if
 						attached tdef.name_index as tdef_name and then
 						attached pe_file.string_heap_item (tdef_name) as s
 					then
-						idx.set_info (create {PE_ITEM_INFO}.make (s))
+						if
+							attached tdef.namespace_index as m_namespace and then
+							attached pe_file.string_heap_item (m_namespace) as ns
+						then
+							idx.set_info (create {PE_ITEM_INFO}.make (ns + "." +s))
+						else
+							idx.set_info (create {PE_ITEM_INFO}.make (s))
+						end
 					else
-						idx.set_info (create {PE_ITEM_INFO}.make (idx.to_string))
+						idx.set_info (create {PE_ITEM_INFO}.make_link (tdef.to_link_string))
 					end
 				else
 					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
@@ -359,7 +365,7 @@ feature -- Visitor
 					then
 						idx.set_info (create {PE_ITEM_INFO}.make (s))
 					else
-						idx.set_info (create {PE_ITEM_INFO}.make (idx.to_string))
+						idx.set_info (create {PE_ITEM_INFO}.make_link (tref.to_link_string))
 					end
 				else
 					idx.report_error (create {PE_INDEX_ERROR}.make (idx))

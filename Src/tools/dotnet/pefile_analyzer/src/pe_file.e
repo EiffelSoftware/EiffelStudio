@@ -959,7 +959,7 @@ feature -- PE MD reader
 					end
 					Result.update_index (tu.index)
 				else
-					check False end
+--					check False end
 					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
 					Result := idx
 				end
@@ -977,7 +977,6 @@ feature -- PE MD reader
 			idx: PE_INDEX_ITEM
 		do
 			b := file.position.to_natural_32
-				-- FIXME
 			if
 				is_type_def_table_using_4_bytes
 				or is_type_ref_table_using_4_bytes
@@ -1147,7 +1146,7 @@ feature -- PE MD reader
 					Result.update_index (tu.index)
 
 				else
-					check False end
+--					check False end
 					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
 					Result := idx
 				end

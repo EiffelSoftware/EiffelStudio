@@ -145,7 +145,11 @@ feature -- Conversion
 		do
 			Result := i.to_string
 			if attached i.info as inf then
-				Result := Result + {STRING_32} " %"" + inf.representation + "%""
+				if inf.is_link then
+					Result := Result + {STRING_32} " @" + inf.text
+				else
+					Result := Result + {STRING_32} " %"" + inf.text + "%""
+				end
 			end
 		end
 

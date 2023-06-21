@@ -12,7 +12,6 @@ class
 inherit
 	PE_INTEGER_32_ITEM
 		redefine
-			to_string,
 			make_from_item
 		end
 
@@ -51,7 +50,6 @@ feature -- Status report
 
 			if has_flag (LayoutMask, AutoLayout,	v) then Result.append ("auto ") end
 
-
 			if has_flag (ClassSemanticsMask, Class_,	v) then Result.append ("Class ") end
 			if has_flag (ClassSemanticsMask, Interface,	v) then Result.append ("Interface ") end
 
@@ -64,10 +62,12 @@ feature -- Status report
 			if has_flag (0x0, BeforeFieldInit,	v) then Result.append ("BeforeFieldInit ") end
 		end
 
-	to_string: STRING_32
-		do
-			Result := to_flags_string + Precursor
-		end
+--	to_string: STRING_32
+--		do
+--			Result := to_flags_string + Precursor
+--		end
+
+feature -- Status report
 
 	is_nested_private: BOOLEAN
 		do

@@ -137,11 +137,12 @@ feature -- Conversion
 					tok := uncompressed_type_token (uncompressed_data (pointer, 1, pointer.count - 1))
 				end
 				if tok & 0xff00_0000 = 0xFF00_0000 then
-					Result := {STRING_32} "!" + prefix_name + "<" + dump + ">"
+--					Result := {STRING_32} "!" + prefix_name + "<" + dump + ">"
+					Result := {STRING_32} "<" + dump + ">"
 				elseif tok = 0x0200_0000 then
 					Result := "void"
 				else
-					Result := prefix_name + "<0x" + tok.to_hex_string + " " + dump + ">"
+					Result := "0x" + tok.to_hex_string
 				end
 			end
 		rescue

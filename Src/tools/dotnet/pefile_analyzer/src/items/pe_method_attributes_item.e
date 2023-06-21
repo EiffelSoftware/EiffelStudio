@@ -12,7 +12,6 @@ class
 inherit
 	PE_INTEGER_16_ITEM
 		redefine
-			to_string,
 			make_from_item
 		end
 
@@ -61,10 +60,10 @@ feature -- Status report
 			if has_flag (0x0, SpecialName,	v) then Result.append ("SpecialName ") end
 		end
 
-	to_string: STRING_32
-		do
-			Result := to_flags_string + Precursor
-		end
+--	to_string: STRING_32
+--		do
+--			Result := to_flags_string + Precursor
+--		end
 
 feature -- Flags
 

@@ -104,8 +104,8 @@ feature -- Constants
 
 --	column_separator: STRING = " | "
 	column_separator: STRING = "%T|"
-	first_column_separator: STRING = "|"
-	last_column_separator: STRING = "%T|"
+	first_column_separator: STRING = "%T"
+	last_column_separator: STRING = "" -- %T|"
 
 feature -- Read
 

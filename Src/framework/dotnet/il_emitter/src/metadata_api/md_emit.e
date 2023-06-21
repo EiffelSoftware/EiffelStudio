@@ -506,7 +506,10 @@ feature -- Save
 
 	append_to_file (f: FILE)
 			-- Append current assembly to file `f`.
+		local
+			l_expected_size: INTEGER
 		do
+			l_expected_size := f.count + save_size
 				-- This code also writes the PE_DOTNET_META_HEADER
 				-- see II.24.2 File headers, II.24.2.1 Metadata root
 				-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297
@@ -524,6 +527,7 @@ feature -- Save
 				check should_not_happen: False end
  				align (f, 4)
 			end
+			check valid_size: l_expected_size = f.count end
 		end
 
 feature {NONE} -- Implementation
@@ -613,7 +617,7 @@ feature {NONE} -- Implementation
 			open_write: a_file.is_open_write
 		do
 			put_subspecial (a_file, pe_writer.strings.base, 0, pe_writer.strings.size.to_integer_32)
---			align (a_file, 4)
+			align (a_file, 4)
 		end
 
 	write_us (a_file: FILE)
@@ -628,7 +632,7 @@ feature {NONE} -- Implementation
 			else
 				put_subspecial (a_file, pe_writer.us.base, 0, pe_writer.us.size.to_integer_32)
 			end
---			align (a_file, 4)
+			align (a_file, 4)
 		end
 
 	write_guid (a_file: FILE)
@@ -638,7 +642,7 @@ feature {NONE} -- Implementation
 			open_write: a_file.is_open_write
 		do
 			put_subspecial (a_file, pe_writer.guid.base, 0, pe_writer.guid.size.to_integer_32)
---			align (a_file, 4)
+			align (a_file, 4)
 		end
 
 	write_blob (a_file: FILE)
@@ -648,7 +652,7 @@ feature {NONE} -- Implementation
 			open_write: a_file.is_open_write
 		do
 			put_subspecial (a_file, pe_writer.blob.base, 0, pe_writer.blob.size.to_integer_32)
---			align (a_file, 4)
+			align (a_file, 4)
 		end
 
 	write_metadata_headers (a_file: FILE)

@@ -200,8 +200,12 @@ feature -- Visitor
 
 			elseif attached {PE_STRING_INDEX_ITEM} o as tstring_index then
 				visit_string_index_item (tstring_index)
-			else
 
+			elseif attached {PE_BLOB_INDEX_ITEM} o as tblob_index then
+				visit_blob_index_item (tblob_index)
+
+			else
+				-- TODO
 			end
 			Precursor (o)
 		end
@@ -395,6 +399,31 @@ feature -- Visitor
 					idx.set_info (create {PE_ITEM_INFO}.make (str))
 				else
 					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+				end
+			end
+		end
+
+	visit_blob_index_item (idx: PE_BLOB_INDEX_ITEM)
+		do
+			if attached {PE_SIGNATURE_BLOB_INDEX} idx.associated_structure then
+				if
+					idx.index > 0
+				then
+					if attached pe_file.signature_blob_heap_item (idx) as sig then
+						idx.set_info (create {PE_ITEM_INFO}.make (sig.to_string))
+					else
+						idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					end
+				end
+			else
+				if
+					idx.index > 0
+				then
+					if attached pe_file.blob_heap_item (idx) as blb then
+						idx.set_info (create {PE_ITEM_INFO}.make (blb.dump))
+					else
+						idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					end
 				end
 			end
 		end

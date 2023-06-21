@@ -15,12 +15,21 @@ feature {NONE} -- Initialization
 		do
 			create struct.make (3, "Param")
 			structure := struct
-			struct.add_flags_16 ("Flags")
+			struct.add_param_attributes ("Flags")
 			struct.add_natural_16 ("Sequence")
 			struct.add_string_index ("Name")
 		end
 
 feature -- Access
+
+	param_attributes: detachable PE_PARAM_ATTRIBUTES_ITEM
+		do
+			if attached {PE_PARAM_ATTRIBUTES_ITEM} structure.item ("Flags") as ta then
+				Result := ta
+			else
+				check False end
+			end
+		end
 
 	name_index: detachable PE_INDEX_ITEM
 		do

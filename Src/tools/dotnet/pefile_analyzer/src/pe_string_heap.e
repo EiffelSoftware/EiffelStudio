@@ -141,11 +141,6 @@ feature -- Access
 --			Result := map.has (i) -- items.valid_index (i.to_integer_32)
 --		end
 
-	offset (i: PE_STRING_ITEM): NATURAL_32
-		do
-			Result := i.declaration_address - address
-		end
-
 feature -- Visit
 
 	accepts (v: PE_VISITOR)

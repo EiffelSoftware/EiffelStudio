@@ -244,6 +244,21 @@ feature -- Element change
 			add (create {PE_TYPE_ATTRIBUTES}.make (lab))
 		end
 
+	add_method_attributes (lab: STRING)
+		do
+			add (create {PE_METHOD_ATTRIBUTES}.make (lab))
+		end
+
+	add_method_impl_attributes (lab: STRING)
+		do
+			add (create {PE_METHOD_IMPL_ATTRIBUTES}.make (lab))
+		end
+
+	add_param_attributes (lab: STRING)
+		do
+			add (create {PE_PARAM_ATTRIBUTES}.make (lab))
+		end
+
 	add_string_index (lab: STRING)
 		do
 			add (create {PE_STRING_INDEX}.make (lab))
@@ -259,9 +274,29 @@ feature -- Element change
 			add (create {PE_BLOB_INDEX}.make (lab))
 		end
 
-	add_signature_blob_index (lab: STRING)
+	add_type_signature_blob_index (lab: STRING)
 		do
-			add (create {PE_SIGNATURE_BLOB_INDEX}.make (lab))
+			add (create {PE_SIGNATURE_BLOB_INDEX}.make_type (lab))
+		end
+	add_method_signature_blob_index (lab: STRING)
+		do
+			add (create {PE_SIGNATURE_BLOB_INDEX}.make_method (lab))
+		end
+	add_method_or_locals_signature_blob_index (lab: STRING)
+		do
+			add (create {PE_SIGNATURE_BLOB_INDEX}.make_method_or_locals (lab))
+		end
+	add_field_or_method_signature_blob_index (lab: STRING)
+		do
+			add (create {PE_SIGNATURE_BLOB_INDEX}.make_field_or_method (lab))
+		end
+	add_field_signature_blob_index (lab: STRING)
+		do
+			add (create {PE_SIGNATURE_BLOB_INDEX}.make_field (lab))
+		end
+	add_locals_signature_blob_index (lab: STRING)
+		do
+			add (create {PE_SIGNATURE_BLOB_INDEX}.make_locals (lab))
 		end
 
 	add_guid_index (lab: STRING)

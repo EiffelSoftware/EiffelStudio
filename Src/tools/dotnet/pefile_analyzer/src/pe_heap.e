@@ -32,4 +32,11 @@ feature -- Access
 		deferred
 		end
 
+feature {NONE} -- Helpers
+
+	offset (i: PE_ITEM): NATURAL_32
+		do
+			Result := i.declaration_address - address
+		end
+
 end

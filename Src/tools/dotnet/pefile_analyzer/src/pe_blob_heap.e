@@ -29,6 +29,7 @@ feature -- Initialization
 			nb: NATURAL_32
 		do
 			create items.make (100)
+			create map.make (items.count)
 			b := pe.position
 
 			i_start_addr := pe.position.to_natural_32
@@ -71,6 +72,7 @@ feature -- Initialization
 				str := pe.read_blob_item (i.out, nb.to_natural_32, i_start_addr)
 				sz := sz + str.size --+ 1
 				items.force (str)
+				map[str.declaration_address - b.to_natural_32] := str
 				i := i + 1
 			end
 		end
@@ -79,10 +81,41 @@ feature -- Access
 
 	items: ARRAYED_LIST [PE_BLOB_ITEM]
 
-	item alias "[]" (i: NATURAL_32): PE_BLOB_ITEM
+	map: HASH_TABLE [PE_BLOB_ITEM, NATURAL_32]
+
+	item_at_offset alias "[]" (i: NATURAL_32): detachable PE_BLOB_ITEM
+		local
+			str: PE_BLOB_ITEM
+			prev: PE_BLOB_ITEM
+			diff: NATURAL_32
 		do
-			Result := items.i_th (i.to_integer_32)
+			Result := map [i] --items.i_th (i.to_integer_32)
+			if Result = Void then
+				across
+					items as ic
+				until
+					Result /= Void
+				loop
+					str := ic.item
+					if
+						prev /= Void and then
+						offset (prev) < i and then i < offset (str)
+					then
+						Result := prev
+					end
+					prev := str
+				end
+				if Result /= Void then
+					diff := i - (Result.declaration_address - address)
+					Result := Result.sub_item_at (diff, i.to_hex_string)
+				end
+			end
 		end
+
+--	item alias "[]" (i: NATURAL_32): PE_BLOB_ITEM
+--		do
+--			Result := items.i_th (i.to_integer_32)
+--		end
 
 	count: INTEGER
 		do

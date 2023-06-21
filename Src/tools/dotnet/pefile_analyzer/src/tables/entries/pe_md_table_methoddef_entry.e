@@ -16,14 +16,32 @@ feature {NONE} -- Initialization
 			create struct.make (6, "MethodDef")
 			structure := struct
 			struct.add_rva ("MethodRVA")
-			struct.add_flags_16 ("Flags")
-			struct.add_flags_16 ("ImplFlags")
+			struct.add_method_impl_attributes ("ImplFlags")
+			struct.add_method_attributes ("Flags")
 			struct.add_string_index ("Name")
-			struct.add_signature_blob_index ("Signature")
+			struct.add_method_signature_blob_index ("Signature")
 			struct.add_param_list_index ("ParamList")
 		end
 
 feature -- Access
+
+	method_attributes: detachable PE_METHOD_ATTRIBUTES_ITEM
+		do
+			if attached {PE_METHOD_ATTRIBUTES_ITEM} structure.item ("Flags") as ta then
+				Result := ta
+			else
+				check False end
+			end
+		end
+
+	method_impl_attributes: detachable PE_METHOD_IMPL_ATTRIBUTES_ITEM
+		do
+			if attached {PE_METHOD_IMPL_ATTRIBUTES_ITEM} structure.item ("ImplFlags") as ta then
+				Result := ta
+			else
+				check False end
+			end
+		end
 
 	name_index: detachable PE_INDEX_ITEM
 		do
@@ -35,9 +53,13 @@ feature -- Access
 			Result := structure.index_item ("ParamList")
 		end
 
-	signature: detachable PE_ITEM
+	signature_index: detachable PE_BLOB_INDEX_ITEM
 		do
-			Result := structure.item ("Signature")
+			if attached {like signature_index} structure.item ("Signature") as i then
+				Result := i
+			else
+				check False end
+			end
 		end
 
 feature -- Access

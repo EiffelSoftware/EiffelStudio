@@ -97,7 +97,7 @@ feature -- Visitor
 				end
 				i := i + 1
 			end
-			output.put_string ("%N")
+			output.put_new_line
 			output.put_line_divider
 			Precursor (o)
 		end
@@ -130,14 +130,14 @@ feature -- Visitor
 			table_entry_index := table_entry_index + 1
 			output.put_string ("["+ table_entry_index.out +"] ")
 			output.put_string (o.to_string)
-			output.put_string ("%N")
+			output.put_new_line
 			if o.has_error then
 				across
 					o.errors as err_ic
 				loop
 					output.put_string (" => ERROR: ")
 					output.put_string (err_ic.item.to_string)
-					output.put_string ("%N")
+					output.put_new_line
 				end
 			end
 			Precursor (o)

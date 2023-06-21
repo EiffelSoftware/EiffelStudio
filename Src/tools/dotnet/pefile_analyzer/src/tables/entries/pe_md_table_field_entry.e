@@ -17,7 +17,7 @@ feature -- Access
 			structure := struct
 			struct.add_flags_16 ("Flags")
 			struct.add_string_index ("Name")
-			struct.add_signature_blob_index ("Signature")
+			struct.add_field_signature_blob_index ("Signature")
 		end
 
 feature -- Access
@@ -25,6 +25,15 @@ feature -- Access
 	name_index: detachable PE_INDEX_ITEM
 		do
 			Result := structure.index_item ("Name")
+		end
+
+	signature_index: detachable PE_BLOB_INDEX_ITEM
+		do
+			if attached {like signature_index} structure.item ("Signature") as i then
+				Result := i
+			else
+				check False end
+			end
 		end
 
 feature -- Access

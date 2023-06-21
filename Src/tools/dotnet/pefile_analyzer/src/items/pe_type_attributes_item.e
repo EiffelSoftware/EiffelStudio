@@ -16,6 +16,8 @@ inherit
 			make_from_item
 		end
 
+	PE_ATTRIBUTES_ITEM
+
 create
 	make,
 	make_from_item
@@ -39,14 +41,22 @@ feature -- Status report
 			t: NATURAL_32
 		do
 			create Result.make (0)
+			v := value.to_natural_32
 
 			t := v & VisibilityMask
-			if (t & NotPublic) = NotPublic then
-				Result.append ("NotPublic ")
-			end
 			if (t & Public) = Public then
 				Result.append ("Public ")
+			else
+				if (t & NotPublic) = NotPublic then
+					Result.append ("NotPublic ")
+				end
 			end
+
+			t := v & LayoutMask
+			if (t & AutoLayout) = AutoLayout then
+				Result.append ("auto ")
+			end
+
 
 			t := v & ClassSemanticsMask
 			if (t & Class_) = Class_ then
@@ -66,11 +76,26 @@ feature -- Status report
 			if (t & SpecialName) = SpecialName then
 				Result.append ("SpecialName ")
 			end
+
+			t := v & StringFormatMask
+			if (t & AnsiClass) = AnsiClass then
+				Result.append ("ansi ")
+			end
+
+			t := v
+			if (t & BeforeFieldInit) = BeforeFieldInit then
+				Result.append ("BeforeFieldInit ")
+			end
 		end
 
 	to_string: STRING_32
 		do
 			Result := to_flags_string + Precursor
+		end
+
+	is_nested_private: BOOLEAN
+		do
+			Result := ((value.to_natural_32 & VisibilityMask) & NestedPrivate) = NestedPrivate
 		end
 
 feature -- Visbility attributes

@@ -50,6 +50,13 @@ feature -- Operation
 
 	last_was_newline: BOOLEAN
 
+
+	put_new_line
+		do
+			output.put_new_line
+			last_was_newline := True
+		end
+
 	put_string (s: READABLE_STRING_32)
 		local
 			i,j,n: INTEGER

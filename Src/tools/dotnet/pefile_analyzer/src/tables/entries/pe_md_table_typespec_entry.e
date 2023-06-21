@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 		do
 			create struct.make (1, "TypeSpec")
 			structure := struct
-			struct.add_blob_index ("Signature")
+			struct.add_type_signature_blob_index ("Signature")
 		end
 
 feature -- Access

@@ -34,6 +34,14 @@ feature -- Access
 			Result := "No Information"
 		end
 
+	token: NATURAL_32
+
+feature -- Status report
+
+	has_token: BOOLEAN = True
+
+feature -- Conversion	
+
 	to_string: STRING_32
 		do
 			Result := {STRING_32} "{" + generator + "} " + dump
@@ -43,6 +51,8 @@ feature -- Access
 		do
 			Result := ""
 		end
+
+feature -- Errors		
 
 	has_error: BOOLEAN
 		do
@@ -64,6 +74,13 @@ feature -- Access
 --			e.set_description ("Not Implemented")
 --			e.raise
 			{EXCEPTIONS}.raise ("["+ generator +"] NotImplemented")
+		end
+
+feature -- Element change
+
+	set_token (tok: like token)
+		do
+			token := tok
 		end
 
 feature -- Visit

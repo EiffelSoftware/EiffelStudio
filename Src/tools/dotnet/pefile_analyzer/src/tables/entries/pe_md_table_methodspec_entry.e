@@ -17,7 +17,6 @@ feature {NONE} -- Initialization
 			structure := struct
 			struct.add_method_def_or_member_ref_index ("Method")
 			struct.add_blob_index ("Instantiation")
-
 		end
 
 feature -- Access

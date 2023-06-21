@@ -376,10 +376,33 @@ feature -- Metadata
 			end
 		end
 
-	signature_blob_heap_item (idx: PE_INDEX_ITEM): detachable PE_SIGNATURE_BLOB_ITEM
+	signature_blob_heap_item (idx: PE_BLOB_INDEX_ITEM): detachable PE_SIGNATURE_BLOB_ITEM
 		do
 			if attached blob_heap_item (idx) as blob then
-				create Result.make_from_item (blob)
+				if attached {PE_SIGNATURE_BLOB_INDEX} idx.associated_structure as l_sign_idx then
+					if l_sign_idx.is_type_signature then
+						create Result.make_type_from_item (blob)
+					elseif l_sign_idx.is_method_signature then
+						create Result.make_method_from_item (blob)
+					elseif l_sign_idx.is_field_signature then
+						create Result.make_field_from_item (blob)
+					elseif l_sign_idx.is_locals_signature then
+						create Result.make_locals_from_item (blob)
+					elseif l_sign_idx.is_field_or_method_signature then
+						create Result.make_field_or_method_from_item (blob)
+					elseif l_sign_idx.is_method_or_locals_signature then
+						create Result.make_method_or_locals_from_item (blob)
+					else
+							-- Default?
+						check known_signature: False end
+						create Result.make_type_from_item (blob)
+					end
+				else
+						-- Default?
+						-- FIXME
+					check expected: False end
+					create Result.make_type_from_item (blob)
+				end
 			end
 		end
 
@@ -782,15 +805,15 @@ feature -- PE MD reader
 			e := file.position.to_natural_32
 		end
 
-	read_blob_index (lab: like {PE_ITEM}.label): PE_INDEX_ITEM
+	read_blob_index (lab: like {PE_ITEM}.label): PE_BLOB_INDEX_ITEM
 		local
 			b,e: NATURAL_32
 		do
 			b := file.position.to_natural_32
 			if is_blob_heap_using_4_bytes then
-				create {PE_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
+				create {PE_BLOB_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
 			else
-				create {PE_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
+				create {PE_BLOB_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
 			end
 			e := file.position.to_natural_32
 		end

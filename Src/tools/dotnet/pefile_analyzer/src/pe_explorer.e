@@ -196,71 +196,84 @@ feature -- Visitor
 	visit_typedef_entry (e: PE_MD_TABLE_TYPEDEF_ENTRY)
 		local
 			n,ns: STRING_32
+			l_display: BOOLEAN
 		do
-			if attached e.type_attributes as ta then
-				output.put_string (ta.to_flags_string)
-			end
-			output.put_string (typedef_fullname (e))
-
-			if attached e.extends_index as l_parent_index then
-				output.put_string (" extends ")
-				if attached {PE_TYPE_DEF_INDEX_ITEM} l_parent_index as l_parent_type_def then
-					if attached pe_file.type_def (l_parent_index) as tdef then
-						output.put_string (typedef_fullname (tdef))
-					end
-				elseif attached {PE_TYPE_REF_INDEX_ITEM} l_parent_index as l_parent_type_ref then
-					if attached pe_file.type_ref (l_parent_index) as tref then
-						output.put_string (typeref_fullname (tref))
-					end
-				elseif attached {PE_TYPE_SPEC_INDEX_ITEM} l_parent_index as l_parent_type_spec then
-					if attached pe_file.type_spec (l_parent_index) as tspec then
-						output.put_string ({STRING_32} "{TypeSpec#"+ l_parent_type_spec.to_string +"}")
-					end
-				else
-					check is_def_or_ref_or_spec: False end
+			l_display := True
+			if attached e.type_attributes as attribs then
+				l_display := not attribs.is_nested_private
+				if l_display then
+					output_token (e)
+					output_attributes (attribs)
 				end
+			else
+				output_token (e)
 			end
+			if l_display then
+				output.put_new_line
+				output.indent
+				output.put_string (typedef_fullname (e))
 
-			output.put_string ("%N")
-			output.indent
-
-			if attached e.field_list as flst then
-				if
-					attached typedef_fields as lst and then
-					attached lst.indexes (e) as l_range
-				then
-					output.put_string ("Fields("+ l_range.nb.out +"):%N")
+				if attached e.extends_index as l_parent_index then
+					output.put_new_line
 					output.indent
-					if attached pe_file.fields (flst, l_range.nb) as l_fields then
-						across
-							l_fields as f_ic
-						loop
-							f_ic.item.accepts (Current)
+					output.put_string (" extends ")
+					if attached {PE_TYPE_DEF_INDEX_ITEM} l_parent_index as l_parent_type_def then
+						if attached pe_file.type_def (l_parent_index) as tdef then
+							output.put_string (typedef_fullname (tdef))
 						end
+					elseif attached {PE_TYPE_REF_INDEX_ITEM} l_parent_index as l_parent_type_ref then
+						if attached pe_file.type_ref (l_parent_index) as tref then
+							output.put_string (typeref_fullname (tref))
+						end
+					elseif attached {PE_TYPE_SPEC_INDEX_ITEM} l_parent_index as l_parent_type_spec then
+						if attached pe_file.type_spec (l_parent_index) as tspec then
+							output.put_string ({STRING_32} "{TypeSpec#"+ l_parent_type_spec.to_string +"}")
+						end
+					else
+						check is_def_or_ref_or_spec: False end
 					end
 					output.exdent
 				end
-			end
-			if attached e.method_list as flst then
-				if
-					attached typedef_methods as lst and then
-					attached lst.indexes (e) as l_range
-				then
-					output.put_string ("Methods("+ l_range.nb.out +"):%N")
-					output.indent
-					if attached pe_file.methods (flst, l_range.nb) as l_methods then
-						across
-							l_methods as m_ic
-						loop
-							m_ic.item.accepts (Current)
-						end
-					end
-					output.exdent
-				end
-			end
 
-			output.exdent
-			output.put_line_divider
+				output.put_new_line
+				if attached e.field_list as flst then
+					if
+						attached typedef_fields as lst and then
+						attached lst.indexes (e) as l_range
+					then
+						output.put_string ("Fields("+ l_range.nb.out +"):%N")
+						output.indent
+						if attached pe_file.fields (flst, l_range.nb) as l_fields then
+							across
+								l_fields as f_ic
+							loop
+								f_ic.item.accepts (Current)
+							end
+						end
+						output.exdent
+					end
+				end
+				if attached e.method_list as flst then
+					if
+						attached typedef_methods as lst and then
+						attached lst.indexes (e) as l_range
+					then
+						output.put_string ("Methods("+ l_range.nb.out +"):%N")
+						output.indent
+						if attached pe_file.methods (flst, l_range.nb) as l_methods then
+							across
+								l_methods as m_ic
+							loop
+								m_ic.item.accepts (Current)
+							end
+						end
+						output.exdent
+					end
+				end
+
+				output.exdent
+				output.put_line_divider
+			end
 		end
 
 	visit_table_entry (o: PE_MD_TABLE_ENTRY)
@@ -286,6 +299,9 @@ feature -- Visitor
 			l_is_first: BOOLEAN
 		do
 --			output.put_string (e.to_string + "%N")
+			output_token (e)
+			output_attributes (e.method_attributes)
+
 			if
 				attached e.name_index as str_idx and then
 				str_idx.index > 0 and then
@@ -322,36 +338,43 @@ feature -- Visitor
 					output.put_string (")")
 				end
 			end
-			if attached e.signature as sig then
-
-			end
-			output.put_string ("%N")
+			output_signature (e.signature_index)
+			output.put_new_line
 		end
 
-	visit_field (o: PE_MD_TABLE_FIELD_ENTRY)
+	visit_field (e: PE_MD_TABLE_FIELD_ENTRY)
 		do
 --			output.put_string (o.to_string + "%N")
+			output_token (e)
+
 			if
-				attached o.name_index as str_idx and then
+				attached e.name_index as str_idx and then
 				str_idx.index > 0 and then
 				attached pe_file.string_heap_item (str_idx) as str
 			then
-				output.put_string (str.to_string_32 + "%N")
+				output.put_string (str.to_string_32)
 			else
-				output.put_string ("!!!%N")
+				output.put_string ("???")
 			end
+
+			output_signature (e.signature_index)
+			output.put_new_line
 		end
 
-	visit_param (o: PE_MD_TABLE_PARAM_ENTRY)
+	visit_param (e: PE_MD_TABLE_PARAM_ENTRY)
 		do
 --			output.put_string (o.to_string + "%N")
-			if attached o.sequence as seq then
+			output_token (e)
+
+			output_attributes (e.param_attributes)
+
+			if attached e.sequence as seq then
 				output.put_string ("#"+seq.value.out + ":")
 			else
 				check has_sequence: False end
 			end
 			if
-				attached o.name_index as str_idx and then
+				attached e.name_index as str_idx and then
 				str_idx.index > 0 and then
 				attached pe_file.string_heap_item (str_idx) as str
 			then
@@ -375,6 +398,40 @@ feature -- Visitor
 	visit_item (o: PE_ITEM)
 		do
 			Precursor (o)
+		end
+
+	output_attributes (attribs: detachable PE_ATTRIBUTES_ITEM)
+		do
+			if
+				attribs /= Void and then
+				attached attribs.to_flags_string as s and then
+				not s.is_whitespace
+			then
+				if s.ends_with (" ") then
+					s.remove_tail (1)
+				end
+				output.put_string ("/")
+				output.put_string (s)
+				output.put_string ("/%T")
+			end
+		end
+
+	output_signature (sig_index: detachable PE_BLOB_INDEX_ITEM)
+		do
+			if
+				attached sig_index and then
+				attached pe_file.signature_blob_heap_item (sig_index) as sig
+			then
+				output.put_string (" :")
+				output.put_string (sig.to_string)
+			end
+		end
+
+	output_token (e: PE_MD_TABLE_ENTRY)
+		do
+			if e.has_token then
+				output.put_string ("/*" + e.token.to_hex_string + "*/ ")
+			end
 		end
 
 end

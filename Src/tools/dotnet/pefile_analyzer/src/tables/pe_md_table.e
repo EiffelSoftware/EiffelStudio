@@ -57,6 +57,7 @@ feature -- Read
 	read (pe: PE_FILE)
 		local
 			i, n: INTEGER
+			tok: NATURAL_32
 		do
 			address := pe.position.to_natural_32
 
@@ -69,6 +70,8 @@ feature -- Read
 			loop
 				if attached read_entry (pe) as e then
 					entries.force (e)
+					tok := (table_id |<< 24) | i.to_natural_32
+					e.set_token (tok)
 				else
 					check is_error end
 				end

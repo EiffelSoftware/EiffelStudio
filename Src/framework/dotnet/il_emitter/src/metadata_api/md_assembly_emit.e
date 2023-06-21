@@ -49,6 +49,7 @@ feature -- Access
 			l_minor_version: NATURAL_16
 			l_build_number: NATURAL_16
 			l_revision_number: NATURAL_16
+			pe_index: NATURAL_32
 		do
 				-- See section II.22.5 AssemblyRef : 0x23
 
@@ -93,6 +94,7 @@ feature -- Definition
 			l_assembly_def_entry: PE_ASSEMBLY_DEF_TABLE_ENTRY
 			l_public_key_or_token: NATURAL_32
 			l_name_index: NATURAL_32
+			pe_index: NATURAL_32
 		do
 				-- Section II.22.2 Assembly : 0x20
 			l_name_index := pe_writer.hash_string (assembly_name.string_32)
@@ -134,6 +136,7 @@ feature -- Definition
 			l_namespace_index: NATURAL_32
 			last_dot: INTEGER
 			l_type_name: STRING_32
+			pe_index: NATURAL_32
 		do
 
 				-- Section II.22.14 ExportedType : 0x27
@@ -185,6 +188,7 @@ feature -- Definition
 			file_name_len: INTEGER
 			l_flags: NATURAL_32
 			l_file_name: STRING_32
+			pe_index: NATURAL_32
 		do
 				-- II.22.19 File : 0x26
 				-- Compute the name index
@@ -223,6 +227,7 @@ feature -- Definition
 			l_tuple_type: like extract_table_type_and_row
 			l_implementation: PE_IMPLEMENTATION
 			l_name_index: NATURAL_32
+			pe_index: NATURAL_32
 		do
 				-- II.22.24 ManifestResource : 0x28
 				-- Extract table type and row from the implementation_token

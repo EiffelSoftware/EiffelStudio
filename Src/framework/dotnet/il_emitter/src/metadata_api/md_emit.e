@@ -42,7 +42,6 @@ feature {NONE}
 			create tables_header
 			create assembly_emitter.make (tables, pe_writer)
 				-- we don't initialize the compilation unit since we don't provide the name of it (similar to the COM interface)
-			initialize_entry_size
 
 		ensure
 			module_guid_set: module_guid.count = 16
@@ -65,48 +64,12 @@ feature {NONE}
 			end
 		end
 
-	initialize_entry_size
-		do
-			create entry_sizes.make (32)
-			entry_sizes.force (agent module_table_entry_size, {PE_TABLES}.tModule)
-			entry_sizes.force (agent type_ref_entry_size, {PE_TABLES}.tTypeRef)
-			entry_sizes.force (agent type_def_table_entry_size, {PE_TABLES}.tTypeDef)
-			entry_sizes.force (agent field_table_entry_size, {PE_TABLES}.tField)
-			entry_sizes.force (agent method_def_table_entry_size, {PE_TABLES}.tMethodDef)
-			entry_sizes.force (agent param_table_entry_size, {PE_TABLES}.tParam)
-			entry_sizes.force (agent interface_impl_table_entry_size, {PE_TABLES}.tInterfaceImpl)
-			entry_sizes.force (agent member_ref_table_entry_size, {PE_TABLES}.tMemberRef)
-			entry_sizes.force (agent constant_table_entry_size, {PE_TABLES}.tConstant)
-			entry_sizes.force (agent custom_attribute_table_entry_size, {PE_TABLES}.tCustomAttribute)
-			entry_sizes.force (agent field_marshal_table_entry_size, {PE_TABLES}.tFieldMarshal)
-			entry_sizes.force (agent decl_security_table_entry_size, {PE_TABLES}.tDeclSecurity)
-			entry_sizes.force (agent class_layout_table_entry_size, {PE_TABLES}.tClassLayout)
-			entry_sizes.force (agent field_layout_table_entry_size, {PE_TABLES}.tFieldLayout)
-			entry_sizes.force (agent standalone_sig_table_entry_size, {PE_TABLES}.tStandaloneSig)
-			entry_sizes.force (agent property_map_table_entry_size, {PE_TABLES}.tPropertyMap)
-			entry_sizes.force (agent property_table_entry_size, {PE_TABLES}.tProperty)
-			entry_sizes.force (agent method_semantics_table_entry_size, {PE_TABLES}.tMethodSemantics)
-			entry_sizes.force (agent method_impl_table_entry_size, {PE_TABLES}.tMethodImpl)
-			entry_sizes.force (agent module_ref_table_entry_size, {PE_TABLES}.tModuleRef)
-			entry_sizes.force (agent type_spec_table_entry_size, {PE_TABLES}.tTypeSpec)
-			entry_sizes.force (agent impl_map_table_entry_size, {PE_TABLES}.tImplMap)
-			entry_sizes.force (agent field_rva_table_entry_size, {PE_TABLES}.tFieldRVA)
-			entry_sizes.force (agent assembly_table_entry_size, {PE_TABLES}.tAssemblyDef)
-			entry_sizes.force (agent assembly_ref_table_entry_size, {PE_TABLES}.tAssemblyRef)
-			entry_sizes.force (agent file_table_entry_size, {PE_TABLES}.tFile)
-			entry_sizes.force (agent exported_type_table_entry_size, {PE_TABLES}.tExportedType)
-			entry_sizes.force (agent manifest_resource_table_entry_size, {PE_TABLES}.tManifestResource)
-			entry_sizes.force (agent nested_class_table_entry_size, {PE_TABLES}.tNestedClass)
-			entry_sizes.force (agent generic_param_table_entry_size, {PE_TABLES}.tGenericParam)
-			entry_sizes.force (agent method_spec_table_entry_size, {PE_TABLES}.tMethodSpec)
-			entry_sizes.force (agent generic_param_constraint_table_entry_size, {PE_TABLES}.tGenericParamConstraint)
-		end
-
 	initialize_unit
 			-- Initialize the compilation unit
 		local
 			l_type_def: PE_TYPEDEF_OR_REF
 			l_table: PE_TYPE_DEF_TABLE_ENTRY
+			pe_index: NATURAL_32
 		do
 				-- initializes the necessary metadata tables for the module and type definition entries.
 			module_index := pe_writer.hash_string ({STRING_32} "<Module>")
@@ -185,10 +148,6 @@ feature -- Access
 
 			Result := compute_metadata_size.to_integer_32
 		end
-
-	entry_sizes: HASH_TABLE [FUNCTION [NATURAL_32], NATURAL_32]
-			-- Hash table of functions to compute the size of a Metadata Table.
-			-- The key is the Metadata Table Key.
 
 	retrieve_user_string (a_token: INTEGER): STRING_32
 			-- Retrieve the user string for `token'.
@@ -656,7 +615,7 @@ feature {NONE} -- Implementation
 			open_write: a_file.is_open_write
 		do
 			put_subspecial (a_file, pe_writer.strings.base, 0, pe_writer.strings.size.to_integer_32)
-			align (a_file, 4)
+--			align (a_file, 4)
 		end
 
 	write_us (a_file: FILE)
@@ -671,7 +630,7 @@ feature {NONE} -- Implementation
 			else
 				put_subspecial (a_file, pe_writer.us.base, 0, pe_writer.us.size.to_integer_32)
 			end
-			align (a_file, 4)
+--			align (a_file, 4)
 		end
 
 	write_guid (a_file: FILE)
@@ -681,7 +640,7 @@ feature {NONE} -- Implementation
 			open_write: a_file.is_open_write
 		do
 			put_subspecial (a_file, pe_writer.guid.base, 0, pe_writer.guid.size.to_integer_32)
-			align (a_file, 4)
+--			align (a_file, 4)
 		end
 
 	write_blob (a_file: FILE)
@@ -691,7 +650,7 @@ feature {NONE} -- Implementation
 			open_write: a_file.is_open_write
 		do
 			put_subspecial (a_file, pe_writer.blob.base, 0, pe_writer.blob.size.to_integer_32)
-			align (a_file, 4)
+--			align (a_file, 4)
 		end
 
 	write_metadata_headers (a_file: FILE)
@@ -835,6 +794,7 @@ feature -- Settings
 		local
 			l_name_index: NATURAL_32
 			l_entry: PE_TABLE_ENTRY_BASE
+			pe_index: NATURAL_32
 		do
 			l_name_index := pe_writer.hash_string (a_name.string_32)
 			create {PE_MODULE_TABLE_ENTRY} l_entry.make_with_data (l_name_index, guid_index)
@@ -888,6 +848,7 @@ feature -- Definition: Access
 			l_tuple: like extract_table_type_and_row
 			last_dot: INTEGER
 			l_type_name: STRING_32
+			pe_index: NATURAL_32
 		do
 				-- II.22.38 TypeRef : 0x01
 			l_tuple := extract_table_type_and_row (resolution_scope)
@@ -941,6 +902,7 @@ feature -- Definition: Access
 			l_tuple: like extract_table_type_and_row
 			l_method_signature: NATURAL_32
 			l_name_index: NATURAL_32
+			pe_index: NATURAL_32
 		do
 				-- Extract table type and row from the in_class_token
 			l_tuple := extract_table_type_and_row (in_class_token)
@@ -967,6 +929,7 @@ feature -- Definition: Access
 		local
 			l_name_index: NATURAL_32
 			l_module_ref_entry: PE_MODULE_REF_TABLE_ENTRY
+			pe_index: NATURAL_32
 		do
 				-- Hash the module name and create a new PE_MODULE_REF_TABLE_ENTRY instance.
 			l_name_index := pe_writer.hash_string (a_name.string_32)
@@ -1010,6 +973,7 @@ feature -- Definition: Creation
 			l_type_name: STRING_32
 --			l_field_index, l_method_index: NATURAL
 			l_class_index: NATURAL_32
+			pe_index: NATURAL_32
 		do
 			l_type_name := type_name.string_32
 			debug ("il_emitter_table")
@@ -1038,8 +1002,8 @@ feature -- Definition: Creation
 --			l_method_index := 1 -- Not yet initialized			
 
 			create {PE_TYPE_DEF_TABLE_ENTRY} l_entry.make_with_uninitialized_field_and_method (flags, l_name_index, l_namespace_index, l_extends)
-			pe_index := add_table_entry (l_entry)
-			l_class_index := pe_index
+			l_class_index := add_table_entry (l_entry)
+			pe_index := l_class_index
 			Result := last_token.to_integer_32
 			debug ("il_emitter_table")
 				print ({STRING_32} " -> index=" + l_class_index.out + " token="+ Result.to_hex_string + "%N")
@@ -1074,6 +1038,7 @@ feature -- Definition: Creation
 		local
 			l_type_def_entry: PE_TYPE_SPEC_TABLE_ENTRY
 			l_type_signature: NATURAL_32
+			pe_index: NATURAL_32
 		do
 			l_type_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 
@@ -1108,6 +1073,7 @@ feature -- Definition: Creation
 			l_method_signature: NATURAL_32
 			l_name_index: NATURAL_32
 			l_method_index: NATURAL_32
+			pe_index: NATURAL_32
 		do
 			debug ("il_emitter_table")
 				print ({STRING_32} "Method: " + method_name.string_32 + " (class:"+ in_class_token.to_hex_string)
@@ -1151,6 +1117,7 @@ feature -- Definition: Creation
 			l_tuple: like extract_table_type_and_row
 			l_method_body: PE_METHOD_DEF_OR_REF
 			l_method_declaration: PE_METHOD_DEF_OR_REF
+			pe_index: NATURAL_32
 		do
 			debug ("il_emitter_table")
 				print ({STRING_32} "MethodImpl: class=" + in_class_token.to_hex_string + " method="+ method_token.to_hex_string + " used_method_declaration_token=" + used_method_declaration_token.to_hex_string)
@@ -1184,6 +1151,7 @@ feature -- Definition: Creation
 			l_table: PE_TABLE_ENTRY_BASE
 			l_tuple: like extract_table_type_and_row
 			l_property_index: NATURAL_32
+			pe_index: NATURAL_32
 		do
 			debug ("il_emitter_table")
 				print ({STRING_32} "Property: type=" + type_token.to_hex_string + " name="+ name.string_32 + " .. ")
@@ -1237,6 +1205,7 @@ feature -- Definition: Creation
 			l_name_index: NATURAL_32
 			l_impl_map_entry: PE_IMPL_MAP_TABLE_ENTRY
 			l_tuple_method: like extract_table_type_and_row
+			pe_index: NATURAL_32
 		do
 			l_tuple_method := extract_table_type_and_row (method_token)
 
@@ -1267,6 +1236,7 @@ feature -- Definition: Creation
 			l_param_flags: INTEGER
 			l_param_index: NATURAL
 			l_param_entry_index: NATURAL_32
+			pe_index: NATURAL_32
 		do
 
 			to_implement ("Review need ensure every row in the Param table is owned by one, and only one, row in the MethodDef table")
@@ -1319,6 +1289,7 @@ feature -- Definition: Creation
 			l_tuple: like extract_table_type_and_row
 			l_parent: PE_FIELD_MARSHAL
 			l_index_native_type: NATURAL_32
+			pe_index: NATURAL_32
 		do
 				-- Extract the table type and row index from `a_token`.
 			l_tuple := extract_table_type_and_row (a_token)
@@ -1343,6 +1314,7 @@ feature -- Definition: Creation
 			l_field_signature: NATURAL_32
 			l_name_index: NATURAL_32
 			l_field_index: NATURAL_32
+			pe_index: NATURAL_32
 		do
 			debug ("il_emitter_table")
 				print ({STRING_32} "Field: " + field_name.string_32 + " (class:"+ in_class_token.to_hex_string)
@@ -1379,6 +1351,7 @@ feature -- Definition: Creation
 		local
 			l_signature_hash: NATURAL_32
 			l_signature_entry: PE_STANDALONE_SIG_TABLE_ENTRY
+			pe_index: NATURAL_32
 		do
 			l_signature_hash := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 
@@ -1417,12 +1390,12 @@ feature -- Definition: Creation
 			blob_count: INTEGER
 			l_ca: PE_CUSTOM_ATTRIBUTE
 			l_ca_type: PE_CUSTOM_ATTRIBUTE_TYPE
+			pe_index: NATURAL_32
 		do
 				-- See II.22.10 CustomAttribute : 0x0C
 
 				-- Extract table type and row from the owner token
 			l_owner_tuple := extract_table_type_and_row (owner)
---			pe_index := l_owner_tuple.table_row_index
 
 				-- Extract table type and row from the l_constructor_tuple token
 			l_constructor_tuple := extract_table_type_and_row (constructor)

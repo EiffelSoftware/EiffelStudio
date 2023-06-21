@@ -16,7 +16,7 @@ inherit
 			prepare_to_save
 		end
 
-	MD_EMIT_SHARED
+	MD_EMIT_IMPLEMENTATION
 
 	PE_TABLE_CONSTANTS
 
@@ -40,9 +40,7 @@ feature {NONE}
 			initialize_guid
 			initialize_unit
 			create tables_header
-			create assembly_emitter.make (tables, pe_writer)
 				-- we don't initialize the compilation unit since we don't provide the name of it (similar to the COM interface)
-
 		ensure
 			module_guid_set: module_guid.count = 16
 		end
@@ -1415,5 +1413,17 @@ feature {NONE} -- Access
 
 	assembly_emitter: MD_ASSEMBLY_EMIT
 			-- Interface that knows how to define assemblies
+		do
+			Result := internal_assembly_emitter
+			if Result = Void then
+				create Result.make (Current)
+				internal_assembly_emitter := Result
+			end
+		end
+
+	internal_assembly_emitter: detachable like assembly_emitter
+			-- Cached value for `assembly_emitter`.
+
+invariant
 
 end

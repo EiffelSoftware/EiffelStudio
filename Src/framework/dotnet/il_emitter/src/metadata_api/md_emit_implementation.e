@@ -1,13 +1,12 @@
 ﻿note
-	description: "Summary description for {MD_EMIT_SHARED}."
+	description: "Summary description for {MD_EMIT_IMPLEMENTATION}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	MD_EMIT_SHARED
+	MD_EMIT_IMPLEMENTATION
 
 inherit
-
 	MD_TOKEN_TYPES
 
 feature -- Access
@@ -52,7 +51,7 @@ feature -- Status report
 			Result := pe_writer.strings.size
 		end
 
-feature {NONE} -- Change tables
+feature {MD_EMIT_BRIDGE} -- Change tables
 
 	add_table_entry (a_entry: PE_TABLE_ENTRY_BASE): NATURAL_32
 			-- Index in related MD_TABLE
@@ -99,7 +98,7 @@ feature {NONE} -- Change tables
 			entry_added: a_entry.token_from_table (tables [a_entry.table_index.to_integer_32]) > 0
 		end
 
-feature {NONE} -- Helper
+feature {MD_EMIT_BRIDGE} -- Helper
 
 	extract_table_type_and_row (a_token: INTEGER): TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
 			-- Given a token `a_token' return a TUPLE with the table_type_index and the

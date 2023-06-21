@@ -7,7 +7,7 @@ class
 	MD_ASSEMBLY_EMIT
 
 inherit
-	MD_EMIT_SHARED
+	MD_EMIT_BRIDGE
 
 	REFACTORING_HELPER
 		export {NONE} all end
@@ -17,22 +17,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tables: SPECIAL [MD_TABLE]; a_writer: PE_GENERATOR)
+	make (a_md_emit: MD_EMIT)
 		do
-			-- TODO: maybe use as parameter the instance of MD_EMIT
-			tables := a_tables
-			pe_writer := a_writer
+			md_emit := a_md_emit
 		end
 
-feature -- Access
+feature {NONE} -- Access
 
-	tables: SPECIAL [MD_TABLE]
-			--  in-memory metadata tables
-
-	--pe_writer: PE_WRITER
-	pe_writer: PE_GENERATOR
-			-- helper class to generate the PE file.
-			--| using as a helper class to access needed features.
+	md_emit: MD_EMIT
 
 feature -- Access
 
@@ -132,7 +124,6 @@ feature -- Definition
 			l_namespace_index: NATURAL_32
 			last_dot: INTEGER
 			l_type_name: STRING_32
-			pe_index: NATURAL_32
 		do
 
 				-- Section II.22.14 ExportedType : 0x27
@@ -182,7 +173,6 @@ feature -- Definition
 			file_name_len: INTEGER
 			l_flags: NATURAL_32
 			l_file_name: STRING_32
-			pe_index: NATURAL_32
 		do
 				-- II.22.19 File : 0x26
 				-- Compute the name index

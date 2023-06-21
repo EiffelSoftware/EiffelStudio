@@ -244,6 +244,11 @@ feature -- Element change
 			add (create {PE_TYPE_ATTRIBUTES}.make (lab))
 		end
 
+	add_field_attributes (lab: STRING)
+		do
+			add (create {PE_FIELD_ATTRIBUTES}.make (lab))
+		end
+
 	add_method_attributes (lab: STRING)
 		do
 			add (create {PE_METHOD_ATTRIBUTES}.make (lab))

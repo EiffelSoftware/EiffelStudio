@@ -17,6 +17,9 @@ inherit
 		end
 
 	PE_ATTRIBUTES_ITEM
+		rename
+			has_flag_16 as has_flag
+		end
 
 create
 	make,
@@ -38,51 +41,24 @@ feature -- Status report
 	to_flags_string: STRING_8
 		local
 			v: NATURAL_16
-			t: NATURAL_16
 		do
 			create Result.make (0)
 			v := value.to_natural_16
 
-			t := v & MemberAccessMask
-			if (t & Private) = Private then
-				Result.append ("Private ")
-			end
-			if (t & Family) = Family then
-				Result.append ("Family ")
-			end
-			if (t & Public) = Public then
-				Result.append ("Public ")
-			end
-			if (t & Static) = Static then
-				Result.append ("Static ")
-			end
-			if (t & Final) = Final then
-				Result.append ("Final ")
-			end
-			if (t & Virtual) = Virtual then
-				Result.append ("Virtual ")
-			end
-			if (t & HideBySig) = HideBySig then
-				Result.append ("HideBySig ")
-			end
+			if has_flag (MemberAccessMask, Private,	v) then Result.append ("Private ") end
+			if has_flag (MemberAccessMask, Family,	v) then Result.append ("Family ") end
+			if has_flag (MemberAccessMask, Public,	v) then Result.append ("Public ") end
+			if has_flag (MemberAccessMask, Static,	v) then Result.append ("Static ") end
+			if has_flag (MemberAccessMask, Final,	v) then Result.append ("Final ") end
+			if has_flag (MemberAccessMask, Virtual,	v) then Result.append ("Virtual ") end
+			if has_flag (MemberAccessMask, HideBySig,	v) then Result.append ("HideBySig ") end
 
-			t := v & VtableLayoutMask
---			if (t & ReuseSlot) = ReuseSlot then
---				Result.append ("ReuseSlot ")
---			end
---			if (t & NewSlot) = NewSlot then
---				Result.append ("NewSlot ")
---			end
-			if (t & Strict) = Strict then
-				Result.append ("Strict ")
-			end
-			if (t & Abstract) = Abstract then
-				Result.append ("Abstract ")
-			end
+--			if has_flag (VtableLayoutMask, ReuseSlot,	v) then Result.append ("ReuseSlot ") end
+--			if has_flag (VtableLayoutMask, NewSlot,	v) then Result.append ("NewSlot ") end
+			if has_flag (VtableLayoutMask, Strict,	v) then Result.append ("Strict ") end
+			if has_flag (VtableLayoutMask, Abstract,	v) then Result.append ("Abstract ") end
 
-			if (t & SpecialName) = SpecialName then
-				Result.append ("SpecialName ")
-			end
+			if has_flag (0x0, SpecialName,	v) then Result.append ("SpecialName ") end
 		end
 
 	to_string: STRING_32

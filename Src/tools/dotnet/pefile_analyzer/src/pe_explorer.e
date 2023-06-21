@@ -301,7 +301,7 @@ feature -- Visitor
 --			output.put_string (e.to_string + "%N")
 			output_token (e)
 			output_attributes (e.method_attributes)
-
+			output.put_new_line
 			if
 				attached e.name_index as str_idx and then
 				str_idx.index > 0 and then
@@ -346,6 +346,8 @@ feature -- Visitor
 		do
 --			output.put_string (o.to_string + "%N")
 			output_token (e)
+			output_attributes (e.field_attributes)
+			output.put_new_line
 
 			if
 				attached e.name_index as str_idx and then

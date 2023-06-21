@@ -15,12 +15,21 @@ feature -- Access
 		do
 			create struct.make (3, "Field")
 			structure := struct
-			struct.add_flags_16 ("Flags")
+			struct.add_field_attributes ("Flags")
 			struct.add_string_index ("Name")
 			struct.add_field_signature_blob_index ("Signature")
 		end
 
 feature -- Access
+
+	field_attributes: detachable PE_FIELD_ATTRIBUTES_ITEM
+		do
+			if attached {PE_FIELD_ATTRIBUTES_ITEM} structure.item ("Flags") as ta then
+				Result := ta
+			else
+				check False end
+			end
+		end
 
 	name_index: detachable PE_INDEX_ITEM
 		do

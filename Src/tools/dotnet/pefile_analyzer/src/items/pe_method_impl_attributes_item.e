@@ -17,6 +17,9 @@ inherit
 		end
 
 	PE_ATTRIBUTES_ITEM
+		rename
+			has_flag_16 as has_flag
+		end
 
 create
 	make,
@@ -44,11 +47,7 @@ feature -- Status report
 			v := value.to_natural_16
 
 			-- TODO ...
-
---			t := v & CodeTypeMask
---			if (t & IL) = IL then
---				Result.append ("IL ")
---			end			
+			if has_flag (CodeTypeMask, IL,	v) then Result.append ("IL ") end
 		end
 
 	to_string: STRING_32

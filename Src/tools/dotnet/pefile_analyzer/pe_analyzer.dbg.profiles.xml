@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<execution_parameters xmlns="http://www.eiffel.com/developers/xml/execution-parameters-1-0-0" last_profile="2E0848C2-8B2B-4D79-9E0B-183A68F4EA8C">
- <profile uuid="2E0848C2-8B2B-4D79-9E0B-183A68F4EA8C" title="c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll binary.txt" arguments="c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll binary.txt" working_directory="">
+<execution_parameters xmlns="http://www.eiffel.com/developers/xml/execution-parameters-1-0-0">
+ <profile uuid="2E0848C2-8B2B-4D79-9E0B-183A68F4EA8C" title="c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll md_consumer.txt" arguments="c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll md_consumer.txt" working_directory="">
  </profile>
  <profile uuid="2BFFEF8A-BC38-4264-8D96-238A5AF0E9E8" title="c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll" arguments="c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll" working_directory="">
  </profile>
- <profile uuid="2D160CF2-A6B8-4F4E-9367-255AD5B3F987" title="EIFGENs\app_netcore\W_code\module_1.dll module_1.txt" arguments="EIFGENs\app_netcore\W_code\module_1.dll module_1.txt" working_directory="C:\work\eiffel\debug\app_dotnet\w">
+ <profile uuid="2D160CF2-A6B8-4F4E-9367-255AD5B3F987" title="EIFGENs\app_netcore\W_code\module_1.dll netcore_module_1.txt" arguments="EIFGENs\app_netcore\W_code\module_1.dll netcore_module_1.txt" working_directory="C:\work\eiffel\debug\app_dotnet\w">
  </profile>
- <profile uuid="06EBB83E-F627-45BE-94C7-41EC6D34DEB0" title="c:\work\eiffel\studio\trunk\Src\framework\dotnet\il_emitter\testing\cs\net_sample\bin\Debug\net6.0\net_sample.dll binary_net_sample.txt" arguments="c:\work\eiffel\studio\trunk\Src\framework\dotnet\il_emitter\testing\cs\net_sample\bin\Debug\net6.0\net_sample.dll binary_net_sample.txt" working_directory="">
- </profile>
- <profile uuid="90AF74CF-8722-4A8B-BF17-B8E19CCFE112" title="EIFGENs\app_netcore\W_code\module_1.dll netcore_module_1.txt" arguments="EIFGENs\app_netcore\W_code\module_1.dll netcore_module_1.txt" working_directory="C:\work\eiffel\debug\app_dotnet\w">
+ <profile uuid="06EBB83E-F627-45BE-94C7-41EC6D34DEB0" title="c:\work\eiffel\studio\trunk\Src\framework\dotnet\il_emitter\testing\cs\net_sample\bin\Debug\net6.0\net_sample.dll binary_net_sample.txt" arguments="c:\work\eiffel\studio\trunk\Src\framework\dotnet\il_emitter\testing\cs\net_sample\bin\Debug\net6.0\net_sample.dll net_sample.txt" working_directory="">
  </profile>
  <profile uuid="9D0BDFBF-F132-41D2-BA44-56D1B8193127" title="EIFGENs\app_fmwkv40\W_code\module_1.dll v4_module_1.txt" arguments="EIFGENs\app_fmwkv40\W_code\module_1.dll v4_module_1.txt" working_directory="C:\work\eiffel\debug\app_dotnet">
+ </profile>
+ <profile uuid="1A01F033-B56E-40A9-8167-618E74660E20" title="--no_analyze c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll" arguments="--no_analyze --explore=md_consumer-tree.txt --print=md_consumer-print.txt c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll" working_directory="">
  </profile>
 </execution_parameters>

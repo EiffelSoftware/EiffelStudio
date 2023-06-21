@@ -27,6 +27,25 @@ feature -- Access
 
 	tab: STRING
 
+feature -- Status report
+
+	is_open_write: BOOLEAN
+		do
+			Result := output.is_open_write
+		end
+
+feature -- File operations
+
+	open_write
+		do
+			output.open_write
+		end
+
+	close
+		do
+			output.close
+		end
+
 feature -- Operation
 
 	indent

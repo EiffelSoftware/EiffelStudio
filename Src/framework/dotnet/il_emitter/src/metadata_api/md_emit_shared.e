@@ -94,12 +94,10 @@ feature {NONE} -- Change tables
 				l_md_table.force (a_entry)
 				Result := l_md_table.size
 			end
-			last_token := (n |<< 24).to_natural_32 | Result
+			Result := (n |<< 24).to_natural_32 | Result
 		ensure
 			entry_added: a_entry.token_from_table (tables [a_entry.table_index.to_integer_32]) > 0
 		end
-
-	last_token: NATURAL_32
 
 feature {NONE} -- Helper
 

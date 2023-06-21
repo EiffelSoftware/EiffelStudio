@@ -848,7 +848,6 @@ feature -- Definition: Access
 			l_tuple: like extract_table_type_and_row
 			last_dot: INTEGER
 			l_type_name: STRING_32
-			pe_index: NATURAL_32
 		do
 				-- II.22.38 TypeRef : 0x01
 			l_tuple := extract_table_type_and_row (resolution_scope)
@@ -890,8 +889,7 @@ feature -- Definition: Access
 				-- TODO: ResolutionScope : null needs to be checked.
 
 			create {PE_TYPE_REF_TABLE_ENTRY} l_entry.make_with_data (create {PE_RESOLUTION_SCOPE}.make_with_tag_and_index (l_scope, l_tuple.table_row_index), l_name_index, l_namespace_index)
-			pe_index := add_table_entry (l_entry)
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_entry).to_integer_32
 		end
 
 	define_member_ref (method_name: CLI_STRING; in_class_token: INTEGER; a_signature: MD_SIGNATURE): INTEGER
@@ -902,7 +900,6 @@ feature -- Definition: Access
 			l_tuple: like extract_table_type_and_row
 			l_method_signature: NATURAL_32
 			l_name_index: NATURAL_32
-			pe_index: NATURAL_32
 		do
 				-- Extract table type and row from the in_class_token
 			l_tuple := extract_table_type_and_row (in_class_token)
@@ -917,10 +914,7 @@ feature -- Definition: Access
 			create l_member_ref_entry.make_with_data (l_member_ref, l_name_index, l_method_signature)
 
 				-- Add the new PE_MEMBER_REF_TABLE_ENTRY instance to the metadata tables.
-			pe_index := add_table_entry (l_member_ref_entry)
-
-				-- Return the generated token.
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_member_ref_entry).to_integer_32
 		end
 
 	define_module_ref (a_name: CLI_STRING): INTEGER
@@ -929,17 +923,13 @@ feature -- Definition: Access
 		local
 			l_name_index: NATURAL_32
 			l_module_ref_entry: PE_MODULE_REF_TABLE_ENTRY
-			pe_index: NATURAL_32
 		do
 				-- Hash the module name and create a new PE_MODULE_REF_TABLE_ENTRY instance.
 			l_name_index := pe_writer.hash_string (a_name.string_32)
 			create l_module_ref_entry.make_with_data (l_name_index)
 
 				-- Add the new PE_MODULE_REF_TABLE_ENTRY instance to the metadata tables.
-			pe_index := add_table_entry (l_module_ref_entry)
-
-				-- Return the generated token.
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_module_ref_entry).to_integer_32
 		end
 
 feature -- Definition: Creation
@@ -973,7 +963,7 @@ feature -- Definition: Creation
 			l_type_name: STRING_32
 --			l_field_index, l_method_index: NATURAL
 			l_class_index: NATURAL_32
-			pe_index: NATURAL_32
+			last_token: NATURAL_32
 		do
 			l_type_name := type_name.string_32
 			debug ("il_emitter_table")
@@ -1002,9 +992,8 @@ feature -- Definition: Creation
 --			l_method_index := 1 -- Not yet initialized			
 
 			create {PE_TYPE_DEF_TABLE_ENTRY} l_entry.make_with_uninitialized_field_and_method (flags, l_name_index, l_namespace_index, l_extends)
-			l_class_index := add_table_entry (l_entry)
-			pe_index := l_class_index
-			Result := last_token.to_integer_32
+			l_class_index := next_table_index (l_entry.table_index)
+			Result := add_table_entry (l_entry).to_integer_32
 			debug ("il_emitter_table")
 				print ({STRING_32} " -> index=" + l_class_index.out + " token="+ Result.to_hex_string + "%N")
 			end
@@ -1017,7 +1006,7 @@ feature -- Definition: Creation
 							l_extends := create_type_def_or_ref (i, imp_tuple.table_row_index)
 							create {PE_INTERFACE_IMPL_TABLE_ENTRY} l_entry.make_with_data (l_class_index, l_extends)
 								--note: l_dis is not used.
-							pe_index := add_table_entry (l_entry)
+							last_token := add_table_entry (l_entry)
 						else
 							check has_info: False end
 						end
@@ -1038,7 +1027,6 @@ feature -- Definition: Creation
 		local
 			l_type_def_entry: PE_TYPE_SPEC_TABLE_ENTRY
 			l_type_signature: NATURAL_32
-			pe_index: NATURAL_32
 		do
 			l_type_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 
@@ -1046,10 +1034,7 @@ feature -- Definition: Creation
 			create l_type_def_entry.make_with_data (l_type_signature)
 
 				-- Add the new PE_TYPE_SPEC_TABLE_ENTRY instance to the metadata tables.
-			pe_index := add_table_entry (l_type_def_entry)
-
-				-- Return the generated token.
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_type_def_entry).to_integer_32
 		end
 
 	define_exported_type (type_name: CLI_STRING; implementation_token: INTEGER;
@@ -1073,7 +1058,6 @@ feature -- Definition: Creation
 			l_method_signature: NATURAL_32
 			l_name_index: NATURAL_32
 			l_method_index: NATURAL_32
-			pe_index: NATURAL_32
 		do
 			debug ("il_emitter_table")
 				print ({STRING_32} "Method: " + method_name.string_32 + " (class:"+ in_class_token.to_hex_string)
@@ -1089,12 +1073,9 @@ feature -- Definition: Creation
 
 				-- Add the new PE_METHOD_DEF_TABLE_ENTRY instance to the metadata tables.
 			l_method_index := next_table_index ({PE_TABLES}.tmethoddef)
-			pe_index := add_table_entry (l_method_def_entry)
-
-				-- Return the generated token.
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_method_def_entry).to_integer_32
 			debug ("il_emitter_table")
-				print ({STRING_32} " -> ("+ l_method_index.out +") index=" + pe_index.out + " token=" + Result.to_hex_string +"%N")
+				print ({STRING_32} " -> ("+ l_method_index.out +") index=" + l_method_index.out + " token=" + Result.to_hex_string +"%N")
 			end
 
 				-- Extract table type and row from the in_class_token
@@ -1117,7 +1098,8 @@ feature -- Definition: Creation
 			l_tuple: like extract_table_type_and_row
 			l_method_body: PE_METHOD_DEF_OR_REF
 			l_method_declaration: PE_METHOD_DEF_OR_REF
-			pe_index: NATURAL_32
+			l_method_impl_index: NATURAL_32
+			last_token : NATURAL_32
 		do
 			debug ("il_emitter_table")
 				print ({STRING_32} "MethodImpl: class=" + in_class_token.to_hex_string + " method="+ method_token.to_hex_string + " used_method_declaration_token=" + used_method_declaration_token.to_hex_string)
@@ -1134,10 +1116,11 @@ feature -- Definition: Creation
 			create l_method_impl_entry.make_with_data (l_tuple.table_row_index, l_method_body, l_method_declaration)
 
 				-- Add the new PE_METHOD_IMPL_TABLE_ENTRY instance to the metadata tables.
-			pe_index := add_table_entry (l_method_impl_entry)
+			l_method_impl_index := next_table_index (l_method_impl_entry.table_index)
+			last_token := add_table_entry (l_method_impl_entry)
 
 			debug ("il_emitter_table")
-				print ({STRING_32} " -> index=" + pe_index.out + " token=" + last_token.to_hex_string +"%N")
+				print ({STRING_32} " -> index=" + l_method_impl_index.out + " token=" + last_token.to_hex_string +"%N")
 			end
 		end
 
@@ -1150,8 +1133,7 @@ feature -- Definition: Creation
 			l_semantics: PE_SEMANTICS
 			l_table: PE_TABLE_ENTRY_BASE
 			l_tuple: like extract_table_type_and_row
-			l_property_index: NATURAL_32
-			pe_index: NATURAL_32
+			l_property_index, l_unused_pe_index: NATURAL_32
 		do
 			debug ("il_emitter_table")
 				print ({STRING_32} "Property: type=" + type_token.to_hex_string + " name="+ name.string_32 + " .. ")
@@ -1167,34 +1149,35 @@ feature -- Definition: Creation
 				)
 
 				-- Add the new PE_PROPERTY_TABLE_ENTRY instance to the metadata tables.
-			l_property_index := next_table_index ({PE_TABLES}.tproperty)
-			pe_index := add_table_entry (l_property)
+			l_property_index := next_table_index (l_property.table_index)
 				-- Return the metadata token for the new property.
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_property).to_integer_32
 
 			debug ("il_emitter_table")
-				print ({STRING_32} " -> index=" + pe_index.out + " token=" + last_token.to_hex_string +"%N")
+				print ({STRING_32} " -> index=" + l_property_index.out + " token=" + Result.to_hex_string +"%N")
 			end
 
 				-- Define the method implementations for the getter and setter, if provided.
 			create l_semantics.make_with_tag_and_index ({PE_SEMANTICS}.property, l_property_index)
 			if getter_token /= 0 then
 				l_tuple := extract_table_type_and_row (getter_token)
-				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data
-					({PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, l_tuple.table_row_index, l_semantics)
-				pe_index := add_table_entry (l_table)
+				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data (
+						{PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, l_tuple.table_row_index, l_semantics
+					)
+				l_unused_pe_index := add_table_entry (l_table)
 			end
 
 			if setter_token /= 0 then
 				l_tuple := extract_table_type_and_row (setter_token)
-				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data
-					({PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_tuple.table_row_index, l_semantics)
-				pe_index := add_table_entry (l_table)
+				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data (
+						{PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_tuple.table_row_index, l_semantics
+					)
+				l_unused_pe_index := add_table_entry (l_table)
 			end
 
 			l_tuple := extract_table_type_and_row (type_token)
 			create {PE_PROPERTY_MAP_TABLE_ENTRY} l_table.make_with_data (l_tuple.table_row_index, l_property_index)
-			pe_index := add_table_entry (l_table)
+			l_unused_pe_index := add_table_entry (l_table)
 		end
 
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;
@@ -1236,7 +1219,6 @@ feature -- Definition: Creation
 			l_param_flags: INTEGER
 			l_param_index: NATURAL
 			l_param_entry_index: NATURAL_32
-			pe_index: NATURAL_32
 		do
 
 			to_implement ("Review need ensure every row in the Param table is owned by one, and only one, row in the MethodDef table")
@@ -1264,10 +1246,7 @@ feature -- Definition: Creation
 
 				-- Add the new PE_PARAM_TABLE_ENTRY instance to the metadata tables.
 			l_param_entry_index := next_table_index ({PE_TABLES}.tparam)
-			pe_index := add_table_entry (l_param_entry)
-
-				-- Return the generated token.
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_param_entry).to_integer_32
 			debug ("il_emitter_table")
 				print ({STRING_32} " -> index=" + l_param_index.out + " token="+ Result.to_hex_string + "%N")
 			end
@@ -1314,7 +1293,6 @@ feature -- Definition: Creation
 			l_field_signature: NATURAL_32
 			l_name_index: NATURAL_32
 			l_field_index: NATURAL_32
-			pe_index: NATURAL_32
 		do
 			debug ("il_emitter_table")
 				print ({STRING_32} "Field: " + field_name.string_32 + " (class:"+ in_class_token.to_hex_string)
@@ -1327,12 +1305,12 @@ feature -- Definition: Creation
 			create l_field_def_entry.make_with_data (field_flags, l_name_index, l_field_signature)
 
 				-- Add the new PE_FIELD_TABLE_ENTRY instance to the metadata tables.
-			l_field_index := next_table_index ({PE_TABLES}.tfield)
-			pe_index := add_table_entry (l_field_def_entry)
+			l_field_index := next_table_index (l_field_def_entry.table_index)
 				-- Return the generated token.
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_field_def_entry).to_integer_32
+
 			debug ("il_emitter_table")
-				print ({STRING_32} " -> ("+ l_field_index.out +") index=" + pe_index.out + " token=" + Result.to_hex_string +"%N")
+				print ({STRING_32} " -> ("+ l_field_index.out +") index=" + l_field_index.out + " token=" + Result.to_hex_string +"%N")
 			end
 
 			if
@@ -1351,14 +1329,11 @@ feature -- Definition: Creation
 		local
 			l_signature_hash: NATURAL_32
 			l_signature_entry: PE_STANDALONE_SIG_TABLE_ENTRY
-			pe_index: NATURAL_32
 		do
 			l_signature_hash := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 
 			create l_signature_entry.make_with_data (l_signature_hash)
-			pe_index := add_table_entry (l_signature_entry)
-
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_signature_entry).to_integer_32
 		end
 
 	define_string_constant (field_name: CLI_STRING; in_class_token: INTEGER;
@@ -1422,10 +1397,9 @@ feature -- Definition: Creation
 			create l_ca_entry.make_with_data (l_ca, l_ca_type, l_ca_blob)
 
 				-- Add the new PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY instance to the metadata tables.
-			pe_index := add_table_entry (l_ca_entry)
+			pe_index := next_table_index (l_ca_entry.table_index)
+			Result := add_table_entry (l_ca_entry).to_integer_32
 
-				-- Return the generated token.
-			Result := last_token.to_integer_32
 			debug ("il_emitter_table")
 				print ({STRING_32} " -> ("+ pe_index.out +") index=" + pe_index.out + " token=" + Result.to_hex_string +"%N")
 			end

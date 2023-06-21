@@ -49,7 +49,6 @@ feature -- Access
 			l_minor_version: NATURAL_16
 			l_build_number: NATURAL_16
 			l_revision_number: NATURAL_16
-			pe_index: NATURAL_32
 		do
 				-- See section II.22.5 AssemblyRef : 0x23
 
@@ -70,8 +69,7 @@ feature -- Access
 			create l_assembly_ref_entry.make_with_data ({PE_ASSEMBLY_FLAGS}.PA_none, l_major_version, l_minor_version, l_build_number, l_revision_number, l_name_index, l_public_key_or_token_index)
 
 				-- Add the new PE_ASSEMBLY_REF_TABLE_ENTRY instance to the metadata tables.
-			pe_index := add_table_entry (l_assembly_ref_entry)
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_assembly_ref_entry).to_integer_32
 		ensure
 			valid_result: Result > 0
 		end
@@ -94,7 +92,6 @@ feature -- Definition
 			l_assembly_def_entry: PE_ASSEMBLY_DEF_TABLE_ENTRY
 			l_public_key_or_token: NATURAL_32
 			l_name_index: NATURAL_32
-			pe_index: NATURAL_32
 		do
 				-- Section II.22.2 Assembly : 0x20
 			l_name_index := pe_writer.hash_string (assembly_name.string_32)
@@ -117,8 +114,7 @@ feature -- Definition
 				assembly_info.revision_number,
 				l_name_index,
 				l_public_key_or_token)
-			pe_index := add_table_entry (l_assembly_def_entry)
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_assembly_def_entry).to_integer_32
 		ensure
 			valid_result: Result > 0
 		end
@@ -166,9 +162,7 @@ feature -- Definition
 				-- Create a new PE_EXPORTED_TYPE_TABLE_ENTRY instance with the given data
 			create l_exported_type_entry.make_with_data (type_flags.to_natural_32, l_tuple_type_def.table_type_index, l_name_index, l_namespace_index, l_implementation)
 
-			pe_index := add_table_entry (l_exported_type_entry)
-
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_exported_type_entry).to_integer_32
 		ensure
 			valid_result: Result > 0
 		end
@@ -212,8 +206,7 @@ feature -- Definition
 			l_flags := file_flags.to_natural_32
 			create l_file_entry.make_with_data (l_flags, l_name_index, l_hash_value_index)
 
-			pe_index := add_table_entry (l_file_entry)
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_file_entry).to_integer_32
 		ensure
 			valid_result: Result > 0
 		end
@@ -227,7 +220,6 @@ feature -- Definition
 			l_tuple_type: like extract_table_type_and_row
 			l_implementation: PE_IMPLEMENTATION
 			l_name_index: NATURAL_32
-			pe_index: NATURAL_32
 		do
 				-- II.22.24 ManifestResource : 0x28
 				-- Extract table type and row from the implementation_token
@@ -242,9 +234,7 @@ feature -- Definition
 				-- Create a new PE_MANIFEST_RESOURCE_TABLE_ENTRY instance with the given data
 			create l_manifest_resource_entry.make_with_data (offset.to_natural_32, resource_flags.to_natural_32, l_name_index, l_implementation)
 
-			pe_index := add_table_entry (l_manifest_resource_entry)
-
-			Result := last_token.to_integer_32
+			Result := add_table_entry (l_manifest_resource_entry).to_integer_32
 		ensure
 			valid_result: Result > 0
 		end

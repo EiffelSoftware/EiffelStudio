@@ -213,7 +213,7 @@ feature -- Visitor
 	visit_method_def_index_item (idx: PE_METHOD_DEF_INDEX_ITEM)
 		do
 			if
-				idx.index > 0 and then idx.index /= table_count ({PE_TABLES}.tmethoddef) + 1
+				not idx.is_null_index and then idx.index /= table_count ({PE_TABLES}.tmethoddef) + 1
 			then
 				if attached pe_file.method_def (idx) as m then
 					if
@@ -233,7 +233,7 @@ feature -- Visitor
 	visit_member_ref_index_item (idx: PE_MEMBER_REF_INDEX_ITEM)
 		do
 			if
-				idx.index > 0 and then idx.index /= table_count ({PE_TABLES}.tmemberref) + 1
+				not idx.is_null_index and then idx.index /= table_count ({PE_TABLES}.tmemberref) + 1
 			then
 				if attached pe_file.member_ref (idx) as m then
 					if
@@ -273,7 +273,7 @@ feature -- Visitor
 	visit_param_index_item (idx: PE_PARAM_INDEX_ITEM)
 		do
 			if
-				idx.index > 0 and then idx.index /= table_count ({PE_TABLES}.tparam) + 1
+				not idx.is_null_index and then idx.index /= table_count ({PE_TABLES}.tparam) + 1
 			then
 				if attached pe_file.param (idx) as p then
 					if
@@ -313,7 +313,7 @@ feature -- Visitor
 	visit_property_index_item (idx: PE_PROPERTY_INDEX_ITEM)
 		do
 			if
-				idx.index > 0 and then idx.index /= table_count ({PE_TABLES}.tproperty) + 1
+				not idx.is_null_index and then idx.index /= table_count ({PE_TABLES}.tproperty) + 1
 			then
 				if attached pe_file.param (idx) as prp then
 					if
@@ -333,7 +333,7 @@ feature -- Visitor
 	visit_type_def_index_item (idx: PE_TYPE_DEF_INDEX_ITEM)
 		do
 			if
-				idx.index > 0 -- and then idx.index /= table_count ({PE_TABLES}.ttypedef) + 1
+				not idx.is_null_index -- and then idx.index /= table_count ({PE_TABLES}.ttypedef) + 1
 			then
 				if attached pe_file.type_def (idx) as tdef then
 					if
@@ -360,7 +360,7 @@ feature -- Visitor
 	visit_type_ref_index_item (idx: PE_TYPE_REF_INDEX_ITEM)
 		do
 			if
-				idx.index > 0 -- and then idx.index /= table_count ({PE_TABLES}.ttyperef) + 1
+				not idx.is_null_index -- and then idx.index /= table_count ({PE_TABLES}.ttyperef) + 1
 			then
 				if attached pe_file.type_ref (idx) as tref then
 					if
@@ -380,7 +380,7 @@ feature -- Visitor
 	visit_type_spec_index_item (idx: PE_TYPE_SPEC_INDEX_ITEM)
 		do
 			if
-				idx.index > 0  -- and then idx.index /= table_count ({PE_TABLES}.ttypespec) + 1
+				not idx.is_null_index  -- and then idx.index /= table_count ({PE_TABLES}.ttypespec) + 1
 			then
 				if attached pe_file.type_spec (idx) as tspec then
 					-- Found
@@ -393,7 +393,7 @@ feature -- Visitor
 	visit_string_index_item (idx: PE_STRING_INDEX_ITEM)
 		do
 			if
-				idx.index > 0
+				not idx.is_null_index
 			then
 				if attached pe_file.string_heap_item (idx) as str then
 					idx.set_info (create {PE_ITEM_INFO}.make (str))

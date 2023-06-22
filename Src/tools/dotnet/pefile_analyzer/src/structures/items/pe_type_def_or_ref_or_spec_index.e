@@ -9,7 +9,7 @@ create
 
 feature -- Read
 
-	read (pe: PE_FILE): PE_ITEM
+	read (pe: PE_FILE): PE_INDEX_ITEM
 		do
 			Result := pe.read_type_def_or_ref_or_spec_index (label, Current)
 		end

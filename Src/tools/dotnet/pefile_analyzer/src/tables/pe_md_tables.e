@@ -88,6 +88,13 @@ feature -- Item
 			end
 		end
 
+	interfaceimpl_table: detachable PE_MD_TABLE_INTERFACEIMPL
+		do
+			if attached {like interfaceimpl_table} item ({PE_TABLES}.tinterfaceimpl) as tb then
+				Result := tb
+			end
+		end
+
 feature -- Access
 
 	starting_address: NATURAL_32
@@ -167,6 +174,8 @@ feature -- Helpers
 			else
 				Result := "#" + tb.to_natural_8.to_hex_string
 			end
+		ensure
+			class
 		end
 
 	read_table (a_tables: PE_MD_TABLES; pe: PE_FILE; tb: NATURAL_32; nb: NATURAL_32): detachable PE_MD_TABLE [PE_MD_TABLE_ENTRY]

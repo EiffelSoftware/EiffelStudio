@@ -16,6 +16,11 @@ feature -- Access
 		deferred
 		end
 
+	is_null_index: BOOLEAN
+		do
+			Result := index = 0x0
+		end
+
 feature -- Element change
 
 	update_index (idx: NATURAL_32)

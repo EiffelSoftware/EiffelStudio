@@ -8,7 +8,7 @@ inherit
 		end
 
 create
-	make_type,
+	make_type_specification,
 	make_method,
 	make_field,
 	make_field_or_method,
@@ -17,10 +17,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make_type (lab: like label)
+	make_type_specification (lab: like label)
 		do
 			make (lab)
-			kind := type_kind
+			kind := type_specification_kind
 		end
 
 	make_method (lab: like label)
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Constant
 
-	type_kind: NATURAL_8 = 1
+	type_specification_kind: NATURAL_8 = 1
 	method_kind: NATURAL_8 = 2
 	field_kind: NATURAL_8 = 3
 	locals_kind: NATURAL_8 = 4
@@ -66,9 +66,9 @@ feature -- Constant
 
 feature -- Status report	
 
-	is_type_signature: BOOLEAN
+	is_type_specification_signature: BOOLEAN
 		do
-			Result := kind = type_kind
+			Result := kind = type_specification_kind
 		end
 
 	is_method_signature: BOOLEAN

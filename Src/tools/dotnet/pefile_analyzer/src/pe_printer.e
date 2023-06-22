@@ -109,7 +109,7 @@ feature -- Visitor
 			output.put_string ("[Table " + o.tables.table_name (o.table_id)+ " " + o.table_id.to_natural_8.to_hex_string +"]("+ o.count.out +")"
 								+ " 0x"+ short_hex_string (o.address.to_hex_string)
 								+ "%N")
-			output.indent
+--			output.indent
 			if
 				not o.entries.is_empty  and then
 				attached o.entries.first as e
@@ -118,7 +118,7 @@ feature -- Visitor
 			end
 			table_entry_index := 0
 			Precursor (o)
-			output.exdent
+--			output.exdent
 			output.put_line_divider
 			output.flush
 		end
@@ -128,7 +128,7 @@ feature -- Visitor
 	visit_table_entry (o: PE_MD_TABLE_ENTRY)
 		do
 			table_entry_index := table_entry_index + 1
-			output.put_string ("["+ table_entry_index.out +"] ")
+			output.put_string ("[0x" + o.token.to_hex_string + " #" + table_entry_index.out +"] ")
 			output.put_string (o.to_string)
 			output.put_new_line
 			if o.has_error then

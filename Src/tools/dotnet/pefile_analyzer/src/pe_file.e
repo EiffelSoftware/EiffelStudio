@@ -151,6 +151,16 @@ feature -- Metadata
 			end
 		end
 
+	interface_impl_list_for (a_class_token: NATURAL_32): detachable LIST [PE_INDEX_ITEM]
+		do
+			if attached metadata_tables.interfaceimpl_table as tb then
+				Result := tb.interfaces (a_class_token)
+				if Result.is_empty then
+					Result := Void
+				end
+			end
+		end
+
 	type_def_or_ref_or_spec (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_ENTRY
 		local
 			tb_id: NATURAL_32
@@ -380,8 +390,8 @@ feature -- Metadata
 		do
 			if attached blob_heap_item (idx) as blob then
 				if attached {PE_SIGNATURE_BLOB_INDEX} idx.associated_structure as l_sign_idx then
-					if l_sign_idx.is_type_signature then
-						create Result.make_type_from_item (blob)
+					if l_sign_idx.is_type_specification_signature then
+						create Result.make_type_specification_from_item (blob)
 					elseif l_sign_idx.is_method_signature then
 						create Result.make_method_from_item (blob)
 					elseif l_sign_idx.is_field_signature then
@@ -395,13 +405,13 @@ feature -- Metadata
 					else
 							-- Default?
 						check known_signature: False end
-						create Result.make_type_from_item (blob)
+						create Result.make_type_specification_from_item (blob)
 					end
 				else
 						-- Default?
 						-- FIXME
 					check expected: False end
-					create Result.make_type_from_item (blob)
+					create Result.make_type_specification_from_item (blob)
 				end
 			end
 		end

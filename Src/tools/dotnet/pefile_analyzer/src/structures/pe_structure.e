@@ -279,9 +279,9 @@ feature -- Element change
 			add (create {PE_BLOB_INDEX}.make (lab))
 		end
 
-	add_type_signature_blob_index (lab: STRING)
+	add_type_specification_signature_blob_index (lab: STRING)
 		do
-			add (create {PE_SIGNATURE_BLOB_INDEX}.make_type (lab))
+			add (create {PE_SIGNATURE_BLOB_INDEX}.make_type_specification (lab))
 		end
 	add_method_signature_blob_index (lab: STRING)
 		do

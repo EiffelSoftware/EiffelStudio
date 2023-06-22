@@ -151,11 +151,10 @@ feature -- Execution
 			pe: PE_FILE
 			rt: PE_MD_ROOT
 			md_tables: PE_MD_TABLES
-			o: APP_OUTPUT
+			o_dft, o: APP_OUTPUT
 			printer: PE_PRINTER
 			analyzer: PE_ANALYZER
 			explorer: PE_EXPLORER
-			l_was_opened: BOOLEAN
 		do
 			create pe.make (fn.name)
 			io.error.put_string ("Loading " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
@@ -164,6 +163,11 @@ feature -- Execution
 
 			md_tables := rt.metadata_tables (pe)
 
+			create o_dft.make (default_output)
+			if not o_dft.was_opened then
+				o_dft.open_write
+			end
+
 			if has_analyzer then
 				create analyzer.make (pe)
 				pe.accepts (analyzer)
@@ -171,37 +175,46 @@ feature -- Execution
 
 			if has_printer then
 				io.error.put_string ("Printing ...%N")
-				create o.make (printer_output)
-				l_was_opened := o.is_open_write
-				if not l_was_opened then
-					o.open_write
+				if printer_output = default_output then
+					o := o_dft
+				else
+					create o.make (printer_output)
+					if o.was_opened then
+						o.open_write
+					end
 				end
 				create printer.make (o)
 				o.put_string ("File: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
 				pe.accepts (printer)
 
-				if not l_was_opened then
+				if o /= o_dft and then not o.was_opened then
 					o.close
 				end
 			end
 
 			if has_explorer then
 				io.error.put_string ("Exploring ...%N")
-				create o.make (explorer_output)
-				l_was_opened := o.is_open_write
-				if not l_was_opened then
-					o.open_write
+				if explorer_output = default_output then
+					o := o_dft
+				else
+					create o.make (explorer_output)
+					if o.was_opened then
+						o.open_write
+					end
 				end
 				create explorer.make (o, pe)
 				o.put_string ("File: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
 				pe.accepts (explorer)
-				if not l_was_opened then
+
+				if o /= o_dft and then not o.was_opened then
 					o.close
 				end
 			end
 
+			if not o_dft.was_opened then
+				o_dft.close
+			end
 			io.error.put_string ("Completed.%N")
-
 		end
 
 end

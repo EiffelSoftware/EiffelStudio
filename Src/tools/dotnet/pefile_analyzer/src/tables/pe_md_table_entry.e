@@ -10,6 +10,8 @@ deferred class
 inherit
 	PE_VISITABLE
 
+	DEBUG_OUTPUT
+
 feature {NONE} -- Initialization
 
 	make (pe: PE_FILE)
@@ -39,6 +41,11 @@ feature -- Access
 feature -- Status report
 
 	has_token: BOOLEAN = True
+
+	debug_output: STRING
+		do
+			Result := token.to_hex_string + " {"+ {PE_MD_TABLES}.table_name (table_id) +"}"
+		end
 
 feature -- Conversion	
 

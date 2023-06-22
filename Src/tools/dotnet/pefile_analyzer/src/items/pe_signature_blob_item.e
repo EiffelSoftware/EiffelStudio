@@ -18,7 +18,7 @@ inherit
 
 create
 --	make_from_item,
-	make_type_from_item,
+	make_type_specification_from_item,
 	make_method_from_item,
 	make_field_from_item,
 	make_locals_from_item,
@@ -30,10 +30,10 @@ convert
 
 feature {NONE} -- Initialization
 
-	make_type_from_item (a_item: PE_BLOB_ITEM)
+	make_type_specification_from_item (a_item: PE_BLOB_ITEM)
 		do
 			make_from_item (a_item)
-			kind := type_kind
+			kind := type_specification_kind
 		end
 
 	make_method_from_item (a_item: PE_BLOB_ITEM)
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			kind := method_or_locals_kind
 		end
 
-	type_kind: NATURAL_8 = 1
+	type_specification_kind: NATURAL_8 = 1
 	method_kind: NATURAL_8 = 2
 	field_kind: NATURAL_8 = 3
 	locals_kind: NATURAL_8 = 4
@@ -77,9 +77,9 @@ feature {NONE} -- Initialization
 
 feature -- Status report	
 
-	is_type_signature: BOOLEAN
+	is_type_specification_signature: BOOLEAN
 		do
-			Result := kind = type_kind
+			Result := kind = type_specification_kind
 		end
 
 	is_method_signature: BOOLEAN
@@ -102,7 +102,7 @@ feature -- Conversion
 	prefix_name: STRING_32
 		do
 			inspect kind
-			when type_kind then
+			when type_specification_kind then
 				Result := {STRING_32} "T-Sig"
 			when method_kind then
 				Result := {STRING_32} "M-Sig"
@@ -126,27 +126,29 @@ feature -- Conversion
 			k: NATURAL_8
 		do
 			if Result = Void then
-				if is_type_signature then
-					tok := uncompressed_type_token (uncompressed_data (pointer, 0, pointer.count))
-				else
-					k := pointer.read_natural_8_le (0)
-					-- DEFAULT: 0x0
-					-- VARARGS: 0x5
-					-- FIELD (FieldSig): 0x6
-					-- GENERIC: 0x10
-					tok := uncompressed_type_token (uncompressed_data (pointer, 1, pointer.count - 1))
-				end
-				if tok & 0xff00_0000 = 0xFF00_0000 then
---					Result := {STRING_32} "!" + prefix_name + "<" + dump + ">"
-					Result := {STRING_32} "<" + dump + ">"
-				elseif tok = 0x0200_0000 then
-					Result := "void"
-				else
-					Result := "0x" + tok.to_hex_string
-				end
+				-- FIXME: this code is wrong, .. review the signature decoding !!!
+--				if is_type_specification_signature then
+--					tok := uncompressed_type_token (uncompressed_data (pointer, 0, pointer.count))
+--				else
+--					k := pointer.read_natural_8_le (0)
+--					-- DEFAULT: 0x0
+--					-- VARARGS: 0x5
+--					-- FIELD (FieldSig): 0x6
+--					-- GENERIC: 0x10
+--					tok := uncompressed_type_token (uncompressed_data (pointer, 1, pointer.count - 1))
+--				end
+--				if tok & 0xff00_0000 = 0xFF00_0000 then
+----					Result := {STRING_32} "!" + prefix_name + "<" + dump + ">"
+--					Result := {STRING_32} "!!"
+--				elseif tok = 0x0200_0000 then
+--					Result := {STRING_32} "void "
+--				else
+					Result := {STRING_32} "0x" + tok.to_hex_string
+--				end
+				Result := Result + {STRING_32} " <<" + dump + ">>"
 			end
 		rescue
-			Result := prefix_name + "!<" + dump + ">"
+			Result := prefix_name + "!<<" + dump + ">>"
 			retry
 		end
 

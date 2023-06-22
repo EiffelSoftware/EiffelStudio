@@ -213,34 +213,37 @@ feature -- Visitor
 				output.indent
 				output.put_string (typedef_fullname (e))
 
-				if attached e.extends_index as l_parent_index then
+				if
+					attached e.extends_index as l_parent_index and then
+					not l_parent_index.is_null_index
+				then
 					output.put_new_line
 					output.indent
-					output.put_string (" extends ")
-					if attached {PE_TYPE_DEF_INDEX_ITEM} l_parent_index as l_parent_type_def then
-						if attached pe_file.type_def (l_parent_index) as tdef then
-							output.put_string (typedef_fullname (tdef))
+					output.put_string ("extends ")
+					output_type_index (l_parent_index)
+					output.exdent
+				end
+				if attached pe_file.interface_impl_list_for (e.token) as l_interfaces then
+					output.put_new_line
+					output.put_string ("implements ")
+					output.indent
+					across
+						l_interfaces as ic
+					loop
+						if attached ic.item as t and then not t.is_null_index then
+							output_type_index (ic.item)
+							output.put_new_line
 						end
-					elseif attached {PE_TYPE_REF_INDEX_ITEM} l_parent_index as l_parent_type_ref then
-						if attached pe_file.type_ref (l_parent_index) as tref then
-							output.put_string (typeref_fullname (tref))
-						end
-					elseif attached {PE_TYPE_SPEC_INDEX_ITEM} l_parent_index as l_parent_type_spec then
-						if attached pe_file.type_spec (l_parent_index) as tspec then
-							output.put_string ({STRING_32} "{TypeSpec#"+ l_parent_type_spec.to_string +"}")
-						end
-					else
-						check is_def_or_ref_or_spec: False end
 					end
 					output.exdent
 				end
 
-				output.put_new_line
 				if attached e.field_list as flst then
 					if
 						attached typedef_fields as lst and then
 						attached lst.indexes (e) as l_range
 					then
+						output.put_line_divider
 						output.put_string ("Fields("+ l_range.nb.out +"):%N")
 						output.indent
 						if attached pe_file.fields (flst, l_range.nb) as l_fields then
@@ -258,6 +261,7 @@ feature -- Visitor
 						attached typedef_methods as lst and then
 						attached lst.indexes (e) as l_range
 					then
+						output.put_line_divider
 						output.put_string ("Methods("+ l_range.nb.out +"):%N")
 						output.indent
 						if attached pe_file.methods (flst, l_range.nb) as l_methods then
@@ -270,8 +274,8 @@ feature -- Visitor
 						output.exdent
 					end
 				end
-
 				output.exdent
+				output.put_new_line
 				output.put_line_divider
 			end
 		end
@@ -302,6 +306,7 @@ feature -- Visitor
 			output_token (e)
 			output_attributes (e.method_attributes)
 			output.put_new_line
+			output.indent
 			if
 				attached e.name_index as str_idx and then
 				str_idx.index > 0 and then
@@ -340,6 +345,7 @@ feature -- Visitor
 			end
 			output_signature (e.signature_index)
 			output.put_new_line
+			output.exdent
 		end
 
 	visit_field (e: PE_MD_TABLE_FIELD_ENTRY)
@@ -348,6 +354,7 @@ feature -- Visitor
 			output_token (e)
 			output_attributes (e.field_attributes)
 			output.put_new_line
+			output.indent
 
 			if
 				attached e.name_index as str_idx and then
@@ -361,6 +368,7 @@ feature -- Visitor
 
 			output_signature (e.signature_index)
 			output.put_new_line
+			output.exdent
 		end
 
 	visit_param (e: PE_MD_TABLE_PARAM_ENTRY)
@@ -414,7 +422,39 @@ feature -- Visitor
 				end
 				output.put_string ("/")
 				output.put_string (s)
-				output.put_string ("/%T")
+				output.put_string ("/ ")
+			end
+		end
+
+	output_type_index (idx: PE_INDEX_ITEM)
+		local
+			err: BOOLEAN
+		do
+			if attached {PE_TYPE_DEF_INDEX_ITEM} idx as l_parent_type_def then
+				if attached pe_file.type_def (l_parent_type_def) as tdef then
+					output.put_string (typedef_fullname (tdef))
+				else
+					err := True
+				end
+			elseif attached {PE_TYPE_REF_INDEX_ITEM} idx as l_parent_type_ref then
+				if attached pe_file.type_ref (l_parent_type_ref) as tref then
+					output.put_string (typeref_fullname (tref))
+				else
+					err := True
+				end
+			elseif attached {PE_TYPE_SPEC_INDEX_ITEM} idx as l_parent_type_spec then
+				if attached pe_file.type_spec (l_parent_type_spec) as tspec then
+					output.put_string ({STRING_32} "{TypeSpec#"+ l_parent_type_spec.to_string +"}")
+				else
+					err := True
+				end
+			else
+				err := True
+				check is_def_or_ref_or_spec: False end
+			end
+			if err then
+				check is_found: False end
+				output.put_string ("/* ERROR missing type ["+ idx.to_string +"] */")
 			end
 		end
 

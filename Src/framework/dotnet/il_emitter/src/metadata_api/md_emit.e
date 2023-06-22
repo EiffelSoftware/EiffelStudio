@@ -1174,9 +1174,7 @@ feature -- Definition: Creation
 				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data (
 						{PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_tuple.table_row_index, l_semantics
 					)
-				debug
-					l_unused_token := add_table_entry (l_table)
-				end
+				l_unused_token := add_table_entry (l_table)
 			end
 
 			l_tuple := extract_table_type_and_row (type_token)

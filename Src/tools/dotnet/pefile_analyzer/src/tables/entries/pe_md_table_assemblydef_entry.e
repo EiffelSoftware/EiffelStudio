@@ -20,7 +20,7 @@ feature -- Access
 			struct.add_natural_16 ("MinorVersion")
 			struct.add_natural_16 ("BuildNumber")
 			struct.add_natural_16 ("RevisionNumber")
-			struct.add_flags_32 ("Flags")
+			struct.add_flags_32 ("Flags") -- AssemblyFlags
 			struct.add_blob_index ("PublicKey")
 			struct.add_string_index ("Name")
 			struct.add_string_index ("Culture")

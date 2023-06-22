@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 		do
 			create struct.make (5, "ExportedType")
 			structure := struct
-			struct.add_flags_32 ("Flags")
+			struct.add_type_attributes ("Flags")
 			struct.add_type_def_index ("TypeDefId")
 			struct.add_string_index ("Name")
 			struct.add_string_index ("Namespace")

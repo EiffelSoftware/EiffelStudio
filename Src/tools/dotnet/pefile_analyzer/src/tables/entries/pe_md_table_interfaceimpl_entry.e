@@ -22,9 +22,14 @@ feature -- Access
 feature -- Access
 
 	class_index: detachable PE_TYPE_DEF_INDEX_ITEM
+		local
+			i: PE_ITEM
 		do
-			if attached {like class_index} structure.item ("Class") as i then
-				Result := i
+			i := structure.index_item ("Class")
+			if attached {PE_TYPE_DEF_INDEX_ITEM} i as t then
+				Result := t
+			else
+				check is_typedef_or_void: i = Void end
 			end
 		end
 

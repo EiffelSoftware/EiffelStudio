@@ -15,16 +15,34 @@ feature {NONE} -- Initialization
 		do
 			create struct.make (3, "Property")
 			structure := struct
-			struct.add_flags_16 ("Flags")
+			struct.add_property_attributes ("Flags")
 			struct.add_string_index ("Name")
-			struct.add_blob_index ("Type")
+			struct.add_property_signature_blob_index ("Type")
 		end
 
 feature -- Access
 
+	property_attributes: detachable PE_PROPERTY_ATTRIBUTES_ITEM
+		do
+			if attached {PE_PROPERTY_ATTRIBUTES_ITEM} structure.item ("Flags") as ta then
+				Result := ta
+			else
+				check False end
+			end
+		end
+
 	name_index: detachable PE_INDEX_ITEM
 		do
 			Result := structure.index_item ("Name")
+		end
+
+	type_signature_index: detachable PE_BLOB_INDEX_ITEM
+		do
+			if attached {like type_signature_index} structure.item ("Type") as i then
+				Result := i
+			else
+				check False end
+			end
 		end
 
 feature -- Access

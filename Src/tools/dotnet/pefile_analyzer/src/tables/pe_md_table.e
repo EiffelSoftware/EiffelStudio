@@ -35,6 +35,27 @@ feature -- Access
 			Result := entries.count
 		end
 
+	entry_list (idx: PE_INDEX_ITEM; nb: NATURAL_32): LIST [G]
+		local
+			i, n: NATURAL_32
+		do
+			create {ARRAYED_LIST [G]} Result.make (nb.to_integer_32)
+			from
+				n := nb
+				i := idx.index
+			until
+				n = 0
+			loop
+				if valid_index (i) and then attached entry (i) as item then
+					Result.force (item)
+				end
+				i := i + 1
+				n := n - 1
+			end
+		ensure
+			Result.count = nb.to_integer_32
+		end
+
 	count: INTEGER
 
 	table_id: NATURAL_32

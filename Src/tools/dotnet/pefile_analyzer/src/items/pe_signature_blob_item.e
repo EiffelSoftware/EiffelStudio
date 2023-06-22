@@ -21,6 +21,7 @@ create
 	make_type_specification_from_item,
 	make_method_from_item,
 	make_field_from_item,
+	make_property_from_item,
 	make_locals_from_item,
 	make_field_or_method_from_item,
 	make_method_or_locals_from_item
@@ -48,6 +49,12 @@ feature {NONE} -- Initialization
 			kind := field_kind
 		end
 
+	make_property_from_item (a_item: PE_BLOB_ITEM)
+		do
+			make_from_item (a_item)
+			kind := property_kind
+		end
+
 	make_locals_from_item (a_item: PE_BLOB_ITEM)
 		do
 			make_from_item (a_item)
@@ -72,6 +79,7 @@ feature {NONE} -- Initialization
 	locals_kind: NATURAL_8 = 4
 	field_or_method_kind: NATURAL_8 = 5
 	method_or_locals_kind: NATURAL_8 = 6
+	property_kind: NATURAL_8 = 7
 
 	kind: NATURAL_8
 
@@ -92,6 +100,11 @@ feature -- Status report
 			Result := kind = field_kind
 		end
 
+	is_property_signature: BOOLEAN
+		do
+			Result := kind = property_kind
+		end
+
 	is_field_or_method_signature: BOOLEAN
 		do
 			Result := kind = field_or_method_kind
@@ -108,6 +121,8 @@ feature -- Conversion
 				Result := {STRING_32} "M-Sig"
 			when field_kind then
 				Result := {STRING_32} "F-Sig"
+			when property_kind then
+				Result := {STRING_32} "P-Sig"
 			when locals_kind then
 				Result := {STRING_32} "L-Sig"
 			when field_or_method_kind then
@@ -143,9 +158,9 @@ feature -- Conversion
 --				elseif tok = 0x0200_0000 then
 --					Result := {STRING_32} "void "
 --				else
-					Result := {STRING_32} "0x" + tok.to_hex_string
+--					Result := {STRING_32} "0x" + tok.to_hex_string
 --				end
-				Result := Result + {STRING_32} " <<" + dump + ">>"
+				Result := {STRING_32} " <<" + dump + ">>"
 			end
 		rescue
 			Result := prefix_name + "!<<" + dump + ">>"

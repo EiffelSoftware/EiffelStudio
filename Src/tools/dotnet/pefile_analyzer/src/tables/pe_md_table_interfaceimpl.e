@@ -14,6 +14,8 @@ feature -- Access
 			create Result.make (pe)
 		end
 
+feature -- Access		
+
 	interfaces (a_class_token: NATURAL_32): ARRAYED_LIST [PE_INDEX_ITEM]
 		local
 			l_cl_idx: NATURAL_32

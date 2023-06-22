@@ -81,6 +81,20 @@ feature -- Item
 			end
 		end
 
+	typespec_table: detachable PE_MD_TABLE_TYPESPEC
+		do
+			if attached {like typespec_table} item ({PE_TABLES}.ttypespec) as tb then
+				Result := tb
+			end
+		end
+
+	typeref_table: detachable PE_MD_TABLE_TYPEREF
+		do
+			if attached {like typeref_table} item ({PE_TABLES}.ttyperef) as tb then
+				Result := tb
+			end
+		end
+
 	methoddef_table: detachable PE_MD_TABLE_METHODDEF
 		do
 			if attached {like methoddef_table} item ({PE_TABLES}.tmethoddef) as tb then
@@ -88,9 +102,58 @@ feature -- Item
 			end
 		end
 
+	methodspec_table: detachable PE_MD_TABLE_METHODSPEC
+		do
+			if attached {like methodspec_table} item ({PE_TABLES}.tmethodspec) as tb then
+				Result := tb
+			end
+		end
+
+	member_ref_table: detachable PE_MD_TABLE_MEMBERREF
+		do
+			if attached {like member_ref_table} item ({PE_TABLES}.tmemberref) as tb then
+				Result := tb
+			end
+		end
+
+	field_table: detachable PE_MD_TABLE_FIELD
+		do
+			if attached {like field_table} item ({PE_TABLES}.tfield) as tb then
+				Result := tb
+			end
+		end
+
+	property_table: detachable PE_MD_TABLE_PROPERTY
+		do
+			if attached {like property_table} item ({PE_TABLES}.tproperty) as tb then
+				Result := tb
+			end
+		end
+
+	param_table: detachable PE_MD_TABLE_PARAM
+		do
+			if attached {like param_table} item ({PE_TABLES}.tparam) as tb then
+				Result := tb
+			end
+		end
+
+	event_table: detachable PE_MD_TABLE_EVENT
+		do
+			if attached {like event_table} item ({PE_TABLES}.tevent) as tb then
+				Result := tb
+			end
+		end
+
 	interfaceimpl_table: detachable PE_MD_TABLE_INTERFACEIMPL
 		do
 			if attached {like interfaceimpl_table} item ({PE_TABLES}.tinterfaceimpl) as tb then
+				Result := tb
+			end
+		end
+
+	propertymap_table: detachable PE_MD_TABLE_PROPERTYMAP
+		do
+			if attached {like propertymap_table} item ({PE_TABLES}.tpropertymap) as tb then
 				Result := tb
 			end
 		end

@@ -63,6 +63,9 @@ feature -- Visitor
 			if attached o.methoddef_table as mtb then
 				visit_methoddef_table (mtb)
 			end
+			if attached o.propertymap_table as pmtb then
+				visit_propertymap_table (pmtb)
+			end
 
 			if attached o.typedef_table as ttb then
 				visit_typedef_table (ttb)
@@ -86,7 +89,7 @@ feature -- Visitor
 
 	visit_typedef_table (o: PE_MD_TABLE_TYPEDEF)
 		local
-			tdef: PE_MD_TABLE_TYPEDEF_ENTRY
+			e: PE_MD_TABLE_TYPEDEF_ENTRY
 			i,n: INTEGER
 			methods: MD_INDEX_LIST [PE_MD_TABLE_TYPEDEF]
 			fields: MD_INDEX_LIST [PE_MD_TABLE_TYPEDEF]
@@ -100,12 +103,12 @@ feature -- Visitor
 			across
 				o.entries as ic
 			loop
-				tdef := ic.item
-				if attached tdef.method_list as idx then
-					methods.force (idx.index, idx.index, tdef)
+				e := ic.item
+				if attached e.method_list as idx then
+					methods.force (idx.index, idx.index, e)
 				end
-				if attached tdef.field_list as idx then
-					fields.force (idx.index, idx.index, tdef)
+				if attached e.field_list as idx then
+					fields.force (idx.index, idx.index, e)
 				end
 				i := i + 1
 			end
@@ -118,8 +121,8 @@ feature -- Visitor
 			across
 				o.entries as ic
 			loop
-				tdef := ic.item
-				visit_typedef_entry (tdef)
+				e := ic.item
+				visit_typedef_entry (e)
 			end
 		end
 
@@ -127,24 +130,48 @@ feature -- Visitor
 
 	visit_methoddef_table (o: PE_MD_TABLE_METHODDEF)
 		local
-			mdef: PE_MD_TABLE_METHODDEF_ENTRY
+			e: PE_MD_TABLE_METHODDEF_ENTRY
 			i,n: INTEGER
-			params: like methoddef_params
+			lst: like methoddef_params
 		do
 			i := 1
-			create params.make (o.entries.count)
-			methoddef_params := params
+			create lst.make (o.entries.count)
+			methoddef_params := lst
 
 			across
 				o.entries as ic
 			loop
-				mdef := ic.item
-				if attached mdef.param_list as idx then
-					params.force (idx.index, idx.index, mdef)
+				e := ic.item
+				if attached e.param_list as idx then
+					lst.force (idx.index, idx.index, e)
 				end
 				i := i + 1
 			end
-			params.update
+			lst.update
+		end
+
+	propertymap_properties: detachable MD_INDEX_LIST [PE_MD_TABLE_PROPERTYMAP]
+
+	visit_propertymap_table (o: PE_MD_TABLE_PROPERTYMAP)
+		local
+			e: PE_MD_TABLE_PROPERTYMAP_ENTRY
+			i,n: INTEGER
+			lst: like propertymap_properties
+		do
+			i := 1
+			create lst.make (o.entries.count)
+			propertymap_properties := lst
+
+			across
+				o.entries as ic
+			loop
+				e := ic.item
+				if attached e.property_list as idx then
+					lst.force (idx.index, idx.index, e)
+				end
+				i := i + 1
+			end
+			lst.update
 		end
 
 	typedef_fullname (e: PE_MD_TABLE_TYPEDEF_ENTRY): STRING_32
@@ -274,6 +301,31 @@ feature -- Visitor
 						output.exdent
 					end
 				end
+				if attached pe_file.propertymap_list_for (e.token) as l_propmap_list then
+					across
+						l_propmap_list as ic
+					loop
+						if
+							attached ic.item as propmap and then
+							attached propmap.property_list as plst and then
+							attached propertymap_properties as lst and then
+							attached lst.indexes (propmap) as l_range
+						then
+							output.put_line_divider
+							output.put_string ("Properties("+ l_range.nb.out +"):%N")
+							output.indent
+							if attached pe_file.properties (plst, l_range.nb) as l_properties then
+								across
+									l_properties as m_ic
+								loop
+									m_ic.item.accepts (Current)
+								end
+							end
+							output.exdent
+						end
+					end
+				end
+
 				output.exdent
 				output.put_new_line
 				output.put_line_divider
@@ -394,9 +446,26 @@ feature -- Visitor
 			end
 		end
 
-	visit_property (o: PE_MD_TABLE_PROPERTY_ENTRY)
+	visit_property (e: PE_MD_TABLE_PROPERTY_ENTRY)
 		do
---			output.put_string (o.to_string + "%N")
+--			output.put_string (e.to_string + "%N")
+			output_token (e)
+
+			output_attributes (e.property_attributes)
+			output.indent
+			if
+				attached e.name_index as str_idx and then
+				str_idx.index > 0 and then
+				attached pe_file.string_heap_item (str_idx) as str
+			then
+				output.put_string (str.to_string_32)
+			else
+				output.put_string ("?")
+			end
+
+			output_signature (e.type_signature_index)
+			output.put_new_line
+			output.exdent
 		end
 
 	visit_event (o: PE_MD_TABLE_EVENT_ENTRY)

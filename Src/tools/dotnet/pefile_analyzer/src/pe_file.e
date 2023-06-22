@@ -161,228 +161,139 @@ feature -- Metadata
 			end
 		end
 
-	type_def_or_ref_or_spec (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_ENTRY
-		local
-			tb_id: NATURAL_32
-			i: NATURAL_32
+	propertymap_list_for (a_class_token: NATURAL_32): detachable LIST [PE_MD_TABLE_PROPERTYMAP_ENTRY]
 		do
-			tb_id := {PE_TABLES}.ttypedef
-			i := idx.index
-			if
-				attached {PE_MD_TABLE_TYPEDEF} metadata_tables [tb_id] as tb and then
-				tb.valid_index (i)
-			then
-				Result := tb [i]
+			if attached metadata_tables.propertymap_table as tb then
+				Result := tb.propertymap_list_for_type_def (a_class_token)
+				if Result.is_empty then
+					Result := Void
+				end
 			end
 		end
 
 	type_def (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_TYPEDEF_ENTRY
-		local
-			tb_id: NATURAL_32
-			i: NATURAL_32
 		do
-			tb_id := {PE_TABLES}.ttypedef
-			i := idx.index
 			if
-				attached {PE_MD_TABLE_TYPEDEF} metadata_tables [tb_id] as tb and then
-				tb.valid_index (i)
+				attached metadata_tables.typedef_table as tb and then
+				tb.valid_index (idx.index)
 			then
-				Result := tb [i]
+				Result := tb [idx.index]
 			end
 		end
 
 	type_ref (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_TYPEREF_ENTRY
-		local
-			tb_id: NATURAL_32
-			i: NATURAL_32
 		do
-			tb_id := {PE_TABLES}.ttyperef
-			i := idx.index
 			if
-				attached {PE_MD_TABLE_TYPEREF} metadata_tables [tb_id] as tb and then
-				tb.valid_index (i)
+				attached metadata_tables.typeref_table as tb and then
+				tb.valid_index (idx.index)
 			then
-				Result := tb [i]
+				Result := tb [idx.index]
 			end
 		end
 
 	type_spec (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_TYPESPEC_ENTRY
-		local
-			tb_id: NATURAL_32
-			i: NATURAL_32
 		do
-			tb_id := {PE_TABLES}.ttypespec
-			i := idx.index
 			if
-				attached {PE_MD_TABLE_TYPESPEC} metadata_tables [tb_id] as tb and then
-				tb.valid_index (i)
+				attached metadata_tables.typespec_table as tb and then
+				tb.valid_index (idx.index)
 			then
-				Result := tb [i]
+				Result := tb [idx.index]
 			end
 		end
 
 	method_def (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_METHODDEF_ENTRY
-		local
-			tb_id: NATURAL_32
-			i: NATURAL_32
 		do
-			tb_id := {PE_TABLES}.tmethoddef
-			i := idx.index
 			if
-				attached {PE_MD_TABLE_METHODDEF} metadata_tables [tb_id] as tb and then
-				tb.valid_index (i)
+				attached metadata_tables.methoddef_table as tb and then
+				tb.valid_index (idx.index)
 			then
-				Result := tb [i]
+				Result := tb [idx.index]
 			end
 		end
 
 	method_spec (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_METHODSPEC_ENTRY
-		local
-			tb_id: NATURAL_32
-			i: NATURAL_32
 		do
-			tb_id := {PE_TABLES}.tmethodspec
-			i := idx.index
 			if
-				attached {PE_MD_TABLE_METHODSPEC} metadata_tables [tb_id] as tb and then
-				tb.valid_index (i)
+				attached metadata_tables.methodspec_table as tb and then
+				tb.valid_index (idx.index)
 			then
-				Result := tb [i]
+				Result := tb [idx.index]
 			end
 		end
 
 	member_ref (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_MEMBERREF_ENTRY
-		local
-			tb_id: NATURAL_32
-			i: NATURAL_32
 		do
-			tb_id := {PE_TABLES}.tmemberref
-			i := idx.index
 			if
-				attached {PE_MD_TABLE_MEMBERREF} metadata_tables [tb_id] as tb and then
-				tb.valid_index (i)
+				attached metadata_tables.member_ref_table as tb and then
+				tb.valid_index (idx.index)
 			then
-				Result := tb [i]
+				Result := tb [idx.index]
 			end
 		end
 
 	field (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_FIELD_ENTRY
-		local
-			tb_id: NATURAL_32
-			i: NATURAL_32
 		do
-			tb_id := {PE_TABLES}.tfield
-			i := idx.index
 			if
-				attached {PE_MD_TABLE_FIELD} metadata_tables [tb_id] as tb and then
-				tb.valid_index (i)
+				attached metadata_tables.field_table as tb and then
+				tb.valid_index (idx.index)
 			then
-				Result := tb [i]
+				Result := tb [idx.index]
 			end
 		end
 
-	fields (idx: PE_INDEX_ITEM; nb: NATURAL_32): ARRAYED_LIST [PE_MD_TABLE_FIELD_ENTRY]
-		local
-			tb_id: NATURAL_32
-			i, n: NATURAL_32
+	fields (idx: PE_INDEX_ITEM; nb: NATURAL_32): detachable LIST [PE_MD_TABLE_FIELD_ENTRY]
 		do
-			create Result.make (nb.to_integer_32)
-			tb_id := {PE_TABLES}.tfield
-			if attached {PE_MD_TABLE_FIELD} metadata_tables [tb_id] as tb then
-				from
-					n := nb
-					i := idx.index
-				until
-					n = 0
-				loop
-					if tb.valid_index (i) and then attached tb [i] as item then
-						Result.force (item)
-					end
-					i := i + 1
-					n := n - 1
-				end
+			if attached metadata_tables.field_table as tb then
+				Result := tb.entry_list (idx, nb)
 			end
 		ensure
-			Result.count = nb.to_integer_32
+			Result = Void or else Result.count = nb.to_integer_32
 		end
 
-	methods (idx: PE_INDEX_ITEM; nb: NATURAL_32): ARRAYED_LIST [PE_MD_TABLE_METHODDEF_ENTRY]
-		local
-			tb_id: NATURAL_32
-			i, n: NATURAL_32
+	properties (idx: PE_INDEX_ITEM; nb: NATURAL_32): detachable LIST [PE_MD_TABLE_PROPERTY_ENTRY]
 		do
-			create Result.make (nb.to_integer_32)
-			tb_id := {PE_TABLES}.tmethoddef
-			if attached {PE_MD_TABLE_METHODDEF} metadata_tables [tb_id] as tb then
-				from
-					n := nb
-					i := idx.index
-				until
-					n = 0
-				loop
-					if tb.valid_index (i) and then attached tb [i] as item then
-						Result.force (item)
-					end
-					i := i + 1
-					n := n - 1
-				end
+			if attached metadata_tables.property_table as tb then
+				Result := tb.entry_list (idx, nb)
 			end
 		ensure
-			Result.count = nb.to_integer_32
+			Result = Void or else Result.count = nb.to_integer_32
 		end
 
-	params (idx: PE_INDEX_ITEM; nb: NATURAL_32): ARRAYED_LIST [PE_MD_TABLE_PARAM_ENTRY]
-		local
-			tb_id: NATURAL_32
-			i, n: NATURAL_32
+	methods (idx: PE_INDEX_ITEM; nb: NATURAL_32): detachable LIST [PE_MD_TABLE_METHODDEF_ENTRY]
 		do
-			create Result.make (nb.to_integer_32)
-			tb_id := {PE_TABLES}.tparam
-			if attached {PE_MD_TABLE_PARAM} metadata_tables [tb_id] as tb then
-				from
-					n := nb
-					i := idx.index
-				until
-					n = 0
-				loop
-					if tb.valid_index (i) and then attached tb [i] as item then
-						Result.force (item)
-					end
-					i := i + 1
-					n := n - 1
-				end
+			if attached metadata_tables.methoddef_table as tb then
+				Result := tb.entry_list (idx, nb)
 			end
 		ensure
-			Result.count = nb.to_integer_32
+			Result = Void or else Result.count = nb.to_integer_32
+		end
+
+	params (idx: PE_INDEX_ITEM; nb: NATURAL_32): detachable LIST [PE_MD_TABLE_PARAM_ENTRY]
+		do
+			if attached metadata_tables.param_table as tb then
+				Result := tb.entry_list (idx, nb)
+			end
+		ensure
+			Result = Void or else Result.count = nb.to_integer_32
 		end
 
 	param (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_PARAM_ENTRY
-		local
-			tb_id: NATURAL_32
-			i: NATURAL_32
 		do
-			tb_id := {PE_TABLES}.tparam
-			i := idx.index
 			if
-				attached {PE_MD_TABLE_PARAM} metadata_tables [tb_id] as tb and then
-				tb.valid_index (i)
+				attached metadata_tables.param_table as tb and then
+				tb.valid_index (idx.index)
 			then
-				Result := tb [i]
+				Result := tb [idx.index]
 			end
 		end
 
 	event (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_EVENT_ENTRY
-		local
-			tb_id: NATURAL_32
-			i: NATURAL_32
 		do
-			tb_id := {PE_TABLES}.tevent
-			i := idx.index
 			if
-				attached {PE_MD_TABLE_EVENT} metadata_tables [tb_id] as tb and then
-				tb.valid_index (i)
+				attached metadata_tables.event_table as tb and then
+				tb.valid_index (idx.index)
 			then
-				Result := tb [i]
+				Result := tb [idx.index]
 			end
 		end
 
@@ -402,6 +313,8 @@ feature -- Metadata
 						create Result.make_field_or_method_from_item (blob)
 					elseif l_sign_idx.is_method_or_locals_signature then
 						create Result.make_method_or_locals_from_item (blob)
+					elseif l_sign_idx.is_property_signature then
+						create Result.make_property_from_item (blob)
 					else
 							-- Default?
 						check known_signature: False end

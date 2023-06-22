@@ -13,7 +13,8 @@ create
 	make_field,
 	make_field_or_method,
 	make_method_or_locals,
-	make_locals
+	make_locals,
+	make_property
 
 feature {NONE} -- Initialization
 
@@ -53,6 +54,12 @@ feature {NONE} -- Initialization
 			kind := locals_kind
 		end
 
+	make_property (lab: like label)
+		do
+			make (lab)
+			kind := property_kind
+		end
+
 	kind: NATURAL_8
 
 feature -- Constant
@@ -63,6 +70,7 @@ feature -- Constant
 	locals_kind: NATURAL_8 = 4
 	method_or_locals_kind: NATURAL_8 = 5
 	field_or_method_kind: NATURAL_8 = 6
+	property_kind: NATURAL_8 = 7
 
 feature -- Status report	
 
@@ -79,6 +87,11 @@ feature -- Status report
 	is_field_signature: BOOLEAN
 		do
 			Result := kind = field_kind
+		end
+
+	is_property_signature: BOOLEAN
+		do
+			Result := kind = property_kind
 		end
 
 	is_locals_signature: BOOLEAN

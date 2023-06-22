@@ -32,10 +32,12 @@ feature -- Access
 
 	type_attributes: detachable PE_TYPE_ATTRIBUTES_ITEM
 		do
-			if attached {PE_TYPE_ATTRIBUTES_ITEM} structure.item ("Flags") as ta then
-				Result := ta
-			else
-				check False end
+			if attached structure.item ("Flags") as i then
+				if attached {like type_attributes} i as v then
+					Result := v
+				else
+					check is_type_attribute: False end
+				end
 			end
 		end
 
@@ -49,14 +51,26 @@ feature -- Access
 			Result := structure.index_item ("Namespace")
 		end
 
-	field_list: detachable PE_INDEX_ITEM
+	field_list: detachable PE_FIELD_INDEX_ITEM
 		do
-			Result := structure.index_item ("FieldList")
+			if attached structure.index_item ("FieldList") as i then
+				if attached {like field_list} i as v then
+					Result := v
+				else
+					check is_field_list: False end
+				end
+			end
 		end
 
-	method_list: detachable PE_INDEX_ITEM
+	method_list: detachable PE_METHOD_DEF_INDEX_ITEM
 		do
-			Result := structure.index_item ("MethodList")
+			if attached structure.index_item ("MethodList") as i then
+				if attached {like method_list} i as v then
+					Result := v
+				else
+					check is_method_list: False end
+				end
+			end
 		end
 
 feature -- Access

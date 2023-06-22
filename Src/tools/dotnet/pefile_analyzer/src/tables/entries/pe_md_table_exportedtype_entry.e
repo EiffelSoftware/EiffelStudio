@@ -22,6 +22,20 @@ feature {NONE} -- Initialization
 			struct.add_index ("Implementation")
 		end
 
+feature -- Access		
+
+	typedefid_index: detachable PE_TYPE_DEF_INDEX_ITEM
+		local
+			i: PE_ITEM
+		do
+			i := structure.index_item ("TypeDefId")
+			if attached {PE_TYPE_DEF_INDEX_ITEM} i as t then
+				Result := t
+			else
+				check is_typedef_or_void: i = Void end
+			end
+		end
+
 feature -- Access
 
 	table_id: NATURAL_32

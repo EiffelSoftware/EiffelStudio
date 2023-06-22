@@ -264,6 +264,11 @@ feature -- Element change
 			add (create {PE_PARAM_ATTRIBUTES}.make (lab))
 		end
 
+	add_property_attributes (lab: STRING)
+		do
+			add (create {PE_PROPERTY_ATTRIBUTES}.make (lab))
+		end
+
 	add_string_index (lab: STRING)
 		do
 			add (create {PE_STRING_INDEX}.make (lab))
@@ -302,6 +307,10 @@ feature -- Element change
 	add_locals_signature_blob_index (lab: STRING)
 		do
 			add (create {PE_SIGNATURE_BLOB_INDEX}.make_locals (lab))
+		end
+	add_property_signature_blob_index (lab: STRING)
+		do
+			add (create {PE_SIGNATURE_BLOB_INDEX}.make_property (lab))
 		end
 
 	add_guid_index (lab: STRING)

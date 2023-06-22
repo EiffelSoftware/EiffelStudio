@@ -61,7 +61,7 @@ feature {MD_EMIT_BRIDGE} -- Change tables
 		require
 			valid_entry_table_index: tables.valid_index (a_entry.table_index.to_integer_32)
 		local
-			l_table_id: INTEGER
+			l_table_id: NATURAL_32
 			l_md_table: MD_TABLE
 		do
 			l_table_id := a_entry.table_index

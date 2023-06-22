@@ -254,6 +254,11 @@ feature -- Element change
 			add (create {PE_METHOD_ATTRIBUTES}.make (lab))
 		end
 
+	add_method_semantics_attributes (lab: STRING)
+		do
+			add (create {PE_METHOD_SEMANTICS_ATTRIBUTES}.make (lab))
+		end
+
 	add_method_impl_attributes (lab: STRING)
 		do
 			add (create {PE_METHOD_IMPL_ATTRIBUTES}.make (lab))

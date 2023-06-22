@@ -61,11 +61,11 @@ feature {MD_EMIT_BRIDGE} -- Change tables
 		require
 			valid_entry_table_index: tables.valid_index (a_entry.table_index.to_integer_32)
 		local
-			n: INTEGER
+			l_table_id: INTEGER
 			l_md_table: MD_TABLE
 		do
-			n := a_entry.table_index.to_integer_32
-			l_md_table := tables [n]
+			l_table_id := a_entry.table_index
+			l_md_table := tables [l_table_id.to_integer_32]
 
 			inspect a_entry.table_index
 			when
@@ -93,7 +93,7 @@ feature {MD_EMIT_BRIDGE} -- Change tables
 				l_md_table.force (a_entry)
 				Result := l_md_table.size
 			end
-			Result := (n |<< 24).to_natural_32 | Result
+			Result := (l_table_id |<< 24) | Result
 		ensure
 			entry_added: a_entry.token_from_table (tables [a_entry.table_index.to_integer_32]) > 0
 		end

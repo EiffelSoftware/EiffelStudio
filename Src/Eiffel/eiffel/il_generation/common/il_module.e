@@ -3304,7 +3304,6 @@ feature {NONE} -- Once per modules being generated.
 			is_generated: is_generated
 		local
 			l_ass_info: MD_ASSEMBLY_INFO
-			l_pub_key: MD_PUBLIC_KEY_TOKEN
 			l_sig: like field_sig
 			l_meth_sig: like method_sig
 			l_ise_eiffel_name_attr_token: INTEGER
@@ -3317,22 +3316,32 @@ feature {NONE} -- Once per modules being generated.
 		do
 				-- Define `ise_runtime_token'.
 			l_ass_info := md_factory.assembly_info
-			l_ass_info.set_major_version (7)
-			l_ass_info.set_minor_version (3)
-			l_ass_info.set_build_number (9)
-			l_ass_info.set_revision_number (2490)
+			if system.is_il_netcore then
+				l_ass_info.major_version 	:= {IL_PREDEFINED_CONSTANTS}.eiffel_runtime_netcore_info.major_version
+				l_ass_info.minor_version	:= {IL_PREDEFINED_CONSTANTS}.eiffel_runtime_netcore_info.minor_version
+				l_ass_info.build_number		:= {IL_PREDEFINED_CONSTANTS}.eiffel_runtime_netcore_info.build_number
+				l_ass_info.revision_number	:= {IL_PREDEFINED_CONSTANTS}.eiffel_runtime_netcore_info.revision_number
+			else
+				l_ass_info.major_version 	:= {IL_PREDEFINED_CONSTANTS}.eiffel_runtime_framework_info.major_version
+				l_ass_info.minor_version 	:= {IL_PREDEFINED_CONSTANTS}.eiffel_runtime_framework_info.minor_version
+				l_ass_info.build_number 	:= {IL_PREDEFINED_CONSTANTS}.eiffel_runtime_framework_info.build_number
+				l_ass_info.revision_number 	:= {IL_PREDEFINED_CONSTANTS}.eiffel_runtime_framework_info.revision_number
+			end
 
-			create l_pub_key.make_from_array (
-				{ARRAY [NATURAL_8]} <<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)
-
-			ise_runtime_token := define_assembly_reference (runtime_namespace, l_ass_info.string, "",
-					{STRING_32} "def26f296efef469"
+			ise_runtime_token := define_assembly_reference (
+					runtime_namespace, l_ass_info.string, "",
+					{IL_PREDEFINED_CONSTANTS}.eiffel_runtime_public_key_string
 				)
---			ise_runtime_token := md_emit.define_assembly_ref (create {CLI_STRING}.make (runtime_class_name), l_ass_info, l_pub_key)
-			ise_runtime_type_token := md_emit.define_type_ref (create {CLI_STRING}.make (runtime_class_name), ise_runtime_token)
+
+			ise_runtime_type_token := md_emit.define_type_ref (
+					create {CLI_STRING}.make (runtime_class_name),
+					ise_runtime_token
+				)
 
 			ise_exception_manager_type_token := md_emit.define_type_ref (
-				create {CLI_STRING}.make (exception_manager_interface_name), ise_runtime_token)
+					create {CLI_STRING}.make (exception_manager_interface_name),
+					ise_runtime_token
+				)
 
 			ise_rt_extension_type_token := md_emit.define_type_ref (
 				create {CLI_STRING}.make (rt_extension_interface_name), ise_runtime_token)

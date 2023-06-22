@@ -67,14 +67,14 @@ feature {NONE}
 		local
 			l_type_def: PE_TYPEDEF_OR_REF
 			l_table: PE_TYPE_DEF_TABLE_ENTRY
-			pe_index: NATURAL_32
+			l_unused_token: NATURAL_32
 		do
 				-- initializes the necessary metadata tables for the module and type definition entries.
 			module_index := pe_writer.hash_string ({STRING_32} "<Module>")
 
 			create l_type_def.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
 			create l_table.make_with_uninitialized_field_and_method (0, module_index, 0, l_type_def)
-			pe_index := add_table_entry (l_table)
+			l_unused_token := add_table_entry (l_table)
 		end
 
 	initialize_guid
@@ -796,11 +796,11 @@ feature -- Settings
 		local
 			l_name_index: NATURAL_32
 			l_entry: PE_TABLE_ENTRY_BASE
-			pe_index: NATURAL_32
+			l_unused_token: NATURAL_32
 		do
 			l_name_index := pe_writer.hash_string (a_name.string_32)
 			create {PE_MODULE_TABLE_ENTRY} l_entry.make_with_data (l_name_index, guid_index)
-			pe_index := add_table_entry (l_entry)
+			l_unused_token := add_table_entry (l_entry)
 		end
 
 	set_method_rva (method_token, rva: INTEGER)
@@ -1135,7 +1135,7 @@ feature -- Definition: Creation
 			l_semantics: PE_SEMANTICS
 			l_table: PE_TABLE_ENTRY_BASE
 			l_tuple: like extract_table_type_and_row
-			l_property_index, l_unused_pe_index: NATURAL_32
+			l_property_index, l_unused_token: NATURAL_32
 		do
 			debug ("il_emitter_table")
 				print ({STRING_32} "Property: type=" + type_token.to_hex_string + " name="+ name.string_32 + " .. ")
@@ -1166,7 +1166,7 @@ feature -- Definition: Creation
 				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data (
 						{PE_METHOD_SEMANTICS_TABLE_ENTRY}.getter.to_natural_16, l_tuple.table_row_index, l_semantics
 					)
-				l_unused_pe_index := add_table_entry (l_table)
+				l_unused_token := add_table_entry (l_table)
 			end
 
 			if setter_token /= 0 then
@@ -1174,12 +1174,14 @@ feature -- Definition: Creation
 				create {PE_METHOD_SEMANTICS_TABLE_ENTRY} l_table.make_with_data (
 						{PE_METHOD_SEMANTICS_TABLE_ENTRY}.setter.to_natural_16, l_tuple.table_row_index, l_semantics
 					)
-				l_unused_pe_index := add_table_entry (l_table)
+				debug
+					l_unused_token := add_table_entry (l_table)
+				end
 			end
 
 			l_tuple := extract_table_type_and_row (type_token)
 			create {PE_PROPERTY_MAP_TABLE_ENTRY} l_table.make_with_data (l_tuple.table_row_index, l_property_index)
-			l_unused_pe_index := add_table_entry (l_table)
+			l_unused_token := add_table_entry (l_table)
 		end
 
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;
@@ -1190,7 +1192,7 @@ feature -- Definition: Creation
 			l_name_index: NATURAL_32
 			l_impl_map_entry: PE_IMPL_MAP_TABLE_ENTRY
 			l_tuple_method: like extract_table_type_and_row
-			pe_index: NATURAL_32
+			l_unused_token: NATURAL_32
 		do
 			l_tuple_method := extract_table_type_and_row (method_token)
 
@@ -1204,7 +1206,7 @@ feature -- Definition: Creation
 			create l_impl_map_entry.make_with_data (mapping_flags.to_integer_16, l_member_forwarded, l_name_index, module_ref.to_natural_32)
 
 				-- Add the PE_IMPL_MAP_TABLE_ENTRY instance to the table
-			pe_index := add_table_entry (l_impl_map_entry)
+			l_unused_token := add_table_entry (l_impl_map_entry)
 		end
 
 	define_parameter (in_method_token: INTEGER; param_name: CLI_STRING;
@@ -1270,7 +1272,7 @@ feature -- Definition: Creation
 			l_tuple: like extract_table_type_and_row
 			l_parent: PE_FIELD_MARSHAL
 			l_index_native_type: NATURAL_32
-			pe_index: NATURAL_32
+			l_unused_token: NATURAL_32
 		do
 				-- Extract the table type and row index from `a_token`.
 			l_tuple := extract_table_type_and_row (a_token)
@@ -1285,7 +1287,7 @@ feature -- Definition: Creation
 			create l_entry.make_with_data (l_parent, l_index_native_type)
 
 				-- Add the new `PE_FIELD_MARSHAL_TABLE_ENTRY` instance to the metadata tables.
-			pe_index := add_table_entry (l_entry)
+			l_unused_token := add_table_entry (l_entry)
 		end
 
 	define_field (field_name: CLI_STRING; in_class_token: INTEGER; field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER

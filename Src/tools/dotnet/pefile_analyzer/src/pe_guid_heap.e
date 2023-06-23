@@ -35,6 +35,16 @@ feature -- Access
 
 	item: detachable PE_GUID_ITEM
 
+	valid_index (i: NATURAL_32): BOOLEAN
+		do
+			Result := i = 0
+		end
+
+	guid_item alias "[]" (i: NATURAL_32): like item
+		do
+			Result := item
+		end
+
 	count: INTEGER
 
 feature -- Visit

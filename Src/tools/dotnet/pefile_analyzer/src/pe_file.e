@@ -201,6 +201,46 @@ feature -- Metadata
 			end
 		end
 
+	module (idx: PE_MODULE_INDEX_ITEM): detachable PE_MD_TABLE_MODULE_ENTRY
+		do
+			if
+				attached {PE_MD_TABLE_MODULE} metadata_tables [{PE_TABLES}.tmodule] as tb and then
+				tb.valid_index (idx.index)
+			then
+				Result := tb [idx.index]
+			end
+		end
+
+	moduleref (idx: PE_MODULE_REF_INDEX_ITEM): detachable PE_MD_TABLE_MODULEREF_ENTRY
+		do
+			if
+				attached {PE_MD_TABLE_MODULEREF} metadata_tables [{PE_TABLES}.tmoduleref] as tb and then
+				tb.valid_index (idx.index)
+			then
+				Result := tb [idx.index]
+			end
+		end
+
+	assembly (idx: PE_ASSEMBLY_INDEX_ITEM): detachable PE_MD_TABLE_ASSEMBLYDEF_ENTRY
+		do
+			if
+				attached {PE_MD_TABLE_ASSEMBLYDEF} metadata_tables [{PE_TABLES}.tassemblydef] as tb and then
+				tb.valid_index (idx.index)
+			then
+				Result := tb [idx.index]
+			end
+		end
+
+	assemblyref (idx: PE_ASSEMBLY_REF_INDEX_ITEM): detachable PE_MD_TABLE_ASSEMBLYREF_ENTRY
+		do
+			if
+				attached {PE_MD_TABLE_ASSEMBLYREF} metadata_tables [{PE_TABLES}.tassemblyref] as tb and then
+				tb.valid_index (idx.index)
+			then
+				Result := tb [idx.index]
+			end
+		end
+
 	method_def (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_METHODDEF_ENTRY
 		do
 			if
@@ -388,6 +428,20 @@ feature -- Metadata
 				attached h [i] as str
 			then
 				Result := str.string_32
+			end
+		end
+
+	guid_heap_item (idx: PE_GUID_INDEX_ITEM): detachable PE_GUID_ITEM
+		local
+			i: NATURAL_32
+		do
+			i := idx.index
+			if
+				attached metadata_guid_heap as h and then
+				h.valid_index (i) and then
+				attached h [i] as g
+			then
+				Result := g
 			end
 		end
 
@@ -637,6 +691,15 @@ feature -- Read item
 			e := file.position.to_natural_32
 		end
 
+	read_rva_item (lab: like {PE_ITEM}.label): PE_RVA_ITEM
+		local
+			b,e: NATURAL_32
+		do
+			b := file.position.to_natural_32
+			create Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
+			e := file.position.to_natural_32
+		end
+
 	read_natural_32_item (lab: like {PE_ITEM}.label): PE_NATURAL_32_ITEM
 		local
 			b,e: NATURAL_32
@@ -723,9 +786,9 @@ feature -- PE MD reader
 			Result := is_table_using_4_bytes ({PE_TABLES}.ttypespec)
 		end
 
-	read_rva (lab: like {PE_ITEM}.label): PE_NATURAL_32_ITEM
+	read_rva (lab: like {PE_ITEM}.label): PE_RVA_ITEM
 		do
-			Result := read_natural_32_item (lab)
+			Result := read_rva_item (lab)
 		end
 
 	read_flags_16 (lab: like {PE_ITEM}.label): PE_INTEGER_16_ITEM
@@ -761,15 +824,15 @@ feature -- PE MD reader
 			e := file.position.to_natural_32
 		end
 
-	read_guid_index (lab: like {PE_ITEM}.label): PE_INDEX_ITEM
+	read_guid_index (lab: like {PE_ITEM}.label): PE_GUID_INDEX_ITEM
 		local
 			b,e: NATURAL_32
 		do
 			b := file.position.to_natural_32
 			if is_guid_heap_using_4_bytes then
-				create {PE_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
+				create {PE_GUID_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
 			else
-				create {PE_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
+				create {PE_GUID_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
 			end
 			e := file.position.to_natural_32
 		end

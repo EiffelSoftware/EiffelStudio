@@ -92,7 +92,7 @@ feature -- Visitor
 				if o.tables [i] /= Void then
 					output.put_string (
 						i.to_natural_8.to_hex_string + "."
-						+ o.table_name (i.to_natural_32)
+						+ o.table_name (i.to_natural_8)
 						+ "(" + o.tables_counts[i].out + ") ")
 				end
 				i := i + 1

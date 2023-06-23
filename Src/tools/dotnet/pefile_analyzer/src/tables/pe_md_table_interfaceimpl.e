@@ -19,9 +19,9 @@ feature -- Access
 	interfaces (a_class_token: NATURAL_32): ARRAYED_LIST [PE_INDEX_ITEM]
 		local
 			l_cl_idx: NATURAL_32
-			l_tb_idx: NATURAL_32
+			l_tb_idx: NATURAL_8
 		do
-			l_tb_idx := a_class_token |>> 24
+			l_tb_idx := (a_class_token |>> 24).to_natural_8
 			check is_typedef_token: l_tb_idx = {PE_TABLES}.ttypedef end
 			l_cl_idx := a_class_token & 0x00FF_FFFF
 			create Result.make (0)

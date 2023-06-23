@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	table_id: NATURAL_32
+	table_id: NATURAL_8
 		deferred
 		ensure
 			{PE_TABLES}.valid (Result)

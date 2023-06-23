@@ -738,7 +738,7 @@ feature -- Read item
 
 feature -- PE MD reader
 
-	is_table_using_4_bytes (tb: NATURAL_32): BOOLEAN
+	is_table_using_4_bytes (tb: NATURAL_8): BOOLEAN
 		do
 			--TODO
 		end

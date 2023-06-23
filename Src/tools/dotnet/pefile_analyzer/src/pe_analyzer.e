@@ -50,7 +50,7 @@ feature -- Visitor
 
 	tables_count: detachable HASH_TABLE [NATURAL_32, NATURAL_32]
 
-	table_count (tb_id: NATURAL_32): NATURAL_32
+	table_count (tb_id: NATURAL_8): NATURAL_32
 		do
 			if attached tables_count as ht then
 				Result := ht [tb_id]

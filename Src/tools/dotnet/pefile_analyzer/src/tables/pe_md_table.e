@@ -58,7 +58,7 @@ feature -- Access
 
 	count: INTEGER
 
-	table_id: NATURAL_32
+	table_id: NATURAL_8
 
 	is_error: BOOLEAN
 			-- False by default
@@ -91,7 +91,7 @@ feature -- Read
 			loop
 				if attached read_entry (pe) as e then
 					entries.force (e)
-					tok := (table_id |<< 24) | i.to_natural_32
+					tok := (table_id.to_natural_32 |<< 24) | i.to_natural_32
 					e.set_token (tok)
 				else
 					check is_error end

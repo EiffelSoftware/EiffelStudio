@@ -53,7 +53,7 @@ feature -- Visitor
 	has_field_pointer_table: BOOLEAN
 	has_method_pointer_table: BOOLEAN
 
-	table_count (tb_id: NATURAL_32): NATURAL_32
+	table_count (tb_id: NATURAL_8): NATURAL_32
 		do
 			if attached tables_count as ht then
 				Result := ht [tb_id]

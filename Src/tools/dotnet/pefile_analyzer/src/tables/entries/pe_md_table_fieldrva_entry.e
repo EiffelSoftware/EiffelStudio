@@ -16,7 +16,7 @@ feature -- Access
 
 feature -- Access
 
-	table_id: NATURAL_32
+	table_id: NATURAL_8
 		once
 			Result := {PE_TABLES}.tfieldrva
 		end

@@ -46,7 +46,7 @@ feature -- Initialization
 			until
 				i > l_upper
 			loop
-				if is_table_included (i.to_natural_32, bin) then
+				if is_table_included (i.to_natural_8, bin) then
 					l_tb_counts[i] := pe.read_natural_32_item ("Size").value
 				end
 				i := i + 1
@@ -58,10 +58,10 @@ feature -- Initialization
 			until
 				i > l_upper or last_read_table_error
 			loop
-				if is_table_included (i.to_natural_32, bin) then
-					s := table_name (i.to_natural_32)
+				if is_table_included (i.to_natural_8, bin) then
+					s := table_name (i.to_natural_8)
 					n32 := l_tb_counts [i]
-					tables[i] := read_table (Current, pe, i.to_natural_32, n32)
+					tables[i] := read_table (Current, pe, i.to_natural_8, n32)
 				end
 				i := i + 1
 			end
@@ -178,22 +178,22 @@ feature -- Access
 
 feature -- Helpers
 
-	max_table_id: NATURAL_32
+	max_table_id: NATURAL_8
 		do
 			Result := {PE_TABLES}.tGenericParamConstraint
 		end
 
-	is_table_included (tb: NATURAL_32; bin: STRING_8): BOOLEAN
+	is_table_included (tb: NATURAL_8; bin: STRING_8): BOOLEAN
 		do
 			Result := bin [bin.count - tb.to_integer_32] = '1'
 		end
 
-	table_size (tb: NATURAL_32): NATURAL_32
+	table_size (tb: NATURAL_8): NATURAL_32
 		do
 			Result := tables_counts [tb.to_integer_32]
 		end
 
-	table_name (tb: NATURAL_32): STRING
+	table_name (tb: NATURAL_8): STRING
 		do
 			inspect tb
 			when {PE_TABLES}.tModule then Result := "Module"
@@ -241,7 +241,7 @@ feature -- Helpers
 			class
 		end
 
-	read_table (a_tables: PE_MD_TABLES; pe: PE_FILE; tb: NATURAL_32; nb: NATURAL_32): detachable PE_MD_TABLE [PE_MD_TABLE_ENTRY]
+	read_table (a_tables: PE_MD_TABLES; pe: PE_FILE; tb: NATURAL_8; nb: NATURAL_32): detachable PE_MD_TABLE [PE_MD_TABLE_ENTRY]
 		do
 			if last_read_table_error then
 				create {PE_MD_TABLE_ERROR} Result.make (a_tables, pe, tb, nb)

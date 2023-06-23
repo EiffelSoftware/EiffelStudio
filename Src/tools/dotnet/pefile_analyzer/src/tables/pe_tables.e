@@ -11,105 +11,105 @@ class
 
 feature -- Creation Procedures
 
-	tModule: NATURAL_32 = 0
+	tModule: NATURAL_8 = 0
 			-- Assembly def
 
-	tTypeRef: NATURAL_32 = 1
+	tTypeRef: NATURAL_8 = 1
 			-- References to other assemblies
 
-	tTypeDef: NATURAL_32 = 2
+	tTypeDef: NATURAL_8 = 2
 			-- definitions of classes and enumerations
 
-	tFieldPointer: NATURAL_32 = 3
+	tFieldPointer: NATURAL_8 = 3
 			-- UNDOCUMENTED
 
-	tField: NATURAL_32 = 4
+	tField: NATURAL_8 = 4
 			-- definitions of fields
 
 
-	tMethodPointer: NATURAL_32 = 5
+	tMethodPointer: NATURAL_8 = 5
 			-- UNDOCUMENTED			
 
-	tMethodDef: NATURAL_32 = 6
+	tMethodDef: NATURAL_8 = 6
 			-- definitions of methods once end includes both managed and unmanaged
 
-	tParam: NATURAL_32 = 8
+	tParam: NATURAL_8 = 8
 			-- definitions of parameters
 
-	tInterfaceImpl: NATURAL_32 = 9
+	tInterfaceImpl: NATURAL_8 = 9
 
-	tMemberRef: NATURAL_32 = 10
+	tMemberRef: NATURAL_8 = 10
 			-- references to external methods once end also the call site references for vararg-style pinvokes
 
-	tConstant: NATURAL_32 = 11
+	tConstant: NATURAL_8 = 11
 			-- initialization constants once end we use them for enumerations but that is about it
 
-	tCustomAttribute: NATURAL_32 = 12
+	tCustomAttribute: NATURAL_8 = 12
 			-- custom attributes once end we use it for C# style varargs but nothing else
 
-	tFieldMarshal: NATURAL_32 = 13
+	tFieldMarshal: NATURAL_8 = 13
 
-	tDeclSecurity: NATURAL_32 = 14
+	tDeclSecurity: NATURAL_8 = 14
 			-- we don't use it
 
-	tClassLayout: NATURAL_32 = 15
+	tClassLayout: NATURAL_8 = 15
 			-- size once end packing for classes
 
-	tFieldLayout: NATURAL_32 = 16
+	tFieldLayout: NATURAL_8 = 16
 			-- field offsets once end we don't use it
 
-	tStandaloneSig: NATURAL_32 = 17
+	tStandaloneSig: NATURAL_8 = 17
 			--?? we don't use it
 
-	tEventMap: NATURAL_32 = 18
+	tEventMap: NATURAL_8 = 18
 
-	tEvent: NATURAL_32 = 20
+	tEvent: NATURAL_8 = 20
 
-	tPropertyMap: NATURAL_32 = 21
+	tPropertyMap: NATURAL_8 = 21
 
-	tProperty: NATURAL_32 = 23
+	tProperty: NATURAL_8 = 23
 
-	tMethodSemantics: NATURAL_32 = 24
+	tMethodSemantics: NATURAL_8 = 24
 
-	tMethodImpl: NATURAL_32 = 25
+	tMethodImpl: NATURAL_8 = 25
 
-	tModuleRef: NATURAL_32 = 26
+	tModuleRef: NATURAL_8 = 26
 			--?? we don't use it
 
-	tTypeSpec: NATURAL_32 = 27
+	tTypeSpec: NATURAL_8 = 27
 			-- we use it for referenced types not found in the typedef table
 
-	tImplMap: NATURAL_32 = 28
+	tImplMap: NATURAL_8 = 28
 			-- pinvoke DLL information
 
-	tFieldRVA: NATURAL_32 = 29
+	tFieldRVA: NATURAL_8 = 29
 			-- cildata RVAs for field initialized data
 
-	tAssemblyDef: NATURAL_32 = 32
+	tAssemblyDef: NATURAL_8 = 32
 			-- our main assembly
 			-- 0x20
 
-	tAssemblyRef: NATURAL_32 = 35
+	tAssemblyRef: NATURAL_8 = 35
 			-- any external assemblies
 
-	tFile: NATURAL_32 = 38
+	tFile: NATURAL_8 = 38
 
-	tExportedType: NATURAL_32 = 39
+	tExportedType: NATURAL_8 = 39
 
-	tManifestResource: NATURAL_32 = 40
+	tManifestResource: NATURAL_8 = 40
 
-	tNestedClass: NATURAL_32 = 41
+	tNestedClass: NATURAL_8 = 41
 			-- list of nested classes and their parents
 
-	tGenericParam: NATURAL_32 = 42
+	tGenericParam: NATURAL_8 = 42
 
-	tMethodSpec: NATURAL_32 = 43
+	tMethodSpec: NATURAL_8 = 43
 
-	tGenericParamConstraint: NATURAL_32 = 44
+	tGenericParamConstraint: NATURAL_8 = 44
 
 feature -- Instances
 
-	valid (id: NATURAL_32): BOOLEAN
+	valid (id: NATURAL_8): BOOLEAN
 		do
 			inspect id
 			when

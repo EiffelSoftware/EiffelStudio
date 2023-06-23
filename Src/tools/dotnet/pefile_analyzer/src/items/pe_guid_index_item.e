@@ -10,6 +10,5 @@ deferred class
 inherit
 	PE_INDEX_ITEM
 
-feature -- Access
 
 end

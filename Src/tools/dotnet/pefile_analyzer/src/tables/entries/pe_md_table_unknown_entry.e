@@ -16,9 +16,9 @@ feature -- Access
 
 feature -- Access
 
-	table_id: NATURAL_32
+	table_id: NATURAL_8
 		once
-			Result := {NATURAL_32}.max_value
+			Result := {NATURAL_8}.max_value
 		end
 
 end

@@ -20,4 +20,10 @@ feature -- Access
 			Result := {PE_TABLES}.tfield
 		end
 
+feature -- Resolver
+
+	replace_index (idx: NATURAL_32)
+		deferred
+		end
+
 end

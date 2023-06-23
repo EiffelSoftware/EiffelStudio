@@ -61,7 +61,12 @@ feature -- Visitor
 		local
 			l_count: NATURAL_32
 			ht: like tables_count
+			resolver: PE_POINTER_RESOLVER
 		do
+				-- Resolve FieldPointer and MethodPointer
+			create resolver.make (pe_file)
+			pe_file.accepts (resolver)
+
 				-- Record table counts
 			create ht.make (o.tables.count)
 			tables_count := ht
@@ -128,12 +133,11 @@ feature -- Visitor
 						prev.update_index (0)
 						l_updated := True
 					end
-					if
-						attached {PE_INDEX_ITEM_WITH_TABLE} idx as idx_with_table and then
-						idx.index = table_count (idx_with_table.associated_table_id) + 1
-					then
-						idx.update_index (0)
-						l_updated := True
+					if attached {PE_INDEX_ITEM_WITH_TABLE} idx as idx_with_table then
+						if idx.index = table_count (idx_with_table.associated_table_id) + 1 then
+							idx.update_index (0)
+							l_updated := True
+						end
 					end
 					prev := idx
 				else
@@ -213,7 +217,8 @@ feature -- Visitor
 	visit_method_def_index_item (idx: PE_METHOD_DEF_INDEX_ITEM)
 		do
 			if
-				not idx.is_null_index and then idx.index /= table_count ({PE_TABLES}.tmethoddef) + 1
+				not idx.is_null_index and then
+				idx.index /= table_count ({PE_TABLES}.tmethoddef) + 1
 			then
 				if attached pe_file.method_def (idx) as m then
 					if
@@ -253,7 +258,8 @@ feature -- Visitor
 	visit_field_index_item (idx: PE_FIELD_INDEX_ITEM)
 		do
 			if
-				idx.index > 0 and then idx.index /= table_count ({PE_TABLES}.tfield) + 1
+				not idx.is_null_index and then
+				idx.index /= table_count ({PE_TABLES}.tfield) + 1
 			then
 				if attached pe_file.field (idx) as f then
 					if

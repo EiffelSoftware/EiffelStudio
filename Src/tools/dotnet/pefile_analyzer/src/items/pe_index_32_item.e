@@ -60,5 +60,4 @@ feature -- Element change
 
 	original_value: like value
 
-
 end

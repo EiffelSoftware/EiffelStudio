@@ -15,7 +15,20 @@ feature -- Access
 		do
 			create struct.make (1, "FieldPointer")
 			structure := struct
-			struct.add_natural_16 ("?")
+			struct.add_field_index ("Field")
+		end
+
+feature -- Access
+
+	field_index: detachable PE_FIELD_INDEX_ITEM
+		do
+			if attached structure.index_item ("Field") as i then
+				if attached {like field_index} i as fidx then
+					Result := fidx
+				else
+					check False end
+				end
+			end
 		end
 
 feature -- Access

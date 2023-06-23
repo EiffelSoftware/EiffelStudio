@@ -499,6 +499,7 @@ feature -- Visitor
 		local
 			err: BOOLEAN
 		do
+			output.put_string (idx.to_string + " ")
 			if attached {PE_TYPE_DEF_INDEX_ITEM} idx as l_parent_type_def then
 				if attached pe_file.type_def (l_parent_type_def) as tdef then
 					output.put_string (typedef_fullname (tdef))

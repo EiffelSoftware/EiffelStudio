@@ -9,9 +9,9 @@ create
 
 feature -- Read
 
-	read (pe: PE_FILE): PE_ITEM
+	read (pe: PE_FILE): PE_FIELD_INDEX_ITEM
 		do
-			Result := pe.read_field_index (label)		
+			Result := pe.read_field_index (label)
 		end
 
 end

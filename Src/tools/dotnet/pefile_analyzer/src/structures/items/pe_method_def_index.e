@@ -11,7 +11,7 @@ create
 
 feature -- Read
 
-	read (pe: PE_FILE): PE_ITEM
+	read (pe: PE_FILE): PE_METHOD_DEF_INDEX_ITEM
 		do
 			Result := pe.read_method_def_index (label)
 		end

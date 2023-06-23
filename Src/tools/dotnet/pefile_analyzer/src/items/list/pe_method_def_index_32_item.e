@@ -23,4 +23,11 @@ create
 convert
 	value: {NATURAL_32}
 
+feature -- Resolver
+
+	replace_index (idx: NATURAL_32)
+		do
+			value := idx
+		end
+
 end

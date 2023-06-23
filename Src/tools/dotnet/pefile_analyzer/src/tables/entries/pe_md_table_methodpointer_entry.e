@@ -15,7 +15,20 @@ feature -- Access
 		do
 			create struct.make (1, "MethodPointer")
 			structure := struct
-			struct.add_natural_16 ("?")
+			struct.add_method_def_index ("Method")
+		end
+
+feature -- Access
+
+	method_index: detachable PE_METHOD_DEF_INDEX_ITEM
+		do
+			if attached structure.index_item ("Method") as i then
+				if attached {like method_index} i as fidx then
+					Result := fidx
+				else
+					check False end
+				end
+			end
 		end
 
 feature -- Access

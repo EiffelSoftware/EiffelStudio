@@ -211,6 +211,16 @@ feature -- Metadata
 			end
 		end
 
+	methodpointer (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_METHODPOINTER_ENTRY
+		do
+			if
+				attached {PE_MD_TABLE_METHODPOINTER} metadata_tables[{PE_TABLES}.tmethodpointer] as tb and then
+				tb.valid_index (idx.index)
+			then
+				Result := tb [idx.index]
+			end
+		end
+
 	method_spec (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_METHODSPEC_ENTRY
 		do
 			if
@@ -235,6 +245,16 @@ feature -- Metadata
 		do
 			if
 				attached metadata_tables.field_table as tb and then
+				tb.valid_index (idx.index)
+			then
+				Result := tb [idx.index]
+			end
+		end
+
+	fieldpointer (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_FIELDPOINTER_ENTRY
+		do
+			if
+				attached {PE_MD_TABLE_FIELDPOINTER} metadata_tables[{PE_TABLES}.tfieldpointer] as tb and then
 				tb.valid_index (idx.index)
 			then
 				Result := tb [idx.index]

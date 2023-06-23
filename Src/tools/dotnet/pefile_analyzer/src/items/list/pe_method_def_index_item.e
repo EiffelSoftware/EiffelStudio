@@ -11,4 +11,10 @@ deferred class
 inherit
 	PE_INDEX_ITEM
 
+feature -- Resolver
+
+	replace_index (idx: NATURAL_32)
+		deferred
+		end
+
 end

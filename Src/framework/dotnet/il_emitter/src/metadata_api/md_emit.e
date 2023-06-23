@@ -380,13 +380,23 @@ feature -- Save
 	prepare_to_save
 			-- Prepare data to be save
 		local
+			max_field_idx, max_meth_idx, max_param_idx: NATURAL_32
 			field_idx, meth_idx, param_idx: NATURAL_32
 			l_missing_field_index_entries: ARRAYED_LIST [PE_TYPE_DEF_TABLE_ENTRY]
 			l_missing_method_index_entries: ARRAYED_LIST [PE_TYPE_DEF_TABLE_ENTRY]
 			l_missing_param_index_entries: ARRAYED_LIST [PE_METHOD_DEF_TABLE_ENTRY]
 		do
 			Precursor
-				-- Update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)			
+				-- Update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)	
+			if attached md_table ({PE_TABLES}.tmethoddef) as tb then
+				max_meth_idx := tb.next_index
+			end
+			if attached md_table ({PE_TABLES}.tfield) as tb then
+				max_field_idx := tb.next_index
+			end
+			if attached md_table ({PE_TABLES}.tparam) as tb then
+				max_param_idx := tb.next_index
+			end
 
 				-- TypeDef table
 			if attached md_table ({PE_TABLES}.ttypedef) as typedef_tb then
@@ -437,7 +447,7 @@ feature -- Save
 					across
 						l_missing_field_index_entries as t
 					loop
-						t.set_field_list_index (field_idx + 1)
+						t.set_field_list_index (max_field_idx)
 					end
 					l_missing_field_index_entries := Void
 				end
@@ -445,7 +455,7 @@ feature -- Save
 					across
 						l_missing_method_index_entries as t
 					loop
-						t.set_method_list_index (meth_idx + 1)
+						t.set_method_list_index (max_meth_idx)
 					end
 					l_missing_method_index_entries := Void
 				end
@@ -482,7 +492,7 @@ feature -- Save
 					across
 						l_missing_param_index_entries as t
 					loop
-						t.set_param_list_index (param_idx + 1)
+						t.set_param_list_index (max_param_idx)
 					end
 					l_missing_param_index_entries := Void
 				end

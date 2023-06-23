@@ -95,7 +95,11 @@ feature -- Conversion
 					Result.append (pad)
 				end
 			end
-			Result.append (last_column_separator)
+			if last_column_separator.is_empty then
+				Result.right_adjust
+			else
+				Result.append (last_column_separator)
+			end
 		end
 
 feature -- Constants

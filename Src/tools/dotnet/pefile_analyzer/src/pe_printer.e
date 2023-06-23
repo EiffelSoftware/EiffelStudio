@@ -108,22 +108,28 @@ feature -- Visitor
 		local
 			i: INTEGER
 			ptb: PE_PRINTER_TABLE
+			row: PE_PRINTER_TABLE_ROW
 		do
 			output.put_string ("[Table " + o.tables.table_name (o.table_id)+ " " + o.table_id.to_natural_8.to_hex_string +"]("+ o.count.out +")"
 								+ " 0x"+ short_hex_string (o.address.to_hex_string)
 								+ "%N")
 
 --			output.indent
-			if
-				not o.entries.is_empty  and then
-				attached o.entries.first as e
-			then
-				output.put_string ("# Columns: " + e.description + "%N")
-			end
 			table_entry_index := 0
 
 			create ptb.make (0, o.count)
 			last_printer_table := ptb
+			if
+				not o.entries.is_empty  and then
+				attached o.entries.first as e and then
+				attached e.description_as_array as desc_arr
+			then
+				create row.make (desc_arr.count)
+				row.put_string ("#")
+				row.put_string_array (desc_arr)
+				ptb.add (row)
+--				output.put_string ("# Columns: " + e.description + "%N")
+			end
 			Precursor (o)
 			across
 				ptb.rows as ic

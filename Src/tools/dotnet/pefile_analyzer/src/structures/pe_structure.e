@@ -222,13 +222,14 @@ feature -- Conversion
 		local
 			i,n: INTEGER
 		do
-			create Result.make (0, structure_items.count)
-			Result [0] := "Columns"
+			create Result.make_filled (empty_string, 1, structure_items.count)
+--			Result [0] := "Columns"
 			i := 1
 			across
 				structure_items as ic
 			loop
 				Result [i] := ic.item.label
+				i := i + 1
 			end
 		end
 

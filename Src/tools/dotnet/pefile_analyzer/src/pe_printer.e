@@ -102,13 +102,17 @@ feature -- Visitor
 			Precursor (o)
 		end
 
+	last_printer_table: detachable PE_PRINTER_TABLE
+
 	visit_table (o: PE_MD_TABLE [PE_MD_TABLE_ENTRY])
 		local
 			i: INTEGER
+			ptb: PE_PRINTER_TABLE
 		do
 			output.put_string ("[Table " + o.tables.table_name (o.table_id)+ " " + o.table_id.to_natural_8.to_hex_string +"]("+ o.count.out +")"
 								+ " 0x"+ short_hex_string (o.address.to_hex_string)
 								+ "%N")
+
 --			output.indent
 			if
 				not o.entries.is_empty  and then
@@ -117,8 +121,22 @@ feature -- Visitor
 				output.put_string ("# Columns: " + e.description + "%N")
 			end
 			table_entry_index := 0
+
+			create ptb.make (0, o.count)
+			last_printer_table := ptb
 			Precursor (o)
+			across
+				ptb.rows as ic
+			loop
+				if attached ic.item as l_row then
+					output.put_string (ptb.row_as_string (l_row))
+					output.put_new_line
+				end
+			end
+			last_printer_table := Void
+
 --			output.exdent
+
 			output.put_line_divider
 			output.flush
 		end
@@ -126,20 +144,43 @@ feature -- Visitor
 	table_entry_index: INTEGER
 
 	visit_table_entry (o: PE_MD_TABLE_ENTRY)
+		local
+			row: PE_PRINTER_TABLE_ROW
 		do
 			table_entry_index := table_entry_index + 1
-			output.put_string ("[0x" + o.token.to_hex_string + " #" + table_entry_index.out +"] ")
-			output.put_string (o.to_string)
-			output.put_new_line
-			if o.has_error then
-				across
-					o.errors as err_ic
-				loop
-					output.put_string (" => ERROR: ")
-					output.put_string (err_ic.item.to_string)
-					output.put_new_line
+			if
+				attached last_printer_table as ptb and then
+				attached o.to_string_array as arr
+			then
+				create row.make (arr.count)
+				row.put_string_array (o.to_string_array)
+				row[1] := {STRING_32} "[0x" + o.token.to_hex_string + " #" + table_entry_index.out +"] " + row [1]
+				ptb.add (row)
+				if o.has_error then
+					across
+						o.errors as err_ic
+					loop
+						create row.make (2)
+						row.put_string (" => ERROR: ")
+						row.put_string (err_ic.item.to_string)
+						ptb.add (row)
+					end
+				end
+			else
+				output.put_string ("[0x" + o.token.to_hex_string + " #" + table_entry_index.out +"] ")
+				output.put_string (o.to_string)
+				output.put_new_line
+				if o.has_error then
+					across
+						o.errors as err_ic
+					loop
+						output.put_string (" => ERROR: ")
+						output.put_string (err_ic.item.to_string)
+						output.put_new_line
+					end
 				end
 			end
+
 			Precursor (o)
 		end
 

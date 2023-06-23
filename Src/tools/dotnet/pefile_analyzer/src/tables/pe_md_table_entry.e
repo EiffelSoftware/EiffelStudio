@@ -36,6 +36,11 @@ feature -- Access
 			Result := "No Information"
 		end
 
+	description_as_array: ARRAY [READABLE_STRING_GENERAL]
+		do
+			Result := <<"No Information">>
+		end
+
 	token: NATURAL_32
 
 feature -- Status report
@@ -48,6 +53,11 @@ feature -- Status report
 		end
 
 feature -- Conversion	
+
+	to_string_array: ARRAY [like to_string]
+		do
+			Result := <<to_string>>
+		end
 
 	to_string: STRING_32
 		do

@@ -107,6 +107,8 @@ feature -- Constants
 	first_column_separator: STRING = "%T"
 	last_column_separator: STRING = "" -- %T|"
 
+	empty_string: STRING_32 = ""
+
 feature -- Read
 
 	read (pe: PE_FILE)
@@ -173,6 +175,21 @@ feature -- Conversion
 			Result.append (last_column_separator)
 		end
 
+	to_string_array: ARRAY [like to_string]
+		local
+			i,n: INTEGER
+		do
+			create Result.make_filled (empty_string, 0, structure_items.count)
+			Result [0] := {STRING_32} "{"+ label +"}"
+			i := 1
+			across
+				items as ic
+			loop
+				Result [i] := item_to_string (ic.item)
+				i := i + 1
+			end
+		end
+
 	item_to_string (i: PE_ITEM): STRING_32
 		do
 			Result := i.to_string
@@ -199,6 +216,20 @@ feature -- Conversion
 				Result.append (ic.item.dump)
 			end
 			Result.append (last_column_separator)
+		end
+
+	description_as_array: ARRAY [READABLE_STRING_GENERAL]
+		local
+			i,n: INTEGER
+		do
+			create Result.make (0, structure_items.count)
+			Result [0] := "Columns"
+			i := 1
+			across
+				structure_items as ic
+			loop
+				Result [i] := ic.item.label
+			end
 		end
 
 	description: STRING_8

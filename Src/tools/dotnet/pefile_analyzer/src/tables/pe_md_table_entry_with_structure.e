@@ -12,8 +12,8 @@ inherit
 		redefine
 			make,
 			dump,
-			to_string,
-			description,
+			to_string, to_string_array,
+			description, description_as_array,
 			has_error,
 			errors
 		end
@@ -51,6 +51,11 @@ feature -- Access
 
 feature -- Display
 
+	to_string_array: ARRAY [like to_string]
+		do
+			Result := structure.to_string_array
+		end
+
 	to_string: STRING_32
 		do
 			Result := structure.to_string
@@ -59,6 +64,11 @@ feature -- Display
 	to_link_string: STRING_32
 		do
 			Result := {STRING_32} "{" + structure.label + "}"
+		end
+
+	description_as_array: ARRAY [READABLE_STRING_GENERAL]
+		do
+			Result := structure.description_as_array
 		end
 
 	description: STRING_8

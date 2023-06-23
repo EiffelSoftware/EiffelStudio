@@ -489,9 +489,9 @@ feature -- Visitor
 				if s.ends_with (" ") then
 					s.remove_tail (1)
 				end
-				output.put_string ("/")
+				output.put_string ("[")
 				output.put_string (s)
-				output.put_string ("/ ")
+				output.put_string ("] ")
 			end
 		end
 

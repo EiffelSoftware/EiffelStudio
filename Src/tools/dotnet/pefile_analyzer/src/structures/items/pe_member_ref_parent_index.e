@@ -9,18 +9,18 @@ create
 
 feature -- Read
 
-	read (pe: PE_FILE): PE_ITEM
+	read (pe: PE_FILE): PE_INDEX_ITEM
 		do
-			Result := pe.read_member_ref_parent_index (label, Current)
+			Result := pe.read_memberref_parent_index (label, Current)
 		end
 
-feature -- Constants
+feature -- Access
 
-	typedef: NATURAL_32 = 0
-	typeref: NATURAL_32 = 1
-	moduleref: NATURAL_32 = 2
-	methoddef: NATURAL_32 = 3
-	typespec: NATURAL_32 = 4
+	typedef: NATURAL_8 = 0
+	typeref: NATURAL_8 = 1
+	moduleref: NATURAL_8 = 2
+	moduledef: NATURAL_8 = 3
+	typespec: NATURAL_8 = 4
 
 	tagbit: INTEGER = 3
 

@@ -61,11 +61,7 @@ feature -- Visitor
 		local
 			l_count: NATURAL_32
 			ht: like tables_count
-			resolver: PE_POINTER_RESOLVER
 		do
-				-- Resolve FieldPointer and MethodPointer
-			create resolver.make (pe_file)
-			pe_file.accepts (resolver)
 
 				-- Record table counts
 			create ht.make (o.tables.count)

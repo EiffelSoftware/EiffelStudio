@@ -355,6 +355,11 @@ feature -- Element change
 			add (create {PE_GUID_INDEX}.make (lab))
 		end
 
+	add_memberref_parent_index (lab: STRING)
+		do
+			add (create {PE_MEMBER_REF_PARENT_INDEX}.make (lab))
+		end
+
 	add_type_def_index (lab: STRING)
 		do
 			add (create {PE_TYPE_DEF_INDEX}.make (lab))

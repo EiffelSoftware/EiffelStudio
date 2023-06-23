@@ -15,7 +15,7 @@ feature -- Access
 		do
 			create struct.make (3, "MemberRef")
 			structure := struct
-			struct.add_index ("Class")
+			struct.add_memberref_parent_index ("Class")
 				--Class (an index into the MethodDef, ModuleRef,TypeDef, TypeRef, or TypeSpec
 				--tables; more precisely, a MemberRefParent (§II.24.2.6) coded index
 

@@ -96,6 +96,10 @@ feature {NONE} -- Initialization
 				print ("%T --help                 : display this help%N")
 				print ("%N")
 			else
+				if not has_analyzer then
+					has_explorer := False
+				end
+
 				if o_printer /= Void then
 					printer_output := output_file (o_printer)
 				end
@@ -155,6 +159,7 @@ feature -- Execution
 			printer: PE_PRINTER
 			analyzer: PE_ANALYZER
 			explorer: PE_EXPLORER
+			resolver: PE_POINTER_RESOLVER
 		do
 			create pe.make (fn.name)
 			io.error.put_string ("Loading " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
@@ -169,6 +174,10 @@ feature -- Execution
 			end
 
 			if has_analyzer then
+					-- Resolve FieldPointer and MethodPointer
+				create resolver.make (pe)
+				pe.accepts (resolver)
+
 				create analyzer.make (pe)
 				pe.accepts (analyzer)
 			end

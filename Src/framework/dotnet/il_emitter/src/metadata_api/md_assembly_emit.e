@@ -151,7 +151,7 @@ feature -- Definition
 			l_implementation := create_implementation (implementation_token, l_tuple_type.table_row_index)
 
 				-- Create a new PE_EXPORTED_TYPE_TABLE_ENTRY instance with the given data
-			create l_exported_type_entry.make_with_data (type_flags.to_natural_32, l_tuple_type_def.table_type_index, l_name_index, l_namespace_index, l_implementation)
+			create l_exported_type_entry.make_with_data (type_flags.to_natural_32, l_tuple_type_def.table_row_index, l_name_index, l_namespace_index, l_implementation)
 
 			Result := add_table_entry (l_exported_type_entry).to_integer_32
 		ensure

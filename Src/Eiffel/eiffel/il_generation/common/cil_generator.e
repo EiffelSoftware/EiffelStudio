@@ -1153,10 +1153,19 @@ feature {NONE} -- File copying
 			-- Location of `Assemblies' directory in W_code or F_code depending
 			-- on compilation type `a_is_finalizing'.
 		do
-			if a_is_finalizing then
-				Result := project_location.final_assemblies_path
+			if system.is_il_netcore then
+					-- FIXME: until a solution to load assemblies from another folder, use current folder. [2023-06-23]
+				if a_is_finalizing then
+					Result := project_location.final_path
+				else
+					Result := project_location.workbench_path
+				end
 			else
-				Result := project_location.workbench_assemblies_path
+				if a_is_finalizing then
+					Result := project_location.final_assemblies_path
+				else
+					Result := project_location.workbench_assemblies_path
+				end
 			end
 		end
 

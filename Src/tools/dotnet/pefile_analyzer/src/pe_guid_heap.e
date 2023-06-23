@@ -37,7 +37,7 @@ feature -- Access
 
 	valid_index (i: NATURAL_32): BOOLEAN
 		do
-			Result := i = 0
+			Result := i = 1
 		end
 
 	guid_item alias "[]" (i: NATURAL_32): like item

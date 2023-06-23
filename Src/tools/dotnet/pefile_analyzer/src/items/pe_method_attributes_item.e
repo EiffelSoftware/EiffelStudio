@@ -44,20 +44,20 @@ feature -- Status report
 			create Result.make (0)
 			v := value.to_natural_16
 
-			if has_flag (MemberAccessMask, Private,	v) then Result.append ("Private ") end
-			if has_flag (MemberAccessMask, Family,	v) then Result.append ("Family ") end
-			if has_flag (MemberAccessMask, Public,	v) then Result.append ("Public ") end
-			if has_flag (MemberAccessMask, Static,	v) then Result.append ("Static ") end
-			if has_flag (MemberAccessMask, Final,	v) then Result.append ("Final ") end
-			if has_flag (MemberAccessMask, Virtual,	v) then Result.append ("Virtual ") end
-			if has_flag (MemberAccessMask, HideBySig,	v) then Result.append ("HideBySig ") end
+			if has_flag (MemberAccessMask, Private,	v) then add_flag_to ("Private", Result) end
+			if has_flag (MemberAccessMask, Family,	v) then add_flag_to ("Family", Result) end
+			if has_flag (MemberAccessMask, Public,	v) then add_flag_to ("Public", Result) end
+			if has_flag (MemberAccessMask, Static,	v) then add_flag_to ("Static", Result) end
+			if has_flag (MemberAccessMask, Final,	v) then add_flag_to ("Final", Result) end
+			if has_flag (MemberAccessMask, Virtual,	v) then add_flag_to ("Virtual", Result) end
+			if has_flag (MemberAccessMask, HideBySig,	v) then add_flag_to ("HideBySig", Result) end
 
---			if has_flag (VtableLayoutMask, ReuseSlot,	v) then Result.append ("ReuseSlot ") end
---			if has_flag (VtableLayoutMask, NewSlot,	v) then Result.append ("NewSlot ") end
-			if has_flag (VtableLayoutMask, Strict,	v) then Result.append ("Strict ") end
-			if has_flag (VtableLayoutMask, Abstract,	v) then Result.append ("Abstract ") end
+--			if has_flag (VtableLayoutMask, ReuseSlot,	v) then add_flag_to ("ReuseSlot", Result) end
+--			if has_flag (VtableLayoutMask, NewSlot,	v) then add_flag_to ("NewSlot", Result) end
+			if has_flag (VtableLayoutMask, Strict,	v) then add_flag_to ("Strict", Result) end
+			if has_flag (VtableLayoutMask, Abstract,	v) then add_flag_to ("Abstract", Result) end
 
-			if has_flag (0x0, SpecialName,	v) then Result.append ("SpecialName ") end
+			if has_flag (0x0, SpecialName,	v) then add_flag_to ("SpecialName", Result) end
 		end
 
 --	to_string: STRING_32

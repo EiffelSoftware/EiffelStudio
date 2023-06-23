@@ -44,10 +44,10 @@ feature -- Status report
 			create Result.make (0)
 			v := value.to_natural_16
 
-			if has_flag (0x0, SpecialName,	v) then Result.append ("SpecialName ") end
-			if has_flag (0x0, RTSpecialName,v) then Result.append ("RTSpecialName ") end
-			if has_flag (0x0, HasDefault,	v) then Result.append ("HasDefault ") end
-			if has_flag (0x0, Unused,		v) then Result.append ("Unused ") end
+			if has_flag (0x0, SpecialName,	v) then add_flag_to ("SpecialName", Result) end
+			if has_flag (0x0, RTSpecialName,v) then add_flag_to ("RTSpecialName", Result) end
+			if has_flag (0x0, HasDefault,	v) then add_flag_to ("HasDefault", Result) end
+			if has_flag (0x0, Unused,		v) then add_flag_to ("Unused", Result) end
 		end
 
 --	to_string: STRING_32

@@ -46,11 +46,11 @@ feature -- Status report
 			v := value.to_natural_16
 
 			if has_flag (FieldAccessMask, Private,	v) then Result.append ("Private") end
-			if has_flag (FieldAccessMask, Private,	v) then Result.append ("Private ") end
-			if has_flag (FieldAccessMask, Assembly,	v) then Result.append ("Assembly ") end
-			if has_flag (FieldAccessMask, Public,	v) then Result.append ("Public ") end
-			if has_flag (FieldAccessMask, Static,	v) then Result.append ("Static ") end
-			if has_flag (FieldAccessMask, Literal,	v) then Result.append ("Literal ") end
+			if has_flag (FieldAccessMask, Private,	v) then add_flag_to ("Private", Result) end
+			if has_flag (FieldAccessMask, Assembly,	v) then add_flag_to ("Assembly", Result) end
+			if has_flag (FieldAccessMask, Public,	v) then add_flag_to ("Public", Result) end
+			if has_flag (FieldAccessMask, Static,	v) then add_flag_to ("Static", Result) end
+			if has_flag (FieldAccessMask, Literal,	v) then add_flag_to ("Literal", Result) end
 		end
 
 --	to_string: STRING_32

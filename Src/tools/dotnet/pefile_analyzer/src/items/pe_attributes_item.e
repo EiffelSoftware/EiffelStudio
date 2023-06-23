@@ -13,6 +13,14 @@ feature -- Conversion
 		deferred
 		end
 
+	add_flag_to (a_flagname: READABLE_STRING_8; str: STRING_8)
+		do
+			if not str.is_empty then
+				str.append_character (' ')
+			end
+			str.append (a_flagname.as_lower)
+		end
+
 feature -- Status report		
 
 	has_flag_16 (a_mask, a_flag, a_value: NATURAL_16): BOOLEAN

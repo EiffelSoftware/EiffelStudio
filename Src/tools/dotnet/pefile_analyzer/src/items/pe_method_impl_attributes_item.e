@@ -46,7 +46,7 @@ feature -- Status report
 			v := value.to_natural_16
 
 			-- TODO ...
-			if has_flag (CodeTypeMask, IL,	v) then Result.append ("IL ") end
+			if has_flag (CodeTypeMask, IL,	v) then add_flag_to ("IL", Result) end
 		end
 
 --	to_string: STRING_32

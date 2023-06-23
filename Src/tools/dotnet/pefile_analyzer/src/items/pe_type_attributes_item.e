@@ -44,22 +44,22 @@ feature -- Status report
 			create Result.make (0)
 			v := value.to_natural_32
 
-			if has_flag (VisibilityMask, Public,	v) then Result.append ("Public ") else
-				if has_flag (VisibilityMask, NotPublic,	v) then Result.append ("NotPublic ") end
+			if has_flag (VisibilityMask, Public,	v) then add_flag_to ("Public", Result) else
+				if has_flag (VisibilityMask, NotPublic,	v) then add_flag_to ("NotPublic", Result) end
 			end
 
-			if has_flag (LayoutMask, AutoLayout,	v) then Result.append ("auto ") end
+			if has_flag (LayoutMask, AutoLayout,	v) then add_flag_to ("auto", Result) end
 
-			if has_flag (ClassSemanticsMask, Class_,	v) then Result.append ("Class ") end
-			if has_flag (ClassSemanticsMask, Interface,	v) then Result.append ("Interface ") end
+			if has_flag (ClassSemanticsMask, Class_,	v) then add_flag_to ("Class", Result) end
+			if has_flag (ClassSemanticsMask, Interface,	v) then add_flag_to ("Interface", Result) end
 
-			if has_flag (0x0, Abstract,	v) then Result.append ("Abstract ") end
-			if has_flag (0x0, Sealed,	v) then Result.append ("Sealed ") end
-			if has_flag (0x0, SpecialName,	v) then Result.append ("SpecialName ") end
+			if has_flag (0x0, Abstract,	v) then add_flag_to ("Abstract", Result) end
+			if has_flag (0x0, Sealed,	v) then add_flag_to ("Sealed", Result) end
+			if has_flag (0x0, SpecialName,	v) then add_flag_to ("SpecialName", Result) end
 
-			if has_flag (StringFormatMask, AnsiClass,	v) then Result.append ("ansi ") end
+			if has_flag (StringFormatMask, AnsiClass,	v) then add_flag_to ("ansi", Result) end
 
-			if has_flag (0x0, BeforeFieldInit,	v) then Result.append ("BeforeFieldInit ") end
+			if has_flag (0x0, BeforeFieldInit,	v) then add_flag_to ("BeforeFieldInit", Result) end
 		end
 
 --	to_string: STRING_32

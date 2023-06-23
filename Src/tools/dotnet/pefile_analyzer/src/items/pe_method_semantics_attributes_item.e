@@ -45,12 +45,12 @@ feature -- Status report
 			create Result.make (0)
 			v := value.to_natural_16
 
-			if has_flag (0x0, Setter,	v) then Result.append ("Setter ") end
-			if has_flag (0x0, Getter,	v) then Result.append ("Getter ") end
-			if has_flag (0x0, Other,	v) then Result.append ("Other ") end
-			if has_flag (0x0, AddOn,	v) then Result.append ("AddOn ") end
-			if has_flag (0x0, RemoveOn,	v) then Result.append ("RemoveOn ") end
-			if has_flag (0x0, Fire,		v) then Result.append ("Fire ") end
+			if has_flag (0x0, Setter,	v) then add_flag_to ("Setter", Result) end
+			if has_flag (0x0, Getter,	v) then add_flag_to ("Getter", Result) end
+			if has_flag (0x0, Other,	v) then add_flag_to ("Other", Result) end
+			if has_flag (0x0, AddOn,	v) then add_flag_to ("AddOn", Result) end
+			if has_flag (0x0, RemoveOn,	v) then add_flag_to ("RemoveOn", Result) end
+			if has_flag (0x0, Fire,		v) then add_flag_to ("Fire", Result) end
 		end
 
 --	to_string: STRING_32

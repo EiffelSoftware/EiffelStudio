@@ -44,12 +44,12 @@ feature -- Status report
 			create Result.make (0)
 			v := value.to_natural_16
 
-			if has_flag (0x0, In,	v) then Result.append ("In ") end
-			if has_flag (0x0, Out_,	v) then Result.append ("Out ") end
-			if has_flag (0x0, Optional,	v) then Result.append ("Optional ") end
-			if has_flag (0x0, HasDefault,	v) then Result.append ("HasDefault ") end
-			if has_flag (0x0, HasFieldMarshal,	v) then Result.append ("HasFieldMarshal ") end
-			if has_flag (0x0, Unused,	v) then Result.append ("Unused ") end
+			if has_flag (0x0, In,	v) then add_flag_to ("In", Result) end
+			if has_flag (0x0, Out_,	v) then add_flag_to ("Out", Result) end
+			if has_flag (0x0, Optional,	v) then add_flag_to ("Optional", Result) end
+			if has_flag (0x0, HasDefault,	v) then add_flag_to ("HasDefault", Result) end
+			if has_flag (0x0, HasFieldMarshal,	v) then add_flag_to ("HasFieldMarshal", Result) end
+			if has_flag (0x0, Unused,	v) then add_flag_to ("Unused", Result) end
 		end
 
 --	to_string: STRING_32

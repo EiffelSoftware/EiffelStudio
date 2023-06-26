@@ -196,10 +196,6 @@
 		</cluster>
 	</target>
 	<target name="base_dotnet" extends="base">
-		<option>
-			<warning name="obsolete_feature" value="all"/>
-		</option>
-		<setting name="msil_clr_version" value="Microsoft.NETCore.App/6.0.14"/>
 		<setting name="msil_generation" value="true"/>
 		<capability>
 			<concurrency use="thread"/>

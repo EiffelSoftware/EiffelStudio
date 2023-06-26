@@ -1372,8 +1372,18 @@ feature {NONE} -- Implementation
 			l_s := l_settings.item (s_msil_clr_version)
 			if system.il_generation then
 					-- value can't change from a precompile or in a compiled system
-				if l_s /= Void and then not equal (system.clr_runtime_version, l_s) and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-					if not is_force_new_target then
+				if
+					l_s /= Void and then
+					not equal (system.clr_runtime_version, l_s) and then
+					(a_target.precompile /= Void or workbench.has_compilation_started)
+				then
+						-- Due to hack to support .net version major.minor without specifing the exact version
+					if
+						attached system.clr_runtime_version as l_sys_clr_rt_version and then
+						l_sys_clr_rt_version.starts_with (l_s)
+					then
+							-- This is not really a new clr runtime version value
+					elseif not is_force_new_target then
 						create vd83.make (s_msil_clr_version, system.clr_runtime_version, l_s)
 						Error_handler.insert_warning (vd83, a_target.options.is_warning_as_error)
 					end

@@ -157,8 +157,7 @@ feature -- Access: IL code generation
 		require
 			il_generation
 		do
-				-- TODO: implement a smart netcore detection. [2023-05-19]
-			Result := clr_runtime_version.has ('/')
+			Result := (create {IL_NETCORE_DETECTOR}).is_il_netcore (clr_runtime_version)
 		end
 
 	metadata_cache_path: STRING_32

@@ -37,10 +37,13 @@ feature -- Status report
 
 feature -- Serialization
 
-	deserializer: EIFFEL_DESERIALIZER
+	deserializer (il_runtime: STRING_32): EIFFEL_DESERIALIZER
 			-- Eiffel md consumer deserializer.
 		do
-			if use_json_storage then
+			if
+				use_json_storage
+				or (create {IL_NETCORE_DETECTOR}).is_il_netcore (il_runtime)
+			then
 				create {EIFFEL_JSON_DESERIALIZER} Result
 			else
 				create {EIFFEL_SED_DESERIALIZER} Result

@@ -163,7 +163,8 @@ feature {NONE} -- Implementation
 	consumed_type_deserializer: EIFFEL_DESERIALIZER
 			-- Deserializer engine
 		once
-			Result := {EIFFEL_SERIALIZATION}.deserializer
+			-- FIXME: may be dangerous to use once here.
+			Result := {EIFFEL_SERIALIZATION}.deserializer (system.clr_runtime_version)
 		ensure
 			consumed_type_deserializer_not_void: Result /= Void
 		end
@@ -176,7 +177,7 @@ feature {NONE} -- Type anchor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

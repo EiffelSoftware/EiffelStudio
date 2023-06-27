@@ -10,11 +10,25 @@ class
 
 feature -- Access
 
-	has_current: INTEGER_8 = 0x20
-	explicit_current: INTEGER_8 = 0x40
-	default_sig: INTEGER_8 = 0
-	vararg_sig: INTEGER_8 = 0x05
-			-- Flags for signature description of methods.
+	has_current: INTEGER_8 = 0x20 -- HASHTHIS
+	explicit_current: INTEGER_8 = 0x40 -- EXPLICITTHIS
+
+feature -- Flags for signature description of methods.
+
+	default_sig: INTEGER_8 = 0 -- DEFAULT
+	vararg_sig: INTEGER_8 = 0x05 -- VARARG
+	generic: INTEGER_8 = 0x10 -- GENERIC
+
+feature -- Calling convention
+
+	c: INTEGER_8 = 0x1 -- c
+	stdcall: INTEGER_8 = 0x2 -- STDCALL
+	thiscall: INTEGER_8 = 0x3 -- THISCALL
+	fastcall: INTEGER_8 = 0x4 -- FASTCALL
+
+	sentinel: INTEGER_8 = 0x41 -- Sentinel
+
+feature -- Signature			
 
 	field_sig: INTEGER_8 = 0x06
 			-- Flag for signature description of a field.
@@ -31,24 +45,24 @@ feature -- Access
 
 feature -- Types
 
-	element_type_end: INTEGER_8 = 0x0
-	element_type_void: INTEGER_8 = 0x1
-	element_type_boolean: INTEGER_8 = 0x2
-	element_type_char: INTEGER_8 = 0x3
-	element_type_i1: INTEGER_8 = 0x4
-	element_type_u1: INTEGER_8 = 0x5
-	element_type_i2: INTEGER_8 = 0x6
-	element_type_u2: INTEGER_8 = 0x7
-	element_type_i4: INTEGER_8 = 0x8
-	element_type_u4: INTEGER_8 = 0x9
-	element_type_i8: INTEGER_8 = 0xa
-	element_type_u8: INTEGER_8 = 0xb
-	element_type_r4: INTEGER_8 = 0xc
-	element_type_r8: INTEGER_8 = 0xd
+	element_type_end: INTEGER_8 = 0x00
+	element_type_void: INTEGER_8 = 0x01
+	element_type_boolean: INTEGER_8 = 0x02
+	element_type_char: INTEGER_8 = 0x03
+	element_type_i1: INTEGER_8 = 0x04
+	element_type_u1: INTEGER_8 = 0x05
+	element_type_i2: INTEGER_8 = 0x06
+	element_type_u2: INTEGER_8 = 0x07
+	element_type_i4: INTEGER_8 = 0x08
+	element_type_u4: INTEGER_8 = 0x09
+	element_type_i8: INTEGER_8 = 0x0a
+	element_type_u8: INTEGER_8 = 0x0b
+	element_type_r4: INTEGER_8 = 0x0c
+	element_type_r8: INTEGER_8 = 0x0d
 	element_type_string: INTEGER_8 = 0xe
 		 -- Basic types.
 
-	element_type_ptr: INTEGER_8 = 0xf
+	element_type_ptr: INTEGER_8 = 0x0f
 		-- PTR <type>
 		-- type is a simple type.
 
@@ -58,12 +72,22 @@ feature -- Types
 
 	element_type_valuetype: INTEGER_8 = 0x11
 		-- VALUETYPE <class Token>.
+		-- class token is a TypeDef or TypeRef token.
 
 	element_type_class: INTEGER_8 = 0x12
-		-- CLASS <class Token>.
+		-- VALUETYPE <class Token>.
+		-- class token is a TypeDef or TypeRef token.
+
+	element_type_var: INTEGER_8 = 0x13
+		-- Generic parameter in a generic type definition, represented as number
+		-- (compressed unsigned integer)	
 
 	element_type_array: INTEGER_8 = 0x14
 		-- MDARRAY <type> <rank> <bcount> <bound1> ... <lbcount> <lb1> ...
+
+	element_type_genericinst: INTEGER_8 = 0x15
+		-- Generic type instantiation.
+		-- Followed by type type-arg-count type-1 ... type-		
 
 	element_type_typedbyref: INTEGER_8 = 0x16
 		-- This is a simple type.
@@ -83,6 +107,10 @@ feature -- Types
 	element_type_szarray: INTEGER_8 = 0x1D
 		-- Shortcut for single dimension zero lower bound array
 		-- SZARRAY <type>
+
+	element_type_mvar: INTEGER_8 = 0x1e
+		-- Generic parameter in a generic method definition, represented as number
+		-- (compressed unsigned integer)		
 
 	element_type_cmod_reqd: INTEGER_8 = 0x1F
 		-- required C modifier : E_T_CMOD_REQD <mdTypeRef/mdTypeDef>
@@ -132,7 +160,7 @@ feature -- Native types
 	native_type_end: INTEGER_8 = 0x0
 			-- DEPRECATED
 
-	native_type_void: INTEGER_8 = 0x1
+	native_type_: INTEGER_8 = 0x1
 			-- DEPRECATED
 
 	native_type_boolean: INTEGER_8 = 0x2
@@ -166,7 +194,7 @@ feature -- Native types
 
 	native_type_currency: INTEGER_8 = 0xf
 
-	native_type_ptr: INTEGER_8 = 0x10
+	native_type_ptr: INTEGER_8 = 0x10 -- BYREF
 			-- DEPRECATED
 
 	native_type_decimal: INTEGER_8 = 0x11
@@ -181,7 +209,7 @@ feature -- Native types
 
 	native_type_lpwstr: INTEGER_8 = 0x15
 
-	native_type_lptstr: INTEGER_8 = 0x16
+	native_type_lptstr: INTEGER_8 = 0x16 -- TYPEDBYREF
 
 	native_type_fixedsysstring: INTEGER_8 = 0x17
 

@@ -26,7 +26,7 @@ feature -- Test routines
 			u1,u2: INTEGER_32
 			sz: INTEGER
 		do
-if False then
+if True then
 			tok := 0x02000012
 --			create mp.make (4 * 1)
 --			sz := compress_data (0x48, mp)
@@ -53,7 +53,7 @@ if False then
 			u1 := uncompressed_data (mp, sz)
 			assert ("uncompressed_data", u1 = 0x48)
 end
-if False then
+if True then
 			tok := 0x02001234
 			create mp.make (4 * 1)
 			sz := compress_type_token (tok, mp)
@@ -81,7 +81,7 @@ if False then
 			assert ("token retrieved", u2 = tok)
 end
 
-if False then
+if True then
 
 			tok := 0x0100_0123
 			create mp.make (4 * 1)
@@ -144,8 +144,11 @@ end
 		local
 --			i1, i2, i3, i4: NATURAL_32
 --			n32: NATURAL_32
+			cl: CELL [INTEGER]
 		do
-			Result := {PE_SIGNATURE_BLOB_ITEM}.uncompressed_data (v, 0, nb)
+			create cl.put (0)
+			Result := {PE_MD_SIGNATURE_READER}.uncompressed_data (v, 0, cl)
+			assert ("expected_size", cl.item = nb)
 --			i1 := v.read_natural_8 (0)
 --			if nb = 1 then
 --				n32 := i1
@@ -209,7 +212,7 @@ end
 --			val: NATURAL_32
 --			tag: NATURAL_32
 		do
-			Result := {PE_SIGNATURE_BLOB_ITEM}.uncompressed_type_token (v).to_integer_32
+			Result := {PE_MD_SIGNATURE_READER}.uncompressed_type_token (v).to_integer_32
 --			enc := (v & 0x0000_0003)
 --			val := (v |>> 2).to_natural_32
 --			inspect

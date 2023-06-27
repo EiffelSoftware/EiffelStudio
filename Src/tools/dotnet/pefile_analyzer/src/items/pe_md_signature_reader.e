@@ -199,22 +199,22 @@ feature -- Method signature
 			n := uncompressed_value.to_natural_32
 			if exhausted then
 				-- FIXME: is that expected?
-				do_nothing
+				check False end
+				Result.append (" (!ERROR!)")
 			else
 					-- return type
 				Result.append (retype)
-
 				if n > 0 then
 						-- Params...
-					Result.append (" param("+ n.out +") ")
+					Result.append (" param("+ n.out +")")
 					if exhausted then
---						check False end
+						check False end
 						Result.append (" (!ERROR!)")
 					else
 						Result.append (" (")
 						from
 						until
-							n = 0 or exhausted
+							n = 0 --or exhausted
 						loop
 							Result.append (param)
 							n := n - 1
@@ -419,7 +419,7 @@ feature -- FieldSig	, LocalSig, PropertySig ...
 			Result.append (" count=" + n.out)
 			from
 			until
-				n = 0 or exhausted -- TODO: report error is exhausted
+				n = 0 --or exhausted -- TODO: report error is exhausted
 			loop
 				i := read_integer_8_le
 				if i = {MD_SIGNATURE_CONSTANTS}.element_type_typedbyref then
@@ -435,7 +435,7 @@ feature -- FieldSig	, LocalSig, PropertySig ...
 						from
 							s := custommod
 						until
-							s.is_whitespace or exhausted -- TODO: report error is exhausted
+							s.is_whitespace --or exhausted -- TODO: report error is exhausted
 						loop
 							Result.append (s)
 							s := custommod

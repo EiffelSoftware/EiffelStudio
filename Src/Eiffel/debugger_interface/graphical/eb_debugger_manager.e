@@ -1178,16 +1178,16 @@ feature -- Output
 				n := d.hour
 				if n > 0 or s.count > 1 then
 					s.append (n.out)
-					s.append_character ('H')
+					s.append_character ('h')
 				end
 				n := d.minute
 				if n > 0 or s.count > 1 then
 					s.append (n.out)
-					s.append_character ('M')
+					s.append_character ('m')
 				end
 				create f.make (4, 2)
 				s.append (f.formatted (d.fine_second))
-				s.append_character ('S')
+				s.append_character ('s')
 
 				l_formatter.add_comment_text (" -> " + s)
 			end

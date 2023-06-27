@@ -337,12 +337,8 @@ feature -- Visitor
 			output_attributes (e.method_attributes)
 			output.put_new_line
 			output.indent
-			if
-				attached e.name_index as str_idx and then
-				str_idx.index > 0 and then
-				attached pe_file.string_heap_item (str_idx) as str
-			then
-				output.put_string (str.to_string_32)
+			if attached e.resolved_identifier (pe_file) as s then
+				output.put_string (s)
 			else
 				output.put_string ("?")
 			end
@@ -386,12 +382,8 @@ feature -- Visitor
 			output.put_new_line
 			output.indent
 
-			if
-				attached e.name_index as str_idx and then
-				str_idx.index > 0 and then
-				attached pe_file.string_heap_item (str_idx) as str
-			then
-				output.put_string (str.to_string_32)
+			if attached e.resolved_identifier (pe_file) as s then
+				output.put_string (s)
 			else
 				output.put_string ("???")
 			end
@@ -413,12 +405,8 @@ feature -- Visitor
 			else
 				check has_sequence: False end
 			end
-			if
-				attached e.name_index as str_idx and then
-				str_idx.index > 0 and then
-				attached pe_file.string_heap_item (str_idx) as str
-			then
-				output.put_string (str.to_string_32)
+			if attached e.resolved_identifier (pe_file) as s then
+				output.put_string (s)
 			else
 				output.put_string ("?")
 			end
@@ -431,12 +419,8 @@ feature -- Visitor
 
 			output_attributes (e.property_attributes)
 			output.indent
-			if
-				attached e.name_index as str_idx and then
-				str_idx.index > 0 and then
-				attached pe_file.string_heap_item (str_idx) as str
-			then
-				output.put_string (str.to_string_32)
+			if attached e.resolved_identifier (pe_file) as s then
+				output.put_string (s)
 			else
 				output.put_string ("?")
 			end
@@ -512,7 +496,8 @@ feature -- Visitor
 				attached sig_index and then
 				attached pe_file.signature_blob_heap_item (sig_index) as sig
 			then
-				output.put_string (" :")
+				output.put_string (" ")
+				sig.set_associated_pe_file (pe_file)
 				output.put_string (sig.to_string)
 			end
 		end

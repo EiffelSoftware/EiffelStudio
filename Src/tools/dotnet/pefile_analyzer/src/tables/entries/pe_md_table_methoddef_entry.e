@@ -4,6 +4,8 @@ class
 inherit
 	PE_MD_TABLE_ENTRY_WITH_STRUCTURE
 
+	PE_MD_TABLE_ENTRY_WITH_IDENTIFIER
+
 create
 	make
 
@@ -59,6 +61,21 @@ feature -- Access
 				Result := i
 			else
 				check False end
+			end
+		end
+
+	resolved_identifier (pe: PE_FILE): detachable STRING_32
+			-- Human identifier
+		do
+			create Result.make_empty
+			if
+				attached name_index as tn_idx  and then
+				attached pe.string_heap_item (tn_idx) as s
+			then
+				Result.append_string_general (s)
+			end
+			if Result.is_whitespace then
+				Result := Void
 			end
 		end
 

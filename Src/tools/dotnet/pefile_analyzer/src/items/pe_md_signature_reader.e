@@ -165,6 +165,8 @@ feature -- Method signature
 			k: INTEGER_8
 			i, j: INTEGER_8
 			tok, n: NATURAL_32
+			l_retype: like retype
+			s: STRING_32
 		do
 			create Result.make_empty
 			i := read_integer_8_le
@@ -203,25 +205,32 @@ feature -- Method signature
 				Result.append (" (!ERROR!)")
 			else
 					-- return type
-				Result.append (retype)
+				l_retype := retype
 				if n > 0 then
 						-- Params...
-					Result.append (" param("+ n.out +")")
+--					Result.append (" param.count="+ n.out)
 					if exhausted then
 						check False end
-						Result.append (" (!ERROR!)")
+						Result.append ("(/!ERROR!/)")
 					else
-						Result.append (" (")
+						Result.append ("(")
 						from
 						until
 							n = 0 --or exhausted
 						loop
-							Result.append (param)
+							s := param
+							s.left_adjust
+							Result.append (s)
+							if n > 1 then
+								Result.append (", ")
+							end
 							n := n - 1
 						end
 						Result.append (")")
 					end
 				end
+				Result.append (":")
+				Result.append (l_retype)
 			end
 		end
 
@@ -485,13 +494,23 @@ feature -- FieldSig	, LocalSig, PropertySig ...
 
 			Result.append (type)
 
-			from
-			until
-				n = 0
-			loop
-				Result.append (param)
-				n := n - 1
+			if n > 0 then
+				Result.append ("(")
+				from
+				until
+					n = 0
+				loop
+					s := param
+					s.left_adjust
+					Result.append (s)
+					if n > 1 then
+						Result.append (", ")
+					end
+					n := n - 1
+				end
+				Result.append (")")
 			end
+
 --			Result := {STRING_32} " ERROR:PropertySig-NotFullyImplemented"
 		end
 

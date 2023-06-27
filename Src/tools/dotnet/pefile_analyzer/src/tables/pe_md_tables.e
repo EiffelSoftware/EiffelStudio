@@ -70,8 +70,13 @@ feature -- Initialization
 feature -- Item
 
 	item alias "[]" (tid: NATURAL_32): detachable PE_MD_TABLE [PE_MD_TABLE_ENTRY]
+		local
+			i: INTEGER
 		do
-			Result := tables [tid.to_integer_32]
+			i := tid.to_integer_32
+			if tables.valid_index (i) then
+				Result := tables [i]
+			end
 		end
 
 	typedef_table: detachable PE_MD_TABLE_TYPEDEF

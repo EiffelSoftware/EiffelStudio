@@ -127,7 +127,14 @@ feature -- Access
 			when {MD_SIGNATURE_CONSTANTS}.property_sig then
 				Result := propertysig
 			else
-				Result := Void
+				if k & {MD_SIGNATURE_CONSTANTS}.property_sig = {MD_SIGNATURE_CONSTANTS}.property_sig then
+					Result := propertysig
+					if k & {MD_SIGNATURE_CONSTANTS}.has_current = {MD_SIGNATURE_CONSTANTS}.has_current then
+						Result.prepend (" hasthis")
+					end
+				else
+					Result := Void
+				end
 			end
 		end
 
@@ -327,7 +334,7 @@ feature -- Method signature
 				Result.append_character (' ')
 				Result.append (token_to_string (tok))
 			when {MD_SIGNATURE_CONSTANTS}.element_type_genericinst then
-				Result.append (" GENERICINST [")
+				Result.append (" GENERICINST[")
 				Result.append (type)
 				n := uncompressed_value.to_natural_32
 				Result.append ("<")
@@ -457,8 +464,35 @@ feature -- FieldSig	, LocalSig, PropertySig ...
 		end
 
 	propertysig: STRING_32
+			-- See II.23.2.5 PropertySig
+		local
+			i: like read_integer_8_le
+			n: NATURAL_32
+			s: like custommod
 		do
-			Result := {STRING_32} " ERROR:PropertySig-NotFullyImplemented"
+			create Result.make_empty
+				-- param count
+			n := uncompressed_value.to_natural_32
+
+			from
+				s := custommod
+			until
+				s.is_whitespace
+			loop
+				Result.append (s)
+				s := custommod
+			end
+
+			Result.append (type)
+
+			from
+			until
+				n = 0
+			loop
+				Result.append (param)
+				n := n - 1
+			end
+--			Result := {STRING_32} " ERROR:PropertySig-NotFullyImplemented"
 		end
 
 	typespecsig: STRING_32

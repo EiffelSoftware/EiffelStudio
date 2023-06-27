@@ -76,6 +76,8 @@ feature -- Item
 			i := tid.to_integer_32
 			if tables.valid_index (i) then
 				Result := tables [i]
+			else
+				check valid_index: False end
 			end
 		end
 

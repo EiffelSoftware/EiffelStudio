@@ -274,14 +274,14 @@ feature -- Method signature
 			when {MD_SIGNATURE_CONSTANTS}.element_type_void then
 				Result.append (" void")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_var then
-				Result.append (" VAR<")
-				tok := token
-				Result.append (token_to_string (tok))
+				Result.append (" VAR<T")
+				tok := uncompressed_value.to_natural_32
+				Result.append (tok.out)
 				Result.append (">")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_mvar then
-				Result.append (" MVAR<")
-				tok := token
-				Result.append (token_to_string (tok))
+				Result.append (" MVAR<T")
+				tok := uncompressed_value.to_natural_32
+				Result.append (tok.out)
 				Result.append (">")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_class then
 				tok := token

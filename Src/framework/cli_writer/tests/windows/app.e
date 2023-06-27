@@ -18,7 +18,7 @@ feature -- Testing
 
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"define_module">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"test_module">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -81,6 +81,9 @@ feature {NONE} -- Implementation
 			end
 			if is_test_included ("define_module", a_pattern) then
 				(create {TEST_METADATA_TABLES}).test_define_module;
+			end
+			if is_test_included ("test_module", a_pattern) then
+				(create {TEST_MODULES}).test_modules;
 			end
 
 

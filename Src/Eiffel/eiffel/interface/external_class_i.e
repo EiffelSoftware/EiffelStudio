@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			-- Deserializer engine
 		once
 			-- FIXME: may be dangerous to use once here.
-			Result := {EIFFEL_SERIALIZATION}.deserializer (system.clr_runtime_version)
+			Result := {EIFFEL_SERIALIZATION}.deserializer_for_version (system.clr_runtime_version)
 		ensure
 			consumed_type_deserializer_not_void: Result /= Void
 		end

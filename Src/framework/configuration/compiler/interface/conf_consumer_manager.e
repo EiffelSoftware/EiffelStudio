@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 			l_guid := an_assembly.guid
 
 				-- we have to get the dependencies from the reference file
-			l_reader := {EIFFEL_SERIALIZATION}.deserializer (il_version)
+			l_reader := {EIFFEL_SERIALIZATION}.deserializer_for_version (il_version)
 			l_reader.deserialize (an_assembly.consumed_path.extended (referenced_assemblies_info_file).name, 0)
 			if attached {CONSUMED_ASSEMBLY_MAPPING} l_reader.deserialized_object as l_referenced_assemblies_mapping then
 				across l_referenced_assemblies_mapping.assemblies as a loop
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 			aid: INTEGER
 			fwd_ct: CONSUMED_FORWARDED_TYPE
 		do
-			l_reader := {EIFFEL_SERIALIZATION}.deserializer (il_version)
+			l_reader := {EIFFEL_SERIALIZATION}.deserializer_for_version (il_version)
 
 				-- Twin old classes because we will remove reused classes.
 			if attached a_assembly.dotnet_classes as l_assembly_dotnet_classes then
@@ -954,7 +954,7 @@ feature {NONE} -- helpers
 			l_eac_file := full_cache_path.extended (cache_info_file)
 			create l_file.make_with_path (l_eac_file)
 			if l_file.exists and then l_file.is_readable then
-				l_reader := {EIFFEL_SERIALIZATION}.deserializer (il_version)
+				l_reader := {EIFFEL_SERIALIZATION}.deserializer_for_version (il_version)
 				l_reader.deserialize (l_eac_file.name, 0)
 				if attached {like cache_content} l_reader.deserialized_object as l_cache_content then
 					cache_content := l_cache_content

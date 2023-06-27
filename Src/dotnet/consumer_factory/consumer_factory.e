@@ -14,8 +14,9 @@ feature -- Basic operations
 			-- or `Void` if not found.
 		do
 			if
-				is_eiffel_layout_defined and then 
-				eiffel_layout.use_emdc_consumer
+				(is_eiffel_layout_defined and then 
+				eiffel_layout.use_emdc_consumer) 
+				or (create {IL_NETCORE_DETECTOR}).is_il_netcore (version)
 			then
 					-- use emdc executable to consume dotnet assemblies.
 				create {MD_CONSUMER_PROCESS} Result.make (cache_path, version)

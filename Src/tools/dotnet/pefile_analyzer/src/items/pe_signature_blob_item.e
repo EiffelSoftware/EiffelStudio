@@ -83,6 +83,15 @@ feature {NONE} -- Initialization
 
 	kind: NATURAL_8
 
+feature -- Additional access
+
+	associated_pe_file: detachable PE_FILE
+
+	set_associated_pe_file (pe: like associated_pe_file)
+		do
+			associated_pe_file := pe
+		end
+
 feature -- Status report	
 
 	is_type_specification_signature: BOOLEAN
@@ -142,7 +151,7 @@ feature -- Conversion
 			l_reader: PE_MD_SIGNATURE_READER
 		do
 			if Result = Void then
-				create l_reader.make (pointer)
+				create l_reader.make (pointer, associated_pe_file)
 				Result := {STRING_32} " <<" + dump + ">>"
 
 				inspect kind

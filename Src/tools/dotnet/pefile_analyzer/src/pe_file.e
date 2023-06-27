@@ -10,7 +10,7 @@ class
 create
 	make
 
-feature
+feature {NONE} -- Initialization
 
 	make (fn: READABLE_STRING_GENERAL)
 		local
@@ -148,6 +148,23 @@ feature -- Metadata
 					Result := read_metadata_blob_heap
 				end
 				internal_metadata_blob_heap := Result
+			end
+		end
+
+feature -- Access
+
+	table_entry	(tok: NATURAL_32): detachable PE_MD_TABLE_ENTRY
+		local
+			tag: NATURAL_8
+			idx: NATURAL_32
+		do
+			tag := (tok |>> 24).to_natural_8
+			idx := (tok & 0x00ff_ffff)
+			if
+				attached metadata_tables [tag] as tb and then
+				tb.valid_index (idx)
+			then
+				Result := tb [idx]
 			end
 		end
 

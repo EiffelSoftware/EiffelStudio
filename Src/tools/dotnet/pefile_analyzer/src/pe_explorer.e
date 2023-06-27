@@ -177,19 +177,8 @@ feature -- Visitor
 	typedef_fullname (e: PE_MD_TABLE_TYPEDEF_ENTRY): STRING_32
 		do
 			create Result.make (0)
-			if
-				attached e.namespace_index as e_ns and then
-				attached pe_file.string_heap_item (e_ns) as str
-			then
-				Result.append (str.to_string_32)
-				Result.append_character ('.')
-			end
-
-			if
-				attached e.name_index as e_n and then
-				attached pe_file.string_heap_item (e_n) as str
-			then
-				Result.append (str.to_string_32)
+			if attached e.resolved_identifier (pe_file) as str then
+				Result.append (str)
 			end
 			if Result.is_empty then
 				Result := "{?TypeDef?}"
@@ -200,19 +189,8 @@ feature -- Visitor
 	typeref_fullname (e: PE_MD_TABLE_TYPEREF_ENTRY): STRING_32
 		do
 			create Result.make (0)
-			if
-				attached e.typenamespace_index as e_ns and then
-				attached pe_file.string_heap_item (e_ns) as str
-			then
-				Result.append (str.to_string_32)
-				Result.append_character ('.')
-			end
-
-			if
-				attached e.typename_index as e_n and then
-				attached pe_file.string_heap_item (e_n) as str
-			then
-				Result.append (str.to_string_32)
+			if attached e.resolved_identifier (pe_file) as str then
+				Result.append (str)
 			end
 			if Result.is_empty then
 				Result := "{?TypeRef?}"

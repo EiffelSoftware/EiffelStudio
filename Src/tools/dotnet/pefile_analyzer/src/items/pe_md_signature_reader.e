@@ -15,14 +15,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (mp: MANAGED_POINTER)
+	make (mp: MANAGED_POINTER; pe: like associated_pe_file)
 		do
 			pointer := mp
+			associated_pe_file := pe
 		end
 
 feature -- Access
 
 	pointer: MANAGED_POINTER
+
+	associated_pe_file: detachable PE_FILE
 
 feature -- Status report
 
@@ -129,6 +132,20 @@ feature -- Access
 		end
 
 feature -- Method signature
+
+	token_to_string (tok: NATURAL_32): STRING_32
+		do
+			if
+				attached associated_pe_file as pe_file and then
+				attached pe_file.table_entry (tok) as e and then
+				attached {PE_MD_TABLE_ENTRY_WITH_IDENTIFIER} e as e_with_id and then
+				attached e_with_id.resolved_identifier (pe_file) as s
+			then
+				Result := s
+			else
+				Result := "0x" + tok.to_hex_string
+			end
+		end
 
 	token: NATURAL_32
 		do
@@ -252,16 +269,17 @@ feature -- Method signature
 			when {MD_SIGNATURE_CONSTANTS}.element_type_var then
 				Result.append (" VAR<")
 				tok := token
-				Result.append ("0x"+ tok.to_hex_string)
+				Result.append (token_to_string (tok))
 				Result.append (">")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_mvar then
 				Result.append (" MVAR<")
 				tok := token
-				Result.append ("0x"+ tok.to_hex_string)
+				Result.append (token_to_string (tok))
 				Result.append (">")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_class then
 				tok := token
-				Result.append (" 0x"+ tok.to_hex_string)
+				Result.append_character (' ')
+				Result.append (token_to_string (tok))
 			when {MD_SIGNATURE_CONSTANTS}.element_type_boolean then
 				Result.append (" boolean")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_char then
@@ -306,7 +324,8 @@ feature -- Method signature
 				Result.append ("]")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_valuetype then
 				tok := token
-				Result.append (" 0x"+ tok.to_hex_string)
+				Result.append_character (' ')
+				Result.append (token_to_string (tok))
 			when {MD_SIGNATURE_CONSTANTS}.element_type_genericinst then
 				Result.append (" GENERICINST [")
 				Result.append (type)
@@ -339,12 +358,14 @@ feature -- FieldSig	, LocalSig, PropertySig ...
 				Result.append (" opt")
 					-- TypeDefOrReforSpecEncoded
 				tok := token
-				Result.append (" 0x" + tok.to_hex_string)
+				Result.append_character (' ')
+				Result.append (token_to_string (tok))
 			when {MD_SIGNATURE_CONSTANTS}.element_type_cmod_reqd then
 				Result.append (" reqd ")
 					-- TypeDefOrReforSpecEncoded
 				tok := token
-				Result.append (" 0x" + tok.to_hex_string)
+				Result.append_character (' ')
+				Result.append (token_to_string (tok))
 			else
 					-- No CustomMod found, reverse position
 				rewind_position (1)
@@ -467,7 +488,9 @@ feature -- FieldSig	, LocalSig, PropertySig ...
 				else
 					rewind_position (1)
 				end
-				Result.append (" 0x" + token.to_hex_string)
+				Result.append_character (' ')
+				Result.append (token_to_string (token))
+
 				n := uncompressed_value.to_natural_32
 				from
 

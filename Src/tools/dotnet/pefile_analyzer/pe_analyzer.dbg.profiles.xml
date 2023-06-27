@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<execution_parameters xmlns="http://www.eiffel.com/developers/xml/execution-parameters-1-0-0" last_profile="2D160CF2-A6B8-4F4E-9367-255AD5B3F987">
+<execution_parameters xmlns="http://www.eiffel.com/developers/xml/execution-parameters-1-0-0" last_profile="12720BFA-74FF-4957-A9C7-1B08BA138ABB">
  <profile uuid="2E0848C2-8B2B-4D79-9E0B-183A68F4EA8C" title="c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll md_consumer.txt" arguments="c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll md_consumer.txt" working_directory="">
  </profile>
  <profile uuid="2BFFEF8A-BC38-4264-8D96-238A5AF0E9E8" title="c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll" arguments="c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll" working_directory="">
@@ -11,5 +11,7 @@
  <profile uuid="9D0BDFBF-F132-41D2-BA44-56D1B8193127" title="EIFGENs\app_fmwkv40\W_code\module_1.dll v4_module_1.txt" arguments="EIFGENs\app_fmwkv40\W_code\module_1.dll v4_module_1.txt" working_directory="C:\work\eiffel\debug\app_dotnet">
  </profile>
  <profile uuid="1A01F033-B56E-40A9-8167-618E74660E20" title="--no_analyze c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll" arguments="--no_analyze --explore=md_consumer-tree.txt --print=md_consumer-print.txt c:\work\eiffel\studio\trunk\Src\dotnet\consumer_netcore\spec\win64\bin\md_consumer.dll" working_directory="">
+ </profile>
+ <profile uuid="12720BFA-74FF-4957-A9C7-1B08BA138ABB" title="EIFGENs\app_netcore\W_code\app_netcore.exe netcore_app_exe.txt" arguments="EIFGENs\app_netcore\W_code\app_netcore.exe netcore_app_exe.txt" working_directory="C:\work\eiffel\debug\app_dotnet\w">
  </profile>
 </execution_parameters>

@@ -14,7 +14,8 @@ create
 	make_field_or_method,
 	make_method_or_locals,
 	make_locals,
-	make_property
+	make_property,
+	make_custom_attribute_value
 
 feature {NONE} -- Initialization
 
@@ -60,6 +61,12 @@ feature {NONE} -- Initialization
 			kind := property_kind
 		end
 
+	make_custom_attribute_value (lab: like label)
+		do
+			make (lab)
+			kind := custom_attribute_value_kind
+		end
+
 	kind: NATURAL_8
 
 feature -- Constant
@@ -71,6 +78,7 @@ feature -- Constant
 	method_or_locals_kind: NATURAL_8 = 5
 	field_or_method_kind: NATURAL_8 = 6
 	property_kind: NATURAL_8 = 7
+	custom_attribute_value_kind: NATURAL_8 = 8
 
 feature -- Status report	
 
@@ -107,6 +115,11 @@ feature -- Status report
 	is_method_or_locals_signature: BOOLEAN
 		do
 			Result := kind = method_or_locals_kind
+		end
+
+	is_custom_attribute_value_signature: BOOLEAN
+		do
+			Result := kind = custom_attribute_value_kind
 		end
 
 feature -- Read

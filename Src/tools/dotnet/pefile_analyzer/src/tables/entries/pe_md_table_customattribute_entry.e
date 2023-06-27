@@ -21,10 +21,22 @@ feature -- Access
 				-- Type (an index into the MethodDef or MemberRef table; more precisely, a
 				-- CustomAttributeType (§II.24.2.6) coded index)
 
-			struct.add_blob_index ("Value")
+			struct.add_custom_attribute_value_signature_blob_index ("Value")
 		end
 
 feature -- Access
+
+	parent_index: detachable PE_INDEX_ITEM
+		do
+			Result := structure.index_item ("Parent")
+		end
+
+	type_index: detachable PE_INDEX_ITEM
+		do
+				-- Warning: this is not a type, but MethodDef or MemberRef
+				-- the name is misleading
+			Result := structure.index_item ("Type")
+		end
 
 	table_id: NATURAL_8
 		once

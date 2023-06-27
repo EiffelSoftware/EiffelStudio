@@ -286,6 +286,11 @@ feature -- Element change
 			add (create {PE_METHOD_ATTRIBUTES}.make (lab))
 		end
 
+	add_file_attributes (lab: STRING)
+		do
+			add (create {PE_FILE_ATTRIBUTES}.make (lab))
+		end
+
 	add_method_semantics_attributes (lab: STRING)
 		do
 			add (create {PE_METHOD_SEMANTICS_ATTRIBUTES}.make (lab))
@@ -314,6 +319,11 @@ feature -- Element change
 	add_index (lab: STRING)
 		do
 			add (create {PE_INDEX}.make (lab))
+		end
+
+	add_implementation_index (lab: STRING)
+		do
+			add (create {PE_IMPLEMENTATION_INDEX}.make (lab))
 		end
 
 	add_blob_index (lab: STRING)
@@ -348,6 +358,10 @@ feature -- Element change
 	add_property_signature_blob_index (lab: STRING)
 		do
 			add (create {PE_SIGNATURE_BLOB_INDEX}.make_property (lab))
+		end
+	add_custom_attribute_value_signature_blob_index (lab: STRING)
+		do
+			add (create {PE_SIGNATURE_BLOB_INDEX}.make_custom_attribute_value (lab))
 		end
 
 	add_guid_index (lab: STRING)

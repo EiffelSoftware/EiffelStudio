@@ -24,7 +24,8 @@ create
 	make_property_from_item,
 	make_locals_from_item,
 	make_field_or_method_from_item,
-	make_method_or_locals_from_item
+	make_method_or_locals_from_item,
+	make_custom_attribute_value_from_item
 
 convert
 	dump: {READABLE_STRING_8, STRING_8}
@@ -73,6 +74,12 @@ feature {NONE} -- Initialization
 			kind := method_or_locals_kind
 		end
 
+	make_custom_attribute_value_from_item (a_item: PE_BLOB_ITEM)
+		do
+			make_from_item (a_item)
+			kind := custom_attribute_value_kind
+		end
+
 	type_specification_kind: NATURAL_8 = 1
 	method_kind: NATURAL_8 = 2
 	field_kind: NATURAL_8 = 3
@@ -80,6 +87,7 @@ feature {NONE} -- Initialization
 	field_or_method_kind: NATURAL_8 = 5
 	method_or_locals_kind: NATURAL_8 = 6
 	property_kind: NATURAL_8 = 7
+	custom_attribute_value_kind: NATURAL_8 = 8
 
 	kind: NATURAL_8
 
@@ -92,32 +100,39 @@ feature -- Additional access
 			associated_pe_file := pe
 		end
 
+	associated_table_entry: detachable PE_MD_TABLE_ENTRY
+
+	set_associated_table_entry (e: like associated_table_entry)
+		do
+			associated_table_entry := e
+		end
+
 feature -- Status report	
 
-	is_type_specification_signature: BOOLEAN
-		do
-			Result := kind = type_specification_kind
-		end
+--	is_type_specification_signature: BOOLEAN
+--		do
+--			Result := kind = type_specification_kind
+--		end
 
-	is_method_signature: BOOLEAN
-		do
-			Result := kind = method_kind
-		end
+--	is_method_signature: BOOLEAN
+--		do
+--			Result := kind = method_kind
+--		end
 
-	is_field_signature: BOOLEAN
-		do
-			Result := kind = field_kind
-		end
+--	is_field_signature: BOOLEAN
+--		do
+--			Result := kind = field_kind
+--		end
 
-	is_property_signature: BOOLEAN
-		do
-			Result := kind = property_kind
-		end
+--	is_property_signature: BOOLEAN
+--		do
+--			Result := kind = property_kind
+--		end
 
-	is_field_or_method_signature: BOOLEAN
-		do
-			Result := kind = field_or_method_kind
-		end
+--	is_field_or_method_signature: BOOLEAN
+--		do
+--			Result := kind = field_or_method_kind
+--		end
 
 feature -- Conversion
 
@@ -138,6 +153,8 @@ feature -- Conversion
 				Result := {STRING_32} "FM-Sig"
 			when method_or_locals_kind then
 				Result := {STRING_32} "ML-Sig"
+			when custom_attribute_value_kind then
+				Result := {STRING_32} "CAV-Sig"
 			else
 				Result := {STRING_32} "<"+ kind.out +">Sig"
 			end
@@ -151,7 +168,7 @@ feature -- Conversion
 			l_reader: PE_MD_SIGNATURE_READER
 		do
 			if Result = Void then
-				create l_reader.make (pointer, associated_pe_file)
+				create l_reader.make (pointer, associated_pe_file, associated_table_entry)
 				Result := {STRING_32} " <<" + dump + ">>"
 
 				inspect kind
@@ -183,6 +200,17 @@ feature -- Conversion
 		rescue
 			Result := prefix_name + "!<<" + dump + ">>"
 			retry
+		end
+
+	methoddefsig_params: like {PE_MD_SIGNATURE_READER}.last_methoddefsig_params
+		local
+			l_reader: PE_MD_SIGNATURE_READER
+		do
+			-- FIXME: ugly as using side effect
+			create l_reader.make (pointer, associated_pe_file, associated_table_entry)
+			if attached l_reader.methoddefsig then
+				Result := l_reader.last_methoddefsig_params
+			end
 		end
 
 end

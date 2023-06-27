@@ -15,10 +15,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (mp: MANAGED_POINTER; pe: like associated_pe_file)
+	make (mp: MANAGED_POINTER; pe: like associated_pe_file; e: like associated_table_entry)
 		do
 			pointer := mp
 			associated_pe_file := pe
+			associated_table_entry := e
 		end
 
 feature -- Access
@@ -26,6 +27,14 @@ feature -- Access
 	pointer: MANAGED_POINTER
 
 	associated_pe_file: detachable PE_FILE
+
+	associated_table_entry: detachable PE_MD_TABLE_ENTRY
+
+feature -- Optional access
+
+	last_methoddefsig_params: detachable ARRAYED_LIST [attached like last_param]
+
+	last_param: detachable TUPLE [is_szarray: BOOLEAN]
 
 feature -- Status report
 
@@ -103,6 +112,38 @@ feature -- Traversal
 			forward_position (1)
 		end
 
+	read_integer_16_le: INTEGER_16
+		require
+			not exhausted
+		do
+			Result := pointer.read_integer_16_le (current_position)
+			forward_position ({PLATFORM}.integer_16_bytes)
+		end
+
+	read_integer_32_le: INTEGER_32
+		require
+			not exhausted
+		do
+			Result := pointer.read_integer_32_le (current_position)
+			forward_position ({PLATFORM}.integer_32_bytes)
+		end
+
+	read_natural_8_le: NATURAL_8
+		require
+			not exhausted
+		do
+			Result := pointer.read_natural_8_le (current_position)
+			forward_position ({PLATFORM}.natural_8_bytes)
+		end
+
+	read_natural_16_le: NATURAL_16
+		require
+			not exhausted
+		do
+			Result := pointer.read_natural_16_le (current_position)
+			forward_position ({PLATFORM}.natural_16_bytes)
+		end
+
 	read_natural_32_le: NATURAL_32
 		require
 			not exhausted
@@ -133,7 +174,14 @@ feature -- Access
 						Result.prepend (" hasthis")
 					end
 				else
-					Result := Void
+					rewind_position (1)
+						-- CA prolog
+					if read_integer_16_le = {MD_SIGNATURE_CONSTANTS}.ca_prolog then
+						Result := custom_attribute
+					else
+						rewind_position ({PLATFORM}.integer_16_bytes)
+						Result := Void
+					end
 				end
 			end
 		end
@@ -167,6 +215,7 @@ feature -- Method signature
 			tok, n: NATURAL_32
 			l_retype: like retype
 			s: STRING_32
+			lst: like last_methoddefsig_params
 		do
 			create Result.make_empty
 			i := read_integer_8_le
@@ -199,6 +248,7 @@ feature -- Method signature
 
 				-- Param count
 			n := uncompressed_value.to_natural_32
+
 			if exhausted then
 				-- FIXME: is that expected?
 				check False end
@@ -213,12 +263,20 @@ feature -- Method signature
 						check False end
 						Result.append ("(/!ERROR!/)")
 					else
+						create lst.make (n.to_integer_32)
+						last_methoddefsig_params := lst
+
 						Result.append ("(")
 						from
 						until
 							n = 0 --or exhausted
 						loop
 							s := param
+							if attached last_param as lp then
+								lst.force (lp)
+							else
+								check has_last_param: False end
+							end
 							s.left_adjust
 							Result.append (s)
 							if n > 1 then
@@ -237,7 +295,10 @@ feature -- Method signature
 	param: STRING_32
 		local
 			i: INTEGER_8
+			l_last_param: like last_param
 		do
+			l_last_param := [False]
+			last_param := l_last_param
 			create Result.make_empty
 			Result.append (custommod)
 			i := read_integer_8_le
@@ -262,7 +323,7 @@ feature -- Method signature
 			when {MD_SIGNATURE_CONSTANTS}.element_type_byref then
 				Result.append (type)
 			when {MD_SIGNATURE_CONSTANTS}.element_type_typedbyref then
-				Result.append (" typedbyref")
+				Result.append (" System.TypedReference")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_pinned then
 				Result.append (" pinned") -- TODO: Good location?				
 			else
@@ -297,33 +358,33 @@ feature -- Method signature
 				Result.append_character (' ')
 				Result.append (token_to_string (tok))
 			when {MD_SIGNATURE_CONSTANTS}.element_type_boolean then
-				Result.append (" boolean")
+				Result.append (" System.Boolean")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_char then
-				Result.append (" char")
+				Result.append (" System.Char")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_i then
-				Result.append (" i")
+				Result.append (" System.IntPtr")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_u then
-				Result.append (" u")
+				Result.append (" System.UIntPtr")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_i1 then
-				Result.append (" i1")
+				Result.append (" System.Sbyte")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_u1 then
-				Result.append (" u1")
+				Result.append (" System.Byte")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_i2 then
-				Result.append (" i2")
+				Result.append (" System.Int16")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_u2 then
-				Result.append (" u2")
+				Result.append (" System.UInt16")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_i4 then
-				Result.append (" i4")
+				Result.append (" System.Int32")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_u4 then
-				Result.append (" u4")
+				Result.append (" System.UInt32")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_i8 then
-				Result.append (" i8")
+				Result.append (" System.Int64")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
-				Result.append (" u8")
+				Result.append (" System.UInt64")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_r4 then
-				Result.append (" r4")
+				Result.append (" System.Float")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_r8 then
-				Result.append (" r8")
+				Result.append (" System.Double")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_string then
 				Result.append (" System.String")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_object then
@@ -335,6 +396,9 @@ feature -- Method signature
 				check implemented: False end
 				Result.append ("]")
 			when {MD_SIGNATURE_CONSTANTS}.element_type_szarray then
+				if attached last_param as lp then
+					lp.is_szarray := True
+				end
 				Result.append (" System.Bytes[")
 				Result.append (type)
 				Result.append ("]")
@@ -556,6 +620,148 @@ feature -- FieldSig	, LocalSig, PropertySig ...
 			else
 				Result := {STRING_32} " ERROR:TypeSpecSig-NotFullyImplemented"
 			end
+		end
+
+	custom_attribute: detachable STRING_32
+			-- See II.23.3 Custom attributes
+		local
+			i: INTEGER
+			s: STRING
+			l_num_named: NATURAL_16
+			is_szarray: BOOLEAN
+			l_args_count: INTEGER
+			l_inner_reader: PE_MD_SIGNATURE_READER
+			l_args_info: detachable LIST [TUPLE [is_szarray: BOOLEAN]]
+		do
+			Result := "CASig" -- Void
+
+	-- FIXME: not implemented, it relies on associated constructor method information
+	--		  find a way to access those data from here...
+			if
+				attached associated_pe_file as pe and then
+				attached {PE_MD_TABLE_CUSTOMATTRIBUTE_ENTRY} associated_table_entry as ca and then
+				attached ca.type_index as l_type_index
+			then
+				if
+					attached {PE_MD_TABLE_MEMBERREF_ENTRY} pe.entry_from_index (l_type_index) as e and then
+					attached e.signature_index as sig_idx and then
+					attached pe.signature_blob_heap_item (sig_idx) as sign and then
+					attached sign.methoddefsig_params as l_params
+				then
+					l_args_info := sign.methoddefsig_params
+--					create l_inner_reader.make (sign.pointer , pe: [like associated_pe_file] detachable PE_FILE, e: [like associated_table_entry] detachable PE_MD_TABLE_ENTRY)
+					do_nothing
+				end
+			end
+if False then
+			create Result.make_empty
+			if l_args_info /= Void then
+				l_args_count := l_args_info.count
+				from
+					i := 0
+				until
+					l_args_count = 0
+				loop
+					i := i + 1
+					-- for each arg, get the value ...
+					is_szarray := False -- FIXME
+					Result.append (fixed_arg (l_args_info.i_th (i).is_szarray))
+					l_args_count := l_args_count - 1
+				end
+				l_num_named := read_natural_16_le
+
+			else
+				l_args_count := 0
+			end
+
+			from
+			until
+				l_num_named = 0
+			loop
+				is_szarray := False -- TODO
+				Result.append (named_arg (is_szarray))
+				l_num_named := l_num_named - 1
+			end
+end
+		end
+
+	named_arg (is_szarray: BOOLEAN): STRING_32
+		local
+			i: like read_integer_8_le
+		do
+			create Result.make_empty
+			i := read_integer_8_le
+			if i = {MD_SIGNATURE_CONSTANTS}.element_type_field then
+				Result.append (" FIELD")
+			elseif i = {MD_SIGNATURE_CONSTANTS}.element_type_property then
+				Result.append (" PROPERTY")
+			else
+				check False end
+				Result.append (" ?ERROR?")
+			end
+			Result.append (type)
+			if attached ser_string as str then
+				Result.append_character ('%"')
+				Result.append (str)
+				Result.append_character ('%"')
+			else
+				Result.append ("null")
+			end
+			Result.append (fixed_arg (is_szarray))
+		end
+
+	ser_string: detachable STRING_32
+		local
+			l_packlen: INTEGER_32
+			s: STRING_8
+			n: NATURAL_8
+		do
+			n := read_natural_8_le
+			if n = 0xFF then
+				Result := Void
+			elseif n= 0x0 then
+				create Result.make_empty
+			else
+				rewind_position (1)
+				l_packlen := uncompressed_value
+				create s.make (l_packlen)
+				from
+				until
+					l_packlen = 0
+				loop
+					s.append_code (read_natural_8_le)
+					l_packlen := l_packlen - 1
+				end
+				Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (s)
+			end
+		end
+
+	fixed_arg (is_szarray: BOOLEAN): STRING_32
+		local
+			i: like read_integer_8_le
+			l_num_elem: INTEGER_32
+		do
+			create Result.make_empty
+			if is_szarray then
+				l_num_elem := read_integer_32_le
+				from
+				until
+					l_num_elem = 0
+				loop
+					Result.append (elem)
+					l_num_elem := l_num_elem - 1
+				end
+			else
+				Result.append (elem)
+			end
+		end
+
+	elem: STRING_32
+		local
+			i: like read_integer_8_le
+		do
+			create Result.make_empty
+			check implemented: False end
 		end
 
 feature -- Implementation

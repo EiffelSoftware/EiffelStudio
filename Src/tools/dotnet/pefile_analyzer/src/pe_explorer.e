@@ -310,8 +310,11 @@ feature -- Visitor
 			end
 		end
 
+	current_table_entry: detachable PE_MD_TABLE_ENTRY
+
 	visit_table_entry (o: PE_MD_TABLE_ENTRY)
 		do
+			current_table_entry := o
 			if attached {PE_MD_TABLE_METHODDEF_ENTRY} o as mtd then
 				visit_method_def (mtd)
 			elseif attached {PE_MD_TABLE_FIELD_ENTRY} o as fld then
@@ -325,6 +328,7 @@ feature -- Visitor
 			else
 			end
 			Precursor (o)
+			current_table_entry := Void
 		end
 
 	visit_method_def (e: PE_MD_TABLE_METHODDEF_ENTRY)
@@ -498,6 +502,7 @@ feature -- Visitor
 			then
 				output.put_string (" ")
 				sig.set_associated_pe_file (pe_file)
+				sig.set_associated_table_entry (current_table_entry)
 				output.put_string (sig.to_string)
 			end
 		end

@@ -4,6 +4,8 @@ class
 inherit
 	PE_MD_TABLE_ENTRY_WITH_STRUCTURE
 
+	PE_MD_TABLE_ENTRY_WITH_IDENTIFIER
+
 create
 	make
 
@@ -28,6 +30,39 @@ feature -- Access
 	name_index: detachable PE_INDEX_ITEM
 		do
 			Result := structure.index_item ("Name")
+		end
+
+	class_index: detachable PE_INDEX_ITEM
+		do
+			Result := structure.index_item ("Class")
+		end
+
+	signature_index: detachable PE_BLOB_INDEX_ITEM
+		do
+			if attached {like signature_index} structure.item ("Signature") as sig then
+				Result := sig
+			end
+		end
+
+	resolved_identifier (pe: PE_FILE): detachable STRING_32
+			-- Human identifier
+		do
+			create Result.make_empty
+			if
+				attached class_index as c_idx and then
+				attached pe.entry_from_index (c_idx) as e
+			then
+				do_nothing
+			end
+			if
+				attached name_index as tn_idx  and then
+				attached pe.string_heap_item (tn_idx) as s
+			then
+				Result.append_string_general (s)
+			end
+			if Result.is_whitespace then
+				Result := Void
+			end
 		end
 
 feature -- Access

@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			struct.add_type_def_index ("TypeDefId")
 			struct.add_string_index ("Name")
 			struct.add_string_index ("Namespace")
-			struct.add_index ("Implementation")
+			struct.add_implementation_index ("Implementation")
 		end
 
 feature -- Access		

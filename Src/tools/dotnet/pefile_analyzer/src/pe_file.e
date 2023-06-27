@@ -188,6 +188,29 @@ feature -- Access
 			end
 		end
 
+	entry_from_index (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_ENTRY
+		do
+			if attached {PE_METHOD_DEF_INDEX_ITEM} idx then
+				Result := method_def (idx)
+
+			elseif attached {PE_TYPE_DEF_INDEX_ITEM} idx then
+				Result := type_def (idx)
+			elseif attached {PE_TYPE_REF_INDEX_ITEM} idx then
+				Result := type_def (idx)
+			elseif attached {PE_TYPE_SPEC_INDEX_ITEM} idx then
+				Result := type_spec (idx)
+
+			elseif attached {PE_MEMBER_REF_INDEX_ITEM} idx then
+				Result := member_ref (idx)
+			elseif attached {PE_MODULE_INDEX_ITEM} idx as mod_idx then
+				Result := module (mod_idx)
+			elseif attached {PE_MODULE_REF_INDEX_ITEM} idx as mod_idx then
+				Result := moduleref (mod_idx)
+			else
+				check False end
+			end
+		end
+
 	type_def (idx: PE_INDEX_ITEM): detachable PE_MD_TABLE_TYPEDEF_ENTRY
 		do
 			if
@@ -392,6 +415,8 @@ feature -- Access
 						create Result.make_method_or_locals_from_item (blob)
 					elseif l_sign_idx.is_property_signature then
 						create Result.make_property_from_item (blob)
+					elseif l_sign_idx.is_custom_attribute_value_signature then
+						create Result.make_custom_attribute_value_from_item (blob)
 					else
 							-- Default?
 						check known_signature: False end
@@ -801,6 +826,18 @@ feature -- PE MD reader
 	is_type_spec_table_using_4_bytes: BOOLEAN
 		do
 			Result := is_table_using_4_bytes ({PE_TABLES}.ttypespec)
+		end
+	is_file_table_using_4_bytes: BOOLEAN
+		do
+			Result := is_table_using_4_bytes ({PE_TABLES}.tfile)
+		end
+	is_assemblyref_table_using_4_bytes: BOOLEAN
+		do
+			Result := is_table_using_4_bytes ({PE_TABLES}.tassemblyref)
+		end
+	is_exportedtype_table_using_4_bytes: BOOLEAN
+		do
+			Result := is_table_using_4_bytes ({PE_TABLES}.texportedtype)
 		end
 
 	read_rva (lab: like {PE_ITEM}.label): PE_RVA_ITEM
@@ -1452,6 +1489,55 @@ feature -- PE MD reader
 						create {PE_MEMBER_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
 					else
 						create {PE_MEMBER_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				else
+					check False end
+					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					Result := idx
+				end
+			else
+				check False end
+				Result := idx
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_implementation_index (lab: like {PE_ITEM}.label; multi: PE_IMPLEMENTATION_INDEX): PE_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+			mp: MANAGED_POINTER
+			idx: PE_INDEX_ITEM
+		do
+			b := file.position.to_natural_32
+			if is_file_table_using_4_bytes or is_assemblyref_table_using_4_bytes or is_exportedtype_table_using_4_bytes then
+				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
+				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
+			else
+				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
+				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
+			end
+			if attached multi.tag_and_index (idx) as tu then
+				inspect tu.table
+				when {PE_IMPLEMENTATION_INDEX}.file then
+					if is_file_table_using_4_bytes then
+						create {PE_FILE_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_FILE_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_IMPLEMENTATION_INDEX}.assemblyref then
+					if is_member_ref_table_using_4_bytes then
+						create {PE_ASSEMBLY_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_ASSEMBLY_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_IMPLEMENTATION_INDEX}.exportedtype then
+					if is_member_ref_table_using_4_bytes then
+						create {PE_EXPORTED_TYPE_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_EXPORTED_TYPE_INDEX_16_ITEM} Result.make (b, mp, lab)
 					end
 					Result.update_index (tu.index)
 				else

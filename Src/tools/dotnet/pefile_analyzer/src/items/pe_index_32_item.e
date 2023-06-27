@@ -37,9 +37,11 @@ feature -- Status report
 
 	to_string: STRING_32
 		do
-			Result := "0x" + value.to_hex_string
 			if attached {PE_INDEX_ITEM_WITH_TABLE} Current as with_table then
+				Result := "0x" + ((with_table.associated_table_id.to_natural_32|<< 24) + value).to_hex_string
 				Result.prepend ({STRING_32} "{#"+ with_table.associated_table_id.to_hex_string +"} ")
+			else
+				Result := "0x" + value.to_hex_string
 			end
 			if original_value > 0 then
 				Result := "0x" + original_value.to_hex_string + "->" + Result

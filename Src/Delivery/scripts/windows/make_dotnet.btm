@@ -10,7 +10,7 @@ espawn "geant clobber" >>& %INSTALL_LOG%
 espawn "geant install_netcore" >>& %INSTALL_LOG%
 iff exist netcore\EiffelSoftware.Runtime.dll then
 ::	For now, just as experiment
-	safe_copy netcore\EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\lib\netcore.EiffelSoftware.Runtime.dll
+	safe_copy netcore\EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\lib\netcore\EiffelSoftware.Runtime.dll
 else
 	remerror Could not compile .NET CORE runtime
 ::	IGNORE this error

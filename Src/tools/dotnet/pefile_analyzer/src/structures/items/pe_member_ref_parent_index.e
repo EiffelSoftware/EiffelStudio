@@ -19,7 +19,7 @@ feature -- Access
 	typedef: NATURAL_8 = 0
 	typeref: NATURAL_8 = 1
 	moduleref: NATURAL_8 = 2
-	moduledef: NATURAL_8 = 3
+	methoddef: NATURAL_8 = 3
 	typespec: NATURAL_8 = 4
 
 	tagbit: INTEGER = 3

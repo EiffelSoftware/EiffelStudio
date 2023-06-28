@@ -25,7 +25,7 @@ feature {NONE} -- Access
 
 	file: RAW_FILE
 
-feature -- Access	
+feature -- Access
 
 	count: INTEGER
 
@@ -80,14 +80,24 @@ feature -- Metadata
 		do
 			Result := internal_metadata_tables
 			if Result = Void then
+					-- Get header
 				if not is_opened then
 					open_read
-					Result := read_metadata_tables
+					create Result.make (Current, metadata_root.metadata_tables_address)
 					close
 				else
-					Result := read_metadata_tables
+					create Result.make (Current, metadata_root.metadata_tables_address)
 				end
 				internal_metadata_tables := Result
+					-- Get the tables
+					-- note: but it relies on `is_table_using_4_bytes`, that relies on `metadata_tables`, ...
+				if not is_opened then
+					open_read
+					Result.read_tables
+					close
+				else
+					Result.read_tables
+				end
 			end
 		end
 
@@ -515,7 +525,8 @@ feature -- Helper
 	read_metadata_tables: PE_MD_TABLES
 		do
 			go (metadata_root.metadata_tables_address)
-			create Result.make (Current)
+			create Result.make (Current, metadata_root.metadata_tables_address)
+			Result.read_tables
 		end
 
 	read_metadata_string_heap: PE_STRING_HEAP
@@ -554,7 +565,7 @@ feature -- Helper
 			create Result.make (Current, tu.address, tu.size)
 		end
 
-feature -- Read		
+feature -- Read
 
 --	read_string_8 (nb: INTEGER): IMMUTABLE_STRING_8
 --		local
@@ -782,17 +793,22 @@ feature -- PE MD reader
 
 	is_table_using_4_bytes (tb: NATURAL_8): BOOLEAN
 		do
-			--TODO
+			Result := metadata_tables.table_size (tb) >= 0x1_0000  -- 2^16
+		end
+
+	is_string_heap_using_4_bytes: BOOLEAN
+		do
+			Result := metadata_tables.string_heap_index_bytes_size = 4
+		end
+
+	is_guid_heap_using_4_bytes: BOOLEAN
+		do
+			Result := metadata_tables.guid_heap_index_bytes_size = 4
 		end
 
 	is_blob_heap_using_4_bytes: BOOLEAN
 		do
-		end
-	is_guid_heap_using_4_bytes: BOOLEAN
-		do
-		end
-	is_string_heap_using_4_bytes: BOOLEAN
-		do
+			Result := metadata_tables.blob_heap_index_bytes_size = 4
 		end
 
 	is_field_table_using_4_bytes: BOOLEAN
@@ -959,7 +975,7 @@ feature -- PE MD reader
 					end
 					Result.update_index (tu.index)
 				else
-					check False end
+--					check False end
 					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
 					Result := idx
 				end
@@ -1049,8 +1065,9 @@ feature -- PE MD reader
 			b := file.position.to_natural_32
 			-- FIXME
 			if
-				is_method_def_table_using_4_bytes
-				or is_member_ref_table_using_4_bytes
+				is_field_table_using_4_bytes
+				or is_param_table_using_4_bytes
+				or is_property_table_using_4_bytes
 			then
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1079,6 +1096,52 @@ feature -- PE MD reader
 						create {PE_PROPERTY_INDEX_32_ITEM} Result.make (b, mp, lab)
 					else
 						create {PE_PROPERTY_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				else
+					check False end
+					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					Result := idx
+				end
+			else
+				check False end
+				Result := idx
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_has_field_marshal_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+			mp: MANAGED_POINTER
+			idx: PE_INDEX_ITEM
+		do
+			b := file.position.to_natural_32
+			-- FIXME
+			if
+				is_field_table_using_4_bytes
+				or is_param_table_using_4_bytes
+			then
+				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
+				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
+			else
+				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
+				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
+			end
+			if attached multi.tag_and_index (idx) as tu then
+				inspect tu.table
+				when {PE_HAS_FIELD_MARSHAL_INDEX}.field then
+					if is_table_using_4_bytes (tu.table) then
+						create {PE_FIELD_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_FIELD_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_FIELD_MARSHAL_INDEX}.param then
+					if is_table_using_4_bytes (tu.table) then
+						create {PE_PARAM_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_PARAM_INDEX_16_ITEM} Result.make (b, mp, lab)
 					end
 					Result.update_index (tu.index)
 				else
@@ -1148,8 +1211,10 @@ feature -- PE MD reader
 			b := file.position.to_natural_32
 			-- FIXME
 			if
-				is_method_def_table_using_4_bytes
-				or is_member_ref_table_using_4_bytes
+				is_table_using_4_bytes ({PE_TABLES}.tmodule)
+				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
+				or is_assemblyref_table_using_4_bytes
+				or is_type_ref_table_using_4_bytes
 			then
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1253,9 +1318,29 @@ feature -- PE MD reader
 		do
 			b := file.position.to_natural_32
 			if
-				is_type_def_table_using_4_bytes
+				is_method_def_table_using_4_bytes
+				or is_table_using_4_bytes ({PE_TABLES}.tmethodspec)
+				or is_member_ref_table_using_4_bytes
+				or is_field_table_using_4_bytes
+				or is_type_def_table_using_4_bytes
 				or is_type_ref_table_using_4_bytes
 				or is_type_spec_table_using_4_bytes
+				or is_param_table_using_4_bytes
+				or is_property_table_using_4_bytes
+				or is_table_using_4_bytes ({PE_TABLES}.tinterfaceimpl)
+				or is_table_using_4_bytes ({PE_TABLES}.tmodule)
+--				or is_table_using_4_bytes ({PE_TABLES}.tpermission) -- Permission
+				or is_table_using_4_bytes ({PE_TABLES}.tevent)
+				or is_table_using_4_bytes ({PE_TABLES}.tstandalonesig)
+				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
+				or is_table_using_4_bytes ({PE_TABLES}.tassemblydef)
+				or is_table_using_4_bytes ({PE_TABLES}.tassemblyref)
+				or is_table_using_4_bytes ({PE_TABLES}.tfile)
+				or is_table_using_4_bytes ({PE_TABLES}.texportedtype)
+				or is_table_using_4_bytes ({PE_TABLES}.tmanifestresource)
+				or is_table_using_4_bytes ({PE_TABLES}.tgenericparam)
+				or is_table_using_4_bytes ({PE_TABLES}.tgenericparamconstraint)
+				or is_table_using_4_bytes ({PE_TABLES}.tmethodspec)
 			then
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1468,7 +1553,10 @@ feature -- PE MD reader
 			idx: PE_INDEX_ITEM
 		do
 			b := file.position.to_natural_32
-			if is_method_def_table_using_4_bytes or is_member_ref_table_using_4_bytes then
+			if
+				is_method_def_table_using_4_bytes
+				or is_member_ref_table_using_4_bytes
+			then
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
 			else
@@ -1510,7 +1598,11 @@ feature -- PE MD reader
 			idx: PE_INDEX_ITEM
 		do
 			b := file.position.to_natural_32
-			if is_file_table_using_4_bytes or is_assemblyref_table_using_4_bytes or is_exportedtype_table_using_4_bytes then
+			if
+				is_file_table_using_4_bytes
+				or is_assemblyref_table_using_4_bytes
+				or is_exportedtype_table_using_4_bytes
+			then
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
 			else
@@ -1591,7 +1683,7 @@ feature -- PE MD reader
 			e := file.position.to_natural_32
 		end
 
-feature -- Status report		
+feature -- Status report
 
 	current_is_string (s: READABLE_STRING_8): BOOLEAN
 		local

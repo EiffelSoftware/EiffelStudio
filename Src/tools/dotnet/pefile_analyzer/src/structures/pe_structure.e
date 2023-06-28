@@ -271,6 +271,11 @@ feature -- Element change
 			add (create {PE_FLAGS_32}.make (lab))
 		end
 
+	add_pinvoke_attributes (lab: STRING)
+		do
+			add (create {PE_PINVOKE_ATTRIBUTES}.make (lab))
+		end
+
 	add_type_attributes (lab: STRING)
 		do
 			add (create {PE_TYPE_ATTRIBUTES}.make (lab))
@@ -387,6 +392,11 @@ feature -- Element change
 	add_has_constant (lab: STRING)
 		do
 			add (create {PE_HAS_CONSTANT_INDEX}.make (lab))
+		end
+
+	add_has_field_marshal (lab: STRING)
+		do
+			add (create {PE_HAS_FIELD_MARSHAL_INDEX}.make (lab))
 		end
 
 	add_resolution_scope (lab: STRING)

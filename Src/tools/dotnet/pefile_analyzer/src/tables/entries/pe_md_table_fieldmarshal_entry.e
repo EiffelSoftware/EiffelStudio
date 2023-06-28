@@ -2,16 +2,23 @@ class
 	PE_MD_TABLE_FIELDMARSHAL_ENTRY
 
 inherit
-	PE_MD_TABLE_ENTRY
+	PE_MD_TABLE_ENTRY_WITH_STRUCTURE
 
 create
 	make
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	read (pe: PE_FILE)
+
+	initialize_structure
+		local
+			struct: like structure
 		do
-			report_not_implemented
+			-- See II.22.17 FieldMarshal : 0x0D
+			create struct.make (2, "FieldMarshal")
+			structure := struct
+			struct.add_has_field_marshal ("Parent")
+			struct.add_blob_index ("NativeType")
 		end
 
 feature -- Access

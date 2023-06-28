@@ -11,101 +11,113 @@ class
 
 feature -- Creation Procedures
 
-	tModule: NATURAL_8 = 0
+	tModule: NATURAL_8 = 0x0
 			-- Assembly def
 
-	tTypeRef: NATURAL_8 = 1
+	tTypeRef: NATURAL_8 = 0x1
 			-- References to other assemblies
 
-	tTypeDef: NATURAL_8 = 2
+	tTypeDef: NATURAL_8 = 0x2
 			-- definitions of classes and enumerations
 
-	tFieldPointer: NATURAL_8 = 3
+	tFieldPointer: NATURAL_8 = 0x3
 			-- UNDOCUMENTED
 
-	tField: NATURAL_8 = 4
+	tField: NATURAL_8 = 0x4
 			-- definitions of fields
 
 
-	tMethodPointer: NATURAL_8 = 5
+	tMethodPointer: NATURAL_8 = 0x5
 			-- UNDOCUMENTED			
 
-	tMethodDef: NATURAL_8 = 6
+	tMethodDef: NATURAL_8 = 0x6
 			-- definitions of methods once end includes both managed and unmanaged
 
-	tParam: NATURAL_8 = 8
+	-- 7?
+
+	tParam: NATURAL_8 = 0x8
 			-- definitions of parameters
 
-	tInterfaceImpl: NATURAL_8 = 9
+	tInterfaceImpl: NATURAL_8 = 0x9
 
-	tMemberRef: NATURAL_8 = 10
+	tMemberRef: NATURAL_8 = 0xA
 			-- references to external methods once end also the call site references for vararg-style pinvokes
 
-	tConstant: NATURAL_8 = 11
+	tConstant: NATURAL_8 =  0xB
 			-- initialization constants once end we use them for enumerations but that is about it
 
-	tCustomAttribute: NATURAL_8 = 12
+	tCustomAttribute: NATURAL_8 = 0xC
 			-- custom attributes once end we use it for C# style varargs but nothing else
 
-	tFieldMarshal: NATURAL_8 = 13
+	tFieldMarshal: NATURAL_8 = 0xD
 
-	tDeclSecurity: NATURAL_8 = 14
+	tDeclSecurity: NATURAL_8 = 0xE
 			-- we don't use it
 
-	tClassLayout: NATURAL_8 = 15
+	tClassLayout: NATURAL_8 = 0xF
 			-- size once end packing for classes
 
-	tFieldLayout: NATURAL_8 = 16
+	tFieldLayout: NATURAL_8 = 0x10
 			-- field offsets once end we don't use it
 
-	tStandaloneSig: NATURAL_8 = 17
+	tStandaloneSig: NATURAL_8 = 0x11
 			--?? we don't use it
 
-	tEventMap: NATURAL_8 = 18
+	tEventMap: NATURAL_8 = 0x12
 
-	tEvent: NATURAL_8 = 20
+	-- 19?
 
-	tPropertyMap: NATURAL_8 = 21
+	tEvent: NATURAL_8 = 0x14
 
-	tProperty: NATURAL_8 = 23
+	tPropertyMap: NATURAL_8 = 0x15
 
-	tMethodSemantics: NATURAL_8 = 24
+	--22?
 
-	tMethodImpl: NATURAL_8 = 25
+	tProperty: NATURAL_8 = 0x17
 
-	tModuleRef: NATURAL_8 = 26
+	tMethodSemantics: NATURAL_8 = 0x18
+
+	tMethodImpl: NATURAL_8 = 0x19
+
+	tModuleRef: NATURAL_8 =  0x1A
 			--?? we don't use it
 
-	tTypeSpec: NATURAL_8 = 27
+	tTypeSpec: NATURAL_8 = 0x1B
 			-- we use it for referenced types not found in the typedef table
 
-	tImplMap: NATURAL_8 = 28
+	tImplMap: NATURAL_8 = 0x1C
 			-- pinvoke DLL information
 
-	tFieldRVA: NATURAL_8 = 29
+	tFieldRVA: NATURAL_8 = 0x1D
 			-- cildata RVAs for field initialized data
 
-	tAssemblyDef: NATURAL_8 = 32
+	--30?
+	--31?
+
+	tAssemblyDef: NATURAL_8 = 0x20
 			-- our main assembly
 			-- 0x20
 
-	tAssemblyRef: NATURAL_8 = 35
+	--33?
+	--34?
+
+	tAssemblyRef: NATURAL_8 = 0x23
 			-- any external assemblies
 
-	tFile: NATURAL_8 = 38
+	tFile: NATURAL_8 = 0x26
 
-	tExportedType: NATURAL_8 = 39
+	tExportedType: NATURAL_8 = 0x27
 
-	tManifestResource: NATURAL_8 = 40
+	tManifestResource: NATURAL_8 = 0x28
 
-	tNestedClass: NATURAL_8 = 41
+	tNestedClass: NATURAL_8 = 0x29
 			-- list of nested classes and their parents
 
-	tGenericParam: NATURAL_8 = 42
+	tGenericParam: NATURAL_8 = 0x2A
 
-	tMethodSpec: NATURAL_8 = 43
+	tMethodSpec: NATURAL_8 = 0x2B
 
-	tGenericParamConstraint: NATURAL_8 = 44
+	tGenericParamConstraint: NATURAL_8 = 0x2C
 
 feature -- Instances
 

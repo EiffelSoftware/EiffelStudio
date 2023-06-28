@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {PE_MD_TABLES}."
 	author: ""
 	date: "$Date$"
@@ -13,27 +13,74 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (pe: PE_FILE)
+	make (pe: PE_FILE; add: like address)
+		do
+			address := add
+			create tables.make_filled (Void, max_table_id.to_integer_32 + 1)
+			create tables_counts.make_filled (0, tables.count)
+			pe_file := pe
+			read_header
+		end
+
+feature -- Access
+
+	address: NATURAL_32
+	address_of_tables: NATURAL_32
+
+	pe_file: PE_FILE
+
+feature -- Input
+
+	read_header
 		local
 			s: STRING_8
 			n: INTEGER
 			o: ANY
 			i, l_upper: INTEGER
 			n32: NATURAL_32
+			n8: NATURAL_8
 			bin: STRING
 			sz: PE_NATURAL_16_ITEM
 			l_tb_counts: like tables_counts
+			pe: like pe_file
 		do
-			create tables.make_filled (Void, max_table_id.to_integer_32 + 1)
-			create l_tb_counts.make_filled (0, tables.count)
-			tables_counts := l_tb_counts
+			pe := pe_file
+			pe.go (address)
+
+			l_tb_counts := tables_counts
 
 			reserved_1 := pe.read_natural_32_item ("reserved")
 			major_version := pe.read_natural_8_item ("MajorVersion")
 			minor_version := pe.read_natural_8_item ("MinorVersion")
 			heap_sizes := pe.read_natural_8_item ("HeapSizes")
+				-- See ECMA 335: II.24.2.6 #~ stream
+				-- the HeapSizes field is a bitvector that encodes the width of indexes into the various heaps. If bit 0 is set,
+				-- indexes into the “#String” heap are 4 bytes wide;
+				-- if bit 1 is set, indexes into the “#GUID” heap are 4 bytes wide;
+				-- if bit 2 is set, indexes into the “#Blob” heap are 4 bytes wide.
+				-- Conversely, if the HeapSize bit for a particular heap is not set, indexes into that heap are 2 bytes wide.
+			n8 := heap_sizes.value
+			if n8 & 0x01 = 0x01 then
+				 	-- Size of “#String” stream >= 2^16 = 0x1_0000
+				string_heap_index_bytes_size := 4
+			else
+				string_heap_index_bytes_size := 2
+			end
+			if n8 & 0x02 = 0x02 then
+					-- Size of “#GUID” stream >= 2^16 = 0x1_0000
+				guid_heap_index_bytes_size := 4
+			else
+				guid_heap_index_bytes_size := 2
+			end
+			if n8 & 0x04 = 0x04 then
+					-- Size of “#Blob” stream >= 2^16 = 0x1_0000	
+				blob_heap_index_bytes_size := 4
+			else
+				blob_heap_index_bytes_size := 2
+			end
+
 			reserved_5 := pe.read_natural_8_item ("reserved")
 			valid := pe.read_natural_64_item ("Valid")
 			sorted := pe.read_natural_64_item ("Sorted")
@@ -52,6 +99,30 @@ feature -- Initialization
 				i := i + 1
 			end
 
+			address_of_tables := pe.position.to_natural_32
+		end
+
+	read_tables
+			-- Read tables, once the header was read.
+		local
+			s: STRING_8
+			n: INTEGER
+			o: ANY
+			i, l_upper: INTEGER
+			n32: NATURAL_32
+			n8: NATURAL_8
+			bin: STRING
+			sz: PE_NATURAL_16_ITEM
+			l_tb_counts: like tables_counts
+			pe: like pe_file
+		do
+			pe := pe_file
+				-- After header, resume the read at `address_of_tables`
+			pe.go (address_of_tables)
+
+			l_tb_counts := tables_counts
+			bin := valid.to_binary_string
+
 			from
 				i := 0
 				l_upper := l_tb_counts.upper
@@ -66,6 +137,12 @@ feature -- Initialization
 				i := i + 1
 			end
 		end
+
+feature -- Settings
+
+	string_heap_index_bytes_size: NATURAL_8
+	guid_heap_index_bytes_size: NATURAL_8
+	blob_heap_index_bytes_size: NATURAL_8
 
 feature -- Item
 

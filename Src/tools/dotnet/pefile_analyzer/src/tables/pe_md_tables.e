@@ -100,7 +100,7 @@ feature -- Input
 							io.error.put_string ("Big-")
 						end
 						io.error.put_string ("Table "+ {PE_MD_TABLES}.table_name (i.to_natural_8) +" ["+ i.to_natural_8.to_hex_string +"]")
-						io.error.put_string (" -> " + l_tb_counts[i].out + " row(s)%N")
+						io.error.put_string ("%T-> " + l_tb_counts[i].out + " 0x"+ l_tb_counts[i].to_natural_32.to_hex_string  +" row(s)%N")
 					end
 				end
 				i := i + 1

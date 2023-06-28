@@ -10,10 +10,16 @@ feature {NONE} -- Access
 			Result := a_tables.table_size (tb) >= 0x1_0000  -- 2^16
 		end
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	initialize (a_tables: PE_MD_TABLES)
 		do
+			-- Heap
+			is_string_heap_using_4_bytes := a_tables.string_heap_index_bytes_size = 4
+			is_guid_heap_using_4_bytes := a_tables.guid_heap_index_bytes_size = 4
+			is_blob_heap_using_4_bytes := a_tables.blob_heap_index_bytes_size = 4
+
+			-- Table
 			is_field_table_using_4_bytes		:=	is_table_using_4_bytes ({PE_TABLES}.tfield, a_tables)
 			is_method_def_table_using_4_bytes 	:=	is_table_using_4_bytes ({PE_TABLES}.tmethoddef, a_tables)
 			is_member_ref_table_using_4_bytes 	:=	is_table_using_4_bytes ({PE_TABLES}.tmemberref, a_tables)
@@ -86,8 +92,23 @@ feature {NONE} -- Initialization
 					or is_table_using_4_bytes ({PE_TABLES}.tgenericparamconstraint, a_tables)
 					or is_table_using_4_bytes ({PE_TABLES}.tmethodspec, a_tables)
 
+			is_method_def_or_member_ref_using_4_bytes :=
+					is_method_def_table_using_4_bytes
+					or is_member_ref_table_using_4_bytes
+
+			is_implementation_using_4_bytes :=
+					is_file_table_using_4_bytes
+					or is_assemblyref_table_using_4_bytes
+					or is_exportedtype_table_using_4_bytes
+
 			is_initialized := True
 		end
+
+feature -- Heap settings
+
+	is_string_heap_using_4_bytes,
+	is_guid_heap_using_4_bytes,
+	is_blob_heap_using_4_bytes: BOOLEAN
 
 feature -- Settings
 
@@ -102,6 +123,7 @@ feature -- Settings
 	is_file_table_using_4_bytes: BOOLEAN
 	is_assemblyref_table_using_4_bytes: BOOLEAN
 	is_exportedtype_table_using_4_bytes: BOOLEAN
+	is_event_table_using_4_bytes: BOOLEAN
 
 feature -- Multi index size
 
@@ -120,5 +142,9 @@ feature -- Multi index size
 	is_custom_attribute_type_using_4_bytes: BOOLEAN
 
 	is_has_custom_attribute_using_4_bytes: BOOLEAN
+
+	is_method_def_or_member_ref_using_4_bytes: BOOLEAN
+
+	is_implementation_using_4_bytes: BOOLEAN
 
 end

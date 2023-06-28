@@ -811,144 +811,6 @@ feature -- Status report
 			Result := metadata_tables.blob_heap_index_bytes_size = 4
 		end
 
-	is_table_using_4_bytes (tb: NATURAL_8): BOOLEAN
-		do
-			Result := metadata_tables.table_size (tb) >= 0x1_0000  -- 2^16
-		end
-
-feature -- Specific MD Table index size
-
-	is_field_table_using_4_bytes: BOOLEAN
-		do
-			Result := is_table_using_4_bytes ({PE_TABLES}.tfield)
-		end
-	is_method_def_table_using_4_bytes: BOOLEAN
-		do
-			Result := is_table_using_4_bytes ({PE_TABLES}.tmethoddef)
-		end
-	is_member_ref_table_using_4_bytes: BOOLEAN
-		do
-			Result := is_table_using_4_bytes ({PE_TABLES}.tmemberref)
-		end
-	is_param_table_using_4_bytes: BOOLEAN
-		do
-			Result := is_table_using_4_bytes ({PE_TABLES}.tparam)
-		end
-	is_property_table_using_4_bytes: BOOLEAN
-		do
-			Result := is_table_using_4_bytes ({PE_TABLES}.tproperty)
-		end
-	is_type_def_table_using_4_bytes: BOOLEAN
-		do
-			Result := is_table_using_4_bytes ({PE_TABLES}.ttypedef)
-		end
-	is_type_ref_table_using_4_bytes: BOOLEAN
-		do
-			Result := is_table_using_4_bytes ({PE_TABLES}.ttyperef)
-		end
-	is_type_spec_table_using_4_bytes: BOOLEAN
-		do
-			Result := is_table_using_4_bytes ({PE_TABLES}.ttypespec)
-		end
-	is_file_table_using_4_bytes: BOOLEAN
-		do
-			Result := is_table_using_4_bytes ({PE_TABLES}.tfile)
-		end
-	is_assemblyref_table_using_4_bytes: BOOLEAN
-		do
-			Result := is_table_using_4_bytes ({PE_TABLES}.tassemblyref)
-		end
-	is_exportedtype_table_using_4_bytes: BOOLEAN
-		do
-			Result := is_table_using_4_bytes ({PE_TABLES}.texportedtype)
-		end
-
-feature -- Multi index size
-
-	is_type_def_or_ref_or_spec_using_4_bytes: BOOLEAN
-		do
-			Result :=
-				is_type_def_table_using_4_bytes
-				or is_type_ref_table_using_4_bytes
-				or is_type_spec_table_using_4_bytes
-		end
-
-	is_memberref_parent_using_4_bytes: BOOLEAN
-		do
-			Result :=
-				is_type_def_table_using_4_bytes
-				or is_type_ref_table_using_4_bytes
-				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
-				or is_method_def_table_using_4_bytes
-				or is_type_spec_table_using_4_bytes
-		end
-
-	is_has_constant_using_4_bytes: BOOLEAN
-		do
-			Result :=
-				is_field_table_using_4_bytes
-				or is_param_table_using_4_bytes
-				or is_property_table_using_4_bytes
-		end
-
-	is_has_field_marshal_using_4_bytes: BOOLEAN
-		do
-			Result :=
-				is_field_table_using_4_bytes
-				or is_param_table_using_4_bytes
-		end
-
-	is_has_semantic_using_4_bytes: BOOLEAN
-		do
-			Result :=
-				is_property_table_using_4_bytes
-				or is_table_using_4_bytes ({PE_TABLES}.tevent)
-		end
-
-	is_resolution_scope_using_4_bytes: BOOLEAN
-		do
-			Result :=
-				is_table_using_4_bytes ({PE_TABLES}.tmodule)
-				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
-				or is_assemblyref_table_using_4_bytes
-				or is_type_ref_table_using_4_bytes
-		end
-
-	is_custom_attribute_type_using_4_bytes: BOOLEAN
-		do
-			Result :=
-				is_method_def_table_using_4_bytes
-				or is_member_ref_table_using_4_bytes
-		end
-
-	is_has_custom_attribute_using_4_bytes: BOOLEAN
-		do
-			Result :=
-				is_method_def_table_using_4_bytes
-				or is_table_using_4_bytes ({PE_TABLES}.tmethodspec)
-				or is_member_ref_table_using_4_bytes
-				or is_field_table_using_4_bytes
-				or is_type_def_table_using_4_bytes
-				or is_type_ref_table_using_4_bytes
-				or is_type_spec_table_using_4_bytes
-				or is_param_table_using_4_bytes
-				or is_property_table_using_4_bytes
-				or is_table_using_4_bytes ({PE_TABLES}.tinterfaceimpl)
-				or is_table_using_4_bytes ({PE_TABLES}.tmodule)
---				or is_table_using_4_bytes ({PE_TABLES}.tpermission) -- Permission
-				or is_table_using_4_bytes ({PE_TABLES}.tevent)
-				or is_table_using_4_bytes ({PE_TABLES}.tstandalonesig)
-				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
-				or is_table_using_4_bytes ({PE_TABLES}.tassemblydef)
-				or is_table_using_4_bytes ({PE_TABLES}.tassemblyref)
-				or is_table_using_4_bytes ({PE_TABLES}.tfile)
-				or is_table_using_4_bytes ({PE_TABLES}.texportedtype)
-				or is_table_using_4_bytes ({PE_TABLES}.tmanifestresource)
-				or is_table_using_4_bytes ({PE_TABLES}.tgenericparam)
-				or is_table_using_4_bytes ({PE_TABLES}.tgenericparamconstraint)
-				or is_table_using_4_bytes ({PE_TABLES}.tmethodspec)
-		end
-
 feature -- Basic value
 
 	read_rva (lab: like {PE_ITEM}.label): PE_RVA_ITEM
@@ -973,7 +835,7 @@ feature -- Heap indexes
 			b,e: NATURAL_32
 		do
 			b := file.position.to_natural_32
-			if is_blob_heap_using_4_bytes then
+			if size_settings.is_blob_heap_using_4_bytes then
 				create {PE_BLOB_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
 			else
 				create {PE_BLOB_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
@@ -986,7 +848,7 @@ feature -- Heap indexes
 			b,e: NATURAL_32
 		do
 			b := file.position.to_natural_32
-			if is_guid_heap_using_4_bytes then
+			if size_settings.is_guid_heap_using_4_bytes then
 				create {PE_GUID_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
 			else
 				create {PE_GUID_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
@@ -999,7 +861,7 @@ feature -- Heap indexes
 			b,e: NATURAL_32
 		do
 			b := file.position.to_natural_32
-			if is_string_heap_using_4_bytes then
+			if size_settings.is_string_heap_using_4_bytes then
 				create {PE_STRING_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
 			else
 				create {PE_STRING_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
@@ -1024,7 +886,7 @@ feature -- Table indexes
 			b,e: NATURAL_32
 		do
 			b := file.position.to_natural_32
-			if is_type_def_table_using_4_bytes then
+			if size_settings.is_type_def_table_using_4_bytes then
 				create {PE_TYPE_DEF_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
 			else
 				create {PE_TYPE_DEF_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
@@ -1037,7 +899,7 @@ feature -- Table indexes
 			b,e: NATURAL_32
 		do
 			b := file.position.to_natural_32
-			if is_field_table_using_4_bytes then
+			if size_settings.is_field_table_using_4_bytes then
 				create {PE_FIELD_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
 			else
 				create {PE_FIELD_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
@@ -1051,7 +913,7 @@ feature -- Table indexes
 			mp: MANAGED_POINTER
 		do
 			b := file.position.to_natural_32
-			if is_method_def_table_using_4_bytes then
+			if size_settings.is_method_def_table_using_4_bytes then
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_METHOD_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
 			else
@@ -1066,7 +928,7 @@ feature -- Table indexes
 			b,e: NATURAL_32
 		do
 			b := file.position.to_natural_32
-			if is_param_table_using_4_bytes then
+			if size_settings.is_param_table_using_4_bytes then
 				create {PE_PARAM_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
 			else
 				create {PE_PARAM_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
@@ -1079,7 +941,7 @@ feature -- Table indexes
 			b,e: NATURAL_32
 		do
 			b := file.position.to_natural_32
-			if is_table_using_4_bytes ({PE_TABLES}.tevent) then
+			if size_settings.is_event_table_using_4_bytes then
 				create {PE_EVENT_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
 			else
 				create {PE_EVENT_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
@@ -1092,7 +954,7 @@ feature -- Table indexes
 			b,e: NATURAL_32
 		do
 			b := file.position.to_natural_32
-			if is_property_table_using_4_bytes then
+			if size_settings.is_property_table_using_4_bytes then
 				create {PE_PROPERTY_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
 			else
 				create {PE_PROPERTY_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
@@ -1110,7 +972,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if is_type_def_or_ref_or_spec_using_4_bytes then
+			if size_settings.is_type_def_or_ref_or_spec_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1161,7 +1023,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if is_member_ref_table_using_4_bytes then
+			if size_settings.is_memberref_parent_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1226,7 +1088,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if is_has_constant_using_4_bytes then
+			if size_settings.is_has_constant_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1277,7 +1139,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if is_has_field_marshal_using_4_bytes then
+			if size_settings.is_has_field_marshal_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1321,7 +1183,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if is_has_semantic_using_4_bytes then
+			if size_settings.is_has_semantic_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1365,7 +1227,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if is_resolution_scope_using_4_bytes then
+			if size_settings.is_resolution_scope_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1423,7 +1285,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if is_custom_attribute_type_using_4_bytes then
+			if size_settings.is_custom_attribute_type_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1467,7 +1329,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if is_has_custom_attribute_using_4_bytes then
+			if size_settings.is_has_custom_attribute_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1652,10 +1514,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if
-				is_method_def_table_using_4_bytes
-				or is_member_ref_table_using_4_bytes
-			then
+			if size_settings.is_method_def_or_member_ref_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1699,11 +1558,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if
-				is_file_table_using_4_bytes
-				or is_assemblyref_table_using_4_bytes
-				or is_exportedtype_table_using_4_bytes
-			then
+			if size_settings.is_implementation_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)

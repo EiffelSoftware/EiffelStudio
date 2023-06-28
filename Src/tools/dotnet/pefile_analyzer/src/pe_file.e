@@ -1077,9 +1077,9 @@ feature -- Multi table indexes
 			if
 				is_type_def_table_using_4_bytes
 				or is_type_ref_table_using_4_bytes
-				or is_type_spec_table_using_4_bytes
 				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
-				or is_table_using_4_bytes ({PE_TABLES}.tmodule)
+				or is_method_def_table_using_4_bytes
+				or is_type_spec_table_using_4_bytes
 			then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
@@ -1104,14 +1104,6 @@ feature -- Multi table indexes
 						create {PE_TYPE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
 					end
 					Result.update_index (tu.index)
-				when {PE_MEMBER_REF_PARENT_INDEX}.typespec then
-					if l_use_4_bytes then
-						create {PE_TYPE_SPEC_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_TYPE_SPEC_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-
 				when {PE_MEMBER_REF_PARENT_INDEX}.moduleref then
 					if l_use_4_bytes then
 						create {PE_MODULE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
@@ -1119,14 +1111,20 @@ feature -- Multi table indexes
 						create {PE_MODULE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
 					end
 					Result.update_index (tu.index)
-				when {PE_MEMBER_REF_PARENT_INDEX}.moduledef then
+				when {PE_MEMBER_REF_PARENT_INDEX}.methoddef then
 					if l_use_4_bytes then
-						create {PE_MODULE_INDEX_32_ITEM} Result.make (b, mp, lab)
+						create {PE_METHOD_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
 					else
-						create {PE_MODULE_INDEX_16_ITEM} Result.make (b, mp, lab)
+						create {PE_METHOD_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
 					end
 					Result.update_index (tu.index)
-
+				when {PE_MEMBER_REF_PARENT_INDEX}.typespec then
+					if l_use_4_bytes then
+						create {PE_TYPE_SPEC_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_TYPE_SPEC_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
 				else
 					check False end
 					idx.report_error (create {PE_INDEX_ERROR}.make (idx))

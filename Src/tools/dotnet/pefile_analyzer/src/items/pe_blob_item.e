@@ -13,7 +13,8 @@ inherit
 	PE_BYTES_ITEM
 
 create
-	make
+	make,
+	make_sub
 
 convert
 	dump: {READABLE_STRING_8, STRING_8}
@@ -29,7 +30,7 @@ feature -- Access
 			d := pos - (value_begin_address - declaration_address)
 			p := pointer.item + d.to_integer_32
 			create mp.make_from_pointer (p, (size - d).to_integer_32)
-			create Result.make (declaration_address + pos, value_begin_address + pos, value_end_address, mp, lab)
+			create Result.make_sub (declaration_address + pos, value_begin_address + pos, value_end_address, mp, lab)
 		end
 
 

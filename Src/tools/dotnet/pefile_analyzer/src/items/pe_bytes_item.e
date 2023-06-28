@@ -16,7 +16,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_sub
 
 convert
 	dump: {READABLE_STRING_8, STRING_8}
@@ -26,6 +27,13 @@ feature {NONE} -- Initialization
 	make (a_decl_address, a_start_index, a_end_index: NATURAL_32; mp: MANAGED_POINTER; lab: like label)
 		require
 			a_end_index - a_start_index = mp.count.to_natural_32
+		do
+			make_item (a_decl_address, a_start_index, a_end_index, mp, lab)
+		end
+
+	make_sub (a_decl_address, a_start_index, a_end_index: NATURAL_32; mp: MANAGED_POINTER; lab: like label)
+		require
+			a_end_index - a_start_index <= mp.count.to_natural_32
 		do
 			make_item (a_decl_address, a_start_index, a_end_index, mp, lab)
 		end

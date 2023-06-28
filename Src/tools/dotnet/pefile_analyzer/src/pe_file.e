@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			create f.make_with_name (fn)
 			count := f.count
 			file := f
+			create size_settings
 		end
 
 feature {NONE} -- Access
@@ -89,6 +90,8 @@ feature -- Metadata
 					create Result.make (Current, metadata_root.metadata_tables_address)
 				end
 				internal_metadata_tables := Result
+				size_settings.initialize (Result)
+
 					-- Get the tables
 					-- note: but it relies on `is_table_using_4_bytes`, that relies on `metadata_tables`, ...
 				if not is_opened then
@@ -160,6 +163,8 @@ feature -- Metadata
 				internal_metadata_blob_heap := Result
 			end
 		end
+
+	size_settings: PE_SIZE_SETTINGS
 
 feature -- Access
 
@@ -858,6 +863,92 @@ feature -- Specific MD Table index size
 			Result := is_table_using_4_bytes ({PE_TABLES}.texportedtype)
 		end
 
+feature -- Multi index size
+
+	is_type_def_or_ref_or_spec_using_4_bytes: BOOLEAN
+		do
+			Result :=
+				is_type_def_table_using_4_bytes
+				or is_type_ref_table_using_4_bytes
+				or is_type_spec_table_using_4_bytes
+		end
+
+	is_memberref_parent_using_4_bytes: BOOLEAN
+		do
+			Result :=
+				is_type_def_table_using_4_bytes
+				or is_type_ref_table_using_4_bytes
+				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
+				or is_method_def_table_using_4_bytes
+				or is_type_spec_table_using_4_bytes
+		end
+
+	is_has_constant_using_4_bytes: BOOLEAN
+		do
+			Result :=
+				is_field_table_using_4_bytes
+				or is_param_table_using_4_bytes
+				or is_property_table_using_4_bytes
+		end
+
+	is_has_field_marshal_using_4_bytes: BOOLEAN
+		do
+			Result :=
+				is_field_table_using_4_bytes
+				or is_param_table_using_4_bytes
+		end
+
+	is_has_semantic_using_4_bytes: BOOLEAN
+		do
+			Result :=
+				is_property_table_using_4_bytes
+				or is_table_using_4_bytes ({PE_TABLES}.tevent)
+		end
+
+	is_resolution_scope_using_4_bytes: BOOLEAN
+		do
+			Result :=
+				is_table_using_4_bytes ({PE_TABLES}.tmodule)
+				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
+				or is_assemblyref_table_using_4_bytes
+				or is_type_ref_table_using_4_bytes
+		end
+
+	is_custom_attribute_type_using_4_bytes: BOOLEAN
+		do
+			Result :=
+				is_method_def_table_using_4_bytes
+				or is_member_ref_table_using_4_bytes
+		end
+
+	is_has_custom_attribute_using_4_bytes: BOOLEAN
+		do
+			Result :=
+				is_method_def_table_using_4_bytes
+				or is_table_using_4_bytes ({PE_TABLES}.tmethodspec)
+				or is_member_ref_table_using_4_bytes
+				or is_field_table_using_4_bytes
+				or is_type_def_table_using_4_bytes
+				or is_type_ref_table_using_4_bytes
+				or is_type_spec_table_using_4_bytes
+				or is_param_table_using_4_bytes
+				or is_property_table_using_4_bytes
+				or is_table_using_4_bytes ({PE_TABLES}.tinterfaceimpl)
+				or is_table_using_4_bytes ({PE_TABLES}.tmodule)
+--				or is_table_using_4_bytes ({PE_TABLES}.tpermission) -- Permission
+				or is_table_using_4_bytes ({PE_TABLES}.tevent)
+				or is_table_using_4_bytes ({PE_TABLES}.tstandalonesig)
+				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
+				or is_table_using_4_bytes ({PE_TABLES}.tassemblydef)
+				or is_table_using_4_bytes ({PE_TABLES}.tassemblyref)
+				or is_table_using_4_bytes ({PE_TABLES}.tfile)
+				or is_table_using_4_bytes ({PE_TABLES}.texportedtype)
+				or is_table_using_4_bytes ({PE_TABLES}.tmanifestresource)
+				or is_table_using_4_bytes ({PE_TABLES}.tgenericparam)
+				or is_table_using_4_bytes ({PE_TABLES}.tgenericparamconstraint)
+				or is_table_using_4_bytes ({PE_TABLES}.tmethodspec)
+		end
+
 feature -- Basic value
 
 	read_rva (lab: like {PE_ITEM}.label): PE_RVA_ITEM
@@ -1019,11 +1110,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if
-				is_type_def_table_using_4_bytes
-				or is_type_ref_table_using_4_bytes
-				or is_type_spec_table_using_4_bytes
-			then
+			if is_type_def_or_ref_or_spec_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1074,13 +1161,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if
-				is_type_def_table_using_4_bytes
-				or is_type_ref_table_using_4_bytes
-				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
-				or is_method_def_table_using_4_bytes
-				or is_type_spec_table_using_4_bytes
-			then
+			if is_member_ref_table_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1145,12 +1226,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			-- FIXME
-			if
-				is_field_table_using_4_bytes
-				or is_param_table_using_4_bytes
-				or is_property_table_using_4_bytes
-			then
+			if is_has_constant_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1201,11 +1277,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			-- FIXME
-			if
-				is_field_table_using_4_bytes
-				or is_param_table_using_4_bytes
-			then
+			if is_has_field_marshal_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1249,11 +1321,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			-- FIXME
-			if
-				is_property_table_using_4_bytes
-				or is_table_using_4_bytes ({PE_TABLES}.tevent)
-			then
+			if is_has_semantic_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1297,13 +1365,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			-- FIXME
-			if
-				is_table_using_4_bytes ({PE_TABLES}.tmodule)
-				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
-				or is_assemblyref_table_using_4_bytes
-				or is_type_ref_table_using_4_bytes
-			then
+			if is_resolution_scope_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1361,11 +1423,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			-- FIXME
-			if
-				is_method_def_table_using_4_bytes
-				or is_member_ref_table_using_4_bytes
-			then
+			if is_custom_attribute_type_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
@@ -1409,31 +1467,7 @@ feature -- Multi table indexes
 			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
-			if
-				is_method_def_table_using_4_bytes
-				or is_table_using_4_bytes ({PE_TABLES}.tmethodspec)
-				or is_member_ref_table_using_4_bytes
-				or is_field_table_using_4_bytes
-				or is_type_def_table_using_4_bytes
-				or is_type_ref_table_using_4_bytes
-				or is_type_spec_table_using_4_bytes
-				or is_param_table_using_4_bytes
-				or is_property_table_using_4_bytes
-				or is_table_using_4_bytes ({PE_TABLES}.tinterfaceimpl)
-				or is_table_using_4_bytes ({PE_TABLES}.tmodule)
---				or is_table_using_4_bytes ({PE_TABLES}.tpermission) -- Permission
-				or is_table_using_4_bytes ({PE_TABLES}.tevent)
-				or is_table_using_4_bytes ({PE_TABLES}.tstandalonesig)
-				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
-				or is_table_using_4_bytes ({PE_TABLES}.tassemblydef)
-				or is_table_using_4_bytes ({PE_TABLES}.tassemblyref)
-				or is_table_using_4_bytes ({PE_TABLES}.tfile)
-				or is_table_using_4_bytes ({PE_TABLES}.texportedtype)
-				or is_table_using_4_bytes ({PE_TABLES}.tmanifestresource)
-				or is_table_using_4_bytes ({PE_TABLES}.tgenericparam)
-				or is_table_using_4_bytes ({PE_TABLES}.tgenericparamconstraint)
-				or is_table_using_4_bytes ({PE_TABLES}.tmethodspec)
-			then
+			if is_has_custom_attribute_using_4_bytes then
 				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)

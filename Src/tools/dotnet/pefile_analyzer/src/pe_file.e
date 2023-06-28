@@ -789,12 +789,7 @@ feature -- Read item
 			e := file.position.to_natural_32
 		end
 
-feature -- PE MD reader
-
-	is_table_using_4_bytes (tb: NATURAL_8): BOOLEAN
-		do
-			Result := metadata_tables.table_size (tb) >= 0x1_0000  -- 2^16
-		end
+feature -- Status report
 
 	is_string_heap_using_4_bytes: BOOLEAN
 		do
@@ -810,6 +805,13 @@ feature -- PE MD reader
 		do
 			Result := metadata_tables.blob_heap_index_bytes_size = 4
 		end
+
+	is_table_using_4_bytes (tb: NATURAL_8): BOOLEAN
+		do
+			Result := metadata_tables.table_size (tb) >= 0x1_0000  -- 2^16
+		end
+
+feature -- Specific MD Table index size
 
 	is_field_table_using_4_bytes: BOOLEAN
 		do
@@ -856,6 +858,8 @@ feature -- PE MD reader
 			Result := is_table_using_4_bytes ({PE_TABLES}.texportedtype)
 		end
 
+feature -- Basic value
+
 	read_rva (lab: like {PE_ITEM}.label): PE_RVA_ITEM
 		do
 			Result := read_rva_item (lab)
@@ -871,15 +875,7 @@ feature -- PE MD reader
 			Result := read_integer_32_item (lab)
 		end
 
-	read_index (lab: like {PE_ITEM}.label): PE_INDEX_ITEM
-		local
-			b,e: NATURAL_32
-		do
-			-- TODO: check if needed?
-			b := file.position.to_natural_32
-			create {PE_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
-			e := file.position.to_natural_32
-		end
+feature -- Heap indexes
 
 	read_blob_index (lab: like {PE_ITEM}.label): PE_BLOB_INDEX_ITEM
 		local
@@ -920,6 +916,18 @@ feature -- PE MD reader
 			e := file.position.to_natural_32
 		end
 
+feature -- Table indexes
+
+	read_index (lab: like {PE_ITEM}.label): PE_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+		do
+			-- TODO: check if needed?
+			b := file.position.to_natural_32
+			create {PE_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
+			e := file.position.to_natural_32
+		end
+
 	read_type_def_index (lab: like {PE_ITEM}.label): PE_TYPE_DEF_INDEX_ITEM
 		local
 			b,e: NATURAL_32
@@ -929,590 +937,6 @@ feature -- PE MD reader
 				create {PE_TYPE_DEF_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
 			else
 				create {PE_TYPE_DEF_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
-			end
-			e := file.position.to_natural_32
-		end
-
-	read_type_def_or_ref_or_spec_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
-		local
-			b,e: NATURAL_32
-			mp: MANAGED_POINTER
-			idx: PE_INDEX_ITEM
-		do
-			b := file.position.to_natural_32
-			if
-				is_type_def_table_using_4_bytes
-				or is_type_ref_table_using_4_bytes
-				or is_type_spec_table_using_4_bytes
-			then
-				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
-				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
-			else
-				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
-				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
-			end
-			if attached multi.tag_and_index (idx) as tu then
-				inspect tu.table
-				when {PE_TYPE_DEF_OR_REF_OR_SPEC_INDEX}.typedef then
-					if is_type_def_table_using_4_bytes then
-						create {PE_TYPE_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_TYPE_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_TYPE_DEF_OR_REF_OR_SPEC_INDEX}.typeref then
-					if is_type_ref_table_using_4_bytes then
-						create {PE_TYPE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_TYPE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_TYPE_DEF_OR_REF_OR_SPEC_INDEX}.typespec then
-					if is_type_spec_table_using_4_bytes then
-						create {PE_TYPE_SPEC_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_TYPE_SPEC_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				else
---					check False end
-					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
-					Result := idx
-				end
-			else
-				check False end
-				Result := idx
-			end
-			e := file.position.to_natural_32
-		end
-
-	read_memberref_parent_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
-		local
-			b,e: NATURAL_32
-			mp: MANAGED_POINTER
-			idx: PE_INDEX_ITEM
-		do
-			b := file.position.to_natural_32
-			if
-				is_type_def_table_using_4_bytes
-				or is_type_ref_table_using_4_bytes
-				or is_type_spec_table_using_4_bytes
---				or is_ ...
-			then
-				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
-				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
-			else
-				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
-				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
-			end
-			if attached multi.tag_and_index (idx) as tu then
-				inspect tu.table
-				when {PE_MEMBER_REF_PARENT_INDEX}.typedef then
-					if is_type_def_table_using_4_bytes then
-						create {PE_TYPE_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_TYPE_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_MEMBER_REF_PARENT_INDEX}.typeref then
-					if is_type_ref_table_using_4_bytes then
-						create {PE_TYPE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_TYPE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_MEMBER_REF_PARENT_INDEX}.typespec then
-					if is_type_spec_table_using_4_bytes then
-						create {PE_TYPE_SPEC_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_TYPE_SPEC_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-
-				when {PE_MEMBER_REF_PARENT_INDEX}.moduleref then
-					if is_type_spec_table_using_4_bytes then
-						create {PE_MODULE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_MODULE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_MEMBER_REF_PARENT_INDEX}.moduledef then
-					if is_type_spec_table_using_4_bytes then
-						create {PE_MODULE_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_MODULE_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-
-				else
-					check False end
-					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
-					Result := idx
-				end
-			else
-				check False end
-				Result := idx
-			end
-			e := file.position.to_natural_32
-		end
-
-	read_has_constant_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
-		local
-			b,e: NATURAL_32
-			mp: MANAGED_POINTER
-			idx: PE_INDEX_ITEM
-		do
-			b := file.position.to_natural_32
-			-- FIXME
-			if
-				is_field_table_using_4_bytes
-				or is_param_table_using_4_bytes
-				or is_property_table_using_4_bytes
-			then
-				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
-				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
-			else
-				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
-				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
-			end
-			if attached multi.tag_and_index (idx) as tu then
-				inspect tu.table
-				when {PE_HAS_CONSTANT_INDEX}.field then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_FIELD_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_FIELD_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CONSTANT_INDEX}.param then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_PARAM_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_PARAM_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CONSTANT_INDEX}.property then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_PROPERTY_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_PROPERTY_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				else
-					check False end
-					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
-					Result := idx
-				end
-			else
-				check False end
-				Result := idx
-			end
-			e := file.position.to_natural_32
-		end
-
-	read_has_field_marshal_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
-		local
-			b,e: NATURAL_32
-			mp: MANAGED_POINTER
-			idx: PE_INDEX_ITEM
-		do
-			b := file.position.to_natural_32
-			-- FIXME
-			if
-				is_field_table_using_4_bytes
-				or is_param_table_using_4_bytes
-			then
-				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
-				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
-			else
-				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
-				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
-			end
-			if attached multi.tag_and_index (idx) as tu then
-				inspect tu.table
-				when {PE_HAS_FIELD_MARSHAL_INDEX}.field then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_FIELD_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_FIELD_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_FIELD_MARSHAL_INDEX}.param then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_PARAM_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_PARAM_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				else
-					check False end
-					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
-					Result := idx
-				end
-			else
-				check False end
-				Result := idx
-			end
-			e := file.position.to_natural_32
-		end
-
-	read_has_semantic_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
-		local
-			b,e: NATURAL_32
-			mp: MANAGED_POINTER
-			idx: PE_INDEX_ITEM
-		do
-			b := file.position.to_natural_32
-			-- FIXME
-			if
-				is_property_table_using_4_bytes
-				or is_table_using_4_bytes ({PE_TABLES}.tevent)
-			then
-				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
-				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
-			else
-				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
-				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
-			end
-			if attached multi.tag_and_index (idx) as tu then
-				inspect tu.table
-				when {PE_HAS_SEMANTIC_INDEX}.event then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_EVENT_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_EVENT_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_SEMANTIC_INDEX}.property then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_PROPERTY_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_PROPERTY_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				else
-					check False end
-					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
-					Result := idx
-				end
-			else
-				check False end
-				Result := idx
-			end
-			e := file.position.to_natural_32
-		end
-
-	read_resolution_scope_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
-		local
-			b,e: NATURAL_32
-			mp: MANAGED_POINTER
-			idx: PE_INDEX_ITEM
-		do
-			b := file.position.to_natural_32
-			-- FIXME
-			if
-				is_table_using_4_bytes ({PE_TABLES}.tmodule)
-				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
-				or is_assemblyref_table_using_4_bytes
-				or is_type_ref_table_using_4_bytes
-			then
-				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
-				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
-			else
-				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
-				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
-			end
-			if attached multi.tag_and_index (idx) as tu then
-				inspect tu.table
-				when {PE_RESOLUTION_SCOPE_INDEX}.module then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_MODULE_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_MODULE_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_RESOLUTION_SCOPE_INDEX}.moduleref then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_MODULE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_MODULE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_RESOLUTION_SCOPE_INDEX}.assemblyref then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_ASSEMBLY_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_ASSEMBLY_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_RESOLUTION_SCOPE_INDEX}.typeref then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_TYPE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_TYPE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				else
-					check False end
-					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
-					Result := idx
-				end
-			else
-				check False end
-				Result := idx
-			end
-			e := file.position.to_natural_32
-		end
-
-	read_custom_attribute_type_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
-		local
-			b,e: NATURAL_32
-			mp: MANAGED_POINTER
-			idx: PE_INDEX_ITEM
-		do
-			b := file.position.to_natural_32
-			-- FIXME
-			if
-				is_method_def_table_using_4_bytes
-				or is_member_ref_table_using_4_bytes
-			then
-				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
-				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
-			else
-				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
-				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
-			end
-			if attached multi.tag_and_index (idx) as tu then
-				inspect tu.table
-				when {PE_CUSTOM_ATTRIBUTE_TYPE_INDEX}.methoddef then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_METHOD_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_METHOD_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_CUSTOM_ATTRIBUTE_TYPE_INDEX}.memberref then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_MEMBER_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_MEMBER_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				else
---					check False end
-					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
-					Result := idx
-				end
-			else
-				check False end
-				Result := idx
-			end
-			e := file.position.to_natural_32
-		end
-
-	read_has_custom_attribute_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
-		local
-			b,e: NATURAL_32
-			mp: MANAGED_POINTER
-			idx: PE_INDEX_ITEM
-		do
-			b := file.position.to_natural_32
-			if
-				is_method_def_table_using_4_bytes
-				or is_table_using_4_bytes ({PE_TABLES}.tmethodspec)
-				or is_member_ref_table_using_4_bytes
-				or is_field_table_using_4_bytes
-				or is_type_def_table_using_4_bytes
-				or is_type_ref_table_using_4_bytes
-				or is_type_spec_table_using_4_bytes
-				or is_param_table_using_4_bytes
-				or is_property_table_using_4_bytes
-				or is_table_using_4_bytes ({PE_TABLES}.tinterfaceimpl)
-				or is_table_using_4_bytes ({PE_TABLES}.tmodule)
---				or is_table_using_4_bytes ({PE_TABLES}.tpermission) -- Permission
-				or is_table_using_4_bytes ({PE_TABLES}.tevent)
-				or is_table_using_4_bytes ({PE_TABLES}.tstandalonesig)
-				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
-				or is_table_using_4_bytes ({PE_TABLES}.tassemblydef)
-				or is_table_using_4_bytes ({PE_TABLES}.tassemblyref)
-				or is_table_using_4_bytes ({PE_TABLES}.tfile)
-				or is_table_using_4_bytes ({PE_TABLES}.texportedtype)
-				or is_table_using_4_bytes ({PE_TABLES}.tmanifestresource)
-				or is_table_using_4_bytes ({PE_TABLES}.tgenericparam)
-				or is_table_using_4_bytes ({PE_TABLES}.tgenericparamconstraint)
-				or is_table_using_4_bytes ({PE_TABLES}.tmethodspec)
-			then
-				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
-				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
-			else
-				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
-				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
-			end
-			if attached multi.tag_and_index (idx) as tu then
-				inspect tu.table
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.methoddef then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_METHOD_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_METHOD_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.methodspec then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_METHOD_SPEC_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_METHOD_SPEC_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.memberref then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_MEMBER_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_MEMBER_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.field then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_FIELD_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_FIELD_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.typedef then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_TYPE_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_TYPE_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.typeref then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_TYPE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_TYPE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.typespec then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_TYPE_SPEC_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_TYPE_SPEC_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.param then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_PARAM_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_PARAM_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.property then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_PROPERTY_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_PROPERTY_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.interfaceimpl then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_INTERFACE_IMPL_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_INTERFACE_IMPL_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.module then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_MODULE_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_MODULE_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.permission then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_PERMISSION_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_PERMISSION_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.event then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_EVENT_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_EVENT_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.standalonesig then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_STANDALONESIG_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_STANDALONESIG_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.moduleref then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_MODULE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_MODULE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.assembly then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_ASSEMBLY_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_ASSEMBLY_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.assemblyref then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_ASSEMBLY_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_ASSEMBLY_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.file then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_FILE_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_FILE_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.exportedtype then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_EXPORTED_TYPE_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_EXPORTED_TYPE_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.manifestresource then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_MANIFEST_RESOURCE_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_MANIFEST_RESOURCE_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.genericparam then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_GENERIC_PARAM_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_GENERIC_PARAM_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.genericparamconstraint then
-					if is_table_using_4_bytes (tu.table) then
-						create {PE_GENERIC_PARAM_CONSTRAINT_INDEX_32_ITEM} Result.make (b, mp, lab)
-					else
-						create {PE_GENERIC_PARAM_CONSTRAINT_INDEX_16_ITEM} Result.make (b, mp, lab)
-					end
-					Result.update_index (tu.index)
-
-				else
---					check False end
-					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
-					Result := idx
-				end
-			else
-				check False end
-				Result := idx
 			end
 			e := file.position.to_natural_32
 		end
@@ -1546,17 +970,661 @@ feature -- PE MD reader
 			e := file.position.to_natural_32
 		end
 
+	read_param_index (lab: like {PE_ITEM}.label): PE_PARAM_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+		do
+			b := file.position.to_natural_32
+			if is_param_table_using_4_bytes then
+				create {PE_PARAM_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
+			else
+				create {PE_PARAM_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_event_index (lab: like {PE_ITEM}.label): PE_EVENT_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+		do
+			b := file.position.to_natural_32
+			if is_table_using_4_bytes ({PE_TABLES}.tevent) then
+				create {PE_EVENT_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
+			else
+				create {PE_EVENT_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_property_index (lab: like {PE_ITEM}.label): PE_PROPERTY_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+		do
+			b := file.position.to_natural_32
+			if is_property_table_using_4_bytes then
+				create {PE_PROPERTY_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
+			else
+				create {PE_PROPERTY_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
+			end
+			e := file.position.to_natural_32
+		end
+
+feature -- Multi table indexes
+
+	read_type_def_or_ref_or_spec_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+			mp: MANAGED_POINTER
+			idx: PE_INDEX_ITEM
+			l_use_4_bytes: BOOLEAN
+		do
+			b := file.position.to_natural_32
+			if
+				is_type_def_table_using_4_bytes
+				or is_type_ref_table_using_4_bytes
+				or is_type_spec_table_using_4_bytes
+			then
+				l_use_4_bytes := True
+				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
+				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
+			else
+				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
+				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
+			end
+			if attached multi.tag_and_index (idx) as tu then
+				inspect tu.table
+				when {PE_TYPE_DEF_OR_REF_OR_SPEC_INDEX}.typedef then
+					if l_use_4_bytes then
+						create {PE_TYPE_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_TYPE_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_TYPE_DEF_OR_REF_OR_SPEC_INDEX}.typeref then
+					if l_use_4_bytes then
+						create {PE_TYPE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_TYPE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_TYPE_DEF_OR_REF_OR_SPEC_INDEX}.typespec then
+					if l_use_4_bytes then
+						create {PE_TYPE_SPEC_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_TYPE_SPEC_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				else
+--					check False end
+					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					Result := idx
+				end
+			else
+				check False end
+				Result := idx
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_memberref_parent_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+			mp: MANAGED_POINTER
+			idx: PE_INDEX_ITEM
+			l_use_4_bytes: BOOLEAN
+		do
+			b := file.position.to_natural_32
+			if
+				is_type_def_table_using_4_bytes
+				or is_type_ref_table_using_4_bytes
+				or is_type_spec_table_using_4_bytes
+				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
+				or is_table_using_4_bytes ({PE_TABLES}.tmodule)
+			then
+				l_use_4_bytes := True
+				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
+				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
+			else
+				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
+				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
+			end
+			if attached multi.tag_and_index (idx) as tu then
+				inspect tu.table
+				when {PE_MEMBER_REF_PARENT_INDEX}.typedef then
+					if l_use_4_bytes then
+						create {PE_TYPE_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_TYPE_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_MEMBER_REF_PARENT_INDEX}.typeref then
+					if l_use_4_bytes then
+						create {PE_TYPE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_TYPE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_MEMBER_REF_PARENT_INDEX}.typespec then
+					if l_use_4_bytes then
+						create {PE_TYPE_SPEC_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_TYPE_SPEC_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+
+				when {PE_MEMBER_REF_PARENT_INDEX}.moduleref then
+					if l_use_4_bytes then
+						create {PE_MODULE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_MODULE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_MEMBER_REF_PARENT_INDEX}.moduledef then
+					if l_use_4_bytes then
+						create {PE_MODULE_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_MODULE_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+
+				else
+					check False end
+					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					Result := idx
+				end
+			else
+				check False end
+				Result := idx
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_has_constant_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+			mp: MANAGED_POINTER
+			idx: PE_INDEX_ITEM
+			l_use_4_bytes: BOOLEAN
+		do
+			b := file.position.to_natural_32
+			-- FIXME
+			if
+				is_field_table_using_4_bytes
+				or is_param_table_using_4_bytes
+				or is_property_table_using_4_bytes
+			then
+				l_use_4_bytes := True
+				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
+				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
+			else
+				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
+				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
+			end
+			if attached multi.tag_and_index (idx) as tu then
+				inspect tu.table
+				when {PE_HAS_CONSTANT_INDEX}.field then
+					if l_use_4_bytes then
+						create {PE_FIELD_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_FIELD_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CONSTANT_INDEX}.param then
+					if l_use_4_bytes then
+						create {PE_PARAM_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_PARAM_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CONSTANT_INDEX}.property then
+					if l_use_4_bytes then
+						create {PE_PROPERTY_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_PROPERTY_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				else
+					check False end
+					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					Result := idx
+				end
+			else
+				check False end
+				Result := idx
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_has_field_marshal_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+			mp: MANAGED_POINTER
+			idx: PE_INDEX_ITEM
+			l_use_4_bytes: BOOLEAN
+		do
+			b := file.position.to_natural_32
+			-- FIXME
+			if
+				is_field_table_using_4_bytes
+				or is_param_table_using_4_bytes
+			then
+				l_use_4_bytes := True
+				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
+				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
+			else
+				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
+				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
+			end
+			if attached multi.tag_and_index (idx) as tu then
+				inspect tu.table
+				when {PE_HAS_FIELD_MARSHAL_INDEX}.field then
+					if l_use_4_bytes then
+						create {PE_FIELD_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_FIELD_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_FIELD_MARSHAL_INDEX}.param then
+					if l_use_4_bytes then
+						create {PE_PARAM_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_PARAM_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				else
+					check False end
+					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					Result := idx
+				end
+			else
+				check False end
+				Result := idx
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_has_semantic_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+			mp: MANAGED_POINTER
+			idx: PE_INDEX_ITEM
+			l_use_4_bytes: BOOLEAN
+		do
+			b := file.position.to_natural_32
+			-- FIXME
+			if
+				is_property_table_using_4_bytes
+				or is_table_using_4_bytes ({PE_TABLES}.tevent)
+			then
+				l_use_4_bytes := True
+				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
+				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
+			else
+				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
+				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
+			end
+			if attached multi.tag_and_index (idx) as tu then
+				inspect tu.table
+				when {PE_HAS_SEMANTIC_INDEX}.event then
+					if l_use_4_bytes then
+						create {PE_EVENT_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_EVENT_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_SEMANTIC_INDEX}.property then
+					if l_use_4_bytes then
+						create {PE_PROPERTY_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_PROPERTY_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				else
+					check False end
+					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					Result := idx
+				end
+			else
+				check False end
+				Result := idx
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_resolution_scope_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+			mp: MANAGED_POINTER
+			idx: PE_INDEX_ITEM
+			l_use_4_bytes: BOOLEAN
+		do
+			b := file.position.to_natural_32
+			-- FIXME
+			if
+				is_table_using_4_bytes ({PE_TABLES}.tmodule)
+				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
+				or is_assemblyref_table_using_4_bytes
+				or is_type_ref_table_using_4_bytes
+			then
+				l_use_4_bytes := True
+				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
+				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
+			else
+				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
+				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
+			end
+			if attached multi.tag_and_index (idx) as tu then
+				inspect tu.table
+				when {PE_RESOLUTION_SCOPE_INDEX}.module then
+					if l_use_4_bytes then
+						create {PE_MODULE_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_MODULE_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_RESOLUTION_SCOPE_INDEX}.moduleref then
+					if l_use_4_bytes then
+						create {PE_MODULE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_MODULE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_RESOLUTION_SCOPE_INDEX}.assemblyref then
+					if l_use_4_bytes then
+						create {PE_ASSEMBLY_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_ASSEMBLY_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_RESOLUTION_SCOPE_INDEX}.typeref then
+					if l_use_4_bytes then
+						create {PE_TYPE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_TYPE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				else
+					check False end
+					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					Result := idx
+				end
+			else
+				check False end
+				Result := idx
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_custom_attribute_type_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+			mp: MANAGED_POINTER
+			idx: PE_INDEX_ITEM
+			l_use_4_bytes: BOOLEAN
+		do
+			b := file.position.to_natural_32
+			-- FIXME
+			if
+				is_method_def_table_using_4_bytes
+				or is_member_ref_table_using_4_bytes
+			then
+				l_use_4_bytes := True
+				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
+				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
+			else
+				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
+				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
+			end
+			if attached multi.tag_and_index (idx) as tu then
+				inspect tu.table
+				when {PE_CUSTOM_ATTRIBUTE_TYPE_INDEX}.methoddef then
+					if l_use_4_bytes then
+						create {PE_METHOD_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_METHOD_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_CUSTOM_ATTRIBUTE_TYPE_INDEX}.memberref then
+					if l_use_4_bytes then
+						create {PE_MEMBER_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_MEMBER_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				else
+--					check False end
+					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					Result := idx
+				end
+			else
+				check False end
+				Result := idx
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_has_custom_attribute_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+			mp: MANAGED_POINTER
+			idx: PE_INDEX_ITEM
+			l_use_4_bytes: BOOLEAN
+		do
+			b := file.position.to_natural_32
+			if
+				is_method_def_table_using_4_bytes
+				or is_table_using_4_bytes ({PE_TABLES}.tmethodspec)
+				or is_member_ref_table_using_4_bytes
+				or is_field_table_using_4_bytes
+				or is_type_def_table_using_4_bytes
+				or is_type_ref_table_using_4_bytes
+				or is_type_spec_table_using_4_bytes
+				or is_param_table_using_4_bytes
+				or is_property_table_using_4_bytes
+				or is_table_using_4_bytes ({PE_TABLES}.tinterfaceimpl)
+				or is_table_using_4_bytes ({PE_TABLES}.tmodule)
+--				or is_table_using_4_bytes ({PE_TABLES}.tpermission) -- Permission
+				or is_table_using_4_bytes ({PE_TABLES}.tevent)
+				or is_table_using_4_bytes ({PE_TABLES}.tstandalonesig)
+				or is_table_using_4_bytes ({PE_TABLES}.tmoduleref)
+				or is_table_using_4_bytes ({PE_TABLES}.tassemblydef)
+				or is_table_using_4_bytes ({PE_TABLES}.tassemblyref)
+				or is_table_using_4_bytes ({PE_TABLES}.tfile)
+				or is_table_using_4_bytes ({PE_TABLES}.texportedtype)
+				or is_table_using_4_bytes ({PE_TABLES}.tmanifestresource)
+				or is_table_using_4_bytes ({PE_TABLES}.tgenericparam)
+				or is_table_using_4_bytes ({PE_TABLES}.tgenericparamconstraint)
+				or is_table_using_4_bytes ({PE_TABLES}.tmethodspec)
+			then
+				l_use_4_bytes := True
+				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
+				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
+			else
+				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
+				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
+			end
+			if attached multi.tag_and_index (idx) as tu then
+				inspect tu.table
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.methoddef then
+					if l_use_4_bytes then
+						create {PE_METHOD_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_METHOD_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.methodspec then
+					if l_use_4_bytes then
+						create {PE_METHOD_SPEC_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_METHOD_SPEC_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.memberref then
+					if l_use_4_bytes then
+						create {PE_MEMBER_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_MEMBER_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.field then
+					if l_use_4_bytes then
+						create {PE_FIELD_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_FIELD_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.typedef then
+					if l_use_4_bytes then
+						create {PE_TYPE_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_TYPE_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.typeref then
+					if l_use_4_bytes then
+						create {PE_TYPE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_TYPE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.typespec then
+					if l_use_4_bytes then
+						create {PE_TYPE_SPEC_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_TYPE_SPEC_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.param then
+					if l_use_4_bytes then
+						create {PE_PARAM_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_PARAM_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.property then
+					if l_use_4_bytes then
+						create {PE_PROPERTY_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_PROPERTY_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.interfaceimpl then
+					if l_use_4_bytes then
+						create {PE_INTERFACE_IMPL_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_INTERFACE_IMPL_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.module then
+					if l_use_4_bytes then
+						create {PE_MODULE_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_MODULE_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.permission then
+					if l_use_4_bytes then
+						create {PE_PERMISSION_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_PERMISSION_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.event then
+					if l_use_4_bytes then
+						create {PE_EVENT_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_EVENT_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.standalonesig then
+					if l_use_4_bytes then
+						create {PE_STANDALONESIG_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_STANDALONESIG_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.moduleref then
+					if l_use_4_bytes then
+						create {PE_MODULE_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_MODULE_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.assembly then
+					if l_use_4_bytes then
+						create {PE_ASSEMBLY_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_ASSEMBLY_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.assemblyref then
+					if l_use_4_bytes then
+						create {PE_ASSEMBLY_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_ASSEMBLY_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.file then
+					if l_use_4_bytes then
+						create {PE_FILE_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_FILE_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.exportedtype then
+					if l_use_4_bytes then
+						create {PE_EXPORTED_TYPE_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_EXPORTED_TYPE_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.manifestresource then
+					if l_use_4_bytes then
+						create {PE_MANIFEST_RESOURCE_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_MANIFEST_RESOURCE_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.genericparam then
+					if l_use_4_bytes then
+						create {PE_GENERIC_PARAM_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_GENERIC_PARAM_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_HAS_CUSTOM_ATTRIBUTE_INDEX}.genericparamconstraint then
+					if l_use_4_bytes then
+						create {PE_GENERIC_PARAM_CONSTRAINT_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_GENERIC_PARAM_CONSTRAINT_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+
+				else
+--					check False end
+					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					Result := idx
+				end
+			else
+				check False end
+				Result := idx
+			end
+			e := file.position.to_natural_32
+		end
+
 	read_method_def_or_member_ref_index (lab: like {PE_ITEM}.label; multi: PE_METHOD_DEF_OR_MEMBER_REF_INDEX): PE_INDEX_ITEM
 		local
 			b,e: NATURAL_32
 			mp: MANAGED_POINTER
 			idx: PE_INDEX_ITEM
+			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
 			if
 				is_method_def_table_using_4_bytes
 				or is_member_ref_table_using_4_bytes
 			then
+				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
 			else
@@ -1566,14 +1634,14 @@ feature -- PE MD reader
 			if attached multi.tag_and_index (idx) as tu then
 				inspect tu.table
 				when {PE_METHOD_DEF_OR_MEMBER_REF_INDEX}.methoddef then
-					if is_method_def_table_using_4_bytes then
+					if l_use_4_bytes then
 						create {PE_METHOD_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
 					else
 						create {PE_METHOD_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
 					end
 					Result.update_index (tu.index)
 				when {PE_METHOD_DEF_OR_MEMBER_REF_INDEX}.memberref then
-					if is_member_ref_table_using_4_bytes then
+					if l_use_4_bytes then
 						create {PE_MEMBER_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
 					else
 						create {PE_MEMBER_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
@@ -1596,6 +1664,7 @@ feature -- PE MD reader
 			b,e: NATURAL_32
 			mp: MANAGED_POINTER
 			idx: PE_INDEX_ITEM
+			l_use_4_bytes: BOOLEAN
 		do
 			b := file.position.to_natural_32
 			if
@@ -1603,6 +1672,7 @@ feature -- PE MD reader
 				or is_assemblyref_table_using_4_bytes
 				or is_exportedtype_table_using_4_bytes
 			then
+				l_use_4_bytes := True
 				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
 				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
 			else
@@ -1612,21 +1682,21 @@ feature -- PE MD reader
 			if attached multi.tag_and_index (idx) as tu then
 				inspect tu.table
 				when {PE_IMPLEMENTATION_INDEX}.file then
-					if is_file_table_using_4_bytes then
+					if l_use_4_bytes then
 						create {PE_FILE_INDEX_32_ITEM} Result.make (b, mp, lab)
 					else
 						create {PE_FILE_INDEX_16_ITEM} Result.make (b, mp, lab)
 					end
 					Result.update_index (tu.index)
 				when {PE_IMPLEMENTATION_INDEX}.assemblyref then
-					if is_member_ref_table_using_4_bytes then
+					if l_use_4_bytes then
 						create {PE_ASSEMBLY_REF_INDEX_32_ITEM} Result.make (b, mp, lab)
 					else
 						create {PE_ASSEMBLY_REF_INDEX_16_ITEM} Result.make (b, mp, lab)
 					end
 					Result.update_index (tu.index)
 				when {PE_IMPLEMENTATION_INDEX}.exportedtype then
-					if is_member_ref_table_using_4_bytes then
+					if l_use_4_bytes then
 						create {PE_EXPORTED_TYPE_INDEX_32_ITEM} Result.make (b, mp, lab)
 					else
 						create {PE_EXPORTED_TYPE_INDEX_16_ITEM} Result.make (b, mp, lab)
@@ -1640,45 +1710,6 @@ feature -- PE MD reader
 			else
 				check False end
 				Result := idx
-			end
-			e := file.position.to_natural_32
-		end
-
-	read_param_index (lab: like {PE_ITEM}.label): PE_PARAM_INDEX_ITEM
-		local
-			b,e: NATURAL_32
-		do
-			b := file.position.to_natural_32
-			if is_param_table_using_4_bytes then
-				create {PE_PARAM_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
-			else
-				create {PE_PARAM_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
-			end
-			e := file.position.to_natural_32
-		end
-
-	read_event_index (lab: like {PE_ITEM}.label): PE_EVENT_INDEX_ITEM
-		local
-			b,e: NATURAL_32
-		do
-			b := file.position.to_natural_32
-			if is_param_table_using_4_bytes then
-				create {PE_EVENT_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
-			else
-				create {PE_EVENT_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
-			end
-			e := file.position.to_natural_32
-		end
-
-	read_property_index (lab: like {PE_ITEM}.label): PE_PROPERTY_INDEX_ITEM
-		local
-			b,e: NATURAL_32
-		do
-			b := file.position.to_natural_32
-			if is_property_table_using_4_bytes then
-				create {PE_PROPERTY_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
-			else
-				create {PE_PROPERTY_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
 			end
 			e := file.position.to_natural_32
 		end

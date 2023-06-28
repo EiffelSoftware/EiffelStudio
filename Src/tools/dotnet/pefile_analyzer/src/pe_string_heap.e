@@ -31,6 +31,10 @@ feature -- Initialization
 			create map.make (items.count)
 			b := pe.position
 
+			debug ("pe_analyze")
+				io.error.put_string ("Read String Heap at 0x"+ b.to_hex_string +"%N")
+			end
+
 			sz := 0
 
 			i_decl_addr := pe.position.to_natural_32
@@ -66,6 +70,9 @@ feature -- Initialization
 							check unexpected_empty_string: False end
 						end
 					else
+						debug ("pe_analyze")
+							io.error.put_string_32 ({STRING_32} "  ["+ i.to_natural_32.to_hex_string  +"] " + str.string_32 +"%N")
+						end
 						items.force (str)
 						map[str.declaration_address - b.to_natural_32] := str
 					end

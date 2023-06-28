@@ -95,6 +95,13 @@ feature -- Input
 			loop
 				if is_table_included (i.to_natural_8, bin) then
 					l_tb_counts[i] := pe.read_natural_32_item ("Size").value
+					debug ("pe_analyze")
+						if l_tb_counts[i] > 0x1_0000 then
+							io.error.put_string ("Big-")
+						end
+						io.error.put_string ("Table "+ {PE_MD_TABLES}.table_name (i.to_natural_8) +" ["+ i.to_natural_8.to_hex_string +"]")
+						io.error.put_string (" -> " + l_tb_counts[i].out + " row(s)%N")
+					end
 				end
 				i := i + 1
 			end

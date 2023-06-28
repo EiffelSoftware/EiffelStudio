@@ -33,6 +33,12 @@ feature -- Initialization
 			b := pe.position
 
 			i_start_addr := pe.position.to_natural_32
+
+
+			debug ("pe_analyze")
+				io.error.put_string ("Read Blob Heap at 0x"+ i_start_addr.to_hex_string +"%N")
+			end
+
 			ch := pe.read_character_8 --Single Byte 0x0
 			check ch = '%U' end
 			create str.make (i_start_addr, b.to_natural_32, b.to_natural_32, create {MANAGED_POINTER}.make (0), "0")

@@ -82,6 +82,10 @@ feature -- Read
 		do
 			address := pe.position.to_natural_32
 
+			debug ("pe_analyze")
+				io.error.put_string ("Read table " + {PE_MD_TABLES}.table_name (table_id) + "  " + table_id.to_hex_string + " (" + count.out + ") at 0x"+ address.to_hex_string +"%N")
+			end
+
 			entries.wipe_out
 			from
 				i := 1
@@ -90,6 +94,10 @@ feature -- Read
 				i > n
 			loop
 				if attached read_entry (pe) as e then
+					debug ("pe_analyze")
+						io.error.put_string_32 ({STRING_32} "  + " + e.to_string + "%N")
+					end
+
 					entries.force (e)
 					tok := (table_id.to_natural_32 |<< 24) | i.to_natural_32
 					e.set_token (tok)

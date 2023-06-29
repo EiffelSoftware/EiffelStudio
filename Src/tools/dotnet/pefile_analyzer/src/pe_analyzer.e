@@ -92,7 +92,7 @@ feature -- Visitor
 			current_table := o
 			update_list_indexes (o)
 			Precursor (o)
-			o.check_validity
+			o.check_validity (pe_file)
 			if o.has_error then
 				error_count := error_count + o.error_count
 			end
@@ -179,7 +179,7 @@ feature -- Visitor
 		do
 			current_table_entry := o
 			Precursor (o)
-			o.check_validity
+			o.check_validity (pe_file)
 			if o.has_error then
 				error_count := error_count + o.error_count
 			end

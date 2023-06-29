@@ -73,7 +73,8 @@ feature -- Conversion
 
 feature -- Validity
 
-	check_validity
+	check_validity (pe: PE_FILE)
+			-- Check simple validity
 		do
 			-- To redefine if needed
 		end

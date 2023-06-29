@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Check validity
 
-	check_validity
+	check_validity (pe: PE_FILE)
 		do
 			-- redefine if needed
 		end

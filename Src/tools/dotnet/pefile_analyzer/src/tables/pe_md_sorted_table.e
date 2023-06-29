@@ -20,7 +20,7 @@ inherit
 
 feature -- Check validity
 
-	check_validity
+	check_validity (pe: PE_FILE)
 		local
 			e,prev: PE_MD_TABLE_COMPARABLE_ENTRY
 			is_sorted: BOOLEAN

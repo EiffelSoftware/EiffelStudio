@@ -4,6 +4,8 @@ REM Should be called by `make_exes.btm'
 cdd %EIFFEL_SRC
 
 remtrace Compiling .NET runtime
+mkdir %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\lib\netcore
+
 cd %EIFFEL_SRC%\Eiffel\eiffel\com_il_generation\core\run-time
 remtrace Compiling .NET CORE runtime
 espawn "geant clobber" >>& %INSTALL_LOG%
@@ -17,6 +19,8 @@ else
 endiff
 
 remtrace Compiling .NET framework runtime
+mkdir %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\lib\netframework
+
 espawn "geant clobber" >>& %INSTALL_LOG%
 sed -e "s/msbuild runtime.sln/msbuild runtime.sln \/p:Platform=\"Any CPU\" \/p:Configuration=Release /" Makefile > Makefile-release
 
@@ -34,7 +38,9 @@ else
 	espawn -u:%TMP_ISE_C_COMPILER_VER% "%COMSPEC% /c nmake -f Makefile-release msbuild_40"
 endiff
 iff exist EiffelSoftware.Runtime.dll then
+:: 	For backward comptability keep .Net framework (v4.0) EiffelSoftware.Runtime.dll also directly in lib directory.
 	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\lib
+	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\lib\netframework
 	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
 	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 else

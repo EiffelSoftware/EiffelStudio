@@ -894,6 +894,19 @@ feature -- Table indexes
 			e := file.position.to_natural_32
 		end
 
+	read_module_ref_index (lab: like {PE_ITEM}.label): PE_MODULE_REF_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+		do
+			b := file.position.to_natural_32
+			if size_settings.is_moduleref_table_using_4_bytes then
+				create {PE_MODULE_REF_INDEX_32_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32), lab)
+			else
+				create {PE_MODULE_REF_INDEX_16_ITEM} Result.make (b, read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32), lab)
+			end
+			e := file.position.to_natural_32
+		end
+
 	read_field_index (lab: like {PE_ITEM}.label): PE_FIELD_INDEX_ITEM
 		local
 			b,e: NATURAL_32
@@ -1068,6 +1081,51 @@ feature -- Multi table indexes
 						create {PE_TYPE_SPEC_INDEX_16_ITEM} Result.make (b, mp, lab)
 					end
 					Result.update_index (tu.index)
+				else
+					check False end
+					idx.report_error (create {PE_INDEX_ERROR}.make (idx))
+					Result := idx
+				end
+			else
+				check False end
+				Result := idx
+			end
+			e := file.position.to_natural_32
+		end
+
+	read_member_forwarded_index (lab: like {PE_ITEM}.label; multi: PE_STRUCTURE_TAG_ITEM): PE_INDEX_ITEM
+		local
+			b,e: NATURAL_32
+			mp: MANAGED_POINTER
+			idx: PE_INDEX_ITEM
+			l_use_4_bytes: BOOLEAN
+		do
+			b := file.position.to_natural_32
+			if size_settings.is_memberforwarded_using_4_bytes then
+				l_use_4_bytes := True
+				mp := read_bytes ({PLATFORM}.natural_32_bytes.to_natural_32)
+				create {PE_INDEX_32_ITEM} idx.make (b, mp, lab)
+			else
+				mp := read_bytes ({PLATFORM}.natural_16_bytes.to_natural_32)
+				create {PE_INDEX_16_ITEM} idx.make (b, mp, lab)
+			end
+			if attached multi.tag_and_index (idx) as tu then
+				inspect tu.table
+				when {PE_MEMBER_FORWARDED_INDEX}.field then
+					if l_use_4_bytes then
+						create {PE_FIELD_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_FIELD_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+				when {PE_MEMBER_FORWARDED_INDEX}.methoddef then
+					if l_use_4_bytes then
+						create {PE_METHOD_DEF_INDEX_32_ITEM} Result.make (b, mp, lab)
+					else
+						create {PE_METHOD_DEF_INDEX_16_ITEM} Result.make (b, mp, lab)
+					end
+					Result.update_index (tu.index)
+
 				else
 					check False end
 					idx.report_error (create {PE_INDEX_ERROR}.make (idx))

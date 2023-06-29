@@ -321,10 +321,10 @@ feature -- Element change
 			add (create {PE_STRING_INDEX}.make (lab))
 		end
 
-	add_index (lab: STRING)
-		do
-			add (create {PE_INDEX}.make (lab))
-		end
+--	add_index (lab: STRING)
+--		do
+--			add (create {PE_INDEX}.make (lab))
+--		end
 
 	add_implementation_index (lab: STRING)
 		do
@@ -379,6 +379,11 @@ feature -- Element change
 			add (create {PE_MEMBER_REF_PARENT_INDEX}.make (lab))
 		end
 
+	add_member_forwarded_index (lab: STRING)
+		do
+			add (create {PE_MEMBER_FORWARDED_INDEX}.make (lab))
+		end
+
 	add_type_def_index (lab: STRING)
 		do
 			add (create {PE_TYPE_DEF_INDEX}.make (lab))
@@ -387,6 +392,11 @@ feature -- Element change
 	add_type_def_or_ref_or_spec (lab: STRING)
 		do
 			add (create {PE_TYPE_DEF_OR_REF_OR_SPEC_INDEX}.make (lab))
+		end
+
+	add_module_ref_index (lab: STRING)
+		do
+			add (create {PE_MODULE_REF_INDEX}.make (lab))
 		end
 
 	add_has_constant (lab: STRING)

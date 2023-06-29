@@ -55,6 +55,13 @@ feature -- Operation
 			file.close
 		end
 
+feature -- Status report
+
+	is_access_readable: BOOLEAN
+		do
+			Result := file.is_access_readable
+		end
+
 	is_opened: BOOLEAN
 		do
 			Result := file.is_open_read

@@ -169,76 +169,80 @@ feature -- Execution
 			l_error_count: NATURAL_32
 		do
 			create pe.make (fn.name)
-			io.error.put_string ("Loading " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
+			if pe.is_access_readable then
+				io.error.put_string ("Loading " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
 
-			rt := pe.metadata_root
+				rt := pe.metadata_root
 
-			md_tables := rt.metadata_tables (pe)
+				md_tables := rt.metadata_tables (pe)
 
-			create o_dft.make (default_output)
-			if not o_dft.was_opened then
-				o_dft.open_write
-			end
+				create o_dft.make (default_output)
+				if not o_dft.was_opened then
+					o_dft.open_write
+				end
 
-			if has_analyzer then
-					-- Resolve FieldPointer and MethodPointer
-				create resolver.make (pe)
-				pe.accepts (resolver)
+				if has_analyzer then
+						-- Resolve FieldPointer and MethodPointer
+					create resolver.make (pe)
+					pe.accepts (resolver)
 
-				create analyzer.make (pe)
-				pe.accepts (analyzer)
-				l_error_count := analyzer.error_count
-				if l_error_count > 0 then
-					io.error.put_string ("ERROR: " + l_error_count.out + " error(s) detected%N")
-				else
-					debug ("pe_analyze")
-						io.error.put_string ("No error detected%N")
+					create analyzer.make (pe)
+					pe.accepts (analyzer)
+					l_error_count := analyzer.error_count
+					if l_error_count > 0 then
+						io.error.put_string ("ERROR: " + l_error_count.out + " error(s) detected%N")
+					else
+						debug ("pe_analyze")
+							io.error.put_string ("No error detected%N")
+						end
 					end
 				end
-			end
 
-			if has_printer then
-				io.error.put_string ("Printing ...%N")
-				if printer_output = default_output then
-					o := o_dft
-				else
-					create o.make (printer_output)
-					if not o.was_opened then
-						o.open_write
+				if has_printer then
+					io.error.put_string ("Printing ...%N")
+					if printer_output = default_output then
+						o := o_dft
+					else
+						create o.make (printer_output)
+						if not o.was_opened then
+							o.open_write
+						end
+					end
+					create printer.make (o)
+					o.put_string ("File: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
+					pe.accepts (printer)
+
+					if o /= o_dft and then not o.was_opened then
+						o.close
 					end
 				end
-				create printer.make (o)
-				o.put_string ("File: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
-				pe.accepts (printer)
 
-				if o /= o_dft and then not o.was_opened then
-					o.close
-				end
-			end
+				if has_explorer then
+					io.error.put_string ("Exploring ...%N")
+					if explorer_output = default_output then
+						o := o_dft
+					else
+						create o.make (explorer_output)
+						if not o.was_opened then
+							o.open_write
+						end
+					end
+					create explorer.make (o, pe)
+					o.put_string ("File: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
+					pe.accepts (explorer)
 
-			if has_explorer then
-				io.error.put_string ("Exploring ...%N")
-				if explorer_output = default_output then
-					o := o_dft
-				else
-					create o.make (explorer_output)
-					if not o.was_opened then
-						o.open_write
+					if o /= o_dft and then not o.was_opened then
+						o.close
 					end
 				end
-				create explorer.make (o, pe)
-				o.put_string ("File: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
-				pe.accepts (explorer)
 
-				if o /= o_dft and then not o.was_opened then
-					o.close
+				if not o_dft.was_opened then
+					o_dft.close
 				end
+				io.error.put_string ("Completed.%N")
+			else
+				io.error.put_string ("Error: can not load the file!%N")
 			end
-
-			if not o_dft.was_opened then
-				o_dft.close
-			end
-			io.error.put_string ("Completed.%N")
 		end
 
 end

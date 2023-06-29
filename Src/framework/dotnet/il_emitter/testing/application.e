@@ -19,7 +19,7 @@ feature -- Testing
 	default_tests: ARRAY [READABLE_STRING_GENERAL]
 		once
 				--Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.empty_assembly", "tk.define_method_net2", "om.method_assembly">>
-			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_class","tk.define_module_net6", "tk.basic_interface">> --,"tk.interface_inheritance","tk.modules","tk.define_entry_point_net6", "tk.define_implementation", "tk.define_interface", "tk.ast_process">>
+			Result := {ARRAY [READABLE_STRING_GENERAL]} <<"tk.define_implementation","tk.modules", "tk.define_class_app_net6">> --"tk.basic_interface", "tk.interface_inheritance","tk.modules","tk.define_entry_point_net6", "tk.define_implementation", "tk.define_interface", "tk.ast_process">>
 		end
 
 	process_test (tn: READABLE_STRING_GENERAL)
@@ -139,7 +139,15 @@ feature -- Token tests
 			if is_test_included("define_class", a_pattern) then
 				launch_test (cat, "define_class", agent (create {TEST_AST_PROCESS}).test_define_class)
 			end
-
+			if is_test_included("define_params", a_pattern) then
+				launch_test (cat, "define_params", agent (create {TEST_AST_PROCESS}).test_define_params)
+			end
+			if is_test_included("define_params_2", a_pattern) then
+				launch_test (cat, "define_params_2", agent (create {TEST_AST_PROCESS}).test_define_params_default)
+			end
+			if is_test_included("define_class_app_net6", a_pattern) then
+				launch_test (cat, "define_class_app_net6", agent (create {TEST_AST_PROCESS}).test_define_class_app)
+			end
 
 		end
 

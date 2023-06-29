@@ -12,7 +12,6 @@ feature -- Test
 	test_modules
 
 		do
-			module_1
 			module_2
 			app
 		end
@@ -71,7 +70,7 @@ feature -- app_module
 			md_assembly_info.set_major_version (1) -- set_minor_version
 			md_assembly_info.set_minor_version (0)
 
-			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("app"), 0, md_assembly_info, Void)
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("app.exe"), 0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (6)
 			md_assembly_info.set_minor_version (0)
@@ -126,8 +125,9 @@ feature -- app_module
 			assembly_title_token := md_emit.define_type_ref (
 					create {CLI_STRING}.make ("System.Reflection.AssemblyTitleAttribute"), system_runtime_token)
 
-			md_emit.set_module_name (create {CLI_STRING}.make ("app.dll"))
+			md_emit.set_module_name (create {CLI_STRING}.make ("app.exe"))
 
+				-- Define code to access System.Console.WriteLine
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			sig.set_parameter_count (1)
@@ -293,15 +293,6 @@ feature -- app_module
 				-- End  Metadata
 				--
 
-				-- Define file module1
-
---			create l_file.make ("module1.dll")
---			create l_signing.make_with_version ("Net6")
---			l_hash_file := l_signing.hash_of_file (l_file)
---			l_token_file_m1 := md_emit.define_file (l_file, l_hash_file, {MD_FILE_FLAGS}.Has_meta_data)
---			module_1_token := md_emit.define_module_ref (create {CLI_STRING}.make ("module_1"))
-
-
 				-- Define file module2
 
 			create l_file.make ("module_2.dll")
@@ -312,27 +303,21 @@ feature -- app_module
 			module_2_token := md_emit.define_module_ref (create {CLI_STRING}.make ("module_2.dll"))
 
 			class_b_m2 := md_emit.define_type_ref (
-							create {CLI_STRING}.make ("B"), module_2_token)
+					create {CLI_STRING}.make ("B"), module_2_token)
 
+			md_emit.define_exported_type (create {CLI_STRING}.make ("B"), l_token_file_m2, class_b_token, {MD_TYPE_ATTRIBUTES}.Public).do_nothing
 
 			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 			class_b_method_j_token := md_emit.define_member_ref (
-							create {CLI_STRING}.make ("J"),
-							class_b_m2, sig)
+					create {CLI_STRING}.make ("J"),
+					class_b_m2, sig)
 
 			class_b_object_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
-							class_b_m2, sig)
-
-
-
-			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-			sig.set_parameter_count (0)
-			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					class_b_m2, sig)
 
 			object_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
 					object_type_token, sig)
@@ -374,7 +359,7 @@ feature -- app_module
 			body.put_opcode ({MD_OPCODES}.stloc_0)
 
 			body.put_opcode ({MD_OPCODES}.ldloc_0)
-			body.put_call ({MD_OPCODES}.call, class_b_method_j_token, 0, False)
+			body.put_call ({MD_OPCODES}.callvirt, class_b_method_j_token, 0, False)
 			body.put_nop
 
 				-- Load the string "Hello" onto the stack
@@ -383,7 +368,6 @@ feature -- app_module
 			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
 			body.put_static_call (write_line_token, 1, False)
 			body.put_nop
-
 
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
@@ -410,165 +394,13 @@ feature -- app_module
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
 
-			create l_pe_file.make ("app.dll", True, True, False, md_emit)
+			create l_pe_file.make ("app.exe", True, False, False, md_emit)
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save
 		end
 
 feature -- Modules
-
-	module_1
-			-- Define a Module1
-			-- With a class C and method M.
-		local
-			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
-			md_emit: MD_EMIT
-			md_assembly_info: MD_ASSEMBLY_INFO
-			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
-			sig: MD_METHOD_SIGNATURE
-			ca: MD_CUSTOM_ATTRIBUTE
-			method_writer: MD_METHOD_WRITER
-			body: MD_METHOD_BODY
-
-			system_console_token, system_runtime_token: INTEGER
-			object_type_token, string_type_token, console_type_token: INTEGER
-			int32_type_token: INTEGER
-			attribute_ctor: INTEGER
-			target_framework_attr_type_token, compilation_relaxations_token: INTEGER
-			ca_token: INTEGER
-			write_line_token: INTEGER
-			object_ctor: INTEGER
-			l_class_c_token: INTEGER
-			class_c_ctor: INTEGER
-			m_method: INTEGER
-			string_token: INTEGER
-		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
-
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
-
-			create md_assembly_info.make
-			md_assembly_info.set_major_version (1)
-			md_assembly_info.set_minor_version (0)
-
-			md_assembly_info.set_major_version (6)
-			md_assembly_info.set_minor_version (0)
-			md_assembly_info.set_build_number (0)
-			create l_pub_key_token.make_from_array (
-				{ARRAY [NATURAL_8]} <<0xB0, 0x3F, 0x5F, 0x7F, 0x11, 0xD5, 0x0A, 0x3A>>)
-
-			system_runtime_token := define_assembly_ref (md_emit, "System.Runtime", md_assembly_info, l_pub_key_token)
-			system_console_token := define_assembly_ref (md_emit, "System.Console", md_assembly_info, l_pub_key_token)
-
-			object_type_token := define_type_ref (md_emit, "System.Object", system_runtime_token)
-			string_type_token := define_type_ref (md_emit, "System.String", system_runtime_token)
-			console_type_token := define_type_ref (md_emit, "System.Console", system_console_token)
-			int32_type_token := define_type_ref (md_emit, "System.Int32", system_runtime_token)
-
-			target_framework_attr_type_token := define_type_ref (md_emit, "System.Runtime.Versioning.TargetFrameworkAttribute", system_runtime_token)
-			compilation_relaxations_token := define_type_ref (md_emit, "System.Runtime.CompilerServices.CompilationRelaxationsAttribute", system_runtime_token)
-
-				-- [assembly: CompilationRelaxations(8)]
-			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-			sig.set_parameter_count (1)
-			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, int32_type_token)
-
-
-				-- Definition of WriteLine method.
-			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
-			sig.set_parameter_count (1)
-			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, string_type_token)
-
-			write_line_token := define_member_ref (md_emit, "WriteLine", console_type_token, sig)
-
-				--
-				-- Object.ctor
-				--
-			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-			sig.set_parameter_count (0)
-			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-
-			object_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"), object_type_token, sig)
-
-				--
-				-- Define Class C
-				--
-
-			l_class_c_token := md_emit.define_type (
-					create {CLI_STRING}.make ("C"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
-					{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public | {MD_TYPE_ATTRIBUTES}.before_field_init,
-					object_type_token, Void)
-			class_c_token := l_class_c_token
-
-			create method_writer.make
-
-				--
-				-- Method M in class C
-				--
-			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-			sig.set_parameter_count (0)
-			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-
-			m_method := md_emit.define_method (create {CLI_STRING}.make ("M"),
-					l_class_c_token,
-					{MD_METHOD_ATTRIBUTES}.public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
-					sig, {MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (m_method)
-
-			body.put_nop
-
-			string_token := md_emit.define_string (create {CLI_STRING}.make ("Message from Class C method M"))
-			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
-			body.put_static_call (write_line_token, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- Method .ctor class C
-
-				-- C.ctor signature
-			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-			sig.set_parameter_count (0)
-			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-
-			class_c_ctor := md_emit.define_method (create {CLI_STRING}.make (".ctor"),
-					l_class_c_token,
-					{MD_METHOD_ATTRIBUTES}.Public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
-					sig, {MD_METHOD_ATTRIBUTES}.Managed)
-
-			body := method_writer.new_method_body (class_c_ctor)
-			body.put_opcode ({MD_OPCODES}.Ldarg_0)
-			body.put_static_call (object_ctor, 1, False)
-			body.put_nop
-			body.put_opcode ({MD_OPCODES}.Ret)
-			method_writer.write_current_body
-
-				-- Set module name
-			md_emit.set_module_name (create {CLI_STRING}.make ("module_1.dll"))
-
-				-- Save Module
-
-			create l_pe_file.make ("module_1.dll", True, True, False, md_emit)
-			l_pe_file.set_method_writer (method_writer)
-			l_pe_file.save
-		end
 
 	module_2
 			-- Define a Module2 with a Class B and method J
@@ -621,7 +453,6 @@ feature -- Modules
 			target_framework_attr_type_token := define_type_ref (md_emit, "System.Runtime.Versioning.TargetFrameworkAttribute", system_runtime_token)
 			compilation_relaxations_token := define_type_ref (md_emit, "System.Runtime.CompilerServices.CompilationRelaxationsAttribute", system_runtime_token)
 
-
 				-- Definition of WriteLine method.
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
@@ -650,6 +481,8 @@ feature -- Modules
 					{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public | {MD_TYPE_ATTRIBUTES}.before_field_init,
 					object_type_token, Void)
 
+			class_b_token := l_class_b_token
+
 			create method_writer.make
 
 				--
@@ -664,7 +497,6 @@ feature -- Modules
 					l_class_b_token,
 					{MD_METHOD_ATTRIBUTES}.public |
 					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
 					{MD_METHOD_ATTRIBUTES}.new_slot,
 					sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
@@ -750,6 +582,5 @@ feature -- Helper
 
 	class_c_token: INTEGER
 	class_b_token: INTEGER
-
 
 end

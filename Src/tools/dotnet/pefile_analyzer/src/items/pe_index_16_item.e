@@ -60,7 +60,7 @@ feature -- Access
 			if original_value > 0 then
 				Result := original_value.to_natural_32
 			else
-				Result := index
+				Result := index.to_natural_32
 			end
 		end
 

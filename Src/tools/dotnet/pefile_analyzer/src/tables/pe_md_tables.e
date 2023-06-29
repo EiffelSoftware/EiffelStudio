@@ -143,14 +143,11 @@ feature -- Input
 					if attached read_table (Current, pe, i.to_natural_8, n32) as tb then
 						tables[i] := tb
 						if should_table_be_sorted (i.to_natural_8, sorted_bin) then
-							if attached {PE_MD_SORTED_TABLE [PE_MD_TABLE_COMPARABLE_ENTRY]} tb then
-								do_nothing
-							else
+							if not attached {PE_MD_SORTED_TABLE [PE_MD_TABLE_COMPARABLE_ENTRY]} tb then
 								tb.report_error (create {PE_USER_ERROR}.make ("Table marked as sorted, but not sortable"))
 							end
 						end
 					else
---						tables[i] := Void
 						check has_table: False end
 					end
 				end

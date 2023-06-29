@@ -15,7 +15,7 @@ inherit
 			make as make_item
 		end
 
-	PE_INDEX_16_ITEM
+	PE_INDEX_16_ITEM_WITH_TABLE
 
 create
 	make

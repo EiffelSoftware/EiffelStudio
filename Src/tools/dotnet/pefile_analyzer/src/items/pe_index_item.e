@@ -12,11 +12,16 @@ inherit
 
 feature -- Access
 
-	index: NATURAL_32
-		deferred
+	token: NATURAL_32
+		do
+			Result := index
 		end
 
 	sorting_index: NATURAL_32
+		deferred
+		end
+
+	index: NATURAL_32
 		deferred
 		end
 

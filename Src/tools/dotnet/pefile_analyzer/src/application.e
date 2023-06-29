@@ -48,6 +48,10 @@ feature {NONE} -- Initialization
 					elseif arg.is_case_insensitive_equal_general ("help") then
 						l_usage := True
 						i := i + 1
+					elseif arg.is_case_insensitive_equal_general ("debug") then
+						is_debug := True
+						i := i + 1
+
 					elseif arg.is_case_insensitive_equal_general ("analyze") then
 						has_analyzer := True
 					elseif arg.is_case_insensitive_equal_general ("no_analyze") then
@@ -112,6 +116,8 @@ feature {NONE} -- Initialization
 				process_file (fn.absolute_path)
 			end
 		end
+
+	is_debug: BOOLEAN
 
 	has_analyzer,
 	has_printer,
@@ -188,7 +194,7 @@ feature -- Execution
 					o := o_dft
 				else
 					create o.make (printer_output)
-					if o.was_opened then
+					if not o.was_opened then
 						o.open_write
 					end
 				end
@@ -207,7 +213,7 @@ feature -- Execution
 					o := o_dft
 				else
 					create o.make (explorer_output)
-					if o.was_opened then
+					if not o.was_opened then
 						o.open_write
 					end
 				end

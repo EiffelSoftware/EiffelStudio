@@ -16,24 +16,17 @@ feature {NONE} -- Initialization
 			create struct.make (5, "ExportedType")
 			structure := struct
 			struct.add_type_attributes ("Flags")
-			struct.add_type_def_index ("TypeDefId")
+
+				-- TypeDefId (a 4-byte index into a TypeDef table of another module in this Assembly).
+				-- This column is used as a hint only. If the entry in the target TypeDef table matches
+				-- the TypeName and TypeNamespace entries in this table, resolution has succeeded.
+				-- But if there is a mismatch, the CLI shall fall back to a search of the target TypeDef
+				-- table. Ignored and should be zero if Flags has IsTypeForwarder set.			
+			struct.add_natural_32 ("TypeDefId")
+
 			struct.add_string_index ("Name")
 			struct.add_string_index ("Namespace")
 			struct.add_implementation_index ("Implementation")
-		end
-
-feature -- Access		
-
-	typedefid_index: detachable PE_TYPE_DEF_INDEX_ITEM
-		local
-			i: PE_ITEM
-		do
-			i := structure.index_item ("TypeDefId")
-			if attached {PE_TYPE_DEF_INDEX_ITEM} i as t then
-				Result := t
-			else
-				check is_typedef_or_void: i = Void end
-			end
 		end
 
 feature -- Access

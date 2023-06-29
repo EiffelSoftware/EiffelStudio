@@ -84,7 +84,9 @@ feature -- Visitor
 			output.put_string (" - Valid : " + o.valid.to_binary_string + "%N")
 			output.put_string (" - Sorted: " + o.sorted.to_binary_string + "%N")
 			l_sizes := o.size_settings
-			output.put_string (" - Counts: ")
+			output.put_string (" - Counts:")
+			output.put_new_line
+			output.indent
 			from
 				i := o.tables.lower
 				u := o.tables.upper
@@ -92,6 +94,7 @@ feature -- Visitor
 				i > u
 			loop
 				if o.tables [i] /= Void then
+
 					output.put_string (
 						i.to_natural_8.to_hex_string + "."
 						+ o.table_name (i.to_natural_8)
@@ -100,10 +103,12 @@ feature -- Visitor
 					if l_sizes.is_table_using_4_bytes (i.to_natural_8, o, 0) then
 						output.put_string ("*")
 					end
-					output.put_string (") ")
+					output.put_string (")")
+					output.put_new_line
 				end
 				i := i + 1
 			end
+			output.exdent
 			output.put_new_line
 			output.put_line_divider
 			Precursor (o)

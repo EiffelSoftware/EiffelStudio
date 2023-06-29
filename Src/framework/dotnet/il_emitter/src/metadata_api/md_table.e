@@ -59,6 +59,22 @@ feature -- Element Change
 			items.put_i_th (a_entry, i.to_integer_32)
 		end
 
+feature -- Sorting
+
+	sort (a_sorter: SORTER [PE_TABLE_ENTRY_BASE])
+			-- Sort `items` using `a_sorter`
+		do
+			a_sorter.sort (items)
+		ensure
+			is_sorted: is_sorted (a_sorter)
+		end
+
+	is_sorted (a_sorter: SORTER [PE_TABLE_ENTRY_BASE]): BOOLEAN
+			-- Is `items` container sorter using `a_sorter`?
+		do
+			Result := a_sorter.sorted (items)
+		end
+
 feature -- Status Report
 
 	debug_output: STRING

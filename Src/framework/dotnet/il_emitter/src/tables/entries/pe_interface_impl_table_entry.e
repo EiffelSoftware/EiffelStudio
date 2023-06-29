@@ -51,6 +51,16 @@ feature -- Status
 				)
 		end
 
+	less_than (other: like Current): BOOLEAN
+			-- Is Current less than `other` in associated table?
+		do
+			if class_.same_as_index (other.class_) then
+				Result := interface.less_than_index (other.interface)
+			else
+				Result := class_.less_than_index (other.class_)
+			end
+		end
+
 feature -- Access
 
 	class_: PE_TYPE_DEF

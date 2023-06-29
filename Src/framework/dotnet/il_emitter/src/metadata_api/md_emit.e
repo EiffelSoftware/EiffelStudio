@@ -379,7 +379,7 @@ feature -- Save
 			valid_result: Result /= Void
 		end
 
-feature -- Save
+feature -- Pre-Save
 
 	prepare_to_save
 			-- Prepare data to be save
@@ -501,7 +501,72 @@ feature -- Save
 					l_missing_param_index_entries := Void
 				end
 			end
+
+				-- Sort tables...
+				-- CustomAttribute table
+			if
+				attached md_table ({PE_TABLES}.tcustomattribute) as customattribute_tb and then
+				attached table_sorter ({PE_TABLES}.tcustomattribute) as l_sorter
+			then
+				debug ("il_emitter")
+					if not customattribute_tb.is_sorted (l_sorter) then
+						print ("customattribute not sorted%N")
+					end
+				end
+				customattribute_tb.sort (l_sorter)
+				check customattribute_tb.is_sorted (l_sorter) end
+			end
+
+				-- InterfaceImpl
+			if
+				attached md_table ({PE_TABLES}.tinterfaceimpl) as interfaceimpl_tb and then
+				attached table_sorter ({PE_TABLES}.tinterfaceimpl) as l_sorter
+			then
+				debug ("il_emitter")
+					if not interfaceimpl_tb.is_sorted (l_sorter) then
+						print ("interfaceimpl not sorted%N")
+					end
+				end
+				interfaceimpl_tb.sort (l_sorter)
+				check interfaceimpl_tb.is_sorted (l_sorter) end
+			end
 		end
+
+	table_sorter (tb_id: NATURAL_32): detachable QUICK_SORTER [PE_TABLE_ENTRY_BASE]
+			-- Sorter for table associated with `tb_id`.
+		local
+			l_comparator: AGENT_EQUALITY_TESTER [PE_TABLE_ENTRY_BASE]
+		do
+			inspect tb_id
+			when {PE_TABLES}.tcustomattribute then
+				create l_comparator.make (agent (e1, e2: PE_TABLE_ENTRY_BASE): BOOLEAN
+					do
+						if
+							attached {PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY} e1 as o1 and then
+							attached {PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY} e2 as o2
+						then
+							Result := o1.less_than (o2)
+						end
+					end)
+			when {PE_TABLES}.tinterfaceimpl then
+				create l_comparator.make (agent (e1, e2: PE_TABLE_ENTRY_BASE): BOOLEAN
+					do
+						if
+							attached {PE_INTERFACE_IMPL_TABLE_ENTRY} e1 as o1 and then
+							attached {PE_INTERFACE_IMPL_TABLE_ENTRY} e2 as o2
+						then
+							Result := o1.less_than (o2)
+						end
+					end)
+			else
+				-- Not implemented or not needed
+			end
+			if l_comparator /= Void then
+				create Result.make (l_comparator)
+			end
+		end
+
+feature -- Save
 
 	save (f_name: CLI_STRING)
 			-- Save current assembly to file `f_name'.

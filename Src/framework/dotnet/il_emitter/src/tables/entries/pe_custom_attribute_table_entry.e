@@ -42,6 +42,13 @@ feature -- Status
 					e.parent_index.is_equal (parent_index)
 				)
 		end
+
+	less_than (other: like Current): BOOLEAN
+			-- Is Current less than `other` in associated table?
+		do
+			Result := parent_index.less_than_index (other.parent_index)
+		end
+
 feature -- Access
 
 	parent_index: PE_CUSTOM_ATTRIBUTE

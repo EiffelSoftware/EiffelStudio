@@ -55,6 +55,18 @@ feature -- Access
 	index: NATURAL_32
 			-- The index used in tables and blobs.
 
+	token: NATURAL_32
+			-- Associated token for information.
+		do
+			Result := (tag.to_natural_32 |<< 24) | index
+		end
+
+	binary_value: NATURAL_32
+			-- Value expected to be written in the binary.
+		do
+			Result := (index |<< get_index_shift) + tag.to_natural_32
+		end
+
 feature -- Status report
 
 	debug_output: STRING
@@ -75,6 +87,16 @@ feature -- Comparison
 			Result := index = other.index and then tag = other.tag
 		end
 
+	same_as_index (other: PE_INDEX_BASE): BOOLEAN
+		do
+			Result := binary_value = other.binary_value
+		end
+
+	less_than_index (other: PE_INDEX_BASE): BOOLEAN
+		do
+			Result := binary_value < other.binary_value
+		end
+
 feature -- Operations
 
 	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]; a_pos: NATURAL_32): NATURAL_32
@@ -85,7 +107,7 @@ feature -- Operations
 		local
 			v: NATURAL_32
 		do
-				--  Calculate the value to be written to the destintation `a_dest`.
+				--  Calculate the value to be written to the destination `a_dest`.
 			v := (index |<< get_index_shift) + tag.to_natural_32
 
 			if has_index_overflow (a_sizes) then

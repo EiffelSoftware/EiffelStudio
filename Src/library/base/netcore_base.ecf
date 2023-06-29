@@ -55,7 +55,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_linker_flag>
-		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\netcore\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system_diagnostics_process" location="$ISE_DOTNET_FRAMEWORK\System.Diagnostics.Process.dll"/>
 		<cluster name="elks" location="$ISE_LIBRARY\library\base\elks\" recursive="true">

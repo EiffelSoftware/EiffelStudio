@@ -94,7 +94,6 @@ feature -- Visitor
 				i > u
 			loop
 				if o.tables [i] /= Void then
-
 					output.put_string (
 						i.to_natural_8.to_hex_string + "."
 						+ o.table_name (i.to_natural_8)

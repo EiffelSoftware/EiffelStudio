@@ -2,7 +2,7 @@ note
 	description: "[
 			Table that should be sorted.
 
-			TODO: ClassLayout, DeclSecurity, FieldLayout, FieldRVA, GenericParam, GenericParamConstraint, MethodSemantics, NestedClass
+			TODO: ClassLayout, DeclSecurity, FieldLayout, FieldRVA, GenericParam, GenericParamConstraint, NestedClass
 
 		]"
 	author: "$Author$"
@@ -42,7 +42,7 @@ feature -- Check validity
 			end
 
 			if not is_sorted then
-				report_error (create {PE_USER_ERROR}.make ({STRING_32} "Table not sorted (#"+ i.out + " 0x"+ i.to_hex_string +"): " + sorting_information))
+				report_error (create {PE_USER_ERROR}.make ({STRING_32} "Table not sorted (#"+ i.out + " 0x"+ (table_id.to_natural_32 |<< 24 | i).to_hex_string +"): " + sorting_information))
 			end
 		end
 

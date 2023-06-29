@@ -189,9 +189,11 @@ feature -- Execution
 				pe.accepts (analyzer)
 				l_error_count := analyzer.error_count
 				if l_error_count > 0 then
-					io.error.put_string ("WARNING: " + l_error_count.out + " error(s) detected%N")
+					io.error.put_string ("ERROR: " + l_error_count.out + " error(s) detected%N")
 				else
-					io.error.put_string ("No error detected%N")
+					debug ("pe_analyze")
+						io.error.put_string ("No error detected%N")
+					end
 				end
 			end
 

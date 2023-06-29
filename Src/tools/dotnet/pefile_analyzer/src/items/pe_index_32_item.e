@@ -55,6 +55,15 @@ feature -- Access
 			Result := value
 		end
 
+	sorting_index: NATURAL_32
+		do
+			if original_value > 0 then
+				Result := original_value
+			else
+				Result := index
+			end
+		end
+
 feature -- Element change
 
 	update_index (idx: NATURAL_32)

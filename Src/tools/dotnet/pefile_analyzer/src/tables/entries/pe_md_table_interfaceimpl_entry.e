@@ -48,7 +48,7 @@ feature -- Comparison
 			-- Primary key: Class, then Interface
 			if attached class_index as i1 then
 				if attached other.class_index as i2 then
-					if i1.index = i2.index then
+					if i1.sorting_index = i2.sorting_index then
 						Result := index_is_less_than (interface_index, other.interface_index)
 					else
 						Result := index_is_less_than (i1, i2)

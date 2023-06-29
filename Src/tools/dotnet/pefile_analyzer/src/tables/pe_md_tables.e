@@ -118,7 +118,7 @@ feature -- Input
 			i, l_upper: INTEGER
 			n32: NATURAL_32
 			n8: NATURAL_8
-			bin: STRING
+			bin, sorted_bin: STRING_8
 			sz: PE_NATURAL_16_ITEM
 			l_tb_counts: like tables_counts
 			pe: like pe_file
@@ -128,6 +128,7 @@ feature -- Input
 			pe.go (address_of_tables)
 
 			l_tb_counts := tables_counts
+			sorted_bin := sorted.to_binary_string
 			bin := valid.to_binary_string
 
 			from
@@ -139,7 +140,19 @@ feature -- Input
 				if is_table_included (i.to_natural_8, bin) then
 					s := table_name (i.to_natural_8)
 					n32 := l_tb_counts [i]
-					tables[i] := read_table (Current, pe, i.to_natural_8, n32)
+					if attached read_table (Current, pe, i.to_natural_8, n32) as tb then
+						tables[i] := tb
+						if should_table_be_sorted (i.to_natural_8, sorted_bin) then
+							if attached {PE_MD_SORTED_TABLE [PE_MD_TABLE_COMPARABLE_ENTRY]} tb then
+								do_nothing
+							else
+								tb.report_error (create {PE_USER_ERROR}.make ("Table marked as sorted, but not sortable"))
+							end
+						end
+					else
+--						tables[i] := Void
+						check has_table: False end
+					end
 				end
 				i := i + 1
 			end
@@ -270,7 +283,7 @@ feature -- Access
 feature -- Factory
 
 	size_settings: PE_SIZE_SETTINGS
-		do 
+		do
 			create Result
 			Result.initialize (Current)
 		end
@@ -283,6 +296,11 @@ feature -- Helpers
 		end
 
 	is_table_included (tb: NATURAL_8; bin: STRING_8): BOOLEAN
+		do
+			Result := bin [bin.count - tb.to_integer_32] = '1'
+		end
+
+	should_table_be_sorted (tb: NATURAL_8; bin: STRING_8): BOOLEAN
 		do
 			Result := bin [bin.count - tb.to_integer_32] = '1'
 		end

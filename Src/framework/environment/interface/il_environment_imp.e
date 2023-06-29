@@ -54,6 +54,14 @@ feature -- Initialization
 				if attached dotnet_framework_path as l_path then
 					l_exec.put (l_path.name, ise_dotnet_framework_env)
 				end
+				if
+					attached version as v and then
+					(create {IL_NETCORE_DETECTOR}).is_il_netcore (v)
+				then
+					l_exec.put ("netcore", ise_dotnet_platform_env)
+				else
+					l_exec.put ("netframework", ise_dotnet_platform_env)
+				end
 			end
 		end
 
@@ -61,6 +69,9 @@ feature -- Access
 
 	ise_dotnet_framework_env: STRING = "ISE_DOTNET_FRAMEWORK"
 			-- .NET framework environment variable
+
+	ise_dotnet_platform_env: STRING = "ISE_DOTNET_PLATFORM"
+			-- .net platform environment variable
 
 	version: IMMUTABLE_STRING_32
 			-- Currently selected version, if none `default_version'.
@@ -107,6 +118,31 @@ feature -- Access
 			-- Path to .NET Framework of version `version'.
 		do
 			Result := installed_runtimes [version]
+		end
+
+feature -- Dotnet platform	
+
+	dotnet_platform_netcore: IMMUTABLE_STRING_32 = "netcore"
+
+	dotnet_platform_netframework: IMMUTABLE_STRING_32 = "netframework"
+
+	dotnet_platform: STRING_32
+		do
+			if attached version as v then
+				if (create {IL_NETCORE_DETECTOR}).is_il_netcore (v) then
+					Result := dotnet_platform_netcore
+				else
+					Result := dotnet_platform_netframework
+				end
+			else
+				Result := default_dotnet_platform
+			end
+		end
+
+	default_dotnet_platform: IMMUTABLE_STRING_32
+		once
+				-- TODO: update to netcore when ready
+			Result := dotnet_platform_netframework
 		end
 
 feature -- Query

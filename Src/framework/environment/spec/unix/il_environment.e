@@ -10,6 +10,9 @@ class
 
 inherit
 	IL_ENVIRONMENT_IMP
+		redefine
+			default_dotnet_platform
+		end
 
 	OPERATING_ENVIRONMENT
 		undefine
@@ -30,6 +33,11 @@ create
 	make, default_create
 
 feature -- Access
+
+	default_dotnet_platform: IMMUTABLE_STRING_32
+		once
+			Result := dotnet_platform_netcore
+		end	
 
 	installed_runtimes: STRING_TABLE [PATH]
 			-- All paths of installed versions of .NET runtime indexed by their version names.

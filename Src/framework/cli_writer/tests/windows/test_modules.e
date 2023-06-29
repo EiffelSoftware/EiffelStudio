@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {TEST_MODULES}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -63,6 +62,7 @@ feature -- app_module
 			class_b_method_j_token: INTEGER
 			class_b_object_ctor: INTEGER
 			mscorlib_token: INTEGER
+			l_type_token: INTEGER
 		do
 			create md_dispenser.make
 			md_emit := md_dispenser.emitter
@@ -70,27 +70,23 @@ feature -- app_module
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
 			md_assembly_info.set_minor_version (2)
-			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("app.dll"),
-						0, md_assembly_info, Void)
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("app.exe"),
+					0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (1)
 			md_assembly_info.set_minor_version (0)
 			md_assembly_info.set_build_number (3300)
 			create l_pub_key_token.make_from_array (
-			{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
-
+				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
 
 			mscorlib_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("mscorlib"), md_assembly_info, l_pub_key_token)
 
-
 			object_type_token := define_type_ref (md_emit, "System.Object", mscorlib_token)
 			string_type_token := define_type_ref (md_emit, "System.String", mscorlib_token)
-			console_type_token := define_type_ref (md_emit, "System.Console", system_console_token)
-			int32_type_token := define_type_ref (md_emit, "System.Int32", system_runtime_token)
+			console_type_token := define_type_ref (md_emit, "System.Console", mscorlib_token)
+			int32_type_token := define_type_ref (md_emit, "System.Int32", mscorlib_token)
 
-
-
-			md_emit.set_module_name (create {CLI_STRING}.make ("app.dll"))
+			md_emit.set_module_name (create {CLI_STRING}.make ("app.exe"))
 
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
@@ -102,42 +98,35 @@ feature -- app_module
 					create {CLI_STRING}.make ("WriteLine"),
 					console_type_token, sig)
 
-
-				-- Define file module1
-
---			create l_file.make ("module1.dll")
---			create l_signing.make_with_version ("Net6")
---			l_hash_file := l_signing.hash_of_file (l_file)
---			l_token_file_m1 := md_emit.define_file (l_file, l_hash_file, {MD_FILE_FLAGS}.Has_meta_data)
---			module_1_token := md_emit.define_module_ref (create {CLI_STRING}.make ("module_1"))
-
-
 				-- Define file module2
 
 			create l_file.make ("module_2.dll")
-			create l_signing.make_with_version ("Net3")
+			create l_signing.make_with_version ("v4.0.30319")
 			l_hash_file := l_signing.hash_of_file (l_file)
 			l_token_file_m2 := md_emit.define_file (l_file, l_hash_file, {MD_FILE_FLAGS}.Has_meta_data)
 
 			module_2_token := md_emit.define_module_ref (create {CLI_STRING}.make ("module_2.dll"))
 
 			class_b_m2 := md_emit.define_type_ref (
-							create {CLI_STRING}.make ("B"), module_2_token)
+					create {CLI_STRING}.make ("B"), module_2_token)
 
+			md_emit.define_exported_type (create {CLI_STRING}.make ("B"), l_token_file_m2, class_b_token, {MD_TYPE_ATTRIBUTES}.Public).do_nothing
 
 			create sig.make
-			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
 			class_b_method_j_token := md_emit.define_member_ref (
-							create {CLI_STRING}.make ("J"),
-							class_b_m2, sig)
+					create {CLI_STRING}.make ("J"),
+					class_b_m2, sig)
 
+			create sig.make
+			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			sig.set_parameter_count (0)
+			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 			class_b_object_ctor := md_emit.define_member_ref (create {CLI_STRING}.make (".ctor"),
-							class_b_m2, sig)
-
-
+					class_b_m2, sig)
 
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
@@ -184,7 +173,7 @@ feature -- app_module
 			body.put_opcode ({MD_OPCODES}.stloc_0)
 
 			body.put_opcode ({MD_OPCODES}.ldloc_0)
-			body.put_call ({MD_OPCODES}.call, class_b_method_j_token, 0, False)
+			body.put_call ({MD_OPCODES}.callvirt, class_b_method_j_token, 0, False)
 			body.put_nop
 
 				-- Load the string "Hello" onto the stack
@@ -193,7 +182,6 @@ feature -- app_module
 			body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr, string_token)
 			body.put_static_call (write_line_token, 1, False)
 			body.put_nop
-
 
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
@@ -220,14 +208,13 @@ feature -- app_module
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
 
-			create l_pe_file.make ("app.dll", True, True, False, md_emit)
+			create l_pe_file.make ("app.exe", True, False, False, md_emit)
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save
 		end
 
 feature -- Modules
-
 
 	module_2
 			-- Define a Module2 with a Class B and method J
@@ -264,14 +251,14 @@ feature -- Modules
 			md_assembly_info.set_minor_version (0)
 			md_assembly_info.set_build_number (3300)
 			create l_pub_key_token.make_from_array (
-			{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
-
+				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
 
 			mscorlib_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("mscorlib"), md_assembly_info, l_pub_key_token)
 
+			object_type_token := define_type_ref (md_emit, "System.Object", mscorlib_token)
 			string_type_token := define_type_ref (md_emit, "System.String", mscorlib_token)
-			console_type_token := define_type_ref (md_emit, "System.Console", system_console_token)
-			int32_type_token := define_type_ref (md_emit, "System.Int32", system_runtime_token)
+			console_type_token := define_type_ref (md_emit, "System.Console", mscorlib_token)
+			int32_type_token := define_type_ref (md_emit, "System.Int32", mscorlib_token)
 
 				-- Definition of WriteLine method.
 			create sig.make
@@ -301,6 +288,7 @@ feature -- Modules
 					{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public | {MD_TYPE_ATTRIBUTES}.before_field_init,
 					object_type_token, Void)
 
+			class_b_token := l_class_b_token
 			create method_writer.make
 
 				--
@@ -315,7 +303,6 @@ feature -- Modules
 					l_class_b_token,
 					{MD_METHOD_ATTRIBUTES}.public |
 					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.virtual |
 					{MD_METHOD_ATTRIBUTES}.new_slot,
 					sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
@@ -330,7 +317,7 @@ feature -- Modules
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
 
-				-- Method .ctor class C
+				-- Method .ctor class B
 
 				-- C.ctor signature
 			create sig.make
@@ -349,7 +336,6 @@ feature -- Modules
 			body := method_writer.new_method_body (class_b_ctor)
 			body.put_opcode ({MD_OPCODES}.Ldarg_0)
 			body.put_static_call (object_ctor, 1, False)
-			body.put_nop
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
 
@@ -401,6 +387,5 @@ feature -- Helper
 
 	class_c_token: INTEGER
 	class_b_token: INTEGER
-
 
 end

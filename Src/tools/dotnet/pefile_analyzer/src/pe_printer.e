@@ -76,12 +76,14 @@ feature -- Visitor
 	visit_tables (o: PE_MD_TABLES)
 		local
 			i,u: INTEGER
+			l_sizes: PE_SIZE_SETTINGS
 		do
 			output.put_string ("[Metadata Tables] 0x"+short_hex_string (o.starting_address.to_hex_string)+"%N")
 			output.put_string (" - major.minor: " + o.major_version.to_string + "." + o.minor_version.to_string + "%N")
 			output.put_string (" - HeapSizes: " + o.heap_sizes.to_string + "%N")
 			output.put_string (" - Valid : " + o.valid.to_binary_string + "%N")
 			output.put_string (" - Sorted: " + o.sorted.to_binary_string + "%N")
+			l_sizes := o.size_settings
 			output.put_string (" - Counts: ")
 			from
 				i := o.tables.lower
@@ -93,7 +95,12 @@ feature -- Visitor
 					output.put_string (
 						i.to_natural_8.to_hex_string + "."
 						+ o.table_name (i.to_natural_8)
-						+ "(" + o.tables_counts[i].out + ") ")
+						+ "(" + o.tables_counts[i].out
+						)
+					if l_sizes.is_table_using_4_bytes (i.to_natural_8, o, 0) then
+						output.put_string ("*")
+					end
+					output.put_string (") ")
 				end
 				i := i + 1
 			end

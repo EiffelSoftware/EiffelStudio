@@ -5,6 +5,8 @@ feature {NONE} -- Access
 
 	is_initialized: BOOLEAN
 
+feature -- Helpers	
+
 	is_table_using_4_bytes (tb: NATURAL_8; a_tables: PE_MD_TABLES; tagbit: INTEGER): BOOLEAN
 		do
 			if tagbit = 0 then

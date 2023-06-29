@@ -170,7 +170,6 @@ feature -- Conversion
 			if Result = Void then
 				create l_reader.make (pointer, associated_pe_file, associated_table_entry)
 				Result := {STRING_32} " <<" + dump + ">>"
-
 				inspect kind
 				when type_specification_kind then
 					Result := l_reader.typespecsig + " " + Result

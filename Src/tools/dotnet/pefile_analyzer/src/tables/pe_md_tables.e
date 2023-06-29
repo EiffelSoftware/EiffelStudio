@@ -267,6 +267,14 @@ feature -- Access
 	tables: SPECIAL [detachable PE_MD_TABLE [PE_MD_TABLE_ENTRY]]
 	tables_counts: SPECIAL [NATURAL_32]
 
+feature -- Factory
+
+	size_settings: PE_SIZE_SETTINGS
+		do 
+			create Result
+			Result.initialize (Current)
+		end
+
 feature -- Helpers
 
 	max_table_id: NATURAL_8

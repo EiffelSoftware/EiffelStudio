@@ -90,7 +90,7 @@ feature -- Metadata
 					create Result.make (Current, metadata_root.metadata_tables_address)
 				end
 				internal_metadata_tables := Result
-				size_settings.initialize (Result)
+				size_settings := Result.size_settings
 
 					-- Get the tables
 					-- note: but it relies on `is_table_using_4_bytes`, that relies on `metadata_tables`, ...

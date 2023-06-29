@@ -54,14 +54,7 @@ feature -- Initialization
 				if attached dotnet_framework_path as l_path then
 					l_exec.put (l_path.name, ise_dotnet_framework_env)
 				end
-				if
-					attached version as v and then
-					(create {IL_NETCORE_DETECTOR}).is_il_netcore (v)
-				then
-					l_exec.put ("netcore", ise_dotnet_platform_env)
-				else
-					l_exec.put ("netframework", ise_dotnet_platform_env)
-				end
+				l_exec.put (dotnet_platform, ise_dotnet_platform_env)
 			end
 		end
 
@@ -127,6 +120,7 @@ feature -- Dotnet platform
 	dotnet_platform_netframework: IMMUTABLE_STRING_32 = "netframework"
 
 	dotnet_platform: STRING_32
+			-- Identifier for the dotnet platform (netcore vs netframework).
 		do
 			if attached version as v then
 				if (create {IL_NETCORE_DETECTOR}).is_il_netcore (v) then

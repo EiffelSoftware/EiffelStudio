@@ -34,14 +34,14 @@ feature -- Test
 			cil_emit := cil_dispenser.emit
 
 			create cil_assembly_info.make
-			cil_assembly_info.set_major (5)
-			cil_assembly_info.set_minor (2)
+			cil_assembly_info.set_major_version (5)
+			cil_assembly_info.set_minor_version (2)
 
 			working_assembly := cil_emit.define_assembly ({STRING_32}"manu_assembly", cil_assembly_info, "")
 
-			cil_assembly_info.set_major (1)
-			cil_assembly_info.set_minor (0)
-			cil_assembly_info.set_build (3300)
+			cil_assembly_info.set_major_version (1)
+			cil_assembly_info.set_minor_version (0)
+			cil_assembly_info.set_build_number (3300)
 
 			cil_emit.define_mscorlib_assembly_ref (cil_assembly_info, {ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
 

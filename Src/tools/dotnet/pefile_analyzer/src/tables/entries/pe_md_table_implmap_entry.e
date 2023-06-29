@@ -2,9 +2,12 @@ class
 	PE_MD_TABLE_IMPLMAP_ENTRY
 
 inherit
-	PE_MD_TABLE_ENTRY_WITH_STRUCTURE
+	PE_MD_TABLE_COMPARABLE_ENTRY_WITH_STRUCTURE
 
 	PE_MD_TABLE_ENTRY_WITH_IDENTIFIER
+		undefine
+			is_equal
+		end
 
 create
 	make
@@ -45,6 +48,19 @@ feature -- Access
 			if Result.is_whitespace then
 				Result := Void
 			end
+		end
+
+	member_forwarded_index: detachable PE_INDEX_ITEM
+		do
+			Result := structure.index_item ("MemberForwarded")
+		end
+
+feature -- Comparison
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current object less than `other'?
+		do
+			Result := index_is_less_than (member_forwarded_index, other.member_forwarded_index)
 		end
 
 feature -- Access

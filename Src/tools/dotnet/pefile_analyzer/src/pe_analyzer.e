@@ -30,7 +30,16 @@ feature {NONE} -- Access
 
 	pe_file: PE_FILE
 
+feature -- Access	
+
+	error_count: NATURAL_32
+
 feature -- Visitor
+
+	reset
+		do
+			error_count := 0
+		end
 
 	visit_pe_file (o: PE_FILE)
 		do
@@ -83,6 +92,10 @@ feature -- Visitor
 			current_table := o
 			update_list_indexes (o)
 			Precursor (o)
+			o.check_validity
+			if o.has_error then
+				error_count := error_count + o.error_count
+			end
 			current_table := Void
 		end
 
@@ -166,6 +179,10 @@ feature -- Visitor
 		do
 			current_table_entry := o
 			Precursor (o)
+			o.check_validity
+			if o.has_error then
+				error_count := error_count + o.error_count
+			end
 			current_table_entry := Void
 		end
 

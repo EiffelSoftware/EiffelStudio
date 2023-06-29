@@ -166,6 +166,7 @@ feature -- Execution
 			analyzer: PE_ANALYZER
 			explorer: PE_EXPLORER
 			resolver: PE_POINTER_RESOLVER
+			l_error_count: NATURAL_32
 		do
 			create pe.make (fn.name)
 			io.error.put_string ("Loading " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
@@ -186,6 +187,12 @@ feature -- Execution
 
 				create analyzer.make (pe)
 				pe.accepts (analyzer)
+				l_error_count := analyzer.error_count
+				if l_error_count > 0 then
+					io.error.put_string ("WARNING: " + l_error_count.out + " error(s) detected%N")
+				else
+					io.error.put_string ("No error detected%N")
+				end
 			end
 
 			if has_printer then

@@ -2,7 +2,7 @@ class
 	PE_MD_TABLE_METHODIMPL_ENTRY
 
 inherit
-	PE_MD_TABLE_ENTRY_WITH_STRUCTURE
+	PE_MD_TABLE_COMPARABLE_ENTRY_WITH_STRUCTURE
 
 create
 	make
@@ -32,6 +32,14 @@ feature -- Access
 			else
 				check is_typedef_or_void: i = Void end
 			end
+		end
+
+feature -- Comparison
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current object less than `other'?
+		do
+			Result := index_is_less_than (class_index, other.class_index)
 		end
 
 feature -- Access

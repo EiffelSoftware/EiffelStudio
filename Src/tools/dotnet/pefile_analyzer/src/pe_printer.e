@@ -125,6 +125,16 @@ feature -- Visitor
 			output.put_string ("[Table " + o.tables.table_name (o.table_id)+ " " + o.table_id.to_natural_8.to_hex_string +"]("+ o.count.out +")"
 								+ " 0x"+ short_hex_string (o.address.to_hex_string)
 								+ "%N")
+			if o.has_error and then attached o.errors as errs then
+				across
+					errs as err_ic
+				loop
+					output.put_string (" => ERROR: ")
+					output.put_string (err_ic.item.to_string)
+					output.put_new_line
+				end
+			end
+
 
 --			output.indent
 			table_entry_index := 0
@@ -174,9 +184,9 @@ feature -- Visitor
 				row.put_string_array (o.to_string_array)
 				row[1] := {STRING_32} "[0x" + o.token.to_hex_string + " #" + table_entry_index.out +"] " + row [1]
 				ptb.add (row)
-				if o.has_error then
+				if o.has_error and then attached o.errors as errs then
 					across
-						o.errors as err_ic
+						errs as err_ic
 					loop
 						create row.make (2)
 						row.put_string (" => ERROR: ")
@@ -188,9 +198,9 @@ feature -- Visitor
 				output.put_string ("[0x" + o.token.to_hex_string + " #" + table_entry_index.out +"] ")
 				output.put_string (o.to_string)
 				output.put_new_line
-				if o.has_error then
+				if o.has_error and then attached o.errors as errs then
 					across
-						o.errors as err_ic
+						errs as err_ic
 					loop
 						output.put_string (" => ERROR: ")
 						output.put_string (err_ic.item.to_string)

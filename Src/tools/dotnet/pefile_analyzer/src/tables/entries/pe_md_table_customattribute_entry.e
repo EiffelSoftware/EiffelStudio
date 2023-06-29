@@ -2,7 +2,7 @@ class
 	PE_MD_TABLE_CUSTOMATTRIBUTE_ENTRY
 
 inherit
-	PE_MD_TABLE_ENTRY_WITH_STRUCTURE
+	PE_MD_TABLE_COMPARABLE_ENTRY_WITH_STRUCTURE
 
 create
 	make
@@ -41,6 +41,14 @@ feature -- Access
 	table_id: NATURAL_8
 		once
 			Result := {PE_TABLES}.tcustomattribute
+		end
+
+feature -- Comparison
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current object less than `other'?
+		do
+			Result := index_is_less_than (parent_index, other.parent_index)
 		end
 
 end

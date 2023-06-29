@@ -21,6 +21,14 @@ feature -- Access
 			Result := index = 0x0
 		end
 
+feature -- Comparison
+
+	is_less_than alias "<" (other: PE_INDEX_ITEM): BOOLEAN
+			-- Is current object less than `other'?
+		do
+			Result := index < other.index
+		end
+
 feature -- Element change
 
 	update_index (idx: NATURAL_32)

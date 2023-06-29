@@ -13,9 +13,7 @@ inherit
 			make,
 			dump,
 			to_string, to_string_array,
-			description, description_as_array,
-			has_error,
-			errors
+			description, description_as_array
 		end
 
 feature {NONE} -- Initialization
@@ -37,16 +35,14 @@ feature -- Access
 	read (pe: PE_FILE)
 		do
 			structure.read (pe)
-		end
+			if structure.has_error then
+				across
+					structure.errors as ic
+				loop
+					report_error (ic.item)
+				end
 
-	has_error: BOOLEAN
-		do
-			Result := structure.has_error
-		end
-
-	errors: ARRAYED_LIST [PE_ERROR]
-		do
-			Result := structure.errors
+			end
 		end
 
 feature -- Display
@@ -79,6 +75,25 @@ feature -- Display
 	dump: STRING_8
 		do
 			Result := structure.dump
+		end
+
+feature -- Helpers
+
+	index_is_less_than (i1, i2: detachable PE_INDEX_ITEM): BOOLEAN
+			-- Is `i1` object less than `i2`?
+		do
+			if i1 /= Void then
+				if i2 /= Void then
+					Result := i1 < i2
+				else
+					Result := False -- i1 (attached) is not less than i2 (Void)
+				end
+			elseif i2 /= Void then
+					-- i1 = Void
+				Result := True -- i1 (Void) is less than attached i2
+			else
+				Result := False -- Void = Void
+			end
 		end
 
 end

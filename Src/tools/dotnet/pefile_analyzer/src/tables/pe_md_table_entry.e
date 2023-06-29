@@ -10,6 +10,8 @@ deferred class
 inherit
 	PE_VISITABLE
 
+	PE_WITH_ERROR_SUPPORT
+
 	DEBUG_OUTPUT
 
 feature {NONE} -- Initialization
@@ -69,19 +71,14 @@ feature -- Conversion
 			Result := ""
 		end
 
+feature -- Validity
+
+	check_validity
+		do
+			-- To redefine if needed
+		end
+
 feature -- Errors		
-
-	has_error: BOOLEAN
-		do
-			-- To redefine !
-		end
-
-	errors: ARRAYED_LIST [PE_ERROR]
-		require
-			has_error
-		do
-			create Result.make (1)
-		end
 
 	report_not_implemented
 		local

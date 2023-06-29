@@ -9,7 +9,7 @@ create
 
 feature -- Read
 
-	read (pe: PE_FILE): PE_ITEM
+	read (pe: PE_FILE): PE_INDEX_ITEM
 		do
 			Result := pe.read_member_forwarded_index (label, Current)
 		end

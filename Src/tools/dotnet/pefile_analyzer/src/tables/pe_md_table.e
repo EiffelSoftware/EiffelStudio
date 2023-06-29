@@ -9,6 +9,8 @@ deferred class
 inherit
 	PE_VISITABLE
 
+	PE_WITH_ERROR_SUPPORT
+
 feature {NONE} -- Initialization
 
 	make (a_tables: PE_MD_TABLES; pe: PE_FILE; tb_id: like table_id; nb: NATURAL_32)
@@ -71,6 +73,13 @@ feature -- Access
 			if not entries.is_empty then
 				Result := entries.first
 			end
+		end
+
+feature -- Check validity
+
+	check_validity
+		do
+			-- redefine if needed
 		end
 
 feature -- Read

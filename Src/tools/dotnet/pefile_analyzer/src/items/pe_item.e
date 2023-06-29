@@ -68,15 +68,6 @@ feature -- Error
 			Result := error /= Void
 		end
 
-feature -- Info
-
-	info: detachable PE_ITEM_INFO
-
-	set_info (inf: detachable PE_ITEM_INFO)
-		do
-			info := inf
-		end
-
 feature -- Element change
 
 	report_error (err: PE_ERROR)
@@ -84,6 +75,15 @@ feature -- Element change
 			error := err
 		ensure
 			has_error
+		end
+
+feature -- Info
+
+	info: detachable PE_ITEM_INFO
+
+	set_info (inf: detachable PE_ITEM_INFO)
+		do
+			info := inf
 		end
 
 feature -- Conversion

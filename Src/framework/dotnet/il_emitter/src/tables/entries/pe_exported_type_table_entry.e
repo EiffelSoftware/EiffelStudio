@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make_with_data (a_flags: NATURAL_32; a_type_def_id: NATURAL_32; a_type_name: NATURAL_32; a_type_name_space: NATURAL_32; a_implementation: PE_IMPLEMENTATION)
 		do
 			flags := a_flags
-			create type_def_id.make_with_index (a_type_def_id)
+			type_def_id := a_type_def_id
 			create type_name.make_with_index (a_type_name)
 			create type_name_space.make_with_index (a_type_name_space)
 			implementation := a_implementation
@@ -52,8 +52,8 @@ feature -- Access
 			-- Defined as a DWord four bytes.
 			-- see TypeAttributes https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=280&zoom=100,116,400
 
-	type_def_id: PE_TYPE_DEF
-			-- a 4-byte index into a TypeDef
+	type_def_id: NATURAL_32
+			-- a 4-byte index into a TypeDef of another Module within the same assembly
 
 	type_name: PE_STRING
 			-- an index into the String heap.
@@ -81,9 +81,11 @@ feature -- Operations
 
 			l_bytes := 4
 
-				-- Write type_def_id, type_name, type_name_space, implemenation and update bytes
+				-- Write type_def_id
+			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, type_def_id, 0)
+			l_bytes := l_bytes + 4
 
-			l_bytes := l_bytes + type_def_id.render (a_sizes, a_dest, l_bytes)
+				-- Write type_name, type_name_space, implemenation and update bytes
 			l_bytes := l_bytes + type_name.render (a_sizes, a_dest, l_bytes)
 			l_bytes := l_bytes + type_name_space.render (a_sizes, a_dest, l_bytes)
 			l_bytes := l_bytes + implementation.render (a_sizes, a_dest, l_bytes)
@@ -99,9 +101,11 @@ feature -- Operations
 
 			l_bytes := 4
 
-				-- Get type_def_id, type_name, type_name_space, implemenation and update bytes
+				-- Get type_def_id
+			type_def_id := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)
+			l_bytes := l_bytes + 4
 
-			l_bytes := l_bytes + type_def_id.get (a_sizes, a_src, l_bytes)
+				-- Get type_name, type_name_space, implemenation and update bytes
 			l_bytes := l_bytes + type_name.get (a_sizes, a_src, l_bytes)
 			l_bytes := l_bytes + type_name_space.get (a_sizes, a_src, l_bytes)
 			l_bytes := l_bytes + implementation.get (a_sizes, a_src, l_bytes)

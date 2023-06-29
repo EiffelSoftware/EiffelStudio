@@ -43,6 +43,12 @@ feature -- Status
 				)
 		end
 
+	less_than (o: like Current): BOOLEAN
+			-- Is Current less than `a_other` in associated table?
+		do
+			Result := association.less_than_index (o.association)
+		end
+
 feature -- Access
 
 	semantics: NATURAL_16

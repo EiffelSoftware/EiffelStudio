@@ -504,31 +504,26 @@ feature -- Pre-Save
 
 				-- Sort tables...
 				-- CustomAttribute table
-			if
-				attached md_table ({PE_TABLES}.tcustomattribute) as customattribute_tb and then
-				attached table_sorter ({PE_TABLES}.tcustomattribute) as l_sorter
-			then
-				debug ("il_emitter")
-					if not customattribute_tb.is_sorted (l_sorter) then
-						print ("customattribute not sorted%N")
-					end
-				end
-				customattribute_tb.sort (l_sorter)
-				check customattribute_tb.is_sorted (l_sorter) end
-			end
+			ensure_table_is_sorted ({PE_TABLES}.tcustomattribute)
+			ensure_table_is_sorted ({PE_TABLES}.tinterfaceimpl)
+			ensure_table_is_sorted ({PE_TABLES}.tmethodimpl)
+			ensure_table_is_sorted ({PE_TABLES}.tmethodsemantics)
+		end
 
-				-- InterfaceImpl
+	ensure_table_is_sorted (tb_id: NATURAL_32)
+			-- Ensure table associated with `tb_id` is sorted.
+		do
 			if
-				attached md_table ({PE_TABLES}.tinterfaceimpl) as interfaceimpl_tb and then
-				attached table_sorter ({PE_TABLES}.tinterfaceimpl) as l_sorter
+				attached md_table (tb_id) as tb and then
+				attached table_sorter (tb_id) as l_sorter
 			then
 				debug ("il_emitter")
-					if not interfaceimpl_tb.is_sorted (l_sorter) then
-						print ("interfaceimpl not sorted%N")
+					if not tb.is_sorted (l_sorter) then
+						print ("Table ["+ tb_id.to_natural_8.to_hex_string +"] is NOT sorted%N")
 					end
 				end
-				interfaceimpl_tb.sort (l_sorter)
-				check interfaceimpl_tb.is_sorted (l_sorter) end
+				tb.sort (l_sorter)
+				check tb.is_sorted (l_sorter) end
 			end
 		end
 
@@ -554,6 +549,26 @@ feature -- Pre-Save
 						if
 							attached {PE_INTERFACE_IMPL_TABLE_ENTRY} e1 as o1 and then
 							attached {PE_INTERFACE_IMPL_TABLE_ENTRY} e2 as o2
+						then
+							Result := o1.less_than (o2)
+						end
+					end)
+			when {PE_TABLES}.tmethodimpl then
+				create l_comparator.make (agent (e1, e2: PE_TABLE_ENTRY_BASE): BOOLEAN
+					do
+						if
+							attached {PE_METHOD_IMPL_TABLE_ENTRY} e1 as o1 and then
+							attached {PE_METHOD_IMPL_TABLE_ENTRY} e2 as o2
+						then
+							Result := o1.less_than (o2)
+						end
+					end)
+			when {PE_TABLES}.tmethodsemantics then
+				create l_comparator.make (agent (e1, e2: PE_TABLE_ENTRY_BASE): BOOLEAN
+					do
+						if
+							attached {PE_METHOD_SEMANTICS_TABLE_ENTRY} e1 as o1 and then
+							attached {PE_METHOD_SEMANTICS_TABLE_ENTRY} e2 as o2
 						then
 							Result := o1.less_than (o2)
 						end

@@ -2511,7 +2511,11 @@ feature -- Existing installations
 				else
 					v := s
 				end
-				Result.force (v)
+				if v.is_empty or else not v[1].is_digit then
+						-- Expecting major.minor value  (i.e:  23.06...)
+				else
+					Result.force (v)
+				end
 			end
 		end
 

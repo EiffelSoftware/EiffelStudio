@@ -11,13 +11,23 @@
                 "app.exe": {}
             },
             "dependencies": {
-                "module_2.dll": ""
-            }
+              "assembly2": "1.0.0.0"
+           }
+        },
+      "assembly2/1.0.0": {
+        "runtime": {
+          "assembly2.dll": {}
         }
+      }
     }
   },
   "libraries": {
     "app/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "assembly2/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

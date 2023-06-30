@@ -22,6 +22,8 @@ feature -- app_module
 			-- Define an APP
 			--	With references to Module1 and Module2
 			--	Class Program with Method Main.
+			--  The example is similar to the C# example
+			--  cs/multi_assemblies
 
 		local
 			l_pe_file: CLI_PE_FILE
@@ -71,7 +73,7 @@ feature -- app_module
 			md_assembly_info.set_major_version (1)
 			md_assembly_info.set_minor_version (0)
 
-			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("app.exe"), 0, md_assembly_info, Void)
+			my_assembly := md_emit.define_assembly (create {CLI_STRING}.make ("app"), 0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (6)
 			md_assembly_info.set_minor_version (0)
@@ -90,7 +92,7 @@ feature -- app_module
 			md_assembly_info.set_major_version (1)
 			md_assembly_info.set_minor_version (0)
 
-			assembly2_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("assembly2.dll"), md_assembly_info, Void)
+			assembly2_token := md_emit.define_assembly_ref (create {CLI_STRING}.make ("assembly2"), md_assembly_info, Void)
 
 			object_type_token := md_emit.define_type_ref (
 					create {CLI_STRING}.make ("System.Object"), system_runtime_token)
@@ -430,7 +432,7 @@ feature -- Modules
 			md_assembly_info.set_major_version (1) -- set_minor_version
 			md_assembly_info.set_minor_version (0)
 
-			my_assembly_2 := md_emit.define_assembly (create {CLI_STRING}.make ("assembly2.dll"), 0, md_assembly_info, Void)
+			my_assembly_2 := md_emit.define_assembly (create {CLI_STRING}.make ("assembly2"), 0, md_assembly_info, Void)
 
 			md_assembly_info.set_major_version (6)
 			md_assembly_info.set_minor_version (0)
@@ -511,6 +513,19 @@ feature -- Modules
 
 			create ca.make
 			ca.put_string (".NETCoreApp,Version=v6.0")
+
+
+				-- Number of named arguments
+			ca.put_integer_16 (1)
+				-- We mark it's a property
+			ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
+				-- Fill `FieldOrPropType' in `ca'
+			ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_string)
+				-- Put the name of the property
+			ca.put_string ("FrameworkDisplayName")
+				-- Put the value
+			ca.put_string ("")
+			ca_token := md_emit.define_custom_attribute (my_assembly_2, attribute_ctor, ca)
 
 				--
 				-- Object.ctor

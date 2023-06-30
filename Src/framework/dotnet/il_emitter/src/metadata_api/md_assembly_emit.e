@@ -29,7 +29,7 @@ feature {NONE} -- Access
 feature -- Access
 
 	define_assembly_ref (assembly_name: CLI_STRING; assembly_info: MD_ASSEMBLY_INFO;
-			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
+			public_key_token: detachable MD_PUBLIC_KEY_TOKEN): INTEGER
 		require
 			assembly_name_not_void: assembly_name /= Void
 			assembly_info_not_void: assembly_info /= Void
@@ -49,7 +49,12 @@ feature -- Access
 
 				-- TODO double check the public key
 				-- Clean the way to compute the index.
-			l_public_key_or_token_index := hash_blob (public_key_token.item.read_array (0, public_key_token.item.count), public_key_token.item.count.to_natural_32)
+			if public_key_token /= Void then
+				l_public_key_or_token_index := hash_blob (public_key_token.item.read_array (0, public_key_token.item.count), public_key_token.item.count.to_natural_32)
+			else
+				l_public_key_or_token_index := 0
+			end
+
 
 				-- Extract the version information from the assembly info.
 			l_major_version := assembly_info.major_version

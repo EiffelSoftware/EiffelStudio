@@ -926,7 +926,7 @@ feature -- Settings
 feature -- Definition: Access
 
 	define_assembly_ref (assembly_name: CLI_STRING; assembly_info: MD_ASSEMBLY_INFO;
-			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
+			public_key_token: detachable MD_PUBLIC_KEY_TOKEN): INTEGER
 			-- Add assembly reference information to the metadata tables.
 		do
 			Result := assembly_emitter.define_assembly_ref (assembly_name, assembly_info, public_key_token)

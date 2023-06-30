@@ -57,6 +57,7 @@ feature -- Properties
 				Result := dt.relative_duration (s)
 				if attached stopped_duration as dur then
 					Result := Result - dur
+					Result := Result.to_canonical (s)
 				end
 			end
 		end

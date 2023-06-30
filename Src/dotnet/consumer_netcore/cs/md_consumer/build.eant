@@ -18,7 +18,9 @@
 	<target name="clean" >
 		<echo message="- Clean nemdc - md_consumer" />
 		<exec executable="dotnet clean -c Release md_consumer.csproj" />
-		<exec executable="rm -rf bin; rm -rf obj" />
+		<exec executable="rm -rf bin; rm -rf obj" unless="$is_windows" accept_errors="true"/>
+		<exec executable="rd /q/s bin" if="$is_windows" accept_errors="true"/>
+		<exec executable="rd /q/s obj" if="$is_windows" accept_errors="true"/>
 	</target>
 	<target name="clobber" depend="clean" />
 	

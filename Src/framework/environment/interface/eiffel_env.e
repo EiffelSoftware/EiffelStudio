@@ -2427,11 +2427,15 @@ feature -- Preferences
 		do
 			l_prod_version_name := product_name_for_version (a_version_name)
 			if {PLATFORM}.is_windows then
-				create Result.make_from_string_general ({STRING_32} "HKEY_CURRENT_USER\SOFTWARE\ISE\" + l_prod_version_name + "\" + application_name + "\Preferences")
+				create Result.make_from_string_general ({STRING_32} "HKEY_CURRENT_USER\SOFTWARE\ISE\")
 				if is_workbench then
-					Result.append_character ('_')
 					Result.append_string_general (wkbench_suffix)
+					Result.append_character ('\')
 				end
+				Result.append_string_general (l_prod_version_name)
+				Result.append_character ('\')
+				Result.append_string_general (application_name)
+				Result.append_string_general ("\Preferences")
 			else
 				p := hidden_files_path_for_version (version_name, a_create_dir)
 				p := p.extended (l_prod_version_name).appended_with_extension ("rc")

@@ -59,7 +59,11 @@ feature -- Access
 			l_lowered_var: READABLE_STRING_GENERAL
 		do
 			l_lowered_var := a_var.as_lower
-			l_eiffel := {STRING_32} "\SOFTWARE\ISE\Eiffel_" + a_version
+			if {EIFFEL_ENV}.is_workbench then
+				l_eiffel := {STRING_32} "\SOFTWARE\ISE\" + {EIFFEL_ENV}.Wkbench_suffix + {STRING_32} "\Eiffel_" + a_version
+			else
+				l_eiffel := {STRING_32} "\SOFTWARE\ISE\Eiffel_" + a_version
+			end
 			create l_reg
 			if a_app /= Void then
 					-- Lookup application-specific setting.
@@ -89,6 +93,10 @@ feature -- Access
 			i,n: INTEGER
 		do
 			l_es_root_keyname := {STRING_32} "\SOFTWARE\ISE"
+			if {EIFFEL_ENV}.is_workbench then
+				l_es_root_keyname.append_character ('\')
+				l_es_root_keyname.append_string_general ({EIFFEL_ENV}.wkbench_suffix)
+			end
 			create l_reg
 			l_key_path := {STRING_32} "HKEY_CURRENT_USER" + l_es_root_keyname
 			p := l_reg.open_key_with_access (l_key_path, l_reg.key_read)
@@ -108,7 +116,11 @@ feature -- Access
 						i > n
 					loop
 						if attached l_reg.enumerate_key (p, i - 1) as k then
-							Result.force (k.name)
+							if k.name.same_string ({EIFFEL_ENV}.wkbench_suffix) then
+									-- Ignore
+							else
+								Result.force (k.name)
+							end
 						end
 						i := i + 1
 					end
@@ -152,7 +164,7 @@ feature -- Environment change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

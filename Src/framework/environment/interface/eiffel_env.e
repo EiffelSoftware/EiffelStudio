@@ -2483,9 +2483,8 @@ feature -- Existing installations
 				loop
 					s := ic
 					if s.is_valid_as_string_8 then
-
+						Result.extend (s.to_string_8)
 					end
-					Result.extend (s.to_string_8)
 				end
 			else
 				create Result.make (0)
@@ -2502,13 +2501,13 @@ feature -- Existing installations
 		once
 			lst := installed_product_version_names
 			create Result.make (lst.count)
-			l_prod_name := product_name
+			l_prod_name := product_name + "_"
 			across
 				lst as ic
 			loop
 				s := ic
 				if s.starts_with (l_prod_name) then
-					v := s.tail (s.count - l_prod_name.count - 1)
+					v := s.tail (s.count - l_prod_name.count)
 				else
 					v := s
 				end

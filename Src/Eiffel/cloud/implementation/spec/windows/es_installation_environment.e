@@ -81,19 +81,20 @@ feature {NONE} -- Implementation
 
 	eiffel_root_key_name (a_version: detachable STRING): STRING_32
 		do
-			if a_version /= Void then
-				Result := {STRING_32} "\SOFTWARE\ISE\Eiffel_" + a_version
-			else
-				Result := {STRING_32} "\SOFTWARE\ISE\Eiffel_" + eiffel_env.version_name
-			end
+			Result := {STRING_32} "\SOFTWARE\ISE"
 			if eiffel_env.is_workbench then
-				Result.append_character ('_')
-				Result.append (eiffel_env.wkbench_suffix)
+				Result.append_character ('\')
+				Result.append_string_general (eiffel_env.wkbench_suffix)
+			end
+			if a_version /= Void then
+				Result.append_string_general ("\Eiffel_" + a_version)
+			else
+				Result.append_string_general ("\Eiffel_" + eiffel_env.version_name)
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

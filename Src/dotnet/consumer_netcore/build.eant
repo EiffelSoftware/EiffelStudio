@@ -36,8 +36,12 @@
 	</target>
 
 	<target name="clean" >
-		<echo message="- Clean nemdc" />
-		<exec executable="dotnet clean -c Release" accept_errors="true" dir="cs${path_separator}md_consumer_app" />
+		<echo message="- Clean nemdc projects" />
+		<geant file="build.eant" target="clobber" dir="cs${path_separator}md_consumer" />
+		<geant file="build.eant" target="clobber" dir="cs${path_separator}md_consumer_app" />
+		<delete dir="spec${path_separator}${ISE_PLATFORM}${path_separator}bin">
+			<fileset  include="@(*.dll|nemdc*)"/>
+  		</delete>
 		<delete dir="spec${path_separator}${ISE_PLATFORM}${path_separator}bin">
 			<fileset  include="@(*.dll|nemdc*)"/>
   		</delete>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<project name="build_md_consumer_lib" default="help">
+<project name="build_md_consumer_app" default="help">
 	<description>
-		description: ".Net md consumer lib"
+		description: ".Net md consumer app"
 	</description>
 
 	<target name="help">
@@ -12,12 +12,12 @@
 	</target>
 	
 	<target name="compile" >
-		<exec executable="dotnet build -c Release md_consumer.csproj" />
-		<exec executable="dotnet publish -c Release md_consumer.csproj" />
+		<exec executable="dotnet build -c Release app.csproj" />
+		<exec executable="dotnet publish -c Release app.csproj" />
 	</target>
 	<target name="clean" >
-		<echo message="- Clean nemdc - md_consumer" />
-		<exec executable="dotnet clean -c Release md_consumer.csproj" />
+		<echo message="- Clean nemdc - md_consumer_app" />
+		<exec executable="dotnet clean -c Release app.csproj" />
 		<exec executable="rm -rf bin; rm -rf obj" />
 	</target>
 	<target name="clobber" depend="clean" />

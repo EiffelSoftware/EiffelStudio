@@ -78,7 +78,7 @@ feature -- Save
 feature -- Definition: access
 
 	define_assembly_ref (assembly_name: CLI_STRING; assembly_info: MD_ASSEMBLY_INFO;
-			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
+			public_key_token: detachable MD_PUBLIC_KEY_TOKEN): INTEGER
 			-- Get token reference on referenced assembly `assembly_name'.
 		do
 			Result := assembly_emitter.define_assembly_ref (assembly_name,

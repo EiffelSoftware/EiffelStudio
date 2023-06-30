@@ -17,7 +17,7 @@ create
 feature -- Access
 
 	define_assembly_ref (assembly_name: CLI_STRING; assembly_info: MD_ASSEMBLY_INFO;
-			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
+			public_key_token: detachable MD_PUBLIC_KEY_TOKEN): INTEGER
 		require
 			assembly_name_not_void: assembly_name /= Void
 			assembly_info_not_void: assembly_info /= Void

@@ -7,12 +7,4 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="assembly3">
-      <HintPath>..\assembly3\bin\Debug\net6.0\assembly3.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-
-
 </Project>

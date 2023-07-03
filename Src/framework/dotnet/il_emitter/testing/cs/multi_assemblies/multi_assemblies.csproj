@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\assembly2\assembly2.csproj" />
+    <Reference Include="assembly2">
+      <HintPath>..\assembly2\bin\Debug\net6.0\assembly2.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

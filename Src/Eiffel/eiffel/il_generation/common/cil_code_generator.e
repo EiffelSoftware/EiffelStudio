@@ -481,10 +481,20 @@ feature -- Settings
 			-- `a_class_type' is generated.
 		require
 			a_class_type_not_void: a_class_type /= Void
+		local
+			l_old_module: like current_module
 		do
+			l_old_module := current_module
 			current_module := il_module (a_class_type)
 				-- Refine so that only classes being generated in current compilation
 				-- unit needs the module to be generated as well.
+			debug ("debugger_il_info_trace")
+				if attached current_module as m then
+					if l_old_module = Void or else l_old_module /= m then
+						print (generator + ".set_current_module_with (...) -> switched to "+ m.module_name +"%N")
+					end
+				end
+			end
 			if a_class_type.is_generated and then not current_module.is_generated then
 				current_module.prepare (md_dispenser, type_count)
 			end
@@ -549,6 +559,9 @@ feature -- Generation Structure
 			location_not_void: location /= Void
 			location_not_empty: not location.is_empty
 		do
+				-- For netcore, use multi-assemblies instead of multi-modules.
+			is_using_multi_assemblies := system.is_il_netcore
+
 				--| Initialize recording of IL Information used for eStudio .NET debugger			
 			Il_debug_info_recorder.start_recording_session (debug_mode)
 
@@ -606,7 +619,7 @@ feature -- Generation Structure
 				assembly_info,
 				1,
 				is_debug_info_enabled,
-				True -- Main assembly
+				True, is_using_multi_assemblies -- Main assembly
 				)
 			current_module := main_module
 			if is_console_application then
@@ -889,6 +902,7 @@ feature -- Generation Structure
 			l_uni_string: CLI_STRING
 			l_module: IL_MODULE
 			l_file_token: INTEGER
+			l_assembly_ref_token: INTEGER
 		do
 			current_module := main_module
 
@@ -910,34 +924,59 @@ feature -- Generation Structure
 						if l_type.is_generated and then not l_class.is_typed_pointer then
 							l_module := il_module (l_type)
 
-							file_token.search (l_module)
-							if file_token.found then
-								l_file_token := file_token.found_item
+							if is_using_multi_assemblies then
+								l_assembly_ref_token := main_module.module_reference_token (l_module)
+
+								l_uni_string.set_string (l_type.full_il_type_name)
+								md_emit.define_exported_type (l_uni_string, l_assembly_ref_token,
+									l_type.last_type_token, {MD_TYPE_ATTRIBUTES}.Public).do_nothing
+
+								if l_type.implementation_id /= l_type.static_type_id then
+									l_uni_string.set_string (l_type.full_il_implementation_type_name)
+									md_emit.define_exported_type (l_uni_string, l_assembly_ref_token,
+										l_type.last_implementation_type_token,
+										{MD_TYPE_ATTRIBUTES}.Public).do_nothing
+								end
+
+								if
+									not l_class.is_deferred and
+									(attached l_class.creators as cs implies not cs.is_empty)
+								then
+									l_uni_string.set_string (l_type.full_il_create_type_name)
+									md_emit.define_exported_type (l_uni_string, l_assembly_ref_token,
+										l_type.last_create_type_token, {MD_TYPE_ATTRIBUTES}.Public).do_nothing
+								end
+
 							else
-								l_file_token := define_file (main_module,
-									l_module.module_file_name, l_module.module_name,
-									{MD_FILE_FLAGS}.Has_meta_data, a_signing)
-								file_token.put (l_file_token, l_module)
-							end
+								file_token.search (l_module)
+								if file_token.found then
+									l_file_token := file_token.found_item
+								else
+									l_file_token := define_file (main_module,
+										l_module.module_file_name, l_module.module_name,
+										{MD_FILE_FLAGS}.Has_meta_data, a_signing)
+									file_token.put (l_file_token, l_module)
+								end
 
-							l_uni_string.set_string (l_type.full_il_type_name)
-							md_emit.define_exported_type (l_uni_string, l_file_token,
-								l_type.last_type_token, {MD_TYPE_ATTRIBUTES}.Public).do_nothing
-
-							if l_type.implementation_id /= l_type.static_type_id then
-								l_uni_string.set_string (l_type.full_il_implementation_type_name)
+								l_uni_string.set_string (l_type.full_il_type_name)
 								md_emit.define_exported_type (l_uni_string, l_file_token,
-									l_type.last_implementation_type_token,
-									{MD_TYPE_ATTRIBUTES}.Public).do_nothing
-							end
+									l_type.last_type_token, {MD_TYPE_ATTRIBUTES}.Public).do_nothing
 
-							if
-								not l_class.is_deferred and
-								(attached l_class.creators as cs implies not cs.is_empty)
-							then
-								l_uni_string.set_string (l_type.full_il_create_type_name)
-								md_emit.define_exported_type (l_uni_string, l_file_token,
-									l_type.last_create_type_token, {MD_TYPE_ATTRIBUTES}.Public).do_nothing
+								if l_type.implementation_id /= l_type.static_type_id then
+									l_uni_string.set_string (l_type.full_il_implementation_type_name)
+									md_emit.define_exported_type (l_uni_string, l_file_token,
+										l_type.last_implementation_type_token,
+										{MD_TYPE_ATTRIBUTES}.Public).do_nothing
+								end
+
+								if
+									not l_class.is_deferred and
+									(attached l_class.creators as cs implies not cs.is_empty)
+								then
+									l_uni_string.set_string (l_type.full_il_create_type_name)
+									md_emit.define_exported_type (l_uni_string, l_file_token,
+										l_type.last_create_type_token, {MD_TYPE_ATTRIBUTES}.Public).do_nothing
+								end
 							end
 						end
 					end
@@ -7825,7 +7864,7 @@ feature {CIL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_GENERATOR} -- Custom at
 			-- arguments `data'.
 			-- Same as `md_emit.define_custom_attribute' but we do not care about return type.
 		do
-			md_emit.define_custom_attribute (token, ctor_token, data).do_nothing
+--			md_emit.define_custom_attribute (token, ctor_token, data).do_nothing
 		end
 
 feature {NONE} -- Once per type definition
@@ -7839,6 +7878,23 @@ feature -- Once per feature definition
 			-- Position of `Result' local variable.
 
 feature -- Mapping between Eiffel compiler and generated tokens
+
+	is_using_multi_assemblies: BOOLEAN
+			-- Use multi-assemblies instead of multi-modules for workbench compilation.
+
+	il_module_file_name (a_id: INTEGER): STRING
+		do
+			if is_using_multi_assemblies then
+				Result := "assembly_"
+				if a_id < 10 then
+					Result.append_character ('0')
+				end
+			else
+				Result := "module_"
+			end
+			Result.append (a_id.out)
+			Result.append (".dll")
+		end
 
 	il_module_for_class (a_class: CLASS_C): IL_MODULE
 			-- Perform lookup for module associated with `a_class'. If not
@@ -7856,7 +7912,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end
 			Result := internal_il_modules.item (l_type_id)
 			if Result = Void then
-				l_module_name := "module_" + l_type_id.out + ".dll"
+				l_module_name := il_module_file_name (l_type_id)
 				create Result.make (
 					l_module_name,
 					location_path.extended (l_module_name).name,
@@ -7866,7 +7922,8 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					Void,
 					l_type_id,
 					is_debug_info_enabled,
-					False)
+					False,
+					is_using_multi_assemblies)
 				internal_il_modules.put (Result, l_type_id)
 			end
 		ensure

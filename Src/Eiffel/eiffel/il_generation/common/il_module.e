@@ -81,7 +81,8 @@ feature {NONE} -- Initialization
 			a_assembly_info: like assembly_info;
 			a_module_id: INTEGER;
 			a_is_debug_mode: BOOLEAN;
-			a_is_main_module: BOOLEAN)
+			a_is_main_module: BOOLEAN;
+			a_is_using_multi_assembly: BOOLEAN)
 
 			-- Create a new module of name `a_file_name' using metadata dispenser `a_dispenser'.
 			-- If `a_is_main_module', current is an assembly manifest.
@@ -100,6 +101,7 @@ feature {NONE} -- Initialization
 			assembly_info := a_assembly_info
 			module_id := a_module_id
 			is_debug_info_enabled := a_is_debug_mode
+			is_using_multi_assemblies := a_is_using_multi_assembly
 			is_assembly_module := a_is_main_module
 			if not is_assembly_module then
 				is_dll := True
@@ -176,6 +178,9 @@ feature -- Status report
 			-- Does current represent an assembly manifest?
 			-- I.e. an assembly is made of modules and of one assembly manifest which
 			-- is a module with `Assembly' table metadata.
+
+	is_using_multi_assemblies: BOOLEAN
+			-- Using multi-assemblies instead of multi-modules.
 
 	is_dll, is_console_application: BOOLEAN
 			-- Nature of generated module.
@@ -1040,15 +1045,21 @@ feature -- Code generation
 
 			uni_string.set_string (module_name)
 
-			if is_assembly_module then
+			if is_assembly_module or is_using_multi_assemblies then
 				ass := md_factory.assembly_info
 				create l_version
-				if l_version.is_version_valid (assembly_info.version) then
-					l_version.set_version (assembly_info.version)
+				if
+					attached assembly_info as l_assembly_info and then
+					l_version.is_version_valid (l_assembly_info.version)
+				then
+					l_version.set_version (l_assembly_info.version)
 					ass.set_major_version (l_version.major.to_natural_16)
 					ass.set_minor_version (l_version.minor.to_natural_16)
 					ass.set_build_number (l_version.build.to_natural_16)
 					ass.set_revision_number (l_version.revision.to_natural_16)
+				else
+					check is_using_multi_assemblies end
+					-- FIXME: reuse the project version information.
 				end
 
 				if public_key /= Void then
@@ -2880,12 +2891,21 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			is_generated: is_generated
 			a_module_not_void: a_module /= Void
 			a_module_not_current: a_module /= Current
+		local
+			ass: MD_ASSEMBLY_INFO
 		do
 			Result := internal_module_references.item (a_module)
 			if Result = 0 then
-					-- ModuleRef token has not yet computed.
-				Result := md_emit.define_module_ref (create {CLI_STRING}.make (a_module.module_name))
-				internal_module_references.put (Result, a_module)
+				if is_using_multi_assemblies then
+						-- AssemblyRef token has not yet been computed.
+					ass := md_factory.assembly_info
+					Result := md_emit.define_assembly_ref (create {CLI_STRING}.make (a_module.module_name), ass, Void)
+					internal_module_references.put (Result, a_module)
+				else
+						-- ModuleRef token has not yet been computed.
+					Result := md_emit.define_module_ref (create {CLI_STRING}.make (a_module.module_name))
+					internal_module_references.put (Result, a_module)
+				end
 			end
 		end
 

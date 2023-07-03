@@ -341,14 +341,8 @@ feature -- Generation
 						l_target_name := project_location.workbench_path
 					end
 					if system.is_il_netcore then
-							-- FIXME: ... resolve variables !!!
-						vars := project_variables (System)
-
-						l_source_name := eiffel_layout.generation_templates_path.extended ("netcore.runtimeconfig.json.template")
-						copy_template_to_local (l_source_name, vars, l_target_name, System.name.to_string_32 + ".runtimeconfig.json")
-
-						l_source_name := eiffel_layout.generation_templates_path.extended ("netcore.deps.json.template")
-						copy_template_to_local (l_source_name, vars, l_target_name, System.name.to_string_32 + ".deps.json")
+						deploy_netcore_runtimeconfig_json_file (System, l_target_name, System.name.to_string_32 + ".runtimeconfig.json")
+						deploy_netcore_deps_json_file (System, l_target_name, System.name.to_string_32 + ".deps.json")
 					else
 						-- Compute name of configuration file: It is `system_name.xxx.config'
 						-- where `xxx' is either `exe' or `dll'.
@@ -370,26 +364,128 @@ feature -- Generation
 			end
 		end
 
-	project_variables (a_system: SYSTEM_I): STRING_TABLE [READABLE_STRING_GENERAL]
+	deploy_netcore_runtimeconfig_json_file (a_system: SYSTEM_I; a_target_directory: PATH; a_target_filename: READABLE_STRING_GENERAL)
 		local
-			s, maj, min, sub: STRING_32
-			i,j: INTEGER
-			l_fmwk_name, l_fmwk_version: STRING_32
+			f: PLAIN_TEXT_FILE
+			vars: like netcore_project_variables
+			s: STRING
 		do
-			create Result.make (7)
-			Result ["SYSTEM_NAME"] := a_system.name
+			vars := netcore_project_variables (a_system)
+
+			s := "[
+{
+  "runtimeOptions": {
+    "tfm": "${FRAMEWORK_MONIKER}",
+    "framework": {
+      "name": "${FRAMEWORK_NAME}",
+      "version": "${FRAMEWORK_VERSION}"
+    }
+  }
+}			
+			]"
+			s.replace_substring_all ("${FRAMEWORK_MONIKER}", vars.framework_moniker)
+			s.replace_substring_all ("${FRAMEWORK_NAME}", vars.framework_name)
+			s.replace_substring_all ("${FRAMEWORK_VERSION}", vars.framework_version)
+
+			create f.make_with_path (a_target_directory.extended (a_target_filename))
+			f.open_write
+			f.put_string (s)
+			f.close
+		end
+
+	deploy_netcore_deps_json_file (a_system: SYSTEM_I; a_target_directory: PATH; a_target_filename: READABLE_STRING_GENERAL)
+		local
+			f: PLAIN_TEXT_FILE
+			vars: like netcore_project_variables
+			s, libs_tpl, libs: STRING
+			fut: FILE_UTILITIES
+			fn: STRING_32
+		do
+			vars := netcore_project_variables (a_system)
+
+			s := "[
+{
+  "runtimeTarget": {
+    "name": "${CLR_RUNTIME}",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    "${CLR_RUNTIME}": {
+      "${SYSTEM_NAME}/${SYSTEM_VERSION}": {
+        "runtime": {
+          "${SYSTEM_NAME}.${SYSTEM_TYPE}": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "${SYSTEM_NAME}/${SYSTEM_VERSION}": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }  
+    ${LIBRARIES}
+  }
+}
+			]"
+			s.replace_substring_all ("${CLR_RUNTIME}", vars.clr_runtime)
+			s.replace_substring_all ("${SYSTEM_NAME}", vars.system_name)
+
+			s.replace_substring_all ("${SYSTEM_VERSION}", vars.system_version)
+			s.replace_substring_all ("${SYSTEM_TYPE}", vars.system_type)
+
+
+			-- FIXME: use the list of .Net assemblies, and generated assemblies to get versions and related information.
+			if attached fut.file_names (a_target_directory.name) as lst then
+				create libs.make_empty
+libs_tpl := "[
+    "${LIB_NAME_VERSION}": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+]"
+				across
+					lst as ic
+				loop
+					fn := ic.item
+					if fn.ends_with_general (".dll") then
+						fn.remove_tail (4)
+						libs.append (",%N")
+						libs.append (libs_tpl)
+						libs.replace_substring_all ("${LIB_NAME_VERSION}", fn + "/0.0.0.0")
+					end
+				end
+			end
+
+			s.replace_substring_all ("${LIBRARIES}", libs)
+
+			create f.make_with_path (a_target_directory.extended (a_target_filename))
+			f.open_write
+			f.put_string (s)
+			f.close
+		end
+
+	netcore_project_variables (a_system: SYSTEM_I): TUPLE [system_name, system_version, system_type, framework_name, framework_version, framework_moniker, clr_runtime: STRING]
+		local
+			s, maj, min, sub: STRING
+			i,j: INTEGER
+			l_fmwk_name, l_fmwk_version: STRING
+			l_system_version, l_system_type, l_framework_moniker, l_clr_runtime: STRING
+		do
 			if
 				attached a_system.msil_version as l_msil_version and then
 				not l_msil_version.is_empty
 			then
-				Result ["SYSTEM_VERSION"] := l_msil_version
+				l_system_version := l_msil_version
 			else
-				Result ["SYSTEM_VERSION"] := "1.0.0" -- Default?
+				l_system_version := "1.0.0" -- Default?
 			end
 
-			Result ["SYSTEM_TYPE"] := a_system.msil_generation_type -- dll | exe
+			l_system_type := a_system.msil_generation_type -- dll | exe
 
-			s := a_system.clr_runtime_version
+			s := a_system.clr_runtime_version.to_string_8
 			i := s.index_of ('/', 1)
 			if i > 0 then
 				l_fmwk_name := s.head (i - 1)
@@ -398,8 +494,6 @@ feature -- Generation
 				l_fmwk_name := s
 				l_fmwk_version := ""
 			end
-			Result ["FRAMEWORK_NAME"] := l_fmwk_name -- Microsoft.NETCore.App
-			Result ["FRAMEWORK_VERSION"] := l_fmwk_version -- 6.0.0
 
 				-- FRAMEWORK_TARGET
 				-- tfm: net6.0, net7.0, .... netstandard2.1
@@ -417,27 +511,28 @@ feature -- Generation
 						sub := "0"
 					end
 					if maj.to_integer >= 5 then
-						s := {STRING_32} "net" + maj + "." + min
+						s := "net" + maj + "." + min
 					else
-						s := {STRING_32} "netcoreapp" + maj + "." + min
+						s := "netcoreapp" + maj + "." + min
 					end
 --					if sub.to_integer > 0 then
 --						s := s + "." + sub
 --					end
-					Result ["FRAMEWORK_MONIKER"] := s
-
+					l_framework_moniker := s
 					-- TODO: support
 					-- tfm: net6.0, net7.0, .... netstandard2.1  (see: https://learn.microsoft.com/en-us/dotnet/standard/frameworks)
 				end
 			end
 
---			Result ["CLR_RUNTIME_VERSION"] := a_system.clr_runtime_version
 			if l_fmwk_name.has_substring ("NETCore.App") then
-				s := {STRING_32} ".NETCoreApp,Version=v" + maj + "." + min
-				Result ["CLR_RUNTIME"] := s
+				s := ".NETCoreApp,Version=v" + maj + "." + min
+				l_clr_runtime := s
 			else
-				Result ["CLR_RUNTIME"] := {STRING_32} ".NETCoreApp,Version=v6.0" -- Default?
+				l_clr_runtime := ".NETCoreApp,Version=v6.0" -- Default?
 			end
+
+			Result := [a_system.name, l_system_version, l_system_type, l_fmwk_name, l_fmwk_version, l_framework_moniker, l_clr_runtime]
+
 		end
 
 feature {NONE} -- Type description

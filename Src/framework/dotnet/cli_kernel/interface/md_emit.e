@@ -182,6 +182,7 @@ feature -- Definition: Creation
 			type_name_not_empty: not type_name.is_empty
 			implementation_token_valid:
 				(implementation_token & Md_mask = Md_file) or
+				(implementation_token & Md_mask = md_assembly_ref) or
 				(implementation_token & Md_mask = Md_exported_type)
 			type_def_token_valid: type_def_token = 0 or (type_def_token & Md_mask = Md_type_def)
 		deferred

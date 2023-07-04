@@ -73,7 +73,7 @@ create {CIL_CODE_GENERATOR}
 feature {NONE} -- Initialization
 
 	make (
-			a_module_name: like module_name;
+			a_module_name: like module_name_with_extension;
 			a_file_name: like module_file_name;
 			a_c_module_name: like c_module_name;
 			a_public_key: like public_key;
@@ -91,10 +91,20 @@ feature {NONE} -- Initialization
 			a_file_name_not_empty: not a_file_name.is_empty
 			a_module_name_not_void: a_module_name /= Void
 			a_module_name_not_empty: not a_module_name.is_empty
+			a_module_name_with_extension: a_module_name.has ('.')
 			a_il_code_generator_not_void: a_il_code_generator /= Void
 			a_module_id_non_negative: a_module_id > 0
+		local
+			i: INTEGER
 		do
-			module_name := a_module_name
+			module_name_with_extension := a_module_name
+			i := a_module_name.last_index_of ('.', a_module_name.count)
+			if i > 0 then
+				module_name := a_module_name.substring (1, i - 1)
+			else
+				check has_extension: False end
+				module_name := a_module_name
+			end
 			module_file_name := a_file_name
 			public_key := a_public_key
 			il_code_generator := a_il_code_generator
@@ -140,6 +150,9 @@ feature -- Access
 
 	module_name: STRING
 			-- Name of current module
+
+	module_name_with_extension: STRING
+			-- Name of current module with extension
 
 	module_file_name: READABLE_STRING_32
 			-- Location where current will be generated.
@@ -1059,7 +1072,11 @@ feature -- Code generation
 					ass.set_revision_number (l_version.revision.to_natural_16)
 				else
 					check is_using_multi_assemblies end
-					-- FIXME: reuse the project version information.
+					l_version.set_version (system.msil_version)
+					ass.set_major_version (l_version.major.to_natural_16)
+					ass.set_minor_version (l_version.minor.to_natural_16)
+					ass.set_build_number (l_version.build.to_natural_16)
+					ass.set_revision_number (l_version.revision.to_natural_16)
 				end
 
 				if public_key /= Void then
@@ -1295,6 +1312,7 @@ feature -- Code generation
 			l_pe_file: CLI_PE_FILE
 			l_debug_info: MANAGED_POINTER
 			ept: like entry_point_token
+			loc: PATH
 		do
 			l_pe_file := md_factory.pe_file (module_file_name, is_dll or is_console_application, is_dll, is_32bits, md_emit)
 			if is_debug_info_enabled then
@@ -1319,12 +1337,108 @@ feature -- Code generation
 			end
 			l_pe_file.save
 
+			if is_using_multi_assemblies then
+				-- FIXME: also save associated .deps.json file!
+				create loc.make_from_string (module_file_name)
+				if attached loc.parent as l_parent then
+					deploy_netcore_deps_json_file (defined_assemblies, system, l_parent, module_name + ".deps.json")
+				end
+			end
+
 			wipe_out
 			is_generated := False
 			is_saved := True
 		ensure
 			is_generated_set: not is_generated
 			is_saved: is_saved
+		end
+
+feature -- Netcore deployment
+
+	deploy_netcore_deps_json_file (a_assemblie: like defined_assemblies;
+				a_system: SYSTEM_I; a_target_directory: PATH; a_target_filename: READABLE_STRING_GENERAL)
+		local
+			f: PLAIN_TEXT_FILE
+			vars: CIL_PROJECT_INFO
+			s, libs_tpl, libs: STRING
+			v: STRING_8
+			l_item: IL_MODULE
+			l_name: READABLE_STRING_GENERAL
+			l_version: READABLE_STRING_GENERAL
+		do
+			create vars.make_from_system (system)
+
+			s := "[
+{
+  "runtimeTarget": {
+    "name": "${CLR_RUNTIME}",
+    "signature": ""
+  },
+  "targets": {
+    "${CLR_RUNTIME}": {
+      "${LIB_NAME_VERSION}": {
+        "runtime": {
+          "${LIB_NAME}.${LIB_TYPE}": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "${LIB_NAME_VERSION}": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }${LIBRARIES}
+  }
+}
+			]"
+			s.replace_substring_all ("${CLR_RUNTIME}", vars.clr_runtime)
+			create v.make_from_string (module_name)
+			if attached assembly_info as l_ass_info then
+				l_version := l_ass_info.version
+			else
+				l_version := vars.system_version
+			end
+			if l_version /= Void then
+				v.append_character ('/')
+				v.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
+			end
+			s.replace_substring_all ("${LIB_NAME_VERSION}", v)
+			s.replace_substring_all ("${LIB_NAME}", module_name)
+			s.replace_substring_all ("${LIB_TYPE}", "dll")
+
+
+			-- FIXME: use the list of .Net assemblies, and generated assemblies to get versions and related information.
+			if a_assemblie /= Void and then not a_assemblie.is_empty then
+				create libs.make_empty
+libs_tpl := "[
+
+    "${LIB_NAME_VERSION}": { "type": "reference" }
+]"
+				across
+					a_assemblie as ic
+				loop
+					l_name := ic.key
+					l_version := ic.item.version
+
+					libs.append (",%N")
+					libs.append (libs_tpl)
+					-- FIXME: maybe use proper JSON encoding, eventually the JSON library.
+					v := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_name)
+					if l_version /= Void then
+						v.append_character ('/')
+						v.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
+					end
+					libs.replace_substring_all ("${LIB_NAME_VERSION}", v)
+				end
+			end
+
+			s.replace_substring_all ("${LIBRARIES}", libs)
+
+			create f.make_with_path (a_target_directory.extended (a_target_filename))
+			f.open_write
+			f.put_string (s)
+			f.close
 		end
 
 feature -- Metadata description
@@ -2236,7 +2350,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			class_token_valid: Result /= 0
 		end
 
-	define_assembly_reference (a_name, a_version, a_culture, a_key: READABLE_STRING_32): INTEGER
+	define_assembly_reference (a_name, a_version, a_culture: READABLE_STRING_32; a_key: detachable READABLE_STRING_32): INTEGER
 			-- Define an assembly reference matching given parameters
 		require
 			a_name_not_void: a_name /= Void
@@ -2247,7 +2361,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			l_key_token: MD_PUBLIC_KEY_TOKEN
 		do
 			if defined_assemblies.has_key (a_name) then
-				Result := defined_assemblies.found_item
+				Result := defined_assemblies.found_item.token
 			else
 				if a_name.same_string_general ("mscorlib") and mscorlib_token > 0 then
 					Result := mscorlib_token
@@ -2279,7 +2393,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 						-- some metadata.
 					Result := md_emit.define_assembly_ref (create {CLI_STRING}.make (a_name), l_ass_info, l_key_token)
 				end
-				defined_assemblies.put (Result, a_name)
+				defined_assemblies.put ([Result, a_version], a_name)
 			end
 		ensure
 			is_token_defined: Result /= 0
@@ -2892,14 +3006,24 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			a_module_not_void: a_module /= Void
 			a_module_not_current: a_module /= Current
 		local
-			ass: MD_ASSEMBLY_INFO
+			l_ass_info: MD_ASSEMBLY_INFO
+			l_version: VERSION
 		do
 			Result := internal_module_references.item (a_module)
 			if Result = 0 then
 				if is_using_multi_assemblies then
 						-- AssemblyRef token has not yet been computed.
-					ass := md_factory.assembly_info
-					Result := md_emit.define_assembly_ref (create {CLI_STRING}.make (a_module.module_name), ass, Void)
+					create l_version
+					l_version.set_version (system.msil_version)
+					l_ass_info := md_factory.assembly_info
+					l_ass_info.set_major_version (l_version.major.to_natural_16)
+					l_ass_info.set_minor_version (l_version.minor.to_natural_16)
+					l_ass_info.set_build_number (l_version.build.to_natural_16)
+					l_ass_info.set_revision_number (l_version.revision.to_natural_16)
+--					a_module.assembly_info
+
+					Result := define_assembly_reference (a_module.module_name, system.msil_version, "", Void)
+--					Result := md_emit.define_assembly_ref (create {CLI_STRING}.make (a_module.module_name), l_ass_info, Void)
 					internal_module_references.put (Result, a_module)
 				else
 						-- ModuleRef token has not yet been computed.
@@ -2985,7 +3109,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				(is_used_as_external implies internal_assemblies.item (a_class_type.external_id) /= 0)
 		end
 
-	defined_assemblies: STRING_TABLE [INTEGER]
+	defined_assemblies: STRING_TABLE [TUPLE [token: INTEGER; version: READABLE_STRING_GENERAL]]
 			-- In order to avoid calling `define_assembly_ref' twice on same assemblies.
 
 feature {NONE} -- Once per modules being generated.

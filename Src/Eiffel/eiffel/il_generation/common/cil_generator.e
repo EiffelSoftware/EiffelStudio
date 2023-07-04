@@ -269,18 +269,50 @@ feature -- Generation
 			-- copy configuration file to load local assemblies.
 		local
 			l_source_name: PATH
-			l_target_name: like {PROJECT_DIRECTORY}.path
+			l_assembly_location: like {PROJECT_DIRECTORY}.path
 			l_has_local, retried: BOOLEAN
 			l_precomp: REMOTE_PROJECT_DIRECTORY
 			l_viop: VIOP
 			l_use_optimized_precomp: BOOLEAN
 			l_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
 			l_state: CONF_STATE
-			vars: STRING_TABLE [READABLE_STRING_GENERAL]
+			vars: CIL_PROJECT_INFO
+			l_assembly_references: ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; version: detachable READABLE_STRING_GENERAL]]
+			fut: FILE_UTILITIES
 		do
 			if not retried then
 					-- Create the Assemblies directory if it does not already exist
 				project_location.create_local_assemblies_directory (is_finalizing)
+
+				if system.is_il_netcore then
+					if is_finalizing then
+						l_assembly_location := project_location.final_path
+					else
+						l_assembly_location := project_location.workbench_path
+					end
+				else
+					l_assembly_location := assembly_location (is_finalizing)
+				end
+
+					-- Assembly references
+				create l_assembly_references.make (0)
+				if cil_generator.is_using_multi_assemblies then
+						-- FIXME: find better source of generated assembly list.
+					if attached fut.file_names (l_assembly_location.name) as lst then
+						across
+							lst as ic
+						loop
+							if
+								attached ic.item as fn and then
+								fn.starts_with ("assembly_") and then
+								fn.ends_with_general (".dll")
+							then
+								fn.remove_tail (4)
+								l_assembly_references.force ([fn, system.msil_version])
+							end
+						end
+					end
+				end
 
 					-- Copy referenced local assemblies
 				l_state := universe.conf_state
@@ -292,7 +324,8 @@ feature -- Generation
 				loop
 					if attached {CONF_PHYSICAL_ASSEMBLY} l_assemblies.item_for_iteration as l_as then
 						if l_as.is_enabled (l_state) and then not l_as.is_in_gac then
-							copy_to_local (l_as.location.build_path ({STRING_32} "", l_as.location.original_file), assembly_location (is_finalizing), Void)
+							l_assembly_references.force ([l_as.name, l_as.assembly_version])
+							copy_to_local (l_as.location.build_path ({STRING_32} "", l_as.location.original_file), l_assembly_location, Void)
 							l_has_local := True
 						end
 					else
@@ -323,10 +356,11 @@ feature -- Generation
 							error_handler.insert_warning (l_viop, universe.target.options.is_warning_as_error)
 						end
 
-						copy_to_local (l_precomp.assembly_driver (l_use_optimized_precomp), assembly_location (is_finalizing), Void)
-						copy_to_local (l_precomp.assembly_helper_driver (l_use_optimized_precomp), assembly_location (is_finalizing), Void)
+						l_assembly_references.force ([l_precomp.name, Void])
+						copy_to_local (l_precomp.assembly_driver (l_use_optimized_precomp), l_assembly_location, Void)
+						copy_to_local (l_precomp.assembly_helper_driver (l_use_optimized_precomp), l_assembly_location, Void)
 						if not l_use_optimized_precomp or l_precomp.line_generation then
-							copy_to_local (l_precomp.assembly_debug_info (l_use_optimized_precomp), assembly_location (is_finalizing), Void)
+							copy_to_local (l_precomp.assembly_debug_info (l_use_optimized_precomp), l_assembly_location, Void)
 						end
 
 						Workbench.Precompilation_directories.forth
@@ -335,20 +369,16 @@ feature -- Generation
 
 					-- Copy configuration file to be able to load up local assembly.
 				if l_has_local then
-					if is_finalizing then
-						l_target_name := project_location.final_path
-					else
-						l_target_name := project_location.workbench_path
-					end
 					if system.is_il_netcore then
-						deploy_netcore_runtimeconfig_json_file (System, l_target_name, System.name.to_string_32 + ".runtimeconfig.json")
-						deploy_netcore_deps_json_file (System, l_target_name, System.name.to_string_32 + ".deps.json")
+						create vars.make_from_system (system)
+						deploy_netcore_runtimeconfig_json_file (vars, l_assembly_location, System.name.to_string_32 + ".runtimeconfig.json")
+						deploy_netcore_deps_json_file (vars, l_assembly_references, System, l_assembly_location, System.name.to_string_32 + ".deps.json")
 					else
 						-- Compute name of configuration file: It is `system_name.xxx.config'
 						-- where `xxx' is either `exe' or `dll'.
 
 						l_source_name := eiffel_layout.generation_templates_path.extended ("assembly_config.xml")
-						copy_to_local (l_source_name, l_target_name, {STRING_32} "" + System.name + "." + System.msil_generation_type + ".config")
+						copy_to_local (l_source_name, l_assembly_location, {STRING_32} "" + System.name + "." + System.msil_generation_type + ".config")
 					end
 				end
 			else
@@ -364,13 +394,11 @@ feature -- Generation
 			end
 		end
 
-	deploy_netcore_runtimeconfig_json_file (a_system: SYSTEM_I; a_target_directory: PATH; a_target_filename: READABLE_STRING_GENERAL)
+	deploy_netcore_runtimeconfig_json_file (vars: CIL_PROJECT_INFO; a_target_directory: PATH; a_target_filename: READABLE_STRING_GENERAL)
 		local
 			f: PLAIN_TEXT_FILE
-			vars: like netcore_project_variables
 			s: STRING
 		do
-			vars := netcore_project_variables (a_system)
 
 			s := "[
 {
@@ -379,9 +407,10 @@ feature -- Generation
     "framework": {
       "name": "${FRAMEWORK_NAME}",
       "version": "${FRAMEWORK_VERSION}"
-    }
+    },
+    "additionalProbingPaths": [ "./Assemblies/" ]
   }
-}			
+}
 			]"
 			s.replace_substring_all ("${FRAMEWORK_MONIKER}", vars.framework_moniker)
 			s.replace_substring_all ("${FRAMEWORK_NAME}", vars.framework_name)
@@ -393,16 +422,13 @@ feature -- Generation
 			f.close
 		end
 
-	deploy_netcore_deps_json_file (a_system: SYSTEM_I; a_target_directory: PATH; a_target_filename: READABLE_STRING_GENERAL)
+	deploy_netcore_deps_json_file (vars: CIL_PROJECT_INFO; a_assembly_reference: LIST [TUPLE [name: READABLE_STRING_GENERAL; version: detachable READABLE_STRING_GENERAL]];
+				a_system: SYSTEM_I; a_target_directory: PATH; a_target_filename: READABLE_STRING_GENERAL)
 		local
 			f: PLAIN_TEXT_FILE
-			vars: like netcore_project_variables
 			s, libs_tpl, libs: STRING
-			fut: FILE_UTILITIES
-			fn: STRING_32
+			v: STRING_8
 		do
-			vars := netcore_project_variables (a_system)
-
 			s := "[
 {
   "runtimeTarget": {
@@ -424,8 +450,7 @@ feature -- Generation
       "type": "project",
       "serviceable": false,
       "sha512": ""
-    }  
-    ${LIBRARIES}
+    }${LIBRARIES}
   }
 }
 			]"
@@ -437,25 +462,24 @@ feature -- Generation
 
 
 			-- FIXME: use the list of .Net assemblies, and generated assemblies to get versions and related information.
-			if attached fut.file_names (a_target_directory.name) as lst then
+			if a_assembly_reference /= Void and then not a_assembly_reference.is_empty then
 				create libs.make_empty
 libs_tpl := "[
-    "${LIB_NAME_VERSION}": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    }
+
+    "${LIB_NAME_VERSION}": { "type": "reference" }
 ]"
 				across
-					lst as ic
+					a_assembly_reference as ic
 				loop
-					fn := ic.item
-					if fn.ends_with_general (".dll") then
-						fn.remove_tail (4)
-						libs.append (",%N")
-						libs.append (libs_tpl)
-						libs.replace_substring_all ("${LIB_NAME_VERSION}", fn + "/0.0.0.0")
+					libs.append (",%N")
+					libs.append (libs_tpl)
+					-- FIXME: maybe use proper JSON encoding, eventually the JSON library.
+					v := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (ic.item.name)
+					if attached ic.item.version as l_version then
+						v.append_character ('/')
+						v.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
 					end
+					libs.replace_substring_all ("${LIB_NAME_VERSION}", v)
 				end
 			end
 

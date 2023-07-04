@@ -491,7 +491,7 @@ feature -- Settings
 			debug ("debugger_il_info_trace")
 				if attached current_module as m then
 					if l_old_module = Void or else l_old_module /= m then
-						print (generator + ".set_current_module_with (...) -> switched to "+ m.module_name +"%N")
+						print (generator + ".set_current_module_with (...) -> switched to "+ m.module_name_with_extension +"%N")
 					end
 				end
 			end
@@ -953,7 +953,7 @@ feature -- Generation Structure
 									l_file_token := file_token.found_item
 								else
 									l_file_token := define_file (main_module,
-										l_module.module_file_name, l_module.module_name,
+										l_module.module_file_name, l_module.module_name_with_extension,
 										{MD_FILE_FLAGS}.Has_meta_data, a_signing)
 									file_token.put (l_file_token, l_module)
 								end

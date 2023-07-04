@@ -16,4 +16,12 @@ create
 convert
 	value: {NATURAL_32}
 
+feature -- Status report
+
+	to_string: STRING_32
+		do
+			Result := {STRING_32} "RVA=" + Precursor
+		end
+
+
 end

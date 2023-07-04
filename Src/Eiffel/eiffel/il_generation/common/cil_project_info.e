@@ -17,21 +17,20 @@ feature {NONE} -- Initialization
 			s, maj, min, sub: STRING
 			i,j: INTEGER
 			l_fmwk_name, l_fmwk_version: STRING
-			l_system_version, l_system_type, l_framework_moniker, l_clr_runtime: STRING
 		do
 			system_name := a_system.name
 			if
 				attached a_system.msil_version as l_msil_version and then
 				not l_msil_version.is_empty
 			then
-				system_version := l_msil_version
+				system_version := l_msil_version.to_string_8 -- FIXME: Unicode version?
 			else
 				system_version := "1.0.0" -- Default?
 			end
 
-			system_type := a_system.msil_generation_type -- dll | exe
+			system_type := a_system.msil_generation_type.to_string_8 -- dll | exe
 
-			s := a_system.clr_runtime_version.to_string_8
+			s := a_system.clr_runtime_version.to_string_8 -- FIXME: Unicode CLR version?
 			i := s.index_of ('/', 1)
 			if i > 0 then
 				l_fmwk_name := s.head (i - 1)

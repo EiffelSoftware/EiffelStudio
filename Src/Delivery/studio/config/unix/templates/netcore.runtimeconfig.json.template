@@ -1,9 +1,0 @@
-{
-  "runtimeOptions": {
-    "tfm": "${FRAMEWORK_MONIKER}",
-    "framework": {
-      "name": "${FRAMEWORK_NAME}",
-      "version": "${FRAMEWORK_VERSION}"
-    }
-  }
-}

@@ -9,6 +9,9 @@ class
 
 inherit
 	PE_NATURAL_32_ITEM
+		redefine
+			to_string
+		end
 
 create
 	make

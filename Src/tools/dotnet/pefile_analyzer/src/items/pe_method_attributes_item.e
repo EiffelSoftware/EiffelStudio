@@ -47,15 +47,15 @@ feature -- Status report
 			if has_flag (MemberAccessMask, Private,	v) then add_flag_to ("Private", Result) end
 			if has_flag (MemberAccessMask, Family,	v) then add_flag_to ("Family", Result) end
 			if has_flag (MemberAccessMask, Public,	v) then add_flag_to ("Public", Result) end
-			if has_flag (MemberAccessMask, Static,	v) then add_flag_to ("Static", Result) end
-			if has_flag (MemberAccessMask, Final,	v) then add_flag_to ("Final", Result) end
-			if has_flag (MemberAccessMask, Virtual,	v) then add_flag_to ("Virtual", Result) end
-			if has_flag (MemberAccessMask, HideBySig,	v) then add_flag_to ("HideBySig", Result) end
+			if has_flag (0x0, Static,	v) then add_flag_to ("Static", Result) end
+			if has_flag (0x0, Final,	v) then add_flag_to ("Final", Result) end
+			if has_flag (0x0, Virtual,	v) then add_flag_to ("Virtual", Result) end
+			if has_flag (0x0, HideBySig,	v) then add_flag_to ("HideBySig", Result) end
 
 --			if has_flag (VtableLayoutMask, ReuseSlot,	v) then add_flag_to ("ReuseSlot", Result) end
---			if has_flag (VtableLayoutMask, NewSlot,	v) then add_flag_to ("NewSlot", Result) end
-			if has_flag (VtableLayoutMask, Strict,	v) then add_flag_to ("Strict", Result) end
-			if has_flag (VtableLayoutMask, Abstract,	v) then add_flag_to ("Abstract", Result) end
+			if has_flag (VtableLayoutMask, NewSlot,	v) then add_flag_to ("NewSlot", Result) end
+			if has_flag (0x0, Strict,	v) then add_flag_to ("Strict", Result) end
+			if has_flag (0x0, Abstract,	v) then add_flag_to ("Abstract", Result) end
 
 			if has_flag (0x0, SpecialName,	v) then add_flag_to ("SpecialName", Result) end
 		end

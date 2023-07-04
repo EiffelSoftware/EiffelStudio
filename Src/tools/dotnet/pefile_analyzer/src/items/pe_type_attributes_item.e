@@ -58,6 +58,7 @@ feature -- Status report
 			if has_flag (0x0, SpecialName,	v) then add_flag_to ("SpecialName", Result) end
 
 			if has_flag (StringFormatMask, AnsiClass,	v) then add_flag_to ("ansi", Result) end
+			if has_flag (StringFormatMask, UnicodeClass,	v) then add_flag_to ("unicode", Result) end
 
 			if has_flag (0x0, BeforeFieldInit,	v) then add_flag_to ("BeforeFieldInit", Result) end
 		end

@@ -52,6 +52,11 @@ feature {NONE} -- Initialization
 						is_debug := True
 						i := i + 1
 
+					elseif arg.is_case_insensitive_equal_general ("raw") then
+						has_analyzer := False
+						has_explorer := False
+						is_raw := True
+
 					elseif arg.is_case_insensitive_equal_general ("analyze") then
 						has_analyzer := True
 					elseif arg.is_case_insensitive_equal_general ("no_analyze") then
@@ -97,6 +102,7 @@ feature {NONE} -- Initialization
 				print ("%T --print=output-file    : enable the printer and outputs to file or stdout|stderr%N")
 				print ("%T --explore|--no_explore : enable/disable the explorer%N")
 				print ("%T --explore=output-file  : enable the explorer and outputs to file or stdout|stderr%N")
+				print ("%T --raw                  : implies no_analyze and no_explorer%N")
 				print ("%T --help                 : display this help%N")
 				print ("%N")
 			else
@@ -119,6 +125,7 @@ feature {NONE} -- Initialization
 
 	is_debug: BOOLEAN
 
+	is_raw,
 	has_analyzer,
 	has_printer,
 	has_explorer: BOOLEAN
@@ -183,8 +190,10 @@ feature -- Execution
 
 				if has_analyzer then
 						-- Resolve FieldPointer and MethodPointer
-					create resolver.make (pe)
-					pe.accepts (resolver)
+					if not is_raw then
+						create resolver.make (pe)
+						pe.accepts (resolver)
+					end
 
 					create analyzer.make (pe)
 					pe.accepts (analyzer)

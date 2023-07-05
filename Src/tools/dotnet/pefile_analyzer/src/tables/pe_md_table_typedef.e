@@ -33,7 +33,7 @@ feature -- Check validity
 							prev_field_idx /= Void and then
 							prev_field_idx.original_index > fl.original_index
 						then
-							report_error (create {PE_USER_ERROR}.make ("<0x"+ e.token.to_hex_string +">.FieldList not ordered (0x"+ prev_field_idx.original_index.to_hex_string +" > 0x"+ fl.original_index.to_hex_string +")" ))
+							report_error (create {PE_USER_ERROR}.make ("<0x"+ e.token.to_hex_string +">.FieldList  not ordered (0x"+ prev_field_idx.original_index.to_hex_string +" > 0x"+ fl.original_index.to_hex_string +")" ))
 						end
 						prev_field_idx := fl
 					end

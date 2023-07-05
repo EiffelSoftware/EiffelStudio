@@ -24,27 +24,32 @@ feature -- Check validity
 			prev_field_idx: PE_INDEX_ITEM
 			prev_method_idx: PE_INDEX_ITEM
 		do
-			across
-				entries as ic
-			loop
-				if attached ic.item as e then
-					if attached e.field_list as fl then
-						if
-							prev_field_idx /= Void and then
-							prev_field_idx.original_index > fl.original_index
-						then
-							report_error (create {PE_USER_ERROR}.make ("<0x"+ e.token.to_hex_string +">.FieldList  not ordered (0x"+ prev_field_idx.original_index.to_hex_string +" > 0x"+ fl.original_index.to_hex_string +")" ))
+			if
+				pe.metadata_tables.table_size ({PE_TABLES}.tfieldpointer) = 0 and then
+				pe.metadata_tables.table_size ({PE_TABLES}.tmethodpointer) = 0
+			then
+				across
+					entries as ic
+				loop
+					if attached ic.item as e then
+						if attached e.field_list as fl then
+							if
+								prev_field_idx /= Void and then
+								prev_field_idx.original_index > fl.original_index
+							then
+								report_error (create {PE_USER_ERROR}.make ("<0x"+ e.token.to_hex_string +">.FieldList  not ordered (0x"+ prev_field_idx.original_index.to_hex_string +" > 0x"+ fl.original_index.to_hex_string +")" ))
+							end
+							prev_field_idx := fl
 						end
-						prev_field_idx := fl
-					end
-					if attached e.method_list as ml then
-						if
-							prev_method_idx /= Void and then
-							prev_method_idx.original_index > ml.original_index
-						then
-							report_error (create {PE_USER_ERROR}.make ("<0x"+ e.token.to_hex_string +">.MethodList not ordered (0x"+ prev_method_idx.original_index.to_hex_string +" > 0x"+ ml.original_index.to_hex_string +")" ))
+						if attached e.method_list as ml then
+							if
+								prev_method_idx /= Void and then
+								prev_method_idx.original_index > ml.original_index
+							then
+								report_error (create {PE_USER_ERROR}.make ("<0x"+ e.token.to_hex_string +">.MethodList not ordered (0x"+ prev_method_idx.original_index.to_hex_string +" > 0x"+ ml.original_index.to_hex_string +")" ))
+							end
+							prev_method_idx := ml
 						end
-						prev_method_idx := ml
 					end
 				end
 			end

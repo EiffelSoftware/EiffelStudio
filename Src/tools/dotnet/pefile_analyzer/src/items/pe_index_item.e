@@ -25,6 +25,10 @@ feature -- Access
 		deferred
 		end
 
+	original_index: NATURAL_32
+		deferred
+		end
+
 	is_null_index: BOOLEAN
 		do
 			Result := index = 0x0
@@ -42,6 +46,8 @@ feature -- Element change
 
 	update_index (idx: NATURAL_32)
 		deferred
+		ensure
+			original_index = old index
 		end
 
 end

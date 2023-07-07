@@ -77,6 +77,10 @@ feature -- Visitor
 
 	visit_index (idx: PE_INDEX_BASE)
 		do
+			-- FIXME jfiat [2023/07/07] : not all indexes are pure MethodDef token
+			-- some may be MethodDef or ... indexes.
+			-- so this code needs to be smarter and check if this is really a MethodDef token
+			
 			remapper.remap_index (idx)
 		end
 

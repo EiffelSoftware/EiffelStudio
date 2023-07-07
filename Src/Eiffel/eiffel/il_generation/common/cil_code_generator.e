@@ -488,7 +488,7 @@ feature -- Settings
 			current_module := il_module (a_class_type)
 				-- Refine so that only classes being generated in current compilation
 				-- unit needs the module to be generated as well.
-			debug ("debugger_il_info_trace")
+			debug ("il_emitter")
 				if attached current_module as m then
 					if l_old_module = Void or else l_old_module /= m then
 						print (generator + ".set_current_module_with (...) -> switched to "+ m.module_name_with_extension +"%N")

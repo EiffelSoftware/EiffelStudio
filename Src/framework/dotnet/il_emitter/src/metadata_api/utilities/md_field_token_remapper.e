@@ -46,7 +46,15 @@ feature -- Visitor
 		do
 			inspect
 				tb.table_id.to_natural_32
-			when {PE_TABLES}.ttypedef then
+			when
+				{PE_TABLES}.ttypedef,
+				{PE_TABLES}.tcustomattribute,
+				{PE_TABLES}.tconstant
+--				, {PE_TABLES}.tfieldmarshal -- Not Implemented
+--				, {PE_TABLES}.timplmap -- Not Implement
+--				, {PE_TABLES}.tfieldlayout -- Not Used
+--				, {PE_TABLES}.tfieldrva    -- Not Used
+			then
 				Precursor (tb)
 			else
 				-- Table not impacted
@@ -57,6 +65,15 @@ feature -- Visitor
 		do
 			if attached {PE_TYPE_DEF_TABLE_ENTRY} e as l_typedef then
 				l_typedef.fields.accepts (Current)
+			elseif attached {PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY} e as l_ca then
+				l_ca.parent_index.accepts (Current)
+				l_ca.type_index.accepts (Current)
+			elseif attached {PE_CONSTANT_TABLE_ENTRY} e as l_cst then
+				l_cst.parent_index.accepts (Current)
+--			elseif attached {PE_FIELD_MARSHAL_TABLE_ENTRY} e as l_fm then
+--				l_fm.parent_index.accepts (Current)
+--			elseif attached {PE_IMPL_MAP_TABLE_ENTRY} e as l_impl then
+--				l_impl.member_forward_index.accepts (Current)
 			else
 				Precursor (e)
 			end

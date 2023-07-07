@@ -7,23 +7,67 @@ note
 class
 	MD_REMAP_TOKEN_MANAGER
 
+inherit
+	TABLE_ITERABLE [NATURAL_32, NATURAL_32]
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_tb: MD_TABLE)
 		do
+			associated_table := a_tb
 			create table.make (4)
 			table.compare_objects
 		end
 
-feature -- Status
+feature -- Access
+
+	associated_table: MD_TABLE
+
+feature -- Access		
+
+	token (a_src: NATURAL_32): NATURAL_32
+		do
+			if table.has (a_src) then
+				Result := table [a_src]
+			else
+				Result := a_src
+			end
+		end
+
+feature -- Access
+
+	new_cursor: TABLE_ITERATION_CURSOR [NATURAL_32, NATURAL_32]
+			-- Fresh cursor associated with current structure
+		do
+			Result := table.new_cursor
+		end
+
+feature -- Status report
+
+	is_empty: BOOLEAN
+		do
+			Result := table.is_empty
+		end
+
+	has (a_key: NATURAL): BOOLEAN
+			-- Is there an item in the hashtable with key `a_key'?
+		do
+			Result := table.has (a_key)
+		end
+
+feature -- Element change
 
 	record (a_src, a_target: NATURAL_32)
+		require
+			valid_src: associated_table.valid_index (a_src)
+			valid_target: associated_table.valid_index (a_target)
 		local
 			l_src: NATURAL_32
 		do
+-- FIXME: check for recursive cases.			
 --			across
 --				table as i
 --			until
@@ -46,31 +90,24 @@ feature -- Status
 			end
 		end
 
-	token (a_src: NATURAL_32): NATURAL_32
-		do
-			if table.has (a_src) then
-				Result := table [a_src]
-			else
-				Result := a_src
-			end
-		end
-
-	is_empty: BOOLEAN
-		do
-			Result := table.is_empty
-		end
-
-	has (a_key: NATURAL): BOOLEAN
-			-- Is there an item in the hashtable with key `a_key'?
-		do
-			Result := table.has (a_key)
-		end
-
 	force (a_item: NATURAL; a_key: NATURAL)
 			-- Update hashtable so that `a_item' will be the item associated
 			-- with `a_key'.
 		do
 			table.force (a_item, a_key)
+		end
+
+feature -- Operation
+
+	remap_index (idx: PE_INDEX_BASE)
+		local
+			i, t: NATURAL_32
+		do
+			i := idx.index
+			t := token (i)
+			if i /= t then
+				idx.update_index (t)
+			end
 		end
 
 feature -- Conversion

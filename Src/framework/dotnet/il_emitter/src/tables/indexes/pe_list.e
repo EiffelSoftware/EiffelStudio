@@ -11,6 +11,7 @@ inherit
 		redefine
 			make_with_index,
 			make_with_tag_and_index,
+			update_index,
 			get_index_shift,
 			has_index_overflow,
 			is_ready_for_render,
@@ -54,12 +55,10 @@ feature -- Access
 feature -- Operations
 
 	update_index (idx: like index)
-		require
-			valid_index: idx >= 0
 		do
-			index := idx
+			Precursor (idx)
 			is_list_index_set := True
-		ensure
+		ensure then
 			is_list_index_set
 		end
 

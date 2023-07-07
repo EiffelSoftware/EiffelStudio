@@ -26,11 +26,19 @@ feature -- Access
 
 	table_id: INTEGER
 
-feature {NONE} -- Access	
+feature {MD_TABLE_ACCESS} -- Access	
 
 	items: LIST [PE_TABLE_ENTRY_BASE]
 			-- vector of tables that can appear in a PE file
 			-- empty tables are elided / pass over?
+
+feature {MD_TABLE_ACCESS} -- Access	
+
+	replace_items (lst: LIST [PE_TABLE_ENTRY_BASE])
+			-- Replace `items` with `lst`.
+		do
+			items := lst
+		end
 
 feature -- Access
 
@@ -103,6 +111,11 @@ feature -- Status Report
 			-- Is the table empty?
 		do
 			Result := items.is_empty
+		end
+
+	valid_index (idx: NATURAL_32): BOOLEAN
+		do
+			Result := idx >= 0 and idx <= size + 1
 		end
 
 end

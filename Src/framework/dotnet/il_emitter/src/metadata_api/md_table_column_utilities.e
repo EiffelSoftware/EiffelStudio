@@ -5,19 +5,22 @@ note
 	revision: "$Revision$"
 
 class
-	MD_TABLE_COLUMN_UTILITIES [G -> PE_TABLE_ENTRY_BASE]
+	MD_TABLE_COLUMN_UTILITIES [E -> PE_TABLE_ENTRY_BASE]
+
+inherit
+	MD_TABLE_ACCESS
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (tb: MD_TABLE; col_tb: MD_TABLE; a_column_value_function: FUNCTION [G, PE_LIST])
+	make (tb: MD_TABLE; col_tb: MD_TABLE; a_column_value_function: FUNCTION [E, PE_LIST])
 		do
 			table := tb
 			table_for_column := col_tb
 			value_for := a_column_value_function
-			create remap.make
+			create remap.make (col_tb)
 		end
 
 feature -- Access
@@ -30,7 +33,65 @@ feature -- Access
 	table_for_column: MD_TABLE
 			-- Table associated with the column (Field, MethodDef, Param, ...)
 
-	value_for: FUNCTION [G, PE_LIST]
+	value_for: FUNCTION [E, PE_LIST]
+
+feature -- Apply token remapping
+
+	apply_remapping
+		local
+			lst: ARRAYED_LIST [PE_TABLE_ENTRY_BASE]
+			src: NATURAL_32
+			tgt: INTEGER_32
+			e: PE_TABLE_ENTRY_BASE
+			col_tb: like table_for_column
+		do
+				-- Re-order `table_for_column` (For instance: Field, MethodDef, .. table)
+			col_tb := table_for_column
+			create lst.make_from_iterable (col_tb.items)
+			across
+				remap as r
+			loop
+				src := @r.key
+				tgt := (r).to_integer_32
+				e := col_tb [src]
+				lst.put_i_th (e, tgt)
+			end
+			col_tb.items.wipe_out
+			col_tb.replace_items (lst)
+
+				-- Updated tokens in the `table` (For instance: TypeDef table, ...)
+			across
+				table as i
+			loop
+				if attached {E} i as l_type_def_entry then
+					if attached value_for (l_type_def_entry) as idx then
+						remap.remap_index (idx)
+					end
+				end
+			end
+		end
+
+	table_dump: STRING_8
+		local
+			i: NATURAL_32
+		do
+			create Result.make (table.count * 20)
+			i := 0
+			across
+				table as e
+			loop
+				i := i + 1
+
+				if attached {E} e as l_entry then
+					Result.append ("[0x" + i.to_hex_string + "]")
+					Result.append (" ListIndex: 0x")
+					Result.append (value_for (l_entry).index.to_hex_string)
+					Result.append_character ('%N')
+				else
+					check expected_entries: False end
+				end
+			end
+		end
 
 feature -- Sorting
 
@@ -52,8 +113,8 @@ feature -- Sorting
 				i > n
 			loop
 				if
-					attached {G} tb [i - 1] as r1 and then
-					attached {G} tb [i] as r2
+					attached {E} tb [i - 1] as r1 and then
+					attached {E} tb [i] as r2
 				then
 					i1 := remap.token (l_col_value_fct (r1).index)
 					i2 := remap.token (l_col_value_fct (r2).index)
@@ -90,7 +151,7 @@ feature -- Sorting
 			until
 				i > n
 			loop
-				if attached {G} tb [i] as r then
+				if attached {E} tb [i] as r then
 					i1 := remap.token (l_col_value_fct (r).index)
 					if i1 > idx and i1 - 1 < Result then
 						Result := i1 - 1
@@ -131,9 +192,9 @@ feature -- Table operation
 				i := ref_index
 				j := 0
 			until
-				j > n --offset
+				i + j > start_index
 			loop
-				if start_index <= i + j and i + j <= end_index then
+				if start_index <= i + j then
 					-- Already moved!
 				else
 					remap.record (i + j, ref_index + offset + j)

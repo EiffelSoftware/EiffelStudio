@@ -314,12 +314,8 @@ feature -- Column sorting
 			end
 		end
 
-
 	sort_list_column (ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY])
 		do
-				-- First we compute the unsorted Token list
-				-- TODO: it seems we don't need the type id because we know
-				-- that we need to traverse the MD_TABLE  identified by {PE_TABLES}.ttypedef
 			if
 				attached ut.unsorted_list_indexes as lst and then
 				not lst.is_empty
@@ -329,8 +325,8 @@ feature -- Column sorting
 --Commented for now, to avoid infinite recursion
 --					sort_list_column (ut)
 			else
-				-- The Metadata Tokens for FieldList are sorted in the table ttypedef
-				-- and the MD_REMAP_MANAGER has the tokens remaps to be applied to
+				-- The Metadata Tokens for Token List are sorted in the container table
+				-- and the token remap manager has the tokens remaps to be applied to
 				-- the corresponding tables.
 			end
 		end
@@ -350,6 +346,7 @@ feature -- FieldList column sorting
 				sort_list_column (ut)
 				if not ut.remap.is_empty then
 					-- Update tables with remapped tokens!
+					ut.apply_remapping
 				end
 			end
 		end
@@ -368,7 +365,7 @@ feature -- MethodList column sorting
 
 				sort_list_column (ut)
 				if not ut.remap.is_empty then
-					-- Update tables with remapped tokens!
+					ut.apply_remapping
 				end
 			end
 		end

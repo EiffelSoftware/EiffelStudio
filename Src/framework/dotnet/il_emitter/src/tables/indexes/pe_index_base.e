@@ -47,6 +47,15 @@ feature {NONE} -- Initialization
 			index_set: index = a_index
 		end
 
+feature -- Operations
+
+	update_index (idx: like index)
+		require
+			valid_index: idx >= 0
+		do
+			index := idx
+		end
+
 feature -- Access
 
 	tag: INTEGER

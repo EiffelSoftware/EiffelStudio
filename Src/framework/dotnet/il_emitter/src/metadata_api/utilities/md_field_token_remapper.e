@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 	make (a_remapper: MD_REMAP_TOKEN_MANAGER)
 		do
-
+			remapper := a_remapper
 		end
 
 feature -- Access

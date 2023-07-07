@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 	make (a_remapper: MD_REMAP_TOKEN_MANAGER)
 		do
-
+			remapper := a_remapper
 		end
 
 feature -- Access
@@ -80,7 +80,7 @@ feature -- Visitor
 			-- FIXME jfiat [2023/07/07] : not all indexes are pure MethodDef token
 			-- some may be MethodDef or ... indexes.
 			-- so this code needs to be smarter and check if this is really a MethodDef token
-			
+
 			remapper.remap_index (idx)
 		end
 

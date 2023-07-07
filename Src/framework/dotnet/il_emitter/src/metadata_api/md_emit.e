@@ -384,201 +384,12 @@ feature -- Pre-Save
 	prepare_to_save
 			-- Prepare data to be save
 		local
-			max_field_idx, max_meth_idx, max_param_idx: NATURAL_32
-			field_idx, meth_idx, param_idx: NATURAL_32
-			l_missing_field_index_entries: ARRAYED_LIST [PE_TYPE_DEF_TABLE_ENTRY]
-			l_missing_method_index_entries: ARRAYED_LIST [PE_TYPE_DEF_TABLE_ENTRY]
-			l_missing_param_index_entries: ARRAYED_LIST [PE_METHOD_DEF_TABLE_ENTRY]
+			md: MD_TABLE_UTILITIES
 		do
 			Precursor
-				-- Update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)
-			if attached md_table ({PE_TABLES}.tmethoddef) as tb then
-				max_meth_idx := tb.next_index
-			end
-			if attached md_table ({PE_TABLES}.tfield) as tb then
-				max_field_idx := tb.next_index
-			end
-			if attached md_table ({PE_TABLES}.tparam) as tb then
-				max_param_idx := tb.next_index
-			end
 
-				-- TypeDef table
-			if attached md_table ({PE_TABLES}.ttypedef) as typedef_tb then
-				across
-					typedef_tb as e
-				loop
-					if attached {PE_TYPE_DEF_TABLE_ENTRY} e as l_type_def_entry then
-							-- FieldList
-						if l_type_def_entry.is_field_list_index_set then
-							field_idx := l_type_def_entry.fields.index
-							if l_missing_field_index_entries /= Void then
-								across
-									l_missing_field_index_entries as t
-								loop
-									t.set_field_list_index (l_type_def_entry.fields.index)
-								end
-								l_missing_field_index_entries.wipe_out
-							end
-						else
-							if l_missing_field_index_entries = Void then
-								create l_missing_field_index_entries.make (10)
-							end
-							l_missing_field_index_entries.force (l_type_def_entry)
-						end
-
-							-- MethodList
-						if l_type_def_entry.is_method_list_index_set then
-							meth_idx := l_type_def_entry.methods.index
-							if l_missing_method_index_entries /= Void then
-								across
-									l_missing_method_index_entries as t
-								loop
-									t.set_method_list_index (l_type_def_entry.methods.index)
-								end
-								l_missing_method_index_entries.wipe_out
-							end
-						else
-							if l_missing_method_index_entries = Void then
-								create l_missing_method_index_entries.make (10)
-							end
-							l_missing_method_index_entries.force (l_type_def_entry)
-						end
-					else
-						check is_type_def: False end
-					end
-				end
-				if l_missing_field_index_entries /= Void then
-					across
-						l_missing_field_index_entries as t
-					loop
-						t.set_field_list_index (max_field_idx)
-					end
-					l_missing_field_index_entries := Void
-				end
-				if l_missing_method_index_entries /= Void then
-					across
-						l_missing_method_index_entries as t
-					loop
-						t.set_method_list_index (max_meth_idx)
-					end
-					l_missing_method_index_entries := Void
-				end
-			end
-
-				-- MethodDef table
-			if attached md_table ({PE_TABLES}.tmethoddef) as methoddef_tb then
-				across
-					methoddef_tb as e
-				loop
-					if attached {PE_METHOD_DEF_TABLE_ENTRY} e as l_method_def_entry then
-							-- ParamList
-						if l_method_def_entry.is_param_list_index_set then
-							param_idx := l_method_def_entry.param_index.index
-							if l_missing_param_index_entries /= Void then
-								across
-									l_missing_param_index_entries as m
-								loop
-									m.set_param_list_index (l_method_def_entry.param_index.index)
-								end
-								l_missing_param_index_entries.wipe_out
-							end
-						else
-							if l_missing_param_index_entries = Void then
-								create l_missing_param_index_entries.make (10)
-							end
-							l_missing_param_index_entries.force (l_method_def_entry)
-						end
-					else
-						check is_method_def: False end
-					end
-				end
-				if l_missing_param_index_entries /= Void then
-					across
-						l_missing_param_index_entries as t
-					loop
-						t.set_param_list_index (max_param_idx)
-					end
-					l_missing_param_index_entries := Void
-				end
-			end
-
-				-- Sort tables...
-				-- CustomAttribute table
-			ensure_table_is_sorted ({PE_TABLES}.tcustomattribute)
-			ensure_table_is_sorted ({PE_TABLES}.tinterfaceimpl)
-			ensure_table_is_sorted ({PE_TABLES}.tmethodimpl)
-			ensure_table_is_sorted ({PE_TABLES}.tmethodsemantics)
-		end
-
-	ensure_table_is_sorted (tb_id: NATURAL_32)
-			-- Ensure table associated with `tb_id` is sorted.
-		do
-			if
-				attached md_table (tb_id) as tb and then
-				attached table_sorter (tb_id) as l_sorter
-			then
-				debug ("il_emitter")
-					if not tb.is_sorted (l_sorter) then
-						print ("Table ["+ tb_id.to_natural_8.to_hex_string +"] is NOT sorted%N")
-					end
-				end
-				tb.sort (l_sorter)
-				check tb.is_sorted (l_sorter) end
-			end
-		end
-
-	table_sorter (tb_id: NATURAL_32): detachable QUICK_SORTER [PE_TABLE_ENTRY_BASE]
-			-- Sorter for table associated with `tb_id`.
-		local
-			l_comparator: AGENT_EQUALITY_TESTER [PE_TABLE_ENTRY_BASE]
-		do
-			inspect tb_id
-			when {PE_TABLES}.tcustomattribute then
-				create l_comparator.make (agent (e1, e2: PE_TABLE_ENTRY_BASE): BOOLEAN
-					do
-						if
-							attached {PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY} e1 as o1 and then
-							attached {PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY} e2 as o2
-						then
-							Result := o1.less_than (o2)
-						end
-					end)
-			when {PE_TABLES}.tinterfaceimpl then
-				create l_comparator.make (agent (e1, e2: PE_TABLE_ENTRY_BASE): BOOLEAN
-					do
-						if
-							attached {PE_INTERFACE_IMPL_TABLE_ENTRY} e1 as o1 and then
-							attached {PE_INTERFACE_IMPL_TABLE_ENTRY} e2 as o2
-						then
-							Result := o1.less_than (o2)
-						end
-					end)
-			when {PE_TABLES}.tmethodimpl then
-				create l_comparator.make (agent (e1, e2: PE_TABLE_ENTRY_BASE): BOOLEAN
-					do
-						if
-							attached {PE_METHOD_IMPL_TABLE_ENTRY} e1 as o1 and then
-							attached {PE_METHOD_IMPL_TABLE_ENTRY} e2 as o2
-						then
-							Result := o1.less_than (o2)
-						end
-					end)
-			when {PE_TABLES}.tmethodsemantics then
-				create l_comparator.make (agent (e1, e2: PE_TABLE_ENTRY_BASE): BOOLEAN
-					do
-						if
-							attached {PE_METHOD_SEMANTICS_TABLE_ENTRY} e1 as o1 and then
-							attached {PE_METHOD_SEMANTICS_TABLE_ENTRY} e2 as o2
-						then
-							Result := o1.less_than (o2)
-						end
-					end)
-			else
-				-- Not implemented or not needed
-			end
-			if l_comparator /= Void then
-				create Result.make (l_comparator)
-			end
+			create md.make (Current)
+			md.prepare_to_save
 		end
 
 feature -- Save
@@ -1146,6 +957,8 @@ feature -- Definition: Creation
 			Result := assembly_emitter.define_file (file_name, hash_value, file_flags)
 		end
 
+	last_define_method_class: INTEGER
+
 	define_method (method_name: CLI_STRING; in_class_token: INTEGER; method_flags: INTEGER;
 			a_signature: MD_METHOD_SIGNATURE; impl_flags: INTEGER): INTEGER
 			-- Create reference to method in class `in_class_token`.
@@ -1156,6 +969,10 @@ feature -- Definition: Creation
 			l_method_index: NATURAL_32
 		do
 			debug ("il_emitter_table")
+				if in_class_token < last_define_method_class then
+					print ({STRING_32} "<!> ")
+				end
+				last_define_method_class := in_class_token
 				print ({STRING_32} "Method: " + method_name.string_32 + " (class:"+ in_class_token.to_hex_string)
 			end
 				-- See II.22.26 MethodDef : 0x06
@@ -1177,7 +994,8 @@ feature -- Definition: Creation
 				-- Extract table type and row from the in_class_token
 			if
 				attached extract_table_type_and_row (in_class_token) as d and then
-				attached {PE_TYPE_DEF_TABLE_ENTRY} md_table (d.table_type_index)[d.table_row_index] as e
+				attached {MD_TABLE} md_table (d.table_type_index) as tb and then
+				attached {PE_TYPE_DEF_TABLE_ENTRY} tb[d.table_row_index] as e
 			then
 				if not e.is_method_list_index_set then
 					e.set_method_list_index (l_method_index)
@@ -1411,7 +1229,8 @@ feature -- Definition: Creation
 
 			if
 				attached extract_table_type_and_row (in_class_token) as d and then
-				attached {PE_TYPE_DEF_TABLE_ENTRY} md_table (d.table_type_index)[d.table_row_index] as e
+				attached {MD_TABLE} md_table (d.table_type_index) as tb and then
+				attached {PE_TYPE_DEF_TABLE_ENTRY} tb[d.table_row_index] as e
 			then
 				if not e.is_field_list_index_set then
 					e.set_field_list_index (l_field_index)

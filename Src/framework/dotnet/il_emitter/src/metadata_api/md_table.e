@@ -82,10 +82,16 @@ feature -- Status Report
 			Result := "["+ table_id.out +"] size=" + size.out
 		end
 
+	count: INTEGER
+			-- Table count
+		do
+			Result := items.count
+		end
+
 	size: NATURAL_32
 			-- Table size
 		do
-			Result := items.count.to_natural_32
+			Result := count.to_natural_32
 		end
 
 	next_index: NATURAL_32

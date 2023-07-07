@@ -120,7 +120,7 @@ feature -- Table operation
 				i := start_index
 				j := 0
 			until
-				i + j > n --end_index
+				i + j > end_index
 			loop
 				remap.record (i + j, ref_index + j)
 				j := j + 1
@@ -131,9 +131,13 @@ feature -- Table operation
 				i := ref_index
 				j := 0
 			until
-				j > offset
+				j > n --offset
 			loop
-				remap.record (i + j, ref_index + offset + j)
+				if start_index <= i + j and i + j <= end_index then
+					-- Already moved!
+				else
+					remap.record (i + j, ref_index + offset + j)
+				end
 				j := j + 1
 			end
 

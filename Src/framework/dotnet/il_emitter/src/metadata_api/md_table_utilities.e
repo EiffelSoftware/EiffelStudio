@@ -257,51 +257,24 @@ feature -- Table sorting
 
 feature -- Column sorting
 
-	token (idx: NATURAL_32; tb: NATURAL_32): NATURAL_32
+	token (idx: NATURAL_32; tb: INTEGER_32): NATURAL_32
 		do
-			Result := (tb |<< 24) | idx
+			Result := (tb.to_natural_32 |<< 24) | idx
 		end
 
-feature -- FieldList column sorting
-
-	ensure_field_list_column_is_ordered
-		local
-			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
+	table_name (id: INTEGER_32): STRING_8
 		do
-			if
-				attached typedef_table as tb and then
-				attached field_table as col_tb
-			then
-				create ut.make (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.fields end)
-
-				sort_fields_list_column (ut)
-				if not ut.remap.is_empty then
-					-- Update tables with remapped tokens!
-				end
-			end
-		end
-
-	sort_fields_list_column (ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY])
-		do
-				-- First we compute the unsorted Field list
-				-- TODO: it seems we don't need the type id because we know
-				-- that we need to traverse the MD_TABLE  identified by {PE_TABLES}.ttypedef
-			if
-				attached ut.unsorted_list_indexes as lst and then
-				not lst.is_empty
-			then
-				partial_sort_field_list (lst, ut)
-
---Commented for now, to avoid infinite recursion
---					sort_fields_list_column (ut)
+			inspect id
+			when {PE_TABLES}.tmethoddef  then
+				Result := "MethodDef"
+			when {PE_TABLES}.tfield  then
+				Result := "Field"
 			else
-				-- The Metadata Tokens for FieldList are sorted in the table ttypedef
-				-- and the MD_REMAP_MANAGER has the tokens remaps to be applied to
-				-- the corresponding tables.
+				Result := "Table#" + id.to_natural_8.to_hex_string
 			end
 		end
 
-	partial_sort_field_list (a_list: like {MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]}.unsorted_list_indexes;
+	partial_sort_list (a_list: like {MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]}.unsorted_list_indexes;
 					ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
 				)
 			-- We do partial sorting over the unsorted field list `a_list`
@@ -321,16 +294,16 @@ feature -- FieldList column sorting
 				l_item := a_list [i]
 				l_end_index := ut.end_index_of_list (l_item.index)
 				debug ("il_emitter_table")
-					print ("@Field@ Partial Sort: 0x" + token(l_item.row, {PE_TABLES}.ttypedef).to_hex_string)
-					print (" index=" + token(l_item.index, {PE_TABLES}.tfield).to_hex_string)
-					print (" before=" + token(l_item.next, {PE_TABLES}.tfield).to_hex_string)
+					print ("@"+table_name(ut.table_for_column.table_id)+"@ Partial Sort: 0x" + token(l_item.row, ut.table_for_column.table_id).to_hex_string)
+					print (" index=" + token(l_item.index, ut.table_for_column.table_id).to_hex_string)
+					print (" before=" + token(l_item.next, ut.table_for_column.table_id).to_hex_string)
 					from
-						print (" ->%N")
+						print (" -> (" + (l_end_index - l_item.index +1).out + ") %N")
 						idx := l_item.index
 					until
-						idx >= l_end_index
+						idx > l_end_index
 					loop
-						print ("%T0x" + token (idx, {PE_TABLES}.tfield).to_hex_string + "%N")
+						print ("%T0x" + token (idx, ut.table_for_column.table_id).to_hex_string + "%N")
 						idx := idx + 1
 					end
 					print ("%N")
@@ -338,6 +311,46 @@ feature -- FieldList column sorting
 				ut.move_tokens (l_item.index, l_end_index, l_item.next)
 
 				i := i + 1
+			end
+		end
+
+
+	sort_list_column (ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY])
+		do
+				-- First we compute the unsorted Token list
+				-- TODO: it seems we don't need the type id because we know
+				-- that we need to traverse the MD_TABLE  identified by {PE_TABLES}.ttypedef
+			if
+				attached ut.unsorted_list_indexes as lst and then
+				not lst.is_empty
+			then
+				partial_sort_list (lst, ut)
+
+--Commented for now, to avoid infinite recursion
+--					sort_list_column (ut)
+			else
+				-- The Metadata Tokens for FieldList are sorted in the table ttypedef
+				-- and the MD_REMAP_MANAGER has the tokens remaps to be applied to
+				-- the corresponding tables.
+			end
+		end
+
+feature -- FieldList column sorting
+
+	ensure_field_list_column_is_ordered
+		local
+			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
+		do
+			if
+				attached typedef_table as tb and then
+				attached field_table as col_tb
+			then
+				create ut.make (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.fields end)
+
+				sort_list_column (ut)
+				if not ut.remap.is_empty then
+					-- Update tables with remapped tokens!
+				end
 			end
 		end
 
@@ -352,74 +365,12 @@ feature -- MethodList column sorting
 				attached methoddef_table as col_tb
 			then
 				create ut.make (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.methods end)
-				sort_methods_list_column (ut)
+
+				sort_list_column (ut)
 				if not ut.remap.is_empty then
 					-- Update tables with remapped tokens!
 				end
 			end
 		end
-
-	sort_methods_list_column (ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY])
-		local
-		do
-				-- First we compute the unsorted Method list
-				-- TODO: it seems we don't need the type id because we know
-				-- that we need to traverse the MD_TABLE  identified by {PE_TABLES}.ttypedef
-			if
-				attached ut.unsorted_list_indexes as lst and then
-				not lst.is_empty
-			then
-				partial_sort_method_list (lst, ut)
-
---Commented for now, to avoid infinite recursion
---					sort_methods_list_column (ut, remap)
-			else
-				-- The Metadata Tokens for MethodList are sorted in the table ttypedef
-				-- and the MD_REMAP_MANAGER has the tokens remaps to be applied to
-				-- the corresponding tables.
-			end
-		end
-
-	partial_sort_method_list (a_list: like {MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]}.unsorted_list_indexes;
-					ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
-				)
-			-- We do partial sorting over the unsorted method list `a_list`
-			-- Update the metadata table {PE_TABLES}.ttypedef
-			-- Update the MD_REMAP_MANAGER
-		local
-			i, n: INTEGER
-			l_item: TUPLE [row: NATURAL_32; index, next: NATURAL_32]
-			idx, l_end_index: NATURAL_32
-		do
-			from
-				i := 1
-				n := a_list.count
-			until
-				i > n
-			loop
-				l_item := a_list [i]
-				l_end_index := ut.end_index_of_list (l_item.index)
-				debug ("il_emitter_table")
-					print ("@Method@ Partial Sort: 0x" + token(l_item.row, {PE_TABLES}.ttypedef).to_hex_string)
-					print (" index=" + token(l_item.index, {PE_TABLES}.tmethoddef).to_hex_string)
-					print (" before=" + token(l_item.next, {PE_TABLES}.tmethoddef).to_hex_string)
-					from
-						print (" ->%N")
-						idx := l_item.index
-					until
-						idx >= l_end_index
-					loop
-						print ("%T0x" + token (idx, {PE_TABLES}.tmethoddef).to_hex_string + "%N")
-						idx := idx + 1
-					end
-					print ("%N")
-				end
-				ut.move_tokens (l_item.index, l_end_index, l_item.next)
-
---				update_remap_index (l_item)
-				i := i + 1
-			end
-		end
-
 
 end

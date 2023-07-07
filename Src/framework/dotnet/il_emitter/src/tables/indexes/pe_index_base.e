@@ -24,6 +24,12 @@ inherit
 			is_equal
 		end
 
+	MD_VISITABLE
+		redefine
+			is_equal
+		end
+
+
 create
 	make_with_index,
 	make_with_tag_and_index
@@ -176,6 +182,13 @@ feature -- Operations
 	large (a_x: NATURAL_32): BOOLEAN
 		do
 			Result := (a_x |<< get_index_shift) > 0xffff
+		end
+
+feature -- Visitor
+
+	accepts (vis: MD_VISITOR)
+		do
+			vis.visit_index (Current)
 		end
 
 end

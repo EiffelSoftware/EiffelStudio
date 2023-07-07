@@ -336,6 +336,7 @@ feature -- FieldList column sorting
 	ensure_field_list_column_is_ordered
 		local
 			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
+			vis: MD_FIELD_TOKEN_REMAPPER
 		do
 			if
 				attached typedef_table as tb and then
@@ -347,6 +348,9 @@ feature -- FieldList column sorting
 				if not ut.remap.is_empty then
 					-- Update tables with remapped tokens!
 					ut.apply_remapping
+						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
+					create vis.make (ut.remap)
+					vis.visit_emitter (emitter)
 				end
 			end
 		end
@@ -356,6 +360,7 @@ feature -- MethodList column sorting
 	ensure_method_list_column_is_ordered
 		local
 			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
+			vis: MD_METHOD_DEF_TOKEN_REMAPPER
 		do
 			if
 				attached typedef_table as tb and then
@@ -366,6 +371,9 @@ feature -- MethodList column sorting
 				sort_list_column (ut)
 				if not ut.remap.is_empty then
 					ut.apply_remapping
+						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
+					create vis.make (ut.remap)
+					vis.visit_emitter (emitter)
 				end
 			end
 		end

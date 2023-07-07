@@ -58,17 +58,6 @@ feature -- Apply token remapping
 			end
 			col_tb.items.wipe_out
 			col_tb.replace_items (lst)
-
-				-- Updated tokens in the `table` (For instance: TypeDef table, ...)
-			across
-				table as i
-			loop
-				if attached {E} i as l_type_def_entry then
-					if attached value_for (l_type_def_entry) as idx then
-						remap.remap_index (idx)
-					end
-				end
-			end
 		end
 
 	table_dump: STRING_8

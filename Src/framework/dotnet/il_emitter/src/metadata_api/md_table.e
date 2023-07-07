@@ -9,6 +9,8 @@ class
 inherit
 	ITERABLE [PE_TABLE_ENTRY_BASE]
 
+	MD_VISITABLE
+
 	DEBUG_OUTPUT
 
 create
@@ -116,6 +118,13 @@ feature -- Status Report
 	valid_index (idx: NATURAL_32): BOOLEAN
 		do
 			Result := idx >= 0 and idx <= size + 1
+		end
+
+feature -- Visitor
+
+	accepts (vis: MD_VISITOR)
+		do
+			vis.visit_table (Current)
 		end
 
 end

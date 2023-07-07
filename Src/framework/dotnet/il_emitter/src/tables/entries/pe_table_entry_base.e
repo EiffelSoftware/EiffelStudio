@@ -9,6 +9,8 @@ deferred class
 inherit
 	PE_META_BASE
 
+	MD_VISITABLE
+
 feature -- Access
 
 	table_index: NATURAL_32
@@ -58,4 +60,12 @@ feature -- Operations
 	get (a_sizes: ARRAY [NATURAL_32]; a_bytes: ARRAY [NATURAL_8]): NATURAL_32
 		deferred
 		end
+
+feature -- Visitor
+
+	accepts (vis: MD_VISITOR)
+		do
+			vis.visit_table_entry (Current)
+		end
+
 end

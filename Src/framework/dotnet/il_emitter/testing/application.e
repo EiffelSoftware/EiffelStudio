@@ -38,7 +38,10 @@ feature -- Testing
 			else
 				old_tests ("old", tn) --"test_11")
 			end
+			test_remap_tables
 --			post_test (tn)
+
+
 
 			execution_environment.change_working_path (curr)
 		rescue
@@ -159,6 +162,15 @@ feature -- Token tests
 
 		end
 
+	test_remap_tables
+		do
+
+			if True then
+				launch_test ("remap", "build_tables", agent (create {TEST_REMAP_TABLES}).test_build_tables)
+			end
+		end
+
+
 feature -- Object model tests
 
 	test_metadata_tables_object_model (cat, a_pattern: READABLE_STRING_GENERAL)
@@ -192,6 +204,7 @@ feature -- Initialization
 			tests: ITERABLE [READABLE_STRING_GENERAL]
 			conv: BYTE_ARRAY_CONVERTER
 			p: PATH
+			md: MD_TABLE_MOCK
 		do
 			create p.make_current
 			starting_directory := p.absolute_path

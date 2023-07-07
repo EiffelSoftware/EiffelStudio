@@ -71,7 +71,7 @@ feature -- Status report
 
 	debug_output: STRING
 		do
-			Result := "#" + index.out + "<"+ tag.out +">"
+			Result := "0x" + token.to_hex_string
 		end
 
 	is_ready_for_render: BOOLEAN

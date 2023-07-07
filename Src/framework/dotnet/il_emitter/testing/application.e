@@ -166,7 +166,12 @@ feature -- Token tests
 		do
 
 			if True then
-				launch_test ("remap", "build_tables", agent (create {TEST_REMAP_TABLES}).test_build_tables)
+--				launch_test ("remap", "build_tables", agent (create {TEST_REMAP_TABLES}).test_build_tables)
+				--launch_test ("remap", "build_tables_case1", agent (create {TEST_REMAP_TABLES}).test_remap_case1)
+				--launch_test ("remap", "build_tables_case2", agent (create {TEST_REMAP_TABLES}).test_remap_case2)
+				launch_test ("remap", "build_tables_case3", agent (create {TEST_REMAP_TABLES}).test_remap_case3)
+				--launch_test ("remap", "build_tables_case4", agent (create {TEST_REMAP_TABLES}).test_remap_case4)
+
 			end
 		end
 

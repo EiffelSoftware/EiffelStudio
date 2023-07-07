@@ -15,8 +15,8 @@ feature -- Table Helpers Case1
 			--  2 |  -  | -  | -       |   -   |    1    |     -
 			--  3 |  -  | -  | -       |   -   |    1    |     -
 			--  4 |  -  | -  | -       |   -   |    1    |     -
-			--  5 |  -  | -  | -       |   -   |    8    |     -
-			--  6 |  -  | -  | -       |   -   |    2    |     -
+			--  5 |  -  | -  | -       |   -   |    8(1) |     -
+			--  6 |  -  | -  | -       |   -   |    2(6) |     -
 			--  7 |  -  | -  | -       |   -   |    9    |     -
 			--  8 |  -  | -  | -       |   -   |    9    |     -
 		do
@@ -52,6 +52,53 @@ feature -- Table Helpers Case1
 			Result.force (file_table_factory (16, 16))
 			Result.force (file_table_factory (4, 10))
 		end
+
+
+	build_expected_fields_sort_case1: MD_TABLE
+			-- #  |Flags|Name|Namespace|Extends|FieldList|MethodList
+			--  1 |  -  | -  | -       |   -   |    1    |     -
+			--  2 |  -  | -  | -       |   -   |    1    |     -
+			--  3 |  -  | -  | -       |   -   |    1    |     -
+			--  4 |  -  | -  | -       |   -   |    1    |     -
+			--  5 |  -  | -  | -       |   -   |    8(1) |     -
+			--  6 |  -  | -  | -       |   -   |    2(6) |     -
+			--  7 |  -  | -  | -       |   -   |    9    |     -
+			--  8 |  -  | -  | -       |   -   |    9    |     -
+		do
+			create Result.make ({PE_TABLES}.ttypedef.to_integer_32)
+			Result.force (type_def_table_factory (1))
+			Result.force (type_def_table_factory (1))
+			Result.force (type_def_table_factory (1))
+			Result.force (type_def_table_factory (1))
+			Result.force (type_def_table_factory (8))
+			Result.force (type_def_table_factory (2))
+			Result.force (type_def_table_factory (9))
+			Result.force (type_def_table_factory (9))
+		end
+
+	build_expected_field_list_type_def_case1: MD_TABLE
+			--	 #  |Flags  |Name   |Signature
+			-- 	 1  | 4 	|10     |-
+			-- 	 2  | 16    |11 	|-
+			--   3  | 16    |12 	|-
+			--	 4  | 16    |13 	|-
+			--	 5  | 16    |14  	|-
+			--	 6  | 16    |15     |-
+			--	 7  | 16    |16     |-
+			--	 8  | 4     |10     |-
+		do
+			create Result.make ({PE_TABLES}.tfield.to_integer_32)
+			Result.force (file_table_factory (4, 10))
+			Result.force (file_table_factory (16, 11))
+			Result.force (file_table_factory (16, 12))
+			Result.force (file_table_factory (16, 13))
+			Result.force (file_table_factory (16, 14))
+			Result.force (file_table_factory (16, 15))
+			Result.force (file_table_factory (16, 16))
+			Result.force (file_table_factory (4, 10))
+		end
+
+
 
 feature -- Table Helpers Case2
 
@@ -112,6 +159,54 @@ feature -- Test Helper Case 3
 			Result.force (type_def_table_factory (9))
 		end
 
+-- Expected output
+--		TypeDef
+
+-- #  |Flags|Name|Namespace|Extends|FieldList|MethodList
+--  1 |  -  | -  | -       |   -   |    1    |     -
+--  2 |  -  | -  | -       |   -   |    1    |     -
+--  3 |  -  | -  | -       |   -   |    1    |     -
+--  4 |  -  | -  | -       |   -   |    1    |     -
+--  5 |  -  | -  | -       |   -   |    2    |     -
+--  6 |  -  | -  | -       |   -   |    3    |     -
+--  7 |  -  | -  | -       |   -   |    6    |     -
+--  8 |  -  | -  | -       |   -   |    9    |     -
+
+
+
+	build_field_list_type_def_case3: MD_TABLE
+			--	 #  |Flags  |Name   |Signature
+			-- 	 1  | 4 	|10     |-
+			-- 	 2  | 16    |11 	|-
+			--   3  | 16    |12 	|-
+			--	 4  | 16    |13 	|-
+			--	 5  | 16    |14  	|-
+			--	 6  | 16    |15     |-
+			--	 7  | 16    |16     |-
+			--	 8  | 4     |10     |-
+		do
+			create Result.make ({PE_TABLES}.tfield.to_integer_32)
+			Result.force (file_table_factory (4, 10))
+			Result.force (file_table_factory (16, 11))
+			Result.force (file_table_factory (16, 12))
+			Result.force (file_table_factory (16, 13))
+			Result.force (file_table_factory (16, 14))
+			Result.force (file_table_factory (16, 15))
+			Result.force (file_table_factory (16, 16))
+			Result.force (file_table_factory (4, 10))
+		end
+
+-- Expected Output
+-- Field Type
+-- #|Flags|Name|Signature
+--1	|4	|10	|-
+--2	|4	|10	|-
+--3	|16	|11	|-
+--4	|16	|12	|-
+--5	|16	|13	|-
+--6	|16	|14	|-
+--7	|16	|15	|-
+--8	|16	|16	|-	
 
 
 
@@ -140,6 +235,31 @@ feature -- Test Helper Case 4
 			Result.force (type_def_table_factory (3))
 			Result.force (type_def_table_factory (9))
 			Result.force (type_def_table_factory (9))
+		end
+
+
+	build_field_list_type_def_case4: MD_TABLE
+			--	 #  |Flags  |Name   |Signature
+			-- 	 1  | 4 	|10     |-
+			-- 	 2  | 16    |11 	|-
+			--   3  | 16    |12 	|-
+			--	 4  | 16    |13 	|-
+			--	 5  | 16    |14  	|-
+			--	 6  | 16    |15     |-
+			--	 7  | 16    |16     |-
+			--	 8  | 16    |17     |-
+			--	 9  | 4     |10     |-
+		do
+			create Result.make ({PE_TABLES}.tfield.to_integer_32)
+			Result.force (file_table_factory (4, 10))
+			Result.force (file_table_factory (16, 11))
+			Result.force (file_table_factory (16, 12))
+			Result.force (file_table_factory (16, 13))
+			Result.force (file_table_factory (16, 14))
+			Result.force (file_table_factory (16, 15))
+			Result.force (file_table_factory (16, 16))
+			Result.force (file_table_factory (16, 17))
+			Result.force (file_table_factory (4, 10))
 		end
 
 feature -- Print Helper

@@ -427,7 +427,10 @@ feature -- Generation
 		local
 			f: PLAIN_TEXT_FILE
 			s, libs_tpl, libs: STRING
+			libs_runtime_tpl, libs_runtime: STRING
+			lib_deps_tpl, libs_deps: STRING
 			v: STRING_8
+			l_start: BOOLEAN
 		do
 			s := "[
 {
@@ -441,8 +444,12 @@ feature -- Generation
       "${SYSTEM_NAME}/${SYSTEM_VERSION}": {
         "runtime": {
           "${SYSTEM_NAME}.${SYSTEM_TYPE}": {}
+        },  
+		 "dependencies": {
+             ${DEPENDENCY_LIBRARY}
         }
       }
+      ${LIBRARIES_RUNTIME}
     }
   },
   "libraries": {
@@ -464,25 +471,58 @@ feature -- Generation
 			-- FIXME: use the list of .Net assemblies, and generated assemblies to get versions and related information.
 			if a_assembly_reference /= Void and then not a_assembly_reference.is_empty then
 				create libs.make_empty
+				create libs_runtime.make_empty
+				create libs_deps.make_empty
+
+lib_deps_tpl := "[ 
+	"${LIB_NAME}": "${LIB_VERSION}"
+]"
+
+libs_runtime_tpl := "[
+   "${LIB_NAME_VERSION}": { "runtime": {"${LIB_NAME}.dll":{}} }
+]"
+				
 libs_tpl := "[
 
     "${LIB_NAME_VERSION}": { "type": "reference" }
 ]"
+				l_start := True
 				across
 					a_assembly_reference as ic
 				loop
 					libs.append (",%N")
 					libs.append (libs_tpl)
+
+					libs_runtime.append (",%N")
+					libs_runtime.append (libs_runtime_tpl)
+
+					if l_start then
+						l_start := False
+					else
+						libs_deps.append (",%N")
+					end
+
+					libs_deps.append (lib_deps_tpl)
+
 					-- FIXME: maybe use proper JSON encoding, eventually the JSON library.
 					v := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (ic.item.name)
+					libs_runtime.replace_substring_all ("${LIB_NAME}", v)
+					libs_deps.replace_substring_all ("${LIB_NAME}", v)
 					if attached ic.item.version as l_version then
 						v.append_character ('/')
 						v.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
+						libs_deps.replace_substring_all ("${LIB_VERSION}", {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
+					else
+						libs_deps.replace_substring_all ("${LIB_VERSION}", "0.0.0.0")
 					end
+
 					libs.replace_substring_all ("${LIB_NAME_VERSION}", v)
+					libs_runtime.replace_substring_all ("${LIB_NAME_VERSION}", v)
 				end
 			end
 
+			s.replace_substring_all ("${DEPENDENCY_LIBRARY}", libs_deps)
+			s.replace_substring_all ("${LIBRARIES_RUNTIME}", libs_runtime)
 			s.replace_substring_all ("${LIBRARIES}", libs)
 
 			create f.make_with_path (a_target_directory.extended (a_target_filename))

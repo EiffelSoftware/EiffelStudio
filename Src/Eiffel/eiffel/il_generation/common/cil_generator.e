@@ -444,12 +444,10 @@ feature -- Generation
       "${SYSTEM_NAME}/${SYSTEM_VERSION}": {
         "runtime": {
           "${SYSTEM_NAME}.${SYSTEM_TYPE}": {}
-        },  
-		 "dependencies": {
-             ${DEPENDENCY_LIBRARY}
+        },
+		"dependencies": {${DEPENDENCY_LIBRARY}
         }
-      }
-      ${LIBRARIES_RUNTIME}
+      }${LIBRARIES_RUNTIME}
     }
   },
   "libraries": {
@@ -474,18 +472,11 @@ feature -- Generation
 				create libs_runtime.make_empty
 				create libs_deps.make_empty
 
-lib_deps_tpl := "[ 
-	"${LIB_NAME}": "${LIB_VERSION}"
-]"
+lib_deps_tpl := "          %"${LIB_NAME}%": %"${LIB_VERSION}%""
 
-libs_runtime_tpl := "[
-   "${LIB_NAME_VERSION}": { "runtime": {"${LIB_NAME}.dll":{}} }
-]"
-				
-libs_tpl := "[
+libs_runtime_tpl := "      %"${LIB_NAME_VERSION}%": { %"runtime%": {%"${LIB_NAME}.dll%":{}} }"
 
-    "${LIB_NAME_VERSION}": { "type": "reference" }
-]"
+libs_tpl := "    %"${LIB_NAME_VERSION}%": { %"type%": %"reference%" }"
 				l_start := True
 				across
 					a_assembly_reference as ic
@@ -496,12 +487,7 @@ libs_tpl := "[
 					libs_runtime.append (",%N")
 					libs_runtime.append (libs_runtime_tpl)
 
-					if l_start then
-						l_start := False
-					else
-						libs_deps.append (",%N")
-					end
-
+					libs_deps.append (",%N")
 					libs_deps.append (lib_deps_tpl)
 
 					-- FIXME: maybe use proper JSON encoding, eventually the JSON library.

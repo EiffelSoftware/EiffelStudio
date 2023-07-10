@@ -59,6 +59,13 @@ feature -- Saving preparation
 			l_missing_method_index_entries: ARRAYED_LIST [PE_TYPE_DEF_TABLE_ENTRY]
 			l_missing_param_index_entries: ARRAYED_LIST [PE_METHOD_DEF_TABLE_ENTRY]
 		do
+				-- Ensure FieldList and MethodList columns are ordered in TypeDef
+			ensure_field_list_column_is_ordered
+			ensure_method_list_column_is_ordered
+				-- Ensure ParamList column is ordered in MethodDef
+			ensure_param_list_column_is_ordered
+
+
 				-- Update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)
 			if attached methoddef_table as tb then
 				max_meth_idx := tb.next_index
@@ -83,7 +90,7 @@ feature -- Saving preparation
 								across
 									l_missing_field_index_entries as t
 								loop
-									t.set_field_list_index (l_type_def_entry.fields.index)
+									t.fields.update_missing_index (l_type_def_entry.fields.index)
 								end
 								l_missing_field_index_entries.wipe_out
 							end
@@ -101,7 +108,7 @@ feature -- Saving preparation
 								across
 									l_missing_method_index_entries as t
 								loop
-									t.set_method_list_index (l_type_def_entry.methods.index)
+									t.methods.update_missing_index (l_type_def_entry.methods.index)
 								end
 								l_missing_method_index_entries.wipe_out
 							end
@@ -119,7 +126,7 @@ feature -- Saving preparation
 					across
 						l_missing_field_index_entries as t
 					loop
-						t.set_field_list_index (max_field_idx)
+						t.fields.update_missing_index (max_field_idx)
 					end
 					l_missing_field_index_entries := Void
 				end
@@ -127,7 +134,7 @@ feature -- Saving preparation
 					across
 						l_missing_method_index_entries as t
 					loop
-						t.set_method_list_index (max_meth_idx)
+						t.methods.update_missing_index (max_meth_idx)
 					end
 					l_missing_method_index_entries := Void
 				end
@@ -146,7 +153,7 @@ feature -- Saving preparation
 								across
 									l_missing_param_index_entries as m
 								loop
-									m.set_param_list_index (l_method_def_entry.param_index.index)
+									m.param_index.update_missing_index (l_method_def_entry.param_index.index)
 								end
 								l_missing_param_index_entries.wipe_out
 							end
@@ -164,7 +171,7 @@ feature -- Saving preparation
 					across
 						l_missing_param_index_entries as t
 					loop
-						t.set_param_list_index (max_param_idx)
+						t.param_index.update_missing_index (max_param_idx)
 					end
 					l_missing_param_index_entries := Void
 				end
@@ -176,12 +183,6 @@ feature -- Saving preparation
 			ensure_table_is_sorted ({PE_TABLES}.tinterfaceimpl)
 			ensure_table_is_sorted ({PE_TABLES}.tmethodimpl)
 			ensure_table_is_sorted ({PE_TABLES}.tmethodsemantics)
-
-				-- Ensure FieldList and MethodList columns are ordered in TypeDef
-			ensure_field_list_column_is_ordered
-			ensure_method_list_column_is_ordered
-				-- Ensure ParamList column is ordered in MethodDef
-			ensure_param_list_column_is_ordered
 		end
 
 feature -- Table sorting		
@@ -259,14 +260,17 @@ feature -- Table sorting
 
 feature -- Column sorting
 
-	token (idx: NATURAL_32; tb: INTEGER_32): NATURAL_32
+	table_token (idx: NATURAL_32; tb: INTEGER_32): NATURAL_32
 		do
 			Result := (tb.to_natural_32 |<< 24) | idx
+		ensure
+			class
 		end
 
 	table_name (id: INTEGER_32): STRING_8
 		do
 			inspect id
+			when {PE_TABLES}.ttypedef  then Result := "TypeDef"
 			when {PE_TABLES}.tmethoddef  then Result := "MethodDef"
 			when {PE_TABLES}.tfield  then Result := "Field"
 			when {PE_TABLES}.tparam  then Result := "Param"
@@ -297,16 +301,16 @@ feature -- Column sorting
 				l_item := a_list [i]
 				l_end_index := ut.end_index_of_list (l_item.index)
 				debug ("il_emitter_table")
-					print ("@"+table_name(ut.table_for_column.table_id)+"@ Partial Sort: ")
-					print (" index=" + token(l_item.index, ut.table_for_column.table_id).to_hex_string)
-					print (" before=" + token(l_item.next, ut.table_for_column.table_id).to_hex_string)
+					print ("@"+table_name (ut.table_for_column.table_id)+"@ Partial Sort: ")
+					print (" index=" + table_token (l_item.index, ut.table_for_column.table_id).to_hex_string)
+					print (" before=" + table_token (l_item.next, ut.table_for_column.table_id).to_hex_string)
 					from
 						print (" -> (" + (l_end_index - l_item.index +1).out + ") %N")
 						idx := l_item.index
 					until
 						idx > l_end_index
 					loop
-						print ("%T0x" + token (idx, ut.table_for_column.table_id).to_hex_string + "%N")
+						print ("%T0x" + table_token (idx, ut.table_for_column.table_id).to_hex_string + "%N")
 						idx := idx + 1
 					end
 					print ("%N")

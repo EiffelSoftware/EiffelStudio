@@ -22,15 +22,16 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_index)
 			is_list_index_set := True
+			is_null_index := index /= 0
 		ensure then
 			is_list_index_set
 		end
 
 	make_default
 		do
-				-- TODO: also use a default `tag`?
 			make_with_index (default_index)
 			is_list_index_set := False
+			is_null_index := True
 		end
 
 feature -- Access
@@ -48,11 +49,22 @@ feature -- Operations
 		do
 			Precursor (idx)
 			is_list_index_set := True
+			is_null_index := idx = 0
+		ensure then
+			is_list_index_set
+		end
+
+	update_missing_index (idx: like index)
+		do
+			update_index (idx)
+			is_null_index := True
 		ensure then
 			is_list_index_set
 		end
 
 feature -- Status report
+
+	is_null_index: BOOLEAN
 
 	is_list_index_set: BOOLEAN
 			-- Is first index of Current list set ?

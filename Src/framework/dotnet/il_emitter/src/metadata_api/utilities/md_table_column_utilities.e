@@ -64,9 +64,13 @@ feature -- Apply token remapping
 		local
 			i: NATURAL_32
 			i_start, i_end: NATURAL_32
+			col_name: STRING
+			p_list: PE_LIST
 		do
 			create Result.make (table.count * 20)
 			Result.append ({MD_TABLE_UTILITIES}.table_name (table.table_id) +" ("+table.count.out+")%N")
+
+			col_name := {MD_TABLE_UTILITIES}.table_name (table_for_column.table_id)
 			i := 0
 			across
 				table as e
@@ -74,19 +78,31 @@ feature -- Apply token remapping
 				i := i + 1
 
 				if attached {E} e as l_entry then
-					Result.append ("[0x" + i.to_hex_string + "]")
-					Result.append (" ListIndex: 0x")
-					i_start := value_for (l_entry).index
-					Result.append (i_start.to_hex_string)
-					if i_start <= table_for_column.size then
-						i_end := end_index_of_list (i_start)
+					Result.append ("[0x" + {MD_TABLE_UTILITIES}.table_token (i, table.table_id).to_hex_string + "]")
+					Result.append (" "+ col_name +": ")
+					p_list := value_for (l_entry)
+					if p_list.is_null_index then
+						Result.append ("NULL")
+						if p_list.is_list_index_set then
+							i_start := p_list.index
+							Result.append ("<0x")
+							Result.append (i_start.to_hex_string)
+							Result.append (">")
+						end
 					else
-						i_end := i_start
-					end
-					if i_end > i_start then
-						Result.append ("..0x")
-						Result.append (i_end.to_hex_string)
-						Result.append ("("+ (i_end - i_start + 1).out +")")
+						i_start := p_list.index
+						Result.append ("0x")
+						Result.append (i_start.to_hex_string)
+						if i_start <= table_for_column.size then
+							i_end := end_index_of_list (i_start)
+						else
+							i_end := i_start
+						end
+						if i_end > i_start then
+							Result.append ("..0x")
+							Result.append (i_end.to_hex_string)
+							Result.append ("("+ (i_end - i_start + 1).out +")")
+						end
 					end
 					Result.append_character ('%N')
 				else
@@ -99,29 +115,46 @@ feature -- Apply token remapping
 		local
 			i: NATURAL_32
 			i_start, i_end: NATURAL_32
+			col_name: STRING
+			p_list: PE_LIST
 		do
 			create Result.make (table.count * 20)
 			Result.append ({MD_TABLE_UTILITIES}.table_name (table.table_id) +" ("+table.count.out+")%N")
 
+			col_name := {MD_TABLE_UTILITIES}.table_name (table_for_column.table_id)
 			i := 0
 			across
 				table as e
 			loop
 				i := i + 1
 				if attached {E} e as l_entry then
-					Result.append ("[0x" + i.to_hex_string + "]")
-					Result.append (" ListIndex: 0x")
-					i_start := remap.token (value_for (l_entry).index)
-					Result.append (i_start.to_hex_string)
-					if i_start <= table_for_column.size then
-						i_end := end_index_of_list (i_start)
+					Result.append ("[0x" + {MD_TABLE_UTILITIES}.table_token (i, table.table_id).to_hex_string + "]")
+					Result.append (" "+ col_name +": ")
+
+					p_list := value_for (l_entry)
+					if p_list.is_null_index then
+						Result.append ("NULL")
+						if p_list.is_list_index_set then
+							i_start := p_list.index
+							Result.append ("<0x")
+							Result.append (remap.token (i_start).to_hex_string)
+							Result.append (">")
+						end
 					else
-						i_end := i_start
-					end
-					if i_end > i_start then
-						Result.append ("..0x")
-						Result.append (i_end.to_hex_string)
-						Result.append ("("+ (i_end - i_start + 1).out +")")
+						i_start := p_list.index
+						Result.append ("0x")
+						i_start := remap.token (i_start)
+						Result.append (i_start.to_hex_string)
+						if i_start <= table_for_column.size then
+							i_end := end_index_of_list (i_start)
+						else
+							i_end := i_start
+						end
+						if i_end > i_start then
+							Result.append ("..0x")
+							Result.append (i_end.to_hex_string)
+							Result.append ("("+ (i_end - i_start + 1).out +")")
+						end
 					end
 					Result.append_character ('%N')
 				else
@@ -135,10 +168,12 @@ feature -- Sorting
 	unsorted_list_indexes: ARRAYED_LIST [TUPLE [index, next: NATURAL_32]]
 			-- Indexes of unsorted indexes from `tb` metadata table.
 		local
-			j, i, n, ref: NATURAL_32
-			i1, i2, i3: NATURAL_32
+			i, n: NATURAL_32
+			i1, i2: NATURAL_32
 			tb: MD_TABLE
 			l_col_value_fct: like value_for
+			p_list: PE_LIST
+			prev_index: NATURAL_32
 		do
 			tb := table
 			l_col_value_fct := value_for
@@ -146,34 +181,22 @@ feature -- Sorting
 				n := tb.size
 				create Result.make (tb.count)
 				i := 2
+				prev_index := 0
 			until
 				i > n
 			loop
-				if
-					attached {E} tb [i - 1] as r1 and then
-					attached {E} tb [i] as r2
-				then
-					i1 := remap.token (l_col_value_fct (r1).index)
-					i2 := remap.token (l_col_value_fct (r2).index)
-					if i1 > i2 then
-						ref := i2
---							-- Find better ref
---						j := i
---						from
---							i := i + 1
---						until
---							i > n
---						loop
---							if attached {E} tb [i] as r3 then
---								i3 := remap.token (l_col_value_fct (r3).index)
---								if i1 > i3 and then i3 > i2 then
---									ref := i3
---								end
---							end
---							i := i + 1
---						end
---						i := j
-						Result.force ([i1, ref])
+				if attached {E} tb [i] as r2 then
+					i1 := prev_index
+					p_list := l_col_value_fct (r2)
+					if p_list.is_null_index then
+						-- Ignore index
+					else
+						i2 := p_list.index
+						i2 := remap.token (i2)
+						if i1 > i2 then
+							Result.force ([i1, i2])
+						end
+						prev_index := i2
 					end
 				else
 					check expected_entries: False end
@@ -192,6 +215,8 @@ feature -- Sorting
 			i1: NATURAL_32
 			tb: MD_TABLE
 			l_col_value_fct: like value_for
+			p_list: PE_LIST
+			prev_index: NATURAL_32
 		do
 			idx := a_index -- Already remapped here !
 
@@ -206,9 +231,13 @@ feature -- Sorting
 				i > n
 			loop
 				if attached {E} tb [i] as r then
-					i1 := remap.token (l_col_value_fct (r).index)
-					if i1 > idx and i1 - 1 < Result then
-						Result := i1 - 1
+					p_list := l_col_value_fct (r)
+					if p_list.is_null_index then
+					else
+						i1 := remap.token (p_list.index)
+						if i1 > idx and i1 - 1 < Result then
+							Result := i1 - 1
+						end
 					end
 				else
 					check expected_entries: False end

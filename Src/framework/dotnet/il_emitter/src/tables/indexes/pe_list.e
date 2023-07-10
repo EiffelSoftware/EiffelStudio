@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_index)
 			is_list_index_set := True
-			is_null_index := index /= 0
+			is_null_index := index = 0
 		ensure then
 			is_list_index_set
 		end

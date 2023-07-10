@@ -177,9 +177,11 @@ feature -- Saving preparation
 			ensure_table_is_sorted ({PE_TABLES}.tmethodimpl)
 			ensure_table_is_sorted ({PE_TABLES}.tmethodsemantics)
 
-				-- Ensure FieldListand MethodList columns are ordered in TypeDef
+				-- Ensure FieldList and MethodList columns are ordered in TypeDef
 			ensure_field_list_column_is_ordered
 			ensure_method_list_column_is_ordered
+				-- Ensure ParamList column is ordered in MethodDef
+			ensure_param_list_column_is_ordered
 		end
 
 feature -- Table sorting		
@@ -274,15 +276,15 @@ feature -- Column sorting
 			end
 		end
 
-	partial_sort_list (a_list: like {MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]}.unsorted_list_indexes;
-					ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
+	partial_sort_list (a_list: like {MD_TABLE_COLUMN_UTILITIES [PE_TABLE_ENTRY_BASE]}.unsorted_list_indexes;
+					ut: MD_TABLE_COLUMN_UTILITIES [PE_TABLE_ENTRY_BASE]
 				)
 			-- We do partial sorting over the unsorted field list `a_list`
 			-- Update the metadata table {PE_TABLES}.ttypedef
 			-- Update the MD_REMAP_MANAGER
 		local
 			i, n: INTEGER
-			l_item: TUPLE [row: NATURAL_32; index, next: NATURAL_32]
+			l_item: TUPLE [index, next: NATURAL_32]
 			idx, l_end_index: NATURAL_32
 		do
 			from
@@ -294,7 +296,7 @@ feature -- Column sorting
 				l_item := a_list [i]
 				l_end_index := ut.end_index_of_list (l_item.index)
 				debug ("il_emitter_table")
-					print ("@"+table_name(ut.table_for_column.table_id)+"@ Partial Sort: 0x" + token(l_item.row, ut.table_for_column.table_id).to_hex_string)
+					print ("@"+table_name(ut.table_for_column.table_id)+"@ Partial Sort: ")
 					print (" index=" + token(l_item.index, ut.table_for_column.table_id).to_hex_string)
 					print (" before=" + token(l_item.next, ut.table_for_column.table_id).to_hex_string)
 					from
@@ -309,21 +311,25 @@ feature -- Column sorting
 					print ("%N")
 				end
 				ut.move_tokens (l_item.index, l_end_index, l_item.next)
-
 				i := i + 1
 			end
+			ut.remap.commit
 		end
 
-	sort_list_column (ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY])
+	sort_list_column (ut: MD_TABLE_COLUMN_UTILITIES [PE_TABLE_ENTRY_BASE])
 		do
 			if
 				attached ut.unsorted_list_indexes as lst and then
 				not lst.is_empty
 			then
+				--print (ut.remapped_table_dump)
+				--print ("%N")
 				partial_sort_list (lst, ut)
+				--print (ut.remapped_table_dump)
+				--print ("%N")
 
---Commented for now, to avoid infinite recursion
---					sort_list_column (ut)
+					-- Recursive sorting..
+				sort_list_column (ut)
 			else
 				-- The Metadata Tokens for Token List are sorted in the container table
 				-- and the token remap manager has the tokens remaps to be applied to
@@ -331,7 +337,7 @@ feature -- Column sorting
 			end
 		end
 
-feature -- FieldList column sorting
+feature -- FieldList column sorting in TypeDef
 
 	ensure_field_list_column_is_ordered
 		local
@@ -351,11 +357,13 @@ feature -- FieldList column sorting
 						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
 					create vis.make (ut.remap)
 					vis.visit_emitter (emitter)
+
+					ut.remap.reset
 				end
 			end
 		end
 
-feature -- MethodList column sorting
+feature -- MethodList column sorting in TypeDef
 
 	ensure_method_list_column_is_ordered
 		local
@@ -367,6 +375,29 @@ feature -- MethodList column sorting
 				attached methoddef_table as col_tb
 			then
 				create ut.make (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.methods end)
+
+				sort_list_column (ut)
+				if not ut.remap.is_empty then
+					ut.apply_remapping
+						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
+					create vis.make (ut.remap)
+					vis.visit_emitter (emitter)
+				end
+			end
+		end
+
+feature -- ParamList column sorting in MethodDef		
+
+	ensure_param_list_column_is_ordered
+		local
+			ut: MD_TABLE_COLUMN_UTILITIES [PE_METHOD_DEF_TABLE_ENTRY]
+			vis: MD_METHOD_DEF_TOKEN_REMAPPER
+		do
+			if
+				attached methoddef_table as tb and then
+				attached param_table as col_tb
+			then
+				create ut.make (tb, col_tb, agent (e: PE_METHOD_DEF_TABLE_ENTRY): PE_LIST do Result := e.param_index end)
 
 				sort_list_column (ut)
 				if not ut.remap.is_empty then

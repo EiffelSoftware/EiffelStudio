@@ -63,6 +63,7 @@ feature -- Apply token remapping
 	table_dump: STRING_8
 		local
 			i: NATURAL_32
+			i_start, i_end: NATURAL_32
 		do
 			create Result.make (table.count * 20)
 			i := 0
@@ -74,7 +75,52 @@ feature -- Apply token remapping
 				if attached {E} e as l_entry then
 					Result.append ("[0x" + i.to_hex_string + "]")
 					Result.append (" ListIndex: 0x")
-					Result.append (value_for (l_entry).index.to_hex_string)
+					i_start := value_for (l_entry).index
+					Result.append (i_start.to_hex_string)
+					if i_start <= table_for_column.size then
+						i_end := end_index_of_list (i_start)
+					else
+						i_end := i_start
+					end
+					if i_end > i_start then
+						Result.append ("..0x")
+						Result.append (i_end.to_hex_string)
+						Result.append ("("+ (i_end - i_start + 1).out +")")
+					end
+					Result.append_character ('%N')
+				else
+					check expected_entries: False end
+				end
+			end
+		end
+
+	remapped_table_dump: STRING_8
+		local
+			i: NATURAL_32
+			i_start, i_end: NATURAL_32
+		do
+			create Result.make (table.count * 20)
+			i := 0
+			across
+				table as e
+			loop
+				i := i + 1
+
+				if attached {E} e as l_entry then
+					Result.append ("[0x" + i.to_hex_string + "]")
+					Result.append (" ListIndex: 0x")
+					i_start := remap.token (value_for (l_entry).index)
+					Result.append (i_start.to_hex_string)
+					if i_start <= table_for_column.size then
+						i_end := end_index_of_list (i_start)
+					else
+						i_end := i_start
+					end
+					if i_end > i_start then
+						Result.append ("..0x")
+						Result.append (i_end.to_hex_string)
+						Result.append ("("+ (i_end - i_start + 1).out +")")
+					end
 					Result.append_character ('%N')
 				else
 					check expected_entries: False end
@@ -84,11 +130,11 @@ feature -- Apply token remapping
 
 feature -- Sorting
 
-	unsorted_list_indexes: ARRAYED_LIST [TUPLE [row: NATURAL_32; index, next: NATURAL_32]]
+	unsorted_list_indexes: ARRAYED_LIST [TUPLE [index, next: NATURAL_32]]
 			-- Indexes of unsorted indexes from `tb` metadata table.
 		local
-			i, n: NATURAL_32
-			i1, i2: NATURAL_32
+			j, i, n, ref: NATURAL_32
+			i1, i2, i3: NATURAL_32
 			tb: MD_TABLE
 			l_col_value_fct: like value_for
 		do
@@ -108,7 +154,24 @@ feature -- Sorting
 					i1 := remap.token (l_col_value_fct (r1).index)
 					i2 := remap.token (l_col_value_fct (r2).index)
 					if i1 > i2 then
-						Result.force ([i - 1, i1, i2])
+						ref := i2
+--							-- Find better ref
+--						j := i
+--						from
+--							i := i + 1
+--						until
+--							i > n
+--						loop
+--							if attached {E} tb [i] as r3 then
+--								i3 := remap.token (l_col_value_fct (r3).index)
+--								if i1 > i3 and then i3 > i2 then
+--									ref := i3
+--								end
+--							end
+--							i := i + 1
+--						end
+--						i := j
+						Result.force ([i1, ref])
 					end
 				else
 					check expected_entries: False end
@@ -128,7 +191,7 @@ feature -- Sorting
 			tb: MD_TABLE
 			l_col_value_fct: like value_for
 		do
-			idx := remap.token (a_index)
+			idx := a_index -- Already remapped here !
 
 			tb := table
 			l_col_value_fct := value_for

@@ -25,4 +25,8 @@ feature -- Access
 		do
 		end
 
+	visit_coded_index (o: PE_CODED_INDEX_BASE)
+		do
+		end
+
 end

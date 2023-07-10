@@ -30,8 +30,8 @@ feature -- Access
 
 	token (a_src: NATURAL_32): NATURAL_32
 		do
-			if table.has (a_src) then
-				Result := table [a_src]
+			if attached committed_table as tb and then tb.has (a_src) then
+				Result := tb [a_src]
 			else
 				Result := a_src
 			end
@@ -60,6 +60,12 @@ feature -- Status report
 
 feature -- Element change
 
+	reset
+		do
+			table.wipe_out
+			committed_table := Void
+		end
+
 	record (a_src, a_target: NATURAL_32)
 		require
 			valid_src: associated_table.valid_index (a_src)
@@ -67,26 +73,45 @@ feature -- Element change
 		local
 			l_src: NATURAL_32
 		do
--- FIXME: check for recursive cases.			
---			across
---				table as i
---			until
---				l_src > 0
---			loop
---				if i = a_src then
---					l_src := @ i.key
---				end
---			end
---			if l_src = 0 then
+-- FIXME: check for recursive cases.
+			if attached committed_table as ftb then
+				across
+					ftb as i
+				until
+					l_src > 0
+				loop
+					if i = a_src then
+						l_src := @ i.key
+					end
+				end
+			end
+			if l_src = 0 then
 				l_src := a_src
---			end
+			end
 			table [l_src] := a_target
 			debug ("il_emitter_table")
 				print ("> Remap token: " + l_src.to_hex_string)
---				if l_src /= a_src then
---					print (" (" + a_src.to_hex_string + ")")
---				end
+				if l_src /= a_src then
+					print (" (" + a_src.to_hex_string + ")")
+				end
 				print (" -> " + a_target.to_hex_string + "%N")
+			end
+		end
+
+	commit
+		local
+			ftb: like committed_table
+		do
+			ftb := committed_table
+			if ftb = Void then
+				create ftb.make (table.count)
+				committed_table := ftb
+			end
+			ftb.wipe_out
+			across
+				table as i
+			loop
+				ftb[@i.key] := i
 			end
 		end
 
@@ -99,14 +124,22 @@ feature -- Element change
 
 feature -- Operation
 
-	remap_index (idx: PE_INDEX_BASE)
+	remap_index (idx: PE_INDEX_BASE; a_table_id: NATURAL_32)
 		local
 			i, t: NATURAL_32
 		do
-			i := idx.index
-			t := token (i)
-			if i /= t then
-				idx.update_index (t)
+			if attached {PE_CODED_INDEX_BASE} idx as l_coded_idx then
+				i := l_coded_idx.index
+				t := token (i)
+				if i /= t then
+					l_coded_idx.update_coded_index (t, a_table_id)
+				end
+			else
+				i := idx.index
+				t := token (i)
+				if i /= t then
+					idx.update_index (t)
+				end
 			end
 		end
 
@@ -126,5 +159,8 @@ feature {NONE} -- Implemetation
 
 	table: HASH_TABLE [NATURAL, NATURAL]
 			-- New token indexed by old token.
+
+	committed_table: detachable HASH_TABLE [NATURAL, NATURAL]
+			-- Token remapping used for recursion.
 
 end

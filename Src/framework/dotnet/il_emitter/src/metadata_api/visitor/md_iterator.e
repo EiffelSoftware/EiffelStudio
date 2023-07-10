@@ -13,7 +13,8 @@ inherit
 			visit_emitter,
 			visit_table,
 			visit_table_entry,
-			visit_index
+			visit_index,
+			visit_coded_index
 		end
 
 feature -- Access
@@ -44,6 +45,20 @@ feature -- Access
 
 	visit_index (o: PE_INDEX_BASE)
 		do
+		end
+
+	visit_coded_index (o: PE_CODED_INDEX_BASE)
+		do
+		end
+
+
+feature {NONE} -- Helpers		
+
+	safe_accepts (o: detachable MD_VISITABLE)
+		do
+			if o /= Void then
+				o.accepts (Current)
+			end
 		end
 
 end

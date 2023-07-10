@@ -66,6 +66,7 @@ feature -- Apply token remapping
 			i_start, i_end: NATURAL_32
 		do
 			create Result.make (table.count * 20)
+			Result.append ({MD_TABLE_UTILITIES}.table_name (table.table_id) +" ("+table.count.out+")%N")
 			i := 0
 			across
 				table as e
@@ -100,12 +101,13 @@ feature -- Apply token remapping
 			i_start, i_end: NATURAL_32
 		do
 			create Result.make (table.count * 20)
+			Result.append ({MD_TABLE_UTILITIES}.table_name (table.table_id) +" ("+table.count.out+")%N")
+
 			i := 0
 			across
 				table as e
 			loop
 				i := i + 1
-
 				if attached {E} e as l_entry then
 					Result.append ("[0x" + i.to_hex_string + "]")
 					Result.append (" ListIndex: 0x")

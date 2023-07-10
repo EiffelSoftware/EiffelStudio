@@ -267,13 +267,14 @@ feature -- Column sorting
 	table_name (id: INTEGER_32): STRING_8
 		do
 			inspect id
-			when {PE_TABLES}.tmethoddef  then
-				Result := "MethodDef"
-			when {PE_TABLES}.tfield  then
-				Result := "Field"
+			when {PE_TABLES}.tmethoddef  then Result := "MethodDef"
+			when {PE_TABLES}.tfield  then Result := "Field"
+			when {PE_TABLES}.tparam  then Result := "Param"
 			else
 				Result := "Table#" + id.to_natural_8.to_hex_string
 			end
+		ensure
+			class
 		end
 
 	partial_sort_list (a_list: like {MD_TABLE_COLUMN_UTILITIES [PE_TABLE_ENTRY_BASE]}.unsorted_list_indexes;
@@ -391,7 +392,7 @@ feature -- ParamList column sorting in MethodDef
 	ensure_param_list_column_is_ordered
 		local
 			ut: MD_TABLE_COLUMN_UTILITIES [PE_METHOD_DEF_TABLE_ENTRY]
-			vis: MD_METHOD_DEF_TOKEN_REMAPPER
+			vis: MD_PARAM_TOKEN_REMAPPER
 		do
 			if
 				attached methoddef_table as tb and then

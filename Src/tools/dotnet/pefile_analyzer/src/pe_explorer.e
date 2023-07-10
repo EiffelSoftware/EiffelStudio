@@ -510,7 +510,7 @@ feature -- Visitor
 	output_token (e: PE_MD_TABLE_ENTRY)
 		do
 			if e.has_token then
-				output.put_string ("/*" + e.token.to_hex_string + "*/ ")
+				output.put_string ("/*0x" + e.token.to_hex_string + "*/ ")
 			end
 		end
 

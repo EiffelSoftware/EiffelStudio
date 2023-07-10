@@ -7,10 +7,11 @@ class
 	PE_SEMANTICS
 
 inherit
-	PE_INDEX_BASE
+	PE_CODED_INDEX_BASE
 		redefine
 			get_index_shift,
-			has_index_overflow
+			has_index_overflow,
+			tag_for_table
 		end
 
 create
@@ -25,6 +26,19 @@ feature -- Enum: tags
 
 	Event: INTEGER = 0
 	Property: INTEGER = 1
+
+feature -- Access
+
+	tag_for_table (tb_id: NATURAL_32): INTEGER_32
+			-- <Precursor/>
+		do
+			inspect tb_id
+			when {PE_TABLES}.tevent then Result := event
+			when {PE_TABLES}.tproperty then Result := property
+			else
+				Result := Precursor (tb_id)
+			end
+		end
 
 feature -- Operations
 

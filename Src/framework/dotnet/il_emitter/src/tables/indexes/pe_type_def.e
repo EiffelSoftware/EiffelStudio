@@ -9,7 +9,6 @@ class
 inherit
 	PE_INDEX_BASE
 		redefine
-			get_index_shift,
 			has_index_overflow
 		end
 
@@ -17,11 +16,6 @@ create
 	make_with_index
 
 feature -- Operations
-
-	get_index_shift: INTEGER
-		do
-			Result := 0
-		end
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_32]): BOOLEAN
 		do

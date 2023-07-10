@@ -10,9 +10,7 @@ inherit
 	PE_INDEX_BASE
 		redefine
 			make_with_index,
-			make_with_tag_and_index,
 			update_index,
-			get_index_shift,
 			has_index_overflow,
 			is_ready_for_render,
 			debug_output
@@ -23,14 +21,6 @@ feature {NONE} -- Initialization
 	make_with_index (a_index: NATURAL_32)
 		do
 			Precursor (a_index)
-			is_list_index_set := True
-		ensure then
-			is_list_index_set
-		end
-
-	make_with_tag_and_index (a_tag: INTEGER; a_index: NATURAL_32)
-		do
-			Precursor (a_tag, a_index)
 			is_list_index_set := True
 		ensure then
 			is_list_index_set
@@ -81,11 +71,6 @@ feature -- Status report
 		end
 
 feature -- Access
-
-	get_index_shift: INTEGER
-		do
-			Result := 0
-		end
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_32]): BOOLEAN
 		do

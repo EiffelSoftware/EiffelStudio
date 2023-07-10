@@ -13,7 +13,6 @@ class
 inherit
 	PE_INDEX_BASE
 		redefine
-			get_index_shift,
 			has_index_overflow
 		end
 
@@ -22,14 +21,11 @@ create
 
 feature -- Operations
 
-	get_index_shift: INTEGER
-		do
-			Result := 0
-		end
-
 	has_index_overflow (a_sizes: ARRAY [NATURAL_32]): BOOLEAN
 		do
-			fixme ("Todo double check if we need + 1 in this case.")
+			debug ("refactor_fixme")
+				fixme ("Todo double check if we need + 1 in this case.")
+			end
 			Result := large(a_sizes[{PE_TABLE_CONSTANTS}.t_string + 1])
 		end
 

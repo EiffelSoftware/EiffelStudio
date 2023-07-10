@@ -10,10 +10,11 @@ class
 	PE_MEMBER_REF_PARENT
 
 inherit
-	PE_INDEX_BASE
+	PE_CODED_INDEX_BASE
 		redefine
 			get_index_shift,
-			has_index_overflow
+			has_index_overflow,
+			tag_for_table
 		end
 
 create
@@ -31,6 +32,22 @@ feature -- Enum: tags
 	ModuleRef: INTEGER = 2
 	MethodDef: INTEGER = 3
 	TypeSpec: INTEGER = 4
+
+feature -- Access
+
+	tag_for_table (tb_id: NATURAL_32): INTEGER_32
+			-- <Precursor/>
+		do
+			inspect tb_id
+			when {PE_TABLES}.ttypedef then Result := typedef
+			when {PE_TABLES}.ttyperef then Result := typeref
+			when {PE_TABLES}.tmoduleref then Result := moduleref
+			when {PE_TABLES}.tmethoddef then Result := methoddef
+			when {PE_TABLES}.ttypespec then Result := typespec
+			else
+				Result := Precursor (tb_id)
+			end
+		end
 
 feature -- Operations
 

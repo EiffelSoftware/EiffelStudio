@@ -31,7 +31,7 @@ feature {NONE} -- Intialization
 feature -- Access
 
 	parent_index: PE_MEMBER_REF_PARENT
-			-- class  column in the spec.
+			-- "Class"  column in the spec.
 
 	name_index: PE_STRING
 			-- index in the string heap.

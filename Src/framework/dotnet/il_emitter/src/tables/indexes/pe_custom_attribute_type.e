@@ -7,10 +7,11 @@ class
 	PE_CUSTOM_ATTRIBUTE_TYPE
 
 inherit
-	PE_INDEX_BASE
+	PE_CODED_INDEX_BASE
 		redefine
 			get_index_shift,
-			has_index_overflow
+			has_index_overflow,
+			tag_for_table
 		end
 
 create
@@ -27,6 +28,19 @@ feature -- Enum: tags
 
 	MethodDef: INTEGER = 2
 	MemberRef: INTEGER = 3
+
+feature -- Access
+
+	tag_for_table (tb_id: NATURAL_32): INTEGER_32
+			-- <Precursor/>
+		do
+			inspect tb_id
+			when {PE_TABLES}.tmethoddef then Result := methoddef
+			when {PE_TABLES}.tmemberref then Result := memberref
+			else
+				Result := Precursor (tb_id)
+			end
+		end
 
 feature -- Operations
 

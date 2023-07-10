@@ -7,10 +7,11 @@ class
 	PE_MEMBER_FORWARDED
 
 inherit
-	PE_INDEX_BASE
+	PE_CODED_INDEX_BASE
 		redefine
 			get_index_shift,
-			has_index_overflow
+			has_index_overflow,
+			tag_for_table
 		end
 
 create
@@ -25,6 +26,19 @@ feature -- Enum: tags
 
 	FieldDef: INTEGER = 0
 	MethodDef: INTEGER = 1
+
+feature -- Access
+
+	tag_for_table (tb_id: NATURAL_32): INTEGER_32
+			-- <Precursor/>
+		do
+			inspect tb_id
+			when {PE_TABLES}.tfield then Result := fielddef
+			when {PE_TABLES}.tmethoddef then Result := methoddef
+			else
+				Result := Precursor (tb_id)
+			end
+		end
 
 feature -- Operations
 

@@ -7,10 +7,11 @@ class
 	PE_IMPLEMENTATION
 
 inherit
-	PE_INDEX_BASE
+	PE_CODED_INDEX_BASE
 		redefine
 			get_index_shift,
-			has_index_overflow
+			has_index_overflow,
+			tag_for_table
 		end
 
 create
@@ -27,6 +28,20 @@ feature -- Enum: tags
 
 		--Not used at the moment
 	ExportedType: INTEGER = 2
+
+feature -- Access
+
+	tag_for_table (tb_id: NATURAL_32): INTEGER_32
+			-- <Precursor/>
+		do
+			inspect tb_id
+			when {PE_TABLES}.tfile then Result := File
+			when {PE_TABLES}.tassemblyref then Result := AssemblyRef
+			when {PE_TABLES}.texportedtype then Result := ExportedType
+			else
+				Result := Precursor (tb_id)
+			end
+		end
 
 feature -- Operations
 

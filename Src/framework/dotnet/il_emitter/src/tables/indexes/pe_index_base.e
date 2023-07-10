@@ -48,7 +48,6 @@ feature -- Operations
 		require
 			valid_index: idx >= 0
 		do
-			print (generator + " " + index.to_hex_string + " -> " + idx.to_hex_string + "%N")
 			index := idx
 		end
 

@@ -35,10 +35,12 @@ feature -- Testing
 				test_metadata_tables_token_interface (tn.head (2), tn.substring (4, tn.count))
 			elseif tn.starts_with ("om.") then
 				test_metadata_tables_object_model (tn.head (2), tn.substring (4, tn.count))
+			elseif tn.starts_with ("md.") then
+				test_metadata_tables (tn.head (2), tn.substring (4, tn.count))
+
 			else
 				old_tests ("old", tn) --"test_11")
 			end
-			test_remap_tables
 --			post_test (tn)
 
 
@@ -162,19 +164,24 @@ feature -- Token tests
 
 		end
 
-	test_remap_tables
+	test_metadata_tables (cat, a_pattern: READABLE_STRING_GENERAL)
 		do
-
-			if True then
---				launch_test ("remap", "build_tables", agent (create {TEST_REMAP_TABLES}).test_build_tables)
-				--launch_test ("remap", "build_tables_case1", agent (create {TEST_REMAP_TABLES}).test_remap_case1)
-				--launch_test ("remap", "build_tables_case2", agent (create {TEST_REMAP_TABLES}).test_remap_case2)
-				launch_test ("remap", "build_tables_case3", agent (create {TEST_REMAP_TABLES}).test_remap_case3)
-				--launch_test ("remap", "build_tables_case4", agent (create {TEST_REMAP_TABLES}).test_remap_case4)
-
+			if is_test_included ("remap_tables", a_pattern) then
+				launch_test (cat, "tables", agent (create {TEST_REMAP_TABLES}).test_build_tables)
+			end
+			if is_test_included ("remap_table_case1", a_pattern) then
+				launch_test (cat, "remap_table_case1", agent (create {TEST_REMAP_TABLES}).test_remap_case1)
+			end
+			if is_test_included ("remap_table_case2", a_pattern) then
+				launch_test (cat, "remap_table_case2", agent (create {TEST_REMAP_TABLES}).test_remap_case2)
+			end
+			if is_test_included ("remap_table_case3", a_pattern) then
+				launch_test (cat, "remap_table_case3", agent (create {TEST_REMAP_TABLES}).test_remap_case3)
+			end
+			if is_test_included ("remap_table_case4", a_pattern) then
+				launch_test (cat, "remap_table_case4", agent (create {TEST_REMAP_TABLES}).test_remap_case4)
 			end
 		end
-
 
 feature -- Object model tests
 

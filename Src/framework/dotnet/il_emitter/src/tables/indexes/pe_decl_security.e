@@ -7,7 +7,7 @@ class
 	PE_DECL_SECURITY
 
 inherit
-	PE_INDEX_BASE
+	PE_CODED_INDEX_BASE
 		redefine
 			get_index_shift,
 			has_index_overflow

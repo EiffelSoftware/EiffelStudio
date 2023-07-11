@@ -180,7 +180,7 @@ feature -- Sorting
 			from
 				n := tb.size
 				create Result.make (tb.count)
-				i := 2
+				i := 1
 				prev_index := 0
 			until
 				i > n

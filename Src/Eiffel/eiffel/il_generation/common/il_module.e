@@ -1362,7 +1362,6 @@ feature -- Netcore deployment
 			vars: CIL_PROJECT_INFO
 			s, libs_tpl, libs: STRING
 			v: STRING_8
-			l_item: IL_MODULE
 			l_name: READABLE_STRING_GENERAL
 			l_version: READABLE_STRING_GENERAL
 		do

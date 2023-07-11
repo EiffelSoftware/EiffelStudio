@@ -62,6 +62,13 @@ feature -- Operations
 			is_list_index_set
 		end
 
+	set_null_index
+		do
+			is_list_index_set := False
+			is_null_index := True
+			index := 0
+		end
+
 feature -- Status report
 
 	is_null_index: BOOLEAN

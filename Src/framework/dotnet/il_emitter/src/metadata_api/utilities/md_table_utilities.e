@@ -52,12 +52,6 @@ feature -- Saving preparation
 
 	prepare_to_save
 			-- Prepare data to be save
-		local
-			max_field_idx, max_meth_idx, max_param_idx: NATURAL_32
-			field_idx, meth_idx, param_idx: NATURAL_32
-			l_missing_field_index_entries: ARRAYED_LIST [PE_TYPE_DEF_TABLE_ENTRY]
-			l_missing_method_index_entries: ARRAYED_LIST [PE_TYPE_DEF_TABLE_ENTRY]
-			l_missing_param_index_entries: ARRAYED_LIST [PE_METHOD_DEF_TABLE_ENTRY]
 		do
 				-- Ensure FieldList and MethodList columns are ordered in TypeDef
 			ensure_field_list_column_is_ordered
@@ -65,117 +59,8 @@ feature -- Saving preparation
 				-- Ensure ParamList column is ordered in MethodDef
 			ensure_param_list_column_is_ordered
 
-
 				-- Update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)
-			if attached methoddef_table as tb then
-				max_meth_idx := tb.next_index
-			end
-			if attached field_table as tb then
-				max_field_idx := tb.next_index
-			end
-			if attached param_table as tb then
-				max_param_idx := tb.next_index
-			end
-
-				-- TypeDef table
-			if attached typedef_table as typedef_tb then
-				across
-					typedef_tb as e
-				loop
-					if attached {PE_TYPE_DEF_TABLE_ENTRY} e as l_type_def_entry then
-							-- FieldList
-						if l_type_def_entry.is_field_list_index_set then
-							field_idx := l_type_def_entry.fields.index
-							if l_missing_field_index_entries /= Void then
-								across
-									l_missing_field_index_entries as t
-								loop
-									t.fields.update_missing_index (l_type_def_entry.fields.index)
-								end
-								l_missing_field_index_entries.wipe_out
-							end
-						else
-							if l_missing_field_index_entries = Void then
-								create l_missing_field_index_entries.make (10)
-							end
-							l_missing_field_index_entries.force (l_type_def_entry)
-						end
-
-							-- MethodList
-						if l_type_def_entry.is_method_list_index_set then
-							meth_idx := l_type_def_entry.methods.index
-							if l_missing_method_index_entries /= Void then
-								across
-									l_missing_method_index_entries as t
-								loop
-									t.methods.update_missing_index (l_type_def_entry.methods.index)
-								end
-								l_missing_method_index_entries.wipe_out
-							end
-						else
-							if l_missing_method_index_entries = Void then
-								create l_missing_method_index_entries.make (10)
-							end
-							l_missing_method_index_entries.force (l_type_def_entry)
-						end
-					else
-						check is_type_def: False end
-					end
-				end
-				if l_missing_field_index_entries /= Void then
-					across
-						l_missing_field_index_entries as t
-					loop
-						t.fields.update_missing_index (max_field_idx)
-					end
-					l_missing_field_index_entries := Void
-				end
-				if l_missing_method_index_entries /= Void then
-					across
-						l_missing_method_index_entries as t
-					loop
-						t.methods.update_missing_index (max_meth_idx)
-					end
-					l_missing_method_index_entries := Void
-				end
-			end
-
-				-- MethodDef table
-			if attached methoddef_table as methoddef_tb then
-				across
-					methoddef_tb as e
-				loop
-					if attached {PE_METHOD_DEF_TABLE_ENTRY} e as l_method_def_entry then
-							-- ParamList
-						if l_method_def_entry.is_param_list_index_set then
-							param_idx := l_method_def_entry.param_index.index
-							if l_missing_param_index_entries /= Void then
-								across
-									l_missing_param_index_entries as m
-								loop
-									m.param_index.update_missing_index (l_method_def_entry.param_index.index)
-								end
-								l_missing_param_index_entries.wipe_out
-							end
-						else
-							if l_missing_param_index_entries = Void then
-								create l_missing_param_index_entries.make (10)
-							end
-							l_missing_param_index_entries.force (l_method_def_entry)
-						end
-					else
-						check is_method_def: False end
-					end
-				end
-				if l_missing_param_index_entries /= Void then
-					across
-						l_missing_param_index_entries as t
-					loop
-						t.param_index.update_missing_index (max_param_idx)
-					end
-					l_missing_param_index_entries := Void
-				end
-			end
+			update_index_list_in_tables
 
 				-- Sort tables...
 				-- CustomAttribute table
@@ -183,6 +68,156 @@ feature -- Saving preparation
 			ensure_table_is_sorted ({PE_TABLES}.tinterfaceimpl)
 			ensure_table_is_sorted ({PE_TABLES}.tmethodimpl)
 			ensure_table_is_sorted ({PE_TABLES}.tmethodsemantics)
+		end
+
+feature -- Update missing indexes
+
+	update_index_list_in_tables
+		do
+				-- Update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)
+			if attached typedef_table as l_typedef_tb then
+				if attached field_table as l_field_tb then
+					update_field_list_of_typedef_table (l_typedef_tb, l_field_tb)
+				end
+				if attached methoddef_table as l_methoddef_tb then
+					update_method_list_of_typedef_table (l_typedef_tb, l_methoddef_tb)
+				end
+			end
+			if
+				attached methoddef_table as l_methoddef_tb and then
+				attached param_table as l_param_tb
+			then
+				update_param_list_of_methoddef_table (l_methoddef_tb, l_param_tb)
+			end
+		end
+
+	update_field_list_of_typedef_table (a_typedef_tb, a_field_tb: MD_TABLE)
+		local
+			max_field_idx: NATURAL_32
+			field_idx: NATURAL_32
+			l_missing_field_index_entries: ARRAYED_LIST [PE_TYPE_DEF_TABLE_ENTRY]
+		do
+			max_field_idx := a_field_tb.next_index
+				-- TypeDef table
+			across
+				a_typedef_tb as e
+			loop
+				if attached {PE_TYPE_DEF_TABLE_ENTRY} e as l_type_def_entry then
+						-- ParamList
+					if l_type_def_entry.is_field_list_index_set then
+						field_idx := l_type_def_entry.fields.index
+						if l_missing_field_index_entries /= Void then
+							across
+								l_missing_field_index_entries as m
+							loop
+								m.fields.update_missing_index (l_type_def_entry.fields.index)
+							end
+							l_missing_field_index_entries.wipe_out
+						end
+					else
+						if l_missing_field_index_entries = Void then
+							create l_missing_field_index_entries.make (10)
+						end
+						l_missing_field_index_entries.force (l_type_def_entry)
+					end
+				else
+					check is_type_def: False end
+				end
+			end
+			if l_missing_field_index_entries /= Void then
+				across
+					l_missing_field_index_entries as t
+				loop
+					t.fields.update_missing_index (max_field_idx)
+				end
+				l_missing_field_index_entries := Void
+			end
+		end
+
+	update_method_list_of_typedef_table (a_typedef_tb, a_methoddef_tb: MD_TABLE)
+		local
+			max_method_idx: NATURAL_32
+			method_idx: NATURAL_32
+			l_missing_method_index_entries: ARRAYED_LIST [PE_TYPE_DEF_TABLE_ENTRY]
+		do
+			max_method_idx := a_methoddef_tb.next_index
+				-- TypeDef table
+			across
+				a_typedef_tb as e
+			loop
+				if attached {PE_TYPE_DEF_TABLE_ENTRY} e as l_type_def_entry then
+						-- ParamList
+					if l_type_def_entry.is_method_list_index_set then
+						method_idx := l_type_def_entry.methods.index
+						if l_missing_method_index_entries /= Void then
+							across
+								l_missing_method_index_entries as m
+							loop
+								m.methods.update_missing_index (l_type_def_entry.methods.index)
+							end
+							l_missing_method_index_entries.wipe_out
+						end
+					else
+						if l_missing_method_index_entries = Void then
+							create l_missing_method_index_entries.make (10)
+						end
+						l_missing_method_index_entries.force (l_type_def_entry)
+					end
+				else
+					check is_type_def: False end
+				end
+			end
+			if l_missing_method_index_entries /= Void then
+				across
+					l_missing_method_index_entries as t
+				loop
+					t.methods.update_missing_index (max_method_idx)
+				end
+				l_missing_method_index_entries := Void
+			end
+		end
+
+	update_param_list_of_methoddef_table (a_methoddef_tb, a_param_table: MD_TABLE)
+		local
+			max_param_idx: NATURAL_32
+			param_idx: NATURAL_32
+			l_missing_param_index_entries: ARRAYED_LIST [PE_METHOD_DEF_TABLE_ENTRY]
+		do
+			max_param_idx := a_param_table.next_index
+				-- MethodDef table
+			across
+				a_methoddef_tb as e
+			loop
+				if attached {PE_METHOD_DEF_TABLE_ENTRY} e as l_method_def_entry then
+						-- ParamList
+					if l_method_def_entry.is_param_list_index_set then
+						param_idx := l_method_def_entry.param_index.index
+						if l_missing_param_index_entries /= Void then
+							across
+								l_missing_param_index_entries as m
+							loop
+								m.param_index.update_missing_index (l_method_def_entry.param_index.index)
+							end
+							l_missing_param_index_entries.wipe_out
+						end
+					else
+						if l_missing_param_index_entries = Void then
+							create l_missing_param_index_entries.make (10)
+						end
+						l_missing_param_index_entries.force (l_method_def_entry)
+					end
+				else
+					check is_method_def: False end
+				end
+			end
+			if l_missing_param_index_entries /= Void then
+				across
+					l_missing_param_index_entries as t
+				loop
+					t.param_index.update_missing_index (max_param_idx)
+				end
+				l_missing_param_index_entries := Void
+			end
 		end
 
 feature -- Table sorting		
@@ -289,34 +324,42 @@ feature -- Column sorting
 			-- Update the MD_REMAP_MANAGER
 		local
 			i, n: INTEGER
-			l_item: TUPLE [index, next: NATURAL_32]
+			l_item: TUPLE [index: NATURAL_32; index_count: INTEGER; next: NATURAL_32]
 			idx, l_end_index: NATURAL_32
+			done: BOOLEAN
 		do
 			from
 				i := 1
 				n := a_list.count
 			until
-				i > n
+				i > n or done
 			loop
 				l_item := a_list [i]
-				l_end_index := ut.end_index_of_list (l_item.index)
+				l_end_index := l_item.index + l_item.index_count.to_natural_32 - 1
 				debug ("il_emitter_table")
 					print ("@"+table_name (ut.table_for_column.table_id)+"@ Partial Sort: ")
 					print (" index=" + table_token (l_item.index, ut.table_for_column.table_id).to_hex_string)
 					print (" before=" + table_token (l_item.next, ut.table_for_column.table_id).to_hex_string)
-					from
-						print (" -> (" + (l_end_index - l_item.index +1).out + ") %N")
-						idx := l_item.index
-					until
-						idx > l_end_index
-					loop
-						print ("%T0x" + table_token (idx, ut.table_for_column.table_id).to_hex_string + "%N")
-						idx := idx + 1
+					if l_end_index = 0 then
+						print (" -> NULL (0) %N")
+					else
+						from
+							print (" -> (" + l_item.index_count.out + ") %N")
+							idx := l_item.index
+						until
+							idx > l_end_index
+						loop
+							print ("%T0x" + table_token (idx, ut.table_for_column.table_id).to_hex_string + "%N")
+							idx := idx + 1
+						end
 					end
 					print ("%N")
 				end
-				ut.move_tokens (l_item.index, l_end_index, l_item.next)
+				if l_end_index > 0 then
+					ut.move_tokens (l_item.index, l_end_index, l_item.next)
+				end
 				i := i + 1
+				done := True -- One at the time for now
 			end
 			ut.remap.commit
 		end
@@ -327,11 +370,20 @@ feature -- Column sorting
 				attached ut.unsorted_list_indexes as lst and then
 				not lst.is_empty
 			then
-				--print (ut.remapped_table_dump)
-				--print ("%N")
+				debug("il_emitter_table")
+					print ("UNSORTED {"+ table_name (ut.table_for_column.table_id) +"} list indexes in table {"+ table_name (ut.table.table_id) +"}%N")
+					across
+						lst as ic
+					loop
+						print (" - 0x")
+						print (ic.index.to_hex_string)
+						print (" > 0x")
+						print (ic.next.to_hex_string)
+						print ("%N")
+					end
+				end
+
 				partial_sort_list (lst, ut)
-				--print (ut.remapped_table_dump)
-				--print ("%N")
 
 					-- Recursive sorting..
 				sort_list_column (ut)
@@ -354,7 +406,6 @@ feature -- FieldList column sorting in TypeDef
 				attached field_table as col_tb
 			then
 				create ut.make (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.fields end)
-
 				sort_list_column (ut)
 				if not ut.remap.is_empty then
 					-- Update tables with remapped tokens!

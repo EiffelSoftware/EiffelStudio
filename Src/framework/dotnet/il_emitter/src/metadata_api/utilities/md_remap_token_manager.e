@@ -74,16 +74,8 @@ feature -- Element change
 			l_src: NATURAL_32
 		do
 -- FIXME: check for recursive cases.
-			if attached committed_table as ftb then
-				across
-					ftb as i
-				until
-					l_src > 0
-				loop
-					if i = a_src then
-						l_src := @ i.key
-					end
-				end
+			if attached reversed_committed_table as rftb then
+				l_src := rftb [a_src]
 			end
 			if l_src = 0 then
 				l_src := a_src
@@ -101,17 +93,29 @@ feature -- Element change
 	commit
 		local
 			ftb: like committed_table
+			rftb: like reversed_committed_table
 		do
 			ftb := committed_table
 			if ftb = Void then
 				create ftb.make (table.count)
 				committed_table := ftb
+			else
+				ftb.wipe_out
 			end
-			ftb.wipe_out
+
+			rftb := reversed_committed_table
+			if rftb = Void then
+				create rftb.make (table.count)
+				reversed_committed_table := rftb
+			else
+				rftb.wipe_out
+			end
+
 			across
 				table as i
 			loop
 				ftb[@i.key] := i
+				rftb[i] := @i.key
 			end
 		end
 
@@ -160,7 +164,8 @@ feature {NONE} -- Implemetation
 	table: HASH_TABLE [NATURAL, NATURAL]
 			-- New token indexed by old token.
 
-	committed_table: detachable HASH_TABLE [NATURAL, NATURAL]
+	committed_table,
+	reversed_committed_table: detachable HASH_TABLE [NATURAL, NATURAL]
 			-- Token remapping used for recursion.
 
 end

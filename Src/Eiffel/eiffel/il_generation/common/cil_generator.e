@@ -298,6 +298,9 @@ feature -- Generation
 				create l_assembly_references.make (0)
 				if cil_generator.is_using_multi_assemblies then
 						-- FIXME: find better source of generated assembly list.
+					if fut.file_path_exists (l_assembly_location.extended ("lib" + system.name + ".c")) then
+						l_assembly_references.force (["lib" + system.name, system.msil_version])
+					end
 					if attached fut.file_names (l_assembly_location.name) as lst then
 						across
 							lst as ic
@@ -466,7 +469,7 @@ feature -- Generation
 			s.replace_substring_all ("${SYSTEM_TYPE}", vars.system_type)
 
 
-			-- FIXME: use the list of .Net assemblies, and generated assemblies to get versions and related information.
+				-- FIXME: use the list of .Net assemblies, and generated assemblies to get versions and related information.
 			if a_assembly_reference /= Void and then not a_assembly_reference.is_empty then
 				create libs.make_empty
 				create libs_runtime.make_empty

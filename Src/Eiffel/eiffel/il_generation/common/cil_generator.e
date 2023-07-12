@@ -269,6 +269,7 @@ feature -- Generation
 			-- copy configuration file to load local assemblies.
 		local
 			l_source_name: PATH
+			l_target_name: like {PROJECT_DIRECTORY}.path
 			l_assembly_location: like {PROJECT_DIRECTORY}.path
 			l_has_local, retried: BOOLEAN
 			l_precomp: REMOTE_PROJECT_DIRECTORY
@@ -377,11 +378,16 @@ feature -- Generation
 						deploy_netcore_runtimeconfig_json_file (vars, l_assembly_location, System.name.to_string_32 + ".runtimeconfig.json")
 						deploy_netcore_deps_json_file (vars, l_assembly_references, System, l_assembly_location, System.name.to_string_32 + ".deps.json")
 					else
+						if is_finalizing then
+							l_target_name := project_location.final_path
+						else
+							l_target_name := project_location.workbench_path
+						end
 						-- Compute name of configuration file: It is `system_name.xxx.config'
 						-- where `xxx' is either `exe' or `dll'.
 
 						l_source_name := eiffel_layout.generation_templates_path.extended ("assembly_config.xml")
-						copy_to_local (l_source_name, l_assembly_location, {STRING_32} "" + System.name + "." + System.msil_generation_type + ".config")
+						copy_to_local (l_source_name, l_target_name, {STRING_32} "" + System.name + "." + System.msil_generation_type + ".config")
 					end
 				end
 			else

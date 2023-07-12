@@ -73,7 +73,7 @@ create {CIL_CODE_GENERATOR}
 feature {NONE} -- Initialization
 
 	make (
-			a_module_name: like module_name_with_extension;
+			a_module_name_with_extension: like module_name_with_extension;
 			a_file_name: like module_file_name;
 			a_c_module_name: like c_module_name;
 			a_public_key: like public_key;
@@ -89,21 +89,21 @@ feature {NONE} -- Initialization
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
-			a_module_name_not_void: a_module_name /= Void
-			a_module_name_not_empty: not a_module_name.is_empty
-			a_module_name_with_extension: a_module_name.has ('.')
+			a_module_name_not_void: a_module_name_with_extension /= Void
+			a_module_name_not_empty: not a_module_name_with_extension.is_empty
+			a_module_name_with_extension: a_module_name_with_extension.has ('.')
 			a_il_code_generator_not_void: a_il_code_generator /= Void
 			a_module_id_non_negative: a_module_id > 0
 		local
 			i: INTEGER
 		do
-			module_name_with_extension := a_module_name
-			i := a_module_name.last_index_of ('.', a_module_name.count)
+			module_name_with_extension := a_module_name_with_extension
+			i := a_module_name_with_extension.last_index_of ('.', a_module_name_with_extension.count)
 			if i > 0 then
-				module_name := a_module_name.substring (1, i - 1)
+				module_name := a_module_name_with_extension.substring (1, i - 1)
 			else
 				check has_extension: False end
-				module_name := a_module_name
+				module_name := a_module_name_with_extension
 			end
 			module_file_name := a_file_name
 			public_key := a_public_key
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 			any_type_id := system.any_class.compiled_class.types.first.static_type_id
 		ensure
 			module_file_name_set: module_file_name = a_file_name
-			module_name_set: module_name = a_module_name
+			module_name_set: module_name_with_extension = a_module_name_with_extension
 			c_module_name_set: c_module_name = a_c_module_name
 			public_key_set: public_key = a_public_key
 			il_code_generator_set: il_code_generator = a_il_code_generator
@@ -1056,7 +1056,7 @@ feature -- Code generation
 			generic_ctor_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 			generic_ctor_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, ise_generic_type_token)
 
-			uni_string.set_string (module_name)
+			uni_string.set_string (module_name) --_with_extension)
 
 			if is_assembly_module or is_using_multi_assemblies then
 				ass := md_factory.assembly_info
@@ -3026,7 +3026,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					internal_module_references.put (Result, a_module)
 				else
 						-- ModuleRef token has not yet been computed.
-					Result := md_emit.define_module_ref (create {CLI_STRING}.make (a_module.module_name))
+					Result := md_emit.define_module_ref (create {CLI_STRING}.make (a_module.module_name_with_extension))
 					internal_module_references.put (Result, a_module)
 				end
 			end

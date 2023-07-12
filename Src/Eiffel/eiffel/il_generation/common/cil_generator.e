@@ -481,13 +481,19 @@ libs_tpl := "    %"${LIB_NAME_VERSION}%": { %"type%": %"reference%" }"
 				across
 					a_assembly_reference as ic
 				loop
+
 					libs.append (",%N")
 					libs.append (libs_tpl)
 
 					libs_runtime.append (",%N")
 					libs_runtime.append (libs_runtime_tpl)
 
-					libs_deps.append (",%N")
+					if l_start then
+						l_start := False
+					else
+						libs_deps.append (",")
+					end
+					libs_deps.append ("%N")
 					libs_deps.append (lib_deps_tpl)
 
 					-- FIXME: maybe use proper JSON encoding, eventually the JSON library.

@@ -215,7 +215,7 @@ feature -- Comparison
 feature -- Insertion, deletion
 
 	put (key: H)
-			-- Attempt to insert `new' with `key'.
+			-- Attempt to insert  with `key'.
 			-- Set `control' to `Inserted' or `Conflict'.
 			-- No insertion if conflict.
 		require
@@ -234,12 +234,12 @@ feature -- Insertion, deletion
 				control := Inserted
 			end
 		ensure then
-			insertion_done: control = Inserted implies item (key) = key
+			insertion_done: control = Inserted implies pure_item (key) = key
 		end
 
 	force (key: H)
-			-- If `key' is present, replace corresponding item by `new',
-			-- if not, insert item `new' with key `key'.
+			-- If `key' is present, replace `key'
+			-- if not, insert key `key'.
 			-- Set `control' to `Inserted'.
 		require
 			valid_key (key)
@@ -255,7 +255,7 @@ feature -- Insertion, deletion
 			content.put (key, position)
 			control := Inserted
 		ensure then
-			insertion_done: item (key) = key
+			insertion_done: pure_item (key) = key
 		end
 
 	change_key (new_key: H; old_key: H)
@@ -540,6 +540,34 @@ feature -- Assertion check
 			Result := (c >= capacity) or else (((c >= 0) and (c <= capacity)) and then content.item (c) /= l_default)
 		end
 
+feature {NONE} -- Assertion check
+
+	pure_item (key: H): detachable H
+			-- Same as `item` but without modifying internal state.
+		require
+			valid_key: valid_key (key)
+		local
+			old_control: like control
+			old_cursor: like cursor
+			old_found_item: like found_item
+			old_position: like position
+		do
+			old_control := control
+			old_cursor := cursor
+			old_found_item := found_item
+			old_position := position
+			Result := item (key)
+			position := old_position
+			found_item := old_found_item
+			go_to (old_cursor)
+			control := old_control
+		ensure
+			control = old control
+			found_item = old found_item
+			position = old position
+			iteration_position = old iteration_position
+		end
+
 feature {NONE} -- Status
 
 	control: INTEGER
@@ -647,7 +675,7 @@ invariant
 	count_big_enough: 0 <= count
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -7864,7 +7864,7 @@ feature {CIL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_GENERATOR} -- Custom at
 			-- arguments `data'.
 			-- Same as `md_emit.define_custom_attribute' but we do not care about return type.
 		do
---			md_emit.define_custom_attribute (token, ctor_token, data).do_nothing
+			md_emit.define_custom_attribute (token, ctor_token, data).do_nothing
 		end
 
 feature {NONE} -- Once per type definition

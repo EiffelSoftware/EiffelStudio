@@ -58,7 +58,7 @@
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system_diagnostics_process" location="$ISE_DOTNET_FRAMEWORK\System.Diagnostics.Process.dll"/>
-		<cluster name="elks" location="$ISE_LIBRARY\library\base\elks\" recursive="true">
+		<cluster name="elks" location="elks\" recursive="true">
 			<option namespace="Base"/>
 			<file_rule>
 				<exclude>/structures/cursor_tree/compact_cursor_tree.e$</exclude>
@@ -142,7 +142,7 @@
 				</cluster>
 			</cluster>
 		</cluster>
-		<cluster name="ise" location="$ISE_LIBRARY\library\base\ise\" recursive="true">
+		<cluster name="ise" location="ise\" recursive="true">
 			<option namespace="Base"/>
 			<file_rule>
 				<exclude>/dotnet$</exclude>
@@ -162,7 +162,7 @@
 			<file_rule>
 				<exclude>/runtime$</exclude>
 			</file_rule>
-			<cluster name="debug" location="$ISE_LIBRARY\library\base\ise\runtime\debug\api\" recursive="true">
+			<cluster name="debug" location="ise\runtime\debug\api\" recursive="true">
 				<file_rule>
 					<exclude>/dotnet$</exclude>
 					<condition>
@@ -176,7 +176,7 @@
 					</condition>
 				</file_rule>
 			</cluster>
-			<cluster name="debug_implementation" location="$ISE_LIBRARY\library\base\ise\runtime\debug\implementation\" recursive="true" hidden="true">
+			<cluster name="debug_implementation" location="ise\runtime\debug\implementation\" recursive="true" hidden="true">
 				<condition>
 					<build value="workbench"/>
 				</condition>

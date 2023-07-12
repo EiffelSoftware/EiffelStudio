@@ -68,10 +68,13 @@ feature -- Preparation
 			loop
 				if attached {E} tb [i] as e then
 					p_list := value_for (e)
-					if not l_sorted_indexes.has (p_list.index) then
-						l_sorted_indexes.force (p_list.index)
+					if p_list.is_list_index_set then
+						if not l_sorted_indexes.has (p_list.index) then
+							l_sorted_indexes.force (p_list.index)
+						end
+						l_indexes.force ([p_list, 0])
+
 					end
-					l_indexes.force ([p_list, 0])
 				else
 					check expected: False end
 --					l_indexes.force (Void)

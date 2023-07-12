@@ -56,6 +56,8 @@ feature {NONE} -- Initialization
 						has_analyzer := False
 						has_explorer := False
 						is_raw := True
+					elseif arg.is_case_insensitive_equal_general ("append") then
+						is_appending_output := True
 
 					elseif arg.is_case_insensitive_equal_general ("analyze") then
 						has_analyzer := True
@@ -102,6 +104,9 @@ feature {NONE} -- Initialization
 				print ("%T --print=output-file    : enable the printer and outputs to file or stdout|stderr%N")
 				print ("%T --explore|--no_explore : enable/disable the explorer%N")
 				print ("%T --explore=output-file  : enable the explorer and outputs to file or stdout|stderr%N")
+				print ("%T                        : if output-file starts with a dot such as '.ext' use%N")
+				print ("%T                        : the path-to-dll.ext as output%N")
+				print ("%T --append               : if output is redirected to a file, append the content%N")
 				print ("%T --raw                  : implies no_analyze and no_explorer%N")
 				print ("%T --help                 : display this help%N")
 				print ("%N")
@@ -111,12 +116,22 @@ feature {NONE} -- Initialization
 				end
 
 				if o_printer /= Void then
+					if o_printer.starts_with (".") then
+						o_printer := fn.absolute_path.appended (o_printer).name
+					end
 					printer_output := output_file (o_printer)
 				end
 				if o_explorer /= Void then
+					if o_explorer.starts_with (".") then
+						o_explorer := fn.absolute_path.appended (o_explorer).name
+					end
+
 					explorer_output := output_file (o_explorer)
 				end
 				if o_default /= Void then
+					if o_default.starts_with (".") then
+						o_default := fn.absolute_path.appended (o_default).name
+					end
 					set_default_output (output_file (o_default))
 				end
 				process_file (fn.absolute_path)
@@ -126,6 +141,7 @@ feature {NONE} -- Initialization
 	is_debug: BOOLEAN
 
 	is_raw,
+	is_appending_output,
 	has_analyzer,
 	has_printer,
 	has_explorer: BOOLEAN
@@ -185,7 +201,11 @@ feature -- Execution
 
 				create o_dft.make (default_output)
 				if not o_dft.was_opened then
-					o_dft.open_write
+					if is_appending_output then
+						o_dft.open_append
+					else
+						o_dft.open_write
+					end
 				end
 
 				if has_analyzer then
@@ -208,15 +228,25 @@ feature -- Execution
 				end
 
 				if has_printer then
-					io.error.put_string ("Printing ...%N")
 					if printer_output = default_output then
 						o := o_dft
 					else
 						create o.make (printer_output)
 						if not o.was_opened then
-							o.open_write
+							if is_appending_output then
+								o.open_append
+							else
+								o.open_write
+							end
 						end
 					end
+					io.error.put_string ("Printing ...")
+					if attached o.output_path as l_path then
+						io.error.put_string (" > ")
+						io.error.put_string_general (l_path.name)
+					end
+					io.error.put_string ("%N")
+
 					create printer.make (o)
 					o.put_string ("File: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
 					pe.accepts (printer)
@@ -227,15 +257,25 @@ feature -- Execution
 				end
 
 				if has_explorer then
-					io.error.put_string ("Exploring ...%N")
 					if explorer_output = default_output then
 						o := o_dft
 					else
 						create o.make (explorer_output)
 						if not o.was_opened then
-							o.open_write
+							if is_appending_output then
+								o.open_append
+							else
+								o.open_write
+							end
 						end
 					end
+					io.error.put_string ("Exploring ...")
+					if attached o.output_path as l_path then
+						io.error.put_string (" > ")
+						io.error.put_string_general (l_path.name)
+					end
+					io.error.put_string ("%N")
+
 					create explorer.make (o, pe)
 					o.put_string ("File: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
 					pe.accepts (explorer)

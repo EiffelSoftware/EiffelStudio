@@ -18,6 +18,10 @@ feature {NONE} -- Initialization
 			was_opened := f.is_open_append or is_open_write
 			create offset.make_empty
 			tab := "    "
+
+			if not attached {CONSOLE} f and then attached {PLAIN_TEXT_FILE} f as tf then
+				output_path := tf.path
+			end
 		end
 
 feature -- Access
@@ -27,6 +31,8 @@ feature -- Access
 	offset: STRING
 
 	tab: STRING
+
+	output_path: detachable PATH
 
 feature -- Status report
 

@@ -44,8 +44,10 @@ feature -- Tests
 			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
 			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
-			create mdu.make (md)
+			create mdu.make (md, Void)
 			mdu.ensure_field_list_column_is_ordered
+			mdu.update_index_list_in_tables
+
 
 			l_mock.print_type_def_table (md.md_table ({PE_TABLES}.ttypedef))
 			io.put_new_line
@@ -78,8 +80,9 @@ feature -- Tests
 			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
 			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
-			create mdu.make (md)
+			create mdu.make (md, Void)
 			mdu.ensure_field_list_column_is_ordered
+			mdu.update_index_list_in_tables
 
 			l_mock.print_type_def_table (md.md_table ({PE_TABLES}.ttypedef))
 			io.put_new_line
@@ -109,8 +112,15 @@ feature -- Tests
 			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
 			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
-			create mdu.make (md)
+			-- l_mock.print_type_def_table (md.md_table ({PE_TABLES}.ttypedef))
+			-- io.put_new_line
+			-- l_mock.print_field_def_table (md.md_table ({PE_TABLES}.tfield))
+			-- io.put_new_line
+
+
+			create mdu.make (md, Void)
 			mdu.ensure_field_list_column_is_ordered
+			mdu.update_index_list_in_tables
 
 			l_mock.print_type_def_table (md.md_table ({PE_TABLES}.ttypedef))
 			io.put_new_line
@@ -133,8 +143,9 @@ feature -- Tests
 			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
 			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
-			create mdu.make (md)
+			create mdu.make (md, Void)
 			mdu.ensure_field_list_column_is_ordered
+			mdu.update_index_list_in_tables
 
 			l_mock.print_type_def_table (md.md_table ({PE_TABLES}.ttypedef))
 			io.put_new_line
@@ -158,8 +169,9 @@ feature -- Tests
 			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
 			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
-			create mdu.make (md)
+			create mdu.make (md, Void)
 			mdu.ensure_field_list_column_is_ordered
+			mdu.update_index_list_in_tables
 
 			l_mock.print_type_def_table (md.md_table ({PE_TABLES}.ttypedef))
 			io.put_new_line

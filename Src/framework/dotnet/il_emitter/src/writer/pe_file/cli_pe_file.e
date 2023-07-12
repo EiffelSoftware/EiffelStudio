@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 				-- PE file header basic initialization.
 			create pe_header.make
 			pe_header.set_number_of_sections (2)
-			l_characteristics := 
+			l_characteristics :=
 				{CLI_PE_FILE_CONSTANTS}.Image_file_executable_image
 				| {CLI_PE_FILE_CONSTANTS}.image_file_large_address_aware
 --				| {CLI_PE_FILE_CONSTANTS}.Image_file_line_nums_stripped
@@ -396,7 +396,7 @@ feature {NONE} -- Saving
 	prepare
 			-- Prepare emitter data before save.
 		do
-			emitter.prepare_to_save
+			emitter.prepare_to_save (file_name)
 		end
 
 	compute_sizes

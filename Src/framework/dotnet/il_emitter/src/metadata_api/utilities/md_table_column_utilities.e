@@ -333,9 +333,9 @@ feature -- Apply token remapping
 					Result.append ("0x")
 					Result.append (i_start.to_hex_string)
 					if i_end > i_start then
-						Result.append ("..0x")
-						Result.append (i_end.to_hex_string)
-						Result.append ("("+ (i_end - i_start + 1).out +")")
+						Result.append (" ("+ (i_end - i_start + 1).out +")")
+					else
+						Result.append (" (1)")
 					end
 				end
 				Result.append_character ('%N')
@@ -344,7 +344,7 @@ feature -- Apply token remapping
 
 feature -- Sorting
 
-	unsorted_list_indexes: ARRAYED_LIST [TUPLE [index: NATURAL_32; index_count: INTEGER; next: NATURAL_32]]
+	unsorted_list_indexes: ARRAYED_LIST [TUPLE [index: NATURAL_32; index_count: INTEGER; next: NATURAL_32; next_count: INTEGER]]
 			-- Indexes of unsorted indexes from `tb` metadata table.
 		local
 			i: INTEGER
@@ -386,7 +386,7 @@ feature -- Sorting
 --						end
 --						j := j - 1
 --					end
-					Result.force ([ref, ref_count, idx])
+					Result.force ([ref, ref_count, idx, item.list_count])
 				end
 				prev := idx
 				prev_count := item.list_count
@@ -443,7 +443,7 @@ feature -- Sorting
 
 feature -- Table operation
 
-	move_tokens (start_index, end_index: NATURAL_32; ref_index: NATURAL_32)
+	move_tokens (start_index, end_index: NATURAL_32; ref_index, ref_end_index: NATURAL_32)
 			-- Move indexes between `start_index` and `end_index` before `ref` index
 		require
 			start_index > ref_index
@@ -468,13 +468,9 @@ feature -- Table operation
 				i := ref_index
 				j := 0
 			until
-				i + j > start_index
+				i + j >= start_index
 			loop
-				if start_index <= i + j then
-					-- Already moved!
-				else
-					remap.record (i + j, ref_index + offset + j)
-				end
+				remap.record (i + j, ref_index + offset + j)
 				j := j + 1
 			end
 

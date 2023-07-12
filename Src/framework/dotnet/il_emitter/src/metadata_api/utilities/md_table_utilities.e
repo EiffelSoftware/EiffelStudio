@@ -14,12 +14,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (e: MD_EMIT)
+	make (e: MD_EMIT; fn: like associated_filename)
 		do
+			associated_filename := fn
 			emitter := e
 		end
 
 feature -- Access
+
+	associated_filename: detachable READABLE_STRING_GENERAL
 
 	emitter: MD_EMIT
 
@@ -324,8 +327,8 @@ feature -- Column sorting
 			-- Update the MD_REMAP_MANAGER
 		local
 			i, n: INTEGER
-			l_item: TUPLE [index: NATURAL_32; index_count: INTEGER; next: NATURAL_32]
-			idx, l_end_index: NATURAL_32
+			l_item: TUPLE [index: NATURAL_32; index_count: INTEGER; next: NATURAL_32; next_count: INTEGER]
+			idx, l_index_end, l_next_end: NATURAL_32
 			done: BOOLEAN
 		do
 			from
@@ -335,19 +338,22 @@ feature -- Column sorting
 				i > n or done
 			loop
 				l_item := a_list [i]
-				l_end_index := l_item.index + l_item.index_count.to_natural_32 - 1
+				l_index_end := l_item.index + l_item.index_count.to_natural_32 - 1
+				l_next_end := l_item.next + l_item.next_count.to_natural_32 - 1
 				debug ("il_emitter_table")
 					print ("@"+table_name (ut.table_for_column.table_id)+"@ Partial Sort: ")
 					print (" index=" + table_token (l_item.index, ut.table_for_column.table_id).to_hex_string)
+					print (" +" + l_item.index_count.out)
 					print (" before=" + table_token (l_item.next, ut.table_for_column.table_id).to_hex_string)
-					if l_end_index = 0 then
+					print (" +" + l_item.next_count.out)
+					if l_index_end = 0 then
 						print (" -> NULL (0) %N")
 					else
 						from
 							print (" -> (" + l_item.index_count.out + ") %N")
 							idx := l_item.index
 						until
-							idx > l_end_index
+							idx > l_index_end
 						loop
 							print ("%T0x" + table_token (idx, ut.table_for_column.table_id).to_hex_string + "%N")
 							idx := idx + 1
@@ -355,8 +361,8 @@ feature -- Column sorting
 					end
 					print ("%N")
 				end
-				if l_end_index > 0 then
-					ut.move_tokens (l_item.index, l_end_index, l_item.next)
+				if l_index_end > 0 then
+					ut.move_tokens (l_item.index, l_index_end, l_item.next, l_next_end)
 				end
 				i := i + 1
 				done := True -- One at the time for now
@@ -377,8 +383,10 @@ feature -- Column sorting
 					loop
 						print (" - 0x")
 						print (ic.index.to_hex_string)
+						print (" +" + ic.index_count.out)
 						print (" > 0x")
 						print (ic.next.to_hex_string)
+						print (" +" + ic.next_count.out)
 						print ("%N")
 					end
 				end

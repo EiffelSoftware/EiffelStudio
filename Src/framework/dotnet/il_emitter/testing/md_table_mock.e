@@ -277,11 +277,11 @@ feature -- Test Helper Case 5
 	build_typedef_fields_unsorted_case5: MD_TABLE
 			-- #  |Flags|Name|Namespace|Extends|FieldList|MethodList
 			--  1 |  -  | -  | -       |   -   |    1    |     -
-			--  2 |  -  | -  | -       |   -   |    1    |     -
-			--  3 |  -  | -  | -       |   -   |    4 (1)|     -
-			--  4 |  -  | -  | -       |   -   |    4 (1)|     -
+			--  2 |  -  | -  | -       |   -   |    1 (3)|     -
+			--  3 |  -  | -  | -       |   -   |    4 (0)|     -
+			--  4 |  -  | -  | -       |   -   |    4 (0)|     -
 			--  5 |  -  | -  | -       |   -   |    8 (2)|     -
-			--  6 |  -  | -  | -       |   -   |    4 (1)|     -
+			--  6 |  -  | -  | -       |   -   |    4 (0)|     -
 			--  7 |  -  | -  | -       |   -   |    4 (1)|     -
 			--  8 |  -  | -  | -       |   -   |    5 (3)|     -
 			--  9 |  -  | -  | -       |   -   |    10   |     -
@@ -299,7 +299,6 @@ feature -- Test Helper Case 5
 			Result.force (type_def_table_factory (10))
 			Result.force (type_def_table_factory (10))
 		end
-
 
 	build_field_list_type_def_case5: MD_TABLE
 			--	 #  |Flags  |Name   |Signature

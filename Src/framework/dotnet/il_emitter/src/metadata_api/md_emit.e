@@ -381,14 +381,14 @@ feature -- Save
 
 feature -- Pre-Save
 
-	prepare_to_save
+	prepare_to_save (fn: READABLE_STRING_GENERAL)
 			-- Prepare data to be save
 		local
 			md: MD_TABLE_UTILITIES
 		do
-			Precursor
+			Precursor (fn)
 
-			create md.make (Current)
+			create md.make (Current, fn)
 			md.prepare_to_save
 		end
 

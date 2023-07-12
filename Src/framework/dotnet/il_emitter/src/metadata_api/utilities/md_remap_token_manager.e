@@ -132,17 +132,24 @@ feature -- Operation
 		local
 			i, t: NATURAL_32
 		do
-			if attached {PE_CODED_INDEX_BASE} idx as l_coded_idx then
-				i := l_coded_idx.index
-				t := token (i)
-				if i /= t then
-					l_coded_idx.update_coded_index (t, a_table_id)
-				end
+			if
+				attached {PE_LIST} idx as p_list and then
+				(not p_list.is_list_index_set or p_list.is_null_index)
+			then
+				-- Ignore
 			else
-				i := idx.index
-				t := token (i)
-				if i /= t then
-					idx.update_index (t)
+				if attached {PE_CODED_INDEX_BASE} idx as l_coded_idx then
+					i := l_coded_idx.index
+					t := token (i)
+					if i /= t then
+						l_coded_idx.update_coded_index (t, a_table_id)
+					end
+				else
+					i := idx.index
+					t := token (i)
+					if i /= t then
+						idx.update_index (t)
+					end
 				end
 			end
 		end

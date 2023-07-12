@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Save
 
-	prepare_to_save
+	prepare_to_save (fn: READABLE_STRING_GENERAL)
 			-- Prepare data to be save
 		do
 			-- To redefine if needed

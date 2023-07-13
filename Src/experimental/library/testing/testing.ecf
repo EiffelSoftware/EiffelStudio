@@ -21,7 +21,7 @@
 			</condition>
 		</library>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
 		<cluster name="etf" location=".\etf\" recursive="true"/>
 		<cluster name="testing" location=".\" recursive="true">
 			<file_rule>

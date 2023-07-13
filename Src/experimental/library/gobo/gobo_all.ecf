@@ -36,6 +36,6 @@
 		<library name="gobo_tools" location="gobo_tools.ecf"/>
 		<library name="gobo_utility" location="gobo_utility.ecf"/>
 		<library name="gobo_xml" location="gobo_xml.ecf"/>
-		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
 	</target>
 </system>

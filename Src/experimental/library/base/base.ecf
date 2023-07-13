@@ -23,7 +23,7 @@
 		<mapping old_name="CHARACTER" new_name="CHARACTER_8"/>
 		<mapping old_name="CHARACTER_REF" new_name="CHARACTER_8_REF"/>
 		<mapping old_name="DOUBLE" new_name="REAL_64"/>
-		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">
 			<renaming old_name="INTERFACE_TYPE_ATTRIBUTE" new_name="SYSTEM_INTERFACE_TYPE_ATTRIBUTE"/>
 			<renaming old_name="ENCODING" new_name="SYSTEM_ENCODING"/>

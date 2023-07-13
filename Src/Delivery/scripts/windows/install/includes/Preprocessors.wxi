@@ -35,19 +35,19 @@
         <?endif?>
       <?endif?>
       <?ifdef x64?>
-        <?define ProductGuid = "BBB4E484-D75D-49FC-B1AA-AF77A132693F" ?>
-        <?define RegistriesGuid = "D7A19F63-D73F-4D0A-8FF3-38506B7D5FF4" ?>
-        <?define ShortcutsGuid = "BE7F883B-E7C2-4FE8-B50E-74211B04B175" ?>
+        <?define ProductGuid = "888E155A-8C94-45EF-A2EB-3703E035DFC5" ?>
+        <?define RegistriesGuid = "853E2DEC-3B70-41B6-B063-A6132A1CA129" ?>
+        <?define ShortcutsGuid = "5252FA4E-BF65-4518-AD7E-0B49400892FE" ?>
       <?else?>
-        <?define ProductGuid = "B0A4CF72-C63C-462D-B83C-3D3699CC4111" ?>
-        <?define RegistriesGuid = "72AF8BF9-768D-4954-A048-86A61359CCED" ?>
-        <?define ShortcutsGuid = "15E96D02-83B2-4797-97F1-A997452EF563" ?>
+        <?define ProductGuid = "E90AB548-63B9-41B1-A57C-1BFF8D5B3B76" ?>
+        <?define RegistriesGuid = "588BAE6C-5221-4F81-8B83-5B3EC0FA4991" ?>
+        <?define ShortcutsGuid = "BC5FB280-E396-4D75-8B7C-7A734E0C3403" ?>
       <?endif?>
-      <?define UpgradeGuid = "6B12862A-4FF4-467C-8342-0CCF0A221A63" ?>
+      <?define UpgradeGuid = "02D81AC9-1739-469B-B4A9-0DC8F3C3ECDD" ?>
       <?define Product = "EiffelStudio" ?>
-      <?define ProductVersion = "23.06" ?>
-      <?define ProductDescription = "EiffelStudio 23.06" Integrated Development Environment (IDE) Installer" ?>
-      <?define ProductKey = "Eiffel_23.06" ?>
+      <?define ProductVersion = "23.07" ?>
+      <?define ProductDescription = "EiffelStudio 23.07" Integrated Development Environment (IDE) Installer" ?>
+      <?define ProductKey = "Eiffel_23.07" ?>
     <?else?>
       <?ifdef EiffelEnvision?>
         <?ifdef Enterprise?>
@@ -66,7 +66,7 @@
         <?define Product = "EiffelEnvision" ?>
         <?define ProductVersion = "2.8" ?>
         <?define ProductDescription = "EiffelEnvision 2.8 The Eiffel for .NET Language Package for Visual Studio .NET 2005" ?>
-        <?define ProductKey = "Eiffel_23.06" ?>
+        <?define ProductKey = "Eiffel_23.07" ?>
       <?else?>
         <?define Edition = "Test"?>
         <?define LicenseFile = "license.rtf"?>
@@ -75,7 +75,7 @@
         <?define Product = "EiffelStudio" ?>
         <?define ProductVersion = "2.8" ?>
         <?define ProductDescription = "Test" ?>
-        <?define ProductKey = "Eiffel_23.06" ?>
+        <?define ProductKey = "Eiffel_23.07" ?>
       <?endif?>
     <?endif?>
     <?define ProductName = "$(var.Product) $(var.ProductVersion) ($(var.Platform)) $(var.Edition)" ?>

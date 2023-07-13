@@ -38,8 +38,6 @@ else
 	espawn -u:%TMP_ISE_C_COMPILER_VER% "%COMSPEC% /c nmake -f Makefile-release msbuild_40"
 endiff
 iff exist EiffelSoftware.Runtime.dll then
-:: 	For backward comptability keep .Net framework (v4.0) EiffelSoftware.Runtime.dll also directly in lib directory.
-	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\lib
 	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\lib\netframework
 	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
 	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin

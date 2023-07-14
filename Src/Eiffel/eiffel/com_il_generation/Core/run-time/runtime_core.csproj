@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
     <AssemblyName>EiffelSoftware.Runtime</AssemblyName>
     <OutputType>Library</OutputType>
     <RootNamespace>EiffelSoftware.Runtime</RootNamespace>

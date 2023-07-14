@@ -9,9 +9,9 @@ create
 
 feature -- Read
 
-	read (pe: PE_FILE): PE_ITEM
+	read (pe: PE_FILE): PE_RVA_ITEM
 		do
-			Result := pe.read_rva (label)		
+			Result := pe.read_rva (label)
 		end
 
 end

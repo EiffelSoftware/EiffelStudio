@@ -37,6 +37,11 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	has_abstract: BOOLEAN
+		do
+			Result := has_flag (0x0, Abstract, value.to_natural_16)
+		end
+
 	to_flags_string: STRING_8
 		local
 			v: NATURAL_16

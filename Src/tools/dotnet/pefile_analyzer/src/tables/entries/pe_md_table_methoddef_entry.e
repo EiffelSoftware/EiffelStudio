@@ -3,6 +3,9 @@ class
 
 inherit
 	PE_MD_TABLE_ENTRY_WITH_STRUCTURE
+		redefine
+			check_validity
+		end
 
 	PE_MD_TABLE_ENTRY_WITH_IDENTIFIER
 
@@ -26,6 +29,15 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	method_rva: detachable PE_RVA_ITEM
+		do
+			if attached {PE_RVA_ITEM} structure.item ("MethodRVA") as rva then
+				Result := rva
+			else
+				check False end
+			end
+		end
 
 	method_attributes: detachable PE_METHOD_ATTRIBUTES_ITEM
 		do
@@ -76,6 +88,21 @@ feature -- Access
 			end
 			if Result.is_whitespace then
 				Result := Void
+			end
+		end
+
+feature -- Validity
+
+	check_validity (pe: PE_FILE)
+			-- Check simple validity
+		do
+			if
+				attached method_attributes as att and then
+				att.has_abstract
+			then
+				if attached method_rva as rva and then rva.value > 0 then
+					report_error (create {PE_USER_ERROR}.make ("Abstract method can not have non null RVA"))
+				end
 			end
 		end
 

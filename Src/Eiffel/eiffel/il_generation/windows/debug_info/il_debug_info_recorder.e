@@ -897,7 +897,7 @@ feature {NONE} -- Record processing
 							+ "%N")
 				end
 					--| Record `feature_i' indexed by `feature_token'
-				l_info_from_module := info_from_module_or_create (a_module.module_file_name, a_module.module_name)
+				l_info_from_module := info_from_module_or_create (a_module.module_file_name, a_module.module_name_with_extension)
 				l_info_from_module.record_feature_i (a_class_type, a_feature, a_feature_token)
 
 					--| Record `feature_token' indexed by `feature_i'
@@ -915,7 +915,7 @@ feature {NONE} -- Class Specific info
 			class_type_not_void: a_class_type /= Void
 			class_token_positive: a_class_token > 0
 		do
-			internal_record_class_type (a_module.module_file_name, a_module.module_name, a_class_type, a_class_token)
+			internal_record_class_type (a_module.module_file_name, a_module.module_name_with_extension, a_class_type, a_class_token)
 		end
 
 	internal_record_class_type (a_module_filename: STRING_32; a_module_name: STRING;
@@ -1509,7 +1509,7 @@ feature {NONE} -- Module indexer implementation
 			-- and internal key for module
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

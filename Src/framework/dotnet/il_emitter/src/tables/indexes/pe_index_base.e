@@ -48,6 +48,9 @@ feature -- Operations
 		require
 			valid_index: idx >= 0
 		do
+			debug ("il_emitter_table")
+				print (Generator + ".update_index: 0x" + index.to_hex_string + " => 0x"+ idx.to_hex_string + "%N")
+			end
 			index := idx
 		end
 

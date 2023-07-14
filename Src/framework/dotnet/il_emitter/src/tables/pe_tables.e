@@ -20,8 +20,12 @@ feature -- Creation Procedures
 	tTypeDef: NATURAL_32 = 2
 			-- definitions of classes and enumerations
 
+	tFieldPtr: NATURAL_32 = 3
+
 	tField: NATURAL_32 = 4
 			-- definitions of fields
+
+	tMethodPtr: NATURAL_32 = 5
 
 	tMethodDef: NATURAL_32 = 6
 			-- definitions of methods once end includes both managed and unmanaged

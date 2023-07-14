@@ -159,6 +159,8 @@ feature -- Conversion
 	dump: STRING
 		do
 			create Result.make (10)
+			Result.append ({MD_TABLE_UTILITIES}.table_name (associated_table.table_id))
+			Result.append (":%N")
 			across
 				table as i
 			loop

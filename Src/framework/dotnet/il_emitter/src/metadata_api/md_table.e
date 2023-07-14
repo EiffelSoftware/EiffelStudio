@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: INTEGER)
+	make (a_id: NATURAL_32)
 		do
 			table_id := a_id
 			create {ARRAYED_LIST [PE_TABLE_ENTRY_BASE]} items.make (0)
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	table_id: INTEGER
+	table_id: NATURAL_32
 
 feature {MD_TABLE_ACCESS} -- Access	
 

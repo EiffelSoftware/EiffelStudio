@@ -20,6 +20,29 @@ feature {NONE} -- Initialization
 			emitter := e
 		end
 
+feature -- Saving preparation	
+
+	prepare_to_save
+			-- Prepare data to be save
+		do
+			debug ("il_emitter_table_map")
+				if attached associated_filename as fn then
+					print ("%N")
+					print ("Prepare ")
+					print (fn)
+					print ("%N")
+				end
+			end
+
+			ensure_list_indexes_are_ordered
+
+				-- Update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)
+			update_index_list_in_tables
+
+				-- Sort tables...
+			ensure_expected_tables_are_sorted
+		end
+
 feature -- Access
 
 	associated_filename: detachable READABLE_STRING_GENERAL
@@ -49,20 +72,6 @@ feature -- Access
 	param_table: detachable MD_TABLE
 		do
 			Result := md_table ({PE_TABLES}.tparam)
-		end
-
-feature -- Saving preparation	
-
-	prepare_to_save
-			-- Prepare data to be save
-		do
-			ensure_list_indexes_are_ordered
-
-				-- Update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)
-			update_index_list_in_tables
-
-				-- Sort tables...
-			ensure_expected_tables_are_sorted
 		end
 
 feature -- Update missing indexes
@@ -336,15 +345,109 @@ feature -- Table sorting
 			end
 		end
 
-feature -- Operation: List indexes sorting		
+feature -- Operation: List indexes sorting using additional FieldPointer and MethodPointer tables
+
+	ensure_field_list_column_is_ordered_using_field_pointer_table
+			-- FieldList column sorting in TypeDef
+		local
+			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
+			vis: MD_FIELD_TOKEN_REMAPPER
+			idx: NATURAL_32
+		do
+			if
+				attached field_table as l_field_tb and then
+				attached md_table ({PE_TABLES}.tFieldPtr) as ptr_tb
+			then
+				across
+					l_field_tb as e
+				loop
+					idx := idx + 1
+					if attached {PE_FIELD_TABLE_ENTRY} e as l_field then
+						ptr_tb.force (create {PE_FIELD_POINTER_TABLE_ENTRY}.make_with_data (idx))
+					end
+				end
+				if
+					attached typedef_table as tb
+				then
+					create ut.make (tb, ptr_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.fields end)
+					sort_list_column (ut)
+					if not ut.remap.is_empty then
+						-- Update tables with remapped tokens!
+						debug ("il_emitter_table_map")
+							print (ut.remap.dump)
+						end
+						ut.apply_remapping
+
+							-- Updated tokens in the related tables (For instance: TypeDef table, ...)
+						create vis.make_using_pointer_table (ut.remap)
+						vis.visit_emitter (emitter)
+
+						ut.remap.reset
+					end
+				end
+			end
+		end
+
+	ensure_method_list_column_is_ordered_using_method_pointer_table
+			-- MethodList column sorting in TypeDef
+		local
+			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
+			vis: MD_METHOD_DEF_TOKEN_REMAPPER
+			idx: NATURAL_32
+		do
+			if
+				attached methoddef_table as l_methoddef_tb and then
+				attached md_table ({PE_TABLES}.tMethodPtr) as ptr_tb
+			then
+				across
+					l_methoddef_tb as e
+				loop
+					idx := idx + 1
+					if attached {PE_METHOD_DEF_TABLE_ENTRY} e as l_field then
+						ptr_tb.force (create {PE_METHOD_POINTER_TABLE_ENTRY}.make_with_data (idx))
+					end
+				end
+				if
+					attached typedef_table as tb
+				then
+					create ut.make (tb, ptr_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.methods end)
+					sort_list_column (ut)
+					if not ut.remap.is_empty then
+						-- Update tables with remapped tokens!
+						debug ("il_emitter_table_map")
+							print (ut.remap.dump)
+						end
+						ut.apply_remapping
+
+							-- Updated tokens in the related tables (For instance: TypeDef table, ...)
+						create vis.make_using_pointer_table (ut.remap)
+						vis.visit_emitter (emitter)
+
+						ut.remap.reset
+					end
+				end
+			end
+		end
+
+feature -- Operation: List indexes sorting
+
+	is_using_additional_pointer_tables: BOOLEAN = False
 
 	ensure_list_indexes_are_ordered
 		do
-					-- Ensure FieldList and MethodList columns are ordered in TypeDef
-			ensure_field_list_column_is_ordered
-			ensure_method_list_column_is_ordered
-				-- Ensure ParamList column is ordered in MethodDef
-			ensure_param_list_column_is_ordered
+			if is_using_additional_pointer_tables then
+						-- Ensure FieldList and MethodList columns are ordered in TypeDef
+				ensure_field_list_column_is_ordered_using_field_pointer_table
+				ensure_method_list_column_is_ordered_using_method_pointer_table
+					-- Ensure ParamList column is ordered in MethodDef
+				ensure_param_list_column_is_ordered
+			else
+						-- Ensure FieldList and MethodList columns are ordered in TypeDef
+				ensure_field_list_column_is_ordered
+				ensure_method_list_column_is_ordered
+					-- Ensure ParamList column is ordered in MethodDef
+				ensure_param_list_column_is_ordered
+			end
 		end
 
 	ensure_field_list_column_is_ordered
@@ -361,6 +464,9 @@ feature -- Operation: List indexes sorting
 				sort_list_column (ut)
 				if not ut.remap.is_empty then
 					-- Update tables with remapped tokens!
+					debug ("il_emitter_table_map")
+						print (ut.remap.dump)
+					end
 					ut.apply_remapping
 						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
 					create vis.make (ut.remap)
@@ -385,6 +491,10 @@ feature -- Operation: List indexes sorting
 
 				sort_list_column (ut)
 				if not ut.remap.is_empty then
+					debug ("il_emitter_table_map")
+						print (ut.remap.dump)
+					end
+
 					ut.apply_remapping
 						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
 					create vis.make (ut.remap)
@@ -407,6 +517,10 @@ feature -- Operation: List indexes sorting
 
 				sort_list_column (ut)
 				if not ut.remap.is_empty then
+					debug ("il_emitter_table_map")
+						print (ut.remap.dump)
+					end
+
 					ut.apply_remapping
 						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
 					create vis.make (ut.remap)
@@ -417,14 +531,14 @@ feature -- Operation: List indexes sorting
 
 feature -- Column sorting
 
-	table_token (idx: NATURAL_32; tb: INTEGER_32): NATURAL_32
+	table_token (idx: NATURAL_32; tb: NATURAL_32): NATURAL_32
 		do
-			Result := (tb.to_natural_32 |<< 24) | idx
+			Result := (tb |<< 24) | idx
 		ensure
 			class
 		end
 
-	table_name (id: INTEGER_32): STRING_8
+	table_name (id: NATURAL_32): STRING_8
 		do
 			inspect id
 			when {PE_TABLES}.ttypedef  then Result := "TypeDef"

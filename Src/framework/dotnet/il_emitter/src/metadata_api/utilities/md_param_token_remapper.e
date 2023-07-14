@@ -1,7 +1,7 @@
 note
 	description: "[
 		Visitor to update metadata tables using Param token...
-		
+
 	]"
 	author: ""
 	date: "$Date$"
@@ -16,7 +16,8 @@ inherit
 			visit_table,
 			visit_table_entry,
 			visit_index,
-			visit_coded_index
+			visit_coded_index,
+			visit_pointer_index
 		end
 
 create
@@ -38,7 +39,7 @@ feature -- Visitor
 	visit_table (tb: MD_TABLE)
 		do
 			inspect
-				tb.table_id.to_natural_32
+				tb.table_id
 			when
 				{PE_TABLES}.tmethoddef
 			then
@@ -63,6 +64,11 @@ feature -- Visitor
 		end
 
 	visit_coded_index (idx: PE_CODED_INDEX_BASE)
+		do
+			remapper.remap_index (idx, {PE_TABLES}.tparam)
+		end
+
+	visit_pointer_index (idx: PE_POINTER_INDEX)
 		do
 			remapper.remap_index (idx, {PE_TABLES}.tparam)
 		end

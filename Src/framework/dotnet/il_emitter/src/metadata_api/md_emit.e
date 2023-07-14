@@ -57,7 +57,7 @@ feature {NONE}
 			until
 				i >= n
 			loop
-				tables.force (create {MD_TABLE}.make (i), i)
+				tables.force (create {MD_TABLE}.make (i.to_natural_32), i)
 				i := i + 1
 			end
 		end
@@ -90,12 +90,19 @@ feature -- Access
 	tables: SPECIAL [MD_TABLE]
 			--  in-memory metadata tables
 
-	md_table (idx: NATURAL_32): MD_TABLE
+	md_table (a_tb_id: NATURAL_32): MD_TABLE
 		require
-			tables.valid_index (idx.to_integer_32)
+			tables.valid_index (a_tb_id.to_integer_32)
 		do
-			Result := tables [idx.to_integer_32]
+			Result := tables [a_tb_id.to_integer_32]
 		end
+
+--	set_md_table (tb: MD_TABLE; a_tb_id: NATURAL_32)
+--		require
+--			tables.valid_index (a_tb_id.to_integer_32)
+--		do
+--			tables [a_tb_id.to_integer_32] := tb
+--		end
 
 	--pe_writer: PE_WRITER
 	pe_writer: PE_GENERATOR
@@ -597,6 +604,16 @@ feature {NONE} -- Implementation
 					-- Adding a null character a the end of the string
 					-- C++ code uses put(streamNames_[i], strlen(streamNames_[i]) + 1);
 				l_names := pe_writer.stream_names [i].twin
+				if 
+					l_names.same_string_general ("#~") and 
+					(
+						tables [{PE_TABLES}.tmethodptr.to_integer_32].count +
+						tables [{PE_TABLES}.tfieldptr.to_integer_32].count > 0 
+					)
+				then
+						-- When using FieldPointer or MethodPointer tables, #~ should be #-
+					l_names := "#-"
+				end
 				l_names.append_character ('%U')
 				a_file.put_string (l_names.to_string_8)
 				align (a_file, 4)

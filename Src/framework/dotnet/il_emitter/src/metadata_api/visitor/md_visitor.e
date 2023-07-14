@@ -29,4 +29,8 @@ feature -- Access
 		do
 		end
 
+	visit_pointer_index (o: PE_POINTER_INDEX)
+		do
+		end
+
 end

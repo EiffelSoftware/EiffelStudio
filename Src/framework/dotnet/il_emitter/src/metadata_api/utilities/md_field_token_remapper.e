@@ -24,11 +24,13 @@ inherit
 			visit_table,
 			visit_table_entry,
 			visit_index,
-			visit_coded_index
+			visit_coded_index,
+			visit_pointer_index
 		end
 
 create
-	make
+	make,
+	make_using_pointer_table
 
 feature {NONE} -- Initialization
 
@@ -37,28 +39,45 @@ feature {NONE} -- Initialization
 			remapper := a_remapper
 		end
 
+	make_using_pointer_table (a_remapper: MD_REMAP_TOKEN_MANAGER)
+		do
+			remapper := a_remapper
+			is_using_pointer_table := True
+		end
+
 feature -- Access
 
 	remapper: MD_REMAP_TOKEN_MANAGER
+
+	is_using_pointer_table: BOOLEAN
+			-- Is using FieldPointer table?
 
 feature -- Visitor
 
 	visit_table (tb: MD_TABLE)
 		do
-			inspect
-				tb.table_id.to_natural_32
-			when
-				{PE_TABLES}.ttypedef,
-				{PE_TABLES}.tcustomattribute,
-				{PE_TABLES}.tconstant
---				, {PE_TABLES}.tfieldmarshal -- Not Implemented
---				, {PE_TABLES}.timplmap -- Not Implemented
---				, {PE_TABLES}.tfieldlayout -- Not Used
---				, {PE_TABLES}.tfieldrva    -- Not Used
+			if
+				is_using_pointer_table and then
+				tb.table_id = {PE_TABLES}.ttypedef
 			then
+					-- Update only the TypeDef table!
 				Precursor (tb)
 			else
-				-- Table not impacted
+				inspect
+					tb.table_id
+				when
+					{PE_TABLES}.ttypedef,
+					{PE_TABLES}.tcustomattribute,
+					{PE_TABLES}.tconstant
+	--				, {PE_TABLES}.tfieldmarshal -- Not Implemented
+	--				, {PE_TABLES}.timplmap -- Not Implemented
+	--				, {PE_TABLES}.tfieldlayout -- Not Used
+	--				, {PE_TABLES}.tfieldrva    -- Not Used
+				then
+					Precursor (tb)
+				else
+					-- Table not impacted
+				end
 			end
 		end
 
@@ -89,5 +108,9 @@ feature -- Visitor
 			remapper.remap_index (idx, {PE_TABLES}.tfield)
 		end
 
+	visit_pointer_index (idx: PE_POINTER_INDEX)
+		do
+			remapper.remap_index (idx, {PE_TABLES}.tfield)
+		end
 
 end

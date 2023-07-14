@@ -14,7 +14,8 @@ inherit
 			visit_table,
 			visit_table_entry,
 			visit_index,
-			visit_coded_index
+			visit_coded_index,
+			visit_pointer_index
 		end
 
 feature -- Access
@@ -51,6 +52,9 @@ feature -- Access
 		do
 		end
 
+	visit_pointer_index (o: PE_POINTER_INDEX)
+		do
+		end
 
 feature {NONE} -- Helpers		
 

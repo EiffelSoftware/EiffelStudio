@@ -719,18 +719,16 @@ feature -- Settings
 				--  	retrieve_table_row (from specific table entry)
 			if
 				attached extract_table_type_and_row (method_token) as d and then
-				attached {PE_METHOD_DEF_TABLE_ENTRY} md_table (d.table_type_index)[d.table_row_index] as l_method_def
+				attached md_table (d.table_type_index) as l_method_def_table and then
+				attached {PE_METHOD_DEF_TABLE_ENTRY} l_method_def_table [d.table_row_index] as l_method_def
 			then
-
 					-- Set RVA value in method definition table entry
-				l_method_def.set_rva (rva.to_natural_32)
-
-					-- Update method definition table entry in metadata tables
-					-- Create a helper feature to update an entry in a table row.
-				md_table (d.table_type_index).replace (l_method_def, d.table_row_index)
+				if not l_method_def.has_abstract then
+						-- FIXME: how do we reach this point for abstract method?
+					l_method_def.set_rva (rva.to_natural_32)
+				end
 			else
-					-- TODO
-				check todo: False end
+				check has_method_def_entry: False end
 			end
 		end
 

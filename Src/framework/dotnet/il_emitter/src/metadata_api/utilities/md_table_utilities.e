@@ -56,21 +56,13 @@ feature -- Saving preparation
 	prepare_to_save
 			-- Prepare data to be save
 		do
-				-- Ensure FieldList and MethodList columns are ordered in TypeDef
-			ensure_field_list_column_is_ordered
-			ensure_method_list_column_is_ordered
-				-- Ensure ParamList column is ordered in MethodDef
-			ensure_param_list_column_is_ordered
+			ensure_list_indexes_are_ordered
 
 				-- Update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)
 			update_index_list_in_tables
 
 				-- Sort tables...
-				-- CustomAttribute table
-			ensure_table_is_sorted ({PE_TABLES}.tcustomattribute)
-			ensure_table_is_sorted ({PE_TABLES}.tinterfaceimpl)
-			ensure_table_is_sorted ({PE_TABLES}.tmethodimpl)
-			ensure_table_is_sorted ({PE_TABLES}.tmethodsemantics)
+			ensure_expected_tables_are_sorted
 		end
 
 feature -- Update missing indexes
@@ -223,7 +215,55 @@ feature -- Update missing indexes
 			end
 		end
 
-feature -- Table sorting		
+feature -- Table sorting
+
+	ensure_expected_tables_are_sorted
+			-- Ensure tables that should be sorted are sorted.
+			-- See ECMA 335 (6th editions) II.22 Metadata logical format: tables
+		do
+				--|	Certain tables are required to be sorted by a primary key, as follows:
+				--| Class name				Primary key, then secondary key
+				--|-----------------------+---------------------------------
+				--|	ClassLayout 			Parent
+				--|	Constant 				Parent
+				--|	CustomAttribute 		Parent
+				--|	DeclSecurity 			Parent
+				--|	FieldLayout 			Field
+				--|	FieldMarshal 			Parent
+				--|	FieldRVA 				Field
+				--|	GenericParam 			Owner, then Number
+				--|	GenericParamConstraint 	Owner
+				--|	ImplMap 				MemberForwarded
+				--|	InterfaceImpl 			Class, then Interface
+				--|	MethodImpl 				Class
+				--|	MethodSemantics 		Association
+				--|	NestedClass 			NestedClass
+				--|
+				--|	Finally, the TypeDef table has a special ordering constraint: the definition of an enclosing class shall
+				--|	precede the definition of all classes it encloses.
+				--|	Metadata items (records in the metadata tables) are addressed by metadata tokens. Uncoded metadata
+				--|	tokens are 4-byte unsigned integers, which contain the metadata table index in the most significant byte
+				--|	and a 1-based record index in the three least-significant bytes. Metadata tables and their respective
+				--|	indexes are described in §II.22.2 and later subclauses.
+				--|	Coded metadata tokens also contain table and record indexes, but in a different format. For details on
+				--|	the encoding see II.24.2.6			
+
+				-- Below the commented lines are related to the tables the compiler does not use for now [2023-07-13]
+--			ensure_table_is_sorted ({PE_TABLES}.tclasslayout)
+--			ensure_table_is_sorted ({PE_TABLES}.tconstant)
+			ensure_table_is_sorted ({PE_TABLES}.tcustomattribute)
+--			ensure_table_is_sorted ({PE_TABLES}.tdeclsecurity)
+--			ensure_table_is_sorted ({PE_TABLES}.tfieldlayout)
+--			ensure_table_is_sorted ({PE_TABLES}.tfieldmarshal)
+--			ensure_table_is_sorted ({PE_TABLES}.tfieldrva)
+--			ensure_table_is_sorted ({PE_TABLES}.tgenericparam)
+--			ensure_table_is_sorted ({PE_TABLES}.tgenericparamconstraint)
+--			ensure_table_is_sorted ({PE_TABLES}.timplmap)
+			ensure_table_is_sorted ({PE_TABLES}.tinterfaceimpl)
+			ensure_table_is_sorted ({PE_TABLES}.tmethodimpl)
+			ensure_table_is_sorted ({PE_TABLES}.tmethodsemantics)
+--			ensure_table_is_sorted ({PE_TABLES}.tnestedclass)
+		end
 
 	ensure_table_is_sorted (tb_id: NATURAL_32)
 			-- Ensure table associated with `tb_id` is sorted.
@@ -293,6 +333,85 @@ feature -- Table sorting
 			end
 			if l_comparator /= Void then
 				create Result.make (l_comparator)
+			end
+		end
+
+feature -- Operation: List indexes sorting		
+
+	ensure_list_indexes_are_ordered
+		do
+					-- Ensure FieldList and MethodList columns are ordered in TypeDef
+			ensure_field_list_column_is_ordered
+			ensure_method_list_column_is_ordered
+				-- Ensure ParamList column is ordered in MethodDef
+			ensure_param_list_column_is_ordered
+		end
+
+	ensure_field_list_column_is_ordered
+			-- FieldList column sorting in TypeDef
+		local
+			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
+			vis: MD_FIELD_TOKEN_REMAPPER
+		do
+			if
+				attached typedef_table as tb and then
+				attached field_table as col_tb
+			then
+				create ut.make (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.fields end)
+				sort_list_column (ut)
+				if not ut.remap.is_empty then
+					-- Update tables with remapped tokens!
+					ut.apply_remapping
+						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
+					create vis.make (ut.remap)
+					vis.visit_emitter (emitter)
+
+					ut.remap.reset
+				end
+			end
+		end
+
+	ensure_method_list_column_is_ordered
+			-- MethodList column sorting in TypeDef
+		local
+			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
+			vis: MD_METHOD_DEF_TOKEN_REMAPPER
+		do
+			if
+				attached typedef_table as tb and then
+				attached methoddef_table as col_tb
+			then
+				create ut.make (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.methods end)
+
+				sort_list_column (ut)
+				if not ut.remap.is_empty then
+					ut.apply_remapping
+						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
+					create vis.make (ut.remap)
+					vis.visit_emitter (emitter)
+				end
+			end
+		end
+
+	ensure_param_list_column_is_ordered
+			-- ParamList column sorting in MethodDef
+		local
+			ut: MD_TABLE_COLUMN_UTILITIES [PE_METHOD_DEF_TABLE_ENTRY]
+			vis: MD_PARAM_TOKEN_REMAPPER
+		do
+			if
+				attached methoddef_table as tb and then
+				attached param_table as col_tb
+			then
+				create ut.make (tb, col_tb, agent (e: PE_METHOD_DEF_TABLE_ENTRY): PE_LIST do Result := e.param_index end)
+
+				sort_list_column (ut)
+				if not ut.remap.is_empty then
+					ut.apply_remapping
+						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
+					create vis.make (ut.remap)
+					vis.visit_emitter (emitter)
+				end
 			end
 		end
 
@@ -399,77 +518,6 @@ feature -- Column sorting
 				-- The Metadata Tokens for Token List are sorted in the container table
 				-- and the token remap manager has the tokens remaps to be applied to
 				-- the corresponding tables.
-			end
-		end
-
-feature -- FieldList column sorting in TypeDef
-
-	ensure_field_list_column_is_ordered
-		local
-			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
-			vis: MD_FIELD_TOKEN_REMAPPER
-		do
-			if
-				attached typedef_table as tb and then
-				attached field_table as col_tb
-			then
-				create ut.make (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.fields end)
-				sort_list_column (ut)
-				if not ut.remap.is_empty then
-					-- Update tables with remapped tokens!
-					ut.apply_remapping
-						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
-					create vis.make (ut.remap)
-					vis.visit_emitter (emitter)
-
-					ut.remap.reset
-				end
-			end
-		end
-
-feature -- MethodList column sorting in TypeDef
-
-	ensure_method_list_column_is_ordered
-		local
-			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
-			vis: MD_METHOD_DEF_TOKEN_REMAPPER
-		do
-			if
-				attached typedef_table as tb and then
-				attached methoddef_table as col_tb
-			then
-				create ut.make (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.methods end)
-
-				sort_list_column (ut)
-				if not ut.remap.is_empty then
-					ut.apply_remapping
-						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
-					create vis.make (ut.remap)
-					vis.visit_emitter (emitter)
-				end
-			end
-		end
-
-feature -- ParamList column sorting in MethodDef		
-
-	ensure_param_list_column_is_ordered
-		local
-			ut: MD_TABLE_COLUMN_UTILITIES [PE_METHOD_DEF_TABLE_ENTRY]
-			vis: MD_PARAM_TOKEN_REMAPPER
-		do
-			if
-				attached methoddef_table as tb and then
-				attached param_table as col_tb
-			then
-				create ut.make (tb, col_tb, agent (e: PE_METHOD_DEF_TABLE_ENTRY): PE_LIST do Result := e.param_index end)
-
-				sort_list_column (ut)
-				if not ut.remap.is_empty then
-					ut.apply_remapping
-						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
-					create vis.make (ut.remap)
-					vis.visit_emitter (emitter)
-				end
 			end
 		end
 

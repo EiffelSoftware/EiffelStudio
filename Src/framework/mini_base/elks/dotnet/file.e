@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_output
 		end
 
-	internal_stream: SYSTEM_STREAM
+	internal_stream: detachable SYSTEM_STREAM
 
 feature -- Element change
 
@@ -44,6 +44,16 @@ feature -- Element change
 				l_stream.write_byte (101) -- e
 				l_stream.write_byte ( 10) -- %N
 			end
-		end			
+		end
 
+note
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

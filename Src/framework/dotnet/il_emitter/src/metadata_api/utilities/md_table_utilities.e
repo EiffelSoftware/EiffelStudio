@@ -431,12 +431,14 @@ feature -- Operation: List indexes sorting using additional FieldPointer and Met
 
 feature -- Operation: List indexes sorting
 
-	is_using_additional_pointer_tables: BOOLEAN = False
+	is_using_additional_pointer_tables: BOOLEAN = True
+			-- Use FieldPointer and MethodPointer tables.
 
 	ensure_list_indexes_are_ordered
 		do
 			if is_using_additional_pointer_tables then
 						-- Ensure FieldList and MethodList columns are ordered in TypeDef
+						-- FIXME: optimization = check first if the table are not order, and only in this case, use related Pointer table [2023-07-17]
 				ensure_field_list_column_is_ordered_using_field_pointer_table
 				ensure_method_list_column_is_ordered_using_method_pointer_table
 					-- Ensure ParamList column is ordered in MethodDef

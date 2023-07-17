@@ -43,26 +43,28 @@ feature {NONE} -- Initialization
 	make_using_pointer_table (a_remapper: MD_REMAP_TOKEN_MANAGER)
 		do
 			remapper := a_remapper
-			is_using_pointer_table := True
+			is_using_method_pointer_table := True
 		end
 
 feature -- Access
 
 	remapper: MD_REMAP_TOKEN_MANAGER
 
-	is_using_pointer_table: BOOLEAN
-			-- Is using FieldPointer table?
+	is_using_method_pointer_table: BOOLEAN
+			-- Is using MethodPointer table?
 
 feature -- Visitor
 
 	visit_table (tb: MD_TABLE)
 		do
-			if
-				is_using_pointer_table and then
-				tb.table_id = {PE_TABLES}.ttypedef
-			then
-					-- Update only the TypeDef table!
-				Precursor (tb)
+			if is_using_method_pointer_table then
+				if
+					tb.table_id = {PE_TABLES}.ttypedef
+					or tb.table_id = {PE_TABLES}.tcustomattribute
+				then
+						-- Update only the TypeDef, and CustomAttribute tables!
+					Precursor (tb)
+				end
 			else
 				inspect
 					tb.table_id

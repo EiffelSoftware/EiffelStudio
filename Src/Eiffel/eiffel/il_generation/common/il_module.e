@@ -1070,9 +1070,10 @@ feature -- Code generation
 					ass.set_minor_version (l_version.minor.to_natural_16)
 					ass.set_build_number (l_version.build.to_natural_16)
 					ass.set_revision_number (l_version.revision.to_natural_16)
-				else
+				elseif attached system.msil_version as l_system_version then
+
 					check is_using_multi_assemblies end
-					l_version.set_version (system.msil_version)
+					l_version.set_version (l_system_version)
 					ass.set_major_version (l_version.major.to_natural_16)
 					ass.set_minor_version (l_version.minor.to_natural_16)
 					ass.set_build_number (l_version.build.to_natural_16)

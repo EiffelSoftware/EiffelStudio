@@ -874,6 +874,9 @@ feature -- Cache settings
 	check_dotnet_environment
 			-- Check .Net environment
 		do
+				-- The Eiffel compiler always uses the emdc consumer on non Windows machine
+				-- And on Windows, it uses by default the emdc consumer (i.e executable instead of the COM consumer on Windows)
+				--  unless ISE_EMDC is set to "false" or "no".
 			if
 				not {PLATFORM}.is_windows
 			then
@@ -881,11 +884,11 @@ feature -- Cache settings
 				use_emdc_consumer := True
 			elseif
 				attached get_environment_32 ("ISE_EMDC") as v1 and then v1.count > 0 and then
-				not (v1.is_case_insensitive_equal ("false") or v1.is_case_insensitive_equal ("no"))
+				(v1.is_case_insensitive_equal ("false") or v1.is_case_insensitive_equal ("no"))
 			then
-				use_emdc_consumer := True
-			else
 				use_emdc_consumer := False
+			else
+				use_emdc_consumer := True
 			end
 			update_use_json_dotnet_md_cache
 		end

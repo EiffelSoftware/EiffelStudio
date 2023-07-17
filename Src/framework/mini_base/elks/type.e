@@ -145,7 +145,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	adapted alias "[]" (g: G): G
+	adapt alias "[]" (g: detachable G): detachable G
 			-- Adapts `g' or calls necessary conversion routine to adapt `g'
 		do
 			Result := g

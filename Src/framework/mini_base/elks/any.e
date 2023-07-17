@@ -28,7 +28,7 @@ feature -- Access
 			generator_not_empty: not Result.is_empty
 		end
 
-	frozen generating_type: frozen TYPE [like Current]
+	frozen generating_type: TYPE [detachable like Current]
 			-- Type of current object
 			-- (type of which it is a direct instance)
 		external

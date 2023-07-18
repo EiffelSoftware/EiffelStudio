@@ -355,8 +355,9 @@ feature -- Operation: List indexes sorting
 			if is_using_additional_pointer_tables then
 						-- Ensure FieldList and MethodList columns are ordered in TypeDef
 						-- FIXME: optimization = check first if the table are not order, and only in this case, use related Pointer table [2023-07-17]
-						-- TODO: for now, ParamPointer, PropertyPointer and EvenPointer are not needed for Eiffel .net compilation, but to be safe
+						-- TODO: for now, ParamPointer, PropertyPointer and EventPointer are not needed for Eiffel .net compilation, but to be safe
 						--		 this could be added as well.
+
 				ensure_field_list_column_is_ordered_using_field_pointer_table
 				ensure_method_list_column_is_ordered_using_method_pointer_table
 					-- Ensure ParamList column is ordered in MethodDef
@@ -375,40 +376,55 @@ feature -- Operation: List indexes sorting using additional FieldPointer and Met
 	ensure_field_list_column_is_ordered_using_field_pointer_table
 			-- FieldList column sorting in TypeDef
 		local
-			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
 			vis: MD_FIELD_TOKEN_REMAPPER
-			idx: NATURAL_32
+			tok: NATURAL_32
+			i: NATURAL_32
+			remap: MD_REMAP_TOKEN_MANAGER
 		do
 			if
 				attached field_table as l_field_tb and then
-				attached md_table ({PE_TABLES}.tFieldPtr) as ptr_tb
+				attached md_table ({PE_TABLES}.tFieldPtr) as ptr_tb and then
+				attached typedef_table as l_typedef_tb
 			then
-				across
-					l_field_tb as e
-				loop
-					idx := idx + 1
-					if attached {PE_FIELD_TABLE_ENTRY} e as l_field then
-						ptr_tb.force (create {PE_FIELD_POINTER_TABLE_ENTRY}.make_with_data (idx))
+				if attached emitter.opt_data_for_type_def as l_types_data then
+						-- Use the recorded data for type def, to build the related pointer table.
+					create remap.make (l_field_tb)
+					i := 0
+					across
+						l_typedef_tb as e
+					loop
+						i := i + 1
+						tok := l_typedef_tb.table_id |<< 24 | i
+						if
+							attached l_types_data [tok] as tdata and then
+							tdata.has_field and then
+							attached tdata.field_list as lst and then
+							not lst.is_empty
+						then
+							tdata.sort_field_list
+							across
+								lst as l_field_token
+							loop
+								ptr_tb.force (create {PE_FIELD_POINTER_TABLE_ENTRY}.make_with_data (l_field_token))
+								remap.record (l_field_token & 0x00FF_FFFF, ptr_tb.size)
+							end
+						end
 					end
-				end
-				if
-					attached typedef_table as tb
-				then
-					create ut.make (tb, ptr_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.fields end)
-					sort_list_column (ut)
-					if not ut.remap.is_empty then
+					remap.commit
+					if not remap.is_empty then
 						-- Update tables with remapped tokens!
 						debug ("il_emitter_table_map")
-							print (ut.remap.dump)
+							print (remap.dump)
 						end
-						ut.apply_remapping
 
 							-- Updated tokens in the related tables (For instance: TypeDef table, ...)
-						create vis.make_using_pointer_table (ut.remap)
+						create vis.make_using_pointer_table (remap)
 						vis.visit_emitter (emitter)
 
-						ut.remap.reset
+						remap.reset
 					end
+				else
+					check has_type_data: False end
 				end
 			end
 		end
@@ -416,40 +432,54 @@ feature -- Operation: List indexes sorting using additional FieldPointer and Met
 	ensure_method_list_column_is_ordered_using_method_pointer_table
 			-- MethodList column sorting in TypeDef
 		local
-			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
 			vis: MD_METHOD_DEF_TOKEN_REMAPPER
-			idx: NATURAL_32
+			tok: NATURAL_32
+			i: NATURAL_32
+			remap: MD_REMAP_TOKEN_MANAGER
 		do
 			if
 				attached methoddef_table as l_methoddef_tb and then
-				attached md_table ({PE_TABLES}.tMethodPtr) as ptr_tb
+				attached md_table ({PE_TABLES}.tMethodPtr) as ptr_tb and then
+				attached typedef_table as l_typedef_tb
 			then
-				across
-					l_methoddef_tb as e
-				loop
-					idx := idx + 1
-					if attached {PE_METHOD_DEF_TABLE_ENTRY} e as l_field then
-						ptr_tb.force (create {PE_METHOD_POINTER_TABLE_ENTRY}.make_with_data (idx))
+				if attached emitter.opt_data_for_type_def as l_types_data then
+					create remap.make (l_methoddef_tb)
+					i := 0
+					across
+						l_typedef_tb as e
+					loop
+						i := i + 1
+						tok := l_typedef_tb.table_id |<< 24 | i
+						if
+							attached l_types_data [tok] as tdata and then
+							tdata.has_method_def and then
+							attached tdata.method_def_list as lst and then
+							not lst.is_empty
+						then
+							tdata.sort_method_def_list
+							across
+								lst as l_method_def_token
+							loop
+								ptr_tb.force (create {PE_METHOD_POINTER_TABLE_ENTRY}.make_with_data (l_method_def_token))
+								remap.record (l_method_def_token & 0x00FF_FFFF, ptr_tb.size)
+							end
+						end
 					end
-				end
-				if
-					attached typedef_table as tb
-				then
-					create ut.make (tb, ptr_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.methods end)
-					sort_list_column (ut)
-					if not ut.remap.is_empty then
+					remap.commit
+					if not remap.is_empty then
 						-- Update tables with remapped tokens!
 						debug ("il_emitter_table_map")
-							print (ut.remap.dump)
+							print (remap.dump)
 						end
-						ut.apply_remapping
 
 							-- Updated tokens in the related tables (For instance: TypeDef table, ...)
-						create vis.make_using_pointer_table (ut.remap)
+						create vis.make_using_pointer_table (remap)
 						vis.visit_emitter (emitter)
 
-						ut.remap.reset
+						remap.reset
 					end
+				else
+					check has_type_data: False end
 				end
 			end
 		end

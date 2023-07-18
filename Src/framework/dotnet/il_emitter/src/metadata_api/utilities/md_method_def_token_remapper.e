@@ -58,12 +58,21 @@ feature -- Visitor
 	visit_table (tb: MD_TABLE)
 		do
 			if is_using_method_pointer_table then
-				if
-					tb.table_id = {PE_TABLES}.ttypedef
-					or tb.table_id = {PE_TABLES}.tcustomattribute
+				inspect
+					tb.table_id
+				when
+					{PE_TABLES}.ttypedef
+					,{PE_TABLES}.tcustomattribute
+--					,{PE_TABLES}.tmethodimpl
+--					,{PE_TABLES}.tmethodspec
+--					,{PE_TABLES}.timplmap
+--					,{PE_TABLES}.tmemberref
+--					,{PE_TABLES}.tgenericparam
+	--				,{PE_TABLES}.tdeclsecurity	-- Not Implemented					
 				then
-						-- Update only the TypeDef, and CustomAttribute tables!
 					Precursor (tb)
+				else
+					-- Table not impacted
 				end
 			else
 				inspect

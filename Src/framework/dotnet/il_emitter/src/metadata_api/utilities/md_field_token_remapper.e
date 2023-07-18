@@ -57,12 +57,20 @@ feature -- Visitor
 	visit_table (tb: MD_TABLE)
 		do
 			if is_using_field_pointer_table then
-				if
-					tb.table_id = {PE_TABLES}.ttypedef
-					or tb.table_id = {PE_TABLES}.tcustomattribute
+				inspect
+					tb.table_id
+				when
+					{PE_TABLES}.ttypedef,
+					{PE_TABLES}.tcustomattribute
+--					, {PE_TABLES}.tconstant
+--					, {PE_TABLES}.tfieldmarshal -- Not Implemented
+--					, {PE_TABLES}.timplmap 		-- Not Implemented
+--					, {PE_TABLES}.tfieldlayout 	-- Not Used
+--					, {PE_TABLES}.tfieldrva    	-- Not Used
 				then
-						-- Update only the TypeDef, and CustomAttribute tables!
 					Precursor (tb)
+				else
+					-- Table not impacted
 				end
 			else
 				inspect
@@ -71,10 +79,10 @@ feature -- Visitor
 					{PE_TABLES}.ttypedef,
 					{PE_TABLES}.tcustomattribute,
 					{PE_TABLES}.tconstant
-	--				, {PE_TABLES}.tfieldmarshal -- Not Implemented
-	--				, {PE_TABLES}.timplmap -- Not Implemented
-	--				, {PE_TABLES}.tfieldlayout -- Not Used
-	--				, {PE_TABLES}.tfieldrva    -- Not Used
+--					, {PE_TABLES}.tfieldmarshal -- Not Implemented
+--					, {PE_TABLES}.timplmap 		-- Not Implemented
+--					, {PE_TABLES}.tfieldlayout 	-- Not Used
+--					, {PE_TABLES}.tfieldrva    	-- Not Used
 				then
 					Precursor (tb)
 				else

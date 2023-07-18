@@ -41,6 +41,8 @@ feature {NONE}
 			initialize_unit
 			create tables_header
 				-- we don't initialize the compilation unit since we don't provide the name of it (similar to the COM interface)
+
+			create opt_data_for_type_def.make (5)
 		ensure
 			module_guid_set: module_guid.count = 16
 		end
@@ -97,17 +99,46 @@ feature -- Access
 			Result := tables [a_tb_id.to_integer_32]
 		end
 
---	set_md_table (tb: MD_TABLE; a_tb_id: NATURAL_32)
---		require
---			tables.valid_index (a_tb_id.to_integer_32)
---		do
---			tables [a_tb_id.to_integer_32] := tb
---		end
-
 	--pe_writer: PE_WRITER
 	pe_writer: PE_GENERATOR
 			-- helper class to generate the PE file.
 			--| using as a helper class to access needed features.
+
+feature -- Optimization
+
+	opt_data_for_type_def: HASH_TABLE [MD_TYPE_DEF_DATA_FOR_OPTIMIZATION, NATURAL_32]
+			-- Data used for optimization Indexed by TypeDef token
+
+	opt_data_for_type_def_dump: STRING
+			-- Dump of `opt_data_for_type_def`, for debugging.
+		do
+			create Result.make (0)
+			if attached opt_data_for_type_def as tb then
+				Result.append ("TYPES DATA:%N")
+				across
+					tb as tdata
+				loop
+					Result.append ("TypeDef 0x" + @tdata.key.to_hex_string + "%N")
+					if attached tdata.field_list as lst then
+						Result.append (" Fields ("+lst.count.out+"):%N")
+						across
+							lst as f
+						loop
+							Result.append ("   - 0x" + f.to_hex_string + "%N")
+						end
+					end
+					if attached tdata.method_def_list as lst then
+						Result.append (" Methods ("+lst.count.out+"):%N")
+						across
+							lst as m
+						loop
+							Result.append ("   - 0x" + m.to_hex_string + "%N")
+						end
+					end
+				end
+				Result.append ("%N")
+			end
+		end
 
 feature -- Access
 
@@ -604,11 +635,11 @@ feature {NONE} -- Implementation
 					-- Adding a null character a the end of the string
 					-- C++ code uses put(streamNames_[i], strlen(streamNames_[i]) + 1);
 				l_names := pe_writer.stream_names [i].twin
-				if 
-					l_names.same_string_general ("#~") and 
+				if
+					l_names.same_string_general ("#~") and
 					(
 						tables [{PE_TABLES}.tmethodptr.to_integer_32].count +
-						tables [{PE_TABLES}.tfieldptr.to_integer_32].count > 0 
+						tables [{PE_TABLES}.tfieldptr.to_integer_32].count > 0
 					)
 				then
 						-- When using FieldPointer or MethodPointer tables, #~ should be #-
@@ -886,6 +917,7 @@ feature -- Definition: Creation
 --			l_field_index, l_method_index: NATURAL
 			l_class_index: NATURAL_32
 			last_token: NATURAL_32
+			tdata: MD_TYPE_DEF_DATA_FOR_OPTIMIZATION
 		do
 			l_type_name := type_name.string_32
 			debug ("il_emitter_table")
@@ -917,7 +949,12 @@ feature -- Definition: Creation
 			l_class_index := next_table_index (l_entry.table_index)
 			Result := add_table_entry (l_entry).to_integer_32
 			debug ("il_emitter_table")
-				print ({STRING_32} " -> index=" + l_class_index.out + " token="+ Result.to_hex_string + "%N")
+				print ({STRING_32} " -> #" + l_class_index.out + " token="+ Result.to_hex_string + "%N")
+			end
+			tdata := opt_data_for_type_def [Result.to_natural_32]
+			if tdata = Void then
+				create tdata
+				opt_data_for_type_def [Result.to_natural_32] := tdata
 			end
 
 				-- Adds entries in the PE_INTERFACE_IMPL_TABLE_ENTRY table for each implemented interface, if any.
@@ -988,7 +1025,7 @@ feature -- Definition: Creation
 					print ({STRING_32} "<!> ")
 				end
 				last_define_method_class := in_class_token
-				print ({STRING_32} "Method: " + method_name.string_32 + " (class:"+ in_class_token.to_hex_string)
+				print ({STRING_32} "Method: " + method_name.string_32 + " (class:"+ in_class_token.to_hex_string + ")")
 			end
 				-- See II.22.26 MethodDef : 0x06
 
@@ -1003,7 +1040,12 @@ feature -- Definition: Creation
 			l_method_index := next_table_index ({PE_TABLES}.tmethoddef)
 			Result := add_table_entry (l_method_def_entry).to_integer_32
 			debug ("il_emitter_table")
-				print ({STRING_32} " -> ("+ l_method_index.out +") index=" + l_method_index.out + " token=" + Result.to_hex_string +"%N")
+				print ({STRING_32} " -> #"+ l_method_index.out +" token=" + Result.to_hex_string +"%N")
+			end
+			if attached opt_data_for_type_def [in_class_token.to_natural_32] as tdata then
+				tdata.record_method_def (Result.to_natural_32)
+			else
+				check has_type_data: False end
 			end
 
 				-- Extract table type and row from the in_class_token
@@ -1049,7 +1091,7 @@ feature -- Definition: Creation
 			last_token := add_table_entry (l_method_impl_entry)
 
 			debug ("il_emitter_table")
-				print ({STRING_32} " -> index=" + l_method_impl_index.out + " token=" + last_token.to_hex_string +"%N")
+				print ({STRING_32} " -> #" + l_method_impl_index.out + " token=" + last_token.to_hex_string +"%N")
 			end
 		end
 
@@ -1083,7 +1125,7 @@ feature -- Definition: Creation
 			Result := add_table_entry (l_property).to_integer_32
 
 			debug ("il_emitter_table")
-				print ({STRING_32} " -> index=" + l_property_index.out + " token=" + Result.to_hex_string +"%N")
+				print ({STRING_32} " -> #" + l_property_index.out + " token=" + Result.to_hex_string +"%N")
 			end
 
 				-- Define the method implementations for the getter and setter, if provided.
@@ -1150,7 +1192,9 @@ feature -- Definition: Creation
 			l_param_entry_index: NATURAL_32
 		do
 
-			to_implement ("Review need ensure every row in the Param table is owned by one, and only one, row in the MethodDef table")
+			debug ("refactor_fixme")
+				to_implement ("Review need ensure every row in the Param table is owned by one, and only one, row in the MethodDef table")
+			end
 
 				-- Extract table type and row from the method token
 			d := extract_table_type_and_row (in_method_token)
@@ -1177,7 +1221,7 @@ feature -- Definition: Creation
 			l_param_entry_index := next_table_index ({PE_TABLES}.tparam)
 			Result := add_table_entry (l_param_entry).to_integer_32
 			debug ("il_emitter_table")
-				print ({STRING_32} " -> index=" + l_param_index.out + " token="+ Result.to_hex_string + "%N")
+				print ({STRING_32} " -> #" + l_param_index.out + " token="+ Result.to_hex_string + "%N")
 			end
 
 			if
@@ -1239,7 +1283,12 @@ feature -- Definition: Creation
 			Result := add_table_entry (l_field_def_entry).to_integer_32
 
 			debug ("il_emitter_table")
-				print ({STRING_32} " -> ("+ l_field_index.out +") index=" + l_field_index.out + " token=" + Result.to_hex_string +"%N")
+				print ({STRING_32} " -> #"+ l_field_index.out +" token=" + Result.to_hex_string +"%N")
+			end
+			if attached opt_data_for_type_def [in_class_token.to_natural_32] as tdata then
+				tdata.record_field (Result.to_natural_32)
+			else
+				check has_type_data: False end
 			end
 
 			if
@@ -1331,7 +1380,7 @@ feature -- Definition: Creation
 			Result := add_table_entry (l_ca_entry).to_integer_32
 
 			debug ("il_emitter_table")
-				print ({STRING_32} " -> ("+ pe_index.out +") index=" + pe_index.out + " token=" + Result.to_hex_string +"%N")
+				print ({STRING_32} " -> #"+ pe_index.out +" token=" + Result.to_hex_string +"%N")
 			end
 		end
 

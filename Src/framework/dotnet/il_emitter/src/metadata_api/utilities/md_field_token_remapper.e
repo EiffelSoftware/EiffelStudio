@@ -57,12 +57,13 @@ feature -- Visitor
 	visit_table (tb: MD_TABLE)
 		do
 			if is_using_field_pointer_table then
+					-- FIXME: review why some tables should be remapped, and other not. [2023-07-19]				
 				inspect
 					tb.table_id
 				when
 					{PE_TABLES}.ttypedef,
 					{PE_TABLES}.tcustomattribute
---					, {PE_TABLES}.tconstant
+					, {PE_TABLES}.tconstant
 --					, {PE_TABLES}.tfieldmarshal -- Not Implemented
 --					, {PE_TABLES}.timplmap 		-- Not Implemented
 --					, {PE_TABLES}.tfieldlayout 	-- Not Used

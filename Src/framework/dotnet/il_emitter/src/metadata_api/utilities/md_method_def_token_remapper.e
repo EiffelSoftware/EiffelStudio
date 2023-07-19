@@ -58,16 +58,17 @@ feature -- Visitor
 	visit_table (tb: MD_TABLE)
 		do
 			if is_using_method_pointer_table then
+					-- FIXME: review why some tables should be remapped, and other not. [2023-07-19]
 				inspect
 					tb.table_id
 				when
 					{PE_TABLES}.ttypedef
 					,{PE_TABLES}.tcustomattribute
---					,{PE_TABLES}.tmethodimpl
---					,{PE_TABLES}.tmethodspec
---					,{PE_TABLES}.timplmap
---					,{PE_TABLES}.tmemberref
---					,{PE_TABLES}.tgenericparam
+--					,{PE_TABLES}.tmethodimpl -- EXCLUDED by experience.
+					,{PE_TABLES}.tmethodspec
+					,{PE_TABLES}.timplmap
+					,{PE_TABLES}.tmemberref
+					,{PE_TABLES}.tgenericparam
 	--				,{PE_TABLES}.tdeclsecurity	-- Not Implemented					
 				then
 					Precursor (tb)

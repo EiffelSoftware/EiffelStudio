@@ -16,13 +16,24 @@
 	<target name="compile" >
 		<echo message="- Compile nemdc" />
 		<exec executable="dotnet build -c Release" accept_errors="true" dir="cs${path_separator}md_consumer_app" />
+		<exec executable="dotnet publish -c Release --self-contained --use-current-runtime" accept_errors="true" dir="cs${path_separator}md_consumer_app" if="${is_self_contained}=true"/><!-- TODO: see if self-contained would be better -->
 		<exec executable="dotnet publish -c Release" accept_errors="true" dir="cs${path_separator}md_consumer_app" />
 	</target>
 
 	<target name="install" depend="compile">
 		<echo message="- Install nemdc into spec/.../bin folder" />
 		<mkdir directory="spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
-		<geant target="_copy_dotnet_build_results" arguments="${cwd}${path_separator}cs${path_separator}md_consumer_app/bin/Release/net6.0/publish/,${cwd}${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
+		<!-- Try with win-64 -->
+		<set name="pub_dir" value="${cwd}${path_separator}cs${path_separator}md_consumer_app/bin/Release/net6.0/win-64/publish"/>
+		<available resource="${pub_dir}" variable="file_available"/>
+		<!-- Try with linux-x86-64 -->
+		<set name="pub_dir" value="${cwd}${path_separator}cs${path_separator}md_consumer_app/bin/Release/net6.0/linux-x86-64/publish/" if="${file_available}=false"/>
+		<available resource="${pub_dir}" variable="file_available"/>
+		<!-- TODO: Try for other platforms ... -->
+		<!-- ... -->
+		<!-- Try without OS info -->
+		<set name="pub_dir" value="${cwd}${path_separator}cs${path_separator}md_consumer_app/bin/Release/net6.0/publish/" if="${file_available}=false"/>
+		<geant target="_copy_dotnet_build_results" arguments="${pub_dir},${cwd}${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin"/>
 	</target>
 
 	<target name="_copy_dotnet_build_results">

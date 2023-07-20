@@ -41,7 +41,7 @@ feature -- Status
 
 feature -- Access
 
-	field_index: PE_POINTER_INDEX
+	field_index: PE_FIELD_POINTER_INDEX
 			-- an index into the Field table
 
 feature -- Status report	

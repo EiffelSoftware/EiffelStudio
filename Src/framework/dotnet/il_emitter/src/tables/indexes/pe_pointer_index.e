@@ -6,7 +6,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	PE_POINTER_INDEX
 
 inherit
@@ -16,15 +16,17 @@ inherit
 			accepts
 		end
 
-create
-	make_with_index
+feature -- Access
 
-feature -- Operations
+	associated_table_index: NATURAL_32
+		deferred
+		end
+
+feature -- Access
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_32]): BOOLEAN
-			-- Always use 4-bytes
 		do
-			Result := Precursor (a_sizes)
+			Result := large (a_sizes [associated_table_index.to_integer_32 + 1])
 		end
 
 feature -- Visitor

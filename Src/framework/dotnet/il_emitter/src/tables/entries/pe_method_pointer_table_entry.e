@@ -41,7 +41,7 @@ feature -- Status
 
 feature -- Access
 
-	method_index: PE_POINTER_INDEX
+	method_index: PE_METHOD_POINTER_INDEX
 			-- an index into the Method table
 
 feature -- Status report	

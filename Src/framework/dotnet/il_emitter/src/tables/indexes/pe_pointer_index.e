@@ -24,7 +24,7 @@ feature -- Operations
 	has_index_overflow (a_sizes: ARRAY [NATURAL_32]): BOOLEAN
 			-- Always use 4-bytes
 		do
-			Result := False
+			Result := Precursor (a_sizes)
 		end
 
 feature -- Visitor

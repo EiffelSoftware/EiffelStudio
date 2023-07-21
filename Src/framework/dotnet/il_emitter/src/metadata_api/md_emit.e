@@ -303,7 +303,10 @@ feature {NONE} -- Implementation
 
 			tables_header.major_version := 2
 			tables_header.reserved2 := 1
-			tables_header.mask_sorted := ({INTEGER_64} 0x1600 |<< 32) + 0x3325FA00
+-- Why having Event and Property sorted? anyway, the Eiffel compiler does not use them.
+--			tables_header.mask_sorted := 0b0000000000000000000101100000000000110011001001011111101000000000
+
+			tables_header.mask_sorted := 0b0000000000000000000101100000000000110011000000011111101000000000
 			--
 				--FIXME: check if size is about rows count, or offset (for Blob)
 				-- See II.24.2.6 #~ stream

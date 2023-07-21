@@ -175,19 +175,38 @@ feature -- Conversion
 			Result.append (last_column_separator)
 		end
 
-	byte_size_to_string_array: ARRAY [like to_string]
+	binary_byte_sizes_string_array: ARRAY [like to_string]
 		local
 			i,n: INTEGER
+			tot: NATURAL_32
+			lst: like binary_byte_sizes_array
 		do
-			create Result.make_filled (empty_string, 0, structure_items.count)
-			Result [0] := {STRING_32} "{"+ label +"}"
+			lst := binary_byte_sizes_array
+			create Result.make_filled (empty_string, lst.lower, lst.upper)
+			i := Result.lower
+			across
+				lst as ic
+			loop
+				Result [i] := ic.item.out
+				i := i + 1
+			end
+		end
+
+	binary_byte_sizes_array: ARRAY [NATURAL_32]
+		local
+			i,n: INTEGER
+			tot: NATURAL_32
+		do
+			create Result.make_filled (0, 0, structure_items.count)
 			i := 1
 			across
 				items as ic
 			loop
-				Result [i] := ic.item.binary_byte_size.out
+				tot := tot + ic.item.binary_byte_size
+				Result [i] := ic.item.binary_byte_size
 				i := i + 1
 			end
+			Result [0] := tot
 		end
 
 	to_string_array: ARRAY [like to_string]

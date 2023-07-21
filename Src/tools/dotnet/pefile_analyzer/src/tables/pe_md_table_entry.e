@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	byte_size_to_string_array: ARRAY [like to_string]
+	binary_byte_sizes_string_array: ARRAY [like to_string]
 		do
 			Result := <<"">>
 		end

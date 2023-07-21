@@ -182,8 +182,8 @@ feature -- Visitor
 				if table_entry_index <= 1 then
 						-- Before first row, display a row, with the number of bytes used for column's binary value.
 					create row.make (arr.count)
-					row.put_string_array (o.byte_size_to_string_array)
-					row[1] := {STRING_32} "# bytes"
+					row.put_string_array (o.binary_byte_sizes_string_array)
+					row[1] := {STRING_32} "# ("+ row[1] +" bytes)"
 
 					ptb.add (row)
 				end

@@ -109,12 +109,12 @@ feature -- Visitor
 				safe_accepts (l_ms.method)
 			elseif attached {PE_IMPL_MAP_TABLE_ENTRY} e as l_imp then
 				safe_accepts (l_imp.method_index)
---			elseif attached {PE_DECL_SECURITY_TABLE_ENTRY} e as l_ds then
---				safe_accepts (l_ds.parent)
 			elseif attached {PE_MEMBER_REF_TABLE_ENTRY} e as l_mr then
 				safe_accepts (l_mr.parent_index)
 			elseif attached {PE_GENERIC_PARAM_TABLE_ENTRY} e as l_ge then
 				safe_accepts (l_ge.owner)
+			elseif attached {PE_DECL_SECURITY_TABLE_ENTRY} e as l_ds then
+--				safe_accepts (l_ds.parent)
 			else
 				Precursor (e)
 			end

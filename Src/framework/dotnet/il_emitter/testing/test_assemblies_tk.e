@@ -560,9 +560,11 @@ feature -- Modules
 
 			j_method := md_emit.define_method (create {CLI_STRING}.make ("J"),
 					l_class_b_token,
-					{MD_METHOD_ATTRIBUTES}.public |
-					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.new_slot,
+					{MD_METHOD_ATTRIBUTES}.public
+					| {MD_METHOD_ATTRIBUTES}.hide_by_signature
+--					| {MD_METHOD_ATTRIBUTES}.new_slot
+--					| {MD_METHOD_ATTRIBUTES}.final
+					,
 					sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 			body := method_writer.new_method_body (j_method)

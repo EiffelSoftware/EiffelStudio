@@ -54,7 +54,12 @@ feature -- Status report
 			Result := token.to_hex_string + " {"+ {PE_MD_TABLES}.table_name (table_id) +"}"
 		end
 
-feature -- Conversion	
+feature -- Conversion
+
+	byte_size_to_string_array: ARRAY [like to_string]
+		do
+			Result := <<"">>
+		end
 
 	to_string_array: ARRAY [like to_string]
 		do

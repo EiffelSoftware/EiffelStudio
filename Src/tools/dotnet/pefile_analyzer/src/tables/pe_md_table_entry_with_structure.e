@@ -12,7 +12,7 @@ inherit
 		redefine
 			make,
 			dump,
-			to_string, to_string_array,
+			to_string, to_string_array, byte_size_to_string_array,
 			description, description_as_array
 		end
 
@@ -46,6 +46,11 @@ feature -- Access
 		end
 
 feature -- Display
+
+	byte_size_to_string_array: ARRAY [like to_string]
+		do
+			Result := structure.byte_size_to_string_array
+		end
 
 	to_string_array: ARRAY [like to_string]
 		do

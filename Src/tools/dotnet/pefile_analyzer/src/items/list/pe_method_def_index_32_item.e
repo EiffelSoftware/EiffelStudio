@@ -27,6 +27,7 @@ feature -- Resolver
 
 	replace_index (idx: NATURAL_32)
 		do
+			set_replaced_index (index)
 			value := idx
 		end
 

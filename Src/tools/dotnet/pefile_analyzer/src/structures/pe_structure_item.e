@@ -21,6 +21,11 @@ feature -- Access
 
 	label: READABLE_STRING_8
 
+--	binary_size: NATURAL_8
+--			-- 1, 2, 4, 8, ... bytes?
+--		deferred
+--		end
+
 feature -- Read
 
 	read (pe: PE_FILE): PE_ITEM

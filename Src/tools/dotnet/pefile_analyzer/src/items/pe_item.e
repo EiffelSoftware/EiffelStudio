@@ -43,6 +43,11 @@ feature -- Access
 
 	label: READABLE_STRING_8
 
+	binary_byte_size: NATURAL_32
+			-- Number of bytes used to store the associated binary data.
+		deferred
+		end
+
 	size: NATURAL_32
 		do
 			Result := value_end_address - value_begin_address

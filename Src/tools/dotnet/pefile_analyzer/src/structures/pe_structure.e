@@ -175,6 +175,21 @@ feature -- Conversion
 			Result.append (last_column_separator)
 		end
 
+	byte_size_to_string_array: ARRAY [like to_string]
+		local
+			i,n: INTEGER
+		do
+			create Result.make_filled (empty_string, 0, structure_items.count)
+			Result [0] := {STRING_32} "{"+ label +"}"
+			i := 1
+			across
+				items as ic
+			loop
+				Result [i] := ic.item.binary_byte_size.out
+				i := i + 1
+			end
+		end
+
 	to_string_array: ARRAY [like to_string]
 		local
 			i,n: INTEGER

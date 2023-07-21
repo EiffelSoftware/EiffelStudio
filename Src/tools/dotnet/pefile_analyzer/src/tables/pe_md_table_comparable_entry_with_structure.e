@@ -18,7 +18,7 @@ inherit
 	PE_MD_TABLE_COMPARABLE_ENTRY
 		undefine
 			make,
-			to_string, to_string_array,
+			to_string, to_string_array, byte_size_to_string_array,
 			description_as_array, description,
 			dump
 		end

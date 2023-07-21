@@ -31,6 +31,8 @@ feature -- Access
 
 	value: NATURAL_64
 
+	binary_byte_size: NATURAL_32 = 8
+
 feature -- Status report
 
 	to_string: STRING_32

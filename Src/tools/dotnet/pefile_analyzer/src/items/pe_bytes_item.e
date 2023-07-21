@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 		require
 			a_end_index - a_start_index = mp.count.to_natural_32
 		do
+			binary_byte_size := mp.count.to_natural_32
 			make_item (a_decl_address, a_start_index, a_end_index, mp, lab)
 		end
 
@@ -44,6 +45,8 @@ feature -- Status report
 		do
 			Result := dump.to_string_32
 		end
+
+	binary_byte_size: NATURAL_32
 
 	debug_output: READABLE_STRING_GENERAL
 		do

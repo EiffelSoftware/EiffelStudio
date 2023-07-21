@@ -121,6 +121,15 @@ feature -- Visitor
 			end
 		end
 
+	sorting_index_of_list (idx: PE_INDEX_ITEM): NATURAL_32
+		do
+			if attached {PE_WITH_POINTER_TABLE_INDEX} idx as r_idx and then r_idx.is_replaced then
+				Result := r_idx.replaced_index
+			else
+				Result := idx.index
+			end
+		end
+
 	update_list_index (o: PE_MD_TABLE [PE_MD_TABLE_ENTRY]; label: READABLE_STRING_GENERAL)
 		local
 			i: NATURAL_32
@@ -137,13 +146,13 @@ feature -- Visitor
 				then
 					if
 						prev /= Void and then
-						prev.index = idx.index
+						sorting_index_of_list (prev) = sorting_index_of_list (idx)
 					then
 						prev.update_index (0)
 						l_updated := True
 					end
 					if attached {PE_INDEX_ITEM_WITH_TABLE} idx as idx_with_table then
-						if idx.index = table_count (idx_with_table.associated_table_id) + 1 then
+						if sorting_index_of_list (idx) = table_count (idx_with_table.associated_table_id) + 1 then
 							idx.update_index (0)
 							l_updated := True
 						end

@@ -515,6 +515,7 @@ feature -- Modules
 			ca.put_string (".NETCoreApp,Version=v6.0")
 
 
+				--| The FrameworkDisplayName info is optional, it could be unset, set to "", or set to meaningful title such as "NET 6.0"
 				-- Number of named arguments
 			ca.put_integer_16 (1)
 				-- We mark it's a property

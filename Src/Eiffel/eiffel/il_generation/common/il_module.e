@@ -1110,20 +1110,23 @@ feature -- Code generation
 							target_framework_attr_type_token,
 							sig
 						)
-
+					debug ("refactor_fixme")
+						fixme ("Do not hardcode the version number ! [2023-07-21")
+					end
 					create ca.make
 					ca.put_string (".NETCoreApp,Version=v6.0")
 
-						-- Number of named arguments
-					ca.put_integer_16 (1)
-						-- We mark it's a property
-					ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
-						-- Fill `FieldOrPropType' in `ca'
-					ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_string)
-						-- Put the name of the property
-					ca.put_string ("FrameworkDisplayName")
-						-- Put the value
-					ca.put_string ("")
+-- The "FrameworkDisplayName" is not required
+--						-- Number of named arguments
+--					ca.put_integer_16 (1)
+--						-- We mark it's a property
+--					ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
+--						-- Fill `FieldOrPropType' in `ca'
+--					ca.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_string)
+--						-- Put the name of the property
+--					ca.put_string ("FrameworkDisplayName")
+--						-- Put the value
+--					ca.put_string ("NET 6.0")
 					ca_token := md_emit.define_custom_attribute (associated_assembly_token, attribute_ctor, ca)
 				end
 			end

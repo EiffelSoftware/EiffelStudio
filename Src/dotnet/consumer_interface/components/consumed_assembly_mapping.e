@@ -24,6 +24,11 @@ feature {NONE} -- Initialization
 				assembly_ids as a
 			loop
 				assemblies.extend (a)
+				if attached {CONSUMED_ASSEMBLY} a as l_a and then
+					l_a.name.is_case_insensitive_equal ("system.runtime")
+				then
+					system_runtime_assembly := a
+				end
 			end
 		end
 
@@ -31,6 +36,9 @@ feature -- Access
 
 	assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			-- Referenced assemblies indexed by id
+
+	system_runtime_assembly: CONSUMED_ASSEMBLY
+
 
 invariant
 	attached_assemblies: assemblies /= Void

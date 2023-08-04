@@ -485,40 +485,49 @@ lib_deps_tpl := "          %"${LIB_NAME}%": %"${LIB_VERSION}%""
 
 libs_runtime_tpl := "      %"${LIB_NAME_VERSION}%": { %"runtime%": {%"${LIB_NAME}.dll%":{}} }"
 
-libs_tpl := "    %"${LIB_NAME_VERSION}%": { %"type%": %"reference%" }"
+-- FIXME
+-- at the moment the field serviceable and sha512 are using default values
+-- false and empty string to be checked.
+libs_tpl := "    %"${LIB_NAME_VERSION}%": { %"type%": %"reference%",  %"serviceable%": false,  %"sha512%": %"%" }"
+
 				l_start := True
+				-- FIXME
+				-- maybe we only need to add the eiffelsoftware.runtime
 				across
 					a_assembly_reference as ic
 				loop
-
-					libs.append (",%N")
-					libs.append (libs_tpl)
-
-					libs_runtime.append (",%N")
-					libs_runtime.append (libs_runtime_tpl)
-
-					if l_start then
-						l_start := False
-					else
-						libs_deps.append (",")
-					end
-					libs_deps.append ("%N")
-					libs_deps.append (lib_deps_tpl)
-
 					-- FIXME: maybe use proper JSON encoding, eventually the JSON library.
-					v := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (ic.item.name)
-					libs_runtime.replace_substring_all ("${LIB_NAME}", v)
-					libs_deps.replace_substring_all ("${LIB_NAME}", v)
-					if attached ic.item.version as l_version then
-						v.append_character ('/')
-						v.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
-						libs_deps.replace_substring_all ("${LIB_VERSION}", {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
-					else
-						libs_deps.replace_substring_all ("${LIB_VERSION}", "0.0.0.0")
-					end
 
-					libs.replace_substring_all ("${LIB_NAME_VERSION}", v)
-					libs_runtime.replace_substring_all ("${LIB_NAME_VERSION}", v)
+					v := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (ic.item.name)
+						-- TODO double check but it seems we only need this one.
+					if v.is_case_insensitive_equal ("eiffelsoftware.runtime")  then
+						libs.append (",%N")
+						libs.append (libs_tpl)
+
+						libs_runtime.append (",%N")
+						libs_runtime.append (libs_runtime_tpl)
+
+						if l_start then
+							l_start := False
+						else
+							libs_deps.append (",")
+						end
+						libs_deps.append ("%N")
+						libs_deps.append (lib_deps_tpl)
+
+						libs_runtime.replace_substring_all ("${LIB_NAME}", v)
+						libs_deps.replace_substring_all ("${LIB_NAME}", v)
+						if attached ic.item.version as l_version then
+							v.append_character ('/')
+							v.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
+							libs_deps.replace_substring_all ("${LIB_VERSION}", {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
+						else
+							libs_deps.replace_substring_all ("${LIB_VERSION}", "0.0.0.0")
+						end
+
+						libs.replace_substring_all ("${LIB_NAME_VERSION}", v)
+						libs_runtime.replace_substring_all ("${LIB_NAME_VERSION}", v)
+					end
 				end
 			end
 

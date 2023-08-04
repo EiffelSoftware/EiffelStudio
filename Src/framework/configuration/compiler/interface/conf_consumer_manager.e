@@ -98,7 +98,7 @@ feature -- Access
 		end
 
 	assemblies: detachable STRING_TABLE [CONF_PHYSICAL_ASSEMBLY]
-		-- Assemblies in the system after compilation indexed by their UUID.
+			-- Assemblies in the system after compilation indexed by their UUID.
 
 feature -- Observers
 
@@ -171,7 +171,7 @@ feature -- Commands
 							l_fwd_types as ft
 						loop
 							if
-								attached ft as l_fwd_type and then
+								attached {CONSUMED_FORWARDED_TYPE} ft as l_fwd_type and then
 								l_fwd_type.assembly = Void and then -- This type was already processed
 								attached an_assembly.dependencies as l_assembly_dependencies and then
 								attached l_assembly_dependencies [l_fwd_type.assembly_id] as l_fwd_assembly
@@ -310,16 +310,20 @@ feature {NONE} -- Implementation
 			-- Linear list of assemblies we have to process.
 
 	factory: CONF_FACTORY
-		-- Factory to create new configuration nodes.
+			-- Factory to create new configuration nodes.
 
 	cache_content: detachable CACHE_INFO
-		-- Content of the metadata cache.
+			-- Content of the metadata cache.
 
 	old_assemblies: detachable STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
-		-- Old assemblies from previous compilation.
+			-- Old assemblies from previous compilation.
 
 	new_assemblies: detachable SEARCH_TABLE [CONF_ASSEMBLY]
-		-- List of assemblies to process.
+			-- List of assemblies to process.
+
+	system_runtime_assembly: detachable CONSUMED_ASSEMBLY
+		-- System Runtime Assembly	
+		-- Workaround: to replace references to System.Private.CoreLib		
 
 	get_physical_assembly (a_consumed: CONSUMED_ASSEMBLY): CONF_PHYSICAL_ASSEMBLY
 			-- Get the physical assembly for `a_consumed'.
@@ -409,8 +413,8 @@ feature {NONE} -- Implementation
 			then
 				if
 					not l_classes.is_empty and then
-				 	attached a_assembly.target.dotnet_renaming as l_dotnet_renaming and then
-				 	not l_dotnet_renaming.is_empty
+					attached a_assembly.target.dotnet_renaming as l_dotnet_renaming and then
+					not l_dotnet_renaming.is_empty
 				then
 						-- TODO Check libraries target dotnet_renaming ...
 					l_dotnet_renaming_groups := l_dotnet_renaming
@@ -444,7 +448,7 @@ feature {NONE} -- Implementation
 							l_new_classes.force (l_class, l_name)
 							debug ("consumer")
 								if not l_name.is_case_insensitive_equal_general (l_class.name) then
-									print ({STRING_32} "RENAME " + l_class.dotnet_name + " {"+ l_class.name + "} -> " + l_name + " from ["+ l_class.group.name +"]%N")
+									print ({STRING_32} "RENAME " + l_class.dotnet_name + " {" + l_class.name + "} -> " + l_name + " from [" + l_class.group.name + "]%N")
 								end
 							end
 						else
@@ -505,6 +509,7 @@ feature {NONE} -- Implementation
 			l_reader := {EIFFEL_SERIALIZATION}.deserializer_for_version (il_version)
 			l_reader.deserialize (an_assembly.consumed_path.extended (referenced_assemblies_info_file).name, 0)
 			if attached {CONSUMED_ASSEMBLY_MAPPING} l_reader.deserialized_object as l_referenced_assemblies_mapping then
+				system_runtime_assembly := l_referenced_assemblies_mapping.system_runtime_assembly
 				across l_referenced_assemblies_mapping.assemblies as a loop
 						-- if it's not the assembly itself
 					if not a.unique_id.same_string (l_guid) then
@@ -587,7 +592,27 @@ feature {NONE} -- Implementation
 									modified_classes.force (l_class)
 								end
 							else
-								l_class := factory.new_class_assembly (l_name, l_dotnet_name, a_assembly, l_pos)
+									-- Workaround to replace System.Private.CoreLib and System.Private.Uri by System.Runtime
+									-- this workaround is not safe since not every type that's exported in System.Runtime
+									-- is defined in System.Private.CoreLib or System.Private.Uri.
+									-- And it is not correct to assume that every class defined in System.Private.CoreLib.dll and System.Private.Uri.dll
+									-- will be available from System.Runtime.dll
+									--
+									-- Options:
+								    --
+									-- 1: Use Reference Assemblies instead of SDK Assemblies to use only Public APIs with nemdc and
+									--    the Eiffel consumer interface.
+									-- 2: Use SDK assemblies, but verify the corresponding assembly for each class.
+									--    it requires to read and inspect different reference assemblies. We can build
+									--    a cache so we can query and get the defined assembly.
+									--    Defined for example at: dotnet\packs\Microsoft.NETCore.App.Ref\6.0.16\ref\net6.0
+
+ 								l_class := factory.new_class_assembly (l_name, l_dotnet_name, a_assembly, l_pos)
+								if a_assembly.name.is_case_insensitive_equal ("system.private.corelib") or else
+								   a_assembly.name.is_case_insensitive_equal ("system.private.uri")
+								then
+									l_class.set_public_group (factory.new_physical_assembly (system_runtime_assembly, full_cache_path, application_target))
+								end
 								added_classes.force (l_class)
 							end
 							l_new_classes.force (l_class, l_name)
@@ -667,7 +692,7 @@ feature {NONE} -- retrieving information from cache
 				l_path := an_assembly.location.evaluated_path
 				Result := consumed_local_assembly (l_path)
 				if Result = Void and then attached new_assemblies as a then
-					-- (re)consume all local assemblies
+						-- (re)consume all local assemblies
 					consume_local_assemblies (a)
 					Result := consumed_local_assembly (l_path)
 				end
@@ -750,7 +775,7 @@ feature {NONE} -- retrieving information from cache
 
 feature {NONE} -- Consuming
 
-	consume_all_assemblies  (an_assemblies: SEARCH_TABLE [CONF_ASSEMBLY])
+	consume_all_assemblies (an_assemblies: SEARCH_TABLE [CONF_ASSEMBLY])
 			-- Consume all (local and gac) assemblies in `an_assemblies'.
 		require
 			an_assemblies_not_void: an_assemblies /= Void
@@ -777,8 +802,8 @@ feature {NONE} -- Consuming
 							l_emitter.consume_assembly (l_assembly_name, l_assembly_version, l_assembly_culture, l_assembly_public_key_token, True)
 							if attached l_emitter.last_error_message as m then
 								add_error (create {CONF_METADATA_CONSUMER_FAILURE}.make
-									({SHARED_LOCALE}.locale.formatted_string ({SHARED_LOCALE}.locale.translation_in_context
-										({STRING_32} "Error when loading .NET metadata for %"$1%": $2.", "configuration.compiler"), l_assembly_name, m)))
+										({SHARED_LOCALE}.locale.formatted_string ({SHARED_LOCALE}.locale.translation_in_context
+												({STRING_32} "Error when loading .NET metadata for %"$1%": $2.", "configuration.compiler"), l_assembly_name, m)))
 							end
 						else
 							check is_non_local_assembly: False end
@@ -795,8 +820,8 @@ feature {NONE} -- Consuming
 					l_emitter.consume_assembly_from_path (l_paths, True, Void)
 					if attached l_emitter.last_error_message as m then
 						add_error (create {CONF_METADATA_CONSUMER_FAILURE}.make
-							({SHARED_LOCALE}.locale.formatted_string ({SHARED_LOCALE}.locale.translation_in_context
-								({STRING_32} "Error when loading .NET assemblies metadata: $1.", "configuration.compiler"), m)))
+								({SHARED_LOCALE}.locale.formatted_string ({SHARED_LOCALE}.locale.translation_in_context
+										({STRING_32} "Error when loading .NET assemblies metadata: $1.", "configuration.compiler"), m)))
 					end
 				end
 			end
@@ -837,8 +862,8 @@ feature {NONE} -- Consuming
 					l_emitter.consume_assembly_from_path (l_paths, True, Void)
 					if attached l_emitter.last_error_message as m then
 						add_error (create {CONF_METADATA_CONSUMER_FAILURE}.make
-							({SHARED_LOCALE}.locale.formatted_string ({SHARED_LOCALE}.locale.translation_in_context
-								({STRING_32} "Error when loading .NET assemblies metadata: $1.", "configuration.compiler"), m)))
+								({SHARED_LOCALE}.locale.formatted_string ({SHARED_LOCALE}.locale.translation_in_context
+										({STRING_32} "Error when loading .NET assemblies metadata: $1.", "configuration.compiler"), m)))
 					end
 				end
 			end
@@ -866,8 +891,8 @@ feature {NONE} -- Consuming
 				l_emitter.consume_assembly (l_assembly_name, l_assembly_version, l_assembly_culture, l_assembly_public_key_token, True)
 				if attached l_emitter.last_error_message as m then
 					add_error (create {CONF_METADATA_CONSUMER_FAILURE}.make
-						({SHARED_LOCALE}.locale.formatted_string ({SHARED_LOCALE}.locale.translation_in_context
-							({STRING_32} "Error when loading metadata for %"$1%": $2.", "configuration.compiler"), l_assembly_name, m)))
+							({SHARED_LOCALE}.locale.formatted_string ({SHARED_LOCALE}.locale.translation_in_context
+									({STRING_32} "Error when loading metadata for %"$1%": $2.", "configuration.compiler"), l_assembly_name, m)))
 				end
 			else
 				check an_assembly_ok: False end
@@ -905,9 +930,9 @@ feature {CONSUMER_EXPORT} -- Consumer
 				Result := {CONSUMER_FACTORY}.consumer (full_cache_path, il_version)
 				if not attached Result then
 					add_error (create {CONF_ERROR_EMITTER_INIT}.make
-						(locale.formatted_string (locale.translation_in_context
-							({STRING_32} "Cannot obtain a .NET assembly metadata consumer for IL version $1.", "configuration.compiler"),
-							il_version)))
+							(locale.formatted_string (locale.translation_in_context
+									({STRING_32} "Cannot obtain a .NET assembly metadata consumer for IL version $1.", "configuration.compiler"),
+								il_version)))
 				elseif not Result.is_available then
 						-- Consumer could not be loaded.
 					add_error (create {CONF_ERROR_EMITTER})
@@ -916,12 +941,12 @@ feature {CONSUMER_EXPORT} -- Consumer
 				elseif not Result.is_initialized then
 						-- Consumer cannot be initialized (e.g., due to the error in the path).
 					add_error (create {CONF_ERROR_EMITTER_INIT}.make
-						(if attached Result.last_error_message as m then
-							{SHARED_LOCALE}.locale.formatted_string
-								({SHARED_LOCALE}.locale.translation_in_context ({STRING_32} "Cannot initialize a .NET assembly metadata consumer: $1.", "configuration.compiler"), m)
-						else
-							{SHARED_LOCALE}.locale.translation_in_context ({STRING_32} "Cannot initialize a .NET assembly metadata consumer.", "configuration.compiler")
-						end))
+							(if attached Result.last_error_message as m then
+								{SHARED_LOCALE}.locale.formatted_string
+									({SHARED_LOCALE}.locale.translation_in_context ({STRING_32} "Cannot initialize a .NET assembly metadata consumer: $1.", "configuration.compiler"), m)
+							else
+								{SHARED_LOCALE}.locale.translation_in_context ({STRING_32} "Cannot initialize a .NET assembly metadata consumer.", "configuration.compiler")
+							end))
 					Result.release
 					Result := Void
 				else
@@ -1016,7 +1041,7 @@ feature {NONE} -- helpers
 				end
 					-- date of the cached information
 				l_cache_mod_date := file_path_modified_date (full_cache_path.extended
-					(an_assembly.folder_name).extended (types_info_file))
+							(an_assembly.folder_name).extended (types_info_file))
 
 				Result := l_mod_date /= -1 and then l_cache_mod_date > l_mod_date
 			end
@@ -1034,10 +1059,10 @@ feature {NONE} -- Contract
 					attached assemblies as a and then
 					a.count = linear_assemblies.count and then
 					across
-						linear_assemblies as l
-					all
+ 						linear_assemblies as l
+ 					all
 						l.is_valid and l.classes_set and a.item (l.guid) = l
-					end
+ 					end
 			end
 		end
 
@@ -1047,9 +1072,9 @@ feature {NONE} -- Contract
 			Result := True
 			if attached old_assemblies as a then
 				Result := a.linear_representation.for_all (agent (a_assembly: CONF_PHYSICAL_ASSEMBLY_INTERFACE): BOOLEAN
-					do
-						Result := a_assembly.classes_set
-					end)
+							do
+								Result := a_assembly.classes_set
+							end)
 			end
 		end
 
@@ -1083,9 +1108,9 @@ invariant
 	consume_assembly_observer_not_void: consume_assembly_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -1113,4 +1138,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

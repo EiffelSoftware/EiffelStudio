@@ -26,13 +26,15 @@ inherit
 		rename
 			file_name as base_name,
 			group as assembly,
-			check_changed as set_date
+			check_changed as set_date,
+			public_group as public_assembly
 		undefine
 			is_compiled
 		redefine
 			assembly,
 			class_type,
-			options
+			options,
+			public_assembly
 		end
 
 create {CONF_COMP_FACTORY}
@@ -62,6 +64,9 @@ feature -- Access
 
 	assembly: ASSEMBLY_I
 			-- Cluster is an assembly.
+
+	public_assembly: detachable ASSEMBLY_I
+			-- Cluster is an assembly
 
 	external_consumed_type: CONSUMED_TYPE
 			-- Associated CONSUMED_TYPE instance of Current
@@ -119,6 +124,13 @@ feature -- Status Report
 
 	is_external_class: BOOLEAN = True
 			-- Class is defined outside current system.
+
+feature -- Element Change
+
+	set_assembly (a_assembly: ASSEMBLY_I)
+		do
+			assembly := a_assembly
+		end
 
 feature {EXTERNAL_CLASS_C} -- Mapping
 

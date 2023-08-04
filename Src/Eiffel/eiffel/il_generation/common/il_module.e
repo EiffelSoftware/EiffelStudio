@@ -3074,7 +3074,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				else
 					if attached {EXTERNAL_CLASS_C} a_class_type.associated_class as l_external_class then
 							-- When it is an XML represented external class.
-						l_assembly := l_external_class.lace_class.assembly
+						l_assembly := if attached l_external_class.lace_class.public_assembly as l_public_assembly then l_public_assembly else l_external_class.lace_class.assembly end
 						l_name := l_assembly.assembly_name
 						l_version_string := l_assembly.assembly_version
 						l_culture := l_assembly.assembly_culture
@@ -3274,11 +3274,12 @@ feature {NONE} -- Once per modules being generated.
 --			l_pub_key: MD_PUBLIC_KEY_TOKEN
 			l_mscorlib: ASSEMBLY_I
 			l_version: VERSION
+			l_system_runtime: STRING_32
 		do
 				-- To compute it, we simply take the data from `System.Object'. That way our
 				-- code is automatically using the version of `mscorlib' that was specified
 				-- in the Ace file.
-			l_mscorlib := system.system_object_class.assembly
+			l_mscorlib := if attached system.system_object_class.public_assembly as l_assembly then l_assembly else system.system_object_class.assembly end
 
 			create l_version
 			check
@@ -3293,7 +3294,10 @@ feature {NONE} -- Once per modules being generated.
 			l_ass_info.set_revision_number (l_version.revision.to_natural_16)
 
 --			create l_pub_key.make_from_string (l_mscorlib.assembly_public_key_token)
+				-- Workaround
+--			l_system_runtime := "system.runtime"
 			mscorlib_token := define_assembly_reference (l_mscorlib.assembly_name, l_ass_info.string, "", l_mscorlib.assembly_public_key_token)
+--			mscorlib_token := define_assembly_reference (l_mscorlib, l_ass_info.string, "", l_mscorlib.assembly_public_key_token)
 
 			type_handle_class_token := md_emit.define_type_ref (
 				create {CLI_STRING}.make (Type_handle_class_name), mscorlib_token)

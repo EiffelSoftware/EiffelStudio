@@ -64,6 +64,16 @@ feature {CONF_ACCESS} -- Update
 			group_set: group = a_group
 		end
 
+	set_public_group (a_public_group: like public_group)
+			-- Set `public_group' to `a_public_group'.
+		require
+			a_public_group_ok: a_public_group /= Void and then a_public_group.is_valid
+		do
+			public_group := a_public_group
+		ensure
+			public_group: public_group = a_public_group
+		end
+
 	name_from_associated_file: STRING
 			-- Compute `renamed_name' from `name'.
 		do
@@ -85,6 +95,9 @@ feature -- Access
 
 	group: CONF_PHYSICAL_ASSEMBLY
 			-- The assembly this class belongs to.
+
+	public_group: detachable CONF_PHYSICAL_ASSEMBLY
+			-- The public assembly this class belongs to.
 
 feature {NONE} -- Implementation
 
@@ -124,7 +137,7 @@ invariant
 	dotnet_name_ok: dotnet_name /= Void and then not dotnet_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

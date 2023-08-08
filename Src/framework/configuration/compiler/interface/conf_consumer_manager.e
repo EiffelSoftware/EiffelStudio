@@ -592,26 +592,28 @@ feature {NONE} -- Implementation
 									modified_classes.force (l_class)
 								end
 							else
-									-- Workaround to replace System.Private.CoreLib and System.Private.Uri by System.Runtime
-									-- this workaround is not safe since not every type that's exported in System.Runtime
-									-- is defined in System.Private.CoreLib or System.Private.Uri.
-									-- And it is not correct to assume that every class defined in System.Private.CoreLib.dll and System.Private.Uri.dll
-									-- will be available from System.Runtime.dll
+									-- Workaround to replace System.Private.* (especially System.Private.CoreLib and System.Private.Uri) by System.Runtime
+
+									-- WARNING: this workaround is not safe
+									--			Indeed, not every type that is exported in System.Runtime is defined in System.Private.CoreLib or System.Private.Uri.
+									-- 			And it is not correct to assume that every class defined in System.Private.CoreLib.dll and System.Private.Uri.dll
+									-- 			will be available from System.Runtime.dll
 									--
 									-- Options:
 								    --
 									-- 1: Use Reference Assemblies instead of SDK Assemblies to use only Public APIs with nemdc and
 									--    the Eiffel consumer interface.
 									-- 2: Use SDK assemblies, but verify the corresponding assembly for each class.
-									--    it requires to read and inspect different reference assemblies. We can build
-									--    a cache so we can query and get the defined assembly.
+									--    it requires to read and inspect different reference assemblies.
+									--	  We can build a cache so we can query and get the defined assembly.
 									--    Defined for example at: dotnet\packs\Microsoft.NETCore.App.Ref\6.0.16\ref\net6.0
 
  								l_class := factory.new_class_assembly (l_name, l_dotnet_name, a_assembly, l_pos)
-								if a_assembly.name.is_case_insensitive_equal ("system.private.corelib") or else
-								   a_assembly.name.is_case_insensitive_equal ("system.private.uri")
+								if
+									attached system_runtime_assembly as l_system_runtime_assembly and then
+									a_assembly.name.as_lower.starts_with_general ("system.private.")
 								then
-									l_class.set_public_group (factory.new_physical_assembly (system_runtime_assembly, full_cache_path, application_target))
+									l_class.set_public_group (factory.new_physical_assembly (l_system_runtime_assembly, full_cache_path, application_target))
 								end
 								added_classes.force (l_class)
 							end

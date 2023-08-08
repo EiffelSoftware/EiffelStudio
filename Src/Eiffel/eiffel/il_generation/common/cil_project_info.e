@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			then
 				system_version := l_msil_version.to_string_8 -- FIXME: Unicode version?
 			else
-				system_version := "1.0.0" -- Default?
+				system_version := "1.0.0.0" -- Default?
 			end
 
 			system_type := a_system.msil_generation_type.to_string_8 -- dll | exe

@@ -13,6 +13,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
+			major_version := 1 -- Default version is: 1.0.0.0
 		end
 
 feature -- Access

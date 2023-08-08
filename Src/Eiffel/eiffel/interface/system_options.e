@@ -183,9 +183,6 @@ feature -- Access: IL code generation
 	msil_version: STRING_32
 			-- Version of current assembly.
 
-	default_msil_version: STRING_32 = "0.0.0.0"
-			-- Default version of current assembly.
-
 	msil_key_file_name: PATH
 			-- Location of key pair used to sign current generated assembly.
 

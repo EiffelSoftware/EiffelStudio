@@ -3017,16 +3017,17 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				if is_using_multi_assemblies then
 						-- AssemblyRef token has not yet been computed.
 					create l_version
-					l_version.set_version (if attached system.msil_version as l_msil_version then l_msil_version else system.default_msil_version end)
+					if attached system.msil_version as l_msil_version then
+						l_version.set_version (l_msil_version)
+					else
+						l_version.set_version ("1.0.0.0") -- Default version.
+					end
 					l_ass_info := md_factory.assembly_info
 					l_ass_info.set_major_version (l_version.major.to_natural_16)
 					l_ass_info.set_minor_version (l_version.minor.to_natural_16)
 					l_ass_info.set_build_number (l_version.build.to_natural_16)
 					l_ass_info.set_revision_number (l_version.revision.to_natural_16)
---					a_module.assembly_info
-
 					Result := define_assembly_reference (a_module.module_name, system.msil_version, "", Void)
---					Result := md_emit.define_assembly_ref (create {CLI_STRING}.make (a_module.module_name), l_ass_info, Void)
 					internal_module_references.put (Result, a_module)
 				else
 						-- ModuleRef token has not yet been computed.

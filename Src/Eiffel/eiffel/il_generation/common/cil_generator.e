@@ -554,7 +554,7 @@ libs_tpl := "    %"${LIB_NAME_VERSION}%": { %"type%": %"reference%",  %"servicea
 			then
 				l_system_version := l_msil_version
 			else
-				l_system_version := "1.0.0" -- Default?
+				l_system_version := "1.0.0.0" -- Default?
 			end
 
 			l_system_type := a_system.msil_generation_type -- dll | exe

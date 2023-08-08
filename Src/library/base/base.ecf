@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
 	<description>Eiffel Base</description>
 	<target name="base">
 		<description>FreeELKS: Library of reusable components for Eiffel.
-			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).
+		</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
@@ -26,6 +27,19 @@
 		<mapping old_name="CHARACTER" new_name="CHARACTER_8"/>
 		<mapping old_name="CHARACTER_REF" new_name="CHARACTER_8_REF"/>
 		<mapping old_name="DOUBLE" new_name="REAL_64"/>
+		<namespace name="Internal">
+			<renaming old_name="CONSOLE" new_name="INTERNAL_CONSOLE"/>
+		</namespace>
+		<namespace name="System"/>
+		<namespace name="System.Diagnostics">
+			<renaming old_name="PROCESS" new_name="SYSTEM_DLL_PROCESS"/>
+			<renaming old_name="PROCESS_START_INFO" new_name="SYSTEM_DLL_PROCESS_START_INFO"/>
+		</namespace>
+		<namespace name="System.Runtime" prefix="SYSTEM_DLL_"/>
+		<namespace name="System.Text">
+			<renaming old_name="ENCODING" new_name="SYSTEM_ENCODING"/>
+		</namespace>
+		<namespace name="System.XML" prefix="XML_"/>
 		<external_include location="$(ISE_LIBRARY)/library/base/elks/encoding/implementation/include">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -42,18 +56,11 @@
 			</condition>
 		</external_linker_flag>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
-		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">
-			<renaming old_name="INTERFACE_TYPE_ATTRIBUTE" new_name="SYSTEM_INTERFACE_TYPE_ATTRIBUTE"/>
-			<renaming old_name="ENCODING" new_name="SYSTEM_ENCODING"/>
-			<renaming old_name="THREAD_STATE" new_name="SYSTEM_THREAD_STATE"/>
-			<renaming old_name="TIMER" new_name="SYSTEM_TIMER"/>
-			<renaming old_name="WEAK_REFERENCE" new_name="SYSTEM_WEAK_REFERENCE"/>
-		</assembly>
-		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
-		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll"/>
+		<assembly name="system_diagnostics_process" location="$ISE_DOTNET_FRAMEWORK\System.Diagnostics.Process.dll"/>
 		<cluster name="elks" location="elks\" recursive="true">
-			<option namespace="Base">
-			</option>
+			<option namespace="Base"/>
 			<file_rule>
 				<exclude>/structures/cursor_tree/compact_cursor_tree.e$</exclude>
 				<exclude>/structures/cursor_tree/linked_cursor_tree.e$</exclude>
@@ -119,17 +126,14 @@
 				<exclude>/encoding$</exclude>
 			</file_rule>
 			<cluster name="encoding" location="$|encoding\">
-				<option namespace="Encoding">
-				</option>
+				<option namespace="Encoding"/>
 				<cluster name="implementation" location="$|implementation\" hidden="true">
-					<option namespace="Implementation">
-					</option>
+					<option namespace="Implementation"/>
 					<cluster name="windows" location="$|windows\" hidden="true">
 						<condition>
 							<platform value="windows"/>
 						</condition>
-						<option namespace="Windows">
-						</option>
+						<option namespace="Windows"/>
 					</cluster>
 					<cluster name="unix" location="$|unix\" hidden="true">
 						<condition>
@@ -140,8 +144,7 @@
 			</cluster>
 		</cluster>
 		<cluster name="ise" location="ise\" recursive="true">
-			<option namespace="Base">
-			</option>
+			<option namespace="Base"/>
 			<file_rule>
 				<exclude>/dotnet$</exclude>
 				<condition>

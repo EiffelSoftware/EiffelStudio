@@ -3017,7 +3017,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				if is_using_multi_assemblies then
 						-- AssemblyRef token has not yet been computed.
 					create l_version
-					l_version.set_version (system.msil_version)
+					l_version.set_version (if attached system.msil_version as l_msil_version then l_msil_version else system.default_msil_version end)
 					l_ass_info := md_factory.assembly_info
 					l_ass_info.set_major_version (l_version.major.to_natural_16)
 					l_ass_info.set_minor_version (l_version.minor.to_natural_16)

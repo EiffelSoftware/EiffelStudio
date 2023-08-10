@@ -127,14 +127,6 @@ feature -- XML generation
 				args.force ("-a")
 				args.force (a)
 			end
-			if is_eiffel_layout_defined and then eiffel_layout.use_json_dotnet_md_cache then
-				args.force ("-json") -- For "JSON" storage
-			end
-			args.force ("-o")
-			args.force (cache_location.name)
-			if a_info_only then
-				args.force ("-g")
-			end
 			if a_references /= Void then
 				across
 					a_references as r
@@ -164,6 +156,16 @@ feature -- XML generation
 			if attached execution_environment.item (eiffel_layout.default_il_environment.ise_dotnet_framework_env) as d then
 				args.extend ("-runtime")
 				args.extend (d)
+			end
+
+			if is_eiffel_layout_defined and then eiffel_layout.use_json_dotnet_md_cache then
+				args.force ("-json") -- For "JSON" storage
+			end
+			args.force ("-o")
+			args.force (cache_location.name)
+
+			if a_info_only then
+				args.force ("-g")
 			end
 
 			if is_debug then

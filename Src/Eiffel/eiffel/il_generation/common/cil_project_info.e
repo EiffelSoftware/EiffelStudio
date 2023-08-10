@@ -39,6 +39,9 @@ feature {NONE} -- Initialization
 				l_fmwk_name := s
 				l_fmwk_version := ""
 			end
+			if l_fmwk_name.as_lower.ends_with_general (".ref") then
+				l_fmwk_name.remove_tail (4) -- removing the .ref
+			end
 			framework_name := l_fmwk_name
 			framework_version := l_fmwk_version
 

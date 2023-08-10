@@ -216,6 +216,7 @@ feature -- Helpers
 			p.close
 			create Result.make (0)
 			if s /= Void then
+					-- TODO: adapt to list Reference assemblies runtime.
 				across
 					s.split ('%N') as ic
 				loop

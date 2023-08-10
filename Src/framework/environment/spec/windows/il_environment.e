@@ -75,20 +75,19 @@ feature -- Access
 			across
 				dotnet_runtime_paths as p
 			loop
-				l_file_name := p.extended ("shared")
+				l_file_name := p.extended ("packs")
 				create l_dir.make_with_path (l_file_name)
 				if l_dir.exists then
 					across l_dir.entries as e loop
 						l_entry := e
 						create l_dir.make_with_path (l_file_name.extended_path (l_entry))
 						if
-							not l_entry.is_current_symbol and then
-							not l_entry.is_parent_symbol and then
+							attached l_entry.extension as ext and then ext.is_case_insensitive_equal_general ("ref") and then
 							l_dir.exists
 						then
 							across l_dir.entries as v loop
 								if version_expression.matches (v.utf_8_name) then
-									Result [l_entry.name + "/" + v.name] := l_file_name.extended_path (l_entry).extended_path (v)
+									Result [l_entry.name + "/" + v.name] := l_file_name.extended_path (l_entry).extended_path (v).extended ("Ref").extended (dotnet_moniker (v.name))
 								end
 							end
 						end

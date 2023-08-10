@@ -128,6 +128,37 @@ feature -- Query
 		deferred
 		end
 
+feature -- Helpers		
+
+	dotnet_moniker (v: READABLE_STRING_32): STRING_32
+			-- .Net moniker id for .Net version `v`.
+		local
+			i,j: INTEGER
+			shv: STRING_32
+		do
+				-- TODO: check if similar code does not exist elsewhere.
+			i := v.index_of ('.', 1)
+			if i > 1 then
+				j := v.index_of ('.', i + 1)
+				if j > 0 then
+					shv := v.substring (1, j - 1)
+				else
+					shv := v.substring (1, v.count)
+				end
+			else
+				shv := v + {STRING_32} ".0"
+			end
+			if shv.is_case_insensitive_equal_general ("3.1") then
+				Result := {STRING_32} "netcoreapp" + shv
+			elseif shv.is_case_insensitive_equal_general ("2.1") then
+				Result := {STRING_32} "netstandard" + shv
+			elseif shv.is_case_insensitive_equal_general ("4.8") then
+				Result := {STRING_32} "net48"
+			else
+				Result := {STRING_32} "net" + shv
+			end
+		end
+
 feature -- Constants
 
 	v1_0: STRING = "v1.0"

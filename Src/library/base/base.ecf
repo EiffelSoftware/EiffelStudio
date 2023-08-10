@@ -58,7 +58,13 @@
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll"/>
+		<assembly name="system_runtime" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.dll"/>
+		<assembly name="system_console" location="$ISE_DOTNET_FRAMEWORK\System.Console.dll"/>
+		<assembly name="system_runtime_interop_services" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.InteropServices.dll"/>
+		<assembly name="system_runtime_serialization_formatters" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.Serialization.Formatters.dll"/>
+		<assembly name="system_diagnostics_stack_trace" location="$ISE_DOTNET_FRAMEWORK\System.Diagnostics.StackTrace.dll"/>
 		<assembly name="system_diagnostics_process" location="$ISE_DOTNET_FRAMEWORK\System.Diagnostics.Process.dll"/>
+		<assembly name="system_threading_thread" location="$ISE_DOTNET_FRAMEWORK\System.Threading.Thread.dll"/>
 		<cluster name="elks" location="elks\" recursive="true">
 			<option namespace="Base"/>
 			<file_rule>

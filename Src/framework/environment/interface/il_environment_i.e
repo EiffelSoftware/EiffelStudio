@@ -120,6 +120,8 @@ feature -- Status report
 			end
 		end
 
+	is_using_reference_assemblies: BOOLEAN = True
+			-- Use reference assemblies instead of implementation assemblies.
 
 feature -- Query
 

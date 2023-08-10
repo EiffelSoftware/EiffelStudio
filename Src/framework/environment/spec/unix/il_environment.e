@@ -37,7 +37,7 @@ feature -- Access
 	default_dotnet_platform: IMMUTABLE_STRING_32
 		once
 			Result := dotnet_platform_netcore
-		end	
+		end
 
 	installed_runtimes: STRING_TABLE [PATH]
 			-- All paths of installed versions of .NET runtime indexed by their version names.
@@ -182,8 +182,10 @@ feature -- Helpers
 			p: BASE_PROCESS
 			buffer: SPECIAL [NATURAL_8]
 			s, line, v, d: STRING_8
+			dn: STRING_32
 			i,j: INTEGER
 			loc: PATH
+			fut: FILE_UTILITIES
 		once
 			create fac
 			if {PLATFORM}.is_windows then
@@ -216,7 +218,6 @@ feature -- Helpers
 			p.close
 			create Result.make (0)
 			if s /= Void then
-					-- TODO: adapt to list Reference assemblies runtime.
 				across
 					s.split ('%N') as ic
 				loop
@@ -226,15 +227,31 @@ feature -- Helpers
 						s := line.substring (1, i - 1)
 						j := line.index_of (' ', i + 1)
 						if j > 0 then
-							v := line.substring (i + 1, j - 1)
-							s.extend ('/')
-							s.append (v)
 							d := line.substring (j + 1, line.count)
-
 							if d.count > 1 and d [1] = '[' and d [d.count] = ']' then
 								d := d.substring (2, d.count - 1)
-								create loc.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (d))
-								Result.force ([s, loc.extended (v)])
+								dn := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (d)
+								create loc.make_from_string (dn)
+
+								v := line.substring (i + 1, j - 1)
+								if is_using_reference_assemblies then
+									s.append (".Ref")
+
+									dn := loc.name
+									dn.replace_substring_all ("/dotnet/shared/", "/dotnet/packs/")
+									dn.append (".Ref")
+									create loc.make_from_string (dn)
+									loc := loc.extended (v).extended ("ref").extended (dotnet_moniker (v))
+								else
+									loc := loc.extended (v)
+								end
+								s.extend ('/')
+								s.append (v)
+								if fut.directory_path_exists (loc) then
+									Result.force ([s, loc])
+								end
+							else
+								loc := Void
 							end
 						end
 					end
@@ -265,19 +282,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

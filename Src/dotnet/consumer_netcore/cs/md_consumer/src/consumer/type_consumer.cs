@@ -1172,8 +1172,21 @@ namespace md_consumer
 								AssemblyName? a1 = vt.Assembly.GetName();
 								AssemblyName? a2 = t.Assembly.GetName();
 								if (a1 != null && a2 != null) {
-									if (a1.Name != null && a1.Name.Equals (a2.Name)) {
-										return a1.CultureName != null && a1.CultureName.Equals(a2.CultureName);
+									if (a1.Name != null && a2.Name != null) {
+										if (a1.Name.Equals (a2.Name)) {
+											return a1.CultureName != null && a1.CultureName.Equals(a2.CultureName);
+										} else if (
+												a1.Name.StartsWith("System.Private.")
+												&& a2.Name.Equals("System.Runtime") 
+											) 
+										{
+											// WARNING: the nemdc already load the System.Void from System.Private.CoreLib
+											// and using Reference Assemblies, `t` may be System.Void from System.Runtime 
+											// and `vt` may be System.Void from System.Private.CoreLib
+											return true;
+										} else {
+											return false;
+										}
 									} else {
 										return false;
 									}

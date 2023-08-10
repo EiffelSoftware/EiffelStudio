@@ -59,6 +59,19 @@ namespace md_consumer
                             return e.Value;
                         }
                     }
+                        // WARNING: Workaround using System.Runtime instead of System.Private.CoreLib, when this private assembly is not loaded
+						// by consumed assemblies (but loaded by nemdc process itself).
+
+						// If assembly name not found, and if it is a System.Private.* library
+                        // try using System.Runtime assembly instead.
+                    if (tn.StartsWith("System.Private.")) {
+                        tn = "System.Runtime,";
+                        foreach(KeyValuePair<string, int> e in assembly_mapping_table) {
+                            if (e.Key.StartsWith(tn)) {
+                                return e.Value;
+                            }
+                        }
+                    }                    
                 }
             }
             return -1;

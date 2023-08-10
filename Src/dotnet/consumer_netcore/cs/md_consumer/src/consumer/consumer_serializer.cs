@@ -470,7 +470,7 @@ namespace md_consumer
                 end_serialize_object(arg);
             }
             writer.WriteEndArray();
-        }      
+        }
         public void serialize_procedure (CONSUMED_PROCEDURE proc)
         {
             var writer = json_writer;

@@ -404,6 +404,8 @@ feature -- Generation
 			end
 		end
 
+
+
 	deploy_netcore_runtimeconfig_json_file (vars: CIL_PROJECT_INFO; a_target_directory: PATH; a_target_filename: READABLE_STRING_GENERAL)
 		local
 			f: PLAIN_TEXT_FILE
@@ -486,7 +488,7 @@ lib_deps_tpl := "          %"${LIB_NAME}%": %"${LIB_VERSION}%""
 
 libs_runtime_tpl := "      %"${LIB_NAME_VERSION}%": { %"runtime%": {%"${LIB_NAME}.dll%":{}} }"
 
--- FIXME
+---- FIXME
 -- at the moment the field serviceable and sha512 are using default values
 -- false and empty string to be checked.
 libs_tpl := "    %"${LIB_NAME_VERSION}%": { %"type%": %"reference%",  %"serviceable%": false,  %"sha512%": %"%" }"
@@ -501,7 +503,9 @@ libs_tpl := "    %"${LIB_NAME_VERSION}%": { %"type%": %"reference%",  %"servicea
 
 					v := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (ic.item.name)
 						-- TODO double check but it seems we only need this one.
-					if v.is_case_insensitive_equal ("eiffelsoftware.runtime")  then
+					if is_finalizing and then v.is_case_insensitive_equal ("eiffelsoftware.runtime")  then
+
+							-- Extract feature append_items
 						libs.append (",%N")
 						libs.append (libs_tpl)
 
@@ -523,12 +527,40 @@ libs_tpl := "    %"${LIB_NAME_VERSION}%": { %"type%": %"reference%",  %"servicea
 							v.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
 							libs_deps.replace_substring_all ("${LIB_VERSION}", {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
 						else
-							libs_deps.replace_substring_all ("${LIB_VERSION}", "0.0.0.0")
+							libs_deps.replace_substring_all ("${LIB_VERSION}", "1.0.0.0")
+						end
+
+						libs.replace_substring_all ("${LIB_NAME_VERSION}", v)
+						libs_runtime.replace_substring_all ("${LIB_NAME_VERSION}", v)
+					else
+						libs.append (",%N")
+						libs.append (libs_tpl)
+
+						libs_runtime.append (",%N")
+						libs_runtime.append (libs_runtime_tpl)
+
+						if l_start then
+							l_start := False
+						else
+							libs_deps.append (",")
+						end
+						libs_deps.append ("%N")
+						libs_deps.append (lib_deps_tpl)
+
+						libs_runtime.replace_substring_all ("${LIB_NAME}", v)
+						libs_deps.replace_substring_all ("${LIB_NAME}", v)
+						if attached ic.item.version as l_version then
+							v.append_character ('/')
+							v.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
+							libs_deps.replace_substring_all ("${LIB_VERSION}", {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
+						else
+							libs_deps.replace_substring_all ("${LIB_VERSION}", "1.0.0.0")
 						end
 
 						libs.replace_substring_all ("${LIB_NAME_VERSION}", v)
 						libs_runtime.replace_substring_all ("${LIB_NAME_VERSION}", v)
 					end
+
 				end
 			end
 
@@ -599,7 +631,7 @@ public class wrap_${SYSTEM_NAME}
     {
          MAIN.Main();
     }
-}			
+}
 			]"
 			s.replace_substring_all ("${SYSTEM_NAME}", vars.system_name)
 			create f.make_with_path (a_target_directory.extended ("wrap_" + vars.system_name + ".cs"))
@@ -675,6 +707,7 @@ public class wrap_${SYSTEM_NAME}
 			Result := [a_system.name, l_system_version, l_system_type, l_fmwk_name, l_fmwk_version, l_framework_moniker, l_clr_runtime]
 
 		end
+
 
 feature {NONE} -- Type description
 

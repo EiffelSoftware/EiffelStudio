@@ -1345,7 +1345,11 @@ feature -- Code generation
 				-- FIXME: also save associated .deps.json file!
 				create loc.make_from_string (module_file_name)
 				if attached loc.parent as l_parent then
-					deploy_netcore_deps_json_file (defined_assemblies, system, l_parent, module_name + ".deps.json")
+					-- FIXME
+					-- It seems deps.json file per file is not needed.
+					-- still under testing, if we are sure we need
+					-- to remove the feature deploy_netcore_deps_json_file
+					-- deploy_netcore_deps_json_file (defined_assemblies, system, l_parent, module_name + ".deps.json")
 				end
 			end
 
@@ -1416,8 +1420,9 @@ feature -- Netcore deployment
 				create libs.make_empty
 libs_tpl := "[
 
-    "${LIB_NAME_VERSION}": { "type": "reference" }
+    "${LIB_NAME_VERSION}": { "type": "reference", "serviceable": false, "sha512": "" }
 ]"
+
 				across
 					a_assemblie as ic
 				loop

@@ -1,9 +1,18 @@
 ﻿note
-	description: "Plain encapsulation of StrongName API."
+	description: "[
+		Plain encapsulation of ICLRStrongName Interface d
+		defined in MetaHost.h
+
+		The old code was a plain encapsulation of StrongName API.
+		All of these functions have been deprecated starting with the .NET Framework 4. For suggested alternatives, see the ICLRStrongName interface.
+
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=Strong Naming", "src=https://learn.microsoft.com/en-us/dotnet/framework/unmanaged-api/strong-naming/", "protocol=uri"
+	EIS: "name=ICLR Strong Naming", "src=https://learn.microsoft.com/en-us/dotnet/framework/unmanaged-api/hosting/iclrstrongname-interface", "protocol=uri"
 
 class
 	MD_STRONG_NAME
@@ -25,10 +34,11 @@ feature {NONE} -- Initialize
 			l_dll: WEL_DLL
 		do
 			runtime_version := a_runtime_version
-				-- Initialize `path' so that we can load `mscorsn.dll'.
+				-- Initialize `path' so that we can load `mscoreei.dll'.
 			setup
-				-- Check that `mscorsn.dll' can be found.
-			create l_dll.make ("mscorsn.dll")
+				-- Check that `MSCorEEi.dll' can be found.
+			--create l_dll.make ("mscorsn.dll")
+			create l_dll.make ("mscoreei.dll")
 			exists := l_dll.exists
 		ensure
 			runtime_version_set: runtime_version = a_runtime_version
@@ -37,7 +47,7 @@ feature {NONE} -- Initialize
 feature -- Status report
 
 	exists: BOOLEAN
-			-- Is `mscorsn.dll' available?
+			-- Is `mscoreei.dll' available?
 
 	runtime_version: STRING_32
 			-- Version for which we are signing.
@@ -45,8 +55,8 @@ feature -- Status report
 feature {NONE} -- Status report
 
 	setup
-			-- Initialize environment for loading `mscorsn.dll', i.e.
-			-- append path to `mscorsn.dll' to PATH environment variable.
+			-- Initialize environment for loading `mscoreei.dll', i.e.
+			-- append path to `mscoreei.dll' to PATH environment variable.
 		local
 			s: STRING_32
 			l_il_env: IL_ENVIRONMENT_I
@@ -90,9 +100,9 @@ feature -- Access
 				-- https://docs.microsoft.com/en-us/dotnet/framework/unmanaged-api/strong-naming/strongnamegetpublickey-function
 				-- Use this instead:
 				-- https://docs.microsoft.com/en-us/dotnet/framework/unmanaged-api/hosting/iclrstrongname-strongnamegetpublickey-method
-			if strong_name_get_public_key (default_pointer, a_key_blob.item, a_key_blob.count, $l_ptr, $l_key_size) /= 0 then
+			if iclr_strong_name_get_public_key (default_pointer, a_key_blob.item, a_key_blob.count, $l_ptr, $l_key_size) /= 0 then
 				create Result.make_from_pointer (l_ptr, l_key_size)
-				strong_name_free_buffer (l_ptr)
+				iclr_strong_name_free_buffer (l_ptr)
 			end
 		end
 
@@ -103,9 +113,9 @@ feature -- Access
 			l_key_size: INTEGER
 			l_result: INTEGER
 		do
-			l_result := strong_name_token_from_public_key (a_public_key_blob.item, a_public_key_blob.count, $l_ptr, $l_key_size)
+			l_result := iclr_strong_name_token_from_public_key (a_public_key_blob.item, a_public_key_blob.count, $l_ptr, $l_key_size)
 			create Result.make_from_pointer (l_ptr, l_key_size)
-			strong_name_free_buffer (l_ptr)
+			iclr_strong_name_free_buffer (l_ptr)
 		end
 
 	assembly_signature (a_file: CLI_STRING; a_public_private_key: MANAGED_POINTER): MANAGED_POINTER
@@ -117,10 +127,10 @@ feature -- Access
 			l_ptr: POINTER
 			l_size, l_result: INTEGER
 		do
-			l_result := strong_name_signature_generation (a_file.item, default_pointer,
+			l_result := iclr_strong_name_signature_generation (a_file.item, default_pointer,
 				a_public_private_key.item, a_public_private_key.count, $l_ptr, $l_size)
 			create Result.make_from_pointer (l_ptr, l_size)
-			strong_name_free_buffer (l_ptr)
+			iclr_strong_name_free_buffer (l_ptr)
 		end
 
 	assembly_signature_size (a_public_private_key: MANAGED_POINTER): INTEGER
@@ -130,7 +140,7 @@ feature -- Access
 		local
 			l_result: INTEGER
 		do
-			l_result := strong_name_signature_size (
+			l_result := iclr_strong_name_signature_size (
 				a_public_private_key.item, a_public_private_key.count, $Result)
 		end
 
@@ -141,7 +151,7 @@ feature -- Access
 			l_alg_id, l_result, l_size: INTEGER
 		do
 			create l_hash.make (1024)
-			l_result := get_hash_from_file (a_file_path.item, $l_alg_id, l_hash.item, l_hash.count, $l_size)
+			l_result := iclr_get_hash_from_file (a_file_path.item, $l_alg_id, l_hash.item, l_hash.count, $l_size)
 			create Result.make_from_pointer (l_hash.item, l_size)
 		end
 
@@ -153,9 +163,9 @@ feature -- Factory
 			l_ptr: POINTER
 			l_result, l_size: INTEGER
 		do
-			l_result := strong_name_key_gen (default_pointer, 0, $l_ptr, $l_size)
+			l_result := iclr_strong_name_key_gen (default_pointer, 0, $l_ptr, $l_size)
 			create Result.make_from_pointer (l_ptr, l_size)
-			strong_name_free_buffer (l_ptr)
+			iclr_strong_name_free_buffer (l_ptr)
 		ensure
 			new_public_private_key_pair_not_void: Result /= Void
 		end
@@ -164,6 +174,8 @@ feature {NONE} -- C externals
 
 	frozen get_error: INTEGER
 			-- Retrieve error code if any.
+		obsolete
+			"This function has been deprecated in .Net4"
 		external
 			"dllwin mscorsn.dll signature : EIF_INTEGER use <StrongName.h>"
 		alias
@@ -172,36 +184,79 @@ feature {NONE} -- C externals
 
 	frozen strong_name_free_buffer (a_key_blob: POINTER)
 			-- Free buffer allocated by routines below.
+		obsolete
+			"This function has been deprecated. Use the iclr_strong_name_free_buffer feature instead."
 		external
 			"dllwin mscorsn.dll signature (BYTE *) use <StrongName.h>"
 		alias
 			"StrongNameFreeBuffer"
 		end
 
+
+	frozen iclr_strong_name_free_buffer (a_key_blob: POINTER)
+			-- Free buffer allocated by routines below.
+		external
+			"dllwin mscoreei.dll signature (BYTE *) use <MetaHost.h>"
+		alias
+			"StrongNameFreeBuffer "
+		end
+
 	frozen strong_name_key_gen (a_container_name: POINTER; flags: INTEGER;
 			a_public_key, a_key_size: POINTER): INTEGER
 
 			-- Generate a new key pair for strong name use.
+		obsolete
+			"This function has been deprecated. Use the iclr_strong_name_key_gen feature instead."
 		external
 			"dllwin mscorsn.dll signature (LPCWSTR, DWORD, BYTE **, ULONG *): EIF_INTEGER use <StrongName.h>"
 		alias
 			"StrongNameKeyGen"
 		end
 
+	frozen iclr_strong_name_key_gen (a_container_name: POINTER; flags: INTEGER;
+			a_public_key, a_key_size: POINTER): INTEGER
+
+			-- Generate a new key pair for strong name use.
+		external
+			"dllwin mscoreei.dll signature (LPCWSTR, DWORD, BYTE **, ULONG *): EIF_INTEGER use <MetaHost.h>"
+		alias
+			"StrongNameKeyGen"
+		end
+
 	frozen strong_name_install (a_container_name: POINTER; a_public_key: POINTER;
 			a_key_size: INTEGER): INTEGER
-
 			-- Import key pair into a key container.
+		obsolete
+			"This function has been deprecated. Use the iclr_strong_name_install feature instead."
 		external
 			"dllwin mscorsn.dll signature (LPCWSTR, BYTE *, ULONG): EIF_INTEGER use <StrongName.h>"
 		alias
 			"StrongNameKeyInstall"
 		end
 
-	frozen strong_name_delete (a_container_name: POINTER): INTEGER
+	frozen iclr_strong_name_install (a_container_name: POINTER; a_public_key: POINTER;
+			a_key_size: INTEGER): INTEGER
 			-- Import key pair into a key container.
 		external
+			"dllwin mscoreei.dll signature (LPCWSTR, BYTE *, ULONG): EIF_INTEGER use <MetaHost.h>"
+		alias
+			"StrongNameKeyInstall"
+		end
+
+	frozen strong_name_delete (a_container_name: POINTER): INTEGER
+			-- Import key pair into a key container.
+		obsolete
+			"This function has been deprecated. Use the iclr_strong_name_delete feature instead."
+		external
 			"dllwin mscorsn.dll signature (LPCWSTR): EIF_INTEGER use <StrongName.h>"
+		alias
+			"StrongNameKeyDelete"
+		end
+
+	frozen iclr_strong_name_delete (a_container_name: POINTER): INTEGER
+			-- Import key pair into a key container.
+		external
+			"dllwin mscoreei.dll signature (LPCWSTR): EIF_INTEGER use <MetaHost.h>"
 		alias
 			"StrongNameKeyDelete"
 		end
@@ -210,6 +265,8 @@ feature {NONE} -- C externals
 			a_key_blob_size: INTEGER; a_public_key: POINTER; a_public_key_size: POINTER): INTEGER
 
 			-- Retrieve the public portion of a key pair.
+		obsolete
+			"This function has been deprecated. Use the iclr_strong_name_get_public_key feature instead."
 		external
 			"[
 				dllwin mscorsn.dll signature (LPCWSTR, BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
@@ -219,11 +276,36 @@ feature {NONE} -- C externals
 			"StrongNameGetPublicKey"
 		end
 
+	frozen iclr_strong_name_get_public_key (a_container_name: POINTER; a_key_blob: POINTER;
+			a_key_blob_size: INTEGER; a_public_key: POINTER; a_public_key_size: POINTER): INTEGER
+
+			-- Retrieve the public portion of a key pair.
+		external
+			"[
+				dllwin mscoreei.dll signature (LPCWSTR, BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
+				use <MetaHost.h>
+			]"
+		alias
+			"StrongNameGetPublicKey"
+		end
+
+
 	frozen strong_name_hash_size (a_hash_alg: INTEGER; a_hash_size: POINTER): INTEGER
 			-- Compute size of buffer in `a_hash_size' needed to hold a hash
 			-- for a given hash algorithm `a_hash_alg'.
+		obsolete
+			"This function has been deprecated. Use the ICLRStrongName::StrongNameHashSize method instead."
 		external
 			"dllwin mscorsn.dll signature (ULONG, DWORD *): EIF_INTEGER use <StrongName.h>"
+		alias
+			"StrongNameHashSize"
+		end
+
+	frozen iclr_strong_name_hash_size (a_hash_alg: INTEGER; a_hash_size: POINTER): INTEGER
+			-- Compute size of buffer in `a_hash_size' needed to hold a hash
+			-- for a given hash algorithm `a_hash_alg'.
+		external
+			"dllwin mscoreei.dll signature (ULONG, DWORD *): EIF_INTEGER use <MetaHost.h>"
 		alias
 			"StrongNameHashSize"
 		end
@@ -232,8 +314,20 @@ feature {NONE} -- C externals
 			a_hash_size: POINTER): INTEGER
 
 			-- Compute size that needs to be allocated for a signature in an assembly.
+		obsolete
+			"This function has been deprecated. Use the iclr_strong_name_signature_size feature instead."
 		external
 			"dllwin mscorsn.dll signature (BYTE *, ULONG, DWORD *): EIF_INTEGER use <StrongName.h>"
+		alias
+			"StrongNameSignatureSize"
+		end
+
+	frozen iclr_strong_name_signature_size (a_public_key: POINTER; a_key_size: INTEGER;
+			a_hash_size: POINTER): INTEGER
+
+			-- Compute size that needs to be allocated for a signature in an assembly.
+		external
+			"dllwin mscoreei.dll signature (BYTE *, ULONG, DWORD *): EIF_INTEGER use <MetaHost.h>"
 		alias
 			"StrongNameSignatureSize"
 		end
@@ -242,6 +336,9 @@ feature {NONE} -- C externals
 			a_public_key_size: INTEGER; a_hash_buffer, a_hash_buffer_size: POINTER): INTEGER
 
 			-- Hash and sign a manifest.
+		obsolete
+			"This function has been deprecated. Use the iclr_strong_name_signature_generation feature instead"
+
 		external
 			"[
 				dllwin mscorsn.dll signature (LPCWSTR, LPCWSTR, BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
@@ -251,10 +348,27 @@ feature {NONE} -- C externals
 			"StrongNameSignatureGeneration"
 		end
 
+	frozen iclr_strong_name_signature_generation (a_file_path, a_container, a_public_key: POINTER;
+			a_public_key_size: INTEGER; a_hash_buffer, a_hash_buffer_size: POINTER): INTEGER
+
+			-- Hash and sign a manifest.
+		external
+			"[
+				dllwin mscoreei.dll signature (LPCWSTR, LPCWSTR, BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
+				use <MetaHost.h>
+			]"
+		alias
+			"StrongNameSignatureGeneration"
+		end
+
+
 	frozen strong_name_token_from_public_key (a_public_key: POINTER; key_length: INTEGER;
 			token, token_lenght: POINTER): INTEGER
 
 			-- Create a strong name token from a public key blob.
+		obsolete
+			"This function has been deprecated. Use the iclr_strong_name_token_from_public_key feature instead"
+
 		external
 			"[
 				dllwin mscorsn.dll signature (BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
@@ -264,10 +378,26 @@ feature {NONE} -- C externals
 			"StrongNameTokenFromPublicKey"
 		end
 
+	frozen iclr_strong_name_token_from_public_key (a_public_key: POINTER; key_length: INTEGER;
+			token, token_lenght: POINTER): INTEGER
+
+			-- Create a strong name token from a public key blob.
+		external
+			"[
+				dllwin mscoreei.dll signature (BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
+				use <MetaHost.h>
+			]"
+		alias
+			"StrongNameTokenFromPublicKey"
+		end
+
 	frozen get_hash_from_assembly_file (a_file_path: POINTER; a_hash_alg_id: POINTER;
 			a_hash_buffer: POINTER; a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
 
 			-- Compute hash of `a_blob' using `a_hash_alg_id'.
+		obsolete
+			"This function has been deprecated. Use the iclr_get_hash_from_assembly_file feature instead."
+
 		external
 			"[
 				dllwin mscorsn.dll signature (LPCWSTR, unsigned int *, BYTE *, DWORD, DWORD *): EIF_INTEGER
@@ -277,10 +407,26 @@ feature {NONE} -- C externals
 			"GetHashFromAssemblyFileW"
 		end
 
+	frozen iclr_get_hash_from_assembly_file (a_file_path: POINTER; a_hash_alg_id: POINTER;
+			a_hash_buffer: POINTER; a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
+
+			-- Compute hash of `a_blob' using `a_hash_alg_id'.
+		external
+			"[
+				dllwin mscoreei.dll signature (LPCWSTR, unsigned int *, BYTE *, DWORD, DWORD *): EIF_INTEGER
+				use <MetaHost.h>
+			]"
+		alias
+			"GetHashFromAssemblyFileW"
+		end
+
 	frozen get_hash_from_blob (a_blob: POINTER; a_blob_size: INTEGER; a_hash_alg_id: POINTER;
 			a_hash_buffer: POINTER; a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
 
 				-- Compute hash of `a_blob' using `a_hash_alg_id'.
+		obsolete
+			"This function has been deprecated. Use the iclr_get_hash_from_blob feature instead"
+
 		external
 			"[
 				dllwin mscorsn.dll
@@ -291,8 +437,25 @@ feature {NONE} -- C externals
 			"GetHashFromBlob"
 		end
 
+	frozen iclr_get_hash_from_blob (a_blob: POINTER; a_blob_size: INTEGER; a_hash_alg_id: POINTER;
+			a_hash_buffer: POINTER; a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
+
+				-- Compute hash of `a_blob' using `a_hash_alg_id'.
+		external
+			"[
+				dllwin mscoreei.dll
+				signature (BYTE *, DWORD, unsigned int *, BYTE *, DWORD, DWORD *): EIF_INTEGER
+				use <MetaHost.h>
+			]"
+		alias
+			"GetHashFromBlob"
+		end
+
+
 	frozen get_hash_from_file (a_path: POINTER; a_hash_alg_id: POINTER; a_hash_buffer: POINTER;
 			a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
+		obsolete
+			"This function has been deprecated. Use the iclr_get_hash_from_file feature instead."
 
 		external
 			"[
@@ -303,6 +466,19 @@ feature {NONE} -- C externals
 		alias
 			"GetHashFromFileW"
 		end
+
+	frozen iclr_get_hash_from_file (a_path: POINTER; a_hash_alg_id: POINTER; a_hash_buffer: POINTER;
+			a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
+		external
+			"[
+				dllwin mscoreei.dll
+				signature (LPCWSTR, unsigned int *, BYTE *, DWORD, DWORD *): EIF_INTEGER
+				use <MetaHost.h>
+			]"
+		alias
+			"GetHashFromFileW"
+		end
+
 
 invariant
 	runtime_version_not_void: runtime_version /= Void

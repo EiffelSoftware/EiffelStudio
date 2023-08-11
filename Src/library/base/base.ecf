@@ -36,6 +36,9 @@
 			<renaming old_name="PROCESS_START_INFO" new_name="SYSTEM_DLL_PROCESS_START_INFO"/>
 		</namespace>
 		<namespace name="System.Runtime" prefix="SYSTEM_DLL_"/>
+		<namespace name="System.Threading">
+			<renaming old_name="SEMAPHORE" new_name="SYSTEM_DLL_SEMAPHORE"/>
+		</namespace>
 		<namespace name="System.Text">
 			<renaming old_name="ENCODING" new_name="SYSTEM_ENCODING"/>
 		</namespace>
@@ -64,6 +67,7 @@
 		<assembly name="system_runtime_serialization_formatters" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.Serialization.Formatters.dll"/>
 		<assembly name="system_diagnostics_stack_trace" location="$ISE_DOTNET_FRAMEWORK\System.Diagnostics.StackTrace.dll"/>
 		<assembly name="system_diagnostics_process" location="$ISE_DOTNET_FRAMEWORK\System.Diagnostics.Process.dll"/>
+		<assembly name="system_threading" location="$ISE_DOTNET_FRAMEWORK\System.Threading.dll"/>
 		<assembly name="system_threading_thread" location="$ISE_DOTNET_FRAMEWORK\System.Threading.Thread.dll"/>
 		<cluster name="elks" location="elks\" recursive="true">
 			<option namespace="Base"/>
@@ -203,7 +207,7 @@
 		</cluster>
 	</target>
 	<target name="base_dotnet" extends="base">
-		<setting name="msil_clr_version" value="Microsoft.NETCore.App/6.0"/>
+		<setting name="msil_clr_version" value="Microsoft.NETCore.App.Ref/6.0"/>
 		<setting name="msil_generation" value="true"/>
 		<capability>
 			<concurrency use="thread"/>

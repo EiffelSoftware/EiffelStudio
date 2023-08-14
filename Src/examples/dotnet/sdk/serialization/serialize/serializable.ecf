@@ -14,11 +14,54 @@
 			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
-		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system.runtime.serialization.formatters.soap" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.Serialization.Formatters.Soap.dll"/>
+		<cluster name="serializable" location=".\"/>
+	</target>
+	<target name="serializable_netcore6">
+		<root cluster="serializable" class="SERIALIZATION_TEST" feature="main"/>
+		<option full_class_checking="false">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="dotnet_naming_convention" value="True"/>
+		<setting name="msil_generation" value="True"/>
+		<setting name="msil_clr_version" value="Microsoft.NETCore.App.Ref/6.0"/>
+		<setting name="msil_generation_type" value="exe"/>
+		<setting name="dead_code_removal" value="all"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
+		<assembly name="System.Runtime" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.dll"/>
+		<assembly name="System.Console" location="$ISE_DOTNET_FRAMEWORK\System.Console.dll"/>
+		<assembly name="System.Runtime.Serialization.Formatters" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.Serialization.Formatters.dll"/>
+		<cluster name="serializable" location=".\"/>
+	</target>
+	<target name="serializable_netcore7">
+		<root cluster="serializable" class="SERIALIZATION_TEST" feature="main"/>
+		<option full_class_checking="false">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="dotnet_naming_convention" value="True"/>
+		<setting name="msil_generation" value="True"/>
+		<setting name="msil_clr_version" value="Microsoft.NETCore.App.Ref/7.0"/>
+		<setting name="msil_generation_type" value="exe"/>
+		<setting name="dead_code_removal" value="all"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
+		<assembly name="System.Runtime" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.dll"/>
+		<assembly name="System.Console" location="$ISE_DOTNET_FRAMEWORK\System.Console.dll"/>
+		<assembly name="System.Runtime.Serialization.Formatters" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.Serialization.Formatters.dll"/>
 		<cluster name="serializable" location=".\"/>
 	</target>
 </system>

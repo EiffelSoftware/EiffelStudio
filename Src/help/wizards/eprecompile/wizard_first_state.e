@@ -196,8 +196,8 @@ feature {NONE} -- Tools
 		do
 				-- NOTE: for now `a_is_dotnet' is set to False, in future
 				-- the wizard should support dotnet precompiles
-			eiffel_layout.set_precompile (False)
-			create eiffel_directory.make_with_path (eiffel_layout.precompilation_path (False))
+			eiffel_layout.set_precompile (False, Void)
+			create eiffel_directory.make_with_path (eiffel_layout.precompilation_path (False, Void))
 			if eiffel_directory.exists then
 				across
 					eiffel_directory.entries as p

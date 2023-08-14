@@ -16,10 +16,35 @@
 			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
-		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll"/>
 		<cluster name="regex_replace" location=".\"/>
 	</target>
+	<target name="regex_replace_netcore6">
+		<root cluster="regex_replace" class="REGEX_MATCHER" feature="main"/>
+		<option full_class_checking="false" namespace="EiffelSoftware.Samples">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="dotnet_naming_convention" value="True"/>
+		<setting name="msil_generation" value="True"/>
+		<setting name="msil_generation_type" value="exe"/>
+		<setting name="msil_clr_version" value="Microsoft.NETCore.App.Ref/6.0"/>
+		<setting name="use_all_cluster_name_as_namespace" value="False"/>
+		<setting name="use_cluster_name_as_namespace" value="False"/>
+		<setting name="dead_code_removal" value="all"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
+		<assembly name="System.Runtime" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.dll"/>
+		<assembly name="System.Console" location="$ISE_DOTNET_FRAMEWORK\System.Console.dll"/>
+		<assembly name="System.Text.RegularExpressions" location="$ISE_DOTNET_FRAMEWORK\System.Text.RegularExpressions.dll"/>
+		<cluster name="regex_replace" location=".\"/>
+	</target>
+
+
 </system>

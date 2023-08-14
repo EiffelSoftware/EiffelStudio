@@ -328,7 +328,7 @@ feature -- Generation
 				loop
 					if attached {CONF_PHYSICAL_ASSEMBLY} l_assemblies.item_for_iteration as l_as then
 						if l_as.is_enabled (l_state) and then not l_as.is_in_gac then
-							l_assembly_references.force ([l_as.name, l_as.assembly_version])
+							l_assembly_references.force ([l_as.assembly_name, l_as.assembly_version])
 							copy_to_local (l_as.location.build_path ({STRING_32} "", l_as.location.original_file), l_assembly_location, Void)
 							l_has_local := True
 						end

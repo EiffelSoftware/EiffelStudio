@@ -175,7 +175,7 @@ feature {NONE} -- C externals
 	frozen get_error: INTEGER
 			-- Retrieve error code if any.
 		obsolete
-			"This function has been deprecated in .Net4"
+			"This function is deprecated in .Net4 [2023-08-11]"
 		external
 			"dllwin mscorsn.dll signature : EIF_INTEGER use <StrongName.h>"
 		alias
@@ -185,13 +185,12 @@ feature {NONE} -- C externals
 	frozen strong_name_free_buffer (a_key_blob: POINTER)
 			-- Free buffer allocated by routines below.
 		obsolete
-			"This function has been deprecated. Use the iclr_strong_name_free_buffer feature instead."
+			"This function is deprecated. Use the iclr_strong_name_free_buffer feature instead [2023-08-11]"
 		external
 			"dllwin mscorsn.dll signature (BYTE *) use <StrongName.h>"
 		alias
 			"StrongNameFreeBuffer"
 		end
-
 
 	frozen iclr_strong_name_free_buffer (a_key_blob: POINTER)
 			-- Free buffer allocated by routines below.
@@ -206,7 +205,7 @@ feature {NONE} -- C externals
 
 			-- Generate a new key pair for strong name use.
 		obsolete
-			"This function has been deprecated. Use the iclr_strong_name_key_gen feature instead."
+			"This function is deprecated. Use the iclr_strong_name_key_gen feature instead [2023-08-11]"
 		external
 			"dllwin mscorsn.dll signature (LPCWSTR, DWORD, BYTE **, ULONG *): EIF_INTEGER use <StrongName.h>"
 		alias
@@ -227,7 +226,7 @@ feature {NONE} -- C externals
 			a_key_size: INTEGER): INTEGER
 			-- Import key pair into a key container.
 		obsolete
-			"This function has been deprecated. Use the iclr_strong_name_install feature instead."
+			"This function is deprecated. Use the iclr_strong_name_install feature instead [2023-08-11]"
 		external
 			"dllwin mscorsn.dll signature (LPCWSTR, BYTE *, ULONG): EIF_INTEGER use <StrongName.h>"
 		alias
@@ -246,7 +245,7 @@ feature {NONE} -- C externals
 	frozen strong_name_delete (a_container_name: POINTER): INTEGER
 			-- Import key pair into a key container.
 		obsolete
-			"This function has been deprecated. Use the iclr_strong_name_delete feature instead."
+			"This function is deprecated. Use the iclr_strong_name_delete feature instead [2023-08-11]"
 		external
 			"dllwin mscorsn.dll signature (LPCWSTR): EIF_INTEGER use <StrongName.h>"
 		alias
@@ -266,7 +265,7 @@ feature {NONE} -- C externals
 
 			-- Retrieve the public portion of a key pair.
 		obsolete
-			"This function has been deprecated. Use the iclr_strong_name_get_public_key feature instead."
+			"This function is deprecated. Use the iclr_strong_name_get_public_key feature instead [2023-08-11]"
 		external
 			"[
 				dllwin mscorsn.dll signature (LPCWSTR, BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
@@ -289,12 +288,11 @@ feature {NONE} -- C externals
 			"StrongNameGetPublicKey"
 		end
 
-
 	frozen strong_name_hash_size (a_hash_alg: INTEGER; a_hash_size: POINTER): INTEGER
 			-- Compute size of buffer in `a_hash_size' needed to hold a hash
 			-- for a given hash algorithm `a_hash_alg'.
 		obsolete
-			"This function has been deprecated. Use the ICLRStrongName::StrongNameHashSize method instead."
+			"This function is deprecated. Use the ICLRStrongName::StrongNameHashSize method instead. [2023-08-11]"
 		external
 			"dllwin mscorsn.dll signature (ULONG, DWORD *): EIF_INTEGER use <StrongName.h>"
 		alias
@@ -315,7 +313,7 @@ feature {NONE} -- C externals
 
 			-- Compute size that needs to be allocated for a signature in an assembly.
 		obsolete
-			"This function has been deprecated. Use the iclr_strong_name_signature_size feature instead."
+			"This function is deprecated. Use the iclr_strong_name_signature_size feature instead [2023-08-11]"
 		external
 			"dllwin mscorsn.dll signature (BYTE *, ULONG, DWORD *): EIF_INTEGER use <StrongName.h>"
 		alias
@@ -337,8 +335,7 @@ feature {NONE} -- C externals
 
 			-- Hash and sign a manifest.
 		obsolete
-			"This function has been deprecated. Use the iclr_strong_name_signature_generation feature instead"
-
+			"This function is deprecated. Use the iclr_strong_name_signature_generation feature instead [2023-08-11]"
 		external
 			"[
 				dllwin mscorsn.dll signature (LPCWSTR, LPCWSTR, BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
@@ -361,14 +358,12 @@ feature {NONE} -- C externals
 			"StrongNameSignatureGeneration"
 		end
 
-
 	frozen strong_name_token_from_public_key (a_public_key: POINTER; key_length: INTEGER;
 			token, token_lenght: POINTER): INTEGER
 
 			-- Create a strong name token from a public key blob.
 		obsolete
-			"This function has been deprecated. Use the iclr_strong_name_token_from_public_key feature instead"
-
+			"This function is deprecated. Use the iclr_strong_name_token_from_public_key feature instead [2023-08-11]"
 		external
 			"[
 				dllwin mscorsn.dll signature (BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
@@ -396,8 +391,7 @@ feature {NONE} -- C externals
 
 			-- Compute hash of `a_blob' using `a_hash_alg_id'.
 		obsolete
-			"This function has been deprecated. Use the iclr_get_hash_from_assembly_file feature instead."
-
+			"This function is deprecated. Use the iclr_get_hash_from_assembly_file feature instead [2023-08-11]"
 		external
 			"[
 				dllwin mscorsn.dll signature (LPCWSTR, unsigned int *, BYTE *, DWORD, DWORD *): EIF_INTEGER
@@ -425,8 +419,7 @@ feature {NONE} -- C externals
 
 				-- Compute hash of `a_blob' using `a_hash_alg_id'.
 		obsolete
-			"This function has been deprecated. Use the iclr_get_hash_from_blob feature instead"
-
+			"This function is deprecated. Use the iclr_get_hash_from_blob feature instead [2023-08-11]"
 		external
 			"[
 				dllwin mscorsn.dll
@@ -439,7 +432,6 @@ feature {NONE} -- C externals
 
 	frozen iclr_get_hash_from_blob (a_blob: POINTER; a_blob_size: INTEGER; a_hash_alg_id: POINTER;
 			a_hash_buffer: POINTER; a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
-
 				-- Compute hash of `a_blob' using `a_hash_alg_id'.
 		external
 			"[
@@ -451,11 +443,10 @@ feature {NONE} -- C externals
 			"GetHashFromBlob"
 		end
 
-
 	frozen get_hash_from_file (a_path: POINTER; a_hash_alg_id: POINTER; a_hash_buffer: POINTER;
 			a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
 		obsolete
-			"This function has been deprecated. Use the iclr_get_hash_from_file feature instead."
+			"This function is deprecated. Use the iclr_get_hash_from_file feature instead [2023-08-11]"
 
 		external
 			"[
@@ -478,7 +469,6 @@ feature {NONE} -- C externals
 		alias
 			"GetHashFromFileW"
 		end
-
 
 invariant
 	runtime_version_not_void: runtime_version /= Void

@@ -504,7 +504,7 @@ feature {NONE} -- Implementation
 			create l_state.make (l_platform_id, build_workbench, a_target.concurrency_mode, a_target.void_safety_mode, a_target.setting_msil_generation, a_target.setting_dynamic_runtime, a_target.variables, l_version)
 
 				-- setup ISE_PRECOMP
-			eiffel_layout.set_precompile (a_target.setting_msil_generation)
+			eiffel_layout.set_precompile (a_target.setting_msil_generation, a_target.setting_msil_clr_version)
 
 			output_action (interface_text_parsing, a_target)
 
@@ -968,7 +968,7 @@ feature {NONE} -- Directory manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -424,7 +424,7 @@ feature -- Status setting
 			l_precompilation_path, l_installation_precompilation_path: like precompilation_path
 			l_dir: DIRECTORY
 			l_source_file, l_target_file: detachable RAW_FILE
-			p, l_path: PATH
+			l_path: PATH
 			retried: BOOLEAN
 			s: STRING_8
 			fn: STRING_32

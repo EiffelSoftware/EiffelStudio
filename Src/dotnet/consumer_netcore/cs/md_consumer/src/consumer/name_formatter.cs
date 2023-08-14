@@ -211,8 +211,8 @@ namespace md_consumer
                         } else if (Char.IsDigit(p) && !Char.IsDigit(c)) {
                             if (n != '_' && ! Char.IsDigit(n)) {
                                 // 3dd = 3_dd, 3Dd = 3_Dd, 3DD = 3DD, 3dD = 3d_D, 3D_ = 3D_, 3d_ = 3d_
-                                put_us = (Char.IsLower(c) && Char.IsLower(n)) || (Char.IsUpper(c) && Char.IsUpper(n));
-
+                                put_us = (Char.IsLower(c) && Char.IsLower(n)) 
+                                            || (Char.IsUpper(c) && Char.IsLower(n));  
                             }
                         } else if (Char.IsUpper(p) && Char.IsUpper(c) && Char.IsLower(n)) {
                             if (a_class_format) {

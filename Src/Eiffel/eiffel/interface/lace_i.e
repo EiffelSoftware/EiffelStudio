@@ -601,7 +601,7 @@ feature {NONE} -- Implementation
 			project_location.set_target (target_name)
 
 				 -- Set ISE_PRECOMP.
-			eiffel_layout.set_precompile (target.setting_msil_generation)
+			eiffel_layout.set_precompile (target.setting_msil_generation, target.setting_msil_clr_version)
 		ensure
 			target_name_set: target_name /= Void and then not target_name.is_empty
 			valid_target: conf_system.targets.has (target_name)

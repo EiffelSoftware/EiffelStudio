@@ -154,7 +154,7 @@ feature -- Loading
 							if not has_error then
 									-- check if precompiles are ok, otherwise (re)create them
 								if is_recompile_from_scrach then
-									eiffel_layout.set_precompile (lace.target.setting_msil_generation)
+									eiffel_layout.set_precompile (lace.target.setting_msil_generation, lace.target.setting_msil_clr_version)
 								end
 
 								lace.check_location_mappings
@@ -1183,7 +1183,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

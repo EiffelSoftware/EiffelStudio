@@ -59,7 +59,7 @@ feature {NONE} -- Basic operation
 				-- We store the ISE_PRECOMP environment variable because when editing an ECF, it can
 				-- be either .NET or classic so we need to compute the right path.
 			l_precompilation := eiffel_layout.get_environment_32 ({EIFFEL_CONSTANTS}.ise_precomp_env)
-			eiffel_layout.set_precompile (target.setting_msil_generation)
+			eiffel_layout.set_precompile (target.setting_msil_generation, target.setting_msil_clr_version)
 
 				-- Lookup all the ECFs that matches.
 			libs := Precursor (a_filter, a_provider_ids)
@@ -111,7 +111,7 @@ feature {NONE} -- Action handlers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

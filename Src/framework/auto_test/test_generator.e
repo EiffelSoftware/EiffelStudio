@@ -361,7 +361,7 @@ feature {NONE} -- Implementation: preparation
 			l_error_handler: AUT_ERROR_HANDLER
 		do
 			eiffel_layout.check_environment_variable
-			eiffel_layout.set_precompile (False)
+			eiffel_layout.set_precompile (False, Void)
 
 			l_error_handler := error_handler
 

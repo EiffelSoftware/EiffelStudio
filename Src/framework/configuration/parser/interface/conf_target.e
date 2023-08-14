@@ -274,6 +274,13 @@ feature -- Access: settings
 			Result := setting_boolean (s_use_all_cluster_name_as_namespace)
 		end
 
+	setting_is_il_netcore: BOOLEAN
+			-- Is .Net netcore runtime?
+			-- cf `clr_runtime_version`
+		do
+			Result := (create {IL_NETCORE_DETECTOR}).is_il_netcore (setting_msil_clr_version)
+		end
+
 feature -- Access, in compiled only, not stored to configuration file
 
 	environ_variables: STRING_TABLE [READABLE_STRING_32]
@@ -1262,7 +1269,7 @@ feature -- Equality
 			end
 			if Result then
 				Result := is_abstract = other.is_abstract and then is_group_equal_check (libraries, other.libraries) and then
-						is_group_equal_check (assemblies, other.assemblies) and then
+						is_assembly_group_equal_check (assemblies, other.assemblies) and then
 						is_group_equal_check (clusters, other.clusters) and then
 						is_group_equal_check (overrides, other.overrides) and then
 						equal (variables, other.variables) and then
@@ -1434,6 +1441,27 @@ feature {NONE} -- Implementation
 					Result := a.item_for_iteration.is_group_equivalent (b.item_for_iteration)
 					a.forth
 					b.forth
+				end
+			end
+		end
+
+	is_assembly_group_equal_check (a, b: STRING_TABLE [CONF_ASSEMBLY]): BOOLEAN
+			-- Check if `a' and `b' are group equivalent.
+		do
+			Result := True
+			if a.count <= b.count then
+				Result := True
+				from
+					a.start
+--					b.start
+				until
+					not Result or a.after --or b.after
+				loop
+					if attached b [a.key_for_iteration] as l_b_item then
+						Result := a.item_for_iteration.is_group_equivalent (l_b_item)
+					end
+					a.forth
+--					b.forth
 				end
 			end
 		end

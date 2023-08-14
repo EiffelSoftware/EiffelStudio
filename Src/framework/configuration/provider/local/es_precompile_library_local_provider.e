@@ -32,7 +32,7 @@ feature {NONE} -- Access
 			Result := Precursor (a_target)
 			if Result.is_empty then
 					-- Extend the default library path
-				scan_library_location_to (a_target, eiffel_layout.precompilation_path (is_dotnet (a_target)).name, 4, Result)
+				scan_library_location_to (a_target, eiffel_layout.precompilation_path (is_dotnet (a_target), a_target.setting_msil_clr_version).name, 4, Result)
 			end
 		end
 

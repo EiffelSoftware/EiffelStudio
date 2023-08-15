@@ -197,7 +197,7 @@ feature {NONE} -- C externals
 		external
 			"dllwin mscoreei.dll signature (BYTE *) use <MetaHost.h>"
 		alias
-			"StrongNameFreeBuffer "
+			"StrongNameFreeBuffer"
 		end
 
 	frozen strong_name_key_gen (a_container_name: POINTER; flags: INTEGER;

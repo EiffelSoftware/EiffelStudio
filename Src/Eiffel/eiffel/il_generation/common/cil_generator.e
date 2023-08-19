@@ -493,18 +493,30 @@ feature -- Generation
 				loop
 						-- FIXME: maybe use proper JSON encoding, eventually the JSON library.
 					v := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (ic.item.name)
-						-- TODO double check but it seems we only need this one.
-					if is_finalizing then
-						if v.is_case_insensitive_equal ("eiffelsoftware.runtime")  then
-							append_items (libs, libs_runtime, libs_deps, v, ic.item.version, l_start)
-							l_start := False
-						end
-					else
-						if v.is_case_insensitive_equal ("eiffelsoftware.runtime") or else v.starts_with("assembly") then
-							append_items (libs, libs_runtime, libs_deps, v, ic.item.version, l_start)
-							l_start := False
-						end
-					end
+
+						-- FIXME
+						-- At the moment, we need to add all the dependencies.
+						--
+						-- The required dependencies are EiffelSoftware Runtime and third party libraries.
+						-- but we don't have a simple way to filter when an given assembly is not part
+						-- of the NetCore.
+						--
+
+					append_items (libs, libs_runtime, libs_deps, v, ic.item.version, l_start)
+					l_start := False
+
+-- TODO double check but it seems we only need this one.
+--					if is_finalizing then
+--						if v.is_case_insensitive_equal ("eiffelsoftware.runtime")  then
+--							append_items (libs, libs_runtime, libs_deps, v, ic.item.version, l_start)
+--							l_start := False
+--						end
+--					else
+--						if v.is_case_insensitive_equal ("eiffelsoftware.runtime") or else v.starts_with("assembly") then
+--							append_items (libs, libs_runtime, libs_deps, v, ic.item.version, l_start)
+--							l_start := False
+--						end
+--					end
 
 				end
 			end

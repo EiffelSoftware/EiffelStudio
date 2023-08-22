@@ -2615,6 +2615,10 @@ feature -- Features info
 
 				if is_static and l_is_c_external then
 						-- Let's define Pinvoke here.
+						-- The COM interface updates the method definition attributes behind the scenes,
+						-- so it is not necessary to update the method attribute with p_invoke_implementation.
+						-- However, with IL_EMITTER, we need to explicitly update the method attribute
+						-- with p_invoke_implementation.
 					if system.is_il_netcore then
 						l_meth_attr :=  l_meth_attr | {MD_METHOD_ATTRIBUTES}.pinvoke_implementation
 					end

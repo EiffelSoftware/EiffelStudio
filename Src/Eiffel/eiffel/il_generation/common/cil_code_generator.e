@@ -2615,13 +2615,19 @@ feature -- Features info
 
 				if is_static and l_is_c_external then
 						-- Let's define Pinvoke here.
+					if system.is_il_netcore then
+						l_meth_attr :=  l_meth_attr | {MD_METHOD_ATTRIBUTES}.pinvoke_implementation
+					end
+
 					l_meth_token := md_emit.define_method (uni_string, current_class_token,
-						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed |
-						{MD_METHOD_ATTRIBUTES}.Preserve_sig)
+											l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed |
+											{MD_METHOD_ATTRIBUTES}.Preserve_sig)
+
 					md_emit.define_pinvoke_map (l_meth_token,
 						{MD_PINVOKE_CONSTANTS}.Charset_ansi |
 						{MD_PINVOKE_CONSTANTS}.Stdcall, uni_string,
 						current_module.c_module_token)
+
 				else
 						-- Normal method
 					l_meth_token := md_emit.define_method (uni_string, current_class_token,

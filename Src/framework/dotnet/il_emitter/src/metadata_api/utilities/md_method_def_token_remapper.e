@@ -66,7 +66,7 @@ feature -- Visitor
 					,{PE_TABLES}.tcustomattribute
 --					,{PE_TABLES}.tmethodimpl -- EXCLUDED by experience.
 					,{PE_TABLES}.tmethodspec
-					,{PE_TABLES}.timplmap
+--					,{PE_TABLES}.timplmap
 					,{PE_TABLES}.tmemberref
 					,{PE_TABLES}.tgenericparam
 	--				,{PE_TABLES}.tdeclsecurity	-- Not Implemented					
@@ -82,8 +82,8 @@ feature -- Visitor
 					{PE_TABLES}.ttypedef,
 					{PE_TABLES}.tcustomattribute,
 					{PE_TABLES}.tmethodimpl,
-					{PE_TABLES}.tmethodspec,
-					{PE_TABLES}.timplmap
+					{PE_TABLES}.tmethodspec
+					,{PE_TABLES}.timplmap
 	--				,{PE_TABLES}.tdeclsecurity	-- Not Implemented
 					,{PE_TABLES}.tmemberref
 					,{PE_TABLES}.tgenericparam

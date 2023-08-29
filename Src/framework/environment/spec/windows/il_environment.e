@@ -331,6 +331,20 @@ feature -- Access
 			end
 		end
 
+	dotnet_executable_path: detachable PATH
+			-- Location of the netcore dotnet executable tool.
+		local
+			f: READABLE_STRING_32
+		once
+			f := execution_environment.item ("ProgramFiles")
+			if not attached f then
+				f := {STRING_32} "C:\Program Files"
+			end
+			f := f + "\dotnet\dotnet.exe"			
+			create Result.make_from_string (f)
+			--create Result.make_from_string ("dotnet")
+		end
+
 feature -- Query
 
 	dotnet_debugger_path (a_debug: READABLE_STRING_GENERAL): detachable PATH

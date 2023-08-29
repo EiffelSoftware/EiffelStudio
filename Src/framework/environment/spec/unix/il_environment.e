@@ -95,6 +95,16 @@ feature -- Access
 			end
 		end
 
+	dotnet_executable_path: detachable PATH
+			-- Location of the netcore dotnet executable tool.
+		once
+			if {PLATFORM}.is_windows then
+				create Result.make_from_string ("dotnet")
+			else
+				create Result.make_from_string ("/usr/bin/dotnet")
+			end
+		end
+
 feature -- Query
 
 	dotnet_debugger_path (a_debug: READABLE_STRING_GENERAL): detachable PATH
@@ -128,11 +138,7 @@ feature -- Helpers
 			loc: PATH
 		once
 			create fac
-			if {PLATFORM}.is_windows then
-				p := fac.process_launcher_with_command_line ("dotnet --list-sdks", Void)
-			else
-				p := fac.process_launcher_with_command_line ("/usr/bin/dotnet --list-sdks", Void)
-			end
+			p := fac.process_launcher_with_command_line (dotnet_executable_path.name + " --list-sdks", Void)
 			p.redirect_output_to_stream
 
 			p.launch
@@ -188,11 +194,7 @@ feature -- Helpers
 			fut: FILE_UTILITIES
 		once
 			create fac
-			if {PLATFORM}.is_windows then
-				p := fac.process_launcher_with_command_line ("dotnet --list-runtimes", Void)
-			else
-				p := fac.process_launcher_with_command_line ("/usr/bin/dotnet --list-runtimes", Void)
-			end
+			p := fac.process_launcher_with_command_line (dotnet_executable_path.name + " --list-runtimes", Void)
 			p.redirect_output_to_stream
 
 			p.launch

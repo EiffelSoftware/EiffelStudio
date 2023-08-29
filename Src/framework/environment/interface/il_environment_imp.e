@@ -113,6 +113,11 @@ feature -- Access
 			Result := installed_runtimes [version]
 		end
 
+	dotnet_executable_path: detachable PATH
+			-- Location of the netcore dotnet executable tool.
+		deferred
+		end
+
 feature -- Dotnet platform	
 
 	dotnet_platform_netcore: IMMUTABLE_STRING_32 = "netcore"

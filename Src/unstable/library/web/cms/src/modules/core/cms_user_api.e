@@ -276,7 +276,11 @@ feature -- Access: user
 	recent_users (params: CMS_DATA_QUERY_PARAMETERS): ITERABLE [CMS_USER]
 			-- List of the `a_rows' most recent users starting from  `a_offset'.
 		do
-			Result := user_storage.recent_users (params.offset.to_integer_32, params.size.to_integer_32)
+			if attached {READABLE_STRING_GENERAL} params.parameter ("name") as n then
+				Result := user_storage.recent_users_filtered_by_name (n, params.offset.to_integer_32, params.size.to_integer_32)
+			else
+				Result := user_storage.recent_users (params.offset.to_integer_32, params.size.to_integer_32)
+			end
 		end
 
 	admin_user: detachable CMS_USER
@@ -818,6 +822,6 @@ feature -- Change Temp User
 --		end
 
 note
-	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2023, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

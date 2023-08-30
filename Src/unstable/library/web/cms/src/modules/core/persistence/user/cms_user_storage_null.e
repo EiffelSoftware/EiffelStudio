@@ -60,6 +60,12 @@ feature -- Access: user
 			create {ARRAYED_LIST[CMS_USER]} Result.make (0)
 		end
 
+	recent_users_filtered_by_name (a_name: READABLE_STRING_GENERAL; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_USER]
+			-- <Precursor>
+		do
+			create {ARRAYED_LIST[CMS_USER]} Result.make (0)
+		end
+
 feature -- Change: user
 
 	new_user (a_user: CMS_USER)
@@ -214,6 +220,6 @@ feature -- Temp Users
 		do
 		end
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2023, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

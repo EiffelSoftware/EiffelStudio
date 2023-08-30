@@ -59,44 +59,87 @@ feature -- HTTP Methods
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			l_response: CMS_RESPONSE
-			s: STRING
+			s,ms: STRING
 			u: CMS_USER
 			l_page_helper: CMS_PAGINATION_GENERATOR
 			s_pager: STRING
-			l_count: INTEGER
+			l_total_user_count: INTEGER
 			user_api: CMS_USER_API
 			l_display_name: READABLE_STRING_32
 			ago: DATE_TIME_AGO_CONVERTER
+			lst: ITERABLE [CMS_USER]
+			nb: NATURAL_32
+			f: CMS_FORM
+
+			l_name_filter: READABLE_STRING_32
+			q: CMS_DATA_QUERY_PARAMETERS
 		do
 				-- At the moment the template are hardcoded, but we can
 				-- get them from the configuration file and load them into
 				-- the setup class.
 
 			if api.has_permission ({CMS_ADMIN_MODULE_ADMINISTRATION}.perm_admin_users) then
-				user_api := api.user_api
-
-				l_count := user_api.users_count
-
 				create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
 
-				create s.make_empty
-				if l_count > 1 then
-					l_response.set_title ("Listing " + l_count.out + " users")
+				user_api := api.user_api
+				l_total_user_count := user_api.users_count
+				if l_total_user_count > 1 then
+					l_response.set_title ("Total: " + l_total_user_count.out + " users")
 				else
-					l_response.set_title ("A single user")
+					l_response.set_title ("One user")
 				end
 
-				create s_pager.make_empty
-				create l_page_helper.make (api.administration_path_location ("users/?page={page}&size={size}"), user_api.users_count.as_natural_64, 25) -- FIXME: Make this default page size a global CMS settings
-				l_page_helper.get_setting_from_request (req)
-				if l_page_helper.has_upper_limit and then l_page_helper.pages_count > 1 then
-					l_page_helper.append_to_html (l_response, s_pager)
-					if l_page_helper.page_size > 25 then
-						s.append (s_pager)
+				if attached {WSF_STRING} req.query_parameter ("name") as p_name then
+					l_name_filter := p_name.value
+					if l_name_filter.is_whitespace then
+						l_name_filter := Void
 					end
 				end
 
-				if attached user_api.recent_users (create {CMS_DATA_QUERY_PARAMETERS}.make (l_page_helper.current_page_offset, l_page_helper.page_size)) as lst then
+				create l_page_helper.make (api.administration_path_location ("users/?page={page}&size={size}"), l_total_user_count.as_natural_64, 25) -- FIXME: Make this default page size a global CMS settings
+				l_page_helper.get_setting_from_request (req)
+
+				create q.make (l_page_helper.current_page_offset, l_page_helper.page_size)
+				if l_name_filter /= Void then
+					q.set_parameter (l_name_filter, "name")
+				end
+				lst := user_api.recent_users (q)
+				if lst /= Void then
+					nb := 0
+					across
+						lst as ic
+					loop
+						nb := nb + 1
+					end
+				end
+
+				create ms.make_empty
+
+				create s_pager.make_empty
+				if l_page_helper.has_upper_limit and then l_page_helper.pages_count > 1 then
+					l_page_helper.append_to_html (l_response, s_pager)
+					if l_page_helper.page_size > 25 then
+						ms.append (s_pager)
+					end
+				end
+
+				create f.make (req.percent_encoded_path_info, "users-form")
+				f.set_method_get
+--				f.add_css_style ("display: inline-block")
+				f.extend_text_field ("name", l_name_filter)
+
+				if lst /= Void then
+					if l_name_filter /= Void then
+						if nb = 0 then
+							l_response.set_title ("No user found (out of "+ l_total_user_count.out +")")
+						elseif nb = 1 then
+							l_response.set_title ("One user found (out of "+ l_total_user_count.out +")")
+						elseif nb > 1 then
+							l_response.set_title (nb.out + " users found (out of "+ l_total_user_count.out +")")
+						end
+					end
+
+					create s.make (1024)
 					s.append ("<ul class=%"cms-users%">%N")
 					create ago.make
 					across
@@ -144,15 +187,19 @@ feature -- HTTP Methods
 						s.append ("</li>%N")
 					end
 					s.append ("</ul>%N")
+
+					f.extend_html_text (s)
+					f.append_to_html (l_response.wsf_theme, ms)
+--					ms.append (s)
 				end
 					-- Again the pager at the bottom, if needed
-				s.append (s_pager)
+				ms.append (s_pager)
 
 				if l_response.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) then
-					s.append (api.link ("Add User", api.administration_path_location ("add/user"), Void))
+					ms.append (api.link ("Add User", api.administration_path_location ("add/user"), Void))
 				end
 
-				l_response.set_main_content (s)
+				l_response.set_main_content (ms)
 				l_response.execute
 			else
 				send_access_denied (req, res)

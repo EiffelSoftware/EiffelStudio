@@ -37,6 +37,25 @@ feature -- Access
 	order_ascending: BOOLEAN
 			-- is ascending ordering?
 
+	parameters: detachable STRING_TABLE [detachable ANY]
+			-- Optional additional parameters
+
+	parameter (n: READABLE_STRING_GENERAL): detachable ANY
+			-- Value for parameter name `n`.
+		do
+			if n.is_case_insensitive_equal ("size") then
+				Result := size
+			elseif n.is_case_insensitive_equal ("offset") then
+				Result := offset
+			elseif n.is_case_insensitive_equal ("order_by") then
+				Result := order_by
+			elseif n.is_case_insensitive_equal ("order_ascending") then
+				Result := order_ascending
+			elseif attached parameters as params then
+				Result := params [n]
+			end
+		end
+
 feature -- Element change
 
 	set_size (a_size: NATURAL)
@@ -85,4 +104,20 @@ feature -- Element change
 			asc_fasle: not order_ascending
 		end
 
+	set_parameter (a_value: detachable ANY; a_name: READABLE_STRING_GENERAL)
+			-- Set optional parameter named `a_name`.
+		local
+			tb: like parameters
+		do
+			tb := parameters
+			if tb = Void then
+				create tb.make_equal_caseless (1)
+				parameters := tb
+			end
+			tb.put (a_value, a_name)
+		end
+
+note
+	copyright: "2011-2023, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

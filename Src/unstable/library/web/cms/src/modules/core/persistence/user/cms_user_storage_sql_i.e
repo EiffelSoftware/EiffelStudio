@@ -208,6 +208,37 @@ feature -- Access: user
 			sql_finalize_query (sql_select_recent_users)
 		end
 
+	recent_users_filtered_by_name (a_name: READABLE_STRING_GENERAL; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_USER]
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+			l_name_filter: STRING_32
+		do
+			create l_name_filter.make_from_string_general (a_name)
+			l_name_filter.replace_substring_all ("*", "%%") -- LIKE syntax ...
+
+			create {ARRAYED_LIST [CMS_USER]} Result.make (0)
+
+			error_handler.reset
+
+			create l_parameters.make (3)
+			l_parameters.put (l_name_filter, "name")
+			l_parameters.put (a_count, "rows")
+			l_parameters.put (a_lower, "offset")
+			sql_query (sql_select_recent_users_filtered_by_name, l_parameters)
+			from
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_user as l_user then
+					Result.force (l_user)
+				end
+				sql_forth
+			end
+			sql_finalize_query (sql_select_recent_users_filtered_by_name)
+		end
+
 feature -- Change: user
 
 	new_user (a_user: CMS_USER)
@@ -963,6 +994,9 @@ feature {NONE} -- Sql Queries: USER
 	sql_select_recent_users: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users ORDER BY uid DESC, created DESC LIMIT :rows OFFSET :offset;"
 			-- Retrieve recent users
 
+	sql_select_recent_users_filtered_by_name: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE name LIKE :name ORDER BY uid DESC, created DESC LIMIT :rows OFFSET :offset;"
+			-- Retrieve recent users filtered by name
+
 	select_user_by_email: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE email =:email;"
 			-- Retrieve user by email if exists.
 
@@ -1421,6 +1455,6 @@ feature {NONE} -- SQL select
 
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2023, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

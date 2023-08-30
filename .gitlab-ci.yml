@@ -1,7 +1,7 @@
 image: gcc
 
 before_script:
-  - apt-get update -qq && apt-get install -y -qq --no-install-recommends ca-certificates curl bzip2 gcc make libxtst-dev libgtk2.0-dev libssl-dev 
+  - apt-get update -qq && apt-get install -y -qq --no-install-recommends ca-certificates curl bzip2 gcc make libxtst-dev libgtk2.0-dev libssl-dev
   - cd $CI_PROJECT_DIR
   - export dir=`pwd` ; echo dir=$dir ; cd ..
   - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly > eiffel.rc
@@ -11,11 +11,11 @@ before_script:
 variables:
   EIFFEL_SRC: '$CI_PROJECT_DIR/Src'
 
-linux_compile_all_job:
+linux_compile_all_library_job:
   stage: test
   tags:
     - linux
-  when: manual
+  when: always
   script:
     - cd $CI_PROJECT_DIR
     - export dir=$CI_PROJECT_DIR
@@ -24,8 +24,31 @@ linux_compile_all_job:
     - export ISE_LIBRARY=$EIFFEL_SRC
     - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
     - echo Check projects compilation status...
-    - export COMPILEALL_DIR=library 
+    - export COMPILEALL_DIR=library
     - export COMPILEALL_IGNORE=scripts/CI/compile_all/stable_others.ini
+    - export COMPILEALL_IGNORE=
+    - sh $EIFFEL_SRC/scripts/CI/travis-ci-compile_all.sh $EIFFEL_SRC/$COMPILEALL_DIR $EIFFEL_SRC/$COMPILEALL_IGNORE
+  only:
+    refs:
+      - master
+      - merge_requests
+      - schedules
+
+linux_compile_all_tools_job:
+  stage: test
+  tags:
+    - linux
+  when: always
+  script:
+    - cd $CI_PROJECT_DIR
+    - export dir=$CI_PROJECT_DIR
+    - export EIFFEL_SRC=$dir/Src
+    - export EWEASEL=$dir/eweasel
+    - export ISE_LIBRARY=$EIFFEL_SRC
+    - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
+    - echo Check projects compilation status...
+    - export COMPILEALL_DIR=tools
+    - export COMPILEALL_IGNORE=
     - sh $EIFFEL_SRC/scripts/CI/travis-ci-compile_all.sh $EIFFEL_SRC/$COMPILEALL_DIR $EIFFEL_SRC/$COMPILEALL_IGNORE
   only:
     refs:

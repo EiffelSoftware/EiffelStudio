@@ -54,7 +54,7 @@
 		<setting name="dotnet_naming_convention" value="True"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<setting name="msil_clr_version" value="Microsoft.NETCore.App.Ref/6.0"/>
+		<setting name="msil_clr_version" value="Microsoft.NETCore.App.Ref/7.0"/>
 		<setting name="use_all_cluster_name_as_namespace" value="False"/>
 		<setting name="use_cluster_name_as_namespace" value="False"/>
 		<setting name="dead_code_removal" value="all"/>

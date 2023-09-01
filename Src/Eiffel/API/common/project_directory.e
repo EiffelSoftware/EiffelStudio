@@ -524,10 +524,11 @@ feature {NONE} -- Implementation
 			internal_target_path := Void
 			internal_workbench_assemblies_path := Void
 			internal_workbench_path := Void
+			internal_data_path := Void
+			internal_testing_results_path := Void
 			internal_precompilation_file_name := Void
 			internal_lock_file_name := Void
 			internal_project_file_name := Void
-			internal_testing_results_path := Void
 		end
 
 feature {NONE} -- Implementation: Access
@@ -559,7 +560,7 @@ invariant
 	target_not_empty: not target.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

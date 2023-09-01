@@ -193,7 +193,12 @@ feature -- XML generation
 				print ("#CONSUMER: " + {UTF_CONVERTER}.string_32_to_utf_8_string_8 (cmd) + "%N")
 			end
 
-			p.set_detached_console (False)
+				-- Be sure to avoid console Windows popup.
+			p.set_detached_console (True)
+			p.set_hidden (True)
+			p.set_separate_console (False)
+
+				-- Launch the process execution
 			p.launch
 			if p.launched then
 				p.wait_for_exit

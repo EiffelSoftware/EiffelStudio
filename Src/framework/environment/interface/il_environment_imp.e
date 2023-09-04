@@ -74,21 +74,36 @@ feature -- Access
 			-- Semantic is to take the most recent version of the run-time.
 		local
 			l_runtimes: like installed_runtimes
+			k: READABLE_STRING_GENERAL
+			v: READABLE_STRING_GENERAL
+			result_key, result_version: IMMUTABLE_STRING_32
+			i: INTEGER
 		do
 			l_runtimes := installed_runtimes
 			if not l_runtimes.is_empty then
 					-- Take the most recent version from `installed_runtimes'.
 				across
 					l_runtimes as r
-				from
-					Result := @ r.key
-					;@ r.forth
 				loop
-					if Result < @ r.key then
-						Result := @ r.key
+					k := @ r.key
+					i := k.index_of ('/', 1)
+						-- FIXME: move this hard coded value elsewhere.
+					if i > 0 and then k.starts_with ("Microsoft.NETCore.App.Ref") then
+						v := k.substring (i + 1, k.count)
+					elseif k.starts_with ("v") then
+						v := k.substring (2, k.count)
+					end
+					if result_key = Void then
+						result_key := k
+						result_version := v
+					elseif result_version < v then
+						result_key := k
+						result_version := v
 					end
 				end
-			else
+				Result := result_key
+			end
+			if Result = Void then
 					-- No .NET runtime found, we simply return a fake version
 					-- number.
 				create Result.make_from_string_general (v4_0)
@@ -171,19 +186,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

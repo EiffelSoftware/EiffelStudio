@@ -953,6 +953,7 @@ feature {NONE} -- Implementation
 			system_valid: system /= Void
 		local
 			l_s: like {CONF_TARGET}.settings.item
+			l_sys_clr_rt_version: like {SYSTEM_OPTIONS}.clr_runtime_version
 			l_p: PATH
 			l_b: BOOLEAN
 			vd15: VD15
@@ -1371,24 +1372,32 @@ feature {NONE} -- Implementation
 
 			l_s := l_settings.item (s_msil_clr_version)
 			if system.il_generation then
-					-- value can't change from a precompile or in a compiled system
+				l_sys_clr_rt_version := system.clr_runtime_version
 				if
 					l_s /= Void and then
-					not equal (system.clr_runtime_version, l_s) and then
-					(a_target.precompile /= Void or workbench.has_compilation_started)
+					(l_sys_clr_rt_version = Void or else not l_s.same_string (l_sys_clr_rt_version))
 				then
-						-- Due to hack to support .net version major.minor without specifing the exact version
+						-- value can't change from a precompile or in a compiled system			
 					if
-						attached system.clr_runtime_version as l_sys_clr_rt_version and then
-						l_sys_clr_rt_version.starts_with (l_s)
+						(workbench.has_compilation_started
+								-- Note: to select adapted precompilation path, and thus precompile
+								--		 the system needs to set the CLR version.
+	--						or a_target.precompile
+						)
 					then
-							-- This is not really a new clr runtime version value
-					elseif not is_force_new_target then
-						create vd83.make (s_msil_clr_version, system.clr_runtime_version, l_s)
-						Error_handler.insert_warning (vd83, a_target.options.is_warning_as_error)
+							-- Due to hack to support .net version major.minor without specifing the exact version
+						if
+							l_sys_clr_rt_version /= Void and then
+							l_sys_clr_rt_version.starts_with (l_s)
+						then
+								-- This is not really a new clr runtime version value
+						elseif not is_force_new_target then
+							create vd83.make (s_msil_clr_version, l_sys_clr_rt_version, l_s)
+							Error_handler.insert_warning (vd83, a_target.options.is_warning_as_error)
+						end
+					else
+						set_clr_runtime_version (l_s)
 					end
-				elseif a_target.precompile = Void and not workbench.has_compilation_started then
-					set_clr_runtime_version (l_s)
 				end
 			end
 

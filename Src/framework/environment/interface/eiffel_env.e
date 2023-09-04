@@ -738,7 +738,6 @@ feature -- Directories (top-level)
 			else
 				Result := Result.extended (eiffel_platform)
 			end
-
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -762,7 +761,11 @@ feature -- Directories (top-level)
 			l_value := get_environment_32 ({EIFFEL_CONSTANTS}.ise_precomp_env)
 			if l_value = Void or else l_value.is_empty then
 				if is_user_files_supported then
-					Result := user_files_path.extended (precomp_name).extended (spec_name)
+					Result := user_files_path.extended (precomp_name)
+					if not current_ec_name.same_string (default_ide_ec_name) then
+						Result := Result.appended ("-").appended (current_ec_name)
+					end
+					Result := Result.extended (spec_name)
 					if a_is_dotnet then
 							-- Append '-dotnet' to platform name
 						create l_dn_name.make (eiffel_platform.count + 8)
@@ -2020,6 +2023,34 @@ feature -- Executable names
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
+		end
+
+	current_ec_name: STRING_32
+			-- Extension less executable name for the current compiler.
+			--| usually "ec" for the IDE, but sometime "ecb" when using the batch compiler.
+		local
+			p: PATH
+		once
+			create p.make_from_string ({EXECUTION_ENVIRONMENT}.arguments.command_name)
+			if attached p.entry as e then
+				p := e
+			end
+			Result := p.name
+			if attached p.extension as ext then
+				Result := Result.substring (1, Result.count - ext.count - 1)
+			end
+		end
+
+	default_ide_ec_name: STRING_32
+			-- Default IDE executable name of ec.
+			--| note:
+			--|	 default = ec
+			--|	 batch = ecb
+			--|  others ...
+		once
+			create Result.make (6)
+			Result.append ({STRING_32} "ec")
+			Result.append_string_general (release_suffix)
 		end
 
 	finish_freezing_script: STRING_32

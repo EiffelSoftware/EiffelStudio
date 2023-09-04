@@ -735,9 +735,6 @@ feature -- Directories (top-level)
 				l_dn_name.append_string_general (eiffel_platform)
 				l_dn_name.append_string_general ("-dotnet")
 				Result := Result.extended (l_dn_name)
-				if a_clr_version /= Void and then (create {IL_NETCORE_DETECTOR}).is_il_netcore (a_clr_version) then
-					Result := Result.extended ("netcore")
-				end
 			else
 				Result := Result.extended (eiffel_platform)
 			end

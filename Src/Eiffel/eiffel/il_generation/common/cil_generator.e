@@ -360,7 +360,7 @@ feature -- Generation
 							error_handler.insert_warning (l_viop, universe.target.options.is_warning_as_error)
 						end
 
-						l_assembly_references.force ([l_precomp.name, Void])
+						l_assembly_references.force ([l_precomp.system_name, Void])
 						copy_to_local (l_precomp.assembly_driver (l_use_optimized_precomp), l_assembly_location, Void)
 						copy_to_local (l_precomp.assembly_helper_driver (l_use_optimized_precomp), l_assembly_location, Void)
 						if not l_use_optimized_precomp or l_precomp.line_generation then
@@ -671,7 +671,7 @@ feature {NONE} -- Implementation
 	append_items (libs, libs_runtime, libs_deps: STRING; a_name: STRING_8; version: detachable READABLE_STRING_GENERAL; l_start: BOOLEAN)
 				-- Append libraries and runtime libraries to the JSON file.
 		local
-			libs_tpl, lib_deps_tpl, libs_runtime_tpl: STRING
+			libs_tpl, lib_deps_tpl, libs_runtime_tpl, v: STRING
 		do
 			lib_deps_tpl := "          %"${LIB_NAME}%": %"${LIB_VERSION}%""
 
@@ -698,12 +698,14 @@ feature {NONE} -- Implementation
 			libs_runtime.replace_substring_all ("${LIB_NAME}", a_name)
 			libs_deps.replace_substring_all ("${LIB_NAME}", a_name)
 			if attached version as l_version then
-				a_name.append_character ('/')
-				a_name.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
-				libs_deps.replace_substring_all ("${LIB_VERSION}", {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
+				v := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version)
 			else
-				libs_deps.replace_substring_all ("${LIB_VERSION}", "1.0.0.0")
+				v := "1.0.0.0" -- Default?
 			end
+			a_name.append_character ('/')
+			a_name.append (v)
+
+			libs_deps.replace_substring_all ("${LIB_VERSION}", v)
 
 			libs.replace_substring_all ("${LIB_NAME_VERSION}", a_name)
 			libs_runtime.replace_substring_all ("${LIB_NAME_VERSION}", a_name)

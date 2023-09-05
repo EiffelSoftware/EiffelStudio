@@ -180,7 +180,7 @@ feature -- Status report
 	filled_with (v: T; start_index, end_index: INTEGER): BOOLEAN
 			-- Are all items between index `start_index' and `end_index'
 			-- set to `v'?
-			-- (Use reference equality for comparison.)			
+			-- (Use reference equality for comparison.)
 		require
 			start_index_non_negative: start_index >= 0
 			start_index_not_too_big: start_index <= end_index + 1
@@ -214,18 +214,17 @@ feature -- Status report
 			i, j, nb: INTEGER
 		do
 			Result := True
-			if other /= Current then
-				from
-					i := source_index
-					j := destination_index
-					nb := source_index + n
-				until
-					i = nb
-				loop
-					if other.item (i) /= item (j) then
-						Result := False
-						i := nb - 1
-					end
+			from
+				i := source_index
+				j := destination_index
+				nb := source_index + n
+			until
+				i = nb
+			loop
+				if other.item (i) /= item (j) then
+					Result := False
+					i := nb -- Exit the loop
+				else
 					i := i + 1
 					j := j + 1
 				end
@@ -430,7 +429,7 @@ feature -- Element change
 				end
 			end
 		ensure
-			copied:	same_items (other, source_index, destination_index, n)
+			copied:	other /= Current implies same_items (other, source_index, destination_index, n)
 			count_updated: count = (old count).max (destination_index + n)
 		end
 

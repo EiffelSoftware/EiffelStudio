@@ -1027,6 +1027,17 @@ feature -- Test
  			check_string_equality ("shared_substring", s, "2")
  		end
 
+	test_shared_substring_comparison
+		local
+			csv, foreground, background: IMMUTABLE_STRING_32; comma_index: INTEGER
+		do
+			create csv.make_from_string ({STRING_32} "foreground, background")
+			comma_index := csv.index_of (',', 1)
+			foreground := csv.shared_substring (1, comma_index - 1)
+			background := csv.shared_substring (comma_index + 2, csv.count)
+			assert ("different strings", not foreground.same_string (background))
+		end
+
 	test_substring
 		local
 			s: IMMUTABLE_STRING_32
@@ -1297,7 +1308,7 @@ feature -- Constants
 
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

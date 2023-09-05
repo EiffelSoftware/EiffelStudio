@@ -92,13 +92,17 @@ feature -- Access
 						v := k.substring (i + 1, k.count)
 					elseif k.starts_with ("v") then
 						v := k.substring (2, k.count)
+					else
+						v := Void
 					end
-					if result_key = Void then
-						result_key := k
-						result_version := v
-					elseif result_version < v then
-						result_key := k
-						result_version := v
+					if v /= Void then
+						if result_key = Void then
+							result_key := k
+							result_version := v
+						elseif result_version = Void or else result_version < v then
+							result_key := k
+							result_version := v
+						end
 					end
 				end
 				Result := result_key

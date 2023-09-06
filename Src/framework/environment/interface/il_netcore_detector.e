@@ -10,10 +10,10 @@ class
 
 feature -- Initialization
 
-	is_il_netcore (version: READABLE_STRING_GENERAL): BOOLEAN
+	is_il_netcore (version: detachable READABLE_STRING_GENERAL): BOOLEAN
 		do
 				-- TODO: implement a smart netcore detection. [2023-05-19]
-			Result := version.has ('/')
+			Result := attached version as v and then v.has ('/')
 				-- Currently, EiffelStudio internally uses
 				--   vx.y.z (such as v4.0.30319) for .net framework
 				--   Microsoft.NETCore.App/x.y.z for netcore

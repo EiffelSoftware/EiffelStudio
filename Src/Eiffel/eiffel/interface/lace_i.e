@@ -1398,6 +1398,8 @@ feature {NONE} -- Implementation
 					else
 						set_clr_runtime_version (l_s)
 					end
+				elseif l_sys_clr_rt_version = Void then
+					set_clr_runtime_version (Void)
 				end
 			end
 
@@ -1699,7 +1701,7 @@ feature {NONE} -- Implementation
 			create {IL_ENVIRONMENT} l_il_env
 
 			if a_version = Void then
-				system.set_clr_runtime_version (l_il_env.default_version)
+				system.set_clr_runtime_version (l_il_env.version) -- version = default_version
 			else
 				if attached l_il_env.installed_version (a_version) as v then
 					system.set_clr_runtime_version (v)

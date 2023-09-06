@@ -117,6 +117,7 @@ feature -- XML generation
 			args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			cmd: STRING_32
 			s: STRING_32
+			dbg: PLAIN_TEXT_FILE
 		do
 			create pf
 			create args.make (10)
@@ -170,8 +171,9 @@ feature -- XML generation
 
 			if is_debug then
 				args.force ("-debug")
+			else
+				args.force("-silent")
 			end
-			args.force("-silent")
 
 			p := pf.process_launcher (emdc_location.name, args, emdc_location.parent.name)
 
@@ -194,9 +196,21 @@ feature -- XML generation
 			end
 
 				-- Be sure to avoid console Windows popup.
-			p.set_detached_console (True)
-			p.set_hidden (True)
+			p.enable_launch_in_new_process_group
 			p.set_separate_console (False)
+			p.set_hidden (True)
+			p.set_detached_console (True)
+
+			if is_debug then
+				create dbg.make_with_path (eiffel_layout.log_path.extended ("emdc.log"))
+				dbg.open_append
+				dbg.put_string ("%N====%N")
+				dbg.put_string_general (cmd)
+				dbg.put_string ("%N----%N")
+				dbg.close
+				p.redirect_output_to_file (dbg.path.name)
+				p.redirect_error_to_same_as_output
+			end
 
 				-- Launch the process execution
 			p.launch

@@ -404,8 +404,6 @@ feature -- Generation
 			end
 		end
 
-
-
 	deploy_netcore_runtimeconfig_json_file (vars: CIL_PROJECT_INFO; a_target_directory: PATH; a_target_filename: READABLE_STRING_GENERAL)
 		local
 			f: PLAIN_TEXT_FILE
@@ -424,9 +422,9 @@ feature -- Generation
   }
 }
 			]"
-			s.replace_substring_all ("${FRAMEWORK_MONIKER}", vars.framework_moniker)
-			s.replace_substring_all ("${FRAMEWORK_NAME}", vars.framework_name)
-			s.replace_substring_all ("${FRAMEWORK_VERSION}", vars.framework_version)
+			s.replace_substring_all ("${FRAMEWORK_MONIKER}", to_json_string (vars.framework_moniker))
+			s.replace_substring_all ("${FRAMEWORK_NAME}", to_json_string (vars.framework_name))
+			s.replace_substring_all ("${FRAMEWORK_VERSION}", to_json_string (vars.framework_version))
 
 			create f.make_with_path (a_target_directory.extended (a_target_filename))
 			f.open_write
@@ -471,11 +469,12 @@ feature -- Generation
   }
 }
 			]"
-			s.replace_substring_all ("${CLR_RUNTIME}", vars.clr_runtime)
-			s.replace_substring_all ("${SYSTEM_NAME}", vars.system_name)
 
-			s.replace_substring_all ("${SYSTEM_VERSION}", vars.system_version)
-			s.replace_substring_all ("${SYSTEM_TYPE}", vars.system_type)
+			s.replace_substring_all ("${CLR_RUNTIME}", to_json_string (vars.clr_runtime))
+			s.replace_substring_all ("${SYSTEM_NAME}", to_json_string (vars.system_name))
+
+			s.replace_substring_all ("${SYSTEM_VERSION}", to_json_string (vars.system_version))
+			s.replace_substring_all ("${SYSTEM_TYPE}", to_json_string (vars.system_type))
 
 
 				-- FIXME: use the list of .Net assemblies, and generated assemblies to get versions and related information.
@@ -492,7 +491,7 @@ feature -- Generation
 					a_assembly_reference as ic
 				loop
 						-- FIXME: maybe use proper JSON encoding, eventually the JSON library.
-					v := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (ic.item.name)
+					v := to_json_string (ic.item.name)
 
 						-- FIXME
 						-- At the moment, we need to add all the dependencies.
@@ -564,7 +563,7 @@ feature -- Generation
 			s.replace_substring_all ("${SYSTEM_NAME}", vars.system_name)
 			s.replace_substring_all ("${SYSTEM_TYPE}", vars.system_type)
 
-			create f.make_with_path (a_target_directory.extended ("wrap_" + vars.system_name + ".csproj"))
+			create f.make_with_path (a_target_directory.extended ({STRING_32} "wrap_" + vars.system_name + ".csproj"))
 			f.open_write
 			f.put_string (s)
 			f.close
@@ -591,87 +590,19 @@ public class wrap_${SYSTEM_NAME}
 }
 			]"
 			s.replace_substring_all ("${SYSTEM_NAME}", vars.system_name)
-			create f.make_with_path (a_target_directory.extended ("wrap_" + vars.system_name + ".cs"))
+			create f.make_with_path (a_target_directory.extended ({STRING_32} "wrap_" + vars.system_name + ".cs"))
 			f.open_write
 			f.put_string (s)
 			f.close
 		end
 
-	netcore_project_variables (a_system: SYSTEM_I): TUPLE [system_name, system_version, system_type, framework_name, framework_version, framework_moniker, clr_runtime: STRING]
-		local
-			s, maj, min, sub: STRING
-			i,j: INTEGER
-			l_fmwk_name, l_fmwk_version: STRING
-			l_system_version, l_system_type, l_framework_moniker, l_clr_runtime: STRING
-		do
-			if
-				attached a_system.msil_version as l_msil_version and then
-				not l_msil_version.is_empty
-			then
-				l_system_version := l_msil_version
-			else
-				l_system_version := "1.0.0.0" -- Default?
-			end
-
-			l_system_type := a_system.msil_generation_type -- dll | exe
-
-			s := a_system.clr_runtime_version.to_string_8
-			i := s.index_of ('/', 1)
-			if i > 0 then
-				l_fmwk_name := s.head (i - 1)
-				l_fmwk_version := s.substring (i + 1, s.count)
-			else
-				l_fmwk_name := s
-				l_fmwk_version := ""
-			end
-
-				-- FRAMEWORK_TARGET
-				-- tfm: net6.0, net7.0, .... netstandard2.1
-				--  (see: https://learn.microsoft.com/en-us/dotnet/standard/frameworks)
-			i := l_fmwk_version.index_of ('.', 1)
-			if i > 0 then
-				maj := l_fmwk_version.head (i - 1)
-				if maj.is_integer then
-					j := l_fmwk_version.index_of ('.', i + 1)
-					if j > 0 then
-						min := l_fmwk_version.substring (i + 1, j - 1)
-						sub := l_fmwk_version.substring (j + 1, l_fmwk_version.count)
-					else
-						min := "0"
-						sub := "0"
-					end
-					if maj.to_integer >= 5 then
-						s := "net" + maj + "." + min
-					else
-						s := "netcoreapp" + maj + "." + min
-					end
---					if sub.to_integer > 0 then
---						s := s + "." + sub
---					end
-					l_framework_moniker := s
-					-- TODO: support
-					-- tfm: net6.0, net7.0, .... netstandard2.1  (see: https://learn.microsoft.com/en-us/dotnet/standard/frameworks)
-				end
-			end
-
-			if l_fmwk_name.has_substring ("NETCore.App") then
-				s := ".NETCoreApp,Version=v" + maj + "." + min
-				l_clr_runtime := s
-			else
-				l_clr_runtime := ".NETCoreApp,Version=v6.0" -- Default?
-			end
-
-			Result := [a_system.name, l_system_version, l_system_type, l_fmwk_name, l_fmwk_version, l_framework_moniker, l_clr_runtime]
-
-		end
-
-
 feature {NONE} -- Implementation
 
-	append_items (libs, libs_runtime, libs_deps: STRING; a_name: STRING_8; version: detachable READABLE_STRING_GENERAL; l_start: BOOLEAN)
+	append_items (libs, libs_runtime, libs_deps: STRING; a_name: READABLE_STRING_8; version: detachable READABLE_STRING_GENERAL; l_start: BOOLEAN)
 				-- Append libraries and runtime libraries to the JSON file.
 		local
-			libs_tpl, lib_deps_tpl, libs_runtime_tpl, v: STRING
+			libs_tpl, lib_deps_tpl, libs_runtime_tpl: STRING
+			v, l_versioned_name: STRING_32
 		do
 			lib_deps_tpl := "          %"${LIB_NAME}%": %"${LIB_VERSION}%""
 
@@ -688,27 +619,26 @@ feature {NONE} -- Implementation
 			libs_runtime.append (",%N")
 			libs_runtime.append (libs_runtime_tpl)
 
-			if l_start then
-			else
+			if not l_start then
 				libs_deps.append (",")
 			end
 			libs_deps.append ("%N")
 			libs_deps.append (lib_deps_tpl)
 
-			libs_runtime.replace_substring_all ("${LIB_NAME}", a_name)
-			libs_deps.replace_substring_all ("${LIB_NAME}", a_name)
+			libs_runtime.replace_substring_all ("${LIB_NAME}", to_json_string (a_name))
+			libs_deps.replace_substring_all ("${LIB_NAME}", to_json_string (a_name))
 			if attached version as l_version then
-				v := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version)
+				v := l_version
 			else
-				v := "1.0.0.0" -- Default?
+				v := {STRING_32} "1.0.0.0" -- Default?
 			end
-			a_name.append_character ('/')
-			a_name.append (v)
+			create l_versioned_name.make_from_string_general (a_name)
+			l_versioned_name.append_character ('/')
+			l_versioned_name.append (v)
 
-			libs_deps.replace_substring_all ("${LIB_VERSION}", v)
-
-			libs.replace_substring_all ("${LIB_NAME_VERSION}", a_name)
-			libs_runtime.replace_substring_all ("${LIB_NAME_VERSION}", a_name)
+			libs_deps.replace_substring_all ("${LIB_VERSION}", to_json_string (v))
+			libs.replace_substring_all ("${LIB_NAME_VERSION}", to_json_string (l_versioned_name))
+			libs_runtime.replace_substring_all ("${LIB_NAME_VERSION}", to_json_string (l_versioned_name))
 		end
 
 feature {NONE} -- Type description
@@ -1597,6 +1527,17 @@ feature {NONE} -- Progression
 		ensure
 			definition: Result implies a_class /= Void
 		end
+
+feature -- JSON encoding
+
+	to_json_string (s: READABLE_STRING_GENERAL): STRING_8
+			-- JSON encoded string of `s`.
+		do
+			Result := (create {JSON_STRING}.make_from_string_general (s)).item
+		ensure
+			class
+		end
+
 
 invariant
 	system_exists: System /= Void

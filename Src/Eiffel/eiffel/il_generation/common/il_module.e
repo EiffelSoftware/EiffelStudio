@@ -217,6 +217,7 @@ feature -- Access: tokens
 
 	mscorlib_token: INTEGER
 			-- Token for `mscorlib' assembly.
+			-- NOTE: it may also be System.Runtime assembly...
 
 	runtime_type_handle_token: INTEGER
 			-- Token for `System.RuntimeTypeHandle' in `mscorlib'.
@@ -1369,7 +1370,7 @@ feature -- Netcore deployment
 			f: PLAIN_TEXT_FILE
 			vars: CIL_PROJECT_INFO
 			s, libs_tpl, libs: STRING
-			v: STRING_8
+			l_versioned_name: STRING_32
 			l_name: READABLE_STRING_GENERAL
 			l_version: READABLE_STRING_GENERAL
 		do
@@ -1399,19 +1400,19 @@ feature -- Netcore deployment
   }
 }
 			]"
-			s.replace_substring_all ("${CLR_RUNTIME}", vars.clr_runtime)
-			create v.make_from_string (module_name)
+			s.replace_substring_all ("${CLR_RUNTIME}", {CIL_GENERATOR}.to_json_string (vars.clr_runtime))
+			create l_versioned_name.make_from_string_general (module_name)
 			if attached assembly_info as l_ass_info then
 				l_version := l_ass_info.version
 			else
 				l_version := vars.system_version
 			end
 			if l_version /= Void then
-				v.append_character ('/')
-				v.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
+				l_versioned_name.append_character ('/')
+				l_versioned_name.append (l_version)
 			end
-			s.replace_substring_all ("${LIB_NAME_VERSION}", v)
-			s.replace_substring_all ("${LIB_NAME}", module_name)
+			s.replace_substring_all ("${LIB_NAME_VERSION}", {CIL_GENERATOR}.to_json_string (l_versioned_name))
+			s.replace_substring_all ("${LIB_NAME}", {CIL_GENERATOR}.to_json_string (module_name))
 			s.replace_substring_all ("${LIB_TYPE}", "dll")
 
 
@@ -1432,12 +1433,12 @@ libs_tpl := "[
 					libs.append (",%N")
 					libs.append (libs_tpl)
 					-- FIXME: maybe use proper JSON encoding, eventually the JSON library.
-					v := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_name)
+					create l_versioned_name.make_from_string_general (l_name)
 					if l_version /= Void then
-						v.append_character ('/')
-						v.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_version))
+						l_versioned_name.append_character ('/')
+						l_versioned_name.append (l_version)
 					end
-					libs.replace_substring_all ("${LIB_NAME_VERSION}", v)
+					libs.replace_substring_all ("${LIB_NAME_VERSION}", {CIL_GENERATOR}.to_json_string (l_versioned_name))
 				end
 			end
 
@@ -3277,36 +3278,33 @@ feature {NONE} -- Once per modules being generated.
 			system_object_compiled: System.system_object_class.is_compiled
 		local
 			l_ass_info: MD_ASSEMBLY_INFO
---			l_pub_key: MD_PUBLIC_KEY_TOKEN
-			l_mscorlib: ASSEMBLY_I
+			l_system_runtime: ASSEMBLY_I
 			l_version: VERSION
-			l_system_runtime: STRING_32
 		do
+				-- WORKAROUND:
 				-- To compute it, we simply take the data from `System.Object'. That way our
 				-- code is automatically using the version of `mscorlib' that was specified
 				-- in the Ace file.
-			l_mscorlib := if attached system.system_object_class.public_assembly as l_assembly then l_assembly else system.system_object_class.assembly end
+			l_system_runtime := if attached system.system_object_class.public_assembly as l_assembly then l_assembly else system.system_object_class.assembly end
+			if l_system_runtime = Void then
+					-- TODO: get assembly using "System.Runtime"
+			end
 
 			create l_version
 			check
-				version_valid: l_version.is_version_valid (l_mscorlib.assembly_version)
+				version_valid: l_version.is_version_valid (l_system_runtime.assembly_version)
 			end
 
-			l_version.set_version (l_mscorlib.assembly_version)
+			l_version.set_version (l_system_runtime.assembly_version)
 			l_ass_info := md_factory.assembly_info
 			l_ass_info.set_major_version (l_version.major.to_natural_16)
 			l_ass_info.set_minor_version (l_version.minor.to_natural_16)
 			l_ass_info.set_build_number (l_version.build.to_natural_16)
 			l_ass_info.set_revision_number (l_version.revision.to_natural_16)
 
---			create l_pub_key.make_from_string (l_mscorlib.assembly_public_key_token)
-				-- Workaround
---			l_system_runtime := "system.runtime"
-			mscorlib_token := define_assembly_reference (l_mscorlib.assembly_name, l_ass_info.string, "", l_mscorlib.assembly_public_key_token)
---			mscorlib_token := define_assembly_reference (l_mscorlib, l_ass_info.string, "", l_mscorlib.assembly_public_key_token)
+			mscorlib_token := define_assembly_reference (l_system_runtime.name, l_ass_info.string, "", l_system_runtime.assembly_public_key_token)
 
-			type_handle_class_token := md_emit.define_type_ref (
-				create {CLI_STRING}.make (Type_handle_class_name), mscorlib_token)
+			type_handle_class_token := md_emit.define_type_ref (create {CLI_STRING}.make (Type_handle_class_name), mscorlib_token)
 		end
 
 	compute_mscorlib_type_tokens

@@ -165,6 +165,7 @@ feature {NONE} -- Access
 				Result.extend (user_files_path)
 				Result.extend (hidden_files_path)
 				Result.extend (projects_data_path)
+				Result.extend (log_path)
 			else
 				create Result.make (0)
 			end

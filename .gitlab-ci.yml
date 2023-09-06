@@ -23,7 +23,7 @@ testing_job:
     - export EWEASEL=$dir/eweasel
     - export ISE_LIBRARY=$EIFFEL_SRC
     - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
-	- echo Prepare EIFFEL_SRC
+    - echo Prepare EIFFEL_SRC
     - cd $EIFFEL_SRC
     - geant prepare
     - ec -config $ISE_LIBRARY/library/base/testing/testing.ecf -clean -tests

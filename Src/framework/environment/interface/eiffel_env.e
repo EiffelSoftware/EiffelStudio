@@ -1537,6 +1537,18 @@ feature -- Private Settings Directories
 			not_result_is_empty: not Result.is_empty
 		end
 
+	log_path: PATH
+			-- Path to log directory that EiffelStudio can use to store logs.
+			--| They are hidden by default to the user.
+		require
+			is_valid_environment: is_valid_environment
+			is_user_files_supported: is_user_files_supported
+		once
+			Result := hidden_files_path.extended ("log")
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature -- User Directories
 
 	user_templates_path: PATH

@@ -369,7 +369,7 @@ feature -- Start Operation
 						if launch_it then
 							env32 := environment_variables_updated_with (param.environment_variables, False)
 							create cmd_exec
-							if l_system.is_il_netcore then
+							if l_system.il_generation and then l_system.is_il_netcore then
 								create l_il_env.make (l_system.clr_runtime_version)
 
 									-- TODO: for now Eiffel NETCORE has no support for execution
@@ -439,7 +439,7 @@ feature -- Start Operation
 						if launch_it then
 							create cmd_exec
 							env32 := environment_variables_updated_with (param.environment_variables, True)
-							if l_system.is_il_netcore then
+							if l_system.il_generation and then l_system.is_il_netcore then
 								create l_il_env.make (l_system.clr_runtime_version)
 									-- TODO: for now Eiffel NETCORE has no support for execution
 								cmd_exec.execute_with_args_and_working_directory_and_environment (

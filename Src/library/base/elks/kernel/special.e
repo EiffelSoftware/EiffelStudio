@@ -214,19 +214,24 @@ feature -- Status report
 			i, j, nb: INTEGER
 		do
 			Result := True
-			from
-				i := source_index
-				j := destination_index
-				nb := source_index + n
-			until
-				i = nb
-			loop
-				if other.item (i) /= item (j) then
-					Result := False
-					i := nb -- Exit the loop
-				else
-					i := i + 1
-					j := j + 1
+			if
+				other /= Current
+				or source_index /= destination_index
+			then
+				from
+					i := source_index
+					j := destination_index
+					nb := source_index + n
+				until
+					i = nb
+				loop
+					if other.item (i) /= item (j) then
+						Result := False
+						i := nb -- Exit the loop
+					else
+						i := i + 1
+						j := j + 1
+					end
 				end
 			end
 		ensure
@@ -876,7 +881,7 @@ invariant
 	consistent_count: count = upper - lower + 1
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

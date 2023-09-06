@@ -11,6 +11,26 @@ before_script:
 variables:
   EIFFEL_SRC: '$CI_PROJECT_DIR/Src'
 
+testing_job:
+  stage: test
+  tags:
+    - linux
+  when: always
+  script:
+    - cd $CI_PROJECT_DIR
+    - export dir=$CI_PROJECT_DIR
+    - export EIFFEL_SRC=$dir/Src
+    - export EWEASEL=$dir/eweasel
+    - export ISE_LIBRARY=$EIFFEL_SRC
+    - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
+    - echo Check projects compilation status...
+    - ec -config $ISE_LIBRARY/library/base/testing/testing.ecf -clean -tests
+  only:
+    refs:
+      - master
+      - merge_requests
+      - schedules
+
 linux_compile_all_library_job:
   stage: test
   tags:

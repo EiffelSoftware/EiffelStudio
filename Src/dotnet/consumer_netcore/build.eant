@@ -22,11 +22,11 @@
 	<target name="install" depend="compile">
 		<echo message="- Install nemdc into spec/.../bin folder" />
 		<mkdir directory="spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
-		<!-- Try with win-64 -->
+		<!-- Try with win-x64 -->
 		<set name="pub_dir" value="${cwd}${path_separator}cs${path_separator}md_consumer_app/bin/Release/net6.0/win-x64/publish"/>
 		<available resource="${pub_dir}" variable="file_available"/>
-		<!-- Try with linux-x86-64 -->
-		<set name="pub_dir" value="${cwd}${path_separator}cs${path_separator}md_consumer_app/bin/Release/net6.0/linux-x86-64/publish/" if="${file_available}=false"/>
+		<!-- Try with linux-x64 -->
+		<set name="pub_dir" value="${cwd}${path_separator}cs${path_separator}md_consumer_app/bin/Release/net6.0/linux-x64/publish/" if="${file_available}=false"/>
 		<available resource="${pub_dir}" variable="file_available"/>
 		<!-- TODO: Try for other platforms ... -->
 		<!-- ... -->

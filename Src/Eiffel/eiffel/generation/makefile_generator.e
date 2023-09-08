@@ -830,7 +830,7 @@ feature -- Generation (Linking rules)
 
 	generate_il_dll
 			-- Generate rules to produce DLL for IL code generation.
-			--| So far this is a Windows specific code generation.
+			--| So far this is a IL (.net) specific code generation.
 		do
 			make_file.put_string ("all: $(IL_SYSTEM)")
 			make_file.put_new_line
@@ -845,9 +845,30 @@ feature -- Generation (Linking rules)
 			make_file.put_new_line
 
 				-- Continue the declaration for the IL_SYSTEM
-			make_file.put_string ("$il_system_compilation_line")
-			make_file.put_new_line
+			if system.is_il_netcore and then not {PLATFORM}.is_windows then
+					-- FIXME: find a way to avoid checking for the current machine's platform [2023-09-08]
 
+					-- FIXME: for now, no resource support for Eiffel netcore.
+					-- Needed on non Windows platforms
+					-- to rename .so file into .dll
+				make_file.put_string ("IL_SYSTEM_DLL = lib")
+				make_file.put_string (system_name)
+				make_file.put_string (".dll%N")
+
+				make_file.put_string ("[
+					$(IL_SYSTEM): $(OBJECTS)
+						$(RM) $(IL_SYSTEM)
+						$(SHAREDLINK) $(LDSHAREDFLAGS) $(IL_SYSTEM) $(IL_OBJECTS) $(EXTERNALS) $(EIFLIB) $(SHAREDLIBS)
+						$(CP) $(IL_SYSTEM) $(IL_SYSTEM_DLL)
+						$(RM) $(OBJECTS)
+						echo Success > completed.eif
+				]")
+				make_file.put_new_line
+				make_file.put_new_line
+			else
+				make_file.put_string ("$il_system_compilation_line")
+				make_file.put_new_line
+			end
 			make_file.put_new_line
 		end
 
@@ -1351,7 +1372,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

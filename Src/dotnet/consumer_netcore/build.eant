@@ -16,45 +16,31 @@
 	<target name="compile" >
 		<echo message="- Compile nemdc" />
 		<exec executable="dotnet build -c Release" accept_errors="true" dir="cs${path_separator}md_consumer_app" />
-		<exec executable="dotnet publish -c Release --self-contained --use-current-runtime" accept_errors="true" dir="cs${path_separator}md_consumer_app"/>
 	</target>
 
 	<target name="install" depend="compile">
-		<echo message="- Install nemdc into spec/.../bin folder" />
-		<mkdir directory="spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
-		<!-- Try with win-x64 -->
-		<set name="pub_dir" value="${cwd}${path_separator}cs${path_separator}md_consumer_app/bin/Release/net6.0/win-x64/publish"/>
-		<available resource="${pub_dir}" variable="file_available"/>
-		<!-- Try with linux-x64 -->
-		<set name="pub_dir" value="${cwd}${path_separator}cs${path_separator}md_consumer_app/bin/Release/net6.0/linux-x64/publish/" if="${file_available}=false"/>
-		<available resource="${pub_dir}" variable="file_available"/>
-		<!-- TODO: Try for other platforms ... -->
-		<!-- ... -->
-		<!-- Try without OS info -->
-		<set name="pub_dir" value="${cwd}${path_separator}cs${path_separator}md_consumer_app/bin/Release/net6.0/publish/" if="${file_available}=false"/>
-		<geant target="_copy_dotnet_build_results" arguments="${pub_dir},${cwd}${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin"/>
+		<echo message="- Install nemdc into pub folder" />
+		<geant target="publish" arguments="${ISE_PLATFORM}" reuse_variables="true"/>
 	</target>
 
-	<target name="_copy_dotnet_build_results">
-		<argument name="a_src"/>
-		<argument name="a_dest"/>
-		<echo message="- Copy from ${a_src} to ${a_dest} folder" />
-		<copy dir="${a_src}" to_directory="${a_dest}" force="true">
-		  	<fileset include="@(*.dll|*.deps.json|*.runtimeconfig.json|nemdc|nemdc.exe)"/>
-		</copy>
-		<exec executable="chmod u+x nemdc${exe} " dir="${a_dest}" />
+	<target name="publish" depend="compile">
+		<argument name="a_platform"/>
+		<!-- See: https://learn.microsoft.com/en-us/dotnet/core/rid-catalog --> 
+		<echo message="- Publish nemdc for ${a_platform} into pub${path_separator}${a_platform} folder" />
+		<set name="opts" value="--self-contained --use-current-runtime"/>
+		<set name="opts" value="--self-contained --runtime win-x64" if="${a_platform}=win64"/>
+		<set name="opts" value="--self-contained --runtime win-x86" if="${a_platform}=windows"/>
+		<set name="opts" value="--self-contained --runtime linux-x64" if="${a_platform}=linux-x86-64"/>
+		<set name="opts" value="--self-contained --runtime linux-arm64" if="${a_platform}=linux-arm64"/>
+		<set name="opts" value="--self-contained --runtime osx-x64" if="${a_platform}=macosx-x86-64"/>
+		<exec executable="dotnet publish cs${path_separator}md_consumer_app${path_separator}app.csproj --configuration Release ${opts} --output pub${path_separator}${a_platform}" accept_errors="true"/>
 	</target>
 
 	<target name="clean" >
 		<echo message="- Clean nemdc projects" />
 		<geant file="build.eant" target="clobber" dir="cs${path_separator}md_consumer" />
 		<geant file="build.eant" target="clobber" dir="cs${path_separator}md_consumer_app" />
-		<delete dir="spec${path_separator}${ISE_PLATFORM}${path_separator}bin">
-			<fileset  include="@(*.dll|nemdc*)"/>
-  		</delete>
-		<delete dir="spec${path_separator}${ISE_PLATFORM}${path_separator}bin">
-			<fileset  include="@(*.dll|nemdc*)"/>
-  		</delete>
+		<delete directory="pub"/>
 	</target>
 
 	<target name="clobber" >

@@ -80,8 +80,15 @@ namespace md_consumer
         {
             if (!locations.Contains(loc)) {
                 locations.Add (loc);
+                if (File.Exists(loc)) {
+                        // Is not a directory
+                    DirectoryInfo? par = Directory.GetParent(loc);
+                    if (par != null) {
+                        register_side_location(par.FullName);
+                    }
+                }
             }
-        }     
+        }
         public void register_side_location(string loc)
         {
             if (!side_locations.Contains(loc)) {

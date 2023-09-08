@@ -116,6 +116,7 @@ namespace EifMdConsumer
                     loader.register_locations(ref_assemblies);
                     loader.register_sdk_locations(sdk_locations);
                     loader.register_runtime_locations(runtime_locations);
+                    loader.register_locations(add_assemblies);
                     
                     StringBuilder o = new StringBuilder();
                     if (cache_location != null) {

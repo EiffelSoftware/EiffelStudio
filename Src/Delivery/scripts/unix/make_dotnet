@@ -19,9 +19,9 @@ if [ -x "$(command -v dotnet)" ]; then
 	remtrace Build Eiffel .Net CORE nemdc tool
 	cd $EIFFEL_SRC/dotnet/consumer_netcore
 	geant install
-	if [ -f "spec/$ISE_PLATFORM/bin/nemdc" ]; then
+	if [ -f "pub/$ISE_PLATFORM/nemdc" ]; then
 		safe_md $INSTALL_DIR/studio/spec/unix/bin/netcore
-		cp spec/$ISE_PLATFORM/bin/* $INSTALL_DIR/studio/spec/unix/bin/netcore/.
+		cp pub/$ISE_PLATFORM/* $INSTALL_DIR/studio/spec/unix/bin/netcore/.
 	else
 		remtrace Error: could not build netcore nemdc tool
 	fi

@@ -239,23 +239,8 @@ feature -- Access
 			-- File descriptor as used by the operating system.
 		require else
 			file_opened: not is_closed
-		local
-			omode: INTEGER
 		do
-			inspect mode
-			when read_file then
-				omode := c_read
-			when append_file then
-				omode := c_append
-			when read_write_file then
-				omode := c_readwrite
-			when write_file then
-				omode := c_write
-			when append_read_file then
-				omode := c_append
-			end
-			omode := omode | c_open_modifier
-			Result := get_fd (file_pointer.to_integer_32, omode)
+			Result := file_fd (file_pointer)
 			descriptor_available := Result /= -1
 		end
 
@@ -1996,12 +1981,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_fd (hdl: INTEGER; omode: INTEGER): INTEGER
-			-- Return the file descriptor corresponding to the handle `hdl' (Windows only).
+	file_fd (hdl: POINTER): INTEGER
+			-- <Precursor>
 		external
-			"C (EIF_INTEGER, EIF_INTEGER): EIF_INTEGER | %"io.h%""
+			"C inline use %"stdio.h%""
 		alias
-			"_open_osfhandle"
+			"fileno((FILE*)$hdl)"
 		end
 
 	eiffel_newline: STRING = "%N"

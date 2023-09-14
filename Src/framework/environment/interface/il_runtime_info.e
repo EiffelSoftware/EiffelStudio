@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			tfm_set: a_tfm /= Void and then not a_tfm.is_whitespace
 		do
 			tfm := a_tfm
-			make  (loc, a_version)
+			make (loc, a_version)
 		end
 
 feature -- Access

@@ -59,7 +59,7 @@ feature -- Access
 	installed_runtimes: STRING_TABLE [IL_RUNTIME_INFO]
 			-- All paths of installed versions of .NET runtime indexed by their version names.
 		local
-			v: READABLE_STRING_GENERAL
+			v: READABLE_STRING_32
 			inf: IL_RUNTIME_INFO
 		once
 			if attached available_runtimes as l_runtimes then
@@ -67,11 +67,11 @@ feature -- Access
 				across
 					l_runtimes as rt
 				loop
-					v := rt.version
-					if attached dotnet_target_framework_moniker (rt.version) as l_moniker then
-						create inf.make_with_version_and_tfm (rt.path, rt.version, l_moniker)
+					v := rt.version.to_string_32
+					if attached dotnet_target_framework_moniker (v) as l_moniker then
+						create inf.make_with_version_and_tfm (rt.path, v, l_moniker)
 					else
-						create inf.make (rt.path, rt.version)
+						create inf.make (rt.path, v)
 					end
 					Result [inf.full_version] := inf
 				end
@@ -79,7 +79,7 @@ feature -- Access
 				create Result.make (0)
 			end
 		end
-		
+
 	installed_sdks: STRING_TABLE [PATH]
 			-- All paths of installed versions of .NET SDKs indexed by their version names.
 		local

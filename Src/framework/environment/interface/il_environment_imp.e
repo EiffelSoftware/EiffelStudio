@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 			tfm := Void
 			runtime_version := Void
 			if attached version as v then
-				i := a_version.index_of ('/', 1)
+				i := v.index_of ('/', 1)
 				if i > 0 then
-					tfm := a_version.substring (1, i - 1)
-					runtime_version := a_version.substring (i + 1, a_version.count)
+					tfm := v.substring (1, i - 1)
+					runtime_version := v.substring (i + 1, v.count)
 				end
 			end
 		ensure
@@ -60,14 +60,18 @@ feature -- Initialization
 			-- If runtime is found, we set the ISE_DOTNET_FRAMEWORK environment variable.
 		local
 			l_exec: EXECUTION_ENVIRONMENT
-			s_packs, s_shared, s_tfm, s_runtime_version: READABLE_STRING_GENERAL
+			l_empty_string, s_packs, s_shared, s_tfm, s_runtime_version: READABLE_STRING_GENERAL
 		do
 			if is_dotnet_installed then
+				l_empty_string := ""
+				s_packs := l_empty_string
+				s_shared := l_empty_string
+
 				create l_exec
 				if attached dotnet_framework_path as l_path then
 					l_exec.put (l_path.name, ise_dotnet_framework_env)
 				else
-					l_exec.put (Void, ise_dotnet_framework_env)
+					l_exec.put (l_empty_string, ise_dotnet_framework_env)
 				end
 				l_exec.put (dotnet_platform, ise_dotnet_platform_env)
 
@@ -78,13 +82,18 @@ feature -- Initialization
 					if attached dotnet_shared_path as p_shared then
 						s_shared := p_shared.name
 					end
-
 					s_tfm := tfm
 					s_runtime_version := runtime_version
 				end
 				l_exec.put (s_packs, ise_dotnet_packs_env)
 				l_exec.put (s_shared, ise_dotnet_shared_env)
+				if s_tfm = Void then
+					s_tfm := l_empty_string
+				end
 				l_exec.put (s_tfm, ise_dotnet_tfm_env)
+				if s_runtime_version = Void then
+					s_runtime_version := l_empty_string
+				end
 				l_exec.put (s_runtime_version, ise_dotnet_version_env)
 			end
 		end
@@ -95,7 +104,7 @@ feature -- Access
 			-- Currently selected version, if none `default_version'.
 
 	tfm: detachable IMMUTABLE_STRING_32
-			-- Target Framework Moniker  
+			-- Target Framework Moniker
 			--| ex: net6.0, net7.0, ...
 
 	runtime_version: detachable IMMUTABLE_STRING_32
@@ -163,7 +172,9 @@ feature -- Query
 	dotnet_framework_path: detachable PATH
 			-- Path to .NET Framework of version `version'.
 		do
-			Result := installed_runtimes [version].location
+			if attached installed_runtimes [version] as inf then
+				Result := inf.location
+			end
 		end
 
 	dotnet_packs_path: detachable PATH

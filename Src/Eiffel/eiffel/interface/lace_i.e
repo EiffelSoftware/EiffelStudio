@@ -1205,7 +1205,7 @@ feature {NONE} -- Implementation
 
 			l_s := l_settings.item (s_external_runtime)
 			if l_s /= Void then
-				system.set_external_runtime (l_s.as_string_8_conversion)
+				system.set_external_runtime ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_s))
 			end
 
 			l_s := l_settings.item (s_executable_name)
@@ -1219,7 +1219,7 @@ feature {NONE} -- Implementation
 				l_s := Void
 			end
 			if l_s /= Void and then (system.name = Void or else not system.name.same_string_general (l_s)) then
-				system.set_name (l_s.as_string_8_conversion)
+				system.set_name ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_s))
 				system.request_freeze
 			end
 
@@ -1685,8 +1685,7 @@ feature {NONE} -- Implementation
 			if l_system_name.is_valid_as_string_8 then
 				system.set_name (l_system_name.to_string_8)
 			else
-					-- FIXME: invalid system name!
-				system.set_name (l_system_name.as_string_8_conversion)
+				system.set_name ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_system_name))
 			end
 		ensure
 			valid_system: workbench.system /= Void

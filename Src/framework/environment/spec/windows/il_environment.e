@@ -26,16 +26,24 @@ create
 
 feature -- Access
 
-	installed_runtimes: STRING_TABLE [PATH]
+	installed_runtimes: STRING_TABLE [IL_RUNTIME_INFO]
 			-- All paths of installed versions of .NET runtime indexed by their version names.
 		local
 			l_runtime_path: detachable like dotnet_framework_runtime_path
 			l_content: ARRAYED_LIST [PATH]
 			l_dir: DIRECTORY
 			l_file_name: PATH
-			l_entry: PATH
+			l_entry, loc: PATH
 			l_file: RAW_FILE
+			netcore_list: ARRAYED_LIST [IL_RUNTIME_INFO]
+			l_netcore_version: READABLE_STRING_32
+			l_version: IL_VERSION
+			l_full_version: READABLE_STRING_GENERAL
+			l_sorter: QUICK_SORTER [IL_RUNTIME_INFO]
+			i,n: INTEGER
+			l_info: IL_RUNTIME_INFO
 		once
+				-- .Net framework
 			l_runtime_path := dotnet_framework_runtime_path
 			create Result.make_equal (5)
 			if l_runtime_path /= Void then
@@ -59,12 +67,15 @@ feature -- Access
 							l_file_name := l_runtime_path.extended_path (l_entry).extended ("mscorwks.dll")
 							create l_file.make_with_path (l_file_name)
 							if l_file.exists then
-								Result [l_entry.name] := l_file_name.parent
+								Result [l_entry.name] := create {IL_RUNTIME_INFO}.make (l_file_name.parent, l_entry.name)
 							else
 								l_file_name := l_runtime_path.extended_path (l_entry).extended ("clr.dll")
 								l_file.make_with_path (l_file_name)
 								if l_file.exists then
-									Result [l_entry.name] := l_file_name.parent
+									if Result.has (l_entry.name) then
+										Result.remove (l_entry.name)
+									end
+									Result [l_entry.name] := create {IL_RUNTIME_INFO}.make (l_file_name.parent, l_entry.name)
 								end
 							end
 						end
@@ -72,6 +83,8 @@ feature -- Access
 					end
 				end
 			end
+				-- NETCore runtimes
+			create netcore_list.make (3)
 			across
 				dotnet_runtime_paths as p
 			loop
@@ -88,11 +101,19 @@ feature -- Access
 						if is_using_reference_assemblies then
 							if
 								attached l_entry.extension as ext and then ext.is_case_insensitive_equal_general ("ref") and then
+								l_entry.name.as_lower.has_substring (".netcore.") and then
 								l_dir.exists
 							then
 								across l_dir.entries as v loop
 									if version_expression.matches (v.utf_8_name) then
-										Result [l_entry.name + "/" + v.name] := l_file_name.extended_path (l_entry).extended_path (v).extended ("Ref").extended (dotnet_moniker (v.name))
+										loc := l_file_name.extended_path (l_entry).extended_path (v).extended ("Ref")
+											-- Now get the TFM
+										if attached folder_tfm (loc) as l_tfm then
+											l_netcore_version := l_tfm + "/" + v.name
+											create l_version.make_from_string (v.name)
+											loc := loc.extended (l_tfm)
+											netcore_list.force (create {IL_RUNTIME_INFO}.make_with_version_and_tfm (loc, v.name, l_tfm))
+										end
 									end
 								end
 							end
@@ -104,11 +125,63 @@ feature -- Access
 							then
 								across l_dir.entries as v loop
 									if version_expression.matches (v.utf_8_name) then
-										Result [l_entry.name + "/" + v.name] := l_file_name.extended_path (l_entry).extended_path (v)
+										loc := l_file_name.extended_path (l_entry).extended_path (v)
+										netcore_list.force (create {IL_RUNTIME_INFO}.make_with_version_and_tfm (loc, v.name, dotnet_target_framework_moniker (v.name)))
 									end
 								end
 							end
 						end
+					end
+				end
+			end
+			if netcore_list /= Void and then not netcore_list.is_empty then
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [IL_RUNTIME_INFO]})
+				l_sorter.sort (netcore_list)
+				from
+					i := 1
+					n := netcore_list.count
+				until
+					i > n
+				loop
+					l_info := netcore_list [i]
+					l_full_version := l_info.full_version
+					Result [l_full_version] := l_info
+					i := i + 1
+					if attached l_info.tfm as l_tfm then
+						if
+							i > n
+							or else (
+								attached netcore_list [i].tfm as l_next_tfm and then
+								not l_next_tfm.same_string (l_tfm)
+							)
+						then
+							Result [l_tfm] := l_info
+						end
+					end
+				end
+			end
+		end
+
+	folder_tfm (p: PATH): detachable READABLE_STRING_32
+			-- Target Framework Moniker directory name inside location at `p`.
+			-- It is the unique (and first) node name.
+		local
+			dir: DIRECTORY
+		do
+			create dir.make_with_path (p)
+			if
+				dir.exists and then
+				attached dir.entries as l_entries
+			then
+				across
+					l_entries as e
+				loop
+					if
+						Result = Void and then
+						not e.is_current_symbol and then
+						not e.is_parent_symbol
+					then
+						Result := e.name
 					end
 				end
 			end
@@ -512,19 +585,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

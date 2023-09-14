@@ -1703,8 +1703,8 @@ feature {NONE} -- Implementation
 			if a_version = Void then
 				system.set_clr_runtime_version (l_il_env.version) -- version = default_version
 			else
-				if attached l_il_env.installed_version (a_version) as v then
-					system.set_clr_runtime_version (v)
+				if attached l_il_env.installed_runtime_info (a_version) as inf then
+					system.set_clr_runtime_version (inf.full_version)
 				else
 					create vd15
 					vd15.set_option_name ("msil_clr_version")

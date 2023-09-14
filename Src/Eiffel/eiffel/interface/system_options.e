@@ -148,7 +148,7 @@ feature -- Access: IL code generation
 	il_verifiable: BOOLEAN
 			-- Should generated IL code be verifiable?
 
-	clr_runtime_version: STRING_32
+	clr_runtime_version: detachable STRING_32
 			-- Version of IL runtime available.
 
 	is_il_netcore: BOOLEAN

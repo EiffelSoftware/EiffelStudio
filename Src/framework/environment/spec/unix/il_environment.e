@@ -10,9 +10,6 @@ class
 
 inherit
 	IL_ENVIRONMENT_IMP
-		redefine
-			default_dotnet_platform
-		end
 
 	OPERATING_ENVIRONMENT
 		undefine
@@ -34,34 +31,60 @@ create
 
 feature -- Access
 
-	default_dotnet_platform: IMMUTABLE_STRING_32
-		once
-			Result := dotnet_platform_netcore
+	dotnet_runtime_paths: ITERABLE [PATH]
+			-- Paths to where .NET runtimes are installed.
+		local
+			paths: ARRAYED_LIST [PATH]
+			p: PATH
+		do
+			create paths.make (0)
+			if attached available_runtimes as l_runtimes then
+				across
+					l_runtimes as rt
+				loop
+					p := rt.path
+					if
+						attached p.parent as l_parent and then
+						attached l_parent.parent as pp
+					then
+						if not paths.has (pp) then
+							paths.force (pp)
+						end
+					end
+				end
+			end
+			Result := paths
 		end
 
-	installed_runtimes: STRING_TABLE [PATH]
+	installed_runtimes: STRING_TABLE [IL_RUNTIME_INFO]
 			-- All paths of installed versions of .NET runtime indexed by their version names.
 		local
 			v: READABLE_STRING_GENERAL
-		do
+			inf: IL_RUNTIME_INFO
+		once
 			if attached available_runtimes as l_runtimes then
 				create Result.make (l_runtimes.count)
 				across
 					l_runtimes as rt
 				loop
 					v := rt.version
-					Result.force (rt.path, v)
+					if attached dotnet_target_framework_moniker (rt.version) as l_moniker then
+						create inf.make_with_version_and_tfm (rt.path, rt.version, l_moniker)
+					else
+						create inf.make (rt.path, rt.version)
+					end
+					Result [inf.full_version] := inf
 				end
 			else
 				create Result.make (0)
 			end
 		end
-
+		
 	installed_sdks: STRING_TABLE [PATH]
 			-- All paths of installed versions of .NET SDKs indexed by their version names.
 		local
 			v: READABLE_STRING_GENERAL
-		do
+		once
 			if attached available_sdks as l_sdks then
 				create Result.make (l_sdks.count)
 				across
@@ -74,6 +97,8 @@ feature -- Access
 				create Result.make (0)
 			end
 		end
+
+feature -- .Net framework specific
 
 	dotnet_framework_sdk_path: like dotnet_framework_path
 			-- Path to .NET Framework SDK directory of version `version'.
@@ -94,6 +119,8 @@ feature -- Access
 				to_implement ("TODO: to implement")
 			end
 		end
+
+feature -- NETCore specific		
 
 	dotnet_executable_path: PATH
 			-- Location of the netcore dotnet executable tool.
@@ -243,7 +270,7 @@ feature -- Helpers
 									dn.replace_substring_all ("/dotnet/shared/", "/dotnet/packs/")
 									dn.append (".Ref")
 									create loc.make_from_string (dn)
-									loc := loc.extended (v).extended ("ref").extended (dotnet_moniker (v))
+									loc := loc.extended (v).extended ("ref").extended (dotnet_target_framework_moniker (v))
 								else
 									loc := loc.extended (v)
 								end
@@ -284,19 +311,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

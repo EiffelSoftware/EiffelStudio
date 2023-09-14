@@ -15,10 +15,34 @@ feature -- Initialization
 		deferred
 		end
 
+feature -- Access / Environment names
+
+	ise_dotnet_framework_env: STRING = "ISE_DOTNET_FRAMEWORK"
+			-- .NET framework environment variable
+
+	ise_dotnet_platform_env: STRING = "ISE_DOTNET_PLATFORM"
+			-- .net platform environment variable
+
+	ise_dotnet_packs_env: STRING = "ISE_DOTNET_PACKS"
+			-- .NETCore "packs" location environment variable
+			-- (Only for NETCore)
+
+	ise_dotnet_shared_env: STRING = "ISE_DOTNET_SHARED"
+			-- .NETCore "shared" location environment variable
+			-- (Only for NETCore)
+
+	ise_dotnet_tfm_env: STRING = "ISE_DOTNET_TFM"
+			-- .NETCore TFM (Target Framework Moniker) environment variable
+			-- (Only for NETCore)
+
+	ise_dotnet_version_env: STRING = "ISE_DOTNET_VERSION"
+			-- .NETCore runtime precise version environment variable
+			-- (Only for NETCore)		
+
 feature -- Access
 
-	ise_dotnet_framework_env: STRING --| = "ISE_DOTNET_FRAMEWORK"
-			-- .NET framework environment variable
+	dotnet_runtime_paths: ITERABLE [PATH]
+			-- Paths to where .NET runtimes are installed.
 		deferred
 		end
 
@@ -40,19 +64,22 @@ feature -- Access
 		deferred
 		end
 
-	installed_version (a_version: READABLE_STRING_GENERAL): detachable READABLE_STRING_GENERAL
+	installed_runtime_info (a_version: READABLE_STRING_GENERAL): detachable IL_RUNTIME_INFO
 			-- Exact installed version adapted from `a_version`.
 			-- note: `a_version` could have only the major and minor, but not the rest
 			--		 the installed_version will be a full defined version compatible with `a_version`
 			--|		 for instance, for ".../6.0", it could return ".../6.0.15" if that one is installed.
 		local
-			k: READABLE_STRING_GENERAL
+			k, loc: READABLE_STRING_GENERAL
+			v: STRING_32
+			i,n: INTEGER
 		do
-			if is_version_installed (a_version) then
-				Result := a_version
+			if
+				is_version_installed (a_version) and then
+				attached installed_runtimes [a_version] as inf
+			then
+				Result := inf
 			else
-					-- FIXME: try to sort the `installed_runtimes` before using it
-					-- sort with versioning M.m.build in mind, and not just alphabetical order.
 				across
 					installed_runtimes as tb
 				loop
@@ -60,7 +87,35 @@ feature -- Access
 						-- FIXME: be more acurate working with versioning and not just "starts_with"
 					if k.starts_with (a_version) then
 							-- From 6.0, accept latest installed version 6.0.16
-						Result := k
+						Result := tb
+					end
+				end
+				if Result = Void and a_version.has ('/') then
+						-- Check old CLR version formatting:  Microsoft.NETCore.App.Ref/6.0...
+					create v.make_from_string_general ({STRING_32} "/" + a_version)
+					if {PLATFORM}.is_windows then
+						from
+							i := 1
+							n := v.count
+						until
+							i > n
+						loop
+							if v [i] = '/' then
+								v [i] := {OPERATING_ENVIRONMENT}.directory_separator
+							end
+							i := i + 1
+						end
+					end
+
+					across
+						installed_runtimes as tb
+					loop
+						loc := tb.location.name
+							-- FIXME: be more acurate working with versioning and not just "starts_with"
+						if loc.has_substring (v) then
+								-- From 6.0, accept latest installed version 6.0.16
+							Result := tb
+						end
 					end
 				end
 			end
@@ -71,15 +126,23 @@ feature -- Access
 		deferred
 		end
 
-	installed_runtimes: STRING_TABLE [PATH]
-			-- All paths of installed versions of .NET runtime indexed by their version names.
+	installed_runtimes: STRING_TABLE [IL_RUNTIME_INFO]
+			-- All paths of sorted installed versions of .NET runtime indexed by their version names.
+			-- note: the table is also sorted.
 		deferred
 		ensure
 			installed_runtimes_not_void: Result /= Void
 		end
 
 	dotnet_framework_path: detachable PATH
-			-- Path to .NET Framework of version `version'.
+			-- Path to .NET Framework/Runtime of version `version'.
+		require
+			is_dotnet_installed: is_dotnet_installed
+		deferred
+		end
+
+	dotnet_packs_path: detachable PATH
+			-- Path to .NET packs directory.
 		require
 			is_dotnet_installed: is_dotnet_installed
 		deferred
@@ -132,8 +195,8 @@ feature -- Query
 
 feature -- Helpers		
 
-	dotnet_moniker (v: READABLE_STRING_32): STRING_32
-			-- .Net moniker id for .Net version `v`.
+	dotnet_target_framework_moniker (v: READABLE_STRING_32): STRING_32
+			-- .Net Target Framework Moniker (TFM) for .Net version `v`.
 		local
 			i,j: INTEGER
 			shv: STRING_32

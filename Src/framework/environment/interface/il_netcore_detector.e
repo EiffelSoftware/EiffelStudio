@@ -13,10 +13,12 @@ feature -- Initialization
 	is_il_netcore (version: detachable READABLE_STRING_GENERAL): BOOLEAN
 		do
 				-- TODO: implement a smart netcore detection. [2023-05-19]
-			Result := attached version as v and then v.has ('/')
+			Result := attached version as v and then
+					(v.has ('/') or v.starts_with ("net"))
 				-- Currently, EiffelStudio internally uses
-				--   vx.y.z (such as v4.0.30319) for .net framework
-				--   Microsoft.NETCore.App/x.y.z for netcore
+				--   for .Net framework: "vx.y.z" (such as "v4.0.30319")
+				--   for NETCore       : "Microsoft.NETCore.App/x.y.z"
+				--                     : or "net6.0", or "net6.0/6.0.15"
 				-- So the presence of '/' is a quick hack to detect netcore
 		end
 

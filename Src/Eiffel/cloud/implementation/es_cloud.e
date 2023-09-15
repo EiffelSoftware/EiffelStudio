@@ -47,6 +47,20 @@ feature {NONE} -- Creation
 				create ua.make_from_string ("EiffelStudio/" + eiffel_layout.version_name)
 				ua.append (" (" + eiffel_layout.eiffel_platform + ")")
 				cfg.set_user_agent (ua)
+
+					-- preferred http client, to workaround some network or security issues.
+				if
+					is_eiffel_layout_defined and then
+					attached eiffel_layout.get_environment_32 ("ES_CLOUD_PREFERRED_HTTP_CLIENT") as v and then
+					not v.is_whitespace
+				then
+					cfg.set_preferred_http_client (v)
+				elseif
+					attached {READABLE_STRING_GENERAL} env.application_item ("preferred_http_client", "es_cloud", eiffel_layout.version_name) as v and then
+					not v.is_whitespace
+				then
+					cfg.set_preferred_http_client (v)
+				end
 				if
 					attached env.application_item ("timeout", "es_cloud", eiffel_layout.version_name) as v and then
 					v.is_integer

@@ -972,6 +972,9 @@ feature {NONE} -- Implementation
 			cl: DEFAULT_HTTP_CLIENT
 		do
 			create cl
+			if attached config.preferred_http_client as pref_cl then
+				cl.force_default_client (pref_cl)
+			end
 			Result := cl.new_session (config.server_url)
 			Result.add_header ("Accept", "application/json,text/html;q=0.9,*.*;q=0.8")
 			if attached config.user_agent as ua then
@@ -1251,7 +1254,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

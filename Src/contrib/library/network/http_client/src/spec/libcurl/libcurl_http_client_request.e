@@ -371,7 +371,7 @@ feature -- Execution
 			end
 			--| Connect Timeout
 			if connect_timeout > 0 then
-				curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_connecttimeout, timeout)
+				curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_connecttimeout, connect_timeout)
 			end
 			--| Redirection
 			if max_redirects /= 0 then
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2023, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

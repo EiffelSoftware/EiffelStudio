@@ -42,7 +42,7 @@ feature -- Basic Operation
 			l_vert: EV_VERTICAL_BOX
 			l_lab: EV_LABEL
 			l_il_env: IL_ENVIRONMENT
-			l_runtimes: STRING_TABLE [PATH]
+			l_runtimes: STRING_TABLE [IL_RUNTIME_INFO]
 			l_item: EV_LIST_ITEM
 		do
 			create rb_project_type_exe.make_with_text (interface_names.l_Exe_type)
@@ -111,7 +111,7 @@ feature -- Basic Operation
 			across
 				l_runtimes as ic
 			loop
-				create l_item.make_with_text (ic.item.name)
+				create l_item.make_with_text (ic.item.location.name)
 				clr_version_cb.extend (l_item)
 			end
 

@@ -85,7 +85,7 @@ feature -- Test routines
 			create config
 			config.set_tls_version ({HTTP_CLIENT_SECURE_CONFIG}.tls_1_2)
 			config.set_certificate_type ("PEM")
-			config.set_client_certificate ("./client.pem")
+			config.set_client_certificate ("mycert.pem")
 			config.set_passphrase ("badssl.com")
 			config.enable_verify_host
 			config.enable_verify_peer

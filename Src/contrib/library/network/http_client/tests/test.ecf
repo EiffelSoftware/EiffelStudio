@@ -17,6 +17,7 @@
 		<variable name="netssl_http_client_enabled" value="true"/>
 		<variable name="net_http_client_disabled" value="false"/>
 		<variable name="libcurl_http_client_disabled" value="false"/>
+		<variable name="curl_http_client_disabled" value="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="http_client" location="..\http_client.ecf" readonly="false" use_application_options="true">
 			<option>
@@ -26,15 +27,21 @@
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<tests name="tests" location=".\">
 			<file_rule>
-				<exclude>.*libcurl_.*.e$</exclude>
+				<exclude>.*_libcurl_.*.e$</exclude>
 				<condition>
 					<custom name="libcurl_http_client_disabled" value="true"/>
 				</condition>
 			</file_rule>
 			<file_rule>
-				<exclude>.*net_.*.e$</exclude>
+				<exclude>.*_net_.*.e$</exclude>
 				<condition>
 					<custom name="net_http_client_disabled" value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>.*_curl_.*.e$</exclude>
+				<condition>
+					<custom name="curl_http_client_disabled" value="true"/>
 				</condition>
 			</file_rule>
 		</tests>

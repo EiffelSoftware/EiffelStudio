@@ -123,7 +123,7 @@ feature -- .Net framework specific
 			end
 		end
 
-feature -- NETCore specific		
+feature -- NETCore specific
 
 	dotnet_executable_path: PATH
 			-- Location of the netcore dotnet executable tool.
@@ -277,6 +277,7 @@ feature -- Helpers
 									create loc.make_from_string (dn)
 									loc := loc.extended (v).extended ("ref").extended (dotnet_target_framework_moniker (v))
 								else
+									create l_rt_name.make_from_string_general (s)
 									loc := loc.extended (v)
 								end
 								if fut.directory_path_exists (loc) then
@@ -314,19 +315,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

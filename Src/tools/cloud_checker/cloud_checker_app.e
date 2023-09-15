@@ -144,9 +144,7 @@ feature {NONE} -- Initialization
 					else
 						print ("] , signing with credential ... %N")
 						if p = Void then
-							io.put_string ("> Enter your password: ")
-							io.read_line
-							p := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (io.last_string)
+							p := get_password_from_input ("> Enter your password: ")
 							p.left_adjust; p.right_adjust
 						end
 						cl.sign_in_with_credential (u, p)
@@ -241,6 +239,10 @@ feature {NONE} -- Initialization
 			end
 			cl_err.replace (False)
 			check_http_client (client, "account.eiffel.com", "/api", cl_err); b := b or cl_err.item
+
+			create {CURL_HTTP_CLIENT} client
+			cl_err.replace (False)
+			check_http_client (client, "account.eiffel.com", "/api", cl_err); b := b or cl_err.item
 		end
 
 	check_http_client (client: HTTP_CLIENT; a_domain: READABLE_STRING_8; a_path: READABLE_STRING_8; cl_err: detachable CELL [BOOLEAN])
@@ -303,6 +305,15 @@ feature {NONE} -- Initialization
 feature -- Status
 
 feature -- Access
+
+	get_password_from_input (s: READABLE_STRING_GENERAL): STRING_32
+		local
+		do
+			io.put_string_32 (s)
+			io.read_line
+			Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (io.last_string)
+			Result.left_adjust; Result.right_adjust
+		end
 
 feature -- Change
 

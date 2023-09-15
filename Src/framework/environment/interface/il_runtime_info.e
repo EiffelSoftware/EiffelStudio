@@ -27,16 +27,18 @@ feature {NONE} -- Initialization
 			version_set: a_version /= Void and then not a_version.is_whitespace
 		do
 			location := loc
-			version := a_version
+			runtime_version := a_version
 		end
 
-	make_with_version_and_tfm (loc: PATH; a_version: READABLE_STRING_32; a_tfm: READABLE_STRING_32)
+	make_with_version_and_tfm (loc: PATH; a_version: READABLE_STRING_32; a_tfm: READABLE_STRING_32; a_rt_name: READABLE_STRING_32)
 		require
 			loc_set: loc /= Void
 			version_set: a_version /= Void and then not a_version.is_whitespace
 			tfm_set: a_tfm /= Void and then not a_tfm.is_whitespace
+			rt_name_set: a_rt_name /= Void and then not a_rt_name.is_whitespace
 		do
 			tfm := a_tfm
+			runtime_name := a_rt_name
 			make (loc, a_version)
 		end
 
@@ -44,16 +46,18 @@ feature -- Access
 
 	location: PATH
 
-	version: READABLE_STRING_32
+	runtime_version: READABLE_STRING_32
+
+	runtime_name: READABLE_STRING_32
 
 	tfm: detachable READABLE_STRING_32
 
 	full_version: READABLE_STRING_32
 		do
 			if attached tfm as l_tfm then
-				Result := l_tfm + "/" + version
+				Result := l_tfm + "/" + runtime_version
 			else
-				Result := version
+				Result := runtime_version
 			end
 		end
 
@@ -70,15 +74,15 @@ feature -- Comparison
 				if l_other_tfm = Void then
 					Result := False
 				else
-					create v1.make_from_string (version)
-					create v2.make_from_string (other.version)
+					create v1.make_from_string (runtime_version)
+					create v2.make_from_string (other.runtime_version)
 					Result := v1 < v2
 				end
 			elseif l_other_tfm /= Void then
 				Result := True
 			else
-				create v1.make_from_string (version)
-				create v2.make_from_string (other.version)
+				create v1.make_from_string (runtime_version)
+				create v2.make_from_string (other.runtime_version)
 				Result := v1 < v2
 			end
 		end
@@ -88,11 +92,15 @@ feature -- Status report
 	debug_output: STRING_32
 		do
 			create Result.make_empty
+			if attached runtime_name as l_rt_name then
+				Result.append (l_rt_name)
+				Result.append (" -> ")
+			end
 			if attached tfm as l_tfm then
 				Result.append (l_tfm)
 				Result.append_character ('/')
 			end
-			Result.append (version)
+			Result.append (runtime_version)
 			Result.append_character (' ')
 			Result.append_character (':')
 			Result.append_character ('%"')

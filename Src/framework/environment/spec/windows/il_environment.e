@@ -112,7 +112,7 @@ feature -- Access
 											l_netcore_version := l_tfm + "/" + v.name
 											create l_version.make_from_string (v.name)
 											loc := loc.extended (l_tfm)
-											netcore_list.force (create {IL_RUNTIME_INFO}.make_with_version_and_tfm (loc, v.name, l_tfm))
+											netcore_list.force (create {IL_RUNTIME_INFO}.make_with_version_and_tfm (loc, v.name, l_tfm, l_entry.name))
 										end
 									end
 								end
@@ -126,7 +126,7 @@ feature -- Access
 								across l_dir.entries as v loop
 									if version_expression.matches (v.utf_8_name) then
 										loc := l_file_name.extended_path (l_entry).extended_path (v)
-										netcore_list.force (create {IL_RUNTIME_INFO}.make_with_version_and_tfm (loc, v.name, dotnet_target_framework_moniker (v.name)))
+										netcore_list.force (create {IL_RUNTIME_INFO}.make_with_version_and_tfm (loc, v.name, dotnet_target_framework_moniker (v.name), l_entry.name))
 									end
 								end
 							end

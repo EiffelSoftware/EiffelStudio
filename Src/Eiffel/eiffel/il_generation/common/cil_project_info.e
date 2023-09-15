@@ -17,6 +17,7 @@ feature {NONE} -- Initialization
 			s, maj, min, sub: STRING
 			i,j: INTEGER
 			l_fmwk_name, l_fmwk_version: STRING
+			l_il_env: IL_ENVIRONMENT
 		do
 			system_name := a_system.name
 			if
@@ -31,13 +32,19 @@ feature {NONE} -- Initialization
 			system_type := a_system.msil_generation_type.to_string_8 -- dll | exe
 
 			s := a_system.clr_runtime_version.to_string_8 -- FIXME: Unicode CLR version?
-			i := s.index_of ('/', 1)
-			if i > 0 then
-				l_fmwk_name := s.head (i - 1)
-				l_fmwk_version := s.substring (i + 1, s.count)
+			create l_il_env.make (s)
+			if attached l_il_env.installed_runtime_info (s) as l_info then
+				l_fmwk_name := l_info.runtime_name
+				l_fmwk_version := l_info.runtime_version
 			else
-				l_fmwk_name := s
-				l_fmwk_version := ""
+				i := s.index_of ('/', 1)
+				if i > 0 then
+					l_fmwk_name := s.head (i - 1)
+					l_fmwk_version := s.substring (i + 1, s.count)
+				else
+					l_fmwk_name := s
+					l_fmwk_version := ""
+				end
 			end
 			if l_fmwk_name.as_lower.ends_with_general (".ref") then
 				l_fmwk_name.remove_tail (4) -- removing the .ref

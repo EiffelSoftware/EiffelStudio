@@ -36,13 +36,13 @@ feature -- Access
 		local
 			paths: ARRAYED_LIST [PATH]
 			p: PATH
-		do
+		once
 			create paths.make (0)
-			if attached available_runtimes as l_runtimes then
+			if attached installed_runtimes as l_runtimes then
 				across
 					l_runtimes as rt
 				loop
-					p := rt.path
+					p := rt.location
 					if
 						attached p.parent as l_parent and then
 						attached l_parent.parent as pp
@@ -62,18 +62,21 @@ feature -- Access
 			v: READABLE_STRING_32
 			inf: IL_RUNTIME_INFO
 		once
-			if attached available_runtimes as l_runtimes then
+			if attached available_runtimes (is_using_reference_assemblies) as l_runtimes then
 				create Result.make (l_runtimes.count)
 				across
 					l_runtimes as rt
 				loop
-					v := rt.version.to_string_32
-					if attached dotnet_target_framework_moniker (v) as l_moniker then
-						create inf.make_with_version_and_tfm (rt.path, v, l_moniker)
-					else
-						create inf.make (rt.path, v)
+						-- Keep only .NETCore. runtime
+					if rt.runtime_name.as_lower.has_substring (".netcore.") then
+						v := rt.runtime_version.to_string_32
+						if attached dotnet_target_framework_moniker (v) as l_moniker then
+							create inf.make_with_version_and_tfm (rt.path, v, l_moniker, rt.runtime_name)
+						else
+							create inf.make (rt.path, v)
+						end
+						Result [inf.full_version] := inf
 					end
-					Result [inf.full_version] := inf
 				end
 			else
 				create Result.make (0)
@@ -209,17 +212,19 @@ feature -- Helpers
 			end
 		end
 
-	available_runtimes: ARRAYED_LIST [TUPLE [version: READABLE_STRING_8; path: PATH]]
+	available_runtimes (a_using_reference: BOOLEAN): ARRAYED_LIST [TUPLE [runtime_name: READABLE_STRING_GENERAL; runtime_version: READABLE_STRING_8; path: PATH]]
+			-- Available dotnet runtime, if `a_using_reference` is True, detect reference assemblies.
 		local
 			fac: BASE_PROCESS_FACTORY
 			p: BASE_PROCESS
 			buffer: SPECIAL [NATURAL_8]
+			l_rt_name: STRING_32
 			s, line, v, d: STRING_8
 			dn: STRING_32
 			i,j: INTEGER
 			loc: PATH
 			fut: FILE_UTILITIES
-		once
+		do
 			create fac
 			p := fac.process_launcher_with_command_line (dotnet_executable_path.name + " --list-runtimes", Void)
 			p.redirect_output_to_stream
@@ -263,21 +268,19 @@ feature -- Helpers
 								create loc.make_from_string (dn)
 
 								v := line.substring (i + 1, j - 1)
-								if is_using_reference_assemblies then
-									s.append (".Ref")
-
+								if a_using_reference then
 									dn := loc.name
+									s.append (".Ref")
 									dn.replace_substring_all ("/dotnet/shared/", "/dotnet/packs/")
 									dn.append (".Ref")
+									create l_rt_name.make_from_string_general (s)
 									create loc.make_from_string (dn)
 									loc := loc.extended (v).extended ("ref").extended (dotnet_target_framework_moniker (v))
 								else
 									loc := loc.extended (v)
 								end
-								s.extend ('/')
-								s.append (v)
 								if fut.directory_path_exists (loc) then
-									Result.force ([s, loc])
+									Result.force ([l_rt_name, v, loc])
 								end
 							else
 								loc := Void

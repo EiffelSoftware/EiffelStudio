@@ -14,6 +14,8 @@ feature -- Access
 			--| To build portable path names, use PATH_NAME and its descendants.
 		once
 			Result := {SYSTEM_PATH}.directory_separator_char
+		ensure
+			class
 		end
 
 	Current_directory_name_representation: STRING = "."
@@ -33,7 +35,7 @@ feature -- Access
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

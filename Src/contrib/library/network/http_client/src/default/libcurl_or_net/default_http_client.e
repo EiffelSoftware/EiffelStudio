@@ -13,23 +13,50 @@ class
 	DEFAULT_HTTP_CLIENT
 
 inherit
-	HTTP_CLIENT
+	DEFAULT_HTTP_CLIENT_I
 
 feature -- Access
 
 	new_session (a_base_url: READABLE_STRING_8): HTTP_CLIENT_SESSION
 			-- Create a new session using `a_base_url'.
 		local
-			libcurl: LIBCURL_HTTP_CLIENT
-			net: NET_HTTP_CLIENT
+			cl: HTTP_CLIENT
 		do
-				--| For now, try libcurl first, and then net
-				--| the reason is the net implementation is still in progress.
-			create libcurl
-			Result := libcurl.new_session (a_base_url)
-			if not Result.is_available then
-				create net
-				Result := net.new_session (a_base_url)
+			cl := forced_default_client
+			if cl /= Void then
+				Result := cl.new_session (a_base_url)
+			end
+			if Result = Void or else not Result.is_available then
+					--| For now, try libcurl first, and then net
+					--| the reason is the net implementation is still in progress.
+				create {LIBCURL_HTTP_CLIENT} cl
+				Result := cl.new_session (a_base_url)
+				if not Result.is_available then
+					create {NET_HTTP_CLIENT} cl
+					Result := cl.new_session (a_base_url)
+				end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	forced_default_client: detachable HTTP_CLIENT
+			-- Forced default client, if any is forced.
+
+feature -- Change
+
+	force_default_client (a_cl_name: detachable READABLE_STRING_GENERAL)
+			-- <Precursor>
+		local
+			cl: HTTP_CLIENT
+		do
+			if a_cl_name /= Void then
+				if a_cl_name.is_case_insensitive_equal ("libcurl") then
+					create {LIBCURL_HTTP_CLIENT} cl
+				elseif a_cl_name.is_case_insensitive_equal ("net") then
+					create {NET_HTTP_CLIENT} cl
+				end
+				forced_default_client := cl
 			end
 		end
 

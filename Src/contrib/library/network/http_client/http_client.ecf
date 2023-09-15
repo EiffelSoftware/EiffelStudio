@@ -64,19 +64,29 @@
 					<custom name="curl_http_client_disabled" excluded_value="true"/>
 				</condition>
 				<cluster name="command" location="$|command\" hidden="true">
-					<cluster name="command_implementation" location="$|implementation\" hidden="true"/>
+					<condition>
+						<custom name="curl_http_client_disabled" excluded_value="true"/>
+					</condition>
+					<cluster name="command_implementation" location="$|implementation\" hidden="true">
+						<condition>
+							<custom name="curl_http_client_disabled" excluded_value="true"/>
+						</condition>
+					</cluster>
 					<cluster name="concurrency_other" location="$|implementation\concurrency\other\" recursive="true" hidden="true">
 						<condition>
+							<custom name="curl_http_client_disabled" excluded_value="true"/>
 							<concurrency excluded_value="thread"/>
 						</condition>
 					</cluster>
 					<cluster name="concurrency_thread" location="$|implementation\concurrency\thread\" recursive="true" hidden="true">
 						<condition>
+							<custom name="curl_http_client_disabled" excluded_value="true"/>
 							<concurrency value="thread"/>
 						</condition>
 					</cluster>
 				</cluster>
 			</cluster>
+			<cluster name="default" location="$|default" recursive="false"/>
 			<cluster name="default_null" location="$|default\null\">
 				<condition>
 					<custom name="net_http_client_disabled" value="true"/>
@@ -119,6 +129,40 @@
 					<custom name="curl_http_client_disabled" excluded_value="true"/>
 				</condition>
 			</cluster>
+			<cluster name="default_net_or_curl" location="$|default\net_or_curl\">
+				<condition>
+					<custom name="net_http_client_disabled" excluded_value="true"/>
+					<custom name="libcurl_http_client_disabled" value="true"/>
+					<custom name="curl_http_client_disabled" excluded_value="true"/>
+				</condition>
+			</cluster>
+			<cluster name="default_libcurl_or_curl" location="$|default\libcurl_or_curl\">
+				<condition>
+					<custom name="net_http_client_disabled" value="true"/>
+					<custom name="libcurl_http_client_disabled" excluded_value="true"/>
+					<custom name="curl_http_client_disabled" excluded_value="true"/>
+				</condition>
+			</cluster>
 		</cluster>
+	</target>
+	<target name="libcurl_http_client" extends="http_client">
+		<variable name="net_http_client_disabled" value="true"/>
+		<variable name="curl_http_client_disabled" value="true"/>
+	</target>
+	<target name="net_http_client" extends="http_client">
+		<variable name="libcurl_http_client_disabled" value="true"/>
+		<variable name="curl_http_client_disabled" value="true"/>
+	</target>
+	<target name="curl_http_client" extends="http_client">
+		<variable name="libcurl_http_client_disabled" value="true"/>
+		<variable name="net_http_client_disabled" value="true"/>
+	</target>
+	<target name="libcurl_or_curl_or_net_http_client" extends="http_client">
+	</target>
+	<target name="libcurl_or_curl_http_client" extends="http_client">
+		<variable name="net_http_client_disabled" value="true"/>
+	</target>
+	<target name="net_or_curl_http_client" extends="http_client">
+		<variable name="libcurl_http_client_disabled" value="true"/>
 	</target>
 </system>

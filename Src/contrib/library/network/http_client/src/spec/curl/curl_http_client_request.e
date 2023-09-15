@@ -34,8 +34,6 @@ feature -- Execution
 		local
 			l_url: READABLE_STRING_8
 			l_use_curl_form: BOOLEAN
-			l_form: detachable CURL_FORM
-			l_last: CURL_FORM
 			l_upload_file: detachable RAW_FILE
 			ctx: like context
 			retried: BOOLEAN
@@ -200,8 +198,6 @@ feature -- Execution
 							cmd.append_character ('%"')
 						end
 						if l_use_curl_form then
-							create l_form.make
-							create l_last.make
 							across
 								l_form_data as ic
 							loop

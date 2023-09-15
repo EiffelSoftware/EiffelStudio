@@ -1,18 +1,21 @@
 note
-	description: "[
-			Default HTTP_CLIENT based on LIBCURL_HTTP_CLIENT.
-		]"
-	author: "$Author$"
+	description: "Summary description for {DEFAULT_HTTP_CLIENT_I}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	DEFAULT_HTTP_CLIENT
+deferred class
+	DEFAULT_HTTP_CLIENT_I
 
 inherit
-	LIBCURL_HTTP_CLIENT
+	HTTP_CLIENT
 
-	DEFAULT_HTTP_CLIENT_I
+feature -- Change
+
+	force_default_client (a_cl_name: detachable READABLE_STRING_GENERAL)
+			-- Set default client according to the name `a_cl_name`.
+		do
+		end
 
 note
 	copyright: "2011-2023, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

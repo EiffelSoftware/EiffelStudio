@@ -12,4 +12,6 @@ class
 inherit
 	NET_HTTP_CLIENT
 
+	DEFAULT_HTTP_CLIENT_I
+
 end

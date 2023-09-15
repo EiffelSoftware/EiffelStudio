@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="http_client" uuid="7897B317-7AD3-44E4-A933-0544A169AB1B" library_target="curl_http_client">
+	<target name="curl_http_client">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="encoder" location="..\..\web\framework\ewf\text\encoder\encoder.ecf"/>
+		<library name="http" location="..\protocol\http\http.ecf"/>
+		<library name="http_auth" location="..\..\web\authentication\http_authorization\http_authorization.ecf"/>
+		<library name="http_network" location="..\http_network\http_network.ecf"/>
+		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf">
+			<condition>
+				<concurrency value="thread"/>
+			</condition>
+		</library>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
+		<cluster name="src" location=".\src\">
+			<cluster name="implementation" location="$|implementation\" recursive="true" hidden="true"/>
+			<cluster name="parameters" location="$|parameters\" recursive="true"/>
+			<cluster name="spec_curl" location="$|spec\curl\">
+				<cluster name="command" location="$|command\" hidden="true">
+					<cluster name="command_implementation" location="$|implementation\" hidden="true"/>
+					<cluster name="concurrency_other" location="$|implementation\concurrency\other\" recursive="true" hidden="true">
+						<condition>
+							<concurrency excluded_value="thread"/>
+						</condition>
+					</cluster>
+					<cluster name="concurrency_thread" location="$|implementation\concurrency\thread\" recursive="true" hidden="true">
+						<condition>
+							<concurrency value="thread"/>
+						</condition>
+					</cluster>
+				</cluster>
+			</cluster>
+			<cluster name="default" location="$|default"/>
+			<cluster name="default_curl" location="$|default\curl\"/>
+		</cluster>
+	</target>
+</system>

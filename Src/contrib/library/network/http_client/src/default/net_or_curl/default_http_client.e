@@ -32,15 +32,11 @@ feature -- Access
 			if Result = Void or else not Result.is_available then
 					--| For now, try libcurl first, and then net
 					--| the reason is the net implementation is still in progress.
-				create {LIBCURL_HTTP_CLIENT} cl
+				create {NET_HTTP_CLIENT} cl
 				Result := cl.new_session (a_base_url)
 				if not Result.is_available then
-					create {NET_HTTP_CLIENT} cl
+					create {CURL_HTTP_CLIENT} cl
 					Result := cl.new_session (a_base_url)
-					if not Result.is_available then
-						create {CURL_HTTP_CLIENT} cl
-						Result := cl.new_session (a_base_url)
-					end
 				end
 			end
 		end
@@ -58,10 +54,8 @@ feature -- Change
 			cl: HTTP_CLIENT
 		do
 			if a_cl_name /= Void then
-				if a_cl_name.is_case_insensitive_equal ("libcurl") then
+				if a_cl_name.is_case_insensitive_equal ("net") then
 					cl := Void -- Already the default
-				elseif a_cl_name.is_case_insensitive_equal ("net") then
-					create {NET_HTTP_CLIENT} cl
 				elseif a_cl_name.is_case_insensitive_equal ("curl") then
 					create {CURL_HTTP_CLIENT} cl
 				end

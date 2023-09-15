@@ -17,6 +17,7 @@
 			<cluster name="implementation" location="$|implementation\" recursive="true" hidden="true"/>
 			<cluster name="parameters" location="$|parameters\" recursive="true"/>
 			<cluster name="spec_libcurl" location="$|spec\libcurl\" recursive="true"/>
+			<cluster name="default" location="$|default\"/>
 			<cluster name="default_libcurl" location="$|default\libcurl\"/>
 		</cluster>
 	</target>

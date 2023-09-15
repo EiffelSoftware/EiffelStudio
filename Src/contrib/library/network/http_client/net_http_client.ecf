@@ -28,6 +28,7 @@
 			<cluster name="spec_net" location="$|spec\net\">
 				<cluster name="net_implementation" location="$|implementation\" hidden="true"/>
 			</cluster>
+			<cluster name="default" location="$|default"/>
 			<cluster name="default_net" location="$|default\net\"/>
 		</cluster>
 	</target>

@@ -12,6 +12,8 @@ class
 inherit
 	HTTP_CLIENT
 
+	DEFAULT_HTTP_CLIENT_I
+
 feature -- Access
 
 	new_session (a_base_url: READABLE_STRING_8): HTTP_CLIENT_SESSION

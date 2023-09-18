@@ -14,6 +14,9 @@ class
 
 inherit
 	DEFAULT_HTTP_CLIENT_I
+		redefine
+			force_default_client
+		end
 
 feature -- Access
 

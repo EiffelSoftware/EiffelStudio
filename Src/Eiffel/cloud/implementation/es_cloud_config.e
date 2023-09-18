@@ -29,7 +29,11 @@ feature {NONE} -- Initialization
 		do
 			create root_endpoint.make_from_string (cfg.root_endpoint)
 			create server_url.make_from_string (cfg.server_url)
-			create preferred_http_client.make_from_string (cfg.preferred_http_client)
+			if attached cfg.preferred_http_client as s then
+				create preferred_http_client.make_from_string (s)
+			else
+				preferred_http_client := Void
+			end
 			connection_timeout := cfg.connection_timeout
 			timeout := cfg.timeout
 			if attached cfg.user_agent as ua then

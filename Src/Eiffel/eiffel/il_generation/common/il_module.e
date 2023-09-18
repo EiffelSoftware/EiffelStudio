@@ -1023,6 +1023,8 @@ feature -- Code generation
 			attribute_ctor: INTEGER
 			sig: MD_METHOD_SIGNATURE
 			ca_token: INTEGER
+			i: INTEGER
+			rt_v: STRING_32
 		do
 				-- Mark Current has being generated.
 			is_generated := True
@@ -1111,11 +1113,26 @@ feature -- Code generation
 							target_framework_attr_type_token,
 							sig
 						)
-					debug ("refactor_fixme")
-						fixme ("Do not hardcode the version number ! [2023-07-21")
+					rt_v := system.clr_runtime_version
+					if
+						rt_v /= Void  and then
+						rt_v.starts_with_general ("net")
+					then
+						i := rt_v.index_of ('/', 1)
+						if i > 0 then
+							rt_v := rt_v.head (i - 1)
+						end
+						rt_v := rt_v.substring (4, rt_v.count) -- Remove the "net"
+					else
+						debug ("refactor_fixme")
+							fixme ("Check if this is acceptable default version number ! [2023-09-18")
+						end
+						rt_v := "6.0" -- Hardcoded value!!!
 					end
 					create ca.make
-					ca.put_string (".NETCoreApp,Version=v6.0")
+					ca.put_string (".NETCoreApp,Version=v" + rt_v)
+
+--					system.clr_runtime_version
 
 -- The "FrameworkDisplayName" is not required
 --						-- Number of named arguments

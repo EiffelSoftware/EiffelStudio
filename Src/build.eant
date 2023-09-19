@@ -4,15 +4,15 @@
 	<description>
 		description: "Eiffel's libraries compilation"
 	</description>
-	
+
 	<target name="help">
 		<echo message="usage:"/>
 		<echo message=" geant check_setup         Check if your setup is ok for compilation " />
 		<echo message=" geant clean               Clean up the folders" />
 		<echo message=" geant clobber             Clean, and delete generated files in folders"/>
 		<echo message=" geant prepare             Prepare folders for development on `ec'"/>
-		<echo message="                           Note: folders=runtime, il runtime, C_library," /> 
-		<echo message="                                       library, framework." /> 
+		<echo message="                           Note: folders=runtime, il runtime, C_library," />
+		<echo message="                                       library, framework." />
 		<echo message=" geant compile             Compile 'ec' finalized" />
 		<echo message=" geant compile_workbench   Compile 'ec' workbench" />
 		<echo message=" geant estudio_workbench   Compile 'ec' workbench in GUI" />
@@ -34,7 +34,7 @@
 		<available resource="$L_check_setup_script" variable="tmp_available"/>
 		<geant target="check_setup" file="$L_check_setup_script"
 			reuse_variables="true" fork="false"
-			if="$tmp_available=true" 
+			if="$tmp_available=true"
 		/>
 		<echo message="Error: can not found [$L_check_setup_script]" if="$tmp_available=false" />
 		<unset name="tmp_available" />
@@ -103,30 +103,30 @@
 		<argument name="_target_name_" />
 
 		<!-- Classic runtime -->
-		<geant target="$_target_name_" dir="C" file="build.eant" 
+		<geant target="$_target_name_" dir="C" file="build.eant"
 			reuse_variables="true" fork="false" />
 		<!-- IL runtime -->
-		<geant target="$_target_name_" dir="Eiffel\eiffel\com_il_generation\Core\run-time" file="build.eant" 
-			reuse_variables="true" fork="false" if="${is_windows}" />
+		<geant target="$_target_name_" dir="Eiffel\eiffel\com_il_generation\Core\run-time" file="build.eant"
+			reuse_variables="true" fork="false" />
 		<!-- C_library -->
 		<geant target="$_target_name_" dir="C_library" file="build.eant"
 			reuse_variables="true" fork="false" />
 		<!-- library -->
-		<geant target="$_target_name_" dir="library" file="build.eant" 
+		<geant target="$_target_name_" dir="library" file="build.eant"
 			reuse_variables="true" fork="false" />
 		<!-- experimental/library -->
 		<!--
-		<geant target="$_target_name_" dir="experimental/library" file="build.eant" 
+		<geant target="$_target_name_" dir="experimental/library" file="build.eant"
 			reuse_variables="true" fork="false" />
 		-->
 		<!-- framework -->
 		<geant target="$_target_name_" dir="framework" file="build.eant"
 			reuse_variables="true" fork="false" />
 		<!-- contrib -->
-		<geant target="$_target_name_" dir="contrib" file="build.eant" 
+		<geant target="$_target_name_" dir="contrib" file="build.eant"
 			reuse_variables="true" fork="false" />
 		<!-- unstable -->
-		<geant target="$_target_name_" dir="unstable" file="build.eant" 
+		<geant target="$_target_name_" dir="unstable" file="build.eant"
 			reuse_variables="true" fork="false" />
 	</target>
 

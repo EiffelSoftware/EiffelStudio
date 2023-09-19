@@ -3,28 +3,14 @@
 # Setup environment
 INIT_DIR=`pwd`
 
-#. $INIT_DIR/set_aliases
+. $INIT_DIR/set_aliases
 
-if [ -x "$(command -v dotnet)" ]; then
-	remtrace Build Eiffel .Net runtime
-	cd $EIFFEL_SRC/Eiffel/eiffel/com_il_generation/Core/run-time
-	geant install_netcore
-	if [ -d netcore ]; then
-		safe_md $INSTALL_DIR/studio/spec/unix/lib/netcore
-		cp netcore/* $INSTALL_DIR/studio/spec/unix/lib/netcore
-	else
-		remtrace Error: could not build Eiffel .Net CORE runtime
-	fi
-
-	remtrace Build Eiffel .Net CORE nemdc tool
-	cd $EIFFEL_SRC/dotnet/consumer_netcore
-	geant install
-	if [ -f "pub/$ISE_PLATFORM/nemdc" ]; then
-		safe_md $INSTALL_DIR/studio/spec/unix/bin/netcore
-		cp pub/$ISE_PLATFORM/* $INSTALL_DIR/studio/spec/unix/bin/netcore/.
-	else
-		remtrace Error: could not build netcore nemdc tool
-	fi
-else
-	remtrace dotnet is not available on this machine
-fi
+remtrace Getting netcore related source code
+safe_md netcore
+remtrace Getting EiffelSoftware.Runtime.dll netcore source code
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Eiffel/eiffel/com_il_generation/Core netcore/Eiffel/eiffel/com_il_generation/Core
+remtrace Getting md consumer netcore source code
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/dotnet/consumer_netcore netcore/dotnet/consumer_netcore
+tgz netcore
+move netcore.tar.bz2 $EXPORT_DIR/.
+fullrd netcore

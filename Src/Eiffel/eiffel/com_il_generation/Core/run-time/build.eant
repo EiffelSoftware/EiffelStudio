@@ -46,14 +46,11 @@
 	<target name="compile_netcore" >
 		<echo message="- Compile .Net CORE Eiffel runtime" />
 		<exec executable="dotnet build -c Release runtime_core.csproj --restore --no-incremental" />
-		<exec executable="dotnet publish -c Release runtime_core.csproj" />
 	</target>
 	<target name="install_netcore" depend="compile_netcore">
+		<exec executable="dotnet publish -c Release runtime_core.csproj --output ${cwd}${path_separator}netcore" />
 		<mkdir directory="${cwd}${path_separator}netcore" />
 		<echo message="- Install .Net CORE [EiffelSoftware.Runtime.dll] into ${cwd}${path_separator}netcore" />
-		<copy dir="bin${path_separator}Release${path_separator}net6.0${path_separator}publish" to_directory="${cwd}${path_separator}netcore" force="true">
-		  	<fileset include="@(*.dll|*.pdb)"/>
-		</copy>
 		<delete directory="obj" />
 	</target>
 

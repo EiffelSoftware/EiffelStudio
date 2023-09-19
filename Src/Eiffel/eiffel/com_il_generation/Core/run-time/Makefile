@@ -33,7 +33,7 @@ msbuild_40: $(RUNTIME_SRC) Makefile
 	$(RM) runtime.sln.cache
 	$(RM)  $(ISE_KEY_NAME)
 
-msbuild_60: $(RUNTIME_SRC) Makefile
+msbuild_netcore: $(RUNTIME_SRC) Makefile
 	dotnet build -c Release runtime_core.csproj --restore --no-incremental
 	dotnet publish -c Release runtime_core.csproj
 	$(CP) bin\Release\net6.0\publish\EiffelSoftware.Runtime.dll netcore/$(OUTPUT_NAME)

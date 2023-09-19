@@ -1,0 +1,35 @@
+#!/bin/sh
+
+INIT_DIR=`pwd`
+
+if [ $# -le 1 ]; then
+	echo Usage: compile_dotnet platform netcore_location install_location
+	exit 1
+fi
+
+ISE_PLATFORM=$1; export ISE_PLATFORM
+NETCORE_DIR=$2; export NETCORE_DIR
+INSTALL_DIR=$3; export INSTALL_DIR
+
+. $INIT_DIR/set_aliases
+
+remtrace Compile the Eiffel dotnet NETCore tools for $ISE_PLATFORM from $EXPORT_DIR and install in $INSTALL_DIR
+remtrace EiffelSoftware.Runtime.dll
+cd $NETCORE_DIR/Eiffel/eiffel/com_il_generation/Core/run-time
+geant install_netcore
+fullrd $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/netcore
+mv netcore $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/netcore
+if [ ! -f "$INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/netcore/EiffelSoftware.Runtime.dll" ]; then
+	remtrace 'ERROR: No EiffelSoftware.Runtime.dll for netcore'
+	CANCEL
+fi
+
+remtrace "MD Consumer (nemdc)"
+cd $NETCORE_DIR/dotnet/consumer_netcore
+geant install
+fullrd $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/netcore
+mv pub/$ISE_PLATFORM $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/netcore
+if [ ! -f "$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/netcore/nemdc" ]; then
+	remtrace 'ERROR: No MD consumer nemdc for netcore'
+	CANCEL
+fi

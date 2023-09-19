@@ -229,6 +229,21 @@ cd $EXPORT_DIR
 cd $EXPORT_DIR
 ./compile_other_libraries $ISE_PLATFORM $INSTALL_DIR
 
+
+cd $EXPORT_DIR
+remtrace Eiffel dotnet NETCore tools
+if [ ! -f netcore.tar.bz2 ]; then
+	remtrace 'No .tar.bz2 for the netcore code'
+	CANCEL
+fi
+bunzip2 -c netcore.tar.bz2 | tar -xf -
+if [ ! -d netcore ]; then
+	remtrace No netcore directory
+	CANCEL
+else
+./compile_dotnet $ISE_PLATFORM $EXPORT_DIR/netcore $INSTALL_DIR
+fi
+
 if [ -d $EXPORT_DIR/eweasel ]; then
 	remtrace eweasel
 	move $INSTALL_DIR/eweasel/spec/unix $INSTALL_DIR/eweasel/spec/$ISE_PLATFORM
@@ -485,6 +500,7 @@ if [ -f "$EXPORT_DIR/bin/ace2ecf.tar.bz2" ]; then
 else
 	remtrace SKIP ace2ecf
 fi
+
 
 remtrace Compiling Gobo tools
 safe_md $INSTALL_DIR/library/gobo/spec/

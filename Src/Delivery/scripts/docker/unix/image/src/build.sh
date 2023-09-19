@@ -5,8 +5,9 @@
 echo Install dotnet environment
 curl -sSL -o dotnet-install.sh https://dot.net/v1/dotnet-install.sh
 chmod +x ./dotnet-install.sh
-./dotnet-install.sh --version latest --channel 6.0 --install-dir $(pwd)/_dotnet
-export DOTNET_ROOT=$(pwd)/_dotnet
+export DOTNET_CLI_HOME=${HOME}
+export DOTNET_ROOT=${DOTNET_CLI_HOME}/.dotnet
+./dotnet-install.sh --version latest --channel 6.0 --install-dir $(DOTNET_ROOT)
 export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
 
 # Delivery building

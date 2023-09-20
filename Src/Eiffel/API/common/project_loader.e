@@ -610,6 +610,11 @@ feature {NONE} -- Settings
 					end
 					if
 						not l_key.is_case_insensitive_equal (eiffel_layout.default_il_environment.ise_dotnet_framework_env) and then
+						not l_key.is_case_insensitive_equal (eiffel_layout.default_il_environment.ise_dotnet_packs_env) and then
+						not l_key.is_case_insensitive_equal (eiffel_layout.default_il_environment.ise_dotnet_shared_env) and then
+						not l_key.is_case_insensitive_equal (eiffel_layout.default_il_environment.ise_dotnet_platform_env) and then
+						not l_key.is_case_insensitive_equal (eiffel_layout.default_il_environment.ise_dotnet_tfm_env) and then
+						not l_key.is_case_insensitive_equal (eiffel_layout.default_il_environment.ise_dotnet_version_env) and then
 						not l_key.is_case_insensitive_equal ({EIFFEL_CONSTANTS}.ise_precomp_env) and then
 						not same_environment_variable_value (l_new_val, l_old_val)
 					then

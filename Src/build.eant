@@ -106,7 +106,7 @@
 		<geant target="$_target_name_" dir="C" file="build.eant"
 			reuse_variables="true" fork="false" />
 		<!-- IL runtime -->
-		<geant target="$_target_name_" dir="Eiffel\eiffel\com_il_generation\Core\run-time" file="build.eant"
+		<geant target="$_target_name_" dir="Eiffel${path_separator}eiffel${path_separator}com_il_generation${path_separator}Core${path_separator}run-time" file="build.eant"
 			reuse_variables="true" fork="false" />
 		<!-- C_library -->
 		<geant target="$_target_name_" dir="C_library" file="build.eant"

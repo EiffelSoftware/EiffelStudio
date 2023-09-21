@@ -517,12 +517,20 @@ feature -- Status setting
 			-- Set up the ISE_PRECOMP environment variable, depending on `a_is_dotnet'.
 		require
 			is_valid_environment: is_valid_environment
+		local
+			l_clr_version: detachable READABLE_STRING_GENERAL
 		do
-			init_precompile_directory (a_is_dotnet, a_clr_version)
+				-- For a dotnet project, if the clr_version setting is empty, use the default version.
+			if a_is_dotnet and then (a_clr_version = Void or else a_clr_version.is_whitespace) then
+				l_clr_version := default_il_environment.default_version
+			else
+				l_clr_version := a_clr_version
+			end
+			init_precompile_directory (a_is_dotnet, l_clr_version)
 
 				-- Now we set the ISE_PRECOMP environment variable with the precompiled library path.
 				-- Note that if it was already set, the value stays the same.
-			set_environment (precompilation_path (a_is_dotnet, a_clr_version).name, {EIFFEL_CONSTANTS}.ise_precomp_env)
+			set_environment (precompilation_path (a_is_dotnet, l_clr_version).name, {EIFFEL_CONSTANTS}.ise_precomp_env)
 		end
 
 feature {NONE} -- Helpers

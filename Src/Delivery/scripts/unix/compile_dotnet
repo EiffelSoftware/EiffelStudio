@@ -16,7 +16,7 @@ INSTALL_DIR=$3; export INSTALL_DIR
 remtrace Compile the Eiffel dotnet NETCore tools for $ISE_PLATFORM from $EXPORT_DIR and install in $INSTALL_DIR
 remtrace EiffelSoftware.Runtime.dll
 cd $NETCORE_DIR/Eiffel/eiffel/com_il_generation/Core/run-time
-geant install_netcore
+dotnet publish -c Release runtime_core.csproj --output `pwd`/netcore
 fullrd $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/netcore
 mv netcore $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/netcore
 if [ ! -f "$INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/netcore/EiffelSoftware.Runtime.dll" ]; then
@@ -26,7 +26,7 @@ fi
 
 remtrace "MD Consumer (nemdc)"
 cd $NETCORE_DIR/dotnet/consumer_netcore
-geant install
+sh ./publish_for.sh $ISE_PLATFORM
 fullrd $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/netcore
 mv pub/$ISE_PLATFORM $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/netcore
 if [ ! -f "$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/netcore/nemdc" ]; then

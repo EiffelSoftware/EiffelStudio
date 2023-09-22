@@ -15,12 +15,12 @@ fi
 # Setup environment, and remaining installation steps
 
 cd $DELIV_WS_DIR
-echo Install dotnet environment
+echo Install NETCore net6.0 environment
 curl -sSL -o dotnet-install.sh https://dot.net/v1/dotnet-install.sh
 chmod +x ./dotnet-install.sh
 export DOTNET_CLI_HOME=${HOME}
 export DOTNET_ROOT=${DOTNET_CLI_HOME}/.dotnet
-./dotnet-install.sh --version latest --channel 6.0 --install-dir $(DOTNET_ROOT)
+./dotnet-install.sh --version latest --channel 6.0 --install-dir ${DOTNET_ROOT}
 export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
 
 

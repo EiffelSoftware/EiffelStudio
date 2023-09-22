@@ -558,6 +558,10 @@ feature -- Generation Structure
 			a_file_name_not_empty: not a_file_name.is_empty
 			location_not_void: location /= Void
 			location_not_empty: not location.is_empty
+		local
+			p: PATH
+			ext: READABLE_STRING_GENERAL
+			l_assembly_name_with_extension: STRING_32
 		do
 				-- For netcore, use multi-assemblies instead of multi-modules.
 			is_using_multi_assemblies := system.is_il_netcore
@@ -607,11 +611,19 @@ feature -- Generation Structure
 
 			is_debug_info_enabled := debug_mode
 			-- FIXME jfiat [2003/10/10 - 16:41] try without debug_mode, for no pdb info
-
-			output_file_name := location.extended (a_file_name).name
-
+			p := location.extended (a_file_name)
+			output_file_name := p.name
+			ext := p.extension
+			if ext = Void then
+				ext := system.msil_generation_type
+			end
+			if a_assembly_name.to_string_32.ends_with (ext) then
+				l_assembly_name_with_extension := a_assembly_name
+			else
+				l_assembly_name_with_extension := (create {PATH}.make_from_string (a_assembly_name)).appended_with_extension (ext).name
+			end
 			create main_module.make (
-				a_assembly_name,
+				l_assembly_name_with_extension, -- Extension is required
 				output_file_name,
 				c_module_name,
 				a_public_key,

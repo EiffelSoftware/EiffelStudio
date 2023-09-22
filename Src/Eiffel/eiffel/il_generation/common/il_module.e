@@ -96,14 +96,41 @@ feature {NONE} -- Initialization
 			a_module_id_non_negative: a_module_id > 0
 		local
 			i: INTEGER
+			f_ext, ext: READABLE_STRING_32
 		do
-			module_name_with_extension := a_module_name_with_extension
+			i := a_file_name.last_index_of ('.', a_file_name.count)
+			if i > 0 then
+				f_ext := a_file_name.substring (i + 1, a_file_name.count)
+			else
+				check module_file_name_has_extension: False end
+				f_ext := "dll" -- Default
+			end
+
 			i := a_module_name_with_extension.last_index_of ('.', a_module_name_with_extension.count)
 			if i > 0 then
-				module_name := a_module_name_with_extension.substring (1, i - 1)
+				ext := a_module_name_with_extension.substring (i + 1, a_module_name_with_extension.count)
+				if ext.is_case_insensitive_equal ("exe") or ext.is_case_insensitive_equal ("dll") then
+					module_name_with_extension := a_module_name_with_extension
+					module_name := a_module_name_with_extension.substring (1, i - 1)
+				else
+					check has_valid_extension: False end
+					module_name := a_module_name_with_extension
+					if f_ext /= Void then
+						module_name_with_extension := a_module_name_with_extension + "." + f_ext
+					else
+						check has_extension: False end
+						module_name_with_extension := a_module_name_with_extension
+					end
+				end
 			else
 				check has_extension: False end
 				module_name := a_module_name_with_extension
+				if f_ext /= Void then
+					module_name_with_extension := a_module_name_with_extension + "." + f_ext
+				else
+					check has_extension: False end
+					module_name_with_extension := a_module_name_with_extension
+				end
 			end
 			module_file_name := a_file_name
 			public_key := a_public_key

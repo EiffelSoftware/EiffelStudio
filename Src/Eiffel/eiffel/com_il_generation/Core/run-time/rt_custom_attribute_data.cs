@@ -196,7 +196,7 @@ namespace EiffelSoftware.Runtime
 				return a_provider.GetCustomAttributes(a_type, false);
 			}
 #elif NET5_0_OR_GREATER
-			IList<CustomAttributeData> attributes = CustomAttributeData.GetCustomAttributes(a_type);
+			System.Collections.Generic.IList<CustomAttributeData> attributes = CustomAttributeData.GetCustomAttributes(a_type);
 			CustomAttributeData[] list = new CustomAttributeData[attributes.Count];
 			attributes.CopyTo(list, 0);
 			return list;

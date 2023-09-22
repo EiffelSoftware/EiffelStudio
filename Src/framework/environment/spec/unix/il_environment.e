@@ -42,14 +42,16 @@ feature -- Access
 				across
 					l_runtimes as rt
 				loop
-					p := rt.location
-					if
-						attached p.parent as l_parent and then
-						attached l_parent.parent as pp
-					then
-						if not paths.has (pp) then
-							paths.force (pp)
-						end
+					if is_using_reference_assemblies then
+							-- Case: /usr/lib/dotnet/packs/Microsoft.NETCore.App.Ref/6.0.22/ref/net6.0
+						p := rt.location.extended ("..").extended ("..").extended ("..").extended ("..").extended ("..")
+					else
+							-- Case: usr/lib/dotnet/shared/Microsoft.NETCore.App/6.0.22/
+						p := rt.location.extended ("..").extended ("..").extended ("..")
+					end
+					p := p.canonical_path
+					if not paths.has (p) then
+						paths.force (p)
 					end
 				end
 			end
@@ -315,19 +317,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

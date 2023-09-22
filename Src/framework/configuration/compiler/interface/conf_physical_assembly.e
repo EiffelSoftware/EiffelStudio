@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 		do
 			consumed_assembly := a_consumed
 				-- FIXME: It would be better if {CONF_GROUP}.name was a READABLE_STRING_32 instance.
-			name := assembly_name.as_lower
+			name := assembly_name
 			target := a_target
 			cache_path := a_cache_path
 			create location.make (a_consumed.location.name, a_target)

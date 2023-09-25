@@ -504,7 +504,7 @@ feature -- Directory creation
 		do
 			create d.make_with_path (a_dir)
 			if not d.exists then
-				d.create_dir
+				d.recursive_create_dir
 			end
 		end
 

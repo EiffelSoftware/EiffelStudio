@@ -106,7 +106,7 @@ endiff
 
 remtrace Compiling Netcore Eiffel Metadata Consumer Executable nemdc.exe
 iff exist %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore\nemdc.exe then
-	remtrace nemdc tool is already built
+	remtrace nemdc tool is already built in  %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore\nemdc.exe
 else
 	cdd %EIFFEL_SRC%\dotnet\consumer_netcore
 	espawn "geant clobber" >>& %INSTALL_LOG%

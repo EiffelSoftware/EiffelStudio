@@ -1,4 +1,4 @@
-call set_deliv_branch.bat 22.12
+call set_deliv_branch.bat 23.09
 ::set PUBLIC_SVN_REVISION=
 ::set ISE_SVN_REVISION=
 echo PUBLIC_SVN_REVISION=%PUBLIC_SVN_REVISION%

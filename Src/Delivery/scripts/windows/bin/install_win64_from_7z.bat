@@ -27,7 +27,7 @@ echo remove junction eiffel_%ISE_PLATFORM%
 rd eiffel_%ISE_PLATFORM%
 
 echo create new junction
-mklink /J eiffel_%ISE_PLATFORM% %ISE_PLATFORM%\Eiffel_%E_VERSION%
+mklink /J eiffel_%ISE_PLATFORM% %cd%\%ISE_PLATFORM%\Eiffel_%E_VERSION%
 
 call %~dp0reset_eiffel_env.bat %ISE_PLATFORM%
 

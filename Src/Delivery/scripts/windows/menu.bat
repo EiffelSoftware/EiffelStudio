@@ -33,10 +33,11 @@ echo EiffelStudio delivery:
 @echo i: display info
 @echo x: extra menu
 @echo w: wipe out/clean previous delivery
+@echo r: cat error.log
 @echo -------------------
 @echo q: quit
 
-CHOICE /C 1234567eixwq /M " > selection:"
+CHOICE /C 1234567eixwrq /M " > selection:"
 if .%ERRORLEVEL%. == .1. GOTO make_delivery
 if .%ERRORLEVEL%. == .2. GOTO make_delivery_quick
 if .%ERRORLEVEL%. == .3. GOTO make_exes
@@ -48,7 +49,8 @@ if .%ERRORLEVEL%. == .8. GOTO starting_env
 if .%ERRORLEVEL%. == .9. GOTO display_info
 if .%ERRORLEVEL%. == .10. GOTO menu_extra
 if .%ERRORLEVEL%. == .11. GOTO clean_delivery
-if .%ERRORLEVEL%. == .12. goto end
+if .%ERRORLEVEL%. == .12. GOTO display_error_logs
+if .%ERRORLEVEL%. == .13. goto end
 goto end
 
 :menu_std
@@ -74,14 +76,16 @@ goto end
 echo Extra menu
 @echo 1: make_dotnet
 @echo 2: make_wizards
-@echo 3: check svn repositories
+@echo 3: hack ...
+@echo 4: check svn repositories
 @echo -------------------
 @echo q: quit
-CHOICE /C 123q /M " > selection:"
+CHOICE /C 1234q /M " > selection:"
 if .%ERRORLEVEL%. == .1. GOTO call_make_dotnet
 if .%ERRORLEVEL%. == .2. GOTO call_make_wizards
-if .%ERRORLEVEL%. == .3. GOTO call_check_svn_repositories
-if .%ERRORLEVEL%. == .4. goto end
+if .%ERRORLEVEL%. == .3. GOTO call_hack
+if .%ERRORLEVEL%. == .4. GOTO call_check_svn_repositories
+if .%ERRORLEVEL%. == .5. goto end
 goto end
 
 :clean_delivery
@@ -129,6 +133,10 @@ goto end
 %TCCLECMD% /C call_make_dotnet.btm
 goto end
 
+:call_hack
+%TCCLECMD% /C call_hack.btm
+goto end
+
 :call_make_wizards
 %TCCLECMD% /C call_make_wizards.btm
 goto end
@@ -156,9 +164,15 @@ goto end
 echo %INSTALL_LOG%
 goto end
 
+:display_error_logs
+echo Display Error logs
+%TCCLECMD% display_error_logs.btm
+goto end
+
 :display_info
 echo Display Info
 %TCCLECMD% display_information.btm
 goto end
+
 
 :end

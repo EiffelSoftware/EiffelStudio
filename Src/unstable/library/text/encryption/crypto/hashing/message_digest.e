@@ -176,14 +176,19 @@ feature -- Element Change
 
 	update_from_io_medium (a_io_medium: IO_MEDIUM)
 			-- Append bytes from io medium
+		local
+			done: BOOLEAN
 		do
 			from
 			until
-				not a_io_medium.readable
+				done or not a_io_medium.readable
 			loop
 				a_io_medium.read_natural_8
 				if a_io_medium.bytes_read > 0 then
 					update_from_byte (a_io_medium.last_natural_8)
+				else
+					check has_byte_read: False end
+					done := True
 				end
 			end
 		end
@@ -242,7 +247,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

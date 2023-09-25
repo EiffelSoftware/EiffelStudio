@@ -132,9 +132,9 @@ feature -- Status report
 						end
 					else
 						if a_ignore_case then
-							Result := token_text_8 (a_token).is_case_insensitive_equal (a_text.as_string_8)
+							Result := a_text.is_case_insensitive_equal (token_text (a_token))
 						else
-							Result := token_text_8 (a_token).same_string_general (a_text)
+							Result := a_text.same_string (token_text (a_token))
 						end
 					end
 				end
@@ -155,9 +155,9 @@ feature -- Status report
 				Result := True
 				if a_keyword /= Void then
 					if attached {STRING_32} a_keyword as l_wide_string then
-						Result := token_text (a_token).is_case_insensitive_equal (l_wide_string)
+						Result := l_wide_string.is_case_insensitive_equal (token_text (a_token))
 					else
-						Result := token_text_8 (a_token).is_case_insensitive_equal (a_keyword.as_string_8)
+						Result := a_keyword.is_case_insensitive_equal (token_text (a_token))
 					end
 				end
 			end
@@ -480,7 +480,7 @@ feature -- Query
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

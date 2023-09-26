@@ -189,7 +189,11 @@ feature -- Initialization
 				process_property_assigners (l_feat_tbl)
 			end
 				-- Add features from ANY
-			add_features_of_any (l_feat_tbl)
+			if l_feat_tbl.feat_tbl_id /= 0 then
+				add_features_of_any (l_feat_tbl)
+			else
+				check has_feature_tbl_id: False end
+			end
 			if is_enum then
 				add_enum_conversion (l_feat_tbl)
 			end
@@ -575,6 +579,8 @@ feature {NONE} -- Initialization
 			l_feat, l_table_feat: FEATURE_I
 			any_parent_type: LIKE_CURRENT
 			is_type_checking_required: BOOLEAN
+			l_class: CLASS_C
+			l_actual_type: CL_TYPE_A
 		do
 			l_any_tbl := system.any_class.compiled_class.feature_table
 			if lace_class.is_attached_by_default then
@@ -586,58 +592,71 @@ feature {NONE} -- Initialization
 				l_any_tbl_not_void: l_any_tbl /= Void
 			end
 
-				-- Make sure context is initialized for `a_feat_tbl' before calling check_types on the feature_i objects.
-			ast_context.initialize (a_feat_tbl.associated_class, a_feat_tbl.associated_class.actual_type)
-
-			from
-				l_any_tbl.start
-			until
-				l_any_tbl.after
-			loop
-					-- Update `l_feat' in context of current class.
-				l_table_feat := l_any_tbl.item_for_iteration
-				if l_table_feat.is_type_evaluation_delayed then
-						-- Make a clone of the current feature that will be updated later.
-					l_feat := l_table_feat.twin
-						-- Register update action.
-					degree_4.put_action (
-						agent (destination: FEATURE_I; source: FEATURE_I; instantiation_type: TYPE_A)
-							local
-								i: FEATURE_I
-							do
-								i := source.instantiated (instantiation_type)
-								destination.set_type (i.type, destination.assigner_name_id)
-								destination.set_arguments (i.arguments)
-								destination.set_pattern_id (i.pattern_id)
-							end
-						(l_feat, l_table_feat, any_parent_type)
-					)
-				else
-					l_feat := l_table_feat.instantiated (any_parent_type)
+			l_class := a_feat_tbl.associated_class
+			if l_class /= Void then
+				l_actual_type := l_class.actual_type
+				if l_actual_type = Void then
+						-- FIXME: actual_type should already be computed.
+					l_class.initialize_actual_type
+					l_actual_type := l_class.actual_type
 				end
+			end
+			if l_class /= Void and l_actual_type /= Void then
+					-- Make sure context is initialized for `a_feat_tbl' before calling check_types on the feature_i objects.
+				ast_context.initialize (l_class, l_actual_type)
 
-				is_type_checking_required := True
-				if l_feat = l_table_feat then
-						-- If the instantiation didn't return a new object then we twin.
-					l_feat := l_feat.twin
-						-- We only need to check types should feature be instantiated for `Current'.
-					is_type_checking_required := False
+				from
+					l_any_tbl.start
+				until
+					l_any_tbl.after
+				loop
+						-- Update `l_feat' in context of current class.
+					l_table_feat := l_any_tbl.item_for_iteration
+					if l_table_feat.is_type_evaluation_delayed then
+							-- Make a clone of the current feature that will be updated later.
+						l_feat := l_table_feat.twin
+							-- Register update action.
+						degree_4.put_action (
+							agent (destination: FEATURE_I; source: FEATURE_I; instantiation_type: TYPE_A)
+								local
+									i: FEATURE_I
+								do
+									i := source.instantiated (instantiation_type)
+									destination.set_type (i.type, destination.assigner_name_id)
+									destination.set_arguments (i.arguments)
+									destination.set_pattern_id (i.pattern_id)
+								end
+							(l_feat, l_table_feat, any_parent_type)
+						)
+					else
+						l_feat := l_table_feat.instantiated (any_parent_type)
+					end
+
+					is_type_checking_required := True
+					if l_feat = l_table_feat then
+							-- If the instantiation didn't return a new object then we twin.
+						l_feat := l_feat.twin
+							-- We only need to check types should feature be instantiated for `Current'.
+						is_type_checking_required := False
+					end
+					l_feat.set_feature_id (feature_id_counter.next)
+					l_feat.set_is_origin (False)
+					l_feat.set_rout_id_set (l_feat.rout_id_set.twin)
+
+						-- Insert modified `l_feat' in current feature table.
+					insert_feature (l_feat, a_feat_tbl)
+
+						-- Check types after insertion since we do not know if the feature
+						-- type checks will be delayed or not and when this decision is made
+						-- the feature has to be registered already.
+					if is_type_checking_required then
+						l_feat.delayed_check_types (a_feat_tbl)
+					end
+
+					l_any_tbl.forth
 				end
-				l_feat.set_feature_id (feature_id_counter.next)
-				l_feat.set_is_origin (False)
-				l_feat.set_rout_id_set (l_feat.rout_id_set.twin)
-
-					-- Insert modified `l_feat' in current feature table.
-				insert_feature (l_feat, a_feat_tbl)
-
-					-- Check types after insertion since we do not know if the feature
-					-- type checks will be delayed or not and when this decision is made
-					-- the feature has to be registered already.
-				if is_type_checking_required then
-					l_feat.delayed_check_types (a_feat_tbl)
-				end
-
-				l_any_tbl.forth
+			else
+				check has_actual_type: False end
 			end
 		end
 
@@ -1070,7 +1089,6 @@ feature {NONE} -- Initialization
 			l_def_func_i: DEF_FUNC_I
 			l_feat_i: FEATURE_I
 			l_inherited: ARRAYED_LIST [CONSUMED_ENTITY]
-			l_setter_name: STRING
 		do
 			l_class := external_class
 			l_inherited := l_class.inherited_entities
@@ -1100,18 +1118,21 @@ feature {NONE} -- Initialization
 							end
 							check func_attached: l_extrn_func_i /= Void or l_def_func_i /= Void end
 
-							l_setter_name := l_setter.eiffel_name
 							if
 								attached l_inherited and then
 								l_inherited.has (l_property) and then
 								attached l_feat_i.written_class.feature_named (l_getter.eiffel_name) as l_feat and then
-								attached l_feat.assigner_name
+								attached l_feat.assigner_name as l_assigner_name
 							then
 									-- property is inherited so use inherit setter name (fixes test#dotnet043)
-								l_setter_name := l_feat.assigner_name
+								l_feat_i := a_feat_tbl.item (l_assigner_name)
+								if l_feat_i = Void then
+									check has_setter_feat_i: False end
+									l_feat_i := a_feat_tbl.item (l_setter.eiffel_name)
+								end
+							else
+								l_feat_i := a_feat_tbl.item (l_setter.eiffel_name)
 							end
-							check l_setter_name_attached: l_setter_name /= Void end
-							l_feat_i := a_feat_tbl.item (l_setter_name)
 							if l_feat_i /= Void then
 								if l_extrn_func_i /= Void then
 									l_extrn_func_i.set_type (l_extrn_func_i.type, l_feat_i.feature_name_id)
@@ -1673,7 +1694,7 @@ invariant
 	valid_enclosing_class: is_nested implies enclosing_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

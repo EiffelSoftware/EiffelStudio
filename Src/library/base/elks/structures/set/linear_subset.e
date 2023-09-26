@@ -58,7 +58,6 @@ feature -- Element change
 	put_left (v: G)
 			-- Insert `v' before the cursor.
 		require
-			item_exists: v /= Void
 			not_before: not before
 		deferred
 		ensure
@@ -68,7 +67,6 @@ feature -- Element change
 	move_item (v: G)
 			-- Move `v' to the left of cursor.
 		require
-			item_exists: v /= Void
 			item_in_set: has (v)
 		local
 			idx: INTEGER

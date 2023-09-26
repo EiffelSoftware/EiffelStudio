@@ -30,7 +30,4 @@ iff not defined NO_COMPILE then
 	remtrace C_library curl
 	cd %1\C_library\curl
 	espawn "geant compile"
-	remtrace C_library openssl
-	cd %1\C_library\openssl
-	espawn "geant compile"
 endiff

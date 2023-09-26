@@ -85,11 +85,17 @@ remtrace Then the C libraries
 cd %EIFFEL_SRC%\C_library
 fullrd .libs
 
-remtrace libpng
+remtrace C_library/libpng
 cd %EIFFEL_SRC%\C_library\libpng
 default_make
-remtrace zlib
+remtrace C_library/zlib
 cd %EIFFEL_SRC%\C_library\zlib
+default_make
+remtrace C_library/curl
+cd %EIFFEL_SRC%\C_library\curl
+geant compile
+remtrace C_library/openssl
+cd %EIFFEL_SRC%\C_library\openssl
 default_make
 
 REM These directories should already have been created by make_delivery. Whatever...

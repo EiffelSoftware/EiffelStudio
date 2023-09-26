@@ -195,7 +195,6 @@ feature {NONE} -- Implementation
 			-- Strategy to calculate several subset features selected depending
 			-- on the dynamic type of `v' and `other'
 		require
-			item_exists: v /= Void
 			other_exists: other /= Void
 		deferred
 		ensure

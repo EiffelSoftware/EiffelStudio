@@ -49,7 +49,7 @@ feature -- Access
 
 				-- TODO double check the public key
 				-- Clean the way to compute the index.
-			if public_key_token /= Void then
+			if public_key_token /= Void and then public_key_token.item.count > 0 then
 				l_public_key_or_token_index := hash_blob (public_key_token.item.read_array (0, public_key_token.item.count), public_key_token.item.count.to_natural_32)
 			else
 				l_public_key_or_token_index := 0

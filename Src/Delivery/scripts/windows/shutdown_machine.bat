@@ -31,4 +31,5 @@ echo shutdown -a
 shutdown -a 2> nul
 shutdown -s -t %tmp_delay%
 
+:EOF
 endlocal

@@ -2437,7 +2437,11 @@ feature -- Mapping between Eiffel compiler and generated tokens
 						l_ass_info.set_revision_number (l_revision.to_natural_16)
 					end
 
-					if a_key /= Void and then not a_key.same_string_general ("null") then
+					if
+						a_key /= Void and then
+						not a_key.is_whitespace and then
+						not a_key.same_string_general ("null")
+					then
 						create l_key_token.make_from_string (a_key)
 					end
 

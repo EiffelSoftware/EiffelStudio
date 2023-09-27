@@ -202,14 +202,16 @@ feature -- XML generation
 			p.set_detached_console (True)
 
 			if is_debug then
-				create dbg.make_with_path (eiffel_layout.log_path.extended ("emdc.log"))
-				dbg.open_append
-				dbg.put_string ("%N====%N")
-				dbg.put_string_general (cmd)
-				dbg.put_string ("%N----%N")
-				dbg.close
-				p.redirect_output_to_file (dbg.path.name)
-				p.redirect_error_to_same_as_output
+				if eiffel_layout.is_user_files_supported then
+					create dbg.make_with_path (eiffel_layout.log_path.extended ("emdc.log"))
+					dbg.open_append
+					dbg.put_string ("%N====%N")
+					dbg.put_string_general (cmd)
+					dbg.put_string ("%N----%N")
+					dbg.close
+					p.redirect_output_to_file (dbg.path.name)
+					p.redirect_error_to_same_as_output
+				end
 			end
 
 				-- Launch the process execution

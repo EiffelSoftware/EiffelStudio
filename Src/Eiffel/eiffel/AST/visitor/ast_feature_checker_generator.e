@@ -1253,7 +1253,6 @@ feature {NONE} -- Implementation
 
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS)
 		local
-			l_creation: CREATION_EXPR_B
 			l_ca_b: CUSTOM_ATTRIBUTE_B
 		do
 			check dotnet_generation: system.il_generation end
@@ -1264,12 +1263,18 @@ feature {NONE} -- Implementation
 					fixme ("Generate an error here as it should be a valid type")
 				end
 				if is_byte_node_enabled then
-					l_creation ?= last_byte_node
-					create l_ca_b.make (l_creation)
-					if l_as.tuple /= Void then
-						check_tuple_validity_for_ca (l_creation_type, l_as.tuple, l_ca_b)
+					if attached {CREATION_EXPR_B} last_byte_node as l_creation then
+						create l_ca_b.make (l_creation)
+						if l_as.tuple /= Void then
+							check_tuple_validity_for_ca (l_creation_type, l_as.tuple, l_ca_b)
+						end
+						last_byte_node := l_ca_b
+					else
+							-- FIXME: find out how this can happens [2023-09-27]
+							-- TODO: report an error or provide default creation ? default_create?
+						check has_creation_expr_b: False end
+						last_byte_node := Void
 					end
-					last_byte_node := l_ca_b
 				elseif l_as.tuple /= Void then
 					check_tuple_validity_for_ca (l_creation_type, l_as.tuple, Void)
 				end
@@ -12344,7 +12349,7 @@ note
 		"CA033", "CA033 — too long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

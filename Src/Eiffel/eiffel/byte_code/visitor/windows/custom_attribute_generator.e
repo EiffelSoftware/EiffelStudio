@@ -74,83 +74,89 @@ feature -- Code generation
 			cil_generator := a_code_generator
 
 			cb := a_ca.creation_expr
-			check attached {CL_TYPE_A} cb.type as l_cb_type then
+			if
+				cb /= Void and then
+				attached {CL_TYPE_A} cb.type as l_cb_type
+			then
 				l_creation_class := l_cb_type.base_class
-			end
-			l_tuple_const := a_ca.named_arguments
+				l_tuple_const := a_ca.named_arguments
 
-			param := cb.call.parameters
-			if param /= Void then
-				count := param.count
-			else
-				count := 0
-			end
-
-			if cb.type.is_external then
-				if
-					attached {EXTERNAL_B} cb.call as l_creation_external and then
-					attached {IL_EXTENSION_I} l_creation_external.extension as ext
-				then
-					l_extension := ext
-					l_ctor_token := l_extension.token
+				param := cb.call.parameters
+				if param /= Void then
+					count := param.count
 				else
-					l_extension := Void
+					count := 0
 				end
-			end
-			if l_extension = Void then
-				if attached {CL_TYPE_A} cb.type as l_type then
-					if count = 0 then
-							-- Use default constructor
-						l_ctor_token := cil_generator.constructor_token (l_type.associated_class_type (a_code_generator.current_class_type.type).implementation_id)
-					else
-						l_ctor_token := cil_generator.inherited_constructor_token (l_type.associated_class_type (a_code_generator.current_class_type.type).implementation_id, cb.call.feature_id)
-					end
-				else
-					check is_cl_type_a: False end
-				end
-			end
 
-				-- Start initialization of custom attribute.
-			create ca_blob.make
-
-				-- Generate value of arguments if any.
-			if count > 0 then
-				from
-					param.start
-				until
-					param.after
-				loop
+				if cb.type.is_external then
 					if
-						attached {PARAMETER_B} param.item as param_b and then
-						attached {CL_TYPE_A} param_b.attachment_type as l_param_type
+						attached {EXTERNAL_B} cb.call as l_creation_external and then
+						attached {IL_EXTENSION_I} l_creation_external.extension as ext
 					then
-						set_target_type (l_param_type)
-						param_b.expression.process (Current)
+						l_extension := ext
+						l_ctor_token := l_extension.token
 					else
-						check is_param_b_with_type_a: False end
+						l_extension := Void
 					end
-					param.forth
 				end
-			end
-
-				-- Generate name argument
-			if l_tuple_const /= Void then
-				ca_blob.put_integer_16 (l_tuple_const.count.to_integer_16)
-
-				from
-					l_tuple_const.start
-				until
-					l_tuple_const.after
-				loop
-					add_named_argument (l_creation_class, l_tuple_const.item)
-					l_tuple_const.forth
+				if l_extension = Void then
+					if attached {CL_TYPE_A} cb.type as l_type then
+						if count = 0 then
+								-- Use default constructor
+							l_ctor_token := cil_generator.constructor_token (l_type.associated_class_type (a_code_generator.current_class_type.type).implementation_id)
+						else
+							l_ctor_token := cil_generator.inherited_constructor_token (l_type.associated_class_type (a_code_generator.current_class_type.type).implementation_id, cb.call.feature_id)
+						end
+					else
+						check is_cl_type_a: False end
+					end
 				end
+
+					-- Start initialization of custom attribute.
+				create ca_blob.make
+
+					-- Generate value of arguments if any.
+				if count > 0 then
+					from
+						param.start
+					until
+						param.after
+					loop
+						if
+							attached {PARAMETER_B} param.item as param_b and then
+							attached {CL_TYPE_A} param_b.attachment_type as l_param_type
+						then
+							set_target_type (l_param_type)
+							param_b.expression.process (Current)
+						else
+							check is_param_b_with_type_a: False end
+						end
+						param.forth
+					end
+				end
+
+					-- Generate name argument
+				if l_tuple_const /= Void then
+					ca_blob.put_integer_16 (l_tuple_const.count.to_integer_16)
+
+					from
+						l_tuple_const.start
+					until
+						l_tuple_const.after
+					loop
+						add_named_argument (l_creation_class, l_tuple_const.item)
+						l_tuple_const.forth
+					end
+				else
+					ca_blob.put_integer_16 (0)
+				end
+
+					-- Assign `ca_blob' to `a_owner_token'.
+				cil_generator.define_custom_attribute (a_owner_token, l_ctor_token, ca_blob)
 			else
-				ca_blob.put_integer_16 (0)
+					-- FIXME: should not occur
+				check has_creation: False end
 			end
-
-				-- Assign `ca_blob' to `a_owner_token'.
-			cil_generator.define_custom_attribute (a_owner_token, l_ctor_token, ca_blob)
 
 				-- Reset current
 			cil_generator := Void

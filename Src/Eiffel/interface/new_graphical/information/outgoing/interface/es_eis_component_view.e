@@ -740,7 +740,7 @@ feature {NONE} -- Validation
 	is_name_valid (a_name: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_name' be changed in `a_item'?
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
+			if a_item.is_parented and then attached {EIS_ENTRY} a_item.row.data as lt_entry then
 				Result := entry_editable (lt_entry, False)
 			end
 		end
@@ -748,7 +748,7 @@ feature {NONE} -- Validation
 	is_protocol_valid (a_protocol: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_protocol' be changed in `a_item'?
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
+			if a_item.is_parented and then attached {EIS_ENTRY} a_item.row.data as lt_entry then
 				Result := entry_editable (lt_entry, False)
 			end
 		end
@@ -756,7 +756,7 @@ feature {NONE} -- Validation
 	is_source_valid (a_source: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_source' be changed in `a_item'?
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
+			if a_item.is_parented and then attached {EIS_ENTRY} a_item.row.data as lt_entry then
 				Result := entry_editable (lt_entry, False)
 			end
 		end
@@ -764,7 +764,7 @@ feature {NONE} -- Validation
 	is_tags_valid (a_tags: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_tags' be changed in `a_item'?
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
+			if a_item.is_parented and then attached {EIS_ENTRY} a_item.row.data as lt_entry then
 				Result := entry_editable (lt_entry, False)
 			end
 		end
@@ -772,7 +772,7 @@ feature {NONE} -- Validation
 	is_parameters_valid (a_parameters: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_parameters' be changed in `a_item'?
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
+			if a_item.is_parented and then attached {EIS_ENTRY} a_item.row.data as lt_entry then
 				Result := entry_editable (lt_entry, False)
 			end
 		end
@@ -1249,7 +1249,7 @@ invariant
 	eis_grid_not_void: eis_grid /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

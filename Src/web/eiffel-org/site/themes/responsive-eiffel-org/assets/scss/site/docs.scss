@@ -139,6 +139,9 @@
 		padding: 2px 4px 2px 4px;
 	}
 	h1 {
+		&.wikititle {
+			font-weight: bold;
+		}
 		color: $wdocs-h1-color;
 		font-weight: bold;
 		margin-top: 25px;

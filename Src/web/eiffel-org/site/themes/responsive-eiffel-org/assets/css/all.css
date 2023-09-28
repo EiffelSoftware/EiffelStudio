@@ -2896,6 +2896,8 @@ code {
     font-weight: bold;
     margin-top: 25px;
     border-bottom: solid 2px #063991; }
+    .wikipage h1.wikititle {
+      font-weight: bold; }
   .wikipage h2 {
     color: #5082D9;
     line-height: 3.5rem;

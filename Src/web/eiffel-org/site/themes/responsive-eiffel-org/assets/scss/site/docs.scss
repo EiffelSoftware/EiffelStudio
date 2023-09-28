@@ -140,7 +140,7 @@
 	}
 	h1 {
 		&.wikititle {
-			font-weight: bold;
+			font-weight: bold !important;
 		}
 		color: $wdocs-h1-color;
 		font-weight: bold;

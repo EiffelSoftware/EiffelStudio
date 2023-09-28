@@ -2881,6 +2881,7 @@ code {
     font-weight: bold; }
 
 .wikipage {
+  font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
   line-height: 1.8; }
   .wikipage a.wiki_link.wiki_notfound {
     color: red; }
@@ -2891,17 +2892,21 @@ code {
     border: solid 1px #999;
     padding: 2px 4px 2px 4px; }
   .wikipage h1 {
-    font: 36px/36px "museo_slab500", Arial, Helvetica, sans-serif;
+    color: #063991;
+    font-weight: bold;
     margin-top: 25px;
-    border-bottom: solid 2px #ccc; }
+    border-bottom: solid 2px #063991; }
   .wikipage h2 {
-    font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
+    color: #5082D9;
+    line-height: 3.5rem;
+    font-weight: bold;
     margin-top: 20px;
-    border-bottom: solid 1px #ccc; }
+    border-bottom: solid 2px #5082D9; }
   .wikipage h3 {
-    font: 24px/24px "museo_slab500", Arial, Helvetica, sans-serif;
+    color: #178752;
+    line-height: 2.6rem;
     margin-top: 10px;
-    border-bottom: dotted 1px #ccc; }
+    border-bottom: dotted 1px #178752; }
   .wikipage pre {
     -webkit-border-radius: 4px;
     border-radius: 4px;
@@ -3153,6 +3158,10 @@ div.node-blog .info {
 /* Hide author and date for CMS pages */
 div.node-page .info {
   display: none; }
+
+ul.pagination li {
+  margin-right: .5em;
+  display: inline-block; }
 
 table.eiffel_org_nodes {
   width: 100%; }
@@ -3431,7 +3440,3 @@ div.container {
 a {
   color: #5082D9;
   text-decoration: none; }
-
-ul.pagination li {
-	margin-right: .5em;
-	display: inline-block; }

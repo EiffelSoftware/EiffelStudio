@@ -42,7 +42,7 @@
 		line-height: 0;
 		position: relative;
 		vertical-align: middle;
-		width: 0;		
+		width: 0;
 		left: -10px;
 	}
 
@@ -123,6 +123,7 @@
 }
 
 .wikipage {
+	font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
 	line-height: 1.8;
 	a.wiki_link {
 		&.wiki_notfound {
@@ -138,19 +139,23 @@
 		padding: 2px 4px 2px 4px;
 	}
 	h1 {
-		font: #{$base-h1-size}/#{$base-h1-lineheight} $museo_slab500;
+		color: $wdocs-h1-color;
+		font-weight: bold;
 		margin-top: 25px;
-		border-bottom: solid 2px $wdocs-border-color;
+		border-bottom: solid 2px $wdocs-h1-color;
 	}
 	h2 {
-		font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+		color: $wdocs-h2-color;
+		line-height: 3.5rem;
+		font-weight: bold;
 		margin-top: 20px;
-		border-bottom: solid 1px $wdocs-border-color;
+		border-bottom: solid 2px $wdocs-h2-color;
 	}
 	h3 {
-		font: #{$base-h3-size}/#{$base-h3-lineheight} $museo_slab500;
+		color: $wdocs-h3-color;
+		line-height: 2.6rem;
 		margin-top: 10px;
-		border-bottom: dotted 1px $wdocs-border-color;
+		border-bottom: dotted 1px $wdocs-h3-color;
 	}
 	pre {
 		@include border-radius(4px);
@@ -177,7 +182,7 @@
 #content {
 	.wdocs-nav {
 		padding: 5px;
-		margin-top: 0.75em; 
+		margin-top: 0.75em;
 		border-top: solid 1px #999;
 		background-color: $wdocs-nav-bg-color;
 		ul {

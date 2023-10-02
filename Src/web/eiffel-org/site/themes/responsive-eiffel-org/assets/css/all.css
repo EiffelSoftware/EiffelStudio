@@ -2907,9 +2907,9 @@ code {
     border-bottom: solid 3px #5082D9; }
   .wikipage h3 {
     color: #178752;
-    line-height: 2.6rem;
+    line-height: 3.2rem;
     margin-top: 10px;
-    border-bottom: dotted 2px #178752; }
+    border-bottom: solid 2px #178752; }
   .wikipage h4 {
     margin-top: 1.5rem;
     margin-bottom: .5rem; }

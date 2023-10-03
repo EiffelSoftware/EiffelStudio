@@ -39,6 +39,9 @@ feature -- Access
 
 	link: detachable READABLE_STRING_8
 
+	hidden: BOOLEAN assign set_hidden
+			-- Is product hidden?
+
 feature -- Link
 
 	get_link
@@ -151,6 +154,11 @@ feature -- Element change
 			-- Assign `link' with `a_link'.	
 		do
 			link := a_link
+		end
+
+	set_hidden (b: like hidden)
+		do
+			hidden := b
 		end
 
 end

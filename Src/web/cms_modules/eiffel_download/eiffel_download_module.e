@@ -300,6 +300,8 @@ feature -- Handler
 	downloads_channel_block (a_block_id: READABLE_STRING_8; a_channel: READABLE_STRING_GENERAL; a_response: CMS_RESPONSE): detachable CMS_BLOCK
 		local
 			vals: CMS_VALUE_TABLE
+			l_hidden_items: detachable ARRAYED_LIST [DOWNLOAD_PRODUCT]
+			l_hidden_options: detachable ARRAYED_LIST [DOWNLOAD_PRODUCT_OPTIONS]
 		do
 			if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 				create vals.make (8)
@@ -318,7 +320,8 @@ feature -- Handler
 
 				if attached eiffel_download_api as l_api then
 					if
-						attached l_api.download_channel_configuration (a_channel) as cfg
+						attached l_api.download_channel_configuration (a_channel) as cfg and then
+						not cfg.hidden
 					then
 						vals.force (l_api.retrieve_public_product (cfg), "product")
 						if attached l_api.retrieve_public_products (cfg) as l_products then
@@ -326,14 +329,42 @@ feature -- Handler
 							across
 								l_products as ic
 							loop
+								if not ic.item.public then
+									if l_hidden_items = Void then
+										create l_hidden_items.make (1)
+									end
+									l_hidden_items.force (ic.item)
+								end
 								l_api.sort_downloads (ic.item)
 								if attached ic.item.downloads as l_downloads then
 									across
 										l_downloads as d_ic
 									loop
+										if d_ic.item.hidden then
+											if l_hidden_options = Void then
+												create l_hidden_options.make (1)
+											end
+											l_hidden_options.force (d_ic.item)
+										end
 										d_ic.item.get_link
 									end
+									if l_hidden_options /= Void then
+										across
+											l_hidden_options as d_ic
+										loop
+											l_downloads.prune_all (d_ic.item)
+										end
+										l_hidden_options := Void
+									end
 								end
+							end
+							if l_hidden_items /= Void then
+								across
+									l_hidden_items as ic
+								loop
+									l_products.prune_all (ic.item)
+								end
+								l_hidden_items := Void
 							end
 							vals.force (l_products, "products")
 						else

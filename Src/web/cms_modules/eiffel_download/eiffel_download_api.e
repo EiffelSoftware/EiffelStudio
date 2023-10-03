@@ -112,6 +112,24 @@ feature -- Persistency
 			Result := f.exists
 		end
 
+	download_configuration_at (ch: READABLE_STRING_GENERAL; a_location: PATH): detachable DOWNLOAD_CONFIGURATION
+			-- Parse JSON files for the current directory `a_dir'.
+			-- and fill the `download_configuration` object.
+		local
+			file: FILE
+			p: PATH
+		do
+			p := channel_file_location (ch).extended_path (a_location)
+			create {RAW_FILE} file.make_with_path (p)
+			if
+				not file.is_directory and then
+			   	file.exists and then
+				attached a_location.extension as ext and then ext.same_string_general ("json")
+			then
+				Result := (create {DOWNLOAD_JSON_CONFIGURATION}).configuration_from_file (p, Void)
+			end
+		end
+
 	save_configuration (a_channel: READABLE_STRING_GENERAL; cfg: DOWNLOAD_CONFIGURATION)
 		local
 			l_dir: DIRECTORY
@@ -260,4 +278,5 @@ feature {NONE} -- Implementation
 				internal_download_configuration := l_download
 			end
 		end
+
 end

@@ -8,6 +8,12 @@ class
 
 feature -- Access
 
+	hidden: BOOLEAN
+			-- Do not list the download entries
+
+	published: BOOLEAN
+			-- Is published?
+
 	mirror: detachable READABLE_STRING_8
 		-- url mirror.
 
@@ -59,6 +65,16 @@ feature -- Access
 		end
 
 feature -- Element Change
+
+	set_hidden (b: BOOLEAN)
+		do
+			hidden := b
+		end
+
+	set_published (b: BOOLEAN)
+		do
+			published := b
+		end
 
 	set_mirror (a_mirror: like mirror)
 			-- Set `mirror' with `a_mirror'.
@@ -121,6 +137,14 @@ feature -- Conversion
 			create jo.make_with_capacity (2)
 
 			create Result.make_from_separate ("{%N")
+			if hidden then
+				jo.put_boolean (True, "hidden")
+			end
+			if published then
+				jo.put_boolean (True, "published")
+			else
+				jo.put_boolean (False, "published")
+			end
 			if attached mirror as m then
 				l_cfg_mirror := m
 				jo.put_string (m, "mirror")
@@ -207,6 +231,9 @@ feature -- Conversion
 						loop
 							dl := dl_ic.item
 							create jdl.make_empty
+							if dl.hidden then
+								jdl.put_boolean (True, "hidden")
+							end
 							if attached dl.platform as l_platform then
 								jdl.put_string (l_platform, "platform")
 							end

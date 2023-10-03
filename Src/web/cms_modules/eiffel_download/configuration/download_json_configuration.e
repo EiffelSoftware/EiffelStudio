@@ -29,6 +29,8 @@ feature -- Access
 			s32: READABLE_STRING_32
 			l_mirror: detachable READABLE_STRING_8
 			prod: like new_product
+			l_hidden: BOOLEAN
+			l_published: BOOLEAN
 		do
 			if a_configuration /= Void then
 				Result := a_configuration
@@ -37,45 +39,65 @@ feature -- Access
 			end
 			l_parser := new_json_parser (a_string)
 			l_parser.parse_content
-			if attached {JSON_OBJECT} l_parser.parsed_json_value as jv and then l_parser.is_parsed then
-				if attached {JSON_STRING} jv.item ("mirror") as j_mirror then
-					s32 := j_mirror.unescaped_string_32
-					if s32.is_valid_as_string_8 then
-						l_mirror := s32.to_string_8
-						if l_mirror.is_whitespace then
+			if
+				attached {JSON_OBJECT} l_parser.parsed_json_value as jv and then
+				l_parser.is_parsed and then
+				l_parser.is_valid
+			then
+				l_hidden := attached {JSON_BOOLEAN} jv.item ("hidden") as j_hidden and then j_hidden.item
+				if attached {JSON_BOOLEAN} jv.item ("published") as j_published then
+					l_published := j_published.item
+				else
+						-- If missing, consider it as published (for old configuration content)
+					l_published := True
+				end
+				if l_published or else a_configuration = Void then
+					if a_configuration = Void then
+						Result.set_hidden (l_hidden)
+					end
+					Result.set_published (l_published)
+					if attached {JSON_STRING} jv.item ("mirror") as j_mirror then
+						s32 := j_mirror.unescaped_string_32
+						if s32.is_valid_as_string_8 then
+							l_mirror := s32.to_string_8
+							if l_mirror.is_whitespace then
+								l_mirror := Void
+							end
+						else
+								-- Invalid mirror value in configuration!
 							l_mirror := Void
 						end
+						if l_mirror /= Void and Result.mirror = Void then
+							Result.set_mirror (l_mirror)
+						end
 					else
-							-- Invalid mirror value in configuration!
 						l_mirror := Void
 					end
-					if l_mirror /= Void and Result.mirror = Void then
-						Result.set_mirror (l_mirror)
-					end
-				else
-					l_mirror := Void
-				end
-				if attached {JSON_ARRAY} jv.item ("products") as l_products then
-					across
-						l_products as ic
-					loop
-						if attached {JSON_OBJECT} ic.item as jo then
-							prod := new_product (jo)
-							prod.set_associated_configuration (Result)
-							if l_mirror /= Void then
-								prod.add_mirror (l_mirror)
+					if attached {JSON_ARRAY} jv.item ("products") as l_products then
+						across
+							l_products as ic
+						loop
+							if attached {JSON_OBJECT} ic.item as jo then
+								prod := new_product (jo)
+								prod.set_associated_configuration (Result)
+								if l_mirror /= Void then
+									prod.add_mirror (l_mirror)
+								end
+								Result.add_product (prod)
 							end
-							Result.add_product (prod)
 						end
+					elseif attached {JSON_OBJECT} jv.item ("products") as l_product then
+						prod := new_product (l_product)
+						prod.set_associated_configuration (Result)
+						if l_mirror /= Void then
+							prod.add_mirror (l_mirror)
+						end
+						Result.add_product (prod)
+						sort_product_downloads (prod)
 					end
-				elseif attached {JSON_OBJECT} jv.item ("products") as l_product then
-					prod := new_product (l_product)
-					prod.set_associated_configuration (Result)
-					if l_mirror /= Void then
-						prod.add_mirror (l_mirror)
+					if prod /= Void and then l_hidden and then a_configuration /= Void then
+						prod.set_public (False)
 					end
-					Result.add_product (prod)
-					sort_product_downloads (prod)
 				end
 			end
 		end
@@ -287,6 +309,9 @@ feature {NONE} -- Implemenation: Products
 					end
 					if attached {JSON_STRING} ji.item ("link") as l_link then
 						l_item.set_link (l_link.unescaped_string_8)
+					end
+					if attached {JSON_BOOLEAN} ji.item ("hidden") as l_hidden then
+						l_item.set_hidden (l_hidden.item)
 					end
 					Result.force (l_item)
 				end

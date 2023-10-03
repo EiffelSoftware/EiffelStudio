@@ -90,6 +90,18 @@ feature -- Handle
 				loop
 					if attached ic.item.entry as e then
 						s.append ("<li>")
+						if attached {DOWNLOAD_CONFIGURATION} l_download_api.download_configuration_at (ch, e) as e_cfg then
+							if e_cfg.hidden then
+								s.append ("HIDDEN ")
+							end
+							if not e_cfg.published then
+								s.append ("NOT-PUBLISHED ")
+							end
+							if e_cfg.products = Void then
+								s.append ("INVALID ")
+							end
+						end
+
 						s.append (a_api.html_encoded (e.name))
 						if l_can_edit then
 							s.append (" -- <a href=%""+ req.percent_encoded_path_info + "/" + a_api.url_encoded (e.name) +"%">Edit</a>")
@@ -169,6 +181,7 @@ feature -- Handle
 										f.put_string (utf_8_encoded (l_content))
 										f.close
 										r.add_notice_message ("Data saved!")
+										-- FIXME: check the validity, valid JSON, valid configuration !!!
 									end
 								elseif l_op.same_string_general ("Delete") then
 									create f.make_with_path (p)

@@ -8,6 +8,9 @@ note
 deferred class
 	MD_SIGNATURE
 
+inherit
+	DEBUG_OUTPUT
+
 feature {NONE} -- Initialization
 
 	make
@@ -88,6 +91,25 @@ feature -- Copy
 			-- Copy of Current as ARRAY
 		do
 			create Result.make_from_special (as_special)
+		end
+
+feature -- Status report
+
+	debug_output: STRING
+		local
+			n: INTEGER
+			n8: NATURAL_8
+		do
+			n := count * 2
+			create Result.make (n)
+			across
+				as_array as ic
+			loop
+				n8 := ic.item
+				Result.append_string (n8.to_hex_string)
+				Result.append_character('-')
+			end
+			Result.remove_tail (1)
 		end
 
 feature {NONE} -- Implementation

@@ -17,6 +17,8 @@ inherit
 			same_as
 		end
 
+	DEBUG_OUTPUT
+
 create
 	make_with_data
 
@@ -27,6 +29,13 @@ feature {NONE} -- Intialization
 			parent_index := a_parent_index
 			type_index := a_type_index
 			create value_index.make_with_index (a_value_index)
+		end
+
+feature -- Status report
+
+	debug_output: STRING
+		do
+			Result := "CA [parent=" + parent_index.debug_output + " type="+ type_index.debug_output +"]"
 		end
 
 feature -- Status

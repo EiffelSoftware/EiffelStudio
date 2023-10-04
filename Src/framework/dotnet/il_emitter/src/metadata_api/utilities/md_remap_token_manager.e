@@ -128,7 +128,7 @@ feature -- Element change
 
 feature -- Operation
 
-	remap_index (idx: PE_INDEX_BASE; a_table_id: NATURAL_32)
+	remap_index (idx: PE_INDEX_BASE; a_table_id: NATURAL_32; a_parent_token: NATURAL_32)
 		local
 			i, t: NATURAL_32
 		do
@@ -139,16 +139,35 @@ feature -- Operation
 				-- Ignore
 			else
 				if attached {PE_CODED_INDEX_BASE} idx as l_coded_idx then
-					i := l_coded_idx.index
-					t := token (i)
-					if i /= t then
-						l_coded_idx.update_coded_index (t, a_table_id)
+					if
+						l_coded_idx.is_table_same_as_tag (a_table_id)
+					then
+							-- Check the codex index tag is related to `a_table_id` !
+						i := l_coded_idx.index
+						t := token (i)
+						if i /= t then
+							l_coded_idx.update_coded_index (t, a_table_id)
+							debug ("il_emitter_table_remap")
+								print (generator + ".remap_index (coded) Parent <tb:" + a_parent_token.to_hex_string.head (2) + " item:0x"+ a_parent_token.to_hex_string +">: table=0x" + a_table_id.to_hex_string
+									+ " 0x" + i.to_hex_string
+									+ " => 0x" + t.to_hex_string + "%N")
+							end
+						end
 					end
 				else
 					i := idx.index
 					t := token (i)
 					if i /= t then
 						idx.update_index (t)
+						debug ("il_emitter_table_remap")
+							if
+								i /= idx.index
+							then
+								print (generator + ".remap_index: Parent <tb:" + a_parent_token.to_hex_string.head (2) + " item:0x"+ a_parent_token.to_hex_string +">: table=0x" + a_table_id.to_hex_string.tail (2)
+									+" 0x" + i.to_hex_string
+									+ " => 0x"+ t.to_hex_string + "%N")
+							end
+						end
 					end
 				end
 			end

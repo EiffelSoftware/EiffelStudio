@@ -14,7 +14,8 @@ class
 inherit
 	MD_SIGNATURE
 		redefine
-			make
+			make,
+			debug_output
 		end
 
 	DEBUG_OUTPUT
@@ -59,7 +60,7 @@ feature -- Status report
 	debug_output: STRING
 		do
 			Result := parameter_count.out + " params"
-					+ " (type:" + method_type.to_hex_string + ")"
+					+ " (type:" + method_type.to_hex_string + "): " + Precursor
 		end
 
 feature -- Settings

@@ -115,6 +115,11 @@ feature -- Operations
 
 feature -- Comparison
 
+	is_table_same_as_tag (tb_id: NATURAL_32): BOOLEAN
+		do
+			Result := tag = tag_for_table (tb_id)
+		end
+
 	is_equal (other: like Current): BOOLEAN
 			-- Is `other' equal to the current object?
 		do

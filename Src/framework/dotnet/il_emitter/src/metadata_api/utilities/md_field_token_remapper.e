@@ -56,13 +56,15 @@ feature -- Visitor
 
 	visit_table (tb: MD_TABLE)
 		do
+			last_table_id := tb.table_id
+			last_table_entry_index := 0
 			if is_using_field_pointer_table then
 					-- FIXME: review why some tables should be remapped, and other not. [2023-07-19]				
 				inspect
 					tb.table_id
 				when
-					{PE_TABLES}.ttypedef,
-					{PE_TABLES}.tcustomattribute
+					{PE_TABLES}.ttypedef
+--					, {PE_TABLES}.tcustomattribute -- EXCLUDED by experience
 					, {PE_TABLES}.tconstant
 --					, {PE_TABLES}.tfieldmarshal -- Not Implemented
 --					, {PE_TABLES}.timplmap 		-- Not Implemented
@@ -77,9 +79,9 @@ feature -- Visitor
 				inspect
 					tb.table_id
 				when
-					{PE_TABLES}.ttypedef,
-					{PE_TABLES}.tcustomattribute,
-					{PE_TABLES}.tconstant
+					{PE_TABLES}.ttypedef
+					,{PE_TABLES}.tcustomattribute
+					,{PE_TABLES}.tconstant
 --					, {PE_TABLES}.tfieldmarshal -- Not Implemented
 --					, {PE_TABLES}.timplmap 		-- Not Implemented
 --					, {PE_TABLES}.tfieldlayout 	-- Not Used
@@ -92,8 +94,15 @@ feature -- Visitor
 			end
 		end
 
+	last_table_id: NATURAL_32
+	last_table_entry_index: NATURAL_32
+	last_table_entry_token: NATURAL_32
+
 	visit_table_entry (e: PE_TABLE_ENTRY_BASE)
 		do
+			last_table_entry_index := last_table_entry_index + 1
+			last_table_entry_token := (last_table_id |<< 24) | last_table_entry_index
+
 			if attached {PE_TYPE_DEF_TABLE_ENTRY} e as l_typedef then
 				safe_accepts (l_typedef.fields)
 			elseif attached {PE_CUSTOM_ATTRIBUTE_TABLE_ENTRY} e as l_ca then
@@ -111,17 +120,17 @@ feature -- Visitor
 
 	visit_index (idx: PE_INDEX_BASE)
 		do
-			remapper.remap_index (idx, {PE_TABLES}.tfield)
+			remapper.remap_index (idx, {PE_TABLES}.tfield, last_table_entry_token)
 		end
 
 	visit_coded_index (idx: PE_CODED_INDEX_BASE)
 		do
-			remapper.remap_index (idx, {PE_TABLES}.tfield)
+			remapper.remap_index (idx, {PE_TABLES}.tfield, last_table_entry_token)
 		end
 
 	visit_pointer_index (idx: PE_POINTER_INDEX)
 		do
-			remapper.remap_index (idx, {PE_TABLES}.tfield)
+			remapper.remap_index (idx, {PE_TABLES}.tfield, last_table_entry_token)
 		end
 
 end

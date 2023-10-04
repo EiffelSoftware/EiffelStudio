@@ -36,8 +36,15 @@ feature -- Access
 
 feature -- Visitor
 
+	last_table_id: NATURAL_32
+	last_table_entry_index: NATURAL_32
+	last_table_entry_token: NATURAL_32
+
 	visit_table (tb: MD_TABLE)
 		do
+			last_table_id := tb.table_id
+			last_table_entry_index := 0
+			last_table_entry_token := 0
 			inspect
 				tb.table_id
 			when
@@ -51,6 +58,9 @@ feature -- Visitor
 
 	visit_table_entry (e: PE_TABLE_ENTRY_BASE)
 		do
+			last_table_entry_index := last_table_entry_index + 1
+			last_table_entry_token := (last_table_id |<< 24) | last_table_entry_index
+
 			if attached {PE_METHOD_DEF_TABLE_ENTRY} e as l_methoddef then
 				l_methoddef.param_index.accepts (Current)
 			else
@@ -60,17 +70,17 @@ feature -- Visitor
 
 	visit_index (idx: PE_INDEX_BASE)
 		do
-			remapper.remap_index (idx, {PE_TABLES}.tparam)
+			remapper.remap_index (idx, {PE_TABLES}.tparam, last_table_entry_token)
 		end
 
 	visit_coded_index (idx: PE_CODED_INDEX_BASE)
 		do
-			remapper.remap_index (idx, {PE_TABLES}.tparam)
+			remapper.remap_index (idx, {PE_TABLES}.tparam, last_table_entry_token)
 		end
 
 	visit_pointer_index (idx: PE_POINTER_INDEX)
 		do
-			remapper.remap_index (idx, {PE_TABLES}.tparam)
+			remapper.remap_index (idx, {PE_TABLES}.tparam, last_table_entry_token)
 		end
 
 

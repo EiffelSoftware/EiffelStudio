@@ -1,62 +1,63 @@
 {
-        "mirror": "https://www.eiffel.com/cdn/",
-        "products": [
-                {
-                        "id": "eiffelstudio-rev", "name": "EiffelStudio",
-                        "version": "22.12 REV",
-                        "number": "22.12",
-                        "build": "106463",
-                        "download_link_pattern": "${mirror}${name}/${number}/${build}/${filename}",
-                        "download": [
-                                {
-                                        "filename": "Eiffel_22.12_rev_106463-win64.msi",
-                                        "platform": "win64",
-                                        "size": "159300585",
-                                        "hash": "8e39c7fccc55096a51fa765c1cb2aa111edb5fb3528e196136b908bb022d79d5"
-                                }
-                                ,{
-                                        "filename": "Eiffel_22.12_rev_106463-win64.7z",
-                                        "platform": "win64",
-                                        "size": "95381886",
-                                        "hash": "785ca6aaf3cde47b1fc2cf85cd756164acd35f94ed4801a51f90737b7060724f"
-                                }
-                                ,{
-                                        "filename": "Eiffel_22.12_rev_106463-linux-x86-64.tar.bz2",
-                                        "platform": "linux-x86-64",
-                                        "size": "116945292",
-                                        "hash": "29b3f7c03d0f3373978c3c017edee61dd2dcf35f66012e28851e02b28256d9e2"
-                                }
-                                ,{
-                                        "filename": "Eiffel_22.12_rev_106463-macosx-armv6.tar.bz2",
-                                        "platform": "macosx-armv6",
-                                        "size": "96960989",
-                                        "hash": "15cb095115d87e556114b465bf0aa05bb81859e9a7e6f6d64e83ebf62c8840b9"
-                                }
-                                ,{
-                                        "filename": "Eiffel_22.12_rev_106463-macosx-x86-64.tar.bz2",
-                                        "platform": "macosx-x86-64",
-                                        "size": "98854646",
-                                        "hash": "e622b203c1d5e1beeb81e329ffd8cfacc4ba560df4a882096b71b319ea46d2d0"
-                                }
-                                ,{
-                                        "filename": "Eiffel_22.12_rev_106463-linux-arm64.tar.bz2",
-                                        "platform": "linux-arm64",
-                                        "size": "113985347",
-                                        "hash": "dd3d7895aecf8d3c9a77b76f14bb067f684708c1985541de955e4fb7498dbe1f"
-                                }
-                                ,{
-                                        "filename": "Eiffel_22.12_rev_106463-linux-armv7.tar.bz2",
-                                        "platform": "linux-armv7",
-                                        "size": "104066105",
-                                        "hash": "5f473d9edb5b943092d880dcb77ed1ab6c74a2bf68207042c73c0cbe1ecb48bf"
-                                }
-                                ,{
-                                        "filename": "Eiffel_22.12_rev_106463-freebsd-x86-64.tar.bz2",
-                                        "platform": "freebsd-x86-64",
-                                        "size": "109051434",
-                                        "hash": "8415539492d89d90d1f2c26c251093cdc8ca4b16ce6c3b59ca9452b23188ff4e"
-                                }
-                        ]
-                }
-        ]
+	"mirror": "https://www.eiffel.com/cdn/",
+	"products": [
+		{
+			"id": "eiffelstudio-rev", "name": "EiffelStudio",
+			"version": "23.09 REV",
+			"number": "23.09",
+			"build": "107335",
+			"download_link_pattern": "${mirror}${name}/${number}/${build}/${filename}",
+			"download": [
+				{
+					"filename": "Eiffel_23.09_rev_107335-win64.msi",
+					"platform": "win64",
+					"size": "195661367",
+					"hash": "d0767551ec9e030551dcbce32e1f668edc65b3a8e7826760609324ead6e10db8"
+				}
+				,{
+					"filename": "Eiffel_23.09_rev_107335-win64.7z",
+					"platform": "win64",
+					"size": "121550740",
+					"hash": "e00c0564e6fe53f7b41601e0ff4d39340f68d6350e6f5d969bf32f72a2eca2ef"
+				}
+				,{
+					"filename": "Eiffel_23.09_rev_107335-linux-x86-64.tar.bz2",
+					"platform": "linux-x86-64",
+					"size": "153283182",
+					"hash": "8b5af3d7ee848d432382757096bd2ade1d36a9b34025d31fcede7617ec77d7d7"
+				}
+				,{
+					"filename": "Eiffel_23.09_rev_107335-macosx-armv6.tar.bz2",
+					"platform": "macosx-armv6",
+					"size": "130367335",
+					"hash": "ed3c093cff6ddbe2aa6ad83f299e9d1b83bab1462b691299da942a14593a35d1"
+				}
+				,{
+					"filename": "Eiffel_23.09_rev_107335-macosx-x86-64.tar.bz2",
+					"platform": "macosx-x86-64",
+					"size": "135593749",
+					"hash": "041a3a739221ae1e72d801e88b2b8feff8d61d63aac6cf7800fd914df3ab2e14"
+				}
+				,{
+					"filename": "Eiffel_23.09_rev_107335-linux-arm64.tar.bz2",
+					"platform": "linux-arm64",
+					"size": "148778117",
+					"hash": "d228d9f16b335c0241b9ac20995ac988fab7d0b2305d4586f6637d77275d7831"
+				}
+				,{
+					"filename": "Eiffel_23.09_rev_107335-linux-armv7.tar.bz2",
+					"platform": "linux-armv7",
+					"size": "109405375",
+					"hash": "fd0ab410462c5c6363734b739867bd743868bbc5d7a04ae5d47f1b973cd8bedb"
+				}
+				,{
+					"filename": "Eiffel_23.09_rev_107335-freebsd-x86-64.tar.bz2",
+					"platform": "freebsd-x86-64",
+					"size": "114703843",
+					"hash": "5e00eb33cd545326cc4fc694f239159141c84dc4b4690964a5686eb1403791b1"
+				}
+			]
+		}
+	]
 }
+

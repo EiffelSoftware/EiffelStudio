@@ -2,14 +2,14 @@
 setlocal
 
 :: Default values
-set ISE_MAJOR_MINOR_LATEST=22.12
-set ISE_BUILD_LATEST=106463
+set ISE_MAJOR_MINOR_LATEST=23.09
+set ISE_BUILD_LATEST=107335
 
-set ISE_MAJOR_MINOR_NIGHTLY=23.08
-set ISE_BUILD_NIGHTLY=107218
+set ISE_MAJOR_MINOR_NIGHTLY=23.09
+set ISE_BUILD_NIGHTLY=107335
 
-set ISE_MAJOR_MINOR_BETA=23.08
-set ISE_BUILD_BETA=107218
+set ISE_MAJOR_MINOR_BETA=23.09
+set ISE_BUILD_BETA=107335
 ::set ISE_BETA_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 
 set ISE_DOWNLOAD_PUBLIC_URL=https://www.eiffel.com/cdn/EiffelStudio
@@ -215,7 +215,7 @@ echo >&2 check for curl.exe
 	)
 	if "%CURL_PATH%" NEQ "" (
 		echo >&2 Use %CURL_PATH%
-		set download_cmd="%CURL_PATH%" -fsSL 
+		set download_cmd="%CURL_PATH%" -fsSL
 		:: -H 'Cache-Control: no-cache'
 		goto GET_DOWNLOAD
 	) else (
@@ -254,7 +254,7 @@ echo >&2 check for curl.exe
 		echo >&2 No download url !!!
 		exit 1
 	)
-	
+
 	set TMP_DOWNLOAD_ARCHIVE_7z=tmp_eiffel_archive.7z
 	if EXIST %TMP_DOWNLOAD_ARCHIVE_7z% (
 		echo >&2 Please remove %TMP_DOWNLOAD_ARCHIVE_7z%.
@@ -265,7 +265,7 @@ echo >&2 check for curl.exe
 	if EXIST "%ISE_EIFFEL%" (
 		echo >&2 %ISE_EIFFEL% already exists! Remove it first!
 		goto FAILURE
-		)	
+		)
 	%extract_cmd% %TMP_DOWNLOAD_ARCHIVE_7z% > NUL
 	del %TMP_DOWNLOAD_ARCHIVE_7z%
 
@@ -288,7 +288,7 @@ echo >&2 check for curl.exe
 			echo >&2 Check inside %ISE_EIFFEL%
 			goto FAILURE
 		)
-	
+
 	echo >&2 EiffelStudio installed in %ISE_EIFFEL%
 	%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ecb.exe -version  >&2
 	echo >&2 Use the file %cd%\%ISE_RC_FILE% to setup your Eiffel environment.

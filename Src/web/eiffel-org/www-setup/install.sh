@@ -15,7 +15,7 @@
 # --install-dir: location for the targetted $ISE_EIFFEL
 # --dir: parent location for the targetted $ISE_EIFFEL based on major.minor values (it should be writable).
 # --url url-to-eiffel-installation-archive: url to installation archive for instance from the ftp.eiffel.com
-# --channel latest|beta|nightly|major.minor.build: choose the channel, latest stable version, beta or nightly, 
+# --channel latest|beta|nightly|major.minor.build: choose the channel, latest stable version, beta or nightly,
 #					or directly the stable $major.$minor.$build
 #
 # Notes:
@@ -28,16 +28,16 @@
 #  $ curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --url https://ftp.eiffel.com/pub/beta/nightly/Eiffel_20.05_rev_104521-linux-x86-64.tar.bz2 --install-dir /opt/eiffel/test --dir /opt/eiffel
 
 # Default values
-ISE_MAJOR_MINOR_LATEST=22.12
-ISE_BUILD_LATEST=106463
+ISE_MAJOR_MINOR_LATEST=23.09
+ISE_BUILD_LATEST=107335
 ISE_TYPE_LATEST=rev
 
-ISE_MAJOR_MINOR_NIGHTLY=23.08
-ISE_BUILD_NIGHTLY=107218
+ISE_MAJOR_MINOR_NIGHTLY=23.09
+ISE_BUILD_NIGHTLY=107335
 ISE_TYPE_NIGHTLY=rev
 
-ISE_MAJOR_MINOR_BETA=23.08
-ISE_BUILD_BETA=107218
+ISE_MAJOR_MINOR_BETA=23.09
+ISE_BUILD_BETA=107335
 ISE_TYPE_BETA=rev
 #ISE_BETA_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 
@@ -294,8 +294,8 @@ do_install() {
 				ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_rev_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
 				ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/download/$ISE_MAJOR_MINOR/$ISE_DOWNLOAD_FILE
 			else
-				echo >&2 Use custom url $ISE_CUSTOM_URL 
-				ISE_CHANNEL=`basename $ISE_CHANNEL` 
+				echo >&2 Use custom url $ISE_CUSTOM_URL
+				ISE_CHANNEL=`basename $ISE_CHANNEL`
 				if [ "`echo $ISE_CHANNEL | tr -d -c '.' | wc -c`" = "2" ]; then
 					iseverParse $ISE_CHANNEL
 				else
@@ -330,7 +330,7 @@ do_install() {
 		EOF
 		( set -x; sleep $TMP_SAFETY_DELAY )
 	fi
-		
+
 	user="$(id -un 2>/dev/null || true)"
 
 	curl=''
@@ -396,7 +396,7 @@ do_install() {
 	cat $ISE_RC_FILE
 
 	#export ISE_PLATFORM=$ISE_PLATFORM
-	#export ISE_EIFFEL=$ISE_EIFFEL 
+	#export ISE_EIFFEL=$ISE_EIFFEL
 	#export PATH=$PATH:$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin
 
 	. $ISE_RC_FILE

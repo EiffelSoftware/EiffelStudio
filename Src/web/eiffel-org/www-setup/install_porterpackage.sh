@@ -6,7 +6,7 @@ t_eif_build_dir=$(pwd)/build_Eiffel_PP
 t_eif_install_dir=$(pwd)/Eiffel_PP
 t_clean="yes"
 
-echo >&2 "Requires: make gcc bzip2 libxtst-dev libgtk2.0-dev"
+echo >&2 "Requires: make gcc bzip2 libxtst-dev libgtk2.0-dev libgtk-3-dev libgdk-pixbuf2.0-dev libssl-dev dotnet6"
 
 
 TMP_SAFETY_DELAY=10
@@ -180,7 +180,7 @@ do_install() {
 
 
 	#export ISE_PLATFORM=$ISE_PLATFORM
-	#export ISE_EIFFEL=$ISE_EIFFEL 
+	#export ISE_EIFFEL=$ISE_EIFFEL
 	#export PATH=$PATH:$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin
 
 	. $ISE_RC_FILE

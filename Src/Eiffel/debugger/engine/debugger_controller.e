@@ -61,6 +61,7 @@ feature -- Debug Operation
 			make_f: PLAIN_TEXT_FILE
 			l_il_env: IL_ENVIRONMENT
 			l_app_string: like safe_path
+			l_app_name: PATH
 			is_dotnet_system: BOOLEAN
 			prefstr: STRING
 			dotnet_debugger: READABLE_STRING_32
@@ -86,9 +87,13 @@ feature -- Debug Operation
 						io.error.put_string (generator)
 						io.error.put_string ("(DEBUG_RUN): Start execution%N")
 					end
-
-					create uf.make_with_path (eiffel_system.application_name (True))
+					l_app_name := eiffel_system.application_name (True)
+					if eiffel_system.system.is_il_netcore and not {PLATFORM}.is_windows then
+						l_app_name := l_app_name.appended_with_extension ("exe")
+					end
+					create uf.make_with_path (l_app_name)
 					create make_f.make_with_path (project_location.workbench_path.extended (makefile_sh))
+
 
 					is_dotnet_system := Eiffel_system.system.il_generation
 					if uf.exists then
@@ -350,6 +355,11 @@ feature -- Start Operation
 						System_defined: Eiffel_system.Workbench.system_defined
 					end
 					appl_name := Eiffel_system.application_name (True)
+					if l_system.il_generation and then l_system.is_il_netcore then
+						if not {PLATFORM}.is_windows then
+							appl_name := appl_name.appended_with_extension ("exe")
+						end
+					end
 					create f.make_with_path (appl_name)
 					if not f.exists then
 						warning (Warning_messages.w_Unexisting_system)
@@ -420,6 +430,11 @@ feature -- Start Operation
 						System_defined: Eiffel_system.Workbench.system_defined
 					end
 					appl_name := Eiffel_system.application_name (False)
+					if l_system.il_generation and then l_system.is_il_netcore then
+						if not {PLATFORM}.is_windows then
+							appl_name := appl_name.appended_with_extension ("exe")
+						end
+					end
 					create f.make_with_path (appl_name)
 					if not f.exists then
 						warning (Warning_messages.w_Unexisting_system)

@@ -405,17 +405,48 @@ feature -- Access
 		end
 
 	dotnet_executable_path: PATH
-			-- Location of the netcore dotnet executable tool.
+			-- Location of the
+		local
+			fut: FILE_UTILITIES
+			p: PATH
+		once
+			across
+				dotnet_potential_root_locations as loc
+			until
+				Result /= Void
+			loop
+				p := loc.extended ("dotnet.exe")
+				if fut.file_path_exists (p) then
+					Result := p
+				end
+			end
+			if Result = Void then
+				create Result.make_from_string ("dotnet.exe")
+			end
+		end
+
+	dotnet_potential_root_locations: ARRAYED_LIST [PATH]
+			-- Potential locations of the netcore root directory
 		local
 			f: READABLE_STRING_32
+			p: PATH
 		once
-			f := execution_environment.item ("ProgramFiles")
-			if not attached f then
-				f := {STRING_32} "C:\Program Files"
+			create Result.make (1)
+			if
+				attached execution_environment.item ("DOTNET_ROOT") as s_dotnet_root
+			then
+				create p.make_from_string (s_dotnet_root)
+				Result.force (p)
 			end
-			f := f + "\dotnet\dotnet.exe"
-			create Result.make_from_string (f)
-			--create Result.make_from_string ("dotnet")
+			if {PLATFORM}.is_windows then
+				f := execution_environment.item ("ProgramFiles")
+				if f = Void then
+					f := {STRING_32} "C:\Program Files"
+				end
+				f := f + "\dotnet"
+				create p.make_from_string (f)
+				Result.force (p)
+			end
 		end
 
 feature -- Query
@@ -585,19 +616,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

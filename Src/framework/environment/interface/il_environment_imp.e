@@ -182,7 +182,7 @@ feature -- Query
 		local
 			dn: PATH
 			l_dir: DIRECTORY
-		do
+		once
 			across
 				dotnet_runtime_paths as p
 			until
@@ -201,7 +201,7 @@ feature -- Query
 		local
 			dn: PATH
 			l_dir: DIRECTORY
-		do
+		once
 			across
 				dotnet_runtime_paths as p
 			until

@@ -28,10 +28,8 @@ if [ ! -f wizard.tar.bz2 ]; then
 fi
 safe_md $EXPORT_DIR/precomp_wizard
 mv wizard.tar.bz2 $EXPORT_DIR/precomp_wizard
-clean_project                                                                    
+clean_project
 echo Precompilation wizard Built!
-
-remtrace EiffelCocoa wizard
 
 remtrace EWF wizard
 echo Building the EWF wizard
@@ -75,3 +73,13 @@ safe_md $EXPORT_DIR/wrapc_wizard
 mv wizard.tar.bz2 $EXPORT_DIR/wrapc_wizard
 clean_project
 echo WrapC wizard Built!
+
+remtrace Dotnet wizard
+echo Building the Dotnet wizard
+clean_project
+finalize dotnet_wizard.ecf wizard
+tgz_ccode wizard wizard.tar.bz2
+if [ ! -f wizard.tar.bz2 ]; then
+	remtrace Couldnt generate the Dotnet wizard
+	CANCEL
+fi

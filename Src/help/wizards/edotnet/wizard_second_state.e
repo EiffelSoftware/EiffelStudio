@@ -111,7 +111,7 @@ feature -- Basic Operation
 			across
 				l_runtimes as ic
 			loop
-				create l_item.make_with_text (ic.item.location.name)
+				create l_item.make_with_text (ic.key)
 				clr_version_cb.extend (l_item)
 			end
 

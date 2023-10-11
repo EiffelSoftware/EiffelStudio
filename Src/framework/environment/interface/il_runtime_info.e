@@ -48,6 +48,20 @@ feature -- Access
 
 	runtime_version: READABLE_STRING_32
 
+	runtime_il_version: IL_VERSION
+		local
+			v: READABLE_STRING_32
+		do
+			v := runtime_version
+			if v.starts_with_general ("v") then
+					-- "v1.2.3.4"
+				create Result.make_from_string (v.substring (2, v.count))
+			else
+					-- "1.2.3.4"
+				create Result.make_from_string (v)
+			end
+		end
+
 	runtime_name: detachable READABLE_STRING_32
 
 	tfm: detachable READABLE_STRING_32
@@ -67,23 +81,18 @@ feature -- Comparison
 			-- Is current object less than `other'?
 		local
 			l_other_tfm: like tfm
-			v1,v2: IL_VERSION
 		do
 			l_other_tfm := other.tfm
 			if attached tfm as l_tfm then
 				if l_other_tfm = Void then
 					Result := False
 				else
-					create v1.make_from_string (runtime_version)
-					create v2.make_from_string (other.runtime_version)
-					Result := v1 < v2
+					Result := runtime_il_version < other.runtime_il_version
 				end
 			elseif l_other_tfm /= Void then
 				Result := True
 			else
-				create v1.make_from_string (runtime_version)
-				create v2.make_from_string (other.runtime_version)
-				Result := v1 < v2
+				Result := runtime_il_version < other.runtime_il_version
 			end
 		end
 
@@ -116,19 +125,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

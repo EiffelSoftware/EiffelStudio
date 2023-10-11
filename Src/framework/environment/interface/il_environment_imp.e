@@ -121,6 +121,7 @@ feature -- Query
 			v: READABLE_STRING_GENERAL
 			result_key, result_version: IMMUTABLE_STRING_32
 			i: INTEGER
+			inf, result_info: IL_RUNTIME_INFO
 		once
 			l_runtimes := installed_runtimes
 			if not l_runtimes.is_empty then
@@ -128,24 +129,14 @@ feature -- Query
 				across
 					l_runtimes as r
 				loop
+					inf := r
 					k := @ r.key
-					i := k.index_of ('/', 1)
-						-- FIXME: move this hard coded value elsewhere.
-					if i > 0 then --and then k.starts_with ("Microsoft.NETCore.App.Ref") then
-						v := k.substring (i + 1, k.count)
-					elseif k.starts_with ("v") then
-						v := k.substring (2, k.count)
-					else
-						v := Void
-					end
-					if v /= Void then
-						if result_key = Void then
-							result_key := k
-							result_version := v
-						elseif result_version = Void or else result_version < v then
-							result_key := k
-							result_version := v
-						end
+					if result_key = Void then
+						result_key := k
+						result_info := inf
+					elseif result_info = Void or else result_info <= inf then
+						result_key := k
+						result_info := inf
 					end
 				end
 				Result := result_key

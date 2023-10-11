@@ -89,12 +89,14 @@ if [ -e "$output_dir/last_revision_built" ]; then
 			if [ "$include_enterprise" = "true" ]; then
 				echo "Sharing the $edition_name PorterPackage (including enterprise) to (ent)"
 				share_deliv_file $output_dir/${deliv_revision}/PorterPackage_${deliv_revision}.tar "New $edition_name Porterpackage for revision ${deliv_revision}" ent
-			else if [ "$edition_name" = "ent" ]; then
-				echo "Sharing the $edition_name PorterPackage to (ent)"
-				share_deliv_file $output_dir/${deliv_revision}/PorterPackage_${deliv_revision}.tar "New $edition_name Porterpackage for revision ${deliv_revision}" ${edition_name}
 			else
-				echo "Sharing the $edition_name PorterPackage to (std)"
-				share_deliv_file $output_dir/${deliv_revision}/PorterPackage_${deliv_revision}.tar "New $edition_name Porterpackage for revision ${deliv_revision}" ${edition_name}
+				if [ "$edition_name" = "ent" ]; then
+					echo "Sharing the $edition_name PorterPackage to (ent)"
+					share_deliv_file $output_dir/${deliv_revision}/PorterPackage_${deliv_revision}.tar "New $edition_name Porterpackage for revision ${deliv_revision}" ${edition_name}
+				else
+					echo "Sharing the $edition_name PorterPackage to (std)"
+					share_deliv_file $output_dir/${deliv_revision}/PorterPackage_${deliv_revision}.tar "New $edition_name Porterpackage for revision ${deliv_revision}" ${edition_name}
+				fi
 			fi
 		fi
 	fi
@@ -120,4 +122,3 @@ if [ -e "$output_dir/last_revision_built" ]; then
 else
 	echo ERROR: issue with previous porterpackage building!
 fi
-

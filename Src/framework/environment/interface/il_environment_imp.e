@@ -98,7 +98,7 @@ feature -- Initialization
 			end
 		end
 
-feature -- Access			
+feature -- Access
 
 	version: IMMUTABLE_STRING_32
 			-- Currently selected version, if none `default_version'.
@@ -110,7 +110,7 @@ feature -- Access
 	runtime_version: detachable IMMUTABLE_STRING_32
 			-- NETCore runtime version, such as 6.0.15, 7.0.10, ...
 
-feature -- Query	
+feature -- Query
 
 	default_version: IMMUTABLE_STRING_32
 			-- Default runtime version if `version' was not specified.
@@ -118,9 +118,7 @@ feature -- Query
 		local
 			l_runtimes: like installed_runtimes
 			k: READABLE_STRING_GENERAL
-			v: READABLE_STRING_GENERAL
-			result_key, result_version: IMMUTABLE_STRING_32
-			i: INTEGER
+			result_key: IMMUTABLE_STRING_32
 			inf, result_info: IL_RUNTIME_INFO
 		once
 			l_runtimes := installed_runtimes
@@ -267,19 +265,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

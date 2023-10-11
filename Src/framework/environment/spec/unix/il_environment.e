@@ -63,9 +63,15 @@ feature -- Access
 		local
 			v: READABLE_STRING_32
 			inf: IL_RUNTIME_INFO
+			netcore_list: ARRAYED_LIST [IL_RUNTIME_INFO]
+			l_full_version: READABLE_STRING_GENERAL
+			l_sorter: QUICK_SORTER [IL_RUNTIME_INFO]
+			i,n: INTEGER
+			l_info: IL_RUNTIME_INFO
 		once
 			if attached available_runtimes (is_using_reference_assemblies) as l_runtimes then
 				create Result.make (l_runtimes.count)
+				create netcore_list.make (l_runtimes.count)
 				across
 					l_runtimes as rt
 				loop
@@ -77,7 +83,33 @@ feature -- Access
 						else
 							create inf.make (rt.path, v)
 						end
-						Result [inf.full_version] := inf
+						netcore_list.force (inf)
+					end
+				end
+				if netcore_list /= Void and then not netcore_list.is_empty then
+					create l_sorter.make (create {COMPARABLE_COMPARATOR [IL_RUNTIME_INFO]})
+					l_sorter.sort (netcore_list)
+					from
+						i := 1
+						n := netcore_list.count
+					until
+						i > n
+					loop
+						l_info := netcore_list [i]
+						l_full_version := l_info.full_version
+						Result [l_full_version] := l_info
+						i := i + 1
+						if attached l_info.tfm as l_tfm then
+							if
+								i > n
+								or else (
+									attached netcore_list [i].tfm as l_next_tfm and then
+									not l_next_tfm.same_string (l_tfm)
+								)
+							then
+								Result [l_tfm] := l_info
+							end
+						end
 					end
 				end
 			else

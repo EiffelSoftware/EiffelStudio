@@ -150,7 +150,7 @@ feature -- Execution
 				i := 1
 				n := a_types.count
 			until
-				i - ignored_nb > n
+				i > n
 			loop
 				dn := a_types.dotnet_names [i]
 				l_pos := a_types.positions [i]

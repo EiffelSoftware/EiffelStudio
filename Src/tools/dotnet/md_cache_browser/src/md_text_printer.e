@@ -82,6 +82,22 @@ feature -- Display
 						io.put_new_line
 					end
 				end
+				if attached t.constructors as t_constructors then
+					io.put_string ("   > ")
+					io.put_string (t_constructors.count.out + " constructor(s)")
+					io.put_new_line
+					across
+						t_constructors as c
+					loop
+						print ("    * ")
+						display_entity (c, t, True)
+						if a_query.is_full_mode then
+							display_entity_details (c, t)
+						end
+						io.put_new_line
+					end
+				end
+
 				io.put_string ("   >")
 				if attached t.constructors as t_constructors then
 					io.put_character (' ')

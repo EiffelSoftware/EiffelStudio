@@ -141,7 +141,7 @@ feature -- Execution
 
 	display_assembly_types (ass: CONSUMED_ASSEMBLY; a_types: CONSUMED_ASSEMBLY_TYPES; a_query: MD_QUERY)
 		local
-			i,n: INTEGER
+			i,n, ignored_nb: INTEGER
 			l_pos, aid: INTEGER
 			en, dn: STRING
 			inc: BOOLEAN
@@ -150,22 +150,25 @@ feature -- Execution
 				i := 1
 				n := a_types.count
 			until
-				i > n
+				i - ignored_nb > n
 			loop
-				dn := a_types.dotnet_names [i - 1]
-				l_pos := a_types.positions [i - 1]
-				aid := a_types.assembly_ids [i - 1]
-				if dn /= Void and a_query.has_type_filter then
+				dn := a_types.dotnet_names [i]
+				l_pos := a_types.positions [i]
+				aid := a_types.assembly_ids [i]
+				if dn = Void then
+					ignored_nb := ignored_nb + 1
+					inc := False
+				elseif a_query.has_type_filter then
 					inc := a_query.type_name_included (dn) and aid = 0
 				else
-					inc := dn /= Void
+					inc := True
 				end
 				if inc then
 					deserializer.deserialize (layout.classes_location (ass).name, l_pos)
 					if attached {CONSUMED_TYPE} deserializer.deserialized_object as t then
 						display_type (t, a_query)
 					else
-						en := a_types.eiffel_names [i - 1]
+						en := a_types.eiffel_names [i]
 						if en /= Void and dn /= Void then
 							if aid > 0 then
 								io.put_string (" @ ")

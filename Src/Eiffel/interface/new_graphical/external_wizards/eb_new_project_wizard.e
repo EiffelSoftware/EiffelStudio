@@ -46,11 +46,10 @@ feature {NONE} -- Initialization
 				entry := analyse_line (file.last_string)
 				if entry /= Void then
 					if entry.name.same_string ("name") then
-						-- FIXME: better handle Unicode name.
 						set_name ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (entry.value))
 					elseif entry.name.same_string ("description") then
 						-- FIXME: better handle Unicode description.
-						set_description ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (wrap_word (entry.value, 70)))
+						set_description ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (wrap_wide_word (entry.value, 70)))
 					elseif entry.name.same_string ("location") then
 						location := eiffel_layout.new_project_wizards_path.extended (entry.value)
 					elseif entry.name.same_string ("platform") then
@@ -95,6 +94,26 @@ feature -- Status Setting
 		end
 
 feature {NONE} -- Implementation
+
+	wrap_wide_word (a_string: STRING_32; a_margin: INTEGER): STRING_32
+			-- Return a copy of `a_string', with a maximum of `a_margin' characters per line.
+		local
+			original: STRING_32
+			last_space_index: INTEGER
+		do
+			create Result.make (0)
+			from
+				original := a_string.string
+			until
+				original.count < a_margin
+			loop
+				last_space_index := original.last_index_of ({CHARACTER_32} ' ', a_margin)
+				Result.append (original.substring (1, last_space_index - 1))
+				Result.append_character ({CHARACTER_32} '%N')
+				original := original.substring (last_space_index + 1, original.count)
+			end
+			Result.append (original)
+		end
 
 	wrap_word (a_string: STRING; a_margin: INTEGER): STRING
 			-- Return a copy of `a_string', with a maximum of `a_margin' characters per line.

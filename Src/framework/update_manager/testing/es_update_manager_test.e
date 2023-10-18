@@ -12,9 +12,21 @@ inherit
 
 feature -- Data
 
-	test_version: TUPLE [major, minor: NATURAL_16; patch: NATURAL_32]
+	test_versions: ARRAYED_LIST [TUPLE [platform: STRING_8; major, minor: NATURAL_16; patch: NATURAL_32]]
+		local
+			tu: TUPLE [platform: STRING_8; major, minor: NATURAL_16; patch: NATURAL_32]
+			env: EIFFEL_ENV
 		once
-			Result := [{NATURAL_16} 23, {NATURAL_16} 09, {NATURAL_32} 107341]
+			create Result.make (3)
+			tu := ["win64", {NATURAL_16} 23, {NATURAL_16} 09, {NATURAL_32} 107341]
+			Result.force (tu)
+
+			tu := ["win64", {NATURAL_16} 22, {NATURAL_16} 12, {NATURAL_32} 0]
+			Result.force (tu)
+
+			create {EC_EIFFEL_LAYOUT} env
+			tu := [env.eiffel_platform, env.major_version, env.minor_version, {NATURAL_32} 0]
+			Result.force (tu)
 		end
 
 feature -- Test routines
@@ -24,18 +36,22 @@ feature -- Test routines
 		local
 			cfg: ES_UPDATE_CLIENT_CONFIGURATION
 			api: ES_UPDATE_MANAGER
-			env: EIFFEL_ENV
+			i: INTEGER
 		do
 				-- !Note
 				-- Launch the esa_api
 			create cfg.make_with_config
 			create api.make (cfg)
-			create {EC_EIFFEL_LAYOUT} env
 
-			if attached api.available_release_update_for_channel ({ES_UPDATE_CONSTANTS}.beta_channel, env.eiffel_platform, test_version.major, test_version.minor, test_version.patch) as l_release then
-				assert ("True", True)
-			else
-				assert ("False", True)
+			across
+				test_versions as item
+			loop
+				i := i + 1
+				if attached api.available_release_update_for_channel ({ES_UPDATE_CONSTANTS}.beta_channel, item.platform, item.major, item.minor, item.patch) as l_release then
+					assert (i.out + "-True", True)
+				else
+					assert (i.out + "-False", True)
+				end
 			end
 		end
 
@@ -44,17 +60,22 @@ feature -- Test routines
 		local
 			cfg: ES_UPDATE_CLIENT_CONFIGURATION
 			api: ES_UPDATE_MANAGER
-			env: EIFFEL_ENV
+			i: INTEGER
 		do
 				-- !Note
 				-- Launch the esa_api
 			create cfg.make_with_config
 			create api.make (cfg)
-			create {EC_EIFFEL_LAYOUT} env
-			if attached api.available_release_update_for_any_channel (env.eiffel_platform, test_version.major, test_version.minor, test_version.patch) as l_release then
-				assert ("True", True)
-			else
-				assert ("False", True)
+
+			across
+				test_versions as item
+			loop
+				i := i + 1
+				if attached api.available_release_update_for_any_channel (item.platform, item.major, item.minor, item.patch) as l_release then
+					assert (i.out + "-True", True)
+				else
+					assert (i.out + "-False", True)
+				end
 			end
 		end
 

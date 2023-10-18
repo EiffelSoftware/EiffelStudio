@@ -38,9 +38,7 @@ feature {NONE} -- Initialization
 			p: PATH
 			fut: FILE_UTILITIES
 		do
-				-- .Net framework runtimes start with "v"
-				-- .Net CORE runtime are formatted like "Microsoft.NETCore.App/6.0..."
-			if a_runtime_version.has ('/') then
+			if (create {IL_NETCORE_DETECTOR}).is_il_netcore (a_runtime_version) then
 				emdc_location := eiffel_layout.nemdc_command_name
 			else
 				emdc_location := eiffel_layout.emdc_command_name

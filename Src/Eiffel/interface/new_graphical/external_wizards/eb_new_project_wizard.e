@@ -46,9 +46,11 @@ feature {NONE} -- Initialization
 				entry := analyse_line (file.last_string)
 				if entry /= Void then
 					if entry.name.same_string ("name") then
-						set_name (entry.value)
+						-- FIXME: better handle Unicode name.
+						set_name ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (entry.value))
 					elseif entry.name.same_string ("description") then
-						set_description (wrap_word (entry.value, 70))
+						-- FIXME: better handle Unicode description.
+						set_description ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (wrap_word (entry.value, 70)))
 					elseif entry.name.same_string ("location") then
 						location := eiffel_layout.new_project_wizards_path.extended (entry.value)
 					elseif entry.name.same_string ("platform") then

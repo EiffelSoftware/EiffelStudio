@@ -566,8 +566,8 @@ feature -- Window Properties
 	changed: BOOLEAN
 			-- Has something been changed and not yet been saved?
 		do
-			if editors_manager.current_editor /= Void then
-				Result := editors_manager.current_editor.changed
+			if attached editors_manager.current_editor as ed then
+				Result := ed.changed
 			end
 		end
 
@@ -580,7 +580,14 @@ feature -- Window Properties
 	is_empty: BOOLEAN
 			-- Does `Current's text is empty?
 		do
-			Result := editors_manager = Void or else editors_manager.current_editor = Void or else editors_manager.current_editor.is_empty
+			if editors_manager = Void then
+				Result := True
+			elseif attached editors_manager.current_editor as ed then
+				Result := ed.is_empty
+			else
+					-- current_editor = Void
+				Result := True
+			end
 		end
 
 	text: STRING_32
@@ -602,8 +609,8 @@ feature -- Window Properties
 	bom: detachable STRING_8
 			-- Bom if needed by `encoding'.
 		do
-			if editors_manager.current_editor /= Void then
-				Result := editors_manager.current_editor.bom
+			if attached editors_manager.current_editor as ed then
+				Result := ed.bom
 			end
 		end
 
@@ -669,8 +676,11 @@ feature -- Update
 				not l_system.root_creators.is_empty
 			then
 				l_root := l_system.root_creators.first
-				if l_root.root_class /= Void and then l_root.root_class.compiled_class /= Void then
-					tools.diagram_tool.set_stone (create {CLASSC_STONE}.make (l_root.root_class.compiled_class))
+				if
+					attached l_root.root_class as l_root_class and then
+					attached l_root_class.compiled_class as l_compiled_class
+				then
+					tools.diagram_tool.set_stone (create {CLASSC_STONE}.make (l_compiled_class))
 				else
 					tools.diagram_tool.set_stone (create {CLUSTER_STONE}.make (l_root.cluster))
 				end
@@ -699,8 +709,8 @@ feature -- Update
 				managed_main_formatters.forth
 			end
 
-			if stone /= Void then
-				st := stone.synchronized_stone
+			if attached stone as l_stone then
+				st := l_stone.synchronized_stone
 			end
 			if editors_manager.editor_count > 0 then
 				set_stone (st)
@@ -841,7 +851,7 @@ feature -- Stone process
 					end
 				end
 
-					-- Apply now the stone.							
+					-- Apply now the stone.
 				(create {EB_STONE_CHECKER}.make (Current)).set_stone_after_first_check (a_stone)
 
 				update_save_symbol
@@ -1086,8 +1096,8 @@ feature -- Position provider
 	position: like position_internal
 			-- Currently shown text position in the editor
 		do
-			if editors_manager.current_editor /= Void then
-				Result := editors_manager.current_editor.first_line_displayed
+			if attached editors_manager.current_editor as ed then
+				Result := ed.first_line_displayed
 			end
 		end
 
@@ -1169,8 +1179,8 @@ feature -- Resource Update
 		do
 			-- FIXIT: temp comment by larry
 			-- May be problems here of tabbed editor
-			if editors_manager.current_editor /= Void then
-				perform_check_before_save_with (editors_manager.current_editor)
+			if attached editors_manager.current_editor as ed then
+				perform_check_before_save_with (ed)
 			end
 		end
 
@@ -1260,10 +1270,10 @@ feature -- Resource Update
 			str: STRING_32
 		do
 			Precursor
-			if editors_manager.current_editor /= Void then
-				editors_manager.current_editor.on_text_saved
+			if attached editors_manager.current_editor as ed then
+				ed.on_text_saved
 				if not save_only then
-					editors_manager.current_editor.update_click_list (True)
+					ed.update_click_list (True)
 				end
 			end
 			text_saved := True
@@ -1283,7 +1293,7 @@ feature -- Resource Update
 			refresh_cursor_position
 			refresh_context_info
 			unlock_update
-			if editors_manager.current_editor.syntax_is_correct then
+			if attached editors_manager.current_editor as ed and then ed.syntax_is_correct then
 				status_bar.display_message ("")
 			else
 				status_bar.display_message (Interface_names.L_syntax_error)
@@ -1295,7 +1305,7 @@ feature -- Resource Update
 			-- Disable `a_command'.
 		require
 			editors_manager_not_void: editors_manager /= Void
-			commands_not_void: commands /= Void and then commands.editor_commands /= Void
+			commands_not_void: attached commands as r_commands and then r_commands.editor_commands /= Void
 		local
 			l_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
 		do
@@ -1512,8 +1522,8 @@ feature -- Multiple editor management
 						l_editor: EB_EDITOR
 					do
 							-- We might be called after the development window has been recycled.
-						if editors_manager /= Void then
-							l_editor := editors_manager.current_editor
+						if attached editors_manager as em then
+							l_editor := em.current_editor
 						end
 						if
 							l_editor /= Void and then
@@ -1588,14 +1598,14 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 				menus.recycle
 				history_manager.recycle
 
-				if menus.view_menu /= Void then
-					menus.view_menu.destroy
+				if attached menus.view_menu as vm then
+					vm.destroy
 				end
 
 				Precursor {EB_TOOL_MANAGER}
 
-				if editors_manager /= Void then
-					editors_manager.recycle
+				if attached editors_manager as em then
+					em.recycle
 				end
 
 				managed_class_formatters := Void
@@ -1722,8 +1732,8 @@ feature {EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Internal issues with E
 	is_text_loaded: BOOLEAN
 			-- Text is loaded in current editor?
 		do
-			if editors_manager.current_editor /= Void then
-				Result := editors_manager.current_editor.is_text_loaded (stone)
+			if attached editors_manager.current_editor as ed then
+				Result := ed.is_text_loaded (stone)
 			else
 				Result := True
 			end
@@ -1892,15 +1902,15 @@ feature {EB_DEVELOPMENT_WINDOW_PART, EB_DEVELOPMENT_WINDOW_BUILDER} -- Implement
 			-- Update save symbol.
 		do
 			Precursor {EB_FILEABLE}
-			if editors_manager.current_editor /= Void then
+			if attached editors_manager.current_editor as ed then
 				if changed then
 					save_cmd.enable_sensitive
 					address_manager.disable_formatters
-					editors_manager.current_editor.set_title_saved (false)
+					ed.set_title_saved (False)
 				else
 					save_cmd.disable_sensitive
 					update_formatters
-					editors_manager.current_editor.set_title_saved (true)
+					ed.set_title_saved (True)
 				end
 			end
 			if is_empty then
@@ -1989,8 +1999,8 @@ feature {NONE} -- Recycle
 			until
 				managed_class_formatters.after
 			loop
-				if managed_class_formatters.item /= Void then
-					managed_class_formatters.item.recycle
+				if attached managed_class_formatters.item as ci then
+					ci.recycle
 				end
 				managed_class_formatters.forth
 			end
@@ -2000,8 +2010,8 @@ feature {NONE} -- Recycle
 			until
 				managed_feature_formatters.after
 			loop
-				if managed_feature_formatters.item /= Void then
-					managed_feature_formatters.item.recycle
+				if attached managed_feature_formatters.item as fi then
+					fi.recycle
 				end
 				managed_feature_formatters.forth
 			end
@@ -2011,8 +2021,8 @@ feature {NONE} -- Recycle
 			until
 				managed_dependency_formatters.after
 			loop
-				if managed_dependency_formatters.item /= Void then
-					managed_dependency_formatters.item.recycle
+				if attached managed_dependency_formatters.item as di then
+					di.recycle
 				end
 				managed_dependency_formatters.forth
 			end
@@ -2022,8 +2032,8 @@ feature {NONE} -- Recycle
 			until
 				managed_main_formatters.after
 			loop
-				if managed_main_formatters.item /= Void then
-					managed_main_formatters.item.recycle
+				if attached managed_main_formatters.item as mi then
+					mi.recycle
 				end
 				managed_main_formatters.forth
 			end
@@ -2046,8 +2056,8 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialized by EB_DEVELOPMENT_WINDOW_
 			l_class_c: detachable CLASS_C
 			l_feature: E_FEATURE
 		do
-			if address_manager /= Void then
-				l_feature_text := address_manager.feature_address.text
+			if attached address_manager as am then
+				l_feature_text := am.feature_address.text
 			end
 			if attached {CLASSI_STONE} stone as l_class_stone then
 				l_class_c := l_class_stone.class_i.compiled_representation
@@ -2071,10 +2081,8 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			-- Display the current cursor position in the status bar.
 		local
 			l, c, v: INTEGER
-			ed: EB_EDITOR
 		do
-			ed := editors_manager.current_editor
-			if ed /= Void and then not ed.is_empty then
+			if attached editors_manager.current_editor as ed and then not ed.is_empty then
 				l := ed.cursor_y_position
 				c := ed.cursor_x_position
 				v := ed.cursor_visible_x_position
@@ -2091,21 +2099,19 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			-- where in the code the cursor is located.
 		local
 			l_feature: TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
-			ed: EB_SMART_EDITOR
 		do
 				-- we may have been called from a timer and have to deactivate the timer
-			if context_refreshing_timer /= Void then
-				context_refreshing_timer.set_interval (0)
+			if attached context_refreshing_timer as t then
+				t.set_interval (0)
 			end
 			if
 				managed_main_formatters.first.selected and then
 				attached {CLASSC_STONE} stone as l_classc_stone
 			then
 					-- We only do that for the clickable view
-				ed := editors_manager.current_editor
 				if
-					ed /= Void
-					and then ed.text_displayed /= Void
+					attached editors_manager.current_editor as ed and then
+					ed.text_displayed /= Void
 				then
 					l_feature := ed.text_displayed.current_feature_containing
 					if l_feature /= Void then
@@ -2126,8 +2132,10 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 		do
 			if a_feature_name /= Void then
 				address_manager.set_feature_text_simply (a_feature_name.feature_name.name_32)
-				if class_name /= Void and group /= Void then
-					l_class_i := eiffel_universe.safe_class_named (class_name, group)
+				if
+					attached class_name as cn and
+					attached group as g then
+					l_class_i := eiffel_universe.safe_class_named (cn, g)
 					if l_class_i /= Void and then l_class_i.is_compiled then
 						l_classc := l_class_i.compiled_class
 						if l_classc.has_feature_table then
@@ -2258,12 +2266,12 @@ feature -- Implementation: Editor commands
 
 	select_all
 			-- Select the whole text in the focused editor.
-		local
-			l_editor: detachable EB_EDITOR
 		do
-			l_editor := ui.current_editor
-			if l_editor /= Void and then not l_editor.is_empty then
-				l_editor.select_all
+			if
+				attached ui.current_editor as ed and then
+				not ed.is_empty
+			then
+				ed.select_all
 			end
 		end
 
@@ -2271,23 +2279,25 @@ feature {EB_ON_SELECTION_COMMAND} -- Commands
 
 	cut_selection
 			-- Cut the selection in the current editor.
-		local
-			l_editor: detachable EB_CLICKABLE_EDITOR
 		do
-			l_editor := ui.current_editor
-			if l_editor /= Void and then not l_editor.is_recycled and then l_editor.number_of_lines /= 0 then
-				l_editor.run_if_editable (agent l_editor.cut_selection)
+			if
+				attached ui.current_editor as ed and then
+				not ed.is_recycled and then
+				ed.number_of_lines /= 0
+			then
+				ed.run_if_editable (agent ed.cut_selection)
 			end
 		end
 
 	copy_selection
 			-- Cut the selection in the current editor.
-		local
-			l_editor: detachable EB_CLICKABLE_EDITOR
 		do
-			l_editor := ui.current_editor
-			if l_editor /= Void and then not l_editor.is_recycled and then l_editor.number_of_lines /= 0 then
-				l_editor.copy_selection
+			if
+				attached ui.current_editor as ed and then
+				not ed.is_recycled and then
+				ed.number_of_lines /= 0
+			then
+				ed.copy_selection
 			end
 		end
 
@@ -2414,11 +2424,11 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			l_formatter := selected_formatter
 			if l_formatter.is_button_sensitive and then
 				l_formatter /= managed_main_formatters.first and then
-				editors_manager.current_editor /= Void
+				attached editors_manager.current_editor as ed
 			then
-				l_line := editors_manager.current_editor.first_line_displayed
+				l_line := ed.first_line_displayed
 				l_formatter.execute
-				editors_manager.current_editor.display_line_at_top_when_ready (l_line, 0)
+				ed.display_line_at_top_when_ready (l_line, 0)
 			end
 		end
 
@@ -2427,7 +2437,11 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} -- EB_DEVELO
 	destroy
 			-- check if current text has been saved and destroy
 		do
-			if Window_manager.development_windows_count > 1 and then process_manager.is_external_command_running and then Current = external_output_manager.target_development_window then
+			if
+				Window_manager.development_windows_count > 1 and then
+				process_manager.is_external_command_running and then
+				Current = external_output_manager.target_development_window
+			then
 				process_manager.confirm_external_command_termination (agent terminate_external_command_and_destroy, agent do_nothing, window)
 			else
 				if changed and then not confirmed then
@@ -2439,8 +2453,8 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} -- EB_DEVELO
 						force_destroy
 					end
 				else
-					if context_refreshing_timer /= Void then
-						context_refreshing_timer.destroy
+					if attached context_refreshing_timer as t then
+						t.destroy
 						context_refreshing_timer := Void
 					end
 					Precursor {EB_TOOL_MANAGER}
@@ -2653,19 +2667,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

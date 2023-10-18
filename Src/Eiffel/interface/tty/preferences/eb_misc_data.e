@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			show_hidden_preferences_preference := l_manager.new_boolean_preference_value (l_manager, show_hidden_preferences_string, False)
 			if {PLATFORM}.is_windows then
 				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "cmd")
-				execute_in_console_shell_command_preference := l_manager.new_string_preference_value (l_manager, execute_in_console_shell_command_string, "cmd /C %"$command%"")
+				execute_in_console_shell_command_preference := l_manager.new_string_preference_value (l_manager, execute_in_console_shell_command_string, "cmd /C %"$command%" & pause")
 				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "notepad $target")
 				file_browser_command_preference := l_manager.new_string_32_preference_value (l_manager, file_browser_command_string, {STRING_32} "explorer $target")
 			else
@@ -426,7 +426,7 @@ invariant
 	terms_accepted_preference_not_void: terms_accepted_preference /= Void
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

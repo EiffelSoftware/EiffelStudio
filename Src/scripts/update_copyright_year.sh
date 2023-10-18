@@ -80,6 +80,9 @@ do_update_copyright_eiffel_software $EIFFEL_SRC/framework/web/xebra/eiffel_proje
 do_update_copyright_eiffel_software $EIFFEL_SRC/framework/web/xebra/eiffel_projects/xebra_translator/xt_argument_parser.e
 do_update_copyright_eiffel_software $EIFFEL_SRC/framework/web/xebra/tools/installer/win/xebra_deployer/xd_argument_parser.e
 
+# $EIFFEL_SRC/web/eiffel-cloud/site/modules/custom_block/templates/block_cloud_footer.tpl
+do_update_copyright_eiffel_software $EIFFEL_SRC/web/eiffel-cloud/site/modules/custom_block/templates/block_cloud_footer.tpl
+
 # sqlite3 examples
 do_update_copyright_eiffel_software $EIFFEL_SRC/unstable/library/persistency/database/sqlite3/examples/liteterm/argument_parser.e
 

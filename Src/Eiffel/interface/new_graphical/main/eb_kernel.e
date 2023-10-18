@@ -21,7 +21,9 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Create and map the first window: the system window.
+			-- Create and according to parameter launch
+			--   the IDE  with {ES_GRAPHIC},
+			--   or batch app {ES_BATCH}.
 		local
 			--| uncomment the following line when profiling
 			--prof_setting: PROFILING_SETTING
@@ -49,7 +51,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

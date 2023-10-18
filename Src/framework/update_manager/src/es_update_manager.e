@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- API
 
-	available_release_update_for_any_channel (a_platform: READABLE_STRING_8; a_current_version: READABLE_STRING_8): detachable ES_UPDATE_RELEASE
+	available_release_update_for_any_channel (a_platform: READABLE_STRING_8; a_major, a_minor: NATURAL_16; a_patch: NATURAL_32): detachable ES_UPDATE_RELEASE
 			-- Verify if there is an available release update.
 			-- Check the latest stable and beta releases for the given platform
 			-- `platform` and if the version is newest than the current eiffel studio version
@@ -44,7 +44,7 @@ feature -- API
 		local
 			l_beta_release: ES_UPDATE_RELEASE
 			l_stable_release: ES_UPDATE_RELEASE
-			l_final: IMMUTABLE_STRING_8
+			l_final: ES_UPDATE_RELEASE
 		do
 			l_beta_release := latest_release_by_platform ({ES_UPDATE_CONSTANTS}.beta_channel, a_platform)
 			l_stable_release := latest_release_by_platform ({ES_UPDATE_CONSTANTS}.stable_channel, a_platform)
@@ -52,26 +52,26 @@ feature -- API
 				l_beta_release /= Void and then
 				l_stable_release /= Void
 			then
-				l_final := l_beta_release.number.max (l_stable_release.number)
-				if l_final.is_greater (a_current_version) then
-					if l_beta_release.number > l_stable_release.number then
+				l_final := l_beta_release.max (l_stable_release)
+				if l_final.is_greater (a_major, a_minor, a_patch) then
+					if l_beta_release.is_greater_than (l_stable_release) then
 						Result := l_beta_release
 					else
 						Result := l_stable_release
 					end
 				end
 			elseif l_beta_release /= Void then
-				if l_beta_release.number > a_current_version then
+				if l_beta_release.is_greater (a_major, a_minor, a_patch) then
 					Result := l_beta_release
 				end
 			elseif l_stable_release /= Void then
-				if l_stable_release.number > a_current_version then
+				if l_stable_release.is_greater (a_major, a_minor, a_patch) then
 					Result := l_stable_release
 				end
 			end
 		end
 
-	available_release_update_for_channel (a_channel: READABLE_STRING_8; a_platform: READABLE_STRING_8; a_current_version: READABLE_STRING_8): detachable ES_UPDATE_RELEASE
+	available_release_update_for_channel (a_channel: READABLE_STRING_8; a_platform: READABLE_STRING_8; a_major, a_minor: NATURAL_16; a_patch: NATURAL_32): detachable ES_UPDATE_RELEASE
 			-- Verify if there is an available beta release update.
 			-- Check the latest release for the given channel `a_channel` and platform
 			-- `a_platform` and if the version is newest than the current eiffel studio version
@@ -82,7 +82,7 @@ feature -- API
 			Result := latest_release_by_platform (a_channel, a_platform)
 			if
 				Result /= Void and then
-				not Result.number.is_greater (a_current_version)
+				not Result.is_greater (a_major, a_minor, a_patch)
 			then
 				Result := Void
 			end
@@ -91,7 +91,7 @@ feature -- API
 				not a_channel.is_case_insensitive_equal_general ({ES_UPDATE_CONSTANTS}.stable_channel)
 			then
 					-- Always check in `stable` channel
-				Result := available_release_update_for_channel ({ES_UPDATE_CONSTANTS}.stable_channel, a_platform, a_current_version)
+				Result := available_release_update_for_channel ({ES_UPDATE_CONSTANTS}.stable_channel, a_platform, a_major, a_minor, a_patch)
 			end
 		end
 
@@ -172,11 +172,18 @@ feature {NONE} -- Retrieve URL
 
 	internal_release_by_platform (a_json: JSON_OBJECT; a_platform: READABLE_STRING_8; a_channel: READABLE_STRING_8): detachable ES_UPDATE_RELEASE
 			-- Given a JSON object, get a release filtered by platform `a_platform`.
+		local
+			l_revision: NATURAL_32
 		do
 			if
 				attached a_json.string_item ("number") as j_number and then
 				attached {JSON_ARRAY} a_json.item ("downloads") as j_downloads
 			then
+				if attached a_json.string_item ("build") as j_build then
+					l_revision := j_build.unescaped_string_8.to_natural_32
+				else
+					l_revision := 0
+				end
 				across
 					j_downloads as ic
 				until
@@ -189,7 +196,7 @@ feature {NONE} -- Retrieve URL
 						attached l_jo.string_item ("href") as j_link and then
 						j_platform.same_caseless_string (a_platform)
 					then
-						create Result.make (a_channel, j_filename.unescaped_string_32, a_platform, j_link.unescaped_string_8, j_number.unescaped_string_8)
+						create Result.make (a_channel, j_filename.unescaped_string_32, a_platform, j_link.unescaped_string_8, j_number.unescaped_string_8, l_revision)
 					end
 				end
 			end
@@ -213,19 +220,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

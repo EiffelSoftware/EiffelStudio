@@ -281,7 +281,7 @@ feature {NONE} -- Welcome dialog
 			up_checker: ES_RELEASE_UPDATE_CHECKER
 		do
 			if is_eiffel_layout_defined then
-				create up_checker.make (preferences.misc_data.update_channel, eiffel_layout.eiffel_platform, eiffel_layout.version_name)
+				create up_checker.make (preferences.misc_data.update_channel, eiffel_layout.eiffel_platform, Compiler_version_number)
 				up_checker.async_check_for_update (agent (a_rel: detachable ES_UPDATE_RELEASE)
 						local
 							m: NOTIFICATION_MESSAGE_WITH_ACTIONS
@@ -597,7 +597,7 @@ invariant
 		valid_branded_edition: is_branded_edition implies not edition_name.is_whitespace
 
 note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

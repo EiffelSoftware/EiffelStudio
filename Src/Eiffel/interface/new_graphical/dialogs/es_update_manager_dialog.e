@@ -33,9 +33,9 @@ feature {NONE} -- Initialization
 			create next_actions
 
 			if release.channel.is_case_insensitive_equal_general ({ES_UPDATE_CONSTANTS}.beta_channel) then
-				s := interface_names.l_update_manager_estudio_beta_help (a_release.number)
+				s := interface_names.l_update_manager_estudio_beta_help (a_release.full_version_number)
 			else
-				s := interface_names.l_update_manager_estudio_stable_help (a_release.number)
+				s := interface_names.l_update_manager_estudio_stable_help (a_release.full_version_number)
 			end
 
 			make_question_prompt (s, yes_no_cancel_buttons, cancel_button,
@@ -94,7 +94,7 @@ feature -- Events
 
 invariant
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

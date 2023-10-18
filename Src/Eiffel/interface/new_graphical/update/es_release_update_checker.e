@@ -14,18 +14,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_channel: READABLE_STRING_8; a_platform: READABLE_STRING_8; a_curr_version_name: READABLE_STRING_8)
+	make (a_channel: READABLE_STRING_8; a_platform: READABLE_STRING_8; v: CONF_VERSION)
 		do
 			create channel.make_from_string (a_channel)
 			create platform.make_from_string (a_platform)
-			create version.make_from_string (a_curr_version_name)
+			major := v.major
+			minor := v.minor
+			patch := (10000 * v.release.to_natural_32) + v.build.to_natural_32
 		end
 
 feature -- Access
 
 	channel: IMMUTABLE_STRING_8
 	platform: IMMUTABLE_STRING_8
-	version: IMMUTABLE_STRING_8
+
+	major, minor: NATURAL_16
+	patch: NATURAL_32
 
 	available_release: detachable ES_UPDATE_RELEASE
 
@@ -39,7 +43,7 @@ feature -- Execution
 			if {ES_GRAPHIC}.is_standard_edition then
 				create update_manager_api.make (create {ES_UPDATE_CLIENT_CONFIGURATION}.make ({ES_UPDATE_CONSTANTS}.update_service_url))
 				available_release := update_manager_api.available_release_update_for_channel (
-											channel, platform, version)
+											channel, platform, major, minor, patch)
 			end
 			a_cb.call ([available_release])
 		end
@@ -71,15 +75,19 @@ feature -- Execution
 			rel: like available_release
 			ch: like channel
 			pl: like platform
-			v: like version
+			maj: like major
+			min: like minor
+			pa: like patch
 		do
 			a_mutex.lock
 			ch := channel.twin
 			pl := platform.twin
-			v := version.twin
+			maj := major
+			min := minor
+			pa := patch
 			a_mutex.unlock;
 			create update_manager_api.make (create {ES_UPDATE_CLIENT_CONFIGURATION}.make ({ES_UPDATE_CONSTANTS}.update_service_url))
-			rel := update_manager_api.available_release_update_for_channel (ch, pl, v)
+			rel := update_manager_api.available_release_update_for_channel (ch, pl, maj, min, pa)
 			a_mutex.lock
 			available_release := rel
 			completed := True
@@ -122,7 +130,7 @@ feature {NONE} -- Implementation: Async
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			l_pointer := pointer_style
 			set_pointer_style (pixmaps.stock_pixmaps.busy_cursor)
 
-			create ch.make (preferences.misc_data.update_channel, eiffel_layout.eiffel_platform, eiffel_layout.version_name)
+			create ch.make (preferences.misc_data.update_channel, eiffel_layout.eiffel_platform, Compiler_version_number)
 			ch.check_for_update (agent (a_rel: detachable ES_UPDATE_RELEASE; i_lnk: EV_LINK_LABEL)
 					local
 						m: NOTIFICATION_MESSAGE_WITH_ACTIONS
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 									, "Try it now!")
 								s_notif.notify (m)
 							end
-							i_lnk.set_text ("An update is available: " + a_rel.number)
+							i_lnk.set_text ("An update is available: " + a_rel.full_version_number)
 							i_lnk.select_actions.wipe_out
 							i_lnk.select_actions.extend (agent (i_url: READABLE_STRING_8)
 								local

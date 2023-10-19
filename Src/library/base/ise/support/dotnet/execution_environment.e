@@ -99,6 +99,21 @@ feature -- Access
 			instance_free: class
 		end
 
+	temporary_directory_path: detachable PATH
+			-- Temporary directory name.
+		note
+			EIS: "name=temporary path", "src=https://en.wikipedia.org/wiki/Temporary_folder", "protocol=Uri"
+		local
+			ns: SYSTEM_STRING
+			s: STRING_32
+		once
+			ns := {SYSTEM_PATH}.get_temp_path
+			create s.make_from_cil (ns)
+			create Result.make_from_string (s)
+		ensure
+			instance_free: class
+		end
+
 	home_directory_path: detachable PATH
 			-- Directory name corresponding to the home directory.
 		require
@@ -178,9 +193,9 @@ feature -- Access
 		obsolete
 			"Use starting_environment which support unicode. [2017-05-31]"
 		do
-			if 
+			if
 				attached {IDICTIONARY} {ENVIRONMENT}.get_environment_variables as l_dic and then
-				attached {IENUMERATOR} l_dic.get_enumerator as l_enumerator 
+				attached {IENUMERATOR} l_dic.get_enumerator as l_enumerator
 			then
 				create Result.make (l_dic.count)
 				from
@@ -206,9 +221,9 @@ feature -- Access
 			-- Table of environment variables associated with current process,
 			-- indexed by variable name
 		do
-			if 
+			if
 				attached {IDICTIONARY} {ENVIRONMENT}.get_environment_variables as l_dic and then
-				attached {IENUMERATOR} l_dic.get_enumerator as l_enumerator 
+				attached {IENUMERATOR} l_dic.get_enumerator as l_enumerator
 			then
 				create Result.make (l_dic.count)
 				from
@@ -232,7 +247,7 @@ feature -- Access
 		end
 
 	available_cpu_count: NATURAL_32
-			-- Number of available CPUs.		
+			-- Number of available CPUs.
 		do
 			Result := {ENVIRONMENT}.processor_count.to_natural_32
 		ensure

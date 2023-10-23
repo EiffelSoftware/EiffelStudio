@@ -198,6 +198,12 @@ feature -- Definition: creation
 				used_method_declaration_token)
 		end
 
+	define_method_spec (method_token: INTEGER; a_signature: MD_METHOD_SIGNATURE): INTEGER
+			-- Define a method spec from `method_token` and `a_signature`.
+		do
+			last_call_success := c_define_method_spec (item, method_token, a_signature.item.item, a_signature.count, $Result)
+		end
+
 	define_property (type_token: INTEGER; name: CLI_STRING; flags: NATURAL_32;
 			signature: MD_PROPERTY_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER): INTEGER
 			-- Define property `name' for a type `type_token'.
@@ -403,6 +409,15 @@ feature {NONE} -- Implementation
 			"C++ IMetaDataEmit signature (mdTypeDef, mdToken, mdToken): EIF_INTEGER use <cor.h>"
 		alias
 			"DefineMethodImpl"
+		end
+
+	c_define_method_spec (an_item: POINTER; method_token: INTEGER; a_signature: POINTER; sig_length: INTEGER; method_spec_token: TYPED_POINTER [INTEGER]): INTEGER
+
+			-- Call `IMetaDataEmit->DefineMethodImpl'.
+		external
+			"C++ IMetaDataEmit2 signature (mdToken, PCCOR_SIGNATURE, ULONG, mdMethodSpec *): EIF_INTEGER use <cor.h>"
+		alias
+			"DefineMethodSpec"
 		end
 
 	c_define_module_ref (an_item: POINTER; module_name: POINTER;

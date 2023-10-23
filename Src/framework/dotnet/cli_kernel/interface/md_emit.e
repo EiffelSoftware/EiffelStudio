@@ -237,6 +237,18 @@ feature -- Definition: Creation
 			is_successful
 		end
 
+	define_method_spec (method_token: INTEGER; a_signature: MD_METHOD_SIGNATURE): INTEGER
+			-- Token for new method spec from `method_token` and `a_signature`.
+		require
+			method_token_valid:
+				(method_token & Md_mask = Md_method_def) or
+				(method_token & Md_mask = Md_member_ref)
+			signature_not_void: a_signature /= Void
+		deferred
+		ensure
+			is_successful
+		end
+
 	define_property (type_token: INTEGER; name: CLI_STRING; flags: NATURAL_32;
 			signature: MD_PROPERTY_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER): INTEGER
 			-- Define property `name' for a type `type_token'.

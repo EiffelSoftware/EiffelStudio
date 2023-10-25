@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="wel" uuid="804E870E-1EED-4F7B-9C7D-4769938A62D7" library_target="wel">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="wel" uuid="804E870E-1EED-4F7B-9C7D-4769938A62D7" library_target="wel">
+	<description>Windows Eiffel Library</description>
 	<target name="wel">
 		<description>WEL: Windows Eiffel Library, reusable Eiffel components for Windows programming.
 			Copyright (c) 1984-2021, Eiffel Software and others.
@@ -9,6 +10,12 @@
 			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<namespace name="System.Drawing" prefix="DRAWING_"/>
+		<namespace name="System.Drawing.Primitives" prefix="DRAWING_"/>
+		<namespace name="System.Runtime.InteropServices">
+			<renaming old_name="INTERFACE_TYPE_ATTRIBUTE" new_name="SYSTEM_INTERFACE_TYPE_ATTRIBUTE"/>
+		</namespace>
+		<namespace name="System.Windows.Forms" prefix="WINFORMS_"/>
 		<external_include location="$(ISE_LIBRARY)\library\wel\spec\windows\include">
 			<condition>
 				<platform value="windows"/>
@@ -35,22 +42,27 @@
 			</condition>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-		<assembly name="drawing" location="$ISE_DOTNET_FRAMEWORK\System.Drawing.dll" prefix="DRAWING_"/>
+		<assembly name="drawing" location="$ISE_DOTNET_FRAMEWORK\System.Drawing.dll"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
-		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">
-			<renaming old_name="INTERFACE_TYPE_ATTRIBUTE" new_name="SYSTEM_INTERFACE_TYPE_ATTRIBUTE"/>
-			<renaming old_name="ENCODING" new_name="SYSTEM_ENCODING"/>
-			<renaming old_name="THREAD_STATE" new_name="SYSTEM_THREAD_STATE"/>
-			<renaming old_name="TIMER" new_name="SYSTEM_TIMER"/>
-			<renaming old_name="WEAK_REFERENCE" new_name="SYSTEM_WEAK_REFERENCE"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system.drawing.primitives" location="$ISE_DOTNET_FRAMEWORK\System.Drawing.Primitives.dll"/>
+		<assembly name="system.runtime.dll" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.dll"/>
+		<assembly name="system.runtime.interopservices" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.InteropServices.dll"/>
+		<assembly name="system_windows_forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll">
+			<condition>
+				<custom name="ISE_DOTNET_PLATFORM" excluded_value="netcore"/>
+			</condition>
 		</assembly>
-		<assembly name="system_windows_forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
+		<assembly name="system_windows_forms_netcore" location="$ISE_DOTNET_PACKS\Microsoft.WindowsDesktop.App.Ref\$ISE_DOTNET_VERSION\ref\$ISE_DOTNET_TFM\System.Windows.Forms.dll">
+			<condition>
+				<custom name="ISE_DOTNET_PLATFORM" value="netcore"/>
+			</condition>
+		</assembly>
 		<cluster name="wel" location=".\" recursive="true">
 			<condition>
 				<platform value="windows"/>
 			</condition>
-			<option namespace="Wel">
-			</option>
+			<option namespace="Wel"/>
 			<class_option class="WEL_WINDOW" is_obsolete_iteration="true">
 				<warning name="obsolete_feature" value="none"/>
 			</class_option>

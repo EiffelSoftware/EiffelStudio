@@ -1696,23 +1696,23 @@ feature {NONE} -- Implementation
 		local
 			l_il_env: IL_ENVIRONMENT_I
 			vd15: VD15
+			v: READABLE_STRING_GENERAL
 		do
 			create {IL_ENVIRONMENT} l_il_env
-
-			if a_version = Void then
-				system.set_clr_runtime_version (l_il_env.version) -- version = default_version
+			v := a_version
+			if v = Void then
+				v := l_il_env.version -- version = default_version
+			end
+			if attached l_il_env.installed_runtime_info (v) as inf then
+				system.set_clr_runtime_version (inf.full_version)
 			else
-				if attached l_il_env.installed_runtime_info (a_version) as inf then
-					system.set_clr_runtime_version (inf.full_version)
-				else
-					create vd15
-					vd15.set_option_name ("msil_clr_version")
-					vd15.set_option_value (a_version)
-					Error_handler.insert_error (vd15)
-					Error_handler.raise_error
+				create vd15
+				vd15.set_option_name ("msil_clr_version")
+				vd15.set_option_value (v)
+				Error_handler.insert_error (vd15)
+				Error_handler.raise_error
 
-					system.set_clr_runtime_version (a_version)
-				end
+				system.set_clr_runtime_version (v)
 			end
 
 			create {IL_ENVIRONMENT} l_il_env.make (system.clr_runtime_version)

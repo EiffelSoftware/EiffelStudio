@@ -8,8 +8,85 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
+using System.Threading;
+
+
 namespace md_consumer
 {
+    public class CACHE_GUARD: IDisposable
+    {
+        public static int cache_locks = 0;
+        public static Mutex? shared_guard;
+        public static bool is_initialized = false;
+
+        public bool is_guard_initialized()
+        {
+            return CACHE_GUARD.is_initialized;
+        }
+        public void initialize_guard(string a_cache_location)
+        {
+            CACHE_GUARD.initialize (a_cache_location);            
+        }
+
+        public static void initialize(string a_cache_location)
+        {
+            string id = a_cache_location;
+            id = id.Replace(':', '!');
+            id = id.Replace('\\', '!');
+            shared_guard = new Mutex(false, "Global\\" + id);
+
+            is_initialized = true;
+        }
+        public void Dispose()
+        {
+            if (shared_guard != null) {
+                shared_guard.Dispose();
+                shared_guard = null;
+                is_initialized = false;
+            }
+        }
+
+        public bool is_cache_locked()
+        {
+            return (cache_locks > 0);
+        }
+
+        public static void lock_cache()
+        {
+            cache_locks = cache_locks + 1;
+            if (cache_locks == 1) {
+                perform_locking();
+            }
+        }
+        public static void unlock_cache()
+        {
+            cache_locks = cache_locks - 1;
+            if (cache_locks == 0) {
+                perform_unlocking();
+            }
+        }
+
+        private static Mutex guard
+        {
+            get {
+                var g = shared_guard; 
+                if (g == null) {
+                    g = new Mutex(false, "Global\\-not-initialized");
+                    shared_guard = g;
+                }
+                return g;
+            }
+        }
+
+        private static void perform_locking()
+        {
+            guard.WaitOne();
+        }
+        private static void perform_unlocking()
+        {
+            guard.ReleaseMutex();
+        }
+    }
     public class CACHE_INFO
     {
         public List<CONSUMED_ASSEMBLY> assemblies;
@@ -79,16 +156,24 @@ namespace md_consumer
     }
     public class CACHE_COMMON
     {
+        protected string cache_location;
         public string eac_info_file_name = "eac.info";
+        private CACHE_GUARD guard;
+        public CACHE_COMMON (string a_cache_loc)
+        {
+            cache_location = a_cache_loc;
+            guard = new CACHE_GUARD();
+            if (! guard.is_guard_initialized()) {
+                guard.initialize_guard (a_cache_loc);
+            }
+        }
     }
     public class CACHE_READER : CACHE_COMMON
     {
-        string cache_location;
         private string info_location;
 
-        public CACHE_READER(string loc)
+        public CACHE_READER(string loc): base(loc)
         {
-            cache_location = loc;
             info_location = Path.Combine(loc, eac_info_file_name);
         }
         public bool is_initialized() {
@@ -144,6 +229,7 @@ namespace md_consumer
             return ca;
         }
         public CACHE_INFO? info() {
+            CACHE_GUARD.lock_cache();
             CACHE_INFO? info = _cache_info;
             if (info != null) {
                 return info;
@@ -169,6 +255,7 @@ namespace md_consumer
                 }
             }
             _cache_info = info;
+            CACHE_GUARD.unlock_cache();
             return info;
         }
         public List<CONSUMED_ASSEMBLY>? assemblies()
@@ -197,16 +284,20 @@ namespace md_consumer
         }
         public CONSUMED_ASSEMBLY? consumed_assembly_from_path(string a_path)
         {
+            CACHE_GUARD.lock_cache();
             var lst = assemblies();
+            CONSUMED_ASSEMBLY? res = null;
             if (lst  != null) {
                 string p = Path.GetFullPath(a_path);
                 foreach (var ca in lst) {
                     if (ca.has_same_path (p)) {
-                        return ca;
+                        res = ca;
+                        break;
                     }
                 }
             }
-            return null;
+            CACHE_GUARD.unlock_cache();
+            return res;
         }
         public string assembly_directory_name_from_consumed_assembly (CONSUMED_ASSEMBLY ca)
         {
@@ -390,6 +481,7 @@ namespace md_consumer
             }
             return null;
         }
+/*
         public CONSUMED_TYPE? consumed_type (Type a_type)
         {
             CONSUMED_TYPE? res = null;
@@ -417,6 +509,8 @@ namespace md_consumer
             }
             return res;
         }        
+*/
+        
         public List<CONSUMED_ASSEMBLY>? client_assemblies(CONSUMED_ASSEMBLY ca)
         {
             var lst = consumed_assemblies();
@@ -436,19 +530,19 @@ namespace md_consumer
 
     public class CACHE_WRITER : CACHE_COMMON
     {
-        string cache_location;
         CACHE_READER reader;
         StringBuilder output;
         private bool is_debug=false;
 
-        public CACHE_WRITER(string loc, StringBuilder o)
+        public CACHE_WRITER(string loc, StringBuilder o): base(loc)
         {
-            cache_location = loc;
             output = o;
-            reader = new CACHE_READER(cache_location);
+            reader = new CACHE_READER(loc);
 
             // Build assembly_mapping from existing consumed assemblies.
+            CACHE_GUARD.lock_cache();
             List<CONSUMED_ASSEMBLY>? assemblies = reader.assemblies();
+            CACHE_GUARD.unlock_cache();
             var l_mapping = new SHARED_ASSEMBLY_MAPPING();
             l_mapping.reset_assembly_mapping();
             if (assemblies != null) {
@@ -473,15 +567,18 @@ namespace md_consumer
         }
         public CACHE_INFO cache_info()
         {
+            CACHE_GUARD.lock_cache();
             var res = reader.info();
             if (res == null) {
                 res = new CACHE_INFO();
             }
+            CACHE_GUARD.unlock_cache();
             return res;
         }
 
         private void update_info(CACHE_INFO info)
         {
+            CACHE_GUARD.lock_cache();
             if (info.is_dirty) {
                 try {
                     var ms = new MemoryStream();
@@ -495,19 +592,23 @@ namespace md_consumer
                     // FIXME
                 }
             }
+            CACHE_GUARD.unlock_cache();
         }
 
         private void update_client_assembly_mappings(CONSUMED_ASSEMBLY ca)
         {
+            CACHE_GUARD.lock_cache();
             var lst = reader.client_assemblies (ca);
             if (lst != null) {
                 foreach (var a in lst) {
                     update_assembly_mappings(a);
                 }
             }
+            CACHE_GUARD.unlock_cache();
         }
         private void update_assembly_mappings(CONSUMED_ASSEMBLY ca)
         {
+            CACHE_GUARD.lock_cache();
             var l_mappings = reader.assembly_mapping_from_consumed_assembly(ca);
             if (l_mappings != null) {
                 List<CONSUMED_ASSEMBLY> lst = l_mappings.assemblies;
@@ -521,6 +622,7 @@ namespace md_consumer
                 }
                 serialize_assembly_mapping_to_json_file(l_mappings, Path.Combine(cache_location, ca.folder_name, AssemblyConsumer.assembly_mapping_file_name));
             }
+            CACHE_GUARD.unlock_cache();
         }        
 
         private long serialize_assembly_mapping_to_json_file (CONSUMED_ASSEMBLY_MAPPING a_mapping, string location)
@@ -569,7 +671,9 @@ namespace md_consumer
         }         
         public void unconsume_assembly(string a_path)
         {
+            CACHE_GUARD.lock_cache();
             // Debug.Assert(reader.is_assembly_in_cache (a_path, true), "is assembly in cache");
+            md_consumer.STATUS_PRINTER.info (String.Format("Unconsuming assembly '{0}'", a_path));
             output.AppendLine(String.Format("Unconsuming assembly '{0}'", a_path));
             CACHE_READER r = reader;
             CONSUMED_ASSEMBLY? ca = r.consumed_assembly_from_path(a_path);
@@ -584,6 +688,7 @@ namespace md_consumer
                 update_client_assembly_mappings(ca);
                 update_info(info);
             }
+            CACHE_GUARD.unlock_cache();
         }
         // public CONSUMED_ASSEMBLY? add_assembly(string a_path, bool a_info_only)
         // {
@@ -592,6 +697,7 @@ namespace md_consumer
         // }
         public bool cache_is_assembly_stale(string k) 
         {
+            CACHE_GUARD.lock_cache();
             bool res = false;
             var ca = consumed_assembly_from_path(k);
             if (ca != null && ca.is_consumed) {
@@ -600,6 +706,7 @@ namespace md_consumer
                 FileInfo fi = new FileInfo(ca.location);
                 res = !Directory.Exists(l_consume_path) || DateTime.Compare(fi.LastWriteTime, di.CreationTime) > 0;
             }
+            CACHE_GUARD.unlock_cache();
             return res;
         }
 
@@ -610,7 +717,8 @@ namespace md_consumer
             )
         // Add assembly at `a_path` and its dependencies into cache.
         {
-            // output.AppendLine(String.Format("Adding assembly (does not mean consuming) '{0}' has already been consumed. Checking ...", a_path));
+            CACHE_GUARD.lock_cache();
+            md_consumer.STATUS_PRINTER.info (String.Format("Adding assembly (does not mean consuming) '{0}'", a_path));
 
             StringBuilder o = output;
             StringBuilder data = new StringBuilder();
@@ -635,6 +743,7 @@ namespace md_consumer
             a_processed.Add(l_key_path);
 
             if (ca != null && ca.is_consumed) {
+                md_consumer.STATUS_PRINTER.info (String.Format("'{0}' has already been consumed. Checking ...", a_path));
                 output.AppendLine(String.Format("'{0}' has already been consumed. Checking ...", a_path));
                 l_info_updated = true; //FIXME: force for now
                 if (l_info_updated) {
@@ -704,11 +813,13 @@ namespace md_consumer
                     update_client_assembly_mappings(ca);
                 }
             }
+            CACHE_GUARD.unlock_cache();
             return ca;
         }
 
         public CONSUMED_ASSEMBLY? consumed_assembly_from_path (string path)
         {
+            CACHE_GUARD.lock_cache();
             CONSUMED_ASSEMBLY? res = null;
             string l_key_path = Path.GetFullPath(path);
             if (reader.is_initialized()) {
@@ -724,6 +835,7 @@ namespace md_consumer
                     reader.reset_info();
                 }
             }
+            CACHE_GUARD.unlock_cache();
             return res;
         }
 
@@ -798,6 +910,7 @@ namespace md_consumer
 
         public void build_assembly_html(CONSUMED_ASSEMBLY ca, string title, string fn)
         {
+            CACHE_GUARD.lock_cache();
             Console.WriteLine(" - build html for " + title);
             string html = @"<html>
                 <head>
@@ -879,6 +992,7 @@ namespace md_consumer
             using (StreamWriter file = new(fn)) {
                 file.WriteLine(html);
             }
+            CACHE_GUARD.unlock_cache();
         }
     }
 }

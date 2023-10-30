@@ -208,14 +208,19 @@ namespace md_consumer
                     // using (mlc) // See `Dispose` 
                     {
                         // Load assembly into MetadataLoadContext.
-                        assembly = null;               
-                        try {
-                            assembly = mlc.LoadFromAssemblyPath(location);
-                        } catch {
-                            string? assname = Path.GetFileNameWithoutExtension(location);
-                            if (assname != null) {
-                                assembly = mlc.LoadFromAssemblyName(assname);
+                        assembly = null;
+                        if (File.Exists(location)) {
+                            try {
+                                assembly = mlc.LoadFromAssemblyPath(location);
+                            } catch {
+                                string? assname = Path.GetFileNameWithoutExtension(location);
+                                if (assname != null) {
+                                    assembly = mlc.LoadFromAssemblyName(assname);
+                                }
                             }
+                        } else {
+                            STATUS_PRINTER.error (string.Format("Assembly location not found '{0}'", location));
+                            assembly = null;
                         }
                         if (assembly != null) {
                             loaded_assemblies[location] = assembly;

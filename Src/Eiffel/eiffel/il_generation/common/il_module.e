@@ -427,9 +427,33 @@ feature {CIL_CODE_GENERATOR} -- Synchronization tokens
 				method_name.is_equal ("Pulse") or else method_name.is_equal ("PulseAll")
 		local
 			monitor_token: INTEGER
+			l_mscorlib_token: INTEGER
 			l_sig: like method_sig
+			l_version: VERSION
+			l_ass_info: MD_ASSEMBLY_INFO
+			l_system_threading: ASSEMBLY_I
 		do
-			monitor_token := md_emit.define_type_ref (create {CLI_STRING}.make ("System.Threading.Monitor"), mscorlib_token)
+			l_mscorlib_token := mscorlib_token
+			if system.is_il_netcore then
+				l_system_threading := if attached system.system_threading_monitor_class.public_assembly as l_assembly then l_assembly else system.system_threading_monitor_class.assembly end
+				create l_version
+				check
+					version_valid: l_version.is_version_valid (l_system_threading.assembly_version)
+				end
+
+				l_version.set_version (l_system_threading.assembly_version)
+				l_ass_info := md_factory.assembly_info
+				l_ass_info.set_major_version (l_version.major.to_natural_16)
+				l_ass_info.set_minor_version (l_version.minor.to_natural_16)
+				l_ass_info.set_build_number (l_version.build.to_natural_16)
+				l_ass_info.set_revision_number (l_version.revision.to_natural_16)
+
+
+				l_mscorlib_token := define_assembly_reference ("System.Threading", l_ass_info.string, "", l_system_threading.assembly_public_key_token)
+			end
+
+
+			monitor_token := md_emit.define_type_ref (create {CLI_STRING}.make ("System.Threading.Monitor"), l_mscorlib_token)
 			l_sig := method_sig
 			l_sig.reset
 			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.default_sig)
@@ -3333,6 +3357,8 @@ feature {NONE} -- Once per modules being generated.
 				-- To compute it, we simply take the data from `System.Object'. That way our
 				-- code is automatically using the version of `mscorlib' that was specified
 				-- in the Ace file.
+
+				-- TODO extract code.
 			l_system_runtime := if attached system.system_object_class.public_assembly as l_assembly then l_assembly else system.system_object_class.assembly end
 			if l_system_runtime = Void then
 					-- TODO: get assembly using "System.Runtime"

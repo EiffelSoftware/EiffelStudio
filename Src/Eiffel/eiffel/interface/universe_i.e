@@ -691,6 +691,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				l_actions.put (agent l_system.set_system_object_class, "SYSTEM_OBJECT")
 				l_actions.put (agent l_system.set_system_value_type_class, "VALUE_TYPE")
 				l_actions.put (agent l_system.set_system_exception_type_class, "NATIVE_EXCEPTION")
+				l_actions.put (agent l_system.set_system_threading_monitor_class, "MONITOR")
 			end
 
 			l_actions.put (agent l_system.set_any_class, "ANY")

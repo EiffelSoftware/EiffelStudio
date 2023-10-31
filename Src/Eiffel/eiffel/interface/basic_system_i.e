@@ -16,8 +16,12 @@ feature -- Generation type
 feature -- Classes from the configutation point of view
 
 	any_class: CLASS_I
+
 	system_object_class: EXTERNAL_CLASS_I
 			-- Class ANY and System.Object
+
+	system_threading_monitor_class: EXTERNAL_CLASS_I
+			-- Class ANY and System.Threading.Monitor.		
 
 	system_value_type_class: EXTERNAL_CLASS_I
 			-- Class System.ValueType
@@ -424,6 +428,7 @@ feature -- Settings
 			tuple_class := Void
 			type_class := Void
 			typed_pointer_class := Void
+			system_threading_monitor_class := Void
 		ensure
 			not attached any_class
 		end
@@ -451,6 +456,20 @@ feature -- Settings
 		ensure
 			system_object_class_set: c.is_external_class implies system_object_class = c
 		end
+
+	set_system_threading_monitor_class (c: CLASS_I)
+		-- Assign `c' to `system_threading_monitor_class`
+		require
+			c_not_void: c /= Void
+		do
+			c.set_as_basic_class
+			if attached {EXTERNAL_CLASS_I} c as e then
+				system_threading_monitor_class := e
+			end
+		ensure
+			system_threading_monitor_set: c.is_external_class implies system_threading_monitor_class = c
+		end
+
 
 	set_system_value_type_class (c: CLASS_I)
 			-- Assign `c' to `system_value_type_class
@@ -797,7 +816,7 @@ feature -- Settings: Exception
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

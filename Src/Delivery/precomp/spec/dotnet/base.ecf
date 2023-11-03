@@ -7,6 +7,7 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="executable_name" value="EiffelSoftware.Library.Base"/>
+		<setting name="msil_clr_version" value="v4.0"/>
 		<setting name="msil_generation" value="true"/>
 		<setting name="msil_generation_type" value="dll"/>
 		<capability>

@@ -160,20 +160,18 @@
 			</condition>
 		</library>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
-		<!-- assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">
 			<renaming old_name="INTERFACE_TYPE_ATTRIBUTE" new_name="SYSTEM_INTERFACE_TYPE_ATTRIBUTE"/>
 			<renaming old_name="ENCODING" new_name="SYSTEM_ENCODING"/>
 			<renaming old_name="THREAD_STATE" new_name="SYSTEM_THREAD_STATE"/>
 			<renaming old_name="TIMER" new_name="SYSTEM_TIMER"/>
 			<renaming old_name="WEAK_REFERENCE" new_name="SYSTEM_WEAK_REFERENCE"/>
+			<condition>
+				<custom name="ISE_DOTNET_PLATFORM" excluded_value="netcore"/>
+			</condition>
 		</assembly>
-		-->
-		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
-		<!--<assembly name="system.drawing.primitives" location="$ISE_DOTNET_FRAMEWORK\System.Drawing.Primitives.dll"/>
-		<assembly name="system.runtime.dll" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.dll"/>
-		<assembly name="System.Threading.dll" location="$ISE_DOTNET_FRAMEWORK\System.Threading.dll"/>
-		<assembly name="system.runtime.interopservices" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.InteropServices.dll"/> -->
 		<assembly name="system_windows_forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll">
+			<renaming old_name="CURSOR" new_name="WINFORMS_CURSOR"/>
 			<condition>
 				<custom name="ISE_DOTNET_PLATFORM" excluded_value="netcore"/>
 			</condition>

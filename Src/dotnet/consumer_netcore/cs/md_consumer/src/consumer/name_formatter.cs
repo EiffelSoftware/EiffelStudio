@@ -383,7 +383,7 @@ namespace md_consumer
             } else {
                 int i = name.IndexOf('+');
                 if (i >= 0) {
-                    string container = name.Substring(0, i - 1);
+                    string container = name.Substring(0, i);
                     string nested = name.Substring(i + 1);
                     res = formatted_variable_type_name (nested) + in_string + formatted_variable_type_name (container);
                 } else {

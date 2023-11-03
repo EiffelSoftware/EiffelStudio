@@ -166,7 +166,7 @@ feature -- Output
 	out: STRING
 			-- Printable representation of pointer value
 		do
-			if {MARSHAL}.size_of_object (item) = 4 then
+			if {MARSHAL}.size_of (item) = 4 then
 				create Result.make_from_cil ({SYSTEM_STRING}.format ("0x{0:X}", to_integer_32))
 			else
 				create Result.make_from_cil ({SYSTEM_STRING}.format ("0x{0:X}", to_integer_64))

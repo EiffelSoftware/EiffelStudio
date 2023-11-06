@@ -162,7 +162,7 @@ feature {CIL_CODE_GENERATOR, IL_MODULE} -- Access
 
 	main_module: IL_MODULE
 			-- Module containing assembly manifest.
-			
+
 feature {NONE} -- Access
 
 	current_module: IL_MODULE
@@ -807,6 +807,7 @@ feature -- Generation Structure
 
 					-- Body index is too large. Reallocate array(s).
 					-- All previously stored data have to be preserved.
+
 					-- Reallocate "string[][]".
 				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				put_integer_32_constant (1)
@@ -816,6 +817,7 @@ feature -- Generation Structure
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_field_cil_token)
 				method_body.put_opcode ({MD_OPCODES}.ldloc_0)
 				method_body.put_static_call (array_copy_method_token, 3, False)
+
 					-- Reallocate "STRING[][]".
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_field_eiffel_token)
 				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
@@ -830,6 +832,7 @@ feature -- Generation Structure
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_field_eiffel_token)
 				method_body.put_opcode ({MD_OPCODES}.ldloc_0)
 				method_body.put_static_call (array_copy_method_token, 3, False)
+
 					-- Reallocate "STRING_32[][]".
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_32_field_eiffel_token)
 				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
@@ -844,6 +847,22 @@ feature -- Generation Structure
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_32_field_eiffel_token)
 				method_body.put_opcode ({MD_OPCODES}.ldloc_0)
 				method_body.put_static_call (array_copy_method_token, 3, False)
+
+					-- Reallocate "IMMUTABLE_STRING_8[][]".
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, omis_8_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				put_integer_32_constant (1)
+				method_body.put_opcode ({MD_OPCODES}.add)
+				type_sig.reset
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (immutable_string_8_type_id))
+				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, omis_8_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldloc_0)
+				method_body.put_static_call (array_copy_method_token, 3, False)
+
 					-- Reallocate "IMMUTABLE_STRING_32[][]".
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, omis_32_field_eiffel_token)
 				method_body.put_opcode ({MD_OPCODES}.ldarg_0)

@@ -216,7 +216,7 @@ feature -- Status report
 
 	is_assembly_module: BOOLEAN
 			-- Does current represent an assembly manifest?
-			-- I.e. an assembly is made of modules and of one assembly manifest which
+			-- I.e. an assembly is made of modules/assemblies and of one assembly manifest which
 			-- is a module with `Assembly' table metadata.
 
 	is_using_multi_assemblies: BOOLEAN
@@ -647,10 +647,13 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: management
 		do
 				-- Define helper class.
 			helper_class_token := md_emit.define_type (
-				runtime_helper_class_name,
-				{MD_TYPE_ATTRIBUTES}.Auto_class | {MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.Public,
-				object_type_token,
-				Void)
+					runtime_helper_class_name,
+					{MD_TYPE_ATTRIBUTES}.Auto_class |
+					{MD_TYPE_ATTRIBUTES}.Auto_layout |
+					{MD_TYPE_ATTRIBUTES}.Public,
+					object_type_token,
+					Void
+				)
 			once_string_class_token_value := helper_class_token
 
 				-- Emit field for CIL strings.
@@ -822,6 +825,9 @@ feature {NONE} -- Once manifest strings: tokens
 	once_immutable_string_32_class_token_value: INTEGER
 			-- Token of a run-time helper class that keeps values of once manifest strings (IMMUTABLE_STRING_32)
 
+	main_assembly_ref_token_value: INTEGER
+			-- Assembly ref token of main assembly.
+
 	once_string_class_token: INTEGER
 			-- Token of a run-time helper class that keeps values of once manifest strings
 		local
@@ -842,7 +848,11 @@ feature {NONE} -- Once manifest strings: tokens
 					once_string_resolution_token := 1
 				else
 						-- Take token of main (assembly) module.
-					once_string_resolution_token := 0
+					if is_using_multi_assemblies then
+						once_string_resolution_token := main_assembly_ref_token
+					else
+						once_string_resolution_token := 0 -- It seems that using `0` means current assembly...
+					end
 				end
 				Result := md_emit.define_type_ref (runtime_helper_class_name, once_string_resolution_token)
 				once_string_class_token_value := Result
@@ -852,6 +862,19 @@ feature {NONE} -- Once manifest strings: tokens
 			token_defined: is_once_string_class_defined
 			consistent_result: Result = once_string_class_token_value
 			old_token_preserved: (old is_once_string_class_defined) implies once_string_class_token_value = old once_string_class_token_value
+		end
+
+	main_assembly_ref_token: INTEGER
+			-- Assembly ref token of the main assembly.
+		do
+			Result := main_assembly_ref_token_value
+
+			if Result = 0 then
+				Result := module_reference_token (il_code_generator.main_module)
+				main_assembly_ref_token_value := Result
+			end
+		ensure
+			valid_result: Result /= 0
 		end
 
 feature -- Access: types
@@ -1239,9 +1262,12 @@ feature -- Code generation
 			l_type_id := a_class_type.implementation_id
 
 			l_entry_type_token := md_emit.define_type (
-				create {CLI_STRING}.make ("MAIN"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
-					{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public,
-				object_type_token, Void)
+					create {CLI_STRING}.make ("MAIN"),
+					{MD_TYPE_ATTRIBUTES}.Ansi_class |
+					{MD_TYPE_ATTRIBUTES}.Auto_layout |
+					{MD_TYPE_ATTRIBUTES}.public,
+					object_type_token, Void
+				)
 
 				-- First we create a static function which takes one argument: In our case an instance of class ANY.
 				-- This function then creates the root object and calls the creation feature.
@@ -1253,10 +1279,12 @@ feature -- Code generation
 			l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, ise_eiffel_type_info_type_token)
 
 			l_root_creator_token := md_emit.define_method (create {CLI_STRING}.make ("create_and_call_root_object"),
-				l_entry_type_token, {MD_METHOD_ATTRIBUTES}.Public |
-				{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-				{MD_METHOD_ATTRIBUTES}.Static, l_sig,
-				{MD_METHOD_ATTRIBUTES}.Managed)
+					l_entry_type_token,
+					{MD_METHOD_ATTRIBUTES}.Public |
+					{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+					{MD_METHOD_ATTRIBUTES}.Static, l_sig,
+					{MD_METHOD_ATTRIBUTES}.Managed
+				)
 
 			if is_debug_info_enabled then
 				il_code_generator.define_custom_attribute (l_root_creator_token,
@@ -1598,15 +1626,15 @@ feature -- Metadata description
 					update_parents (class_type, class_c, True)
 
 					l_attributes := {MD_TYPE_ATTRIBUTES}.Public |
-						{MD_TYPE_ATTRIBUTES}.Auto_layout |
-						{MD_TYPE_ATTRIBUTES}.Ansi_class
+									{MD_TYPE_ATTRIBUTES}.Auto_layout |
+									{MD_TYPE_ATTRIBUTES}.Ansi_class
 
 					if class_type.is_generated_as_single_type then
-						l_attributes := l_attributes ⦶
-							{MD_TYPE_ATTRIBUTES}.Is_class ⦶
-							{MD_TYPE_ATTRIBUTES}.Serializable ⦶
-							({MD_TYPE_ATTRIBUTES}.abstract ⊗ (- class_c.is_deferred.to_integer.to_integer_16)) ⦶
-							({MD_TYPE_ATTRIBUTES}.Sealed ⊗ (- (class_c.is_optimized_as_frozen or class_type.is_expanded).to_integer.to_integer_16))
+						l_attributes := l_attributes |
+							{MD_TYPE_ATTRIBUTES}.Is_class |
+							{MD_TYPE_ATTRIBUTES}.Serializable |
+							({MD_TYPE_ATTRIBUTES}.abstract & (- class_c.is_deferred.to_integer.to_integer_16)) |
+							({MD_TYPE_ATTRIBUTES}.Sealed & (- (class_c.is_optimized_as_frozen or class_type.is_expanded).to_integer.to_integer_16))
 						single_parent_mapping.put (single_inheritance_parent_id, class_type.implementation_id)
 					else
 						l_attributes := l_attributes |
@@ -1658,13 +1686,13 @@ feature -- Metadata description
 				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
 			else
 				l_attributes :=
-					{MD_TYPE_ATTRIBUTES}.Public ⦶
-					{MD_TYPE_ATTRIBUTES}.Auto_layout ⦶
-					{MD_TYPE_ATTRIBUTES}.Ansi_class ⦶
-					{MD_TYPE_ATTRIBUTES}.Is_class ⦶
-					{MD_TYPE_ATTRIBUTES}.Serializable ⦶
-					({MD_TYPE_ATTRIBUTES}.Abstract ⊗ (- class_c.is_deferred.to_integer.to_integer_16)) ⦶
-					({MD_TYPE_ATTRIBUTES}.Sealed ⊗ (- (class_c.is_optimized_as_frozen or class_type.is_expanded).to_integer.to_integer_16))
+					{MD_TYPE_ATTRIBUTES}.Public |
+					{MD_TYPE_ATTRIBUTES}.Auto_layout |
+					{MD_TYPE_ATTRIBUTES}.Ansi_class |
+					{MD_TYPE_ATTRIBUTES}.Is_class |
+					{MD_TYPE_ATTRIBUTES}.Serializable |
+					({MD_TYPE_ATTRIBUTES}.Abstract & (- class_c.is_deferred.to_integer.to_integer_16)) |
+					({MD_TYPE_ATTRIBUTES}.Sealed & (- (class_c.is_optimized_as_frozen or class_type.is_expanded).to_integer.to_integer_16))
 
 				update_parents (class_type, class_c, False)
 				single_parent_mapping.put (single_inheritance_parent_id,
@@ -2509,12 +2537,15 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					class_module := il_code_generator.il_module_for_class (class_c)
 					if class_module = Current then
 						Result := md_emit.define_type (
-							class_data_name,
-							{MD_TYPE_ATTRIBUTES}.auto_class | {MD_TYPE_ATTRIBUTES}.auto_layout |
-							{MD_TYPE_ATTRIBUTES}.is_class | {MD_TYPE_ATTRIBUTES}.public |
-							{MD_TYPE_ATTRIBUTES}.sealed,
-							object_type_token,
-							Void)
+								class_data_name,
+								{MD_TYPE_ATTRIBUTES}.auto_class |
+								{MD_TYPE_ATTRIBUTES}.auto_layout |
+								{MD_TYPE_ATTRIBUTES}.is_class |
+								{MD_TYPE_ATTRIBUTES}.public |
+								{MD_TYPE_ATTRIBUTES}.sealed,
+								object_type_token,
+								Void
+							)
 					else
 						Result := md_emit.define_type_ref (class_data_name, module_reference_token (class_module))
 					end

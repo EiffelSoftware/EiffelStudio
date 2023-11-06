@@ -160,10 +160,10 @@ feature {CIL_CODE_GENERATOR, IL_MODULE} -- Access
 			-- Is current module generated as just a single module?
 			-- Case of precompiled libraries or finalized systems.
 
-feature {NONE} -- Access
-
 	main_module: IL_MODULE
 			-- Module containing assembly manifest.
+			
+feature {NONE} -- Access
 
 	current_module: IL_MODULE
 			-- Module being used for code generation.

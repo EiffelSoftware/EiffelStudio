@@ -33,6 +33,7 @@ namespace md_consumer
             string id = a_cache_location;
             id = id.Replace(':', '!');
             id = id.Replace('\\', '!');
+            id = id.Replace('/', '!');
             shared_guard = new Mutex(false, "Global\\" + id);
 
             is_initialized = true;

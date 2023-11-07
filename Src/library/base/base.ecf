@@ -39,6 +39,9 @@
 		<namespace name="System.Threading">
 			<renaming old_name="SEMAPHORE" new_name="SYSTEM_DLL_SEMAPHORE"/>
 		</namespace>
+		<namespace name="System.Threading.Thread">
+			<renaming old_name="THREAD_STATE" new_name="SYSTEM_THREAD_STATE"/>
+		</namespace>
 		<namespace name="System.Text">
 			<renaming old_name="ENCODING" new_name="SYSTEM_ENCODING"/>
 		</namespace>

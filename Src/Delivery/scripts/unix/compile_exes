@@ -119,6 +119,10 @@ safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
 move $INSTALL_DIR/studio/config/unix/* $INSTALL_DIR/studio/config/$ISE_PLATFORM
 move $INSTALL_DIR/studio/spec/unix/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM
 mv $INSTALL_DIR/precomp/spec/platform $INSTALL_DIR/precomp/spec/$ISE_PLATFORM
+rm -f $INSTALL_DIR/precomp/spec/$ISE_PLATFORM/wel*
+mv $INSTALL_DIR/precomp/spec/dotnet $INSTALL_DIR/precomp/spec/${ISE_PLATFORM}-dotnet
+rm -f $INSTALL_DIR/precomp/spec/${ISE_PLATFORM}-dotnet/wel*
+rm -f $INSTALL_DIR/precomp/spec/${ISE_PLATFORM}-dotnet/netcore/wel*
 fullrd $INSTALL_DIR/studio/config/unix
 fullrd $INSTALL_DIR/studio/spec/unix
 

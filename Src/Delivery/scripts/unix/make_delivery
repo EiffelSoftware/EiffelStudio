@@ -188,6 +188,7 @@ safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
 cd $INSTALL_DIR/precomp/spec
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/platform platform
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/dotnet dotnet
 
 remtrace C_library
 safe_md $INSTALL_DIR/C_library

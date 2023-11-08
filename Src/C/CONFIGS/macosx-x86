@@ -210,9 +210,9 @@ eiflib='finalized'
 if [ -n "$LD" ]; then
 	ld=$LD
 else
-	ld='ld'
+	ld=$cc
 fi
-ldflags='-arch i386'
+ldflags=''
 ldsharedflags="$ldflags -dynamiclib -flat_namespace -undefined suppress -o"
 libs='-lm'
 ln='/bin/ln'
@@ -237,7 +237,7 @@ shared_rt_suffix='.dylib'
 sharedlibs='-lm'
 mtsharedlibs='-lm -lpthread'
 sharedlibversion='.23.11'
-sharedlink=$cc
+sharedlink=$ld
 suffix='.a'
 wkeiflib='wkbench'
 

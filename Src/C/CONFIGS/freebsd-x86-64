@@ -210,7 +210,7 @@ eiflib='finalized'
 if [ -n "$LD" ]; then
 	ld=$LD
 else
-	ld='ld'
+	ld=$cc
 fi
 lintflags=''
 ldflags=" -L/usr/local/lib -L/usr/lib "
@@ -238,7 +238,7 @@ shared_rt_suffix='.so'
 sharedlibs='-lm -lcompat'
 mtsharedlibs='-lm -lcompat -lpthread'
 sharedlibversion='.23.11'
-sharedlink='ld'
+sharedlink=$ld
 suffix='.a'
 wkeiflib='wkbench'
 

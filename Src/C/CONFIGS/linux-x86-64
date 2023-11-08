@@ -210,10 +210,10 @@ eiflib='finalized'
 if [ -n "$LD" ]; then
 	ld=$LD
 else
-	ld='ld'
+	ld=$cc
 fi
 lintflags=''
-ldflags="-m elf_x86_64"
+ldflags=""
 ldsharedflags="$ldflags -shared -o"
 
 libs='-lm'

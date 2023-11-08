@@ -209,10 +209,10 @@ eiflib='finalized'
 if [ -n "$LD" ]; then
 	ld=$LD
 else
-	ld='ld'
+	ld=$cc
 fi
 lintflags=''
-ldflags="-m elf_i386"
+ldflags=""
 ldsharedflags="$ldflags -shared -o"
 libs='-lm'
 ln='/bin/ln'
@@ -237,7 +237,7 @@ shared_rt_suffix='.so'
 sharedlibs='-lm'
 mtsharedlibs='-lm -lpthread'
 sharedlibversion='.23.11'
-sharedlink='ld'
+sharedlink=$ld
 suffix='.a'
 wkeiflib='wkbench'
 

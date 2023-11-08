@@ -785,7 +785,11 @@ feature -- Directories (top-level)
 						l_dn_name.append_string_general ("-dotnet")
 						Result := Result.extended (l_dn_name)
 						if a_clr_version /= Void and then (create {IL_NETCORE_DETECTOR}).is_il_netcore (a_clr_version) then
-							Result := Result.extended (a_clr_version) --"netcore")
+							if attached default_il_environment.installed_runtime_info (a_clr_version) as irinf then
+								Result := Result.extended (irinf.runtime_version) --"netcore")
+							else
+								Result := Result.extended ( a_clr_version) --"netcore")
+							end
 						end
 					else
 						Result := Result.extended (eiffel_platform)

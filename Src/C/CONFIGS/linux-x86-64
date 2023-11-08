@@ -241,7 +241,7 @@ shared_rt_suffix='.so'
 sharedlibs='-lm'
 mtsharedlibs='-lm -lpthread'
 sharedlibversion='.23.11'
-sharedlink='ld'
+sharedlink=$ld
 suffix='.a'
 wkeiflib='wkbench'
 

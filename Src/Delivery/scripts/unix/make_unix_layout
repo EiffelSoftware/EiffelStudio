@@ -71,10 +71,8 @@ cp -r $ISE_EIFFEL/C_library $LIB_DIR
 # Copy precompile without EIFGENs and remove WEL files
 mkdir -p $SHARE_DIR/precomp/spec/$UNIX_PLATFORM
 cp $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/*.ecf $SHARE_DIR/precomp/spec/$UNIX_PLATFORM/
-rm -f $SHARE_DIR/precomp/spec/$UNIX_PLATFORM/wel*
 mkdir -p $SHARE_DIR/precomp/spec/${UNIX_PLATFORM}-dotnet
 cp $ISE_EIFFEL/precomp/spec/${ISE_PLATFORM}-dotnet/*.ecf $SHARE_DIR/precomp/spec/${UNIX_PLATFORM}-dotnet/
-rm -f $SHARE_DIR/precomp/spec/${UNIX_PLATFORM}-dotnet/wel*
 
 # Copy documentation
 cp $ISE_EIFFEL/VERSION $DOC_DIR

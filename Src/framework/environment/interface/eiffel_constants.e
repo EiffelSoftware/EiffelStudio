@@ -52,6 +52,14 @@ feature -- Variable names
 	ec_name_env: STRING = "EC_NAME"
 			-- ec executable name.
 
+feature -- Variables names / Dotnet specific
+
+	ise_dotnet_assemblies_path_env: STRING = "ISE_DOTNET_ASSEMBLIES_PATH"
+			-- .Net Metadata assemblies cache location
+
+	ise_emdc_env: STRING = "ISE_EMDC"
+			-- Location of the .Net MetaData consumer "(n)emdc" executable	
+
 feature -- File extensions
 
 	config_extension: STRING = "ecf"
@@ -102,7 +110,7 @@ feature -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

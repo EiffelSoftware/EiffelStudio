@@ -43,14 +43,14 @@ feature {NONE} -- Initialization
 			else
 				emdc_location := eiffel_layout.emdc_command_name
 			end
-			if attached {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC") as s then
+			if attached {EXECUTION_ENVIRONMENT}.item ({EIFFEL_ENV}.ise_emdc_env) as s then
 				create p.make_from_string (s)
 				if fut.file_path_exists (p) then
 					emdc_location := p
 				end
 			end
 
-			is_debug := attached {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC_DEBUG") as s and then s.is_case_insensitive_equal ("true")
+			is_debug := attached {EXECUTION_ENVIRONMENT}.item ({EIFFEL_ENV}.ise_emdc_env + "_DEBUG") as s and then s.is_case_insensitive_equal ("true")
 
 			cache_location := a_cache_path
 			create dir.make_with_path (a_cache_path)
@@ -242,19 +242,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

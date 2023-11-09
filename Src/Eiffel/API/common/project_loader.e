@@ -446,7 +446,7 @@ feature -- Status report
 			-- Iron packages the user wants to install?
 
 	is_iron_execution_error: BOOLEAN
-			-- Was there an error during the last iron command execution?	
+			-- Was there an error during the last iron command execution?
 			-- i.e: iron packages installation.
 
 feature {NONE} -- Status report
@@ -616,6 +616,8 @@ feature {NONE} -- Settings
 						not l_key.is_case_insensitive_equal (eiffel_layout.default_il_environment.ise_dotnet_tfm_env) and then
 						not l_key.is_case_insensitive_equal (eiffel_layout.default_il_environment.ise_dotnet_version_env) and then
 						not l_key.is_case_insensitive_equal ({EIFFEL_CONSTANTS}.ise_precomp_env) and then
+						not l_key.is_case_insensitive_equal ({EIFFEL_CONSTANTS}.ise_emdc_env) and then
+						not l_key.is_case_insensitive_equal ({EIFFEL_CONSTANTS}.ise_dotnet_assemblies_path_env) and then
 						not same_environment_variable_value (l_new_val, l_old_val)
 					then
 						ask_environment_update (l_key, l_old_val, l_new_val)
@@ -1153,7 +1155,7 @@ feature {NONE} -- Implementation
 					-- The library is specified as name only
 				l_library_name := a_library.name
 
-					-- Guess location					
+					-- Guess location
 				l_ecf_path := {STRING_32} "$ISE_LIBRARY/library/" + l_library_name + "/" + l_library_name + "-safe" + {EIFFEL_CONSTANTS}.dotted_config_extension
 				create l_loc.make (l_ecf_path, a_target)
 				if not ut.file_path_exists (l_loc.evaluated_path) then

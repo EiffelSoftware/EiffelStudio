@@ -884,7 +884,7 @@ feature  -- Directories (dotnet)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			if attached get_environment_32 ("ISE_DOTNET_ASSEMBLIES_PATH") as l_path then
+			if attached get_environment_32 (ise_dotnet_assemblies_path_env) as l_path then
 				create Result.make_from_string (l_path)
 			else
 				if is_user_files_supported then
@@ -939,7 +939,7 @@ feature -- Cache settings
 					-- On non Windows platform (Linux, ...), always use "emdc".
 				use_emdc_consumer := True
 			elseif
-				attached get_environment_32 ("ISE_EMDC") as v1 and then v1.count > 0 and then
+				attached get_environment_32 (ise_emdc_env) as v1 and then v1.count > 0 and then
 				(v1.is_case_insensitive_equal ("false") or v1.is_case_insensitive_equal ("no"))
 			then
 				use_emdc_consumer := False
@@ -958,7 +958,7 @@ feature -- Cache settings
 
 					-- unless ISE_EMDC_JSON is "false"
 				if
-					attached get_environment_32 ("ISE_EMDC_JSON") as v2 and then
+					attached get_environment_32 (ise_emdc_env + "_JSON") as v2 and then
 					v2.count > 0 and then
 					( v2.is_case_insensitive_equal ("false")
 					  or v2.is_case_insensitive_equal ("no")
@@ -984,9 +984,9 @@ feature -- Cache settings
 			use_emdc_consumer := b
 			if a_permanent then
 				if b then
-					environment.set_application_item ("ISE_EMDC", application_name, version_name, "true")
+					environment.set_application_item (ise_emdc_env, application_name, version_name, "true")
 				else
-					environment.set_application_item ("ISE_EMDC", application_name, version_name, "false")
+					environment.set_application_item (ise_emdc_env, application_name, version_name, "false")
 				end
 			end
 			update_use_json_dotnet_md_cache
@@ -999,9 +999,9 @@ feature -- Cache settings
 			use_json_dotnet_md_cache := b
 			if a_permanent then
 				if b then
-					environment.set_application_item ("ISE_EMDC_JSON", application_name, version_name, "true")
+					environment.set_application_item (ise_emdc_env + "_JSON", application_name, version_name, "true")
 				else
-					environment.set_application_item ("ISE_EMDC_JSON", application_name, version_name, "false")
+					environment.set_application_item (ise_emdc_env + "_JSON", application_name, version_name, "false")
 				end
 			end
 		end

@@ -884,15 +884,20 @@ feature  -- Directories (dotnet)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			if is_user_files_supported then
-				Result := user_files_path
+			if attached get_environment_32 ("ISE_DOTNET_ASSEMBLIES_PATH") as l_path then
+				create Result.make_from_string (l_path)
 			else
-					-- No user file is specified, we use the installation
-					-- directory and if this is not writable, users will
-					-- get an error.
-				Result := install_path
+				if is_user_files_supported then
+					Result := user_files_path
+				else
+						-- No user file is specified, we use the installation
+						-- directory and if this is not writable, users will
+						-- get an error.
+					Result := install_path
+				end
+				Result := Result.extended (dotnet_name).extended (assemblies_name)
 			end
-			Result := Result.extended (dotnet_name).extended (assemblies_name)
+
 			if use_json_dotnet_md_cache then
 				Result := Result.extended ("json")
 			end

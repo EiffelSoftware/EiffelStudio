@@ -282,9 +282,15 @@ feature {NONE} -- Implementation
 	execute_operation (op: like run)
 			-- Execute operation `op'
 		local
+			ctrl: like debugging_options_control
 			prof: DEBUGGER_EXECUTION_PROFILE
 		do
-			prof := debugging_options_control.selected_profile
+			ctrl := debugging_options_control
+			if ctrl.has_changed then
+				ctrl.apply_changes
+			end
+
+			prof := ctrl.selected_profile
 
 			if keep_opened_check_button.is_selected then
 				op.call ([prof])
@@ -336,7 +342,7 @@ invariant
 	argument_control_not_void: debugging_options_control /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

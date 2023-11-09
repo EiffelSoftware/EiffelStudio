@@ -31,6 +31,8 @@
 		</external_include>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll"/>
+		<assembly name="system_runtime" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.dll"/>
 		<cluster name="time" location=".\" recursive="true">
 			<option namespace="DateTime">
 			</option>

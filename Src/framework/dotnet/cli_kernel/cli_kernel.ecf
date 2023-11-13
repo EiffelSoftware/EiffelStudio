@@ -33,4 +33,9 @@
 		</cluster>		
 		<cluster name="interface" location=".\interface\" recursive="true"/>
 	</target>
+	<target name="test_cli_kernel" extends="cli_kernel">
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<cluster name="tests" location=".\testing\" recursive="true"/>
+		<root class="ANY" feature="default_create"/>
+	</target>
 </system>

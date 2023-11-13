@@ -50,11 +50,13 @@
 		<assembly name="system.runtime.interopservices" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.InteropServices.dll"/>
 		<assembly name="system_windows_forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll">
 			<condition>
+				<platform value="windows"/>
 				<custom name="ISE_DOTNET_PLATFORM" excluded_value="netcore"/>
 			</condition>
 		</assembly>
 		<assembly name="system_windows_forms_netcore" location="$ISE_DOTNET_PACKS\Microsoft.WindowsDesktop.App.Ref\$ISE_DOTNET_VERSION\ref\$ISE_DOTNET_TFM\System.Windows.Forms.dll">
 			<condition>
+				<platform value="windows"/>
 				<custom name="ISE_DOTNET_PLATFORM" value="netcore"/>
 			</condition>
 		</assembly>

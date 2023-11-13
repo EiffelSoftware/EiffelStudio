@@ -28,6 +28,19 @@ feature -- Test routines
 
 			assert ("same plain text string", cstr.string_32.same_string (str))
 
+			str := {STRING_32} "abc%U"
+			create cstr.make (str)
+			assert ("same plain text ending with null string", cstr.string_32.same_string (str))
+
+			str := {STRING_32} ""
+			create cstr.make (str)
+			assert ("same empty string", cstr.string_32.same_string (str))
+
+			str := {STRING_32} "%U"
+			create cstr.make (str)
+			assert ("same null char string", cstr.string_32.same_string (str))
+
+
 			str := {STRING_32} "binary[%/0c000/%/0c001/%/0c002/%/0c003/%/0c004/%/0c005/]"
 			create cstr.make (str)
 

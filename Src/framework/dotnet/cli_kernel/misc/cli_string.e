@@ -154,11 +154,9 @@ feature -- Access
 
 	string_32: STRING_32
 			-- Representation of Current up to the first null character.
-		local
-			u: UTF_CONVERTER
 		do
 				-- Taking the `raw_string' representation of Current, we decode it as a Unicode string.
-			Result := u.utf_16_0_pointer_to_escaped_string_32 (managed_data)
+			Result := substring (1, count)
 		end
 
 	substring (start_pos, end_pos: INTEGER): STRING_32
@@ -172,7 +170,7 @@ feature -- Access
 			u: UTF_CONVERTER
 		do
 			create Result.make (end_pos - start_pos + 1)
-			u.utf_16_0_subpointer_into_escaped_string_32 (managed_data,
+			u.utf_16_0_subpointer_into_string_32 (managed_data,
 				start_pos - 1, end_pos - 1, False, Result)
 		ensure
 			susbstring_not_void: Result /= Void
@@ -424,6 +422,8 @@ feature -- Element change
 			a_string_not_void: a_string /= Void
 		do
 			set_substring (a_string, 1, a_string.count)
+		ensure
+			a_string.same_string (string_32)
 		end
 
 	set_substring (a_string: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER)
@@ -436,7 +436,7 @@ feature -- Element change
 		local
 			u: UTF_CONVERTER
 		do
-			u.escaped_utf_32_substring_into_utf_16_0_pointer (a_string, start_pos, end_pos,
+			u.utf_32_substring_into_utf_16_0_pointer (a_string, start_pos, end_pos,
 				managed_data, 0, upper_cell)
 			count := upper_cell.item // character_size
 		end

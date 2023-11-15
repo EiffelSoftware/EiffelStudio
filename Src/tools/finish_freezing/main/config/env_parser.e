@@ -231,13 +231,17 @@ feature {NONE} -- Basic operations
 	try_delete (f: FILE)
 			-- Try to delete file `f` and rescue any exception.
 		local
-			retried: BOOLEAN
+			retried: INTEGER
 		do
-			if not retried and f.exists then
+			if
+				retried <= 2 and then
+				f.exists
+			then
 				f.delete
 			end
 		rescue
-			retried := True
+			retried := retried + 1
+			{EXECUTION_ENVIRONMENT}.sleep (10_000_000) -- wait 10 ms before trying again.
 			retry
 		end
 

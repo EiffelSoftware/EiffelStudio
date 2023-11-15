@@ -58,9 +58,12 @@ feature {NONE} -- Implementation
 			u: FILE_UTILITIES
 			l_parser: ENV_PARSER
 		do
-			if attached vs_get_installation_path (vs_version) as l_str8 then
+			if
+				attached vs_get_installation_path (vs_version) as l_str8 and then
+				not l_str8.is_whitespace
+			then
 				create l_c_str.make (l_str8)
-				create l_str.make_by_pointer_and_count (l_c_str.item, l_str8.count * 2)
+				create l_str.make_by_pointer_and_count (l_c_str.item, l_str8.count)
 				create internal_install_path.make_from_string (l_str.string)
 				l_file_name := batch_file_name
 				if u.file_path_exists (l_file_name) then
@@ -101,7 +104,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

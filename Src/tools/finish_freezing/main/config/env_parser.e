@@ -335,21 +335,32 @@ feature {NONE} -- Basic operations
 		local
 			retried: BOOLEAN
 			l_file: PLAIN_TEXT_FILE
+			p: PATH
+			i: INTEGER
 		do
-
-			if not retried then
-					-- Create file in the current working directory if possible
-				if attached execution_environment.temporary_directory_path as tmp then
-					Result := tmp.extended (a_temp_name).name
-				else
-					Result := a_temp_name.as_string_32
+			if attached execution_environment.temporary_directory_path as tmp then
+				p := tmp
+			else
+				p := execution_environment.current_working_path
+			end
+			if retried then
+					-- We could not create our temporary file,
+					-- let's create one in the temporary directory of the OS.
+				from
+					p := p.extended (a_temp_name)
+					create l_file.make_with_path (p)
+				until
+					not l_file.exists or i > 1_000 -- try at max 1_000 times.
+				loop
+					p := p.appended (i.out)
+					l_file.make_with_path (p)
 				end
+				Result := p.name
 				create l_file.make_open_write (Result)
 				l_file.close
 			else
-					-- We could not create our temporary file,
-					-- let's create one in the temporary directory of the OS.
-				create l_file.make_open_temporary_with_prefix (a_temp_name)
+					-- Create file in the current working directory if possible
+				create l_file.make_open_temporary_with_prefix (p.extended (a_temp_name).name)
 				Result := l_file.path.name
 				l_file.close
 				create l_file.make_open_write (Result)
@@ -457,7 +468,7 @@ invariant
 	batch_options_attached: batch_options /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

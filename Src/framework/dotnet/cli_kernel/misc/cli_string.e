@@ -148,8 +148,8 @@ feature -- Access
 		do
 				-- Alias `managed_data' to be a C string so that we copy the raw sequence
 				-- of bytes into a STRING_8 but we do not include the null-terminating character.
-			create l_cstr.make_shared_from_pointer_and_count (managed_data.item, managed_data.count)
-			Result := l_cstr.substring_8 (1, managed_data.count - character_size)
+			create l_cstr.make_shared_from_pointer_and_count (managed_data.item, count * character_size)
+			Result := l_cstr.substring_8 (1, count * character_size)
 		end
 
 	string_32: STRING_32
@@ -439,6 +439,7 @@ feature -- Element change
 			u.escaped_utf_32_substring_into_utf_16_0_pointer (a_string, start_pos, end_pos,
 				managed_data, 0, upper_cell)
 			count := upper_cell.item // character_size
+--			managed_data.resize (upper_cell.item)
 		end
 
 	set_shared_from_pointer (a_ptr: POINTER)

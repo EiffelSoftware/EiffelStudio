@@ -170,7 +170,7 @@ feature -- Access
 			u: UTF_CONVERTER
 		do
 			create Result.make (end_pos - start_pos + 1)
-			u.utf_16_0_subpointer_into_string_32 (managed_data,
+			u.utf_16_0_subpointer_into_escaped_string_32 (managed_data,
 				start_pos - 1, end_pos - 1, False, Result)
 		ensure
 			susbstring_not_void: Result /= Void
@@ -436,7 +436,7 @@ feature -- Element change
 		local
 			u: UTF_CONVERTER
 		do
-			u.utf_32_substring_into_utf_16_0_pointer (a_string, start_pos, end_pos,
+			u.escaped_utf_32_substring_into_utf_16_0_pointer (a_string, start_pos, end_pos,
 				managed_data, 0, upper_cell)
 			count := upper_cell.item // character_size
 		end

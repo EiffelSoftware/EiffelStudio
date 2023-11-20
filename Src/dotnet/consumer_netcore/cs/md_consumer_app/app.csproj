@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="../md_consumer/md_consumer.csproj" />
-	<!-- <ProjectReference Include="../md_foo/md_foo.csproj" /> -->
-    <!-- <PackageReference Include="Microsoft.Build.Framework" /> -->
     <!-- <PackageReference Include="System.Reflection.MetadataLoadContext" Version="6.0.0" /> -->
   </ItemGroup>
 

@@ -32,13 +32,13 @@ namespace md_consumer
 
         public CONSUMED_REFERENCED_TYPE declared_type;
         public bool _is_public ;
-        public bool is_excluded() {
+        public virtual bool is_excluded() {
             // Is current entity excluded from consumer result?
             // FIXME: for now, any generic related entity is excluded
             return declared_type.is_excluded();
         }
 
-        public bool is_public()
+        public virtual bool is_public()
         {
             return _is_public;
         }
@@ -51,7 +51,7 @@ namespace md_consumer
             set_is_public (pub);
         }
 
-        public void set_is_public(bool b)
+        public virtual void set_is_public(bool b)
         {
             _is_public = b;
         }

@@ -28,6 +28,14 @@ namespace md_consumer
                 mode = mode ^ f;
             }
         }        
+        public static void setup(bool is_console=true)
+        {
+            if (is_console) {
+                System.Diagnostics.Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
+                // System.Diagnostics.Debug.Listeners.Add(new TextWriterTraceListener(Console.Out));
+            }
+            Trace.AutoFlush = true;            
+        }
         public static void set_info(bool b)
         {
             set_mode_flag (mode_info, b);
@@ -51,12 +59,19 @@ namespace md_consumer
                     if (m == mode_error) {
                         System.Diagnostics.Trace.WriteLine("[ERROR] " + msg);
                     } else if (m == mode_debug) {
-                        System.Diagnostics.Debug.WriteLine(msg);
+                        System.Diagnostics.Trace.WriteLine("[DEBUG] "+ msg);
+                        // System.Diagnostics.Debug.WriteLine(msg);
                     } else {
                         System.Diagnostics.Trace.WriteLine(msg);
                     }
                 } else {
-                    Console.WriteLine(msg);
+                    if (m == mode_error) {
+                        Console.WriteLine("[ERROR] " + msg);
+                    } else if (m == mode_debug) {
+                        Console.WriteLine("[DEBUG] "+ msg);
+                    } else {
+                        Console.WriteLine(msg);
+                    }
                 }
             }
         }

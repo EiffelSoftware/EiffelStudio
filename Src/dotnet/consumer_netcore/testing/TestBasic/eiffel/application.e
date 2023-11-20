@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 		local
 			abc: ABC
 		do
+			print (once "TestBasic%N")
 			create abc.make
 		end
 

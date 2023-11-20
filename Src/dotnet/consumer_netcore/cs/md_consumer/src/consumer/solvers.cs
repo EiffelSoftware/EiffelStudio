@@ -107,7 +107,7 @@ namespace md_consumer
                             number_of_methods_with_parameters = number_of_methods_with_parameters + 1;
                             int j = 0;
                             while (j < method.arguments.Length && !is_unique) {
-                                name = name + "_" + formatted_variable_type_name(method.arguments[j].type.name);
+                                name = name + "_" + formatted_variable_type_name(method.arguments[j].real_argument_type_name());
                                 is_unique = is_unique_signature (method, method_list, j);
                                 j = j + 1;
                             }
@@ -247,12 +247,16 @@ namespace md_consumer
             if (l_meth != null) {
                 if (is_consumed_method (l_meth)) {
                     internal_add_method (l_meth, true);
+                }  else {
+                    internal_exclude_method (l_meth, true);
                 }
             }
             l_meth = METHOD_RETRIEVER.property_setter (prop);
             if (l_meth != null) {
                 if (is_consumed_method (l_meth)) {
                     internal_add_method (l_meth, false);
+                }  else {
+                    internal_exclude_method (l_meth, false);
                 }
             }
         }
@@ -285,11 +289,13 @@ namespace md_consumer
         {
             if (is_consumed_method (meth)) {
                 if (has_method (meth)) {
-                    // DEBUG Console.WriteLine("ALREADY HAS " + meth.ToString());
+                    STATUS_PRINTER.debug ("Already had " + meth.ToString());
                 } else {
                     internal_add_method (meth, false);
                 }
-            }                
+            }  else {
+                internal_exclude_method (meth, false);
+            }             
         }
 
         public void add_event (EventInfo ev)
@@ -299,18 +305,24 @@ namespace md_consumer
             if (l_meth != null) {
                 if (is_consumed_method (l_meth)) {
                     internal_add_method (l_meth, false);
+                }  else {
+                    internal_exclude_method (l_meth, false);
                 }
             }
             l_meth = METHOD_RETRIEVER.event_adder (ev);
             if (l_meth != null) {
                 if (is_consumed_method (l_meth)) {
                     internal_add_method (l_meth, false);
+                }  else {
+                    internal_exclude_method (l_meth, false);
                 }
             }
             l_meth = METHOD_RETRIEVER.event_remover (ev);
             if (l_meth != null) {
                 if (is_consumed_method (l_meth)) {
                     internal_add_method (l_meth, false);
+                }  else {
+                    internal_exclude_method (l_meth, false);
                 }
             }
         }        
@@ -335,6 +347,14 @@ namespace md_consumer
             }
             lst.Add (new METHOD_SOLVER(meth, get_property));
         }
+        protected void internal_exclude_method (MethodInfo meth, bool get_property) 
+        {
+            if (get_property) {
+                STATUS_PRINTER.debug (" - EXCLUDE get method " + meth.ToString());
+            } else {
+                STATUS_PRINTER.debug (" - EXCLUDE method " + meth.ToString());
+            }
+        }        
         public string get_prefix = "get_";
     }
 

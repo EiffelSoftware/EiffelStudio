@@ -57,6 +57,9 @@ namespace md_consumer
         public const string raiser = "rai"; //"raiser" ;
         public const string assembly_id = "aid"; //"assembly_id" ;
         public const string type = "t"; //"type" 
+        public const string formal_type_name = "ftn"; //"formal_type_name" ;
+        public const string formal_position = "fpos"; //"formal_position" ;
+
         public const string element_type = "et"; //"element_type" ;
         public const string declared_type = "dt"; //"declared_type" ;
         public const string return_type = "rt"; //"return_type" ;
@@ -83,6 +86,8 @@ namespace md_consumer
         public const string is_event = "is_event" ;
         public const string is_constant = "is_constant" ;
         public const string is_attribute = "is_attribute" ;
+        public const string is_generic = "is_generic";
+        public const string generic_parameters = "generic_parameters";
 
         public const string multiple_source = "multiple_source" ;
 

@@ -21,8 +21,16 @@
 			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
+		<!--
+		<library name="base" location="$ISE_LIBRARY\framework\mini_base\base.ecf"/>
+		-->
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll"/>
+		<assembly name="system_runtime" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.dll"/>
+
 		<assembly name="TestGeneric" location="..\_BIN\TestGeneric.dll"/>
+
 		<cluster name="src_cluster" location="." recursive="true">
 			<option warning="none" />
 		</cluster>

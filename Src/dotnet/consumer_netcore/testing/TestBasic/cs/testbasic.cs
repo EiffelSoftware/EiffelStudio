@@ -52,7 +52,7 @@ namespace Eiffel.MD.Testing
         	Bar b = new Bar(123);
         	return b;
         }
-        public string debug_output() 
+        public virtual string debug_output() 
         {
         	return foo_value + ": " + bar().item().ToString();
         }
@@ -72,7 +72,7 @@ namespace Eiffel.MD.Testing
         }
 
 
-        new public string debug_output() 
+        public override string debug_output() 
         {
         	return "FOOBAR["+ debug_output() +"]";
         }
@@ -97,6 +97,7 @@ namespace Eiffel.MD.Testing
 			return string.Format("code[{0}]", code);
 		}
 
+		
 		protected internal delegate string? StringFromCode(int code);
 
 		protected void test_StringFromCode_delegate (StringFromCode d)

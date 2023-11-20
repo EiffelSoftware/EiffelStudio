@@ -50,7 +50,7 @@ namespace md_consumer
 			string? l_member_name;
 			bool l_compliant;
 		    l_member_name = member.Name;
-			l_compliant = l_member_name != null && (l_member_name.IndexOf('`') < 0);
+			l_compliant = l_member_name != null && (l_member_name.IndexOf('`') < 0);  // TODO: handle generics!
 			if (l_compliant) {
                 Type? l_type = member.DeclaringType;
                 if (l_type != null) {
@@ -65,7 +65,13 @@ namespace md_consumer
 					}
                     if (l_compliant) {
                         if (typeof(MethodInfo).IsAssignableFrom(member.GetType())) {
-                            Type? rt = ((MethodInfo) member).ReturnType;
+                            Type? rt = null;
+                            
+                            try {
+                                rt = ((MethodInfo) member).ReturnType;
+                            } catch {
+                                rt = null;
+                            }
                             if (rt != null) {
                                 l_checked_type = checked_type (rt);
                                 l_compliant = l_checked_type.is_eiffel_compliant();
@@ -117,7 +123,7 @@ namespace md_consumer
         {
             method = (MethodBase) m;
         }
-    	protected new void check_extended_compliance()
+    	protected override void check_extended_compliance()
 			// -- Checks entity's CLS-compliance.
         {        
             MethodBase l_member = method;
@@ -136,7 +142,7 @@ namespace md_consumer
             }
         }
 
-	    protected new void check_eiffel_compliance()
+	    protected override void check_eiffel_compliance()
 			// -- Checks entity to see if it is Eiffel-compliant.
         {        
             MethodBase l_member = method;
@@ -194,7 +200,7 @@ namespace md_consumer
             Type t = method.ReturnType;
             return checked_type (t);
         }
-    	protected new void check_extended_compliance()
+    	protected override void check_extended_compliance()
 			// -- Checks entity's CLS-compliance.
         {        
             MethodInfo l_member = method;
@@ -223,7 +229,7 @@ namespace md_consumer
             }    
         }
 
-	    protected new void check_eiffel_compliance()
+	    protected override void check_eiffel_compliance()
 			// -- Checks entity to see if it is Eiffel-compliant.
 		{
             MethodInfo l_member = method;
@@ -254,7 +260,7 @@ namespace md_consumer
         {
             constructor = (ConstructorInfo) m;
         }
-    	protected new void check_extended_compliance()
+    	protected override void check_extended_compliance()
 			// -- Checks entity's CLS-compliance.
         {
             ConstructorInfo l_member = constructor;
@@ -273,7 +279,7 @@ namespace md_consumer
             }
         }
 
-	    protected new void check_eiffel_compliance()
+	    protected override void check_eiffel_compliance()
 			// -- Checks entity to see if it is Eiffel-compliant.
         {
             ConstructorInfo l_member = constructor;
@@ -310,7 +316,7 @@ namespace md_consumer
             }
         }
 
-    	protected new void check_extended_compliance()
+    	protected override void check_extended_compliance()
 			// -- Checks entity's CLS-compliance.
         {    
             EventInfo l_member = member_event;
@@ -330,7 +336,7 @@ namespace md_consumer
             }        
         }
 
-	    protected new void check_eiffel_compliance()
+	    protected override void check_eiffel_compliance()
 			// -- Checks entity to see if it is Eiffel-compliant.
 		{
             base.check_eiffel_compliance();
@@ -364,7 +370,7 @@ namespace md_consumer
             Type t = property.PropertyType;
             return entity_factory().checked_type (t);
         }
-    	protected new void check_extended_compliance()
+    	protected override void check_extended_compliance()
 			// -- Checks entity's CLS-compliance.
         {      
             base.check_extended_compliance();
@@ -383,7 +389,7 @@ namespace md_consumer
             }    
         }
 
-	    protected new void check_eiffel_compliance()
+	    protected override void check_eiffel_compliance()
 			// -- Checks entity to see if it is Eiffel-compliant.
         {      
             base.check_eiffel_compliance();
@@ -412,7 +418,7 @@ namespace md_consumer
             Type t = field.FieldType;
             return entity_factory().checked_type (t);
         }
-    	protected new void check_extended_compliance()
+    	protected override void check_extended_compliance()
 			// -- Checks entity's CLS-compliance.
         {  
             FieldInfo l_member = field;
@@ -436,23 +442,25 @@ namespace md_consumer
             }      
         }
 
-	    protected new void check_eiffel_compliance()
+	    protected override void check_eiffel_compliance()
 			// -- Checks entity to see if it is Eiffel-compliant.
 		{
             base.check_eiffel_compliance();
             if (internal_is_eiffel_compliant) {
                 FieldInfo l_member = field;
-                if (! internal_is_compliant && (l_member.IsPublic || l_member.IsFamily || l_member.IsFamilyOrAssembly )) {
-                    EC_CHECKED_TYPE cft = checked_field_type();
-                    bool l_compliant = cft.is_eiffel_compliant();
-                    if (l_compliant) {
-                        internal_is_eiffel_compliant = true;
-                    } else {
-                        non_eiffel_compliant_reason = cft.non_eiffel_compliant_reason;
+                if (! internal_is_compliant) {
+                    if (l_member.IsPublic || l_member.IsFamily || l_member.IsFamilyOrAssembly) {
+                        EC_CHECKED_TYPE cft = checked_field_type();
+                        bool l_compliant = cft.is_eiffel_compliant();
+                        if (l_compliant) {
+                            internal_is_eiffel_compliant = true;
+                        } else {
+                            internal_is_eiffel_compliant = false;
+                            non_eiffel_compliant_reason = cft.non_eiffel_compliant_reason;
+                        }
                     }
                 }
             }
-
         }
     }            
  

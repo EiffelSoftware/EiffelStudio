@@ -15,16 +15,31 @@ namespace md_consumer
 		public bool has_generic_type=false;
         public bool has_pointer_type=false;
         public bool is_forwarded_type=false;
-        public bool is_excluded() {
-            return has_generic_type || has_pointer_type;
+
+        public bool is_nested_or_delegate_type=false;
+
+        public virtual bool is_excluded() {
+            return has_generic_type || has_pointer_type; // || is_nested_or_delegate_type;
         }        
 
         public CONSUMED_REFERENCED_TYPE(string n, int i)
         {
             name = n;
-            has_generic_type = n.IndexOf('`') > 0; // FIXME: support for generics?
+            has_generic_type = n.IndexOf('`') > 0;  // TODO: handle generics!
             has_pointer_type = name.IndexOf('*') > 0 ;
+            is_nested_or_delegate_type = name.IndexOf('+') > 0 ;
             assembly_id = i;
+        }
+        public CONSUMED_REFERENCED_TYPE (CONSUMED_REFERENCED_TYPE r): this(r.name, r.assembly_id)
+        {
+            if (r.is_by_ref()) {
+                set_is_by_ref();
+            }
+        }
+
+        public virtual string real_type_name()
+        {
+            return name;
         }
 
         public bool is_by_ref() 
@@ -42,10 +57,32 @@ namespace md_consumer
         }
     }   
 
+    public class CONSUMED_FORMAL_GENERIC_TYPE : CONSUMED_REFERENCED_TYPE
+    {
+        public string formal_type_name;
+        public int formal_position; // 0-based index
+
+        public CONSUMED_FORMAL_GENERIC_TYPE(CONSUMED_REFERENCED_TYPE r, string gen_type_name, int gen_type_position): base (r)
+        {
+            // base.CONSUMED_REFERENCED_TYPE (r.name, r.assembly_id);
+            formal_type_name = gen_type_name;
+            formal_position = gen_type_position;
+        }
+
+
+        public override bool is_excluded() {
+            return has_pointer_type; //base.is_excluded()
+        }
+        public override string real_type_name()
+        {
+            return formal_type_name;
+        }
+    }    
+
     public class CONSUMED_ARRAY_TYPE : CONSUMED_REFERENCED_TYPE
     {
         public CONSUMED_REFERENCED_TYPE element_type;
-        public new bool is_excluded() {
+        public override bool is_excluded() {
             return base.is_excluded() || element_type.is_excluded();
         }   
         public CONSUMED_ARRAY_TYPE(string n, int i, CONSUMED_REFERENCED_TYPE t) : base (n, i)
@@ -79,7 +116,7 @@ namespace md_consumer
         public bool is_excluded() {
             return parent != null && parent.is_excluded();
             // FIXME: add more criteria!
-        }        
+        }
 
         public CONSUMED_TYPE (string dn, string en,
 			bool is_inter, bool is_abstract, bool is_sealed, bool is_value_type, bool is_enumerator,

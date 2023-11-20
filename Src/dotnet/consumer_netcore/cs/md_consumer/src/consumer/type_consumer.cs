@@ -116,7 +116,13 @@ namespace md_consumer
 				}
 			}
 
-			Type[] inter = t.GetInterfaces();
+			Type[]? inter = null;
+			try {
+				inter = t.GetInterfaces();
+			} catch {
+				STATUS_PRINTER.debug("Failure with GetInterface() on type "+ t.ToString());
+				inter = null;
+			}
 			if (inter != null) {
 				nb = inter.Length;
 				interfaces = new List<CONSUMED_REFERENCED_TYPE>();
@@ -287,7 +293,7 @@ namespace md_consumer
 						if (l_unique_eiffel_name == null) {
 							l_unique_eiffel_name = l_info_name;
 						}
-						return new CONSUMED_PROCEDURE (
+						var proc = new CONSUMED_PROCEDURE (
 								l_unique_eiffel_name,
 								l_dotnet_name,
 								SHARED_NAME_FORMATTER.formatted_feature_name (l_dotnet_name),
@@ -301,6 +307,8 @@ namespace md_consumer
 								property_or_event,
 								referenced_type_from_type (l_decl_type)
 							);
+						update_generic_info (info, proc);
+						return proc;				
 					} catch {
 						// FIXME: exception due to function pointer... info.GetParameters() and info.ReturnType.
 						return null;
@@ -330,8 +338,8 @@ namespace md_consumer
 		 			string? l_unique_eiffel_name = overload_solver.unique_eiffel_name (l_info_name, info.GetParameters(), l_ret_type, l_decl_type);
 					if (l_unique_eiffel_name == null) {
 						l_unique_eiffel_name = l_info_name;
-					} 
-					return new CONSUMED_FUNCTION (
+					}
+					var fct = new CONSUMED_FUNCTION (
 							l_unique_eiffel_name,
 							l_dotnet_name,
 							SHARED_NAME_FORMATTER.formatted_feature_name (l_dotnet_name),
@@ -347,12 +355,29 @@ namespace md_consumer
 							info.IsVirtual,
 							property_or_event,
 							referenced_type_from_type (l_decl_type)
-						);					
+						);
+					update_generic_info (info, fct);
+					return fct;				
 				} else {
 					Debug.Assert(false, "from doc");
 				}
 			}
 			return null;
+		}
+
+		protected void update_generic_info (MethodInfo info, CONSUMED_PROCEDURE proc)
+			// Update `proc` with generic method info if any.
+		{
+			if (info.IsGenericMethod) {
+				Type[] typeArguments = info.GetGenericArguments();
+				string[] generic_parameters = new string[typeArguments.Length];
+				foreach (Type tParam in typeArguments) {
+
+					generic_parameters[tParam.GenericParameterPosition] = tParam.Name;
+					//Console.WriteLine("{0} param pos {1} decl meth {2}", tParam, tParam.GenericParameterPosition, tParam.DeclaringMethod);
+				}
+				proc.set_is_generic_method(true, generic_parameters);
+			}
 		}
 
 		public CONSUMED_PROPERTY? consumed_property (PropertyInfo info)
@@ -570,7 +595,7 @@ namespace md_consumer
 			MemberInfo[] l_merged_members;
 			PropertyInfo[] l_merged_properties;
 			EventInfo[] l_merged_events;
-			Type[] l_interfaces;
+			Type[]? l_interfaces;
 	// 		i, nb: INTEGER
 			MemberInfo?[] l_members;
 			PropertyInfo?[] l_properties;
@@ -617,7 +642,13 @@ namespace md_consumer
 			internal_events.CopyTo(l_merged_events, offset); 
 			internal_events = l_merged_events;
 
-			l_interfaces = t.GetInterfaces();
+			
+			try {
+				l_interfaces = t.GetInterfaces();
+			} catch {
+				STATUS_PRINTER.debug("Failure with GetInterfaces() on type " + t.ToString());
+				l_interfaces = null; // FIXME
+			}			
 			if (l_interfaces != null) {
 				processed.Add(t, t);
 				// foreach(DictionaryEntry e in processed)
@@ -636,14 +667,18 @@ namespace md_consumer
 		// 	a_method_attached: a_method /= Void
 			string res = a_method.Name + '(';
 			int i = 0;
-			foreach(ParameterInfo l_param in a_method.GetParameters())
-			{
-				Type l_type = l_param.ParameterType;
-				if (i > 0) {
-					res = res + ',';
+			try {
+				foreach(ParameterInfo l_param in a_method.GetParameters())
+				{
+					Type l_type = l_param.ParameterType;
+					if (i > 0) {
+						res = res + ',';
+					}
+					res = res + l_type.Name;
+					i = i + 1;
 				}
-				res = res + l_type.Name;
-				i = i + 1;
+			} catch {
+				STATUS_PRINTER.debug("Failure with GetParameters() on method " + a_method.ToString());
 			}
 			res = res + ')';
 			return res;
@@ -671,6 +706,7 @@ namespace md_consumer
 			// do
 
 			// DEBUG: Console.WriteLine("Initialize " + eiffel_name + " : " + system_type.ToString());
+ 			STATUS_PRINTER.debug(string.Format("Initialize '{0}' : '{1}'", eiffel_name, system_type.ToString()));
 
 			try {
 			// 		check
@@ -740,21 +776,41 @@ namespace md_consumer
 							if (!is_property_or_event (l_meth)) {
 								if (is_function (l_meth)) {
 									CONSUMED_FUNCTION? cp_function = consumed_function (l_meth, false);
-									if (cp_function != null && !cp_function.is_excluded()) {
-										if (has_consumed_function (cp_function)) {
-										// DEBUG: Console.WriteLine(" !!! Already has such function: " + eiffel_name + "." + cp_function.dotnet_name);
+									if (cp_function != null) {
+										if (cp_function.is_excluded()) {
+											if (cp_function.has_generic_type_arguments()) {
+												STATUS_PRINTER.debug(string.Format(" - GENERIC EXCLUDED Function {0}.{1} -> {2}", eiffel_name, l_meth.Name, l_meth.ToString()));
+											} else {
+												STATUS_PRINTER.debug(string.Format(" - EXCLUDED Function {0}.{1} -> {2}", eiffel_name, l_meth.Name, l_meth.ToString()), 2);
+											}
 										} else {
-											l_functions.Add (cp_function);
+											if (has_consumed_function (cp_function)) {
+											// DEBUG: Console.WriteLine(" !!! Already has such function: " + eiffel_name + "." + cp_function.dotnet_name);
+												STATUS_PRINTER.debug(string.Format(" ! FOUND Function {0}.{1}", eiffel_name, cp_function.dotnet_name));
+											} else {
+												STATUS_PRINTER.debug(string.Format(" + Function  {1} -> {2}", eiffel_name, l_meth.Name, l_meth.ToString()));
+												l_functions.Add (cp_function);
+											}
 										}
 									}
 								} else {
 									CONSUMED_PROCEDURE? cp_procedure = consumed_procedure (l_meth, false);
-									if (cp_procedure != null && !cp_procedure.is_excluded()) {
-										if (has_consumed_procedure (cp_procedure)) {
-										// DEBUG: Console.WriteLine(" !!! Already has such procedure ");
+									if (cp_procedure != null) {
+										if (cp_procedure.is_excluded()) {
+											if (cp_procedure.has_generic_type()) {
+												STATUS_PRINTER.debug(string.Format(" - GENERIC EXCLUDED Procedure {1} -> {2}", eiffel_name, l_meth.Name, l_meth.ToString()));
+											} else {
+												STATUS_PRINTER.debug(string.Format(" - EXCLUDED Procedure {1} -> {2}", eiffel_name, l_meth.Name, l_meth.ToString()), 2);
+											}
 										} else {
-											l_procedures.Add (cp_procedure);
-										}
+											if (has_consumed_procedure (cp_procedure)) {
+												STATUS_PRINTER.debug(string.Format(" ! FOUND Procedure {0}.{1}", eiffel_name, cp_procedure.dotnet_name), 2);
+											// DEBUG: Console.WriteLine(" !!! Already has such procedure ");
+											} else {
+												STATUS_PRINTER.debug(string.Format(" + Procedure {1} -> {2}", eiffel_name, l_meth.Name, l_meth.ToString()));
+												l_procedures.Add (cp_procedure);
+											}
+										}								
 									}
 								}
 							} else {
@@ -770,31 +826,43 @@ namespace md_consumer
 							if (is_consumed_field (l_field)) {
 								CONSUMED_FIELD? cp_field = consumed_field (l_field);
 								if (cp_field != null && !cp_field.is_excluded()) {
+									STATUS_PRINTER.debug(string.Format(" + Field {1} -> {2}", eiffel_name, l_field.Name, l_field.ToString()));
 									l_fields.Add (cp_field);
 									if (is_public_field (l_field) && !is_init_only_field (l_field)) {
 										CONSUMED_PROCEDURE? l_setter = attribute_setter_feature (l_field, l_fields.Last().eiffel_name);
 										if (l_setter != null && !l_setter.is_excluded()) {
 											cp_field.set_setter (l_setter);
+											STATUS_PRINTER.debug(string.Format(" + Proc-Setter {1} -> {2}", eiffel_name, l_setter.eiffel_name, l_setter.dotnet_name));
 											l_procedures.Add (l_setter);
+											
 										} else {
 											Debug.Assert(false, "has setter");
 										}
 									}
 								} else {
 									Debug.Assert(cp_field != null && cp_field.is_excluded(), "has field");
+									STATUS_PRINTER.debug(string.Format(" - EXCLUDED Field {1} -> {2}", eiffel_name, l_field.Name, l_field.ToString()));
 								}
+							} else {
+								STATUS_PRINTER.debug(string.Format(" - IGNORED Field {1} -> {2}", eiffel_name, l_field.Name, l_field.ToString()));
 							}
 						} else if (l_member.MemberType == MemberTypes.Property) {
 							PropertyInfo l_property = (PropertyInfo) l_member;
 							CONSUMED_PROPERTY? cp_property = consumed_property(l_property);
 							if (cp_property != null) {
+								STATUS_PRINTER.debug(string.Format(" + Property {1} -> {2}", eiffel_name, l_property.Name, l_property.ToString()));
 								l_properties.Add (cp_property);
+							} else {
+								STATUS_PRINTER.debug(string.Format(" - IGNORED Property {1} -> {2}", eiffel_name, l_property.Name, l_property.ToString()));
 							}
 						} else if (l_member.MemberType == MemberTypes.Event) {
 							EventInfo l_event = (EventInfo) l_member;
 							CONSUMED_EVENT? cp_event = consumed_event(l_event);
 							if (cp_event != null) {
+								STATUS_PRINTER.debug(string.Format(" + Event {1} -> {2}", eiffel_name, l_event.Name, l_event.ToString()));
 								l_events.Add (cp_event);
+							} else {
+								STATUS_PRINTER.debug(string.Format(" - IGNORED Event {1} -> {2}", eiffel_name, l_event.Name, l_event.ToString()));								
 							}
 						}
 					} catch {
@@ -845,6 +913,7 @@ namespace md_consumer
 				initialized = true;
 			
 			} catch {
+				STATUS_PRINTER.error(string.Format("Failure while initializing type '{0}' : '{1}'", eiffel_name, system_type.ToString()));
 
 				initialized = false;
 

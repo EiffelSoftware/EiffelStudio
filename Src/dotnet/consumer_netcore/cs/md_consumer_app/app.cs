@@ -90,6 +90,8 @@ namespace EifMdConsumer
                 }
             }
 
+            md_consumer.STATUS_PRINTER.setup (true);
+
 			md_consumer.STATUS_PRINTER.set_error (true);
             if (is_silent) {
                 nologo = true;
@@ -121,6 +123,8 @@ namespace EifMdConsumer
                     md_consumer.ASSEMBLY_LOADER loader = md_consumer.SHARED_ASSEMBLY_LOADER.assembly_loader;
                     if (is_debug) {
                         loader.set_is_debug (true);
+                        md_consumer.STATUS_PRINTER.set_info (true);
+                        md_consumer.STATUS_PRINTER.set_warning (true);
                         if (debug_level > 1) {
                             md_consumer.STATUS_PRINTER.set_debug (true, debug_level - 1);
                         }

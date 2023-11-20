@@ -10,7 +10,6 @@ using System.Diagnostics;
 
 namespace md_consumer
 {
-
     class AssemblyConsumer : EC_CHECKED_ENTITY_FACTORY
     {
         // public Assembly assembly;
@@ -45,11 +44,11 @@ namespace md_consumer
         {
             MdConsumerData md_data = new MdConsumerData();
             if (a_info_only) {
-                System.Diagnostics.Trace.WriteLine(string.Format("Beginning consumption for assembly '{0}'.", assembly.ToString()));
-                System.Diagnostics.Trace.WriteLine(string.Format("Consuming into '{0}'.", destination_path_name));
+                STATUS_PRINTER.info(string.Format("Beginning consumption for assembly '{0}'.", assembly.ToString()));
+                STATUS_PRINTER.info(string.Format("Consuming into '{0}'.", destination_path_name));
             } else {
-                System.Diagnostics.Trace.WriteLine(string.Format("Beginning full consumption for assembly '{0}'.", assembly.ToString()));
-                System.Diagnostics.Trace.WriteLine(string.Format("Consuming fully into '{0}'.", destination_path_name));
+                STATUS_PRINTER.info(string.Format("Beginning full consumption for assembly '{0}'.", assembly.ToString()));
+                STATUS_PRINTER.info(string.Format("Consuming fully into '{0}'.", destination_path_name));
             }
             //JFIAT 
             shared_assembly_mapping.reset_assembly_mapping();
@@ -91,7 +90,7 @@ namespace md_consumer
                         l_ref_ass = null;
                     }
                     if (l_ref_ass == null) {
-                        System.Diagnostics.Trace.WriteLine(string.Format(" ! could not load assembly '{0}'.", l_assembly_name.ToString()));
+                        STATUS_PRINTER.debug(string.Format(" ! could not load assembly '{0}'.", l_assembly_name.ToString()));
                     } else {
                         string? l_ref_ass_full_name = l_ref_ass.FullName;
                         if (l_ref_ass_full_name != null) {
@@ -152,11 +151,11 @@ namespace md_consumer
                         a_ref = SHARED_ASSEMBLY_LOADER.assembly_loader.assembly_from_name(n);
                         // a_ref = Assembly.Load(n);
                     }
-                    catch (FileNotFoundException fnf) { Console.WriteLine("ERROR while trying to load ref ass " + n.Name + ": FILE NOT FOUND ("+ fnf.FileName +")\n"); }
-                    catch (FileLoadException) { Console.WriteLine("ERROR while trying to load ref ass " + n.Name + ": FILE LOAD EXCEPTION\n"); }
-                    catch (BadImageFormatException) { Console.WriteLine("ERROR while trying to load ref ass " + n.Name + ": BAD IMAGE FORMAT EXCEPTION\n"); }
+                    catch (FileNotFoundException fnf) { STATUS_PRINTER.error("while trying to load ref ass " + n.Name + ": FILE NOT FOUND ("+ fnf.FileName +")\n"); }
+                    catch (FileLoadException) { STATUS_PRINTER.error("while trying to load ref ass " + n.Name + ": FILE LOAD EXCEPTION\n"); }
+                    catch (BadImageFormatException) { STATUS_PRINTER.error("while trying to load ref ass " + n.Name + ": BAD IMAGE FORMAT EXCEPTION\n"); }
                     catch {
-                        Console.WriteLine("ERROR while trying to load ref ass " + n.Name + ": EXCEPTION OCCURED\n");
+                        STATUS_PRINTER.error("while trying to load ref ass " + n.Name + ": EXCEPTION OCCURED\n");
                     }
 
                     writer.WriteStartObject();
@@ -267,8 +266,9 @@ namespace md_consumer
             foreach (KeyValuePair<string,List<TYPE_NAME_SOLVER>> kvp in names) {
                 List<TYPE_NAME_SOLVER> list = kvp.Value;
                 foreach (TYPE_NAME_SOLVER tns in list) {
-                    if (tns.eiffel_name.Contains('<') || tns.eiffel_name.Contains('`')) {
+                    if (tns.eiffel_name.Contains('<') || tns.eiffel_name.Contains('`')) {  // TODO: handle generics!
                         //FIXME Not Yet Supported !! generic                        
+                        STATUS_PRINTER.info(string.Format("Ignoring generic type '{0}'.", tns.eiffel_name));
                     } else {
                         // if (kvp.Value.Count > 1) {
                         //     Console.WriteLine(" *-> " + kvp.Key + ": " + tns.eiffel_name + " = " + tns.simple_name);
@@ -285,11 +285,12 @@ namespace md_consumer
                                 tc = new TYPE_CONSUMER(t, tns.eiffel_name, tns.assembly_id);
                             }
                             type_consumers.Add(tns.eiffel_name, tc);
+                            STATUS_PRINTER.debug(string.Format("Analyzed '{0}' ('{1}').", tc.consumed_type.dotnet_name, tc.consumed_type.eiffel_name));
                         }
                         catch (System.IO.FileNotFoundException ex)
                         {
                             // We are missing the required dependency assembly.
-                            Console.WriteLine("  [Error] missing dependency assembly: " + ex.ToString());
+                            STATUS_PRINTER.error("missing dependency assembly: " + ex.ToString());
                         }
                     }                        
                 }
@@ -319,6 +320,7 @@ namespace md_consumer
                     tc.initialize();
                     if (!tc.initialized) {
                         // TODO Error
+                        STATUS_PRINTER.error(string.Format("Error: TYPE_CONSUMER '{0}' is not initialized!", tc.eiffel_name));
                     } else {
                         CONSUMED_TYPE type = tc.consumed_type;
                         CONSUMED_REFERENCED_TYPE? parent = type.parent;
@@ -342,6 +344,7 @@ namespace md_consumer
                                 string s = Path.Combine(destination_path_name, classes_file_name);
                                 // Append to file `s`
                                 long file_size = md_data.serialize_type_to_json_file (type, s, true);
+                                STATUS_PRINTER.debug(string.Format("Written '{0}': '{1}'", tc.eiffel_name, s));
                                 l_file_position = (int) file_size;
                             }
                         }

@@ -33,6 +33,10 @@ namespace md_consumer
         {
             return type.is_excluded();
         }
+        public string real_argument_type_name()
+        {
+            return type.real_type_name();
+        }        
 
     }
 

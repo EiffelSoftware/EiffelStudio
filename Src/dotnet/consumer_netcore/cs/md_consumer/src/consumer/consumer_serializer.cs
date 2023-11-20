@@ -475,6 +475,19 @@ namespace md_consumer
         {
             var writer = json_writer;
             serialize_member (proc);
+            if (proc.is_generic_method) {
+                writer.WritePropertyName(JSON_NAMES.is_generic); //"is_generic");
+                writer.WriteBooleanValue(true);
+                writer.WritePropertyName(JSON_NAMES.generic_parameters); //"generic_parameters");
+                writer.WriteStartArray();
+                if (proc.generic_parameters != null) {
+                    foreach(string pn in proc.generic_parameters)
+                    {
+                        writer.WriteStringValue(pn);
+                    }                         
+                    writer.WriteEndArray();   
+                }
+            }
             writer.WritePropertyName(JSON_NAMES.arguments); //"arguments");
             writer.WriteStartArray();
             foreach(CONSUMED_ARGUMENT arg in proc.arguments)
@@ -523,6 +536,13 @@ namespace md_consumer
                 CONSUMED_ARRAY_TYPE arr_type = (CONSUMED_ARRAY_TYPE) ref_type;
                 writer.WritePropertyName(JSON_NAMES.element_type); //"element_type");
                 serialize_referenced_type_as_object(arr_type.element_type, inc_type_name);
+            }
+            if (ref_type is CONSUMED_FORMAL_GENERIC_TYPE && md_consumer.Config.generic_method_enabled) {
+                CONSUMED_FORMAL_GENERIC_TYPE l_formal_type = (CONSUMED_FORMAL_GENERIC_TYPE) ref_type;
+                writer.WritePropertyName(JSON_NAMES.formal_type_name); //"formal_type_name");
+                writer.WriteStringValue(l_formal_type.formal_type_name);
+                writer.WritePropertyName(JSON_NAMES.formal_position); //"formal_position");
+                writer.WriteNumberValue(l_formal_type.formal_position);
             }
             end_serialize_object(ref_type, inc_type_name);
         }

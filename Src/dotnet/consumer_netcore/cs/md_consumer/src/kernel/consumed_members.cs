@@ -14,11 +14,11 @@ namespace md_consumer
         public CONSUMED_MEMBER(string en, string dn, bool pub, CONSUMED_REFERENCED_TYPE a_type) : base (en, dn, pub, a_type)
         {
         }
-        public bool has_generic_type() 
+        public virtual bool has_generic_type() 
         {
             return false;
         }
-        new public bool is_public()
+        public override bool is_public()
         {
             return (flags & FEATURE_ATTRIBUTE.is_public) == FEATURE_ATTRIBUTE.is_public;
         }
@@ -46,7 +46,7 @@ namespace md_consumer
         {
             return (flags & FEATURE_ATTRIBUTE.is_newslot) == FEATURE_ATTRIBUTE.is_newslot;
         }  
-        public bool is_virtual()
+        public virtual bool is_virtual()
         {
             return (flags & FEATURE_ATTRIBUTE.is_virtual) == FEATURE_ATTRIBUTE.is_virtual;
         }
@@ -55,7 +55,7 @@ namespace md_consumer
             return (flags & FEATURE_ATTRIBUTE.is_attribute_setter) == FEATURE_ATTRIBUTE.is_attribute_setter;
         }
 
-	    new public void set_is_public (bool pub)
+	    public override void set_is_public (bool pub)
         {
             if (pub) {
                 flags = flags | FEATURE_ATTRIBUTE.is_public;
@@ -75,6 +75,9 @@ namespace md_consumer
     public class CONSUMED_PROCEDURE: CONSUMED_MEMBER
     {
         public CONSUMED_ARGUMENT[] arguments;
+
+        public bool is_generic_method = false;
+        public string[]? generic_parameters = null;
         public CONSUMED_PROCEDURE(string en, string dn, string den, CONSUMED_ARGUMENT[] args, bool froz, bool a_static, bool defer, bool pub, bool ns, bool virt, bool poe, CONSUMED_REFERENCED_TYPE a_type) : base (en, dn, pub, a_type)
         {
             if (!den.Equals(en)) {
@@ -100,7 +103,7 @@ namespace md_consumer
             }
             if (poe) {
                 flags = flags | FEATURE_ATTRIBUTE.is_property_or_event;
-            }          
+            }
         }
  
         public CONSUMED_PROCEDURE(string en, string dn, CONSUMED_ARGUMENT arg, CONSUMED_REFERENCED_TYPE a_type, bool a_static) : base (en, dn, true, a_type)
@@ -112,8 +115,15 @@ namespace md_consumer
                 flags = flags | FEATURE_ATTRIBUTE.is_static;
             }
             flags = flags | FEATURE_ATTRIBUTE.is_attribute_setter;
-        }     
-        public new bool is_excluded() 
+        } 
+
+        public void set_is_generic_method(bool v, string[]? a_generic_parameters)
+        {
+            is_generic_method = v;
+            generic_parameters = a_generic_parameters;
+        }
+
+        public override bool is_excluded() 
         {
             if (base.is_excluded()) {
                 return true;
@@ -124,11 +134,23 @@ namespace md_consumer
                             return true;
                         }
                     }
-                }                
+                }
             }
             return false;
         }
-        public new bool has_generic_type() 
+        public bool has_generic_type_arguments() 
+        {
+            if (arguments != null) {
+                foreach (var a in arguments) {
+                    if (a.has_generic_type()) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }         
+        
+        public override bool has_generic_type() 
         {
             if (arguments != null) {
                 foreach (var a in arguments) {
@@ -190,11 +212,11 @@ namespace md_consumer
         {
             return same_procedure (obj) && return_type.same_as (obj.return_type);
         }
-        public new bool is_excluded()
+        public override bool is_excluded()
         {
             return return_type.is_excluded() || base.is_excluded();
         }
-        public new bool has_generic_type() 
+        public override bool has_generic_type() 
         {
             return return_type.has_generic_type || base.has_generic_type();
         }
@@ -232,7 +254,7 @@ namespace md_consumer
         {
             return (flags & FEATURE_ATTRIBUTE.is_init_only) == FEATURE_ATTRIBUTE.is_init_only;
         }
-        new public bool is_virtual()
+        public override bool is_virtual()
         {
             return !is_static();
         }
@@ -246,11 +268,11 @@ namespace md_consumer
             }
             return_type = rt;
         }
-        new public bool is_excluded() {
+        public override bool is_excluded() {
             return base.is_excluded() || (has_return_value && return_type.is_excluded());
         }
 
-        public new bool has_generic_type() 
+        public override bool has_generic_type() 
         {
             return has_return_value && return_type.has_generic_type;
         }

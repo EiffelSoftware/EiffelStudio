@@ -44,10 +44,26 @@ namespace Eiffel.MD.Testing
         	bar_value = v;
         }
 
-        public string bargen<T>(T gen_v)
+        public string bargen_t<T>(T a1)
         {
-        	return "bargen<"+typeof(T).ToString() +">";
+        	return "bargen_t<"+typeof(T).ToString() +">";
         }
+
+        public string bargen_tu<T,U>(T a1, U a2)
+        {
+        	return "bargen_tu<"+typeof(T).ToString() +", "+typeof(U).ToString() +">";
+        }
+
+        public string bargen_t_str_u<T,U>(T a1, string a2, U a3)
+        {
+        	return "bargen_t_str_u<"+typeof(T).ToString() +", string, "+typeof(U).ToString() +">";
+        }
+
+        public T bargen_rt_t<T>(T v)
+        {
+        	return v;
+        }
+
         public string barnogen(Object v)
         {
         	return "barnogen<"+v.GetType().ToString() +">";

@@ -16,7 +16,7 @@ namespace md_consumer
         public CONSUMED_ARGUMENT[] arguments;
         public bool is_frozen = true;
         public bool is_constructor = true;
-        new public string dotnet_eiffel_name()
+        public new string dotnet_eiffel_name()
         {
             return "make";
         }
@@ -27,7 +27,7 @@ namespace md_consumer
             arguments = args;
         }
 
-        new public bool is_excluded() {
+        public override bool is_excluded() {
             if (base.is_excluded()) {
                 return true;
             } else {

@@ -110,7 +110,7 @@ iff exist %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore\nemdc.exe then
 else
 	cdd %EIFFEL_SRC%\dotnet\consumer_netcore
 	espawn "geant clobber" >>& %INSTALL_LOG%
-	espawn "geant install" >>& %INSTALL_LOG%
+	espawn "geant publish" >>& %INSTALL_LOG%
 	mkdir %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore
 	iff exist pub\%ISE_PLATFORM%\nemdc.exe then
 		safe_copy pub\%ISE_PLATFORM%\*.* %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\netcore

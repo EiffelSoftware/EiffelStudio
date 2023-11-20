@@ -8,7 +8,7 @@
 	<target name="help">
 		<echo message="usage:"/>
 		<echo message=" geant compile"/>
-		<echo message=" geant install"/>
+		<echo message=" geant publish"/>
 		<echo message=" geant clean"/>
 		<echo message=" geant clobber"/>
 	</target>
@@ -18,12 +18,12 @@
 		<exec executable="dotnet build -c Release" accept_errors="true" dir="cs${path_separator}md_consumer_app" />
 	</target>
 
-	<target name="install" depend="compile">
+	<target name="publish">
 		<echo message="- Install nemdc into pub folder" />
-		<geant target="publish" arguments="${ISE_PLATFORM}" reuse_variables="true"/>
+		<geant target="publish_for" arguments="${ISE_PLATFORM}" reuse_variables="true"/>
 	</target>
 
-	<target name="publish" depend="compile">
+	<target name="publish_for" depend="compile">
 		<argument name="a_platform"/>
 		<!-- See: https://learn.microsoft.com/en-us/dotnet/core/rid-catalog --> 
 		<echo message="- Publish nemdc for ${a_platform} into pub${path_separator}${a_platform} folder" />
@@ -34,6 +34,17 @@
 		<set name="opts" value="--self-contained --runtime linux-arm64" if="${a_platform}=linux-arm64"/>
 		<set name="opts" value="--self-contained --runtime osx-x64" if="${a_platform}=macosx-x86-64"/>
 		<exec executable="dotnet publish cs${path_separator}md_consumer_app${path_separator}app.csproj --configuration Release ${opts} --output pub${path_separator}${a_platform}" accept_errors="true"/>
+	</target>
+
+	<target name="install" depend="publish">
+		<echo message="- Install nemdc into ISE_EIFFEL folder" />
+		<delete dir="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin${path_separator}netcore">
+			<fileset  include="@(*.*)"/>
+  		</delete>
+		<copy dir="pub${path_separator}${ISE_PLATFORM}" to_directory="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin${path_separator}netcore" force="true">
+		  	<fileset include="@(*.*)"/>
+		</copy>
+		<exec executable="chmod u+x nemdc${exe} " dir="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin${path_separator}netcore" />  		
 	</target>
 
 	<target name="clean" >

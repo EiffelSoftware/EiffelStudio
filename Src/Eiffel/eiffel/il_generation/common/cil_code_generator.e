@@ -4049,7 +4049,7 @@ feature -- IL Generation
 	internal_generate_external_call (an_assembly_token, a_type_token: INTEGER; base_name: STRING;
 			member_name: STRING; ext_kind: INTEGER;
 			parameters_string: ARRAY [STRING]; return_type: STRING;
-			is_virtual: BOOLEAN; is_generic_method: BOOLEAN; generic_method_parameters_info: detachable CONSUMED_GENERIC_PARAMETERS_INFO;)
+			is_virtual: BOOLEAN; generic_method_parameters_info: detachable CONSUMED_GENERIC_PARAMETERS_INFO;)
 
 			-- Generate call to `member_name' with signature `parameters_type' + `return_type'.
 		require
@@ -4063,8 +4063,9 @@ feature -- IL Generation
 			i, gen_i, nb: INTEGER
 			l_context_class_type: CLASS_TYPE
 			p: CONSUMED_PROCEDURE
+			is_generic_method: BOOLEAN
 		do
---			is_generic_method := generic_method_parameters_info /= Void and then generic_method_parameters_info.has_generic
+			is_generic_method := generic_method_parameters_info /= Void and then generic_method_parameters_info.has_generic
 			l_context_class_type := current_class_type
  			if base_name /= Void then
  				uni_string.set_string (base_name)
@@ -4424,8 +4425,7 @@ feature -- Object creation
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				generic_conformance_class_name,
 				"create_like_object", Static_type, <<type_info_class_name>>,
-				type_info_class_name,
-				Void)
+				type_info_class_name, False, Void)
 		end
 
 	load_type

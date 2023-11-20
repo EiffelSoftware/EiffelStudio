@@ -1358,9 +1358,11 @@ feature -- Definition: Creation
 	define_string (str: CLI_STRING): INTEGER
 			-- Define a new token for `str'.
 		local
+			l_str: STRING_32
 			l_us_index: NATURAL_32
 		do
-			l_us_index := hash_utf_16le_string_8_us (str.raw_string, str.count)
+			create l_str.make_from_string (str.string_32)
+			l_us_index := hash_us (l_str, l_str.count)
 			Result := (l_us_index | ({NATURAL_32} 0x70 |<< 24)).to_integer_32
 		end
 

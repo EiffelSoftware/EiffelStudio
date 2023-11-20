@@ -556,6 +556,7 @@ feature -- Generation
     <Reference Include="EiffelSoftware.Runtime">
       <HintPath>Eiffelsoftware.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="assembly_*.dll"/>
   </ItemGroup>
 </Project>
 			]"

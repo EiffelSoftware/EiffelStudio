@@ -81,7 +81,6 @@ feature {MD_EMIT_BRIDGE} -- Change tables
 				{PE_TABLES}.tGenericParam, -- Not used.
 				{PE_TABLES}.tImplMap,
 				{PE_TABLES}.tMethodSemantics,
-				{PE_TABLES}.tMethodSpec, -- Not used
 				{PE_TABLES}.tNestedClass, -- Not used
 				{PE_TABLES}.tStandaloneSig
 			then

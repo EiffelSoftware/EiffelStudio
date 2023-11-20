@@ -65,6 +65,24 @@ feature -- Settings
 			end
 		end
 
+	set_generic_parameter_type (element_type: INTEGER_8; a_param_index: INTEGER)
+			-- note: `a_param_index` is 0-based.
+		require
+			expected_data: (element_type = {MD_SIGNATURE_CONSTANTS}.Element_type_mvar) implies
+				a_param_index >= 0
+		do
+			internal_put (element_type, current_position)
+			current_position := current_position + 1
+			inspect
+				element_type
+			when
+				{MD_SIGNATURE_CONSTANTS}.Element_type_mvar
+			then
+				compress_data (a_param_index)
+			else
+			end
+		end
+
 feature -- Copy
 
 	as_special: SPECIAL [NATURAL_8]

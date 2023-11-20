@@ -125,6 +125,19 @@ feature -- IL Generation
 			base_name_not_void: base_name /= Void
 			base_name_empty: not base_name.is_empty
 			valid_external_type: valid_type (ext_kind)
+			deferred
+			end
+
+	generate_external_generic_call (base_name: STRING; name: STRING; ext_kind: INTEGER;
+			parameters_type: ARRAY [INTEGER]; generic_method_parameters_info: CONSUMED_GENERIC_PARAMETERS_INFO; return_type: INTEGER;
+			is_virtual: BOOLEAN)
+
+			-- Generate generic method call to `name' with signature `parameters_type' + `return_type'.
+		require
+			base_name_not_void: base_name /= Void
+			base_name_empty: not base_name.is_empty
+			valid_external_type: valid_type (ext_kind)
+			generic_method_parameters_info_set: generic_method_parameters_info /= Void and then generic_method_parameters_info.has_generic
 		deferred
 		end
 
@@ -1305,7 +1318,7 @@ feature -- Generic conformance
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

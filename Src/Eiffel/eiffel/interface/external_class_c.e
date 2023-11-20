@@ -867,6 +867,12 @@ feature {NONE} -- Initialization
 
 				l_names_heap.put (l_member.dotnet_name)
 				l_ext.set_alias_name_id (l_names_heap.found_item)
+
+					-- Special case of generic method!!
+				if attached {CONSUMED_PROCEDURE} l_member as l_proc and then l_proc.is_generic then
+					l_ext.set_is_generic_method (True, l_proc.generic_method_parameter_info)
+				end
+
 				if l_ext.type = {SHARED_IL_CONSTANTS}.Enum_field_type then
 					check
 						l_enum_ext_not_void: l_enum_ext /= Void

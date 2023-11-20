@@ -127,6 +127,12 @@ feature -- Element change
 			ae := a_entity
 		end
 
+	set_is_generic (b: BOOLEAN; a_generic_parameters: detachable ARRAY [detachable READABLE_STRING_32])
+		do
+			is_generic := b
+			generic_parameters := a_generic_parameters
+		end
+
 feature -- Access
 
 	arguments: ARRAY [CONSUMED_ARGUMENT]
@@ -146,6 +152,49 @@ feature -- Status report
 			-- Does current have arguments?
 		do
 			Result := arguments /= Void and then arguments.count /= 0
+		end
+
+	has_generic: BOOLEAN
+		do
+			if
+				attached arguments as args
+			then
+				across
+					args as arg
+				until
+					Result
+				loop
+					Result := arg.has_generic
+				end
+			end
+		end
+
+	is_generic: BOOLEAN
+
+	generic_parameters: detachable ARRAY [detachable READABLE_STRING_32]
+
+	generic_method_parameter_info: CONSUMED_GENERIC_PARAMETERS_INFO
+		require
+			is_generic
+		local
+			args: like arguments
+			i: INTEGER
+		do
+			args := arguments
+			create Result.make (generic_parameters, args.count, has_return_value)
+			if
+				attached {CONSUMED_FORMAL_GENERIC_TYPE} return_type as rt
+			then
+				Result.set_generic_return_type (rt.name, rt.formal_type_name, rt.formal_position)
+			end
+			across
+				args as arg
+			loop
+				i := i + 1
+				if arg.has_generic and then attached {CONSUMED_FORMAL_GENERIC_TYPE} arg.type as ftype then
+					Result.set_generic_argument_type (ftype.name, ftype.formal_type_name, ftype.formal_position, i)
+				end
+			end
 		end
 
 feature {NONE} -- Access

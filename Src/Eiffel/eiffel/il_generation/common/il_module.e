@@ -98,6 +98,10 @@ feature {NONE} -- Initialization
 			i: INTEGER
 			f_ext, ext: READABLE_STRING_32
 		do
+			debug ("il_emitter_table")
+				print ({STRING_32} "IL_MODULE: " + a_module_name_with_extension + "%N")
+			end
+
 			i := a_file_name.last_index_of ('.', a_file_name.count)
 			if i > 0 then
 				f_ext := a_file_name.substring (i + 1, a_file_name.count)
@@ -1108,6 +1112,9 @@ feature -- Code generation
 
 				-- Create Unicode string buffer.
 			create uni_string.make_empty (1024)
+			uni_string.set_string (module_name) --_with_extension)
+
+			md_emit.set_module_name (uni_string)
 
 				-- Create default signature.
 			create default_sig.make
@@ -1133,7 +1140,7 @@ feature -- Code generation
 			generic_ctor_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 			generic_ctor_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, ise_generic_type_token)
 
-			uni_string.set_string (module_name) --_with_extension)
+
 
 			if is_assembly_module or is_using_multi_assemblies then
 				ass := md_factory.assembly_info
@@ -1223,7 +1230,6 @@ feature -- Code generation
 				end
 			end
 
-			md_emit.set_module_name (uni_string)
 
 			if is_debug_info_enabled then
 				uni_string.set_string (module_file_name)
@@ -1301,7 +1307,7 @@ feature -- Code generation
 				il_code_generator.internal_generate_external_call (ise_runtime_token, 0,
 					Runtime_class_name, "assertion_initialize",
 					{SHARED_IL_CONSTANTS}.static_type, <<type_handle_class_name>>,
-					Void, False)
+					Void, False, Void)
 			end
 
 				-- Create ISE_EXCEPTION_MANAGER object and assign it to ISE_RUNTIME.
@@ -1391,7 +1397,7 @@ feature -- Code generation
 				il_code_generator.internal_generate_external_call (ise_runtime_token, 0,
 					Runtime_class_name, "assertion_initialize",
 					{SHARED_IL_CONSTANTS}.static_type, <<type_handle_class_name>>,
-					Void, False)
+					Void, False, Void)
 			end
 
 				-- Dummy ANY object for context in case `system.root_type' is generic.
@@ -1453,6 +1459,9 @@ feature -- Code generation
 			wipe_out
 			is_generated := False
 			is_saved := True
+			debug ("il_emitter_table")
+				print ({STRING_32} "IL_MODULE: " + module_name_with_extension + " SAVED%N")
+			end
 		ensure
 			is_generated_set: not is_generated
 			is_saved: is_saved

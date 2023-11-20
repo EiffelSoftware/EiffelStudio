@@ -51,6 +51,8 @@ feature	-- Names
 	raiser: JSON_STRING once Result := "raiser" end
 	assembly_id: JSON_STRING once Result := "assembly_id" end
 	element_type: JSON_STRING once Result := "element_type" end
+	formal_type_name: JSON_STRING once Result := "formal_type_name" end
+	formal_position: JSON_STRING once Result := "formal_position" end
 	declared_type: JSON_STRING once Result := "declared_type" end
 	return_type: JSON_STRING once Result := "return_type" end
 	is_interface: JSON_STRING once Result := "is_interface" end
@@ -76,6 +78,8 @@ feature	-- Names
 	is_event: JSON_STRING once Result := "is_event" end
 	is_constant: JSON_STRING once Result := "is_constant" end
 	is_attribute: JSON_STRING once Result := "is_attribute" end
+	is_generic: JSON_STRING once Result := "is_generic" end
+	generic_parameters: JSON_STRING once Result := "generic_parameters" end
 
 	type: JSON_STRING once Result := "type" end
 

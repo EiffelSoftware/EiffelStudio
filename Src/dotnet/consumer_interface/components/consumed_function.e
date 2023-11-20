@@ -13,7 +13,7 @@ inherit
 		rename
 			make as method_make
 		redefine
-			has_return_value, return_type, is_infix, is_prefix
+			has_return_value, return_type, is_infix, is_prefix, has_generic
 		end
 
 create
@@ -87,6 +87,16 @@ feature -- Status report
 
 	has_return_value: BOOLEAN = True
 			-- A function always return a value.
+
+	has_generic: BOOLEAN
+		do
+			if attached return_type as l_rt then
+				Result := l_rt.has_generic
+			end
+			if not Result then
+				Result := Precursor
+			end
+		end
 
 feature {NONE} -- Access
 

@@ -73,6 +73,21 @@ feature -- Status report
 			Result := arguments /= Void and then arguments.count /= 0
 		end
 
+	has_generic: BOOLEAN
+		do
+			if
+				attached arguments as args
+			then
+				across
+					args as arg
+				until
+					Result
+				loop
+					Result := arg.has_generic
+				end
+			end
+		end
+
 feature -- Settings
 
 	set_is_public (pub: like is_public)

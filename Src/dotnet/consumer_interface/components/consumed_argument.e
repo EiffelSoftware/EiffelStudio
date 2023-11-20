@@ -59,6 +59,11 @@ feature -- Access
 			Result := t
 		end
 
+	has_generic: BOOLEAN
+		do
+			Result := type.has_generic
+		end
+
 feature {NONE} -- Access
 
 	d: like dotnet_name

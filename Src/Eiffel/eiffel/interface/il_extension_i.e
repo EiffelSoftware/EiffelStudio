@@ -96,8 +96,13 @@ feature -- Call generation
 			check
 				type_not_enum: type /= Enum_field_type
 			end
-			il_generator.generate_external_call (base_class, Names_heap.item (alias_name_id),
-				type, argument_types, return_type, is_polymorphic)
+			if is_generic_method then
+				il_generator.generate_external_generic_call (base_class, Names_heap.item (alias_name_id),
+					type, argument_types, generic_method_parameters_info, return_type, is_polymorphic)
+			else
+				il_generator.generate_external_call (base_class, Names_heap.item (alias_name_id),
+					type, argument_types, return_type, is_polymorphic)
+			end
 		end
 
 	generate_external_creation_call (a_actual_type: CL_TYPE_A)
@@ -133,7 +138,7 @@ feature -- Call generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

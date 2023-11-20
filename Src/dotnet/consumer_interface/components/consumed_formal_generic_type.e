@@ -1,28 +1,37 @@
 note
-	description: "Type referenced by other types (as parent or interface) to be persisted to XML"
+	description: ".NET formal generic type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
+	CONSUMED_FORMAL_GENERIC_TYPE
+
+inherit
 	CONSUMED_REFERENCED_TYPE
+		rename
+			make as referenced_type_make
+		redefine
+			has_generic
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; id: INTEGER)
-			-- Set `name' with `a_name'.
-			-- Set `assembly_id' with `id'.
+	make (a_name: STRING; id: INTEGER; t: like formal_type_name; p: like formal_position)
+			-- Initialize Current with type name `a_name' defined in assembly `id'
+			-- where original formal type name was `t`.
 		require
-			non_void_name: a_name /= Void
-			valid_name: not a_name.is_empty
-			valid_id: id > 0
+			name_not_void: a_name /= Void
+			name_not_empty: not a_name.is_empty
+			id_positive: id > 0
 		do
-			n := a_name
-			i := id
+			referenced_type_make (a_name, id)
+			ftn := t
+			fpos := p
 		ensure
 			name_set: name = a_name
 			id_set: assembly_id = id
@@ -30,60 +39,30 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
-			-- .NET type name
+	formal_type_name: STRING_32
 		do
-			Result := n
+			Result := ftn
 		end
 
-	assembly_id: INTEGER
-			-- Assembly containing type
+	formal_position: INTEGER
+			-- Position of the formal type in generic method declaration
+			-- Warning: this is 0-based index
 		do
-			Result := i
+			Result := fpos
 		end
 
-	is_by_ref: BOOLEAN
-			-- Is current type a byref one?
-		do
-			Result := n.item (n.count) = '&'
-		end
-
-	has_generic: BOOLEAN
-			-- Has generic?
-		do
-		end
-
-feature -- Setting
-
-	set_is_by_ref
-			-- Set `is_byref'.
-		do
-			n.append_character ('&')
-		ensure
-			is_by_ref_set: is_by_ref
-		end
+	has_generic: BOOLEAN = True
 
 feature {NONE} -- Access
 
-	n: STRING
-			-- Internal data for `name'.
+	ftn: like formal_type_name
+			-- Internal data for `formal_type_name'.
 
-	i: INTEGER
-			-- Internal data for `assembly_id'.
-
-feature -- Comparison
-
-	same_as (other: CONSUMED_REFERENCED_TYPE): BOOLEAN
-			-- Only compare referenced types from same assembly as ids may change for other assemblies!
-		do
-			Result := other.assembly_id = assembly_id and other.name.is_equal (name) and
-				other.is_by_ref = is_by_ref
-		end
+	fpos: like formal_position
+			-- Internal data for `formal_position`.
 
 invariant
-	non_void_name: name /= Void
-	valid_name: not name.is_empty
-	valid_assembly_id: assembly_id > 0
+	formal_type_name_set: formal_type_name /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -118,4 +97,4 @@ note
 		]"
 
 
-end -- class CONSUMED_REFERENCE_TYPE
+end -- class CONSUMED_ARRAY_TYPE

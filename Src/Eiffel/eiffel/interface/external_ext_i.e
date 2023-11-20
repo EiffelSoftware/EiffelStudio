@@ -128,6 +128,16 @@ feature -- Properties
 			-- mode we need to ensure that GC will not be blocked waiting for the
 			-- blocking call to resume.
 
+feature -- Properties / generic method
+
+	is_generic_method: BOOLEAN
+			-- Is Current associated with a generic method?
+			-- FIXME: also keep the type information to generate the expected MethodSpec info
+			-- when calling a generic method.
+
+	generic_method_parameters_info: detachable CONSUMED_GENERIC_PARAMETERS_INFO
+			-- Signature parameters types for the generic method.
+
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Convenience
 
 	alias_name: STRING
@@ -178,6 +188,15 @@ feature -- Settings
 			is_blocking_call := v
 		ensure
 			is_blocking_call_set: is_blocking_call = v
+		end
+
+	set_is_generic_method (v: like is_generic_method; args: like generic_method_parameters_info)
+			-- Assign `v` to `is_generic_method`
+		do
+			is_generic_method := v
+			generic_method_parameters_info := args
+		ensure
+			is_generic_method_set: is_generic_method = v
 		end
 
 feature -- Comparison
@@ -346,7 +365,7 @@ feature -- Code generation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

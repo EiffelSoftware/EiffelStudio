@@ -26,6 +26,14 @@ feature -- Access
 	property_sig: INTEGER_8 = 0x08
 			-- Flag for signature description of a property.
 
+	generic_sig: INTEGER_8 = 0x10
+			-- Flag for signature description of a generic type.
+
+	GENRICINST_sig: INTEGER_8 = 0x0A
+			-- Flag for signature description of a generic method
+			-- GENRICINST has the value 0x0A. [Note: This value is known as
+			-- IMAGE_CEE_CS_CALLCONV_GENERICINST in the Microsoft CLR implementation. end note]
+
 	ca_prolog: INTEGER_16 = 0x0001
 			-- Prolog for Custom Attribute blob.
 
@@ -83,6 +91,10 @@ feature -- Types
 	element_type_szarray: INTEGER_8 = 0x1D
 		-- Shortcut for single dimension zero lower bound array
 		-- SZARRAY <type>
+
+	element_type_mvar: INTEGER_8 = 0x1E
+		-- Generic parameter in a generic method definition, represented as number (compressed unsigned integer)
+		-- ELEMENT_TYPE_MVAR
 
 	element_type_cmod_reqd: INTEGER_8 = 0x1F
 		-- required C modifier : E_T_CMOD_REQD <mdTypeRef/mdTypeDef>

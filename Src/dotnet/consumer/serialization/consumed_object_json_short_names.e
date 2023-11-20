@@ -39,6 +39,8 @@ inherit
 			assembly_id,
 			type,
 			element_type,
+			formal_type_name,
+			formal_position,
 			declared_type,
 			return_type,
 			associated_reference_type,
@@ -93,6 +95,8 @@ feature	-- Names
 	assembly_id: JSON_STRING once Result := "aid" end
 	type: JSON_STRING once Result := "t" end
 	element_type: JSON_STRING once Result := "et" end
+	formal_type_name: JSON_STRING once Result := "ftn" end
+	formal_position: JSON_STRING once Result := "fpos" end
 	declared_type: JSON_STRING once Result := "dt" end
 	return_type: JSON_STRING once Result := "rt" end
 --	is_frozen: JSON_STRING once Result := "is_frozen" end
@@ -106,6 +110,9 @@ feature	-- Names
 --	is_infix: JSON_STRING once Result := "is_infix" end
 --	is_prefix: JSON_STRING once Result := "is_prefix" end
 --	is_constructor: JSON_STRING once Result := "is_constructor" end
+--	is_generic: JSON_STRING once Result := "is_generic" end
+--	generic_parameters: JSON_STRING once Result := "generic_parameters" end
+
 	flag: JSON_STRING once Result := "f" end
 	position: JSON_STRING once Result := "p" end
 

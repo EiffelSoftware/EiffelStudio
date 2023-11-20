@@ -10,7 +10,6 @@ class
 	MD_EMIT
 
 inherit
-
 	MD_EMIT_I
 		redefine
 			prepare_to_save
@@ -747,6 +746,8 @@ feature {NONE} -- Implementation
 
 feature -- Settings
 
+	module_name: detachable IMMUTABLE_STRING_32
+
 	set_module_name (a_name: CLI_STRING)
 			-- Set the module name for the compilation unit being emitted.
 		local
@@ -754,6 +755,7 @@ feature -- Settings
 			l_entry: PE_TABLE_ENTRY_BASE
 			l_unused_token: NATURAL_32
 		do
+			module_name := a_name.string_32
 			l_name_index := pe_writer.hash_string (a_name.string_32)
 			create {PE_MODULE_TABLE_ENTRY} l_entry.make_with_data (l_name_index, guid_index)
 			l_unused_token := add_table_entry (l_entry)
@@ -1356,11 +1358,9 @@ feature -- Definition: Creation
 	define_string (str: CLI_STRING): INTEGER
 			-- Define a new token for `str'.
 		local
-			l_str: STRING_32
 			l_us_index: NATURAL_32
 		do
-			create l_str.make_from_string (str.string_32)
-			l_us_index := hash_us (l_str, l_str.count)
+			l_us_index := hash_utf_16le_string_8_us (str.raw_string, str.count)
 			Result := (l_us_index | ({NATURAL_32} 0x70 |<< 24)).to_integer_32
 		end
 
@@ -1399,6 +1399,9 @@ feature -- Definition: Creation
 			l_ca_type := create_pe_custom_attribute_type (constructor, l_constructor_tuple.table_row_index)
 
 			debug ("il_emitter_table")
+				if attached module_name as modn then
+					print ({STRING_32} "<<"+modn+">> ")
+				end
 				print ({STRING_32} "CustomAttribute: "
 						+ " owner="+ owner.to_hex_string +" [" + l_owner_tuple.table_row_index.to_natural_32.to_hex_string + "]"
 						+ " ctor="+ constructor.to_hex_string +" [" + l_constructor_tuple.table_row_index.to_natural_32.to_hex_string + "]"

@@ -773,6 +773,14 @@ feature -- IL Generation
 		do
 		end
 
+	generate_external_generic_call (base_name: STRING; name: STRING; ext_kind: INTEGER;
+			parameters_type: ARRAY [INTEGER]; generic_method_parameters_info: CONSUMED_GENERIC_PARAMETERS_INFO; return_type: INTEGER;
+			is_virtual: BOOLEAN)
+			-- Generate generic method call to `name' with signature `parameters_type' + `return_type'.
+		do
+			check not_implemented: False end
+		end
+
 	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER; parameters_type: ARRAY [INTEGER]; return_type: INTEGER; is_virtual: BOOLEAN)
 			-- Generate call to `name' with signature `parameters_type'.
 		local
@@ -2517,7 +2525,7 @@ feature -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

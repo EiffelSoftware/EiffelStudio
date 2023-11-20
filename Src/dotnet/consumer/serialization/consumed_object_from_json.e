@@ -1025,7 +1025,7 @@ feature -- Helpers
 			Result := attached j.boolean_item (n) as b and then b.item
 		end
 
-	string_array (j: JSON_ARRAY): ARRAY [detachable READABLE_STRING_32]
+	string_array (j: JSON_ARRAY): ARRAY [READABLE_STRING_32]
 		local
 			i: INTEGER
 		do
@@ -1036,6 +1036,9 @@ feature -- Helpers
 			loop
 				if attached {JSON_STRING} ji as j_str then
 					Result [i] := j_str.unescaped_string_32
+				else
+					check is_string: False end
+					Result [i] := ""
 				end
 			end
 		end

@@ -127,7 +127,7 @@ feature -- Element change
 			ae := a_entity
 		end
 
-	set_is_generic (b: BOOLEAN; a_generic_parameters: detachable ARRAY [detachable READABLE_STRING_32])
+	set_is_generic (b: BOOLEAN; a_generic_parameters: detachable ARRAY [READABLE_STRING_32])
 		do
 			is_generic := b
 			generic_parameters := a_generic_parameters
@@ -171,28 +171,30 @@ feature -- Status report
 
 	is_generic: BOOLEAN
 
-	generic_parameters: detachable ARRAY [detachable READABLE_STRING_32]
+	generic_parameters: detachable ARRAY [READABLE_STRING_32]
 
-	generic_method_parameter_info: CONSUMED_GENERIC_PARAMETERS_INFO
+	generic_method_parameter_info: detachable CONSUMED_GENERIC_PARAMETERS_INFO
 		require
 			is_generic
 		local
 			args: like arguments
 			i: INTEGER
 		do
-			args := arguments
-			create Result.make (generic_parameters, args.count, has_return_value)
-			if
-				attached {CONSUMED_FORMAL_GENERIC_TYPE} return_type as rt
-			then
-				Result.set_generic_return_type (rt.name, rt.formal_type_name, rt.formal_position)
-			end
-			across
-				args as arg
-			loop
-				i := i + 1
-				if arg.has_generic and then attached {CONSUMED_FORMAL_GENERIC_TYPE} arg.type as ftype then
-					Result.set_generic_argument_type (ftype.name, ftype.formal_type_name, ftype.formal_position, i)
+			if attached generic_parameters as l_gen_params then
+				args := arguments
+				create Result.make (l_gen_params, args.count, has_return_value)
+				if
+					attached {CONSUMED_FORMAL_GENERIC_TYPE} return_type as rt
+				then
+					Result.set_generic_return_type (rt.name, rt.formal_type_name, rt.formal_position)
+				end
+				across
+					args as arg
+				loop
+					i := i + 1
+					if arg.has_generic and then attached {CONSUMED_FORMAL_GENERIC_TYPE} arg.type as ftype then
+						Result.set_generic_argument_type (ftype.name, ftype.formal_type_name, ftype.formal_position, i)
+					end
 				end
 			end
 		end
@@ -214,19 +216,19 @@ note
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

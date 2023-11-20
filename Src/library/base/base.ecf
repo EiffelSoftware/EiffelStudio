@@ -210,7 +210,7 @@
 		</cluster>
 	</target>
 	<target name="base_dotnet" extends="base">
-		<setting name="msil_clr_version" value="Microsoft.NETCore.App.Ref/6.0"/>
+		<setting name="msil_clr_version" value="net6.0"/>
 		<setting name="msil_generation" value="true"/>
 		<capability>
 			<concurrency use="thread"/>

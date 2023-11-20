@@ -134,7 +134,7 @@ feature -- Conversion
 					if Result.valid_code (l_code) then
 						Result.put_code (l_code, i)
 					else
-						Result.put_code ({NATURAL_32} 0, i)
+						Result.put_code (0, i)
 					end
 					i := i + 1
 				end

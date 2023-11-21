@@ -124,9 +124,17 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			reset_bitmap_content
 			reset_resource_content
 
-			private_icon := {WEL_ICON} / a_resource
+
+				-- TODO: use {TYPE}.attempted once Eiffel .Net has full generic support. [2023-11-17] (edited)
+			if attached {WEL_ICON} a_resource as l_resource then
+				private_icon := l_resource
+			end
+
 			if private_icon = Void then
-				private_cursor := {WEL_CURSOR} / a_resource
+					-- TODO: use {TYPE}.attempted once Eiffel .Net has full generic support. [2023-11-17] (edited)
+				if attached {WEL_CURSOR} a_resource as l_resource then
+					private_cursor := l_resource
+				end
 			end
 			a_resource.increment_reference
 
@@ -2014,7 +2022,7 @@ invariant
 			l_private_cursor.reference_tracked
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

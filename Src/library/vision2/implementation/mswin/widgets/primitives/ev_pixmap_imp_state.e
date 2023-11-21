@@ -295,7 +295,11 @@ feature -- Misc.
 	build_icon: WEL_ICON
 			-- Build a WEL_ICON from `bitmap' and `mask_bitmap'.
 		do
-			Result := {WEL_ICON} / build_graphical_resource (True)
+				-- TODO: use {TYPE}.attempted once Eiffel .Net has full generic support. [2023-11-17]
+			if attached {WEL_ICON} build_graphical_resource (True) as l_result then
+				Result := l_result
+			end
+
 			check attached Result then end
 		ensure
 			Result_not_void: Result /= Void
@@ -304,7 +308,10 @@ feature -- Misc.
 	build_cursor: WEL_CURSOR
 			-- Build a WEL_CURSOR from `bitmap' and `mask_bitmap'.
 		do
-			Result := {WEL_CURSOR} / build_graphical_resource (False)
+				-- TODO: use {TYPE}.attempted once Eiffel .Net has full generic support. [2023-11-17]
+			if attached {WEL_CURSOR} build_graphical_resource (False) as l_result then
+				Result := l_result
+			end
 			check attached Result then end
 		ensure
 			Result_not_void: Result /= Void
@@ -473,7 +480,7 @@ feature {
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

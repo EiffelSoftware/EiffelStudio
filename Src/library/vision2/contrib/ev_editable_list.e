@@ -394,7 +394,10 @@ feature {NONE} -- Commands
 				end
 
 				if change_widgets.has (widget_column) then
-					w := {like widget} / change_widgets.item (widget_column)
+						 -- TODO: use {TYPE}.attempted once Eiffel .Net has full generic support. [2023-11-17]
+					if attached {like widget} change_widgets.item (widget_column) as l_w then
+						w := l_w
+					end
 				else
 						-- Use text field as default widget type.
 					create {EV_TEXT_FIELD} w
@@ -616,7 +619,7 @@ invariant
 	editable_columns_not_void: editable_columns /= Void
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -84,7 +84,10 @@ feature {NONE} -- Implementation
 			-- An `item_list' if an EV_MULTI_COLUMN_LIST.
 			-- Void otherwise
 		do
-			Result := {EV_MULTI_COLUMN_LIST} / item_list
+				-- TODO: use {TYPE}.attempted once Eiffel .Net has full generic support. [2023-11-17]
+			if attached {EV_MULTI_COLUMN_LIST} item_list as l_result then
+				Result := l_result
+			end
 		end
 
 	new_list_item: EV_LIST_ITEM
@@ -96,25 +99,37 @@ feature {NONE} -- Implementation
 	list: EV_LIST
 			-- An `item_list' if an EV_LIST.
 		do
-			Result := {EV_LIST} / item_list
+				-- TODO: use {TYPE}.attempted once Eiffel .Net has full generic support. [2023-11-17]
+			if attached {EV_LIST} item_list as l_result then
+				Result := l_result
+			end
 		end
 
 	combo_box: EV_COMBO_BOX
 			-- An `item_list' if an EV_COMBO_BOX.
 		do
-			Result := {EV_COMBO_BOX} / item_list
+				-- TODO: use {TYPE}.attempted once Eiffel .Net has full generic support. [2023-11-17]
+			if attached {EV_COMBO_BOX} item_list as l_result then
+				Result := l_result
+			end
 		end
 
 	tool_bar: EV_TOOL_BAR
 			-- An `item_list' if an EV_TOOL_BAR.
 		do
-			Result := {EV_TOOL_BAR} / item_list
+				-- TODO: use {TYPE}.attempted once Eiffel .Net has full generic support. [2023-11-17]
+			if attached {EV_TOOL_BAR} item_list as l_result then
+				Result := l_result
+			end
 		end
 
 	tree: EV_TREE
 			-- An `item_list' if an EV_TREE.
 		do
-			Result := {EV_TREE} / item_list
+				-- TODO: use {TYPE}.attempted once Eiffel .Net has full generic support. [2023-11-17]
+			if attached {EV_TREE} item_list as l_result then
+				Result := l_result
+			end
 		end
 
 	extend_container

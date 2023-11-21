@@ -940,14 +940,7 @@ feature -- List
 				if
 					attached consumed_procedure (j) as proc
 				then
-					if proc.has_generic or proc.is_generic then
-						check is_has_generic: proc.has_generic = proc.is_generic end
-						do_nothing
---						Result.force (proc)
-						print ("Ignore generic procedure: " + proc.eiffel_name + "%N")
-					else
-						Result.force (proc)
-					end
+					Result.force (proc)
 				else
 					report_error ("Missing or invalid procedure")
 				end
@@ -963,17 +956,7 @@ feature -- List
 				if
 					attached consumed_function (j) as fct
 				then
-					if fct.has_generic or fct.is_generic then
-						check is_has_generic: fct.has_generic = fct.is_generic end
-						do_nothing
-						if fct.eiffel_name.starts_with ("bargen") then
-							Result.force (fct)
-						else
-							print ("Ignore generic function: " + fct.eiffel_name + "%N")
-						end
-					else
-						Result.force (fct)
-					end
+					Result.force (fct)
 				else
 					report_error ("Missing or invalid function")
 				end

@@ -284,7 +284,7 @@ namespace md_consumer
         {
             ConstructorInfo l_member = constructor;
             if (l_member.IsPublic || l_member.IsFamily || l_member.IsFamilyOrAssembly) {
-                base.check_extended_compliance();
+                base.check_eiffel_compliance();
                 if (internal_is_eiffel_compliant) {
                     bool l_compliant = are_parameters_compliant (true);
                     if (!l_compliant) {

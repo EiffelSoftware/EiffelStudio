@@ -604,7 +604,7 @@ feature -- Builtin implementations for Eiffel classes, see Eiffel classes for co
 		identified_list.Capacity = identified_list.Capacity + nb_chunks * 1000;
 		identified_mutex.ReleaseMutex();
 	}
-	public static object builtin_IDENTIFIED_ROUTINES_eif_id_object (object Current, int an_id)
+	public static object builtin_IDENTIFIED_ROUTINES_eif_id_object (int an_id)
 		   // Return object associated with `an_id' if ANY, Void otherwise.
 	{
 		object Result = null;
@@ -623,7 +623,7 @@ feature -- Builtin implementations for Eiffel classes, see Eiffel classes for co
 		return Result;
 	}
 
-	public static int builtin_IDENTIFIED_ROUTINES_eif_object_id (object Current, object an_object)
+	public static int builtin_IDENTIFIED_ROUTINES_eif_object_id (object an_object)
 		   // Compute new ID for object `an_object'.
 	{
 		int Result;
@@ -634,7 +634,7 @@ feature -- Builtin implementations for Eiffel classes, see Eiffel classes for co
 		return Result;
 	}
 
-	public static void builtin_IDENTIFIED_ROUTINES_eif_object_id_free (object Current, int an_id)
+	public static void builtin_IDENTIFIED_ROUTINES_eif_object_id_free (int an_id)
 		   // Free the entry `an_id'.
 	{
 		identified_mutex.WaitOne();
@@ -715,10 +715,10 @@ feature -- Builtin implementations for Eiffel classes, see Eiffel classes for co
 	}
 
 	public static int builtin_IDENTIFIED_ROUTINES_eif_current_object_id(object Current){
-		return builtin_IDENTIFIED_ROUTINES_eif_object_id (Current, Current);
+		return builtin_IDENTIFIED_ROUTINES_eif_object_id (Current);
 	}
 	public static bool builtin_IDENTIFIED_ROUTINES_eif_is_object_id_of_current(object Current, int an_id) {
-		return builtin_IDENTIFIED_ROUTINES_eif_id_object(Current, an_id) == Current;
+		return builtin_IDENTIFIED_ROUTINES_eif_id_object(an_id) == Current;
 	}
 
 /*

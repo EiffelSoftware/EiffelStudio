@@ -329,7 +329,7 @@ feature -- Generation
 					if attached {CONF_PHYSICAL_ASSEMBLY} l_assemblies.item_for_iteration as l_as then
 						if l_as.is_enabled (l_state) and then not l_as.is_in_gac then
 							l_assembly_references.force ([l_as.assembly_name, l_as.assembly_version])
-							copy_to_local (l_as.location.build_path ({STRING_32} "", l_as.location.original_file), l_assembly_location, Void)
+							copy_to_local (l_as.location.build_path ({STRING_32} "", l_as.location.original_file), l_assembly_location, Void, True)
 							l_has_local := True
 						end
 					else
@@ -361,10 +361,10 @@ feature -- Generation
 						end
 
 						l_assembly_references.force ([l_precomp.system_name, Void])
-						copy_to_local (l_precomp.assembly_driver (l_use_optimized_precomp), l_assembly_location, Void)
-						copy_to_local (l_precomp.assembly_helper_driver (l_use_optimized_precomp), l_assembly_location, Void)
+						copy_to_local (l_precomp.assembly_driver (l_use_optimized_precomp), l_assembly_location, Void, True)
+						copy_to_local (l_precomp.assembly_helper_driver (l_use_optimized_precomp), l_assembly_location, Void, True)
 						if not l_use_optimized_precomp or l_precomp.line_generation then
-							copy_to_local (l_precomp.assembly_debug_info (l_use_optimized_precomp), l_assembly_location, Void)
+							copy_to_local (l_precomp.assembly_debug_info (l_use_optimized_precomp), l_assembly_location, Void, is_debug_enabled)
 						end
 
 						Workbench.Precompilation_directories.forth
@@ -388,7 +388,7 @@ feature -- Generation
 						-- where `xxx' is either `exe' or `dll'.
 
 						l_source_name := eiffel_layout.generation_templates_path.extended ("assembly_config.xml")
-						copy_to_local (l_source_name, l_target_name, {STRING_32} "" + System.name + "." + System.msil_generation_type + ".config")
+						copy_to_local (l_source_name, l_target_name, {STRING_32} "" + System.name + "." + System.msil_generation_type + ".config", True)
 					end
 				end
 			else
@@ -1371,9 +1371,10 @@ feature {NONE} -- File copying
 			end
 		end
 
-	copy_to_local (a_source: PATH; a_target_directory: PATH; a_destination_name: detachable READABLE_STRING_GENERAL)
+	copy_to_local (a_source: PATH; a_target_directory: PATH; a_destination_name: detachable READABLE_STRING_GENERAL; a_report_missing_source: BOOLEAN)
 			-- Copy `a_source' into `a_target_directory' directory under `a_destination_name' if specified,
 			-- or under the same name as `a_source'.
+			-- If `source` is missing report an error when `a_report_missing` is True.
 		require
 			a_source_not_void: a_source /= Void
 			a_source_not_empty: not a_source.is_empty
@@ -1403,7 +1404,7 @@ feature {NONE} -- File copying
 						l_source.close
 						l_target.close
 						l_target.set_date (l_source.date)
-					else
+					elseif a_report_missing_source then
 							-- Source does not exist, report the error.
 						create l_vicf.make (a_source.name, l_target.path.name)
 						error_handler.insert_warning (l_vicf, universe.target.options.is_warning_as_error)

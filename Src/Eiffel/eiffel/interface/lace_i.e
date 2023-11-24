@@ -1444,7 +1444,18 @@ feature {NONE} -- Implementation
 				)
 			then
 					-- Update concurrency setting on first compilation.
-				system.set_concurrency_index (a_target.options.concurrency_capability.root_index)
+				if
+					system.il_generation and then
+					a_target.options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_scoop
+				then
+						-- FIXME/TODO: remove that condition when SCOOP is supported on Eiffel for .NET [2023-11-24]
+					system.set_concurrency_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
+
+					Error_handler.insert_warning (create {VD90}, False)
+				else
+					system.set_concurrency_index (a_target.options.concurrency_capability.root_index)
+				end
+
 					-- Update void_safety setting on first compilation.
 				system.set_void_safety_index (a_target.options.void_safety_capability.root_index)
 			elseif

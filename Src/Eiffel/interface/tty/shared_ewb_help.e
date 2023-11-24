@@ -232,13 +232,15 @@ feature {NONE}
 
 	text_doc_help: STRING_GENERAL do Result := locale.translation ("Generate text form of all classes in system") end
 
+	app_info_help: STRING_GENERAL do Result := locale.translation ("Output various application information (-appinfo ? to list available informations)") end
+
 	version_help: STRING_GENERAL do Result := locale.translation ("show compiler version number") end
 
 	gc_stats_help: STRING_GENERAL do Result := locale.translation ("Show GC statistics") end
 
 note
 	ca_ignore: "CA033", "CA033: too large class"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

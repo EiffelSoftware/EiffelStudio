@@ -171,8 +171,10 @@ feature
 
 	reset_ide_layout_abb: CHARACTER = 'z'
 
+	app_info_abb: CHARACTER = 'i'
+
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

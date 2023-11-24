@@ -1103,6 +1103,7 @@ feature -- Code generation
 			ca_token: INTEGER
 			i: INTEGER
 			rt_v: STRING_32
+			l_mod_name_string: CLI_STRING
 		do
 				-- Mark Current has being generated.
 			is_generated := True
@@ -1112,9 +1113,10 @@ feature -- Code generation
 
 				-- Create Unicode string buffer.
 			create uni_string.make_empty (1024)
-			uni_string.set_string (module_name) --_with_extension)
 
-			md_emit.set_module_name (uni_string)
+				-- Module name
+			create l_mod_name_string.make (module_name)
+			md_emit.set_module_name (l_mod_name_string)
 
 				-- Create default signature.
 			create default_sig.make
@@ -1139,8 +1141,6 @@ feature -- Code generation
 			generic_ctor_sig.set_parameter_count (1)
 			generic_ctor_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 			generic_ctor_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, ise_generic_type_token)
-
-
 
 			if is_assembly_module or is_using_multi_assemblies then
 				ass := md_factory.assembly_info
@@ -1168,7 +1168,7 @@ feature -- Code generation
 					l_assembly_flags := {MD_ASSEMBLY_FLAGS}.public_key
 				end
 				associated_assembly_token :=
-					md_emit.define_assembly (uni_string, l_assembly_flags, ass, public_key)
+					md_emit.define_assembly (l_mod_name_string, l_assembly_flags, ass, public_key)
 
 				if is_debug_info_enabled then
 					md_emit.define_custom_attribute (associated_assembly_token,
@@ -1230,10 +1230,9 @@ feature -- Code generation
 				end
 			end
 
-
 			if is_debug_info_enabled then
-				uni_string.set_string (module_file_name)
-				dbg_writer := md_factory.dbg_writer (md_emit, uni_string, True)
+				l_mod_name_string.set_string (module_file_name)
+				dbg_writer := md_factory.dbg_writer (md_emit, l_mod_name_string, True)
 				if not dbg_writer.is_successful then
 					Error_handler.insert_error (create {VIGE}.make_pdb_in_use (module_file_name))
 					error_handler.raise_error

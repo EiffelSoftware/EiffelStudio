@@ -1,4 +1,5 @@
 @echo off
+setlocal
 set TMP_PATH=%cd%
 call %~dp0set_eweasel_env.bat
 
@@ -50,8 +51,13 @@ if "%~1" == "" (
 	if "%~1" == "no" (
 		echo "Eweasel not launched per user request"
 	) else (
+		title EWEASEL ...
 		%EWEASEL_COMMAND% -order -catalog %EWEASEL%\control\catalog > %output_file%
+		title
 	)
 )
 
 goto :eof
+
+:eof
+endlocal

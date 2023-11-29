@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			widget.pointer_double_press_actions.extend (agent double_press)
 			widget.pointer_button_release_actions.extend (agent button_release)
 			widget.pointer_leave_actions.extend (agent pointer_leave)
+			widget.pick_actions.extend (agent on_pick_request)
 			widget.set_pebble_function (agent on_pebble_request)
 			widget.set_actual_drop_target_agent (agent on_drop_target_request)
 		end
@@ -571,6 +572,40 @@ feature {NONE} -- Event implementation
 			end
 		end
 
+	on_pick_request  (a_x, a_y: INTEGER)
+			-- Pick event of current figure.
+		local
+			event_fig, fig: detachable EV_MODEL
+		do
+			event_fig := figure_on_position (world, a_x + area_x, a_y + area_y)
+			if
+				event_fig /= Void and then
+				event_fig.is_show_requested and then
+				event_fig.is_sensitive
+			then
+				from
+				until
+					fig /= Void or event_fig = Void
+				loop
+					check
+						event_fig /= Void
+					end
+					if not event_fig.pick_actions.is_empty then
+						fig := event_fig
+					else
+						event_fig := event_fig.group
+					end
+				end
+				if
+					fig /= Void and then
+					attached fig.pick_actions as l_actions and then
+					not l_actions.is_empty
+				then
+					l_actions.call ([a_x, a_y])
+				end
+			end
+		end
+
 feature {EV_MODEL_WORLD_CELL} -- Element change
 
 	simulate_mouse_move (ax, ay: INTEGER)
@@ -659,7 +694,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

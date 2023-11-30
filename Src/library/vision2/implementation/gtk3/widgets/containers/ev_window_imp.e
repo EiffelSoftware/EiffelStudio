@@ -113,9 +113,11 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_window_set_default_size (l_c_object, 1, 1)
 			Precursor {EV_CELL_IMP}
 				-- Need to set decorations after window is realized.
-			{GTK}.gdk_window_set_decorations ({GTK}.gtk_widget_get_window (l_c_object), default_wm_decorations)
+			{GDK}.gdk_window_set_decorations ({GTK}.gtk_widget_get_window (l_c_object), default_wm_decorations)
 			internal_is_border_enabled := True
 			configure_event_pending := True
+
+			{GTK}.gtk_widget_set_name (l_c_object, (create {EV_GTK_C_STRING}.set_with_eiffel_string ("EV_WINDOW")).item)
 			user_can_resize := True
 			set_is_initialized (True)
 		end
@@ -185,8 +187,8 @@ feature -- Status setting
 				-- We are disabling the border so we need to reset the position in the exact place
 			l_x := x_position
 			l_y := y_position
-			l_decor := default_wm_decorations.bit_and ({GTK}.gdk_decor_border_enum.bit_not)
-			{GTK}.gdk_window_set_decorations ({GTK}.gtk_widget_get_window (c_object), l_decor)
+			l_decor := default_wm_decorations.bit_and ({GDK}.gdk_decor_border_enum.bit_not)
+			{GDK}.gdk_window_set_decorations ({GTK}.gtk_widget_get_window (c_object), l_decor)
 			set_position (l_x, l_y)
 		end
 
@@ -195,8 +197,8 @@ feature -- Status setting
 		local
 			l_decor: INTEGER
 		do
-			l_decor := default_wm_decorations.bit_or ({GTK}.gdk_decor_border_enum)
-			{GTK}.gdk_window_set_decorations ({GTK}.gtk_widget_get_window (c_object), l_decor)
+			l_decor := default_wm_decorations.bit_or ({GDK}.gdk_decor_border_enum)
+			{GDK}.gdk_window_set_decorations ({GTK}.gtk_widget_get_window (c_object), l_decor)
 		end
 
 	disable_user_resize_called: BOOLEAN
@@ -234,7 +236,7 @@ feature -- Status setting
 			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, maximum_height)
 			{GTK}.set_gdk_geometry_struct_min_width (l_geometry, minimum_width)
 			{GTK}.set_gdk_geometry_struct_min_height (l_geometry, minimum_height)
-			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GTK}.Gdk_hint_max_size_enum | {GTK}.gdk_hint_min_size_enum)
+			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GTK}.Gdk_hint_max_size_enum | {GDK}.gdk_hint_min_size_enum)
 			l_geometry.memory_free
 			internal_enable_border
 		end
@@ -692,7 +694,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -42,32 +42,32 @@ feature -- Commands
 	asterisk
 			-- Asterisk beep.
 		do
-			{GTK}.gdk_display_beep ({GDK}.gdk_display_get_default)
+			{GDK}.gdk_display_beep ({GDK}.gdk_display_get_default)
 		end
 
 	exclamation
 			-- Exclamation beep.
 		do
-			{GTK}.gdk_display_beep ({GDK}.gdk_display_get_default)
+			{GDK}.gdk_display_beep ({GDK}.gdk_display_get_default)
 		end
 
 	hand
 			-- Hand beep.
 		do
-			{GTK}.gdk_display_beep ({GDK}.gdk_display_get_default)
+			{GDK}.gdk_display_beep ({GDK}.gdk_display_get_default)
 		end
 
 	question
 			-- Question beep.
 		do
-			{GTK}.gdk_display_beep ({GDK}.gdk_display_get_default)
+			{GDK}.gdk_display_beep ({GDK}.gdk_display_get_default)
 		end
 
 	ok
 			-- Ok beep.
 			-- System default beep.
 		do
-			{GTK}.gdk_display_beep ({GDK}.gdk_display_get_default)
+			{GDK}.gdk_display_beep ({GDK}.gdk_display_get_default)
 		end
 
 note

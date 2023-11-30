@@ -216,7 +216,7 @@ feature -- Element change
 			m: READABLE_STRING_32
 		do
 			create a_cs.make_from_path (file_path)
-			filepixbuf := {GTK}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
+			filepixbuf := {GDK}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
 			if g_error /= default_pointer then
 					-- GDK cannot not load the image. Raise an exception.
 				create e.make_from_pointer (g_error)
@@ -255,12 +255,12 @@ feature -- Element change
 				a_gdkpixbuf := pixbuf_from_drawable
 				if l_width <= 16 and then l_height <= 16 then
 						-- For small images this method scales better
-					a_scale_type := {GTK2}.gdk_interp_nearest
+					a_scale_type := {GDK}.gdk_interp_nearest
 				else
 						-- For larger images this mode provides better scaling
-					a_scale_type := {GTK2}.gdk_interp_bilinear
+					a_scale_type := {GDK}.gdk_interp_bilinear
 				end
-				scaled_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y, a_scale_type)
+				scaled_pixbuf := {GDK}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y, a_scale_type)
 				{GTK2}.g_object_unref (a_gdkpixbuf)
 				set_pixmap_from_pixbuf (scaled_pixbuf)
 				{GTK2}.g_object_unref (scaled_pixbuf)
@@ -292,7 +292,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 	pixbuf_from_drawable_at_position (src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
 		do
-			Result := {GTK}.gdk_pixbuf_get_from_surface (cairo_surface, src_x, src_y, a_width, a_height)
+			Result := {GDK}.gdk_pixbuf_get_from_surface (cairo_surface, src_x, src_y, a_width, a_height)
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -338,13 +338,13 @@ feature -- Access
 		do
 			create Result.make_with_alpha_zero (width, height)
 			Result.set_originating_pixmap (attached_interface)
---			a_gdkimage := {GTK}.gdk_image_get (drawable, 0, 0, width, height)
+--			a_gdkimage := {GDK}.gdk_image_get (drawable, 0, 0, width, height)
 
 --			from
 --				a_width := width * 4
-----				a_color_map := {GTK2}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default)
---				a_visual := {GTK}.gdk_colormap_get_visual (a_color_map)
---				a_visual_type := {GTK}.gdk_visual_struct_type (a_visual)
+----				a_color_map := {GDK}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default)
+--				a_visual := {GDK}.gdk_colormap_get_visual (a_color_map)
+--				a_visual_type := {GDK}.gdk_visual_struct_type (a_visual)
 --				a_color := {GTK}.c_gdk_color_struct_allocate
 --				array_size := a_width * height
 --				array_area := Result.area
@@ -352,21 +352,21 @@ feature -- Access
 --			until
 --				array_offset = array_size
 --			loop
-----				a_pixel := {GTK}.gdk_image_get_pixel (
+----				a_pixel := {GDK}.gdk_image_get_pixel (
 ----					a_gdkimage,
 ----					(array_offset \\ (a_width) // 4), -- Zero based X coord
 ----					((array_offset) // a_width) -- Zero based Y coord
 ----				)
---				{GTK2}.gdk_colormap_query_color (a_color_map, a_pixel, a_color)
+--				{GDK}.gdk_colormap_query_color (a_color_map, a_pixel, a_color)
 --					-- RGB values of a_color are 16 bit.
---				array_area.put (({GTK}.gdk_color_struct_red (a_color) // 256).to_natural_8, array_offset)
---				array_area.put (({GTK}.gdk_color_struct_green (a_color) // 256).to_natural_8, array_offset + 1)
---				array_area.put (({GTK}.gdk_color_struct_blue (a_color) // 256).to_natural_8, array_offset + 2)
+--				array_area.put (({GDK}.gdk_color_struct_red (a_color) // 256).to_natural_8, array_offset)
+--				array_area.put (({GDK}.gdk_color_struct_green (a_color) // 256).to_natural_8, array_offset + 1)
+--				array_area.put (({GDK}.gdk_color_struct_blue (a_color) // 256).to_natural_8, array_offset + 2)
 --				array_area.put (255, array_offset + 3)
 --				array_offset := array_offset + 4
 --			end
 --			a_color.memory_free
---			{GTK}.gdk_image_destroy (a_gdkimage)
+--			{GDK}.gdk_image_destroy (a_gdkimage)
 		end
 
 feature -- Duplication
@@ -402,8 +402,8 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
 			release_previous_cairo_surface
 			cairo_surface := {CAIRO}.image_surface_create (
 				{CAIRO}.FORMAT_ARGB32,
-				{GTK}.gdk_pixbuf_get_width (a_pixbuf),
-				{GTK}.gdk_pixbuf_get_height (a_pixbuf)
+				{GDK}.gdk_pixbuf_get_width (a_pixbuf),
+				{GDK}.gdk_pixbuf_get_height (a_pixbuf)
 			)
 			get_new_cairo_context
 			cr := cairo_context
@@ -509,7 +509,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 		do
 				-- Store internal xpm data for default stock cursor handling.
 			internal_xpm_data := a_xpm_data
-			xpmpixbuf := {GTK}.gdk_pixbuf_new_from_xpm_data (a_xpm_data)
+			xpmpixbuf := {GDK}.gdk_pixbuf_new_from_xpm_data (a_xpm_data)
 
 			set_pixmap_from_pixbuf (xpmpixbuf)
 				-- Unreference pixbuf so that it may be collected.
@@ -560,13 +560,13 @@ feature {NONE} -- Implementation
 				create a_handle.make_from_path (a_file_path)
 				a_filetype := a_format.file_extension
 				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
-					stretched_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {GTK2}.gdk_interp_bilinear)
+					stretched_pixbuf := {GDK}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {GTK2}.gdk_interp_bilinear)
 						-- Unref original pixbuf so it gets deleted from memory
 					{GTK2}.g_object_unref (a_gdkpixbuf)
 						-- Set our scaled pixbuf to be the one that is saved
 					a_gdkpixbuf := stretched_pixbuf
 				end
-				{GTK2}.gdk_pixbuf_save (a_gdkpixbuf, a_handle.item, a_filetype.item, $gerror)
+				{GDK}.gdk_pixbuf_save (a_gdkpixbuf, a_handle.item, a_filetype.item, $gerror)
 				{GTK2}.g_object_unref (a_gdkpixbuf)
 				if not gerror.is_default_pointer then
 						-- GDK cannot save the image. Raise an exception.

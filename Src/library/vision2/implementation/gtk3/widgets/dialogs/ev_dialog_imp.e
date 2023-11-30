@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			end
 			close_fct := close_fct.bit_or ({GTK}.Gdk_func_move_enum)
 		    close_fct := close_fct.bit_or ({GTK}.Gdk_func_resize_enum)
-			{GTK}.gdk_window_set_functions (
+			{GDK}.gdk_window_set_functions (
 				{GTK}.gtk_widget_get_window (c_object),
 				close_fct
 			)

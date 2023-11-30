@@ -911,7 +911,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 	pixbuf_from_drawable_at_position (src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
 		do
-			Result := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
+			Result := {GDK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
 		end
 
 	pixbuf_from_drawable_with_size (a_width, a_height: INTEGER): POINTER
@@ -920,7 +920,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 			a_pixbuf: POINTER
 		do
 			a_pixbuf := pixbuf_from_drawable
-			Result := {GTK2}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, {GTK2}.gdk_interp_bilinear)
+			Result := {GDK}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, {GTK2}.gdk_interp_bilinear)
 			{GTK2}.g_object_unref (a_pixbuf)
 		end
 
@@ -949,8 +949,8 @@ feature {NONE} -- Implementation
 
 	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER)
 		require
-			a_pixbuf_ptr_has_alpha: {GTK2}.gdk_pixbuf_get_has_alpha (a_pixbuf_ptr)
-			a_mask_ptr_has_alpha: {GTK2}.gdk_pixbuf_get_has_alpha (a_mask_ptr)
+			a_pixbuf_ptr_has_alpha: {GDK}.gdk_pixbuf_get_has_alpha (a_pixbuf_ptr)
+			a_mask_ptr_has_alpha: {GDK}.gdk_pixbuf_get_has_alpha (a_mask_ptr)
 		external
 			"C inline use <ev_gtk.h>"
 		alias

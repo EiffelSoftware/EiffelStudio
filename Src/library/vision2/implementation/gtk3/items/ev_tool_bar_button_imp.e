@@ -202,7 +202,7 @@ feature -- Element change
 				l_gdkwin := {GDK_HELPERS}.window_at ($l_x, $l_y)
 				if l_gdkwin /= default_pointer then
 					if Current = app_implementation.gtk_widget_from_gdk_window (l_gdkwin) then
-						i := {GTK}.gdk_window_get_origin (l_gdkwin, $l_screen_x, $l_screen_y)
+						i := {GDK}.gdk_window_get_origin (l_gdkwin, $l_screen_x, $l_screen_y)
 						app_implementation.pnd_screen.set_pointer_position (l_screen_x + l_x + width + 10, l_screen_y + l_y + height + 10)
 						app_implementation.pnd_screen.set_pointer_position (l_screen_x + l_x, l_screen_y + l_y)
 					end

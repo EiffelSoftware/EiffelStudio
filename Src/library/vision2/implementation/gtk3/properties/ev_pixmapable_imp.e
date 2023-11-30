@@ -71,7 +71,7 @@ feature {EV_ANY_I} -- Implementation
 				-- We need to scale pixmap before it is placed in to pixmap holder			
 				a_pixmap_imp.stretch (a_width, a_height)
 			end
-			l_pixbuf := {GTK}.gdk_pixbuf_get_from_surface (a_pixmap_imp.cairo_surface, 0, 0, a_width, a_height)
+			l_pixbuf := {GDK}.gdk_pixbuf_get_from_surface (a_pixmap_imp.cairo_surface, 0, 0, a_width, a_height)
 			gtk_pix_wid := {GTK2}.gtk_image_new_from_pixbuf (l_pixbuf)
 			{GTK}.gtk_widget_show (gtk_pix_wid)
 			{GTK}.gtk_container_add (pixmap_box, gtk_pix_wid)

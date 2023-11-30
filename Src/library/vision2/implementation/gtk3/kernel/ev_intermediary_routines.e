@@ -86,7 +86,7 @@ feature -- Draw and configure signal
 		do
 			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
 				l_gdk_configure := {GTK2}.gtk_value_pointer (arguments)
-				Result := l_any_imp.process_configure_event ({GTK}.gdk_event_configure_struct_x (l_gdk_configure), {GTK}.gdk_event_configure_struct_y (l_gdk_configure), {GTK}.gdk_event_configure_struct_width (l_gdk_configure), {GTK}.gdk_event_configure_struct_height (l_gdk_configure))
+				Result := l_any_imp.process_configure_event ({GDK}.gdk_event_configure_struct_x (l_gdk_configure), {GDK}.gdk_event_configure_struct_y (l_gdk_configure), {GDK}.gdk_event_configure_struct_width (l_gdk_configure), {GDK}.gdk_event_configure_struct_height (l_gdk_configure))
 			end
 		end
 

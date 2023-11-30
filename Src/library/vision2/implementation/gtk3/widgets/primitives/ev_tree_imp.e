@@ -195,7 +195,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			a_gdkwin := {GDK_HELPERS}.window_at ($l_x, $l_y)
 			if a_gdkwin /= default_pointer then
-				{GTK}.gdk_window_get_user_data (a_gdkwin, $a_gtkwid)
+				{GDK}.gdk_window_get_user_data (a_gdkwin, $a_gtkwid)
 				if a_gtkwid /= tree_view then
 						-- We are not clicking on the item area.
 					avoid_item_events := True

@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			l_display := {GTK}.gtk_widget_get_display (event_widget)
 			l_seat := {GDK}.gdk_display_get_default_seat (l_display)
 			App_implementation.disable_debugger
-			i := {GTK}.gdk_seat_grab (
+			i := {GDK}.gdk_seat_grab (
 --				{GDK_HELPERS}.default_seat,
 				l_seat,
 				{GTK}.gtk_widget_get_window (event_widget),
@@ -190,8 +190,8 @@ feature {NONE} -- Implementation
 		do
 			l_display := {GTK}.gtk_widget_get_display (event_widget)
 			l_seat := {GDK}.gdk_display_get_default_seat (l_display)
---			{GTK}.gdk_seat_ungrab ({GDK_HELPERS}.default_seat)
-			{GTK}.gdk_seat_ungrab (l_seat)
+--			{GDK}.gdk_seat_ungrab ({GDK_HELPERS}.default_seat)
+			{GDK}.gdk_seat_ungrab (l_seat)
 			app_implementation.enable_debugger
 		end
 
@@ -298,7 +298,7 @@ feature -- Implementation
 			l_current: detachable EV_PICK_AND_DROPABLE_IMP
 			l_press: BOOLEAN
 		do
-			l_press := a_type /= {GTK}.gdk_button_release_enum
+			l_press := a_type /= {GDK}.gdk_button_release_enum
 			app_imp := app_implementation
 			l_call_events := not app_imp.is_in_transport
 			l_top_level_window_imp := top_level_window_imp
@@ -306,14 +306,14 @@ feature -- Implementation
 				if not app_imp.is_in_transport then
 					if a_button = 1 then
 						l_dockable_source ?= Current
-						if a_type = {GTK}.gdk_button_press_enum and then l_dockable_source /= Void and then (is_dockable or else able_to_transport (a_button)) then
+						if a_type = {GDK}.gdk_button_press_enum and then l_dockable_source /= Void and then (is_dockable or else able_to_transport (a_button)) then
 							l_dockable_source.start_dragable_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 						end
-						if l_dockable_source /= Void and then a_type = {GTK}.gdk_button_release_enum then
+						if l_dockable_source /= Void and then a_type = {GDK}.gdk_button_release_enum then
 								-- Here we make sure that any pending drag and drops or docks are cancelled as transport was never establised.
 							l_dockable_source.end_dragable (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 						end
-					elseif (a_type = {GTK}.gdk_button_release_enum and then (mode_is_pick_and_drop and then a_button = 3 and then not mode_is_configurable_target_menu)) or else ready_for_pnd_menu (a_button, l_press) then
+					elseif (a_type = {GDK}.gdk_button_release_enum and then (mode_is_pick_and_drop and then a_button = 3 and then not mode_is_configurable_target_menu)) or else ready_for_pnd_menu (a_button, l_press) then
 						start_transport (a_x, a_y, a_button, l_press, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y, False)
 						l_call_events := pebble = Void
 							-- If a pick and drop has initiated then we dont want button events firing.
@@ -321,10 +321,10 @@ feature -- Implementation
 				else
 					l_current := Current
 					l_dockable_source ?= l_current
-					if l_dockable_source /= Void and then a_type = {GTK}.gdk_button_release_enum then
+					if l_dockable_source /= Void and then a_type = {GDK}.gdk_button_release_enum then
 						l_dockable_source.end_dragable (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
-					if a_type = {GTK}.gdk_button_release_enum and then app_imp.pick_and_drop_source = l_current then
+					if a_type = {GDK}.gdk_button_release_enum and then app_imp.pick_and_drop_source = l_current then
 						end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
 				end
@@ -418,7 +418,7 @@ feature -- Implementation
 						-- Remove previously set pointer.
 					l_window := {GTK}.gtk_widget_get_window (c_object)
 					if l_window /= default_pointer then
-						{GTK}.gdk_window_set_cursor (l_window, default_pointer)
+						{GDK}.gdk_window_set_cursor (l_window, default_pointer)
 					end
 				end
 			end

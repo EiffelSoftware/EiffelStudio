@@ -32,7 +32,7 @@ feature -- Access
 			pixbuf_format: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			formats := {GTK2}.gdk_pixbuf_get_formats
+			formats := {GDK}.gdk_pixbuf_get_formats
 			format_count := {GTK}.g_slist_length (formats)
 			from
 				i := 0
@@ -42,13 +42,13 @@ feature -- Access
 				i = format_count
 			loop
 				pixbuf_format := {GTK}.g_slist_nth_data (formats, i)
-				a_cs.share_from_pointer ({GTK2}.gdk_pixbuf_format_get_name (pixbuf_format))
+				a_cs.share_from_pointer ({GDK}.gdk_pixbuf_format_get_name (pixbuf_format))
 				format_name := a_cs.string
 				if format_name.is_equal (once {STRING_32} "jpeg") then
 					format_name := once {STRING_32} "jpg"
 				end
 				if a_writeable then
-					if {GTK2}.gdk_pixbuf_format_is_writable (pixbuf_format) then
+					if {GDK}.gdk_pixbuf_format_is_writable (pixbuf_format) then
 						Result.extend (format_name.as_upper)
 					end
 				else

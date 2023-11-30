@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 					-- Set the default size so that the
 				{GTK}.gtk_widget_hide (c_object)
 					-- Force an immediate hide so that the event loop is not relied upon to unmap `Current'.
-				{GTK}.gdk_window_hide ({GTK}.gtk_widget_get_window (c_object))
+				{GDK}.gdk_window_hide ({GTK}.gtk_widget_get_window (c_object))
 
 					-- Reset the size and position to emulate Win32 behavior.
 				{GTK}.gtk_window_set_default_size (c_object, l_width, l_height)
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 						-- by the modal dialog, when closed the window managed would restore the
 						-- focus to the previously focused window which may or may not be `l_window_imp',
 						-- this leads to odd behavior when closing the modal dialog so we always raise the window.
-					{GTK}.gdk_window_raise ({GTK}.gtk_widget_get_window (l_window_imp.c_object))
+					{GDK}.gdk_window_raise ({GTK}.gtk_widget_get_window (l_window_imp.c_object))
 				end
 			end
 		end
@@ -347,7 +347,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			l_app_imp := app_implementation
 
 				-- Perform translation on key values from gdk.
-			keyval := {GTK}.gdk_event_key_struct_keyval (a_key_event)
+			keyval := {GDK}.gdk_event_key_struct_keyval (a_key_event)
 			if keyval > 0 then
 				if not valid_gtk_code (keyval) then
 						-- We perform mapping for F11 and F12 keys on Solaris with Type 4 keyboards.
@@ -365,7 +365,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					create a_key.make_with_code (key_code_from_gtk (keyval))
 				end
 			end
-			if {GTK}.gdk_event_key_struct_type (a_key_event) = {GTK}.gdk_key_press_enum then
+			if {GDK}.gdk_event_key_struct_type (a_key_event) = {GDK}.gdk_key_press_enum then
 				a_key_press := True
 				l_window_imp ?= Current
 
@@ -519,7 +519,7 @@ feature {EV_ANY_I} -- Implementation
 			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, l_height)
 			{GTK}.set_gdk_geometry_struct_min_width (l_geometry, l_width)
 			{GTK}.set_gdk_geometry_struct_min_height (l_geometry, l_height)
-			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GTK}.Gdk_hint_max_size_enum | {GTK}.gdk_hint_min_size_enum)
+			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GTK}.Gdk_hint_max_size_enum | {GDK}.gdk_hint_min_size_enum)
 			l_geometry.memory_free
 		end
 

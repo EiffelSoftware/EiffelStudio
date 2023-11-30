@@ -213,8 +213,8 @@ feature {NONE} -- Implementation
 			gdkwin := {GTK}.gtk_widget_get_window (c_object)
 			if gdkwin /= default_pointer then
 
-				{GTK2}.gdk_window_get_position (gdkwin, $l_x, $l_y)
-				{GTK}.gdk_window_get_user_data (gdkwin, $gtkwid)
+				{GDK}.gdk_window_get_position (gdkwin, $l_x, $l_y)
+				{GDK}.gdk_window_get_user_data (gdkwin, $gtkwid)
 
 				if gtkwid = c_object then
 					from
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 
 				-- If we are clicking on the Void area then we the item events passing Void items.
-			if a_type = {GTK}.gdk_button_press_enum or a_type = {GTK}.gdk_2button_press_enum then
+			if a_type = {GDK}.gdk_button_press_enum or a_type = {GDK}.gdk_2button_press_enum then
 
 				-- TODO double check	
 				-- With GTK3 the call to the feature `{GDK_HELPERS}.window_at ($a_pointer_x, $a_pointer_y)`
@@ -266,13 +266,13 @@ feature {NONE} -- Implementation
 
 				gdkwin := {GTK}.gtk_widget_get_window (c_object)
 				if gdkwin /= default_pointer then
-					{GTK}.gdk_window_get_user_data (gdkwin, $l_widget)
+					{GDK}.gdk_window_get_user_data (gdkwin, $l_widget)
 					l_last_column := {GTK2}.gtk_tree_view_get_column (c_object, count)
 					if l_widget = {GTK2}.gtk_tree_view_column_get_button (l_last_column) then
 							-- Fire item press actions with a Void item.
-						if a_type = {GTK}.gdk_button_press_enum and then item_pointer_button_press_actions_internal /= Void then
+						if a_type = {GDK}.gdk_button_press_enum and then item_pointer_button_press_actions_internal /= Void then
 							item_pointer_button_press_actions_internal.call ([Void, a_x, a_y, a_button])
-						elseif a_type = {GTK}.gdk_2button_press_enum and then item_pointer_double_press_actions_internal /= Void then
+						elseif a_type = {GDK}.gdk_2button_press_enum and then item_pointer_double_press_actions_internal /= Void then
 							item_pointer_double_press_actions_internal.call ([Void, a_x, a_y, a_button])
 						end
 					end

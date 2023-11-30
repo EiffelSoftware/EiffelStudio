@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 					-- The --gtk-debug=updates command line option passed to GTK+ programs enables this debug option at application startup time.
 					-- That's usually more useful than calling gdk_window_set_debug_updates() yourself, though you might want to use this function to enable updates
 					-- sometime after application startup time.
-				-- {GTK2}.gdk_window_set_debug_updates (True)
+				-- {GDK}.gdk_window_set_debug_updates (True)
 					-- Deprecated since 3.22.
 
 
@@ -522,7 +522,7 @@ feature {EV_ANY_I} -- Implementation
 								l_widget_imp ?= eif_object_from_gtk_object (event_widget)
 							end
 							if l_widget_imp /= Void then
-								if {GTK2}.gdk_event_scroll_struct_scroll_direction (gdk_event) = {GTK2}.gdk_scroll_up_enum then
+								if {GDK}.gdk_event_scroll_struct_scroll_direction (gdk_event) = {GTK2}.gdk_scroll_up_enum then
 									l_button_number := 4
 								else
 									l_button_number := 5
@@ -649,8 +649,8 @@ feature {EV_ANY_I} -- Implementation
 						l_top_level_window_imp ?= eif_object_from_gtk_object (event_widget)
 						if l_top_level_window_imp /= Void then
 							l_top_level_window_imp.call_window_state_event (
-								{GTK2}.gdk_event_window_state_struct_changed_mask (gdk_event),
-								{GTK2}.gdk_event_window_state_struct_new_window_state (gdk_event)
+								{GDK}.gdk_event_window_state_struct_changed_mask (gdk_event),
+								{GDK}.gdk_event_window_state_struct_new_window_state (gdk_event)
 							)
 							l_top_level_window_imp := Void
 						end

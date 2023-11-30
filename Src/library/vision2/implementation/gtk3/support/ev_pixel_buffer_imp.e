@@ -24,8 +24,8 @@ feature -- Initialization
 			-- Create with size.
 		do
 			if {GTK}.gtk_maj_ver >= 2 then
-				set_gdkpixbuf ({GTK}.gdk_pixbuf_new ({GTK}.gdk_colorspace_rgb_enum, True, 8, a_width, a_height))
-				{GTK}.gdk_pixbuf_fill (gdk_pixbuf, 0)
+				set_gdkpixbuf ({GDK}.gdk_pixbuf_new ({GDK}.gdk_colorspace_rgb_enum, True, 8, a_width, a_height))
+				{GDK}.gdk_pixbuf_fill (gdk_pixbuf, 0)
 			else
 				create internal_pixmap.make_with_size (a_width, a_height)
 			end
@@ -48,10 +48,10 @@ feature -- Initialization
 				-- FIXME JV
 				-- find a way to replace gdk_pixbuf_get_from_drawable
 				-- options gdk_pixbuf_get_from_window or
-				--l_pixbuf := {GTK2}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_pixmap_imp.width, l_pixmap_imp.height)
+				--l_pixbuf := {GDK}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_pixmap_imp.width, l_pixmap_imp.height)
 				--l_window := {GDK}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default)
-				--l_pixbuf := {GTK}.gdk_pixbuf_new (0, False, 8, l_pixmap_imp.width, l_pixmap_imp.height)
-				--l_pixbuf := {GTK}.gdk_pixbuf_get_from_window (l_window, 0, 0, l_pixmap_imp.width, l_pixmap_imp.height)
+				--l_pixbuf := {GDK}.gdk_pixbuf_new (0, False, 8, l_pixmap_imp.width, l_pixmap_imp.height)
+				--l_pixbuf := {GDK}.gdk_pixbuf_get_from_window (l_window, 0, 0, l_pixmap_imp.width, l_pixmap_imp.height)
 				set_gdkpixbuf (l_pixmap_imp.pixbuf)
 			end
 		end
@@ -77,7 +77,7 @@ feature -- Command
 		do
 			if {GTK}.gtk_maj_ver >= 2 then
 				create l_cs.make_from_path (a_file_name)
-				filepixbuf := {GTK}.gdk_pixbuf_new_from_file (l_cs.item, $ge)
+				filepixbuf := {GDK}.gdk_pixbuf_new_from_file (l_cs.item, $ge)
 				if not ge.is_default_pointer then
 						-- The image cannot be loaded, raise an exception.
 					create e.make_from_pointer (ge)
@@ -103,7 +103,7 @@ feature -- Command
 			m: like {EV_GLIB_ERROR}.message
 		do
 			create l_stream.new_from_data (a_pointer, a_size)
-			l_pixel_buf := {GTK}.gdk_pixbuf_new_from_stream (l_stream.item, default_pointer, $ge)
+			l_pixel_buf := {GDK}.gdk_pixbuf_new_from_stream (l_stream.item, default_pointer, $ge)
 			if not ge.is_default_pointer then
 					-- The image cannot be loaded, raise an exception.
 				create e.make_from_pointer (ge)
@@ -154,7 +154,7 @@ feature -- Command
 				if {GTK}.gtk_maj_ver >= 2 then
 					create l_cs.make_from_path (a_file_name)
 					create l_file_type.set_with_eiffel_string (l_format)
-					{GTK2}.gdk_pixbuf_save (gdk_pixbuf, l_cs.item, l_file_type.item, $ge)
+					{GDK}.gdk_pixbuf_save (gdk_pixbuf, l_cs.item, l_file_type.item, $ge)
 					if not ge.is_default_pointer then
 							-- The image cannot be saved, raise an exception.
 						create e.make_from_pointer (ge)
@@ -187,7 +187,7 @@ feature -- Command
 		do
 				-- Same as Windows {EV_PIXEL_BUFFER_IMP} implementation, using PNG format as default
 			create l_file_type.set_with_eiffel_string ("png")
-			l_result := {GTK}.gdk_pixbuf_save_to_buffer (gdk_pixbuf, $l_pointer, $l_buffer_size, l_file_type.item, $ge)
+			l_result := {GDK}.gdk_pixbuf_save_to_buffer (gdk_pixbuf, $l_pointer, $l_buffer_size, l_file_type.item, $ge)
 			if not ge.is_default_pointer then
 					-- The image cannot be saved, raise an exception.
 				create e.make_from_pointer (ge)
@@ -211,7 +211,7 @@ feature -- Command
 				check
 					l_pixmap_imp /= Void then
 				end
-				l_pixbuf := {GTK}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+				l_pixbuf := {GDK}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
 				l_pixmap_imp.set_pixmap_from_pixbuf (l_pixbuf)
 				{GTK2}.g_object_unref (l_pixbuf)
 			else
@@ -235,18 +235,18 @@ feature -- Command
 			check l_imp /= Void then end
 				-- The code below was taken from `{EV_PIXMAP_IMP}.stretch'.
 			if a_width <= 16 and then a_height <= 16 then
-				l_scale_type := {GTK2}.gdk_interp_nearest
+				l_scale_type := {GDK}.gdk_interp_nearest
 			else
-				l_scale_type := {GTK2}.gdk_interp_bilinear
+				l_scale_type := {GDK}.gdk_interp_bilinear
 			end
-			l_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (gdk_pixbuf, a_width, a_height, l_scale_type)
+			l_pixbuf := {GDK}.gdk_pixbuf_scale_simple (gdk_pixbuf, a_width, a_height, l_scale_type)
 				-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
 			if not {GDK}.gdk_is_pixbuf (l_pixbuf) then
 				debug ("gtk_log")
 					print (generator + ".stretched gdk_is_pixbuf is False" )
 				end
 			end
-			l_imp.set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pixbuf))
+			l_imp.set_gdkpixbuf ({GDK}.gdk_pixbuf_copy (l_pixbuf))
 		end
 
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
@@ -256,14 +256,14 @@ feature -- Command
 			l_rect: EV_RECTANGLE
 		do
 			l_rect := area.intersection (a_rect)
-			l_subpixbuf := {GTK}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, l_rect.x, l_rect.y, l_rect.width, l_rect.height)
+			l_subpixbuf := {GDK}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, l_rect.x, l_rect.y, l_rect.width, l_rect.height)
 			if area.contains (a_rect) then
 					-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
 				if not {GDK}.gdk_is_pixbuf (l_subpixbuf) then
 					print (generator + ".sub_pixel_buffer gdk_is_pixbuf is False" )
 				end
 				create Result
-				Result.actual_implementation.set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_subpixbuf))
+				Result.actual_implementation.set_gdkpixbuf ({GDK}.gdk_pixbuf_copy (l_subpixbuf))
 			else
 					-- We create a new pixbuf of the right size, copy the subpart of Current in it via
 					-- scaling. We could have used `gdk_pixbuf_copy_area' but it is already a wrapper
@@ -271,9 +271,9 @@ feature -- Command
 				create Result.make_with_size (a_rect.width, a_rect.height)
 				if l_rect.has_area then
 					l_pixbuf := Result.actual_implementation.gdk_pixbuf
-					{GTK2}.gdk_pixbuf_scale (l_subpixbuf, l_pixbuf, (-a_rect.x).max (0), (-a_rect.y).max (0),
+					{GDK}.gdk_pixbuf_scale (l_subpixbuf, l_pixbuf, (-a_rect.x).max (0), (-a_rect.y).max (0),
 						l_rect.width, l_rect.height,
-						(-a_rect.x).max (0), (-a_rect.x).max (0), 1.0, 1.0, {GTK2}.gdk_interp_nearest)
+						(-a_rect.x).max (0), (-a_rect.x).max (0), 1.0, 1.0, {GDK}.gdk_interp_nearest)
 				end
 			end
 			{GTK2}.g_object_unref (l_subpixbuf)
@@ -288,16 +288,16 @@ feature -- Command
 			l_row_stride: NATURAL_32
 			l_bytes_per_sample: NATURAL
 		do
-			l_n_channels := {GTK}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
-			l_bytes_per_sample := {GTK}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
+			l_n_channels := {GDK}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
+			l_bytes_per_sample := {GDK}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
 
-			l_row_stride := {GTK}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
+			l_row_stride := {GDK}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
 
 			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
 
 			l_managed_pointer := reusable_managed_pointer
 				-- Share with a size big enough to read at `byte_pos'.
-			l_managed_pointer.set_from_pointer ({GTK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos + {PLATFORM}.natural_32_bytes)
+			l_managed_pointer.set_from_pointer ({GDK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos + {PLATFORM}.natural_32_bytes)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to read big endian.
 			Result := l_managed_pointer.read_natural_32_be (byte_pos)
 		end
@@ -311,15 +311,15 @@ feature -- Command
 			l_row_stride: NATURAL_32
 			l_bytes_per_sample: NATURAL
 		do
-			l_n_channels := {GTK}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
-			l_bytes_per_sample := {GTK}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
+			l_n_channels := {GDK}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
+			l_bytes_per_sample := {GDK}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
 
-			l_row_stride := {GTK}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
+			l_row_stride := {GDK}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
 
 			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
 
 			l_managed_pointer := reusable_managed_pointer
-			l_managed_pointer.set_from_pointer ({GTK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos + (l_bytes_per_sample * l_n_channels).to_integer_32)
+			l_managed_pointer.set_from_pointer ({GDK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos + (l_bytes_per_sample * l_n_channels).to_integer_32)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to set big endian.
 
 			l_managed_pointer.put_natural_32_be (rgba, byte_pos)
@@ -366,15 +366,15 @@ feature -- Command
 
 				-- Retrieve pixbuf from drawable and set the previous background color 'l_grey_value' to transparent alpha.
 				-- TODO check how to replace gdk_pixbuf_get_from_drawable
---			l_pixbuf_ptr := {GTK2}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_width, l_height)
-			l_pixbuf_ptr := {GTK}.gdk_pixbuf_get_from_window ({GDK}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default), 0, 0, l_width, l_height)
-			l_pixbuf_ptr2 := {GTK2}.gdk_pixbuf_add_alpha (l_pixbuf_ptr, True, l_grey_value, l_grey_value, l_grey_value)
+--			l_pixbuf_ptr := {GDK}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_width, l_height)
+			l_pixbuf_ptr := {GDK}.gdk_pixbuf_get_from_window ({GDK}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default), 0, 0, l_width, l_height)
+			l_pixbuf_ptr2 := {GDK}.gdk_pixbuf_add_alpha (l_pixbuf_ptr, True, l_grey_value, l_grey_value, l_grey_value)
 				-- Clean up
 			{GTK2}.g_object_unref (l_pixbuf_ptr)
 			l_pixbuf_ptr := default_pointer
 
 				-- Composite pixbuf with alpha on to `Current'
-			{GTK2}.gdk_pixbuf_composite (l_pixbuf_ptr2, gdk_pixbuf, l_x, l_y, l_width, l_height, 0, 0, 1, 1, 0, l_composite_alpha)
+			{GDK}.gdk_pixbuf_composite (l_pixbuf_ptr2, gdk_pixbuf, l_x, l_y, l_width, l_height, 0, 0, 1, 1, 0, l_composite_alpha)
 				-- Clean up
 			{GTK2}.g_object_unref (l_pixbuf_ptr2)
 			l_pixbuf_ptr2 := default_pointer
@@ -436,7 +436,7 @@ feature -- Command
 					l_dest_height := 0
 				end
 			end
-			{GTK2}.gdk_pixbuf_composite (l_pixel_buffer_imp.gdk_pixbuf, gdk_pixbuf, l_x, l_y, l_dest_width, l_dest_height, a_x, a_y, 1, 1, {GTK2}.gdk_interp_hyper, 255)
+			{GDK}.gdk_pixbuf_composite (l_pixel_buffer_imp.gdk_pixbuf, gdk_pixbuf, l_x, l_y, l_dest_width, l_dest_height, a_x, a_y, 1, 1, {GDK}.gdk_interp_hyper, 255)
 		end
 
 feature -- Query
@@ -445,7 +445,7 @@ feature -- Query
 			-- Width of buffer in pixels.
 		do
 			if {GTK}.gtk_maj_ver > 1 then
-				Result := {GTK}.gdk_pixbuf_get_width (gdk_pixbuf)
+				Result := {GDK}.gdk_pixbuf_get_width (gdk_pixbuf)
 			elseif attached internal_pixmap as l_internal_pixmap then
 				Result := l_internal_pixmap.width
 			end
@@ -455,7 +455,7 @@ feature -- Query
 			-- Height of buffer in pixels.
 		do
 			if {GTK}.gtk_maj_ver > 1 then
-				Result := {GTK}.gdk_pixbuf_get_height (gdk_pixbuf)
+				Result := {GDK}.gdk_pixbuf_get_height (gdk_pixbuf)
 			elseif attached internal_pixmap as l_internal_pixmap then
 				Result := l_internal_pixmap.height
 			end
@@ -465,7 +465,7 @@ feature -- Query
 			--Memory acess point to image data.
 			-- This feature is NOT platform independent.
 		do
-			Result := {GTK}.gdk_pixbuf_get_pixels (gdk_pixbuf)
+			Result := {GDK}.gdk_pixbuf_get_pixels (gdk_pixbuf)
 		end
 
 feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
@@ -539,7 +539,7 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 						print (generator + ".set_from_stock_id gdk_is_pixbuf is False" )
 					end
 				end
-				set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (stock_pixbuf))
+				set_gdkpixbuf ({GDK}.gdk_pixbuf_copy (stock_pixbuf))
 				{GTK2}.g_object_unref (stock_pixbuf)
 			end
 		end
@@ -563,9 +563,9 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implemen
 			end
 			if a_pixbuf /= default_pointer then
 				l_pixbuf := {GTK2}.g_object_ref (a_pixbuf) -- incr ref (GdkPixbuf is not a GInitiallyUnowned)
-				if not {GTK2}.gdk_pixbuf_get_has_alpha (a_pixbuf) then
+				if not {GDK}.gdk_pixbuf_get_has_alpha (a_pixbuf) then
 						-- Make sure that the pixel data is internally stored as R G B A
-					gdk_pixbuf := {GTK2}.gdk_pixbuf_add_alpha (l_pixbuf, False, 0, 0, 0)
+					gdk_pixbuf := {GDK}.gdk_pixbuf_add_alpha (l_pixbuf, False, 0, 0, 0)
 					{GTK2}.g_object_unref (a_pixbuf) -- gdk_pixbuf_add_alpha is creating a newly pixbuf, so unref previous one.
 					gdk_pixbuf := {GTK2}.g_object_ref (gdk_pixbuf) -- incr ref for this newly pixbuf
 				else
@@ -616,7 +616,7 @@ feature -- Obsolete
 			check
 				l_pixel_buffer_imp /= Void then
 			end
-			{GTK2}.gdk_pixbuf_copy_area (l_pixel_buffer_imp.gdk_pixbuf, 0, 0, a_rect.width, a_rect.height, gdk_pixbuf, a_rect.x, a_rect.y)
+			{GDK}.gdk_pixbuf_copy_area (l_pixel_buffer_imp.gdk_pixbuf, 0, 0, a_rect.width, a_rect.height, gdk_pixbuf, a_rect.x, a_rect.y)
 		end
 
 note

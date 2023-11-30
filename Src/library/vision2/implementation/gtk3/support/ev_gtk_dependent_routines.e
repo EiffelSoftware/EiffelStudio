@@ -74,7 +74,7 @@ feature -- Implementation
 			l_monitor := {GDK}.gdk_display_get_primary_monitor({GDK}.gdk_display_get_default)
 			{GDK}.gdk_monitor_get_workarea(l_monitor, l_workarea)
 
-			Result := ({GTK}.gdk_rectangle_struct_width(l_workarea) / {GDK}.gdk_monitor_get_width_mm (l_monitor) * 25.4).rounded
+			Result := ({GDK}.gdk_rectangle_struct_width(l_workarea) / {GDK}.gdk_monitor_get_width_mm (l_monitor) * 25.4).rounded
 		end
 
 	vertical_resolution_internal: INTEGER
@@ -86,7 +86,7 @@ feature -- Implementation
 			l_monitor := {GDK}.gdk_display_get_primary_monitor({GDK}.gdk_display_get_default())
 			{GDK}.gdk_monitor_get_workarea(l_monitor, l_workarea)
 
-			Result := ({GTK}.gdk_rectangle_struct_height(l_workarea) / {GDK}.gdk_monitor_get_height_mm (l_monitor) * 25.4).rounded
+			Result := ({GDK}.gdk_rectangle_struct_height(l_workarea) / {GDK}.gdk_monitor_get_height_mm (l_monitor) * 25.4).rounded
 		end
 
 note

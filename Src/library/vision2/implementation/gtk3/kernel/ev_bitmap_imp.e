@@ -37,8 +37,8 @@ feature -- Initialization
 		local
 			l_app_imp: like app_implementation
 		do
---			cairo_context := {GTK}.gdk_pixmap_new (default_pointer, 1, 1, 1)
---			gc := {GTK}.gdk_gc_new (cairo_context)
+--			cairo_context := {GDK}.gdk_pixmap_new (default_pointer, 1, 1, 1)
+--			gc := {GDK}.gdk_gc_new (cairo_context)
 --			set_default_colors
 --			init_default_values
 			l_app_imp := app_implementation
@@ -64,10 +64,10 @@ feature -- Status Setting
 --	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 --			-- Erase rectangle specified with `background_color'.
 --		do
-----			{GTK}.gdk_gc_set_foreground (gc, fg_color)
-----			{GTK}.gdk_gc_set_background (gc, bg_color)
+----			{GDK}.gdk_gc_set_foreground (gc, fg_color)
+----			{GDK}.gdk_gc_set_background (gc, bg_color)
 
-----			{GTK}.gdk_draw_rectangle (cairo_context, gc, 1, a_x, a_y, a_width, a_height)
+----			{GDK}.gdk_draw_rectangle (cairo_context, gc, 1, a_x, a_y, a_width, a_height)
 
 ----			set_default_colors
 --		end
@@ -180,8 +180,8 @@ feature {NONE} -- Implementation
 	set_default_colors
 			-- Set foreground and background color to their default values.
 		do
---			{GTK}.gdk_gc_set_foreground (gc, bg_color)
---			{GTK}.gdk_gc_set_background (gc, fg_color)
+--			{GDK}.gdk_gc_set_foreground (gc, bg_color)
+--			{GDK}.gdk_gc_set_background (gc, fg_color)
 		end
 
 	flush

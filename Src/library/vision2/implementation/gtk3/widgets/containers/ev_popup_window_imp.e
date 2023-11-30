@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 				-- This completely disconnects the window from the window manager.
 			if override_redirect then
-				{GTK}.gdk_window_set_override_redirect ({GTK}.gtk_widget_get_window (c_object), True)
+				{GDK}.gdk_window_set_override_redirect ({GTK}.gtk_widget_get_window (c_object), True)
 			end
 
 			disable_border
@@ -90,9 +90,9 @@ feature {EV_ANY} -- Transparency
 		local
 			c_screen, c_visual: POINTER
 		do
-			c_screen := {GTK2}.gdk_screen_get_default
+			c_screen := {GDK}.gdk_screen_get_default
 			c_visual := {GDK}.gdk_screen_get_rgba_visual (c_screen)
-			if not c_visual.is_default_pointer and {GTK}.gdk_screen_is_composited (c_screen) then
+			if not c_visual.is_default_pointer and {GDK}.gdk_screen_is_composited (c_screen) then
 				{GTK}.gtk_widget_set_visual (c_object, c_visual)
 			end
 			{GTK}.gtk_widget_set_app_paintable (c_object, True)
@@ -196,7 +196,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			-- A mouse event has occurred.
 		do
 			if override_redirect then
-				if a_type = {GTK}.gdk_button_press_enum then
+				if a_type = {GDK}.gdk_button_press_enum then
 					if
 						a_screen_x >= x_position and then
 						a_screen_x <= (x_position + width) and then

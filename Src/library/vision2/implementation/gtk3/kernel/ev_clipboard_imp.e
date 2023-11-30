@@ -38,11 +38,11 @@ feature {NONE}-- Initialization
 		do
 			cs := once "CLIPBOARD"
 			clipboard := {GTK2}.gtk_clipboard_get (
-							{GTK}.gdk_atom_intern (cs.item, 1)
+							{GDK}.gdk_atom_intern (cs.item, 1)
 			)
 			cs := once "PRIMARY"
 			primary := {GTK2}.gtk_clipboard_get (
-							{GTK}.gdk_atom_intern (cs.item, 1)
+							{GDK}.gdk_atom_intern (cs.item, 1)
 			)
 			set_is_initialized (True)
 		end

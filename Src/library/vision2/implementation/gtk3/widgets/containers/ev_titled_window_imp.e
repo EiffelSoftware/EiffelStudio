@@ -63,15 +63,15 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implemen
 		local
 			l_call_restore: BOOLEAN
 		do
-			if a_changed_mask & {GTK2}.gdk_window_state_iconified_enum = {GTK2}.gdk_window_state_iconified_enum then
-				if a_new_state & {GTK2}.gdk_window_state_iconified_enum = {GTK2}.gdk_window_state_iconified_enum then
+			if a_changed_mask & {GDK}.gdk_window_state_iconified_enum = {GTK2}.gdk_window_state_iconified_enum then
+				if a_new_state & {GDK}.gdk_window_state_iconified_enum = {GTK2}.gdk_window_state_iconified_enum then
 						-- Window has been minimized
 					is_minimized := True
 					is_maximized := False
 					if minimize_actions_internal /= Void then
 						minimize_actions_internal.call (Void)
 					end
-				elseif a_new_state & {GTK2}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
+				elseif a_new_state & {GDK}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
 						-- Window has been restored to a maximized state from a previous minimized state
 						-- We need to call maximize actions to match Windows behavior instead of calling restore.
 					is_maximized := True
@@ -83,8 +83,8 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implemen
 						-- We must be restoring from a minimized to a non maximized state.
 					l_call_restore := True
 				end
-			elseif a_changed_mask & {GTK2}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
-				if a_new_state & {GTK2}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
+			elseif a_changed_mask & {GDK}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
+				if a_new_state & {GDK}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
 						-- The window has been maximized
 					is_maximized := True
 					is_minimized := False
@@ -160,13 +160,13 @@ feature -- Status setting
 			elseif is_minimized then
 				restore
 			end
-			{GTK}.gdk_window_raise ({GTK}.gtk_widget_get_window (c_object))
+			{GDK}.gdk_window_raise ({GTK}.gtk_widget_get_window (c_object))
 		end
 
 	lower
 			-- Request that window be displayed below all other windows.
 		do
-			{GTK}.gdk_window_lower ({GTK}.gtk_widget_get_window (c_object))
+			{GDK}.gdk_window_lower ({GTK}.gtk_widget_get_window (c_object))
 		end
 
 	minimize
@@ -207,7 +207,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := an_icon_name
-			{GTK}.gdk_window_set_icon_name (
+			{GDK}.gdk_window_set_icon_name (
 				{GTK}.gtk_widget_get_window (c_object), a_cs.item)
 			icon_name_holder := an_icon_name.as_string_32.twin
 		end
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 	default_wm_decorations: INTEGER
 			-- Default WM decorations of `Current'.?
 		do
-			Result := {GTK}.gdk_decor_all_enum
+			Result := {GDK}.gdk_decor_all_enum
 		end
 
 feature {EV_ANY_I} -- Implementation

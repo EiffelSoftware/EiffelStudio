@@ -386,13 +386,13 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_screen_x, l_screen_y: INTEGER
 		do
 			if attached app_implementation as l_app_imp then
-				l_screen_x := {GTK}.gdk_event_button_struct_x_root (a_gdk_event).truncated_to_integer + l_app_imp.screen_virtual_x
-				l_screen_y := {GTK}.gdk_event_button_struct_y_root (a_gdk_event).truncated_to_integer + l_app_imp.screen_virtual_y
+				l_screen_x := {GDK}.gdk_event_button_struct_x_root (a_gdk_event).truncated_to_integer + l_app_imp.screen_virtual_x
+				l_screen_y := {GDK}.gdk_event_button_struct_y_root (a_gdk_event).truncated_to_integer + l_app_imp.screen_virtual_y
 				on_mouse_button_event (
-						{GTK}.gdk_event_button_struct_type (a_gdk_event),
-						{GTK}.gdk_event_button_struct_x (a_gdk_event).truncated_to_integer,
-						{GTK}.gdk_event_button_struct_y (a_gdk_event).truncated_to_integer,
-						{GTK}.gdk_event_button_struct_button (a_gdk_event),
+						{GDK}.gdk_event_button_struct_type (a_gdk_event),
+						{GDK}.gdk_event_button_struct_x (a_gdk_event).truncated_to_integer,
+						{GDK}.gdk_event_button_struct_y (a_gdk_event).truncated_to_integer,
+						{GDK}.gdk_event_button_struct_button (a_gdk_event),
 						0.5,
 						0.5,
 						0.5,
@@ -407,12 +407,12 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_button_number: INTEGER
 		do
-			if {GTK2}.gdk_event_scroll_struct_scroll_direction (a_gdk_event) = {GTK2}.gdk_scroll_up_enum then
+			if {GDK}.gdk_event_scroll_struct_scroll_direction (a_gdk_event) = {GTK2}.gdk_scroll_up_enum then
 				l_button_number := 4
 			else
 				l_button_number := 5
 			end
-			call_button_event_actions ({GTK}.gdk_button_press_enum, 0, 0, l_button_number, 0.5, 0.5, 0.5, 0, 0)
+			call_button_event_actions ({GDK}.gdk_button_press_enum, 0, 0, l_button_number, 0.5, 0.5, 0.5, 0, 0)
 			Result := True
 		end
 

@@ -77,7 +77,7 @@ feature -- Access
 				i := 1
 				gdkwin := {GDK_HELPERS}.window_at ($l_x, $l_y)
 				if gdkwin /= default_pointer then
-					{GTK}.gdk_window_get_user_data (gdkwin, $mouse_ptr_wid)
+					{GDK}.gdk_window_get_user_data (gdkwin, $mouse_ptr_wid)
 					a_wid ?= eif_object_from_c (mouse_ptr_wid)
 				end
 			until

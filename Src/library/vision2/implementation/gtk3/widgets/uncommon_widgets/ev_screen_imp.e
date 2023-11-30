@@ -105,7 +105,7 @@ feature {NONE} -- Drawing initialization
 				drawing_initialized := True
 				-- TODO update this code to support different environments like (Wayland)
 				if has_x11_support then
-					drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
+					drawable := {GDK}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
 					debug ("refactor_fixme")
 						{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
 					end
@@ -199,7 +199,7 @@ feature -- Status report
 			gdkwin := l_display_data.window
 			if not gdkwin.is_default_pointer then
 				from
-					{GTK}.gdk_window_get_user_data (gdkwin, $gtkwid)
+					{GDK}.gdk_window_get_user_data (gdkwin, $gtkwid)
 				until
 					Result /= Void or else gtkwid.is_default_pointer
 				loop
@@ -229,10 +229,10 @@ feature -- Status report
 			l_rect := {GTK}.c_gdk_rectangle_struct_allocate
 			{GDK}.gdk_monitor_get_geometry(l_mon, l_rect)
 
-			l_x := {GTK}.gdk_rectangle_struct_x (l_rect) - device_x_offset
-			l_y := {GTK}.gdk_rectangle_struct_y (l_rect) - device_y_offset
-			l_width := {GTK}.gdk_rectangle_struct_width (l_rect)
-			l_height := {GTK}.gdk_rectangle_struct_height (l_rect)
+			l_x := {GDK}.gdk_rectangle_struct_x (l_rect) - device_x_offset
+			l_y := {GDK}.gdk_rectangle_struct_y (l_rect) - device_y_offset
+			l_width := {GDK}.gdk_rectangle_struct_width (l_rect)
+			l_height := {GDK}.gdk_rectangle_struct_height (l_rect)
 			l_rect.memory_free
 
 			create Result.make (l_x, l_y, l_width, l_height)
@@ -254,10 +254,10 @@ feature -- Status report
 			l_rect := {GTK}.c_gdk_rectangle_struct_allocate
 			{GDK}.gdk_monitor_get_geometry(l_monitor, l_rect)
 
-			l_x := {GTK}.gdk_rectangle_struct_x (l_rect) - device_x_offset
-			l_y := {GTK}.gdk_rectangle_struct_y (l_rect) - device_y_offset
-			l_width := {GTK}.gdk_rectangle_struct_width (l_rect)
-			l_height := {GTK}.gdk_rectangle_struct_height (l_rect)
+			l_x := {GDK}.gdk_rectangle_struct_x (l_rect) - device_x_offset
+			l_y := {GDK}.gdk_rectangle_struct_y (l_rect) - device_y_offset
+			l_width := {GDK}.gdk_rectangle_struct_width (l_rect)
+			l_height := {GDK}.gdk_rectangle_struct_height (l_rect)
 			l_rect.memory_free
 
 			create Result.make (l_x, l_y, l_width, l_height)
@@ -384,7 +384,7 @@ feature -- Basic operation
 				l_gdk_test_simulate_key_symbol := gdk_test_simulate_key_symbol
 				if l_gdk_test_simulate_key_symbol /= default_pointer then
 					l_window := {GDK_HELPERS}.window_at ($l_x, $l_y)
-					a_success_flag := gdk_test_simulate_call (l_gdk_test_simulate_key_symbol, l_window, l_x, l_y, a_key_code, 0, {GTK}.gdk_key_press_enum)
+					a_success_flag := gdk_test_simulate_call (l_gdk_test_simulate_key_symbol, l_window, l_x, l_y, a_key_code, 0, {GDK}.gdk_key_press_enum)
 				end
 			end
 		end
@@ -411,7 +411,7 @@ feature -- Basic operation
 				l_gdk_test_simulate_key_symbol := gdk_test_simulate_key_symbol
 				if l_gdk_test_simulate_key_symbol /= default_pointer then
 					l_window := {GDK_HELPERS}.window_at ($l_x, $l_y)
-					a_success_flag := gdk_test_simulate_call (l_gdk_test_simulate_key_symbol, l_window, l_x, l_y, a_key_code, 0, {GTK}.gdk_key_release_enum)
+					a_success_flag := gdk_test_simulate_call (l_gdk_test_simulate_key_symbol, l_window, l_x, l_y, a_key_code, 0, {GDK}.gdk_key_release_enum)
 				end
 			end
 		end
@@ -427,7 +427,7 @@ feature -- Measurement
 	horizontal_resolution: INTEGER
 			-- Number of logical pixels per inch along horizontal axis
 		do
-			Result := {GTK2}.gdk_screen_get_resolution ({GTK2}.gdk_screen_get_default)
+			Result := {GDK}.gdk_screen_get_resolution ({GTK2}.gdk_screen_get_default)
 			if Result = -1 then
 					-- If no resolution has been set then default to 96.
 				Result := 96
@@ -437,7 +437,7 @@ feature -- Measurement
 	vertical_resolution: INTEGER
 			-- Number of logical pixels per inch along vertical axis
 		do
-			Result := {GTK2}.gdk_screen_get_resolution ({GTK2}.gdk_screen_get_default)
+			Result := {GDK}.gdk_screen_get_resolution ({GTK2}.gdk_screen_get_default)
 			if Result = -1 then
 					-- If no resolution has been set then default to 96.
 				Result := 96
@@ -617,7 +617,7 @@ feature -- Drawing / Clear Operations
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 
 				tmp_fg_color := internal_foreground_color
 				if tmp_fg_color = Void then
@@ -653,7 +653,7 @@ feature -- Drawing
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				{GDK_X11}.draw_line (
 					drawable_x_window, drawable_x_display,
 					gc,
@@ -681,7 +681,7 @@ feature -- Drawing
 				not drawable_x_display.is_default_pointer and then
 				a_width > 0 and a_height > 0
 			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				{GDK_X11}.draw_arc (
 					drawable_x_window, drawable_x_display,
 					gc,
@@ -710,7 +710,7 @@ feature -- Drawing
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 	 			{GDK_X11}.draw_point (
 	 				drawable_x_window, drawable_x_display,
 	 				gc,
@@ -739,7 +739,7 @@ feature -- Drawing
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				a_radians := radians_to_gdk_angle
 				{GDK_X11}.draw_arc (
 					drawable_x_window, drawable_x_display,
@@ -771,7 +771,7 @@ feature -- Drawing
 				not drawable_x_display.is_default_pointer and then
 				a_width > 0 and then a_height > 0
 			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 					-- If width or height are zero then nothing will be rendered.
 				{GDK_X11}.draw_rectangle (
 					drawable_x_window, drawable_x_display,
@@ -803,7 +803,7 @@ feature -- Drawing
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if is_closed then
 					{GDK_X11}.draw_polygon (drawable_x_window, drawable_x_display, gc, False, $tmp, points.count)
@@ -827,7 +827,7 @@ feature -- Drawing / Fill Operations
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				if tile /= Void then
 					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
 				end
@@ -857,7 +857,7 @@ feature -- Drawing / Fill Operations
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				if tile /= Void then
 					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
 				end
@@ -882,7 +882,7 @@ feature -- Drawing / Fill Operations
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if tile /= Void then
 					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
@@ -907,7 +907,7 @@ feature -- Drawing / Fill Operations
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				if tile /= Void then
 					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
 				end
@@ -1091,9 +1091,9 @@ feature -- Drawing / Basic operation
 		do
 			prepare_drawing
 			if not cairo_context.is_default_pointer then
-				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+				{GDK}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 				-- FIXME JV gdk_window_process_updates has been deprecated since version 3.22 and should not be used in newly-written code.
-				--{GTK2}.gdk_window_process_updates (drawable, True)
+				--{GDK}.gdk_window_process_updates (drawable, True)
 				--{GTK}.gtk_widget_queue_draw (drawable)
 				-- https://stackoverflow.com/questions/34912757/how-do-you-force-a-screen-refresh-in-gtk-3-8
 				{GTK}.gtk_widget_queue_draw (cairo_context)

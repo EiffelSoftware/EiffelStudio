@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 			c_screen := {GDK}.gdk_screen_get_default
 			c_visual := {GDK}.gdk_screen_get_rgba_visual (c_screen)
-			if not c_visual.is_default_pointer and {GTK}.gdk_screen_is_composited (c_screen) then
+			if not c_visual.is_default_pointer and {GDK}.gdk_screen_is_composited (c_screen) then
 				{GTK}.gtk_widget_set_visual (c_win, c_visual)
 			end
 			{GTK}.gtk_widget_set_app_paintable (c_win, True)

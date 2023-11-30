@@ -649,8 +649,8 @@ feature {EV_ANY_I} -- Implementation
 						l_top_level_window_imp ?= eif_object_from_gtk_object (event_widget)
 						if l_top_level_window_imp /= Void then
 							l_top_level_window_imp.call_window_state_event (
-								{GDK}.gdk_event_window_state_struct_changed_mask (gdk_event),
-								{GDK}.gdk_event_window_state_struct_new_window_state (gdk_event)
+								{GTK2}.gdk_event_window_state_struct_changed_mask (gdk_event),
+								{GTK2}.gdk_event_window_state_struct_new_window_state (gdk_event)
 							)
 							l_top_level_window_imp := Void
 						end

@@ -1028,6 +1028,15 @@ feature -- Status report
 		}
 	}
 
+	public static object attempted_on_type (Type a_type, object obj)
+		// Given an dotnet type `a_type` , return `obj` if it is an instance of that type.
+	{
+		if (a_type.IsInstanceOfType (obj)) {
+			return obj;
+		}
+		return null;
+	}
+
 //FIXME: to remove when TUPLE is updated not to use this routine anymore.
 	public static Type type_of_generic_parameter (object an_obj, int pos)
 		// Given an Eiffel object `an_obj', find the associated type of generic parameter

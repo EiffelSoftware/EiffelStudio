@@ -5085,13 +5085,38 @@ feature -- Assignments
 		local
 			l_token: INTEGER
 			l_type: TYPE_A
+			l_type_var, l_obj_var: INTEGER
 		do
 			l_type := type_i.actual_type
 
-			if l_type.is_none or l_type.is_formal then
+			if l_type.is_none then
 					-- Nothing to be done because those types are mapped to
 					-- System.Object the ancestor to all objects. So we
 					-- simply preserve the value on the stack.
+			elseif l_type.is_formal and then attached {FORMAL_A} l_type as l_formal_type then
+					-- Nothing to be done because those types are mapped to
+					-- System.Object the ancestor to all objects. So we
+					-- simply preserve the value on the stack.
+				byte_context.add_local (system_object_type)
+				l_obj_var := byte_context.local_list.count
+				put_dummy_local_info (system_object_type, l_obj_var)
+				generate_local_assignment (l_obj_var)
+
+				generate_current
+				put_integer_32_constant (l_formal_type.position)
+				internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name.as_string_8,
+						"type_of_generic_parameter", Static_type, <<System_object_class_name.as_string_8, "System.Int32">>, system_type_class_name,
+						False, Void)
+
+				generate_local (l_obj_var)
+				internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name.as_string_8,
+						"attempted_on_type", Static_type, <<System_type_class_name.as_string_8, System_object_class_name>>, System_object_class_name,
+						True, Void)
+				put_void
+				method_body.put_opcode ({MD_OPCODES}.Ceq)
+				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
+				method_body.put_opcode ({MD_OPCODES}.Ceq)
+
 			else
 					-- We use `mapped_class_type_token' because if we do:
 					-- a: ANY
@@ -7671,6 +7696,12 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 			-- Type of Object object
 		once
 			Result := System.system_object_class.compiled_class.types.first.type
+		end
+
+	system_type_type: TYPE_A
+			-- Type of Type object
+		once
+			Result := System.system_type_class.compiled_class.types.first.type
 		end
 
 	string_type: TYPE_A

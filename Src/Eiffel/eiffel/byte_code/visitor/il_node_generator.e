@@ -2809,12 +2809,16 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_target_type, l_source_type: TYPE_A
+			l_target_formal_type: FORMAL_A
 			l_target_class_type: CL_TYPE_A
 			success_label, failure_label: IL_LABEL
 			basic_failure_label: IL_LABEL
 		do
 				-- Get types
 			l_target_type := a_node.target.type
+			if attached {FORMAL_A} l_target_type as fa then
+				l_target_formal_type := fa
+			end
 			l_target_type := context.real_type (l_target_type)
 			l_source_type := context.real_type (a_node.expression.type)
 			check
@@ -2871,7 +2875,15 @@ feature {NONE} -- Visitors
 					-- Save the original value so that it can be used for the second chance type test.
 				il_generator.duplicate_top
 					-- Generate Test on type.
-				il_generator.generate_is_instance_of (l_target_type)
+				if l_target_formal_type /= Void and then not l_target_type.is_basic then
+						-- As the `l_target_type` is System.Object for such formal
+						-- the "is instance of"w will wrongly always return True.
+						-- then have special handling in `il_generator` for that formal type.
+
+					il_generator.generate_is_instance_of (l_target_formal_type)
+				else
+					il_generator.generate_is_instance_of (l_target_type)
+				end
 
 				failure_label := il_generator.create_label
 				success_label := il_generator.create_label
@@ -5018,7 +5030,7 @@ note
 	ca_ignore: "CA033", "CA033: too large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

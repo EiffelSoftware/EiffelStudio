@@ -1045,7 +1045,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 				a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 				check attached {EV_GTK_TREE_ITER_STRUCT} ev_children.i_th (a_row).list_iter as  a_list_iter then
 					{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
-					{GTK2}.g_object_unref (a_pixbuf)
+					{GDK}.g_object_unref (a_pixbuf)
 				end
 			end
 		end
@@ -1220,7 +1220,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

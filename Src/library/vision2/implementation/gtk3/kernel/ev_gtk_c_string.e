@@ -214,11 +214,11 @@ feature {NONE} -- Implementation
 				i := 1
 				if item /= default_pointer and then not is_shared then
 						-- Reuse memory pointed to by `item' instead of freeing it.
-					utf8_ptr := {GTK}.g_realloc (item, bytes_written + 1)
+					utf8_ptr := {GDK}.g_realloc (item, bytes_written + 1)
 						-- Set `item' to `default_pointer' so that it won't be GC'd.
 					item := default_pointer
 				else
-					utf8_ptr := {GTK}.g_malloc (bytes_written + 1)
+					utf8_ptr := {GDK}.g_malloc (bytes_written + 1)
 				end
 				l_ptr := shared_pointer_helper
 				l_ptr.set_from_pointer (utf8_ptr, bytes_written + 1)
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 		do
 				-- This routine is also called from `set_from_pointer'.
 			if item /= default_pointer and then not is_shared then
-				{GTK}.g_free (item)
+				{GDK}.g_free (item)
 				item := default_pointer
 			end
 		end
@@ -299,7 +299,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

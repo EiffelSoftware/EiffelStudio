@@ -55,7 +55,8 @@ feature {NONE} -- Initialization
 			--| This is just to satisfy pixmapable and textable contracts.
 		do
 			box := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
-			box := {GTK}.g_object_ref_sink (box)
+				-- Use GDK instead using GTK
+			box := {GDK}.g_object_ref_sink (box)
 			{GTK}.gtk_box_pack_start (box, text_label, True, True, 0)
 			{GTK}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end
@@ -81,7 +82,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 	c_object_dispose
 		do
 			if not box.is_default_pointer then
-				{GTK2}.g_object_unref (box)
+				{GDK}.g_object_unref (box)
 				box := default_pointer
 			end
 			Precursor
@@ -129,7 +130,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_SEPARATOR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

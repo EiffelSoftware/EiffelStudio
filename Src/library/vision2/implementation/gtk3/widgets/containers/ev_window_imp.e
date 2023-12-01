@@ -231,7 +231,7 @@ feature -- Status setting
 		local
 			l_geometry: POINTER
 		do
-			l_geometry := {GTK}.c_gdk_geometry_struct_allocate
+			l_geometry := {GDK}.c_gdk_geometry_struct_allocate
 			{GTK}.set_gdk_geometry_struct_max_width (l_geometry, maximum_width)
 			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, maximum_height)
 			{GTK}.set_gdk_geometry_struct_min_width (l_geometry, minimum_width)
@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 		local
 			l_geometry: POINTER
 		do
-			l_geometry := {GTK}.c_gdk_geometry_struct_allocate
+			l_geometry := {GDK}.c_gdk_geometry_struct_allocate
 			{GTK}.set_gdk_geometry_struct_max_width (l_geometry, a_max_width)
 			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, a_max_height)
 			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GTK}.Gdk_hint_max_size_enum)

@@ -226,7 +226,7 @@ feature -- Status report
 			l_x, l_y, l_width, l_height: INTEGER
 		do
 			l_mon := {GDK}.gdk_display_get_monitor_at_point ({GDK}.gdk_display_get_default, a_x + device_x_offset, a_y + device_y_offset)
-			l_rect := {GTK}.c_gdk_rectangle_struct_allocate
+			l_rect := {GDK}.c_gdk_rectangle_struct_allocate
 			{GDK}.gdk_monitor_get_geometry(l_mon, l_rect)
 
 			l_x := {GDK}.gdk_rectangle_struct_x (l_rect) - device_x_offset
@@ -251,7 +251,7 @@ feature -- Status report
 			check l_window_imp /= Void then end
 			l_monitor := {GDK}.gdk_display_get_monitor_at_window ({GDK}.gdk_display_get_default, {GTK}.gtk_widget_get_window (l_window_imp.c_object))
 
-			l_rect := {GTK}.c_gdk_rectangle_struct_allocate
+			l_rect := {GDK}.c_gdk_rectangle_struct_allocate
 			{GDK}.gdk_monitor_get_geometry(l_monitor, l_rect)
 
 			l_x := {GDK}.gdk_rectangle_struct_x (l_rect) - device_x_offset
@@ -1173,7 +1173,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SCREEN note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

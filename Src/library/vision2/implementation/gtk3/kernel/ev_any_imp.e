@@ -48,7 +48,8 @@ feature {EV_ANY_I} -- Access
 		do
 			if needs_event_box then
 				l_c_object := {GTK}.gtk_event_box_new -- Floating ref
-				l_c_object := {GTK}.g_object_ref_sink (l_c_object) -- Adopt floating ref count
+							-- TODO using GDK instead of GTK	
+				l_c_object := {GDK}.g_object_ref_sink (l_c_object) -- Adopt floating ref count
 
 				{GTK}.gtk_container_add (l_c_object, a_c_object) -- Adopt `a_c_object` floating ref, or add ref if a_c_object was not floating.
 				{GTK}.gtk_widget_show (a_c_object)
@@ -56,7 +57,8 @@ feature {EV_ANY_I} -- Access
 				if {GDK}.g_object_is_floating (a_c_object) then
 					c_object_was_floating := True
 						-- Adopt floating ref count, or increase ref count
-					l_c_object := {GTK}.g_object_ref_sink (a_c_object)
+						-- Using GDK instead of GTK
+					l_c_object := {GDK}.g_object_ref_sink (a_c_object)
 				else
 					check
 						is_gtk_top_window: {GTK}.gtk_is_widget (a_c_object) and then
@@ -488,7 +490,7 @@ invariant
 	has_c_object: not is_destroyed implies not c_object.is_default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

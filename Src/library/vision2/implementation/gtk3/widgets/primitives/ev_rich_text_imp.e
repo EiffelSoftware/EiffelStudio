@@ -438,7 +438,7 @@ feature -- Status Report
 			a_rectangle: MANAGED_POINTER
 		do
 			create a_text_iter.make
-			create a_rectangle.make ({GTK}.c_gdk_rectangle_struct_size)
+			create a_rectangle.make ({GDK}.c_gdk_rectangle_struct_size)
 			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, an_index - 1)
 			{GTK2}.gtk_text_view_get_iter_location (text_view, a_text_iter.item, a_rectangle.item)
 			a_x := {GDK}.gdk_rectangle_struct_x (a_rectangle.item)
@@ -455,7 +455,7 @@ feature -- Status Report
 			a_rectangle: MANAGED_POINTER
 		do
 			create a_text_iter.make
-			create a_rectangle.make ({GTK}.c_gdk_rectangle_struct_size)
+			create a_rectangle.make ({GDK}.c_gdk_rectangle_struct_size)
 			{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, an_index - 1)
 			{GTK2}.gtk_text_view_get_iter_location (text_view, a_text_iter.item, a_rectangle.item)
 			a_x := {GDK}.gdk_rectangle_struct_x (a_rectangle.item)
@@ -627,7 +627,7 @@ feature -- Status setting
 				{GTK2}.gtk_text_view_set_buffer (text_view, append_buffer) -- Incr ref to `append_buffer`
 				text_buffer := append_buffer
 				initialize_buffer_events
-				{GTK2}.g_object_unref (append_buffer)
+				{GDK}.g_object_unref (append_buffer)
 				append_buffer := default_pointer
 				buffer_locked_in_format_mode := False
 			elseif buffer_locked_in_append_mode then
@@ -635,7 +635,7 @@ feature -- Status setting
 				{GTK2}.gtk_text_view_set_buffer (text_view, append_buffer) -- Incr ref to `append_buffer`
 				text_buffer := append_buffer
 				initialize_buffer_events
-				{GTK2}.g_object_unref (append_buffer)
+				{GDK}.g_object_unref (append_buffer)
 				append_buffer := default_pointer
 				buffer_locked_in_append_mode := False
 			end
@@ -936,7 +936,7 @@ feature {NONE} -- Implementation
 			-- Clean up `append_buffer'.
 		do
 			if not append_buffer.is_default_pointer then
-				{GTK2}.g_object_unref (append_buffer)
+				{GDK}.g_object_unref (append_buffer)
 				append_buffer := default_pointer
 			end
 		end
@@ -961,9 +961,9 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 invariant
 	has_c_object_implies_has_append_buffer: not c_object.is_default_pointer implies not append_buffer.is_default_pointer
-	
+
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -533,7 +533,7 @@ feature -- Drawing operations
 				{PANGO}.cairo_show_layout (l_drawable, a_pango_layout)
 
 					-- Free allocated resources
-				{GTK2}.g_object_unref (a_pango_layout)
+				{GDK}.g_object_unref (a_pango_layout)
 				{CAIRO}.restore (l_drawable)
 			end
 			post_drawing
@@ -625,7 +625,7 @@ feature -- Drawing operations
 			check attached {EV_PIXMAP_IMP} Result.implementation as pix_imp then
 				a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
 				pix_imp.set_pixmap_from_pixbuf (a_pix)
-				{GTK2}.g_object_unref (a_pix)
+				{GDK}.g_object_unref (a_pix)
 			end
 		end
 
@@ -921,7 +921,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 		do
 			a_pixbuf := pixbuf_from_drawable
 			Result := {GDK}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, {GTK2}.gdk_interp_bilinear)
-			{GTK2}.g_object_unref (a_pixbuf)
+			{GDK}.g_object_unref (a_pixbuf)
 		end
 
 feature {NONE} -- Implementation
@@ -1020,7 +1020,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DRAWABLE note option: stable attribute end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

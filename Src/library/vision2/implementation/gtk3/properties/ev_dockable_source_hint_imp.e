@@ -204,7 +204,7 @@ feature {EV_ANY} -- Size change
 	discard_pixbuf
 		do
 			if not pixbuf.is_default_pointer then
-				{GTK}.g_object_unref (pixbuf)
+				{GDK}.g_object_unref (pixbuf)
 				pixbuf := default_pointer
 				pixbuf_rectangle := Void
 			end
@@ -513,7 +513,7 @@ feature {EV_ANY} -- Execution
 	interface: detachable EV_DOCKABLE_SOURCE_HINT note option: stable attribute end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

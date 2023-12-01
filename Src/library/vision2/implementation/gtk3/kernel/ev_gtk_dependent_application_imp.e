@@ -38,11 +38,12 @@ feature -- Initialize
  				-- The following call seems to be needed for any Xlib function.
 			dlg := {GTK2}.gtk_dialog_new
 				-- take ownership
-			dlg := {GTK}.g_object_ref_sink (dlg)
+				-- Using GDK instead GDK
+			dlg := {GDK}.g_object_ref_sink (dlg)
 				-- unref the dialog, as we do nothing with it
-			{GTK}.g_object_unref (dlg)
+			{GDK}.g_object_unref (dlg)
 				-- destroy dlg
-			{GTK}.gtk_widget_destroy (dlg)
+			{GTK2}.gtk_widget_destroy (dlg)
 			initialize_gtk_theme_properties
  		end
 
@@ -201,11 +202,11 @@ feature -- Implementation
 					Result := c_strcmp (previous_font_settings, font_name_ptr) /= 0
 					if Result then
 							-- Font settings have changed
-						{GTK}.g_free (previous_font_settings)
+						{GDK}.g_free (previous_font_settings)
 						previous_font_settings := font_name_ptr
 					else
 							-- Font settings have not changed so we free font_name_ptr.
-						{GTK}.g_free (font_name_ptr)
+						{GDK}.g_free (font_name_ptr)
 					end
 				else
 					Result := True
@@ -375,7 +376,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -78,10 +78,10 @@ feature {NONE} -- Access
 					fname := {GTK}.gslist_struct_data (fnlist)
 					a_cs.share_from_pointer (fname)
 					Result.extend (a_cs.string)
-					{GTK}.g_free (fname)
+					{GDK}.g_free (fname)
 					fnlist := {GTK}.gslist_struct_next (fnlist)
 				end
-				{GTK}.g_slist_free (fnlist)
+				{GDK}.g_slist_free (fnlist)
 			end
 		end
 
@@ -102,10 +102,10 @@ feature {NONE} -- Access
 				loop
 					fname := {GTK}.gslist_struct_data (fnlist)
 					Result.extend (create {PATH}.make_from_pointer (fname))
-					{GTK}.g_free (fname)
+					{GDK}.g_free (fname)
 					fnlist := {GTK}.gslist_struct_next (fnlist)
 				end
-				{GTK}.g_slist_free (fnlist)
+				{GDK}.g_slist_free (fnlist)
 			end
 		end
 
@@ -138,7 +138,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FILE_OPEN_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

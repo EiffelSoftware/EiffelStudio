@@ -70,7 +70,7 @@ feature -- Access
 				l_filename := {GTK2}.gtk_file_chooser_get_filename (c_object)
 				if l_filename /= default_pointer then
 					create Result.make_from_pointer (l_filename)
-					{GTK}.g_free (l_filename)
+					{GDK}.g_free (l_filename)
 				else
 					create Result.make_empty
 				end
@@ -196,7 +196,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				if (not temp_file.exists or else not temp_file.is_directory) then
 					Precursor {EV_STANDARD_DIALOG_IMP}
 				end
-				{GTK}.g_free (a_filename)
+				{GDK}.g_free (a_filename)
 			end
 		end
 
@@ -285,7 +285,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FILE_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

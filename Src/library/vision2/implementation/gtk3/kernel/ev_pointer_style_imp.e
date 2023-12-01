@@ -292,7 +292,7 @@ feature -- Implementation
 					attached_interface.x_hotspot,
 					attached_interface.y_hotspot
 				)
-				{GTK2}.g_object_unref (l_image)
+				{GDK}.g_object_unref (l_image)
 			end
 		end
 
@@ -308,7 +308,7 @@ feature -- Implementation
 			-- Set gdk_pixbuf to `a_pixbuf'.
 		do
 			if gdk_pixbuf /= default_pointer then
-				{GTK2}.g_object_unref (gdk_pixbuf)
+				{GDK}.g_object_unref (gdk_pixbuf)
 			end
 			gdk_pixbuf := a_pixbuf
 		end
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

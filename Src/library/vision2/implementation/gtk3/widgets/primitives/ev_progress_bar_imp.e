@@ -133,7 +133,7 @@ feature -- Element change / colors
 				-- TODO Handle error
 			end
 			if not l_provider.is_default_pointer then
-				{GTK2}.g_object_unref (l_provider)
+				{GDK}.g_object_unref (l_provider)
 			end
 		end
 
@@ -175,7 +175,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PROGRESS_BAR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

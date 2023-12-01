@@ -512,7 +512,7 @@ feature {EV_ANY_I} -- Implementation
 			l_geometry: POINTER
 			l_width, l_height: INTEGER
 		do
-			l_geometry := {GTK}.c_gdk_geometry_struct_allocate
+			l_geometry := {GDK}.c_gdk_geometry_struct_allocate
 			l_width := width
 			l_height := height
 			{GTK}.set_gdk_geometry_struct_max_width (l_geometry, l_width)
@@ -524,7 +524,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

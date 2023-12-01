@@ -1257,8 +1257,8 @@ feature -- Basic operation
 			end
 			{GDK}.gdk_drop_finish (a_context, l_success, a_time)
 			{GTK}.gtk_drag_finish (a_context, l_success, False, a_time)
-			{GTK}.g_free (prop_data)
-			{GTK}.g_free (a_target_list)
+			{GDK}.g_free (prop_data)
+			{GDK}.g_free (a_target_list)
 		end
 
 
@@ -1328,7 +1328,7 @@ feature -- Basic operation
 		do
 			if not is_destroyed then
 				if tooltips /= default_pointer then
-					{GTK2}.g_object_unref (tooltips)
+					{GDK}.g_object_unref (tooltips)
 				end
 				set_is_destroyed (True)
 					-- This will exit our main loop
@@ -1609,7 +1609,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 	reusable_rectangle_struct: POINTER
 			-- Persistent GdkRectangle struct
 		once
-			Result := {GTK}.c_gdk_rectangle_struct_allocate
+			Result := {GDK}.c_gdk_rectangle_struct_allocate
 		end
 
 	c_string_from_eiffel_string (a_string: READABLE_STRING_GENERAL): EV_GTK_C_STRING

@@ -4203,6 +4203,7 @@ feature {NONE} -- Implementation: Feature calls
 			l_invariant_checked: BOOLEAN
 			l_real_metamorphose: BOOLEAN
 			l_count: INTEGER
+			l_target_type: TYPE_A
 		do
 				-- Get type on which call will be performed.
 			if attached {CL_TYPE_A} a_node.context_type as c then
@@ -4233,7 +4234,10 @@ feature {NONE} -- Implementation: Feature calls
 						if a_node.is_static_call then
 								-- Bug fix until we generate direct static access
 								-- to C external.
-							(create {CREATE_TYPE}.make (a_node.static_class_type)).generate_il
+
+								-- Find location of feature.
+							l_target_type := a_node.static_class_type;
+							(create {CREATE_TYPE}.make (l_target_type)).generate_il
 						else
 							il_generator.generate_current
 						end
@@ -4270,8 +4274,11 @@ feature {NONE} -- Implementation: Feature calls
 						-- In IL, if you can call Precursor, it means that parent is
 						-- not expanded and therefore we can safely generate a static
 						-- call to Precursor feature.
+
+						-- Use implemented type instead of `a_node.static_class_type`
+					l_target_type := l_cl_type.implemented_type (a_node.written_in)
 					il_generator.generate_feature_access (
-						a_node.static_class_type, a_node.feature_id, l_count, not l_return_type.is_void, False)
+						l_target_type, a_node.feature_id, l_count, not l_return_type.is_void, False)
 				elseif l_cl_type.is_expanded then
 					il_generator.generate_feature_access (l_cl_type,
 						l_cl_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id,

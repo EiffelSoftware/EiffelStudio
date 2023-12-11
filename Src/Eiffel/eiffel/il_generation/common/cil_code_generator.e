@@ -5101,17 +5101,27 @@ feature -- Assignments
 				l_obj_var := byte_context.local_list.count
 				put_dummy_local_info (system_object_type, l_obj_var)
 				generate_local_assignment (l_obj_var)
+				if
+					attached current_class.formal_at_position (l_formal_type.position) as l_type_feature_i
+				then
+					generate_current
+					generate_type_feature_call (l_type_feature_i)
+					generate_local (l_obj_var)
+					internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name.as_string_8,
+							"attempted_on_rt_type", Static_type, <<System_object_class_name.as_string_8, type_class_name, System_object_class_name>>, System_object_class_name,
+							True, Void)
+				else
+					generate_current
+					put_integer_32_constant (l_formal_type.position)
+					internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name.as_string_8,
+							"type_of_generic_parameter", Static_type, <<System_object_class_name.as_string_8, "System.Int32">>, system_type_class_name,
+							False, Void)
 
-				generate_current
-				put_integer_32_constant (l_formal_type.position)
-				internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name.as_string_8,
-						"type_of_generic_parameter", Static_type, <<System_object_class_name.as_string_8, "System.Int32">>, system_type_class_name,
-						False, Void)
-
-				generate_local (l_obj_var)
-				internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name.as_string_8,
-						"attempted_on_type", Static_type, <<System_type_class_name.as_string_8, System_object_class_name>>, System_object_class_name,
-						True, Void)
+					generate_local (l_obj_var)
+					internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name.as_string_8,
+							"attempted_on_type", Static_type, <<System_type_class_name.as_string_8, System_object_class_name>>, System_object_class_name,
+							True, Void)
+				end
 				put_void
 				method_body.put_opcode ({MD_OPCODES}.Ceq)
 				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)

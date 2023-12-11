@@ -1031,11 +1031,27 @@ feature -- Status report
 	public static object attempted_on_type (Type a_type, object obj)
 		// Given an dotnet type `a_type` , return `obj` if it is an instance of that type.
 	{
-		if (a_type.IsInstanceOfType (obj)) {
+		if (a_type != null && a_type.IsInstanceOfType (obj)) {
 			return obj;
 		}
 		return null;
 	}
+
+	public static object attempted_on_rt_type (object current, RT_TYPE a_rt_type, object obj)
+		// return `obj` if it is an instance of `a_rt_type`, or
+		// of type associated with position of formal type for `current` object.
+	{
+		Type t = null;
+
+		if (a_rt_type is RT_CLASS_TYPE) {
+			RT_CLASS_TYPE cl_t = a_rt_type as RT_CLASS_TYPE;
+			t = cl_t.dotnet_type();
+		} else if (a_rt_type is RT_FORMAL_TYPE) {
+			RT_FORMAL_TYPE f_t = a_rt_type as RT_FORMAL_TYPE;
+			t = type_of_generic_parameter (current, f_t.position);
+		}
+		return attempted_on_type (t,obj);
+	}	
 
 //FIXME: to remove when TUPLE is updated not to use this routine anymore.
 	public static Type type_of_generic_parameter (object an_obj, int pos)

@@ -44,7 +44,7 @@ feature -- Initialization
 					set_platform (l_arg)
 				end
 			end
-			l_pos := l_args.index_of_word_option (capabilty_option_name)
+			l_pos := l_args.index_of_word_option (capability_option_name)
 			if l_pos > 0 and then l_pos + 1 <= l_args.argument_count then
 				l_arg := l_args.argument (l_pos + 1)
 				if is_capability_valid (l_arg) then
@@ -60,7 +60,7 @@ feature -- Access
 	full_option_name: STRING = "full"
 	safe_option_name: STRING = "safe"
 	platform_option_name: STRING = "platform"
-	capabilty_option_name: STRING = "capability"
+	capability_option_name: STRING = "capability"
 			-- Name of command line options that can be used to initialize Current
 
 	command_line: STRING
@@ -121,15 +121,15 @@ feature -- Access
 				Result.extend (platform_mode)
 			end
 			if is_capability_warning then
-				Result.extend (capabilty_option)
+				Result.extend (capability_option)
 				Result.extend (capability_value_warning)
 			end
 			if is_capability_error then
-				Result.extend (capabilty_option)
+				Result.extend (capability_option)
 				Result.extend (capability_value_error)
 			end
 			if is_capability_strict then
-				Result.extend (capabilty_option)
+				Result.extend (capability_option)
 				Result.extend (capability_value_strict)
 			end
 		end
@@ -417,14 +417,14 @@ feature {NONE}
 
 feature -- Capabilities
 
-	capabilty_option: STRING
+	capability_option: STRING
 			-- Option to control capabilities processing with leading option sign.
 		local
 			a: ES_ARGUMENTS
 		once
 			create a
 			create Result.make_filled (a.option_sign.item.to_character_8, 1)
-			Result.append_string (capabilty_option_name)
+			Result.append_string (capability_option_name)
 		end
 
 	capability_value_warning: STRING = "warning"
@@ -448,7 +448,7 @@ feature {NONE} -- Capabilities
 			-- Check library code against its capability rather than project settings.
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

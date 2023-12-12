@@ -355,9 +355,6 @@ feature -- Properties
 			-- File which Output is redirected into
 			-- if `output_file_option' is set to True.
 
-	option: STRING_32
-			-- Current option being analyzed
-
 	single_file_compilation_filename: PATH
 			-- File name of Eiffel class file in single file compilation mode
 
@@ -587,12 +584,18 @@ feature {NONE} -- Output
 		end
 
 	print_one_help (opt: READABLE_STRING_32; txt: READABLE_STRING_32)
+		local
+			s: STRING_32
 		do
-			io.put_string ("%T-")
-			io.put_string_32 (opt)
-			io.put_string (": ")
-			io.put_string_32 (txt)
-			io.put_string (".%N")
+			create s.make (2 + opt.count + txt.count + 4)
+			s.append_character (option_sign.item)
+			s.append (opt)
+			s.append_character (':')
+			s.append_character (' ')
+			s.append (txt)
+			s.append_character ('.')
+			s.append_character ('%N')
+			io.put_string_32 (s)
 		end
 
 	print_gc_statistics
@@ -718,12 +721,16 @@ feature {NONE} -- Update
 			in_filename, out_filename: STRING_32
 			l_configuration_settings: like configuration_settings
 			option_arguments: ARRAYED_LIST [READABLE_STRING_32]
+			option: STRING_32
 			option_name: STRING_32
+			option_processed: BOOLEAN
 		do
 			filter_name := ""
 			option := argument (current_option)
-			if option.starts_with ({STRING_32} "-") then
-				option_name := option.tail (option.count - 1) -- Remove prefix '-'
+			option_processed := False
+			if option[1] = option_sign.item then
+				option_processed := True -- For now, mark it as processed, if at the end it is not processed, it will be set to False.
+				option_name := option.tail (option.count - 1) -- Remove option_sign '-'
 				if option_name.same_string_general (help_cmd_name) then --| -help
 					help_only := True
 				elseif option_name.same_string_general (loop_cmd_name) then --| -loop
@@ -990,26 +997,26 @@ feature {NONE} -- Update
 						if not has_error then
 							if option.same_string_general ("-flat") then
 								if cn.same_string_general ("-all") then
-									create {EWB_DOCUMENTATION} command.make_flat (filter_name, false)
+									create {EWB_DOCUMENTATION} command.make_flat (filter_name, False)
 								elseif cn.same_string_general ("-all_and_parents") then
-									create {EWB_DOCUMENTATION} command.make_flat (filter_name, true)
+									create {EWB_DOCUMENTATION} command.make_flat (filter_name, True)
 								else
 									create {EWB_FLAT} command.make (cn, filter_name)
 								end
 							elseif option.same_string_general ("-short") then
 								if cn.same_string_general ("-all") then
-									create {EWB_DOCUMENTATION} command.make_short (filter_name, false)
+									create {EWB_DOCUMENTATION} command.make_short (filter_name, False)
 								elseif cn.same_string_general ("-all_and_parents") then
-									create {EWB_DOCUMENTATION} command.make_short (filter_name, true)
+									create {EWB_DOCUMENTATION} command.make_short (filter_name, True)
 								else
 									create {EWB_SHORT} command.make (cn, filter_name)
 								end
 							else
 								check option.same_string_general ("-flatshort") end
 								if cn.same_string_general ("-all") then
-									create {EWB_DOCUMENTATION} command.make_flat_short (filter_name, false)
+									create {EWB_DOCUMENTATION} command.make_flat_short (filter_name, False)
 								elseif cn.same_string_general ("-all_and_parents") then
-									create {EWB_DOCUMENTATION} command.make_flat_short (filter_name, true)
+									create {EWB_DOCUMENTATION} command.make_flat_short (filter_name, True)
 								else
 									create {EWB_FS} command.make (cn, filter_name)
 								end
@@ -1469,85 +1476,92 @@ feature {NONE} -- Update
 						-- override the compilation option that was previously set.
 					create {EWB_TEST_EXECUTION} command
 					command_option := option
-				else
-					process_special_options
-				end
-			elseif option.same_string_general (compiler_profile.capabilty_option) then
-					-- This options specifies how capabilities are processed.
-				if current_option < argument_count then
-					current_option := current_option + 1
-					if compiler_profile.is_capability_valid (argument (current_option)) then
-						compiler_profile.set_capability (argument (current_option))
-					else
-						option_error_message :=
-							locale.formatted_string (
-								locale.translation ("Capability option value should be one of %"$1%", %"$2%", %"$3%"."),
-								compiler_profile.capability_value_warning,
-								compiler_profile.capability_value_error,
-								compiler_profile.capability_value_strict
-							)
+				elseif option.same_string_general (compiler_profile.capability_option_name) then
+						-- This options specifies how capabilities are processed.
+					if current_option < argument_count then
+						current_option := current_option + 1
+						if compiler_profile.is_capability_valid (argument (current_option)) then
+							compiler_profile.set_capability (argument (current_option))
+						else
+							option_error_message :=
+								locale.formatted_string (
+									locale.translation ("Capability option value should be one of %"$1%", %"$2%", %"$3%"."),
+									compiler_profile.capability_value_warning,
+									compiler_profile.capability_value_error,
+									compiler_profile.capability_value_strict
+								)
 
-					end
-				else
-					option_error_message := locale.translation ("Capability option requires a value.")
-				end
-			elseif
-				attached extension.service as s and then
-				option.count > 1 and then
-				option [1] = (create {ES_ARGUMENTS}).option_sign.item and then
-				attached option.tail (option.count - 1) as o and then
-				attached s.argument_count (o) as n and then
-				n /= s.unknown_option
-			then
-					-- This is a known service-provided option.
-					-- Check if there are sufficient option arguments.
-				if current_option + n > argument_count then
-					option_error_message := locale.formatted_string
-						(locale.plural_translation_in_context
-							({STRING_32} "Insufficient arguments for option `$1` that expects $2 argument.",
-							{STRING_32} "Insufficient arguments for option `$1` that expects $2 arguments.",
-							"compiler.option",
-							n),
-						option,
-						n)
-				else
-						-- Collect option arguments.
-					create option_arguments.make (n)
-					⟳ i: (current_option + 1) |..| (current_option + n) ¦ option_arguments.extend (argument (i)) ⟲
-						-- Current option will be added at the end of the routine.
-					current_option := current_option + n
-						-- Retrieve the associated command.
-					if not attached s.command (o, option_arguments) as c then
-						option_error_message := s.error
-					elseif attached command and then c /= command then
-						option_error_message := locale.formatted_string ({STRING_32} "Option `$1` conflicts with `$2`.", option, command_option)
+						end
 					else
-						command := c
-						command_option := option
-					end
-				end
-
-			elseif is_eiffel_class_file_name (create {PATH}.make_from_string (option)) then
-					-- This option is only valid if no other config options are set
-				if config_file_name = Void and target_name = Void and old_ace_file = Void and old_project_file = Void then
-					create single_file_compilation_filename.make_from_string (argument (current_option))
-					is_single_file_compilation := True
-						-- Implies finish freezing
-					is_finish_freezing_called := True
-						-- If no libraries are set yet, initialize empty list
-					if single_file_compilation_libraries = Void then
-						create single_file_compilation_libraries.make (5)
+						option_error_message := locale.translation ("Capability option requires a value.")
 					end
 				else
-					option_error_message := locale.translation ("Cannot mix -config or -target when compiling a system using an Eiffel class as argument")
+					option_processed := False
 				end
-			else
-				process_special_options
+			end
+			if not option_processed then
+				option_processed := True
+				if
+					attached extension.service as s and then
+					option.count > 1 and then
+					option [1] = (create {ES_ARGUMENTS}).option_sign.item and then
+					attached option.tail (option.count - 1) as o and then
+					attached s.argument_count (o) as n and then
+					n /= s.unknown_option
+				then
+						-- This is a known service-provided option.
+						-- Check if there are sufficient option arguments.
+					if current_option + n > argument_count then
+						option_error_message := locale.formatted_string
+							(locale.plural_translation_in_context
+								({STRING_32} "Insufficient arguments for option `$1` that expects $2 argument.",
+								{STRING_32} "Insufficient arguments for option `$1` that expects $2 arguments.",
+								"compiler.option",
+								n),
+							option,
+							n)
+					else
+							-- Collect option arguments.
+						create option_arguments.make (n)
+						⟳ i: (current_option + 1) |..| (current_option + n) ¦ option_arguments.extend (argument (i)) ⟲
+							-- Current option will be added at the end of the routine.
+						current_option := current_option + n
+							-- Retrieve the associated command.
+						if not attached s.command (o, option_arguments) as c then
+							option_error_message := s.error
+						elseif attached command and then c /= command then
+							option_error_message := locale.formatted_string ({STRING_32} "Option `$1` conflicts with `$2`.", option, command_option)
+						else
+							command := c
+							command_option := option
+						end
+					end
+
+				elseif is_eiffel_class_file_name (create {PATH}.make_from_string (option)) then
+						-- This option is only valid if no other config options are set
+					if config_file_name = Void and target_name = Void and old_ace_file = Void and old_project_file = Void then
+						create single_file_compilation_filename.make_from_string (argument (current_option))
+						is_single_file_compilation := True
+							-- Implies finish freezing
+						is_finish_freezing_called := True
+							-- If no libraries are set yet, initialize empty list
+						if single_file_compilation_libraries = Void then
+							create single_file_compilation_libraries.make (5)
+						end
+					else
+						option_error_message := locale.translation ("Cannot mix -config or -target when compiling a system using an Eiffel class as argument")
+					end
+				else
+					option_processed := True
+				end
+			end
+			if not option_processed then
+				process_special_options (option)
 			end
 			current_option := current_option + 1
 		end
 
-	process_special_options
+	process_special_options (option: STRING_32)
 			-- Process the special option.
 		local
 			keep: BOOLEAN

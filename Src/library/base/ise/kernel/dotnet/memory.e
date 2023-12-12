@@ -292,6 +292,8 @@ feature -- Removal
 		do
 				-- Perform a collection for now.
 			{GC}.collect (0)
+		ensure
+			class
 		end
 
 	collect
@@ -299,6 +301,8 @@ feature -- Removal
 			-- collection is enabled; do nothing otherwise.
 		do
 			{GC}.collect (0)
+		ensure
+			class
 		end
 
 	full_collect
@@ -306,6 +310,8 @@ feature -- Removal
 			-- collection is enabled; do nothing otherwise.
 		do
 			{GC}.collect
+		ensure
+			class
 		end
 
 feature {NONE} -- Implementation

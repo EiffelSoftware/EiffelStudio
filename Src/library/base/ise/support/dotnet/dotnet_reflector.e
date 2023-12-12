@@ -1795,6 +1795,7 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 		once
 			create Result.make_filled (Void, min_predefined_type, array_upper_cell.item)
 		ensure
+			class
 			id_to_eiffel_type_not_void: Result /= Void
 		end
 

@@ -266,6 +266,8 @@ feature -- Access
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := helper.type_name_of_type (type_id)
+		ensure
+			class
 		end
 
 	type_name_8_of_type (type_id: INTEGER): STRING_8
@@ -275,6 +277,8 @@ feature -- Access
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := helper.type_name_8_of_type (type_id)
+		ensure
+			class
 		end
 
 	attached_type (type_id: INTEGER): INTEGER

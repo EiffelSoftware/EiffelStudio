@@ -1552,7 +1552,7 @@ feature {NONE} -- Update
 						option_error_message := locale.translation ("Cannot mix -config or -target when compiling a system using an Eiffel class as argument")
 					end
 				else
-					option_processed := True
+					option_processed := False
 				end
 			end
 			if not option_processed then

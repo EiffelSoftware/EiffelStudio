@@ -1245,8 +1245,7 @@ feature -- Code generation
 					end
 					create ca.make
 					ca.put_string (".NETCoreApp,Version=v" + rt_v)
-
---					system.clr_runtime_version
+					ca.put_integer_16 (0)
 
 -- The "FrameworkDisplayName" is not required
 --						-- Number of named arguments
@@ -1259,6 +1258,7 @@ feature -- Code generation
 --					ca.put_string ("FrameworkDisplayName")
 --						-- Put the value
 --					ca.put_string ("NET 6.0")
+--					ca.put_integer_16 (0)
 					ca_token := md_emit.define_custom_attribute (associated_assembly_token, attribute_ctor, ca)
 				end
 			end

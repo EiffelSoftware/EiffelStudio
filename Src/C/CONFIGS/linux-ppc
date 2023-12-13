@@ -244,6 +244,9 @@ sharedlink=$ld
 suffix='.a'
 wkeiflib='wkbench'
 
+#IL generation
+il_flags='-DEIF_IL_DLL'
+
 #testing
 start_test='if [ ! -f finished ] ; then'
 end_test='; fi'

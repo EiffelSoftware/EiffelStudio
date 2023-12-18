@@ -920,7 +920,15 @@ feature {NONE} -- Access: code generation
 
 	initialize_uni_string (nb: INTEGER)
 		do
-			create internal_uni_string.make_empty (1_024)
+			if
+				attached {EXECUTION_ENVIRONMENT}.item ("ISE_OPTS") as l_opts and then
+				l_opts.has_substring ("disable_uni_string_buffer")
+			then
+					-- Disable uni_string reusable buffer.
+				internal_uni_string := Void
+			else
+				create internal_uni_string.make_empty (1_024)
+			end
 		end
 
 	reset_uni_string

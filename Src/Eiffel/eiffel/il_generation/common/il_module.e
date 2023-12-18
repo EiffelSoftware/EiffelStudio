@@ -914,6 +914,8 @@ feature {NONE} -- Access: code generation
 					-- Reuse CLI_STRING object for performance.
 				Result.set_string (s)
 			end
+		ensure
+			expected_string: Result.string_32.same_string_general (s)
 		end
 
 	initialize_uni_string (nb: INTEGER)
@@ -1597,7 +1599,7 @@ feature -- Metadata description
 		local
 			class_c: CLASS_C
 			name: STRING
-			l_type_token: INTEGER
+			l_type_token, tok: INTEGER
 			l_nested_parent_class: CLASS_C
 			l_nested_parent_class_token: INTEGER
 			l_sig: MD_TYPE_SIGNATURE
@@ -1625,8 +1627,8 @@ feature -- Metadata description
 						name.index_of ('+', 1) + 1, name.count)),
 						l_nested_parent_class_token)
 				else
-					l_type_token := md_emit.define_type_ref (uni_string (name),
-						external_assembly_token (class_type))
+					tok := external_assembly_token (class_type)
+					l_type_token := md_emit.define_type_ref (uni_string (name), tok)
 				end
 				class_mapping.put (l_type_token, class_type.external_id)
 

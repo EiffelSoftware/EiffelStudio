@@ -21,11 +21,19 @@ feature {NONE} -- Initialization
 		do
 			print (once "TestBasic%N")
 			create abc.make
+			test_anchors
 		end
 
-feature -- Status
-
 feature -- Access
+
+	test_anchors
+		local
+			obj: ANY
+		do
+			obj := create {ARRAYED_LIST [like list_of_strings.item]}.make (0)
+		end
+
+	list_of_strings: detachable LIST [STRING]
 
 feature -- Change
 

@@ -48,7 +48,7 @@ feature {EV_ANY_I} -- Access
 		do
 			if needs_event_box then
 				l_c_object := {GTK}.gtk_event_box_new -- Floating ref
-							-- TODO using GDK instead of GTK	
+							-- TODO using GDK instead of GTK
 				l_c_object := {GDK}.g_object_ref_sink (l_c_object) -- Adopt floating ref count
 
 				{GTK}.gtk_container_add (l_c_object, a_c_object) -- Adopt `a_c_object` floating ref, or add ref if a_c_object was not floating.
@@ -216,7 +216,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 			a_conn_id > 0
 		local
 			l_app_imp: EV_APPLICATION_IMP
-			conn: like signal_connections.item
+			conn: GTK_SIGNAL_MARSHAL_CONNECTION
 		do
 			debug ("gtk_signal")
 				print (generator + ": calling signal_disconnect (" + a_c_object.out + ", " + a_conn_id.out + ")%N")
@@ -262,7 +262,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 			if a_connection_id > 0 then
 				lst := signal_connections
 				if lst = Void then
-					create {ARRAYED_LIST [like signal_connections.item]} lst.make (1)
+					create {ARRAYED_LIST [GTK_SIGNAL_MARSHAL_CONNECTION]} lst.make (1)
 					signal_connections := lst
 				end
 				lst.force (create {GTK_SIGNAL_MARSHAL_CONNECTION}.make (a_c_object, a_connection_id))

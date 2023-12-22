@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="thread" uuid="8D4AB86A-5613-42C9-A181-925DEB27843A" library_target="thread">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="thread" uuid="8D4AB86A-5613-42C9-A181-925DEB27843A" library_target="thread">
 	<target name="thread">
 		<description>EiffelThread: Multithreading facilities for Eiffel.
 			Copyright (c) 1984-2021, Eiffel Software and others.
@@ -16,13 +16,28 @@
 		<capability>
 			<concurrency support="none"/>
 		</capability>
+		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">
-			<renaming old_name="INTERFACE_TYPE_ATTRIBUTE" new_name="SYSTEM_INTERFACE_TYPE_ATTRIBUTE"/>
-			<renaming old_name="ENCODING" new_name="SYSTEM_ENCODING"/>
+
+		<namespace name="System">
 			<renaming old_name="WEAK_REFERENCE" new_name="SYSTEM_WEAK_REFERENCE"/>
-		</assembly>
+		</namespace>
+				
+		<namespace name="System.Runtime.InteropServices">
+			<renaming old_name="INTERFACE_TYPE_ATTRIBUTE" new_name="SYSTEM_INTERFACE_TYPE_ATTRIBUTE"/>
+		</namespace>
+		
+		<namespace name="System.Text">
+			<renaming old_name="ENCODING" new_name="SYSTEM_ENCODING"/>
+		</namespace>
+
+	
+		
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="System.Runtime" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.dll"/>
+		<assembly name="System.Threading.Thread" location="$ISE_DOTNET_FRAMEWORK\System.Threading.Thread.dll"/>
 		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_"/>
+		
 		<cluster name="dotnet_thread" location="$ISE_LIBRARY\library\thread\dotnet\private\" hidden="true">
 			<condition>
 				<dotnet value="true"/>

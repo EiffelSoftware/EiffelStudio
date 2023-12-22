@@ -75,17 +75,17 @@ feature {NONE} -- Implementation
 
 	children_mutex: MUTEX
 			-- Synchronization object for all operations on `children_by_thread_id'.
-		note
-			once_status: global
-		once
+--		note
+--			once_status: global
+		once ("PROCESS")
 			create Result.make
 		end
 
 	children_by_thread_id: HASH_TABLE [ARRAYED_LIST [THREAD], POINTER]
 			-- Table of all children threads for a given thread.
-		note
-			once_status: global
-		once
+--		note
+--			once_status: global
+		once ("PROCESS")
 			create Result.make (5)
 		end
 
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

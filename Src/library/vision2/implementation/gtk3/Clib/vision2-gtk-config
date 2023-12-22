@@ -55,6 +55,12 @@ while test $# -gt 0; do
 			postfix_path=" $postfix_path $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/gtk3_eiffel.o"
 		fi
 		;;
+		--ilobject)
+		if [ $needs_object_path = $false_val ]; then
+			needs_object_path=$true_val
+			postfix_path=" $postfix_path $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/ILgtk3_eiffel.o"
+		fi
+		;;
 		--library)
 		if [ $needs_library_path = $false_val ]; then
 			needs_library_path=$true_val

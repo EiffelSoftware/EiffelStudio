@@ -259,6 +259,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		local
 			lst: like signal_connections
 		do
+			print (generator + ".record_signal_connection%N")
 			if a_connection_id > 0 then
 				lst := signal_connections
 				if lst = Void then

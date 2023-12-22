@@ -101,6 +101,7 @@
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk3/Clib/vision2-gtk-config --threads --object`">
 			<condition>
 				<platform excluded_value="windows"/>
+				<dotnet value="false"/>
 				<concurrency excluded_value="none"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
 				<custom name="vision_implementation" excluded_value="gtk2"/>
@@ -109,11 +110,31 @@
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk3/Clib/vision2-gtk-config --object`">
 			<condition>
 				<platform excluded_value="windows"/>
+				<dotnet value="false"/>
 				<concurrency value="none"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
 				<custom name="vision_implementation" excluded_value="gtk2"/>
 			</condition>
 		</external_linker_flag>
+		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk3/Clib/vision2-gtk-config --threads --ilobject`">
+			<condition>
+				<platform excluded_value="windows"/>
+				<dotnet value="true"/>
+				<concurrency excluded_value="none"/>
+				<custom name="vision_implementation" excluded_value="cocoa"/>
+				<custom name="vision_implementation" excluded_value="gtk2"/>
+			</condition>
+		</external_linker_flag>
+		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk3/Clib/vision2-gtk-config --ilobject`">
+			<condition>
+				<platform excluded_value="windows"/>
+				<dotnet value="true"/>
+				<concurrency value="none"/>
+				<custom name="vision_implementation" excluded_value="cocoa"/>
+				<custom name="vision_implementation" excluded_value="gtk2"/>
+			</condition>
+		</external_linker_flag>
+		
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk3/Clib/vision2-gtk-config --threads --library`">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -161,6 +182,9 @@
 		</library>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\$ISE_DOTNET_PLATFORM\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system.runtime.dll" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.dll"/>
+		<assembly name="system.runtime.interopservices" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.InteropServices.dll"/>
+
 		<cluster name="contrib" location="contrib\" recursive="true">
 			<option namespace="Vision2.Contrib">
 			</option>
@@ -205,6 +229,24 @@
 				<exclude>/support/externals/gtk2_deprecated.e$</exclude>
 				<exclude>/support/externals/gtk_css_deprecated.e$</exclude>
 				<exclude>/support/externals/gtk_deprecated.e$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>/kernel/classic$</exclude>	
+				<condition>
+					<platform excluded_value="windows"/>
+					<dotnet value="true"/>
+					<custom name="vision_implementation" excluded_value="cocoa"/>
+					<custom name="vision_implementation" excluded_value="gtk2"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/kernel/dotnet$</exclude>	
+				<condition>
+					<platform excluded_value="windows"/>
+					<dotnet value="false"/>
+					<custom name="vision_implementation" excluded_value="cocoa"/>
+					<custom name="vision_implementation" excluded_value="gtk2"/>
+				</condition>
 			</file_rule>
 		</cluster>
 		<cluster name="implementation_interface" location="implementation\implementation_interface\" recursive="true">

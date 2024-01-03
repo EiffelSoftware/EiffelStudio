@@ -96,7 +96,8 @@ feature {NONE} -- Implementation
 			debug("gtk_net")
 				print (generator + " free%N" )
 			end
-			{GC_HANDLE}.from_int_ptr (a_pointer).free
+
+			if attached {GC_HANDLE}.from_int_ptr (a_pointer) as h then h.free else  end
 		end
 
 feature {EV_ANY_IMP} -- Access

@@ -54,12 +54,6 @@ feature -- Errors
 			"return (EIF_INTEGER) ERR_GET_LIB((unsigned long)$a_code)"
 		end
 
-	c_error_get_func (a_code: NATURAL_64 ): INTEGER
-		external "C inline use %"eif_openssl.h%""
-		alias
-			"return (EIF_INTEGER) ERR_GET_FUNC((unsigned long)$a_code)"
-		end
-
 	c_error_get_reason (a_code: NATURAL_64 ): INTEGER
 		external "C inline use %"eif_openssl.h%""
 		alias
@@ -73,7 +67,7 @@ feature -- Errors
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

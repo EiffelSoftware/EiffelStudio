@@ -609,13 +609,6 @@ feature -- RSA
 			"RSA_PKCS1_PADDING"
 		end
 
-	RSA_SSLV23_PADDING: INTEGER
-		external
-			"C inline use %"eif_openssl.h%""
-		alias
-			"RSA_SSLV23_PADDING"
-		end
-
 	RSA_NO_PADDING: INTEGER
 		external
 			"C inline use %"eif_openssl.h%""
@@ -850,7 +843,7 @@ feature -- OpenSSL base64 encoding.
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

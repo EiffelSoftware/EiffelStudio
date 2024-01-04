@@ -57,11 +57,6 @@ feature -- Status Report
 			Result := padding = {SSL_CRYPTO_EXTERNALS}.rsa_pkcs1_oaep_padding
 		end
 
-	is_sslv23_padding: BOOLEAN
-		do
-			Result := padding = {SSL_CRYPTO_EXTERNALS}.rsa_sslv23_padding
-		end
-
 feature -- Element  Change.
 
 	mark_pkcs1_padding
@@ -90,13 +85,6 @@ feature -- Element  Change.
 			pkcs1_oaep_padding_set: padding = {SSL_CRYPTO_EXTERNALS}.rsa_pkcs1_oaep_padding
 		end
 
-	mark_sslv23_padding
-			-- PKCS #1 v1.5 padding with an SSL-specific modification that denotes that the server is SSL3 capable.
-		do
-			padding := {SSL_CRYPTO_EXTERNALS}.rsa_sslv23_padding
-		ensure
-			rsa_sslv23_padding_set: padding = {SSL_CRYPTO_EXTERNALS}.rsa_sslv23_padding
-		end
 
 feature -- Access: Public Encrypt - Private Decrypt
 
@@ -345,7 +333,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

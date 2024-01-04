@@ -26,11 +26,6 @@ feature -- Access
 			Result := {SSL_ERROR_EXTERNALS}.c_error_get_lib (code)
 		end
 
-	error_function_code: INTEGER
-		do
-			Result := {SSL_ERROR_EXTERNALS}.c_error_get_func (code)
-		end
-
 	error_reason_code: INTEGER
 		do
 			Result := {SSL_ERROR_EXTERNALS}.c_error_get_reason (code)
@@ -85,7 +80,7 @@ feature -- Status Report
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

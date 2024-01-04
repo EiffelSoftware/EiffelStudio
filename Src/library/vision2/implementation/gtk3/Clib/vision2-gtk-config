@@ -7,6 +7,7 @@ Usage: vision2-gtk-config [OPTIONS]
 Options
 	[--include_path]
 	[--object]
+	[--ilobject]
 	[--library]
 	[--threads]
 EOF
@@ -67,7 +68,7 @@ while test $# -gt 0; do
 
 			# Check if Xtst is needed for EV_SCREEN fake mouse/key support
 			$pkg_manager_name $gtk_package_string --atleast-version="2.14.0"
-			if [ $? = 1 ]; then 	
+			if [ $? = 1 ]; then
 				if echo "$ISE_PLATFORM" | grep "macosx" >/dev/null 2>&1; then
 					postfix_path=" $postfix_path $xtst_string"
 				else

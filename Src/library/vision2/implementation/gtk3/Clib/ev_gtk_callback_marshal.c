@@ -19,29 +19,29 @@ indexing
 #include "ev_gtk_callback_marshal.h"
 
 EIF_OBJECT ev_gtk_callback_marshal_object;
-EIF_POINTER ev_gtk_dispatcher;
 
 #ifdef EIF_IL_DLL
+EIF_POINTER ev_gtk_dispatcher;
 void (* ev_gtk_free) (EIF_POINTER);
 #endif
 
-void (*ev_gtk_callback_marshal)
 #ifdef EIF_IL_DLL
-    (EIF_POINTER,
+void (*ev_gtk_callback_marshal) (EIF_POINTER, EIF_INTEGER, EIF_POINTER, EIF_POINTER);
 #else
-    (EIF_REFERENCE, EIF_REFERENCE,
+void (*ev_gtk_callback_marshal) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER);
 #endif
-     EIF_INTEGER, EIF_POINTER, EIF_POINTER);
 
-void c_ev_gtk_callback_marshal_init (
 #ifdef EIF_IL_DLL
+void c_ev_gtk_callback_marshal_init (
     void (*callback_marshal) (EIF_POINTER, EIF_INTEGER, EIF_POINTER, EIF_POINTER),
     void (*callback_free) (EIF_POINTER)
+    )
 #else
+void c_ev_gtk_callback_marshal_init (
     EIF_REFERENCE callback_marshal_object,
     void (*callback_marshal) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER)
+    )
 #endif
-	)
         // Store the address of the Eiffel callback marshal in a global.
 {
 	IL_EV_PRINTF("[Start] c_ev_gtk_callback_marshal_init\n");
@@ -106,13 +106,11 @@ void c_ev_gtk_callback_marshal (
 	}
 }
 
-int c_ev_gtk_callback_marshal_true_callback (
 #ifdef EIF_IL_DLL
-	EIF_POINTER
+int c_ev_gtk_callback_marshal_true_callback (EIF_POINTER adopted_agent)
 #else
-	EIF_OBJECT
+int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT adopted_agent)
 #endif
-	adopted_agent)
 	// GtkFunction that passes `agent' to ev_gtk_callback_marshal
 	// and returns TRUE
 {
@@ -124,8 +122,8 @@ int c_ev_gtk_callback_marshal_true_callback (
 #ifdef EIF_IL_DLL
 		adopted_agent,
 #else
-           	eif_access (ev_gtk_callback_marshal_object),
-           	eif_access (adopted_agent),
+		eif_access (ev_gtk_callback_marshal_object),
+		eif_access (adopted_agent),
 #endif
 		(EIF_INTEGER) 0,
 		(EIF_POINTER) NULL,
@@ -156,16 +154,11 @@ void gdestroy_notify_eif_wean (gpointer data)
 	}
 }
 
-guint c_ev_gtk_callback_marshal_signal_connect (
-    gpointer c_object,
-    const gchar* signal,
 #ifdef EIF_IL_DLL
-    EIF_POINTER agent,
+guint c_ev_gtk_callback_marshal_signal_connect (gpointer c_object, const gchar* signal, EIF_POINTER agent, gboolean invoke_after_handler)
 #else
-    EIF_OBJECT agent,
+guint c_ev_gtk_callback_marshal_signal_connect (gpointer c_object, const gchar* signal, EIF_OBJECT agent, gboolean invoke_after_handler)
 #endif
-    gboolean invoke_after_handler
-)
 		// Connect an `agent' to a named `signal' emitted by a GTK `c_object'.
 		// Return connection id.
 {
@@ -182,7 +175,7 @@ guint c_ev_gtk_callback_marshal_signal_connect (
 	IL_EV_PRINTF_1("[.Net agent] %p\n", agent);
 #else
 	EIF_OBJECT adopted_agent;
-	agent = (EIF_OBJECT) eif_adopt (agent);
+	adopted_agent = (EIF_OBJECT) eif_adopt (agent);
 #endif
 	closure = g_closure_new_simple (sizeof(GClosure), adopted_agent);
 	IL_EV_PRINTF_1("[closure] %p\n", closure);
@@ -202,15 +195,11 @@ guint c_ev_gtk_callback_marshal_signal_connect (
 	return connection_id;
 }
 
-guint c_ev_gtk_callback_marshal_timeout_connect (
-    gint delay,
 #ifdef EIF_IL_DLL
-    EIF_POINTER
+guint c_ev_gtk_callback_marshal_timeout_connect (gint delay, EIF_POINTER agent)
 #else
-    EIF_OBJECT
+guint c_ev_gtk_callback_marshal_timeout_connect (gint delay, EIF_OBJECT agent)
 #endif
-    agent
-)
         // Call an `agent' every `delay' milliseconds.
 {
 	#ifdef EIF_IL_DLL

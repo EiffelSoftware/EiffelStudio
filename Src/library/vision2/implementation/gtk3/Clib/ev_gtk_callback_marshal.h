@@ -20,41 +20,34 @@ indexing
 #include <ev_gtk.h>
 
 
-extern void c_ev_gtk_callback_marshal_init
 #ifdef EIF_IL_DLL
-		(
-			void (*) (EIF_POINTER, EIF_INTEGER, EIF_POINTER, EIF_POINTER),
+extern void c_ev_gtk_callback_marshal_init (
+			void (*) (EIF_POINTER, EIF_INTEGER, EIF_POINTER, EIF_POINTER), /* marshal */
 			void (*) (EIF_POINTER) /* free */
+		);
 #else
-		(
+extern void c_ev_gtk_callback_marshal_init (
 			EIF_REFERENCE, /*EV_GTK_MARSHAL*/
 			void (*) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER)
-#endif
 		);
+#endif
 
 extern void c_ev_gtk_callback_marshal_destroy ();
 
 extern int c_ev_gtk_callback_marshal_is_enabled;
 extern void c_ev_gtk_callback_marshal_set_is_enabled (int);
 
-extern guint c_ev_gtk_callback_marshal_signal_connect
-		(gpointer,
-		 const gchar*,
 #ifdef EIF_IL_DLL
-		 EIF_POINTER,
+extern guint c_ev_gtk_callback_marshal_signal_connect (gpointer, const gchar*, EIF_POINTER, gboolean);
 #else
-		 EIF_OBJECT,
+extern guint c_ev_gtk_callback_marshal_signal_connect (gpointer, const gchar*, EIF_OBJECT, gboolean);
 #endif
-		 gboolean);
-#else
 
-extern guint c_ev_gtk_callback_marshal_timeout_connect (gint,
 #ifdef EIF_IL_DLL
-	EIF_POINTER
+extern guint c_ev_gtk_callback_marshal_timeout_connect (gint, EIF_POINTER);
 #else
-	EIF_OBJECT
+extern guint c_ev_gtk_callback_marshal_timeout_connect (gint, EIF_OBJECT);
 #endif
-	);
 
 extern void gtk_set_dispatcher_object(EIF_OBJECT _addr_);
 #   define cgtk_set_dispatcher_object(_addr_) gtk_set_dispatcher_object(_addr_)

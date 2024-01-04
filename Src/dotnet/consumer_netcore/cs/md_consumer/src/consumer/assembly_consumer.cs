@@ -246,7 +246,7 @@ namespace md_consumer
                 }
             } catch {
                 // FIXME: Oups ...unable to load assembly. See why and if there is a cleaner way to handle the issue.
-
+                STATUS_PRINTER.warning(String.Format("Failure with GetForwardedTypes() on assembly '{0}'", assembly.ToString()));
             }
 
             Dictionary<string,string> used_names = new Dictionary<string, string>();

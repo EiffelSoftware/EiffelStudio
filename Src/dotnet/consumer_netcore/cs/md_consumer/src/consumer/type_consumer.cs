@@ -120,7 +120,7 @@ namespace md_consumer
 			try {
 				inter = t.GetInterfaces();
 			} catch {
-				STATUS_PRINTER.debug("Failure with GetInterface() on type "+ t.ToString());
+				STATUS_PRINTER.warning(String.Format("Failure with GetInterfaces() on type '{0}'", t.ToString()));
 				inter = null;
 			}
 			if (inter != null) {
@@ -1300,6 +1300,7 @@ namespace md_consumer
 				// FIXME: Exception has occurred: CLR/System.NotSupportedException
 				// Exception thrown: 'System.NotSupportedException' in System.Reflection.MetadataLoadContext.dll: 'Parsing function pointer types in signatures is not supported.'
 				// Case: System.RuntimeTypeHandle  GetActivationInfo
+             			STATUS_PRINTER.warning(String.Format("Failure with GetParameters() on MethodInfo '{0}'", info.ToString()));
 			}
 			// }
 			res = properties_and_events.ContainsKey(k);	

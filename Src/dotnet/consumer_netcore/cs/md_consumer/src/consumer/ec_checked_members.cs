@@ -96,6 +96,7 @@ namespace md_consumer
                                         }
                                     }
                                 } catch {
+                                    STATUS_PRINTER.warning(String.Format("Failure with GetParameters() on member '{0}'", member.ToString()));
                                     // FIXME: how to avoid such exception ?
                                 }
                             }
@@ -159,14 +160,22 @@ namespace md_consumer
         }
         protected EC_CHECKED_TYPE[] checked_parameter_types()
         {
-            ParameterInfo[] l_parameters = method.GetParameters();
+            ParameterInfo[]? l_parameters;
             List<EC_CHECKED_TYPE> res = new List<EC_CHECKED_TYPE>();
-            foreach (ParameterInfo l_info in l_parameters)
-            {
-                Type? l_param_type = l_info.ParameterType;
-                if (l_param_type != null) {
-                    EC_CHECKED_TYPE t = entity_factory().checked_type (l_param_type);
-                    res.Add(t);
+            try {
+                l_parameters = method.GetParameters();
+            } catch {
+                l_parameters = null;
+                STATUS_PRINTER.warning(String.Format("Failure with GetParameters() on method '{0}'", method.ToString()));
+            }
+            if (l_parameters != null) {
+                foreach (ParameterInfo l_info in l_parameters)
+                {
+                    Type? l_param_type = l_info.ParameterType;
+                    if (l_param_type != null) {
+                        EC_CHECKED_TYPE t = entity_factory().checked_type (l_param_type);
+                        res.Add(t);
+                    }
                 }
             }
             return res.ToArray();
@@ -195,10 +204,15 @@ namespace md_consumer
         {
             method = (MethodInfo) m;
         }
-        public EC_CHECKED_TYPE checked_return_type()
+        public EC_CHECKED_TYPE? checked_return_type()
         {
-            Type t = method.ReturnType;
-            return checked_type (t);
+            try {
+                Type t = method.ReturnType;
+                return checked_type (t);
+            } catch {
+                STATUS_PRINTER.warning(String.Format("Failure with ReturnType on method '{0}'", method.ToString()));
+                return null;
+            }
         }
     	protected override void check_extended_compliance()
 			// -- Checks entity's CLS-compliance.
@@ -211,7 +225,12 @@ namespace md_consumer
                     if (l_compliant) {
                         l_compliant =  are_parameters_compliant (false);
                         if (l_compliant) {
-                            l_compliant = checked_return_type().is_compliant();
+                            var rt = checked_return_type();
+                            if (rt != null) {
+                                l_compliant = rt.is_compliant();
+                            } else {
+                                l_compliant = false;
+                            }
                             if (!l_compliant) {
                                 non_compliant_reason = EC_CHECKED_REASON_CONSTANTS.reason_method_returns_non_compliant_type;
                             }
@@ -238,7 +257,12 @@ namespace md_consumer
                 if (internal_is_eiffel_compliant) {
                     bool l_compliant = are_parameters_compliant(true);
                     if (l_compliant) {
-                        l_compliant = checked_return_type().is_eiffel_compliant();
+                        var rt = checked_return_type();
+                        if (rt != null) {
+                            l_compliant = rt.is_eiffel_compliant();
+                        } else {
+                            l_compliant = false;
+                        }
                         if (!l_compliant) {
                             non_eiffel_compliant_reason = EC_CHECKED_REASON_CONSTANTS.reason_method_returns_non_compliant_type;
                         }

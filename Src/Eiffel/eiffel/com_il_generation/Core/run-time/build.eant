@@ -40,6 +40,11 @@
 	<target name="install_framework_40" depend="compile_framework_40">
 		<echo message="- Install .Net framework 4.0 [EiffelSoftware.Runtime.dll]" />
 		<!-- Already done by compile_framework and msbuild_20-->
+		<mkdir directory="${cwd}${path_separator}netframework" />
+		<copy dir="${cwd}" 
+			  to_directory="${cwd}${path_separator}netframework"
+			  force="true" 
+			><fileset include="@(EiffelSoftware*.*)" /></copy>
 	</target>
 	<target name="compile_framework" depend="compile_framework_40"/>
 	<target name="install_framework" depend="install_framework_40"/>
@@ -47,11 +52,17 @@
 		<echo message="- Compile .Net CORE Eiffel runtime" />
 		<exec executable="dotnet build -c Release runtime_core.csproj --restore --no-incremental" />
 	</target>
-	<target name="install_netcore" depend="compile_netcore">
-		<exec executable="dotnet publish -c Release runtime_core.csproj --output ${cwd}${path_separator}netcore" />
-		<mkdir directory="${cwd}${path_separator}netcore" />
+	<target name="install_netcore">
 		<echo message="- Install .Net CORE [EiffelSoftware.Runtime.dll] into ${cwd}${path_separator}netcore" />
-		<delete directory="obj" />
+		<exec executable="dotnet publish -c Release runtime_core.csproj --output ${cwd}${path_separator}netcore" />
+		<delete directory="${cwd}${path_separator}bin" />
+		<delete directory="${cwd}${path_separator}obj" />
+	</target>
+	<target name="install_netcore_debug">
+		<echo message="- Install .Net CORE [EiffelSoftware.Runtime.dll] into ${cwd}${path_separator}netcore" />
+		<exec executable="dotnet publish -c Debug runtime_core.csproj --output ${cwd}${path_separator}netcore" />
+		<delete directory="${cwd}${path_separator}bin" />
+		<delete directory="${cwd}${path_separator}obj" />
 	</target>
 
 	<target name="compile_20" >
@@ -77,5 +88,4 @@
 	</target>
 
 	<target name="clobber" depend="clean" />
-
 </project>

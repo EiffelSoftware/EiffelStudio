@@ -44,15 +44,15 @@ void c_ev_gtk_callback_marshal_init (
 	)
         // Store the address of the Eiffel callback marshal in a global.
 {
-	printf("[Start] c_ev_gtk_callback_marshal_init\n");
+	IL_EV_PRINTF("[Start] c_ev_gtk_callback_marshal_init\n");
 #ifdef EIF_IL_DLL
-	    printf("[.Net] Calling c_ev_gtk_callback_marshal_init\n");
+	    IL_EV_PRINTF("[.Net] Calling c_ev_gtk_callback_marshal_init\n");
 	    ev_gtk_callback_marshal = callback_marshal;
-	    printf("[.Net ev_gtk_callback_marshal] %p\n", ev_gtk_callback_marshal);
+	    IL_EV_PRINTF_1("[.Net ev_gtk_callback_marshal] %p\n", ev_gtk_callback_marshal);
 	    ev_gtk_free = callback_free;
-	    printf("[.Net] Set ev_gtk_free\n");
+	    IL_EV_PRINTF("[.Net] Set ev_gtk_free\n");
 #else
-	    printf("[Classic] c_ev_gtk_callback_marshal_init\n");
+	    IL_EV_PRINTF("[Classic] c_ev_gtk_callback_marshal_init\n");
 	    ev_gtk_callback_marshal_object = eif_protect(callback_marshal_object);
 	    ev_gtk_callback_marshal = callback_marshal;
 #endif
@@ -79,17 +79,17 @@ void c_ev_gtk_callback_marshal (
     // Called by GTK when an `object' emits a signal,
     // Call an `agent' with `n_args' `args'.
 {
-	printf("[Start] c_ev_gtk_callback_marshal\n");
+	IL_EV_PRINTF("[Start] c_ev_gtk_callback_marshal\n");
 
 	if (c_ev_gtk_callback_marshal_is_enabled) {
-		printf("[.Net] Calling ev_gtk_callback_marshal\n");
+		IL_EV_PRINTF("[.Net] Calling ev_gtk_callback_marshal\n");
 #ifdef EIF_IL_DLL
-		printf("[.Net closure] %p\n", closure);
-		printf("[.Net closure->data] %p\n", closure->data);
-		printf("[.Net eif_access ((EIF_OBJECT) closure->data)] %p\n", eif_access ((EIF_OBJECT) closure->data));
-		printf("[.Net params] %i\n", n_param_values - 1);
-		printf("[.Net values] %p\n", ((GValue*)param_values + 1));
-		printf("[.Net] Calling ev_gtk_callback_marshal causes a segmentation fault\n");
+		IL_EV_PRINTF_1("[.Net closure] %p\n", closure);
+		IL_EV_PRINTF_1("[.Net closure->data] %p\n", closure->data);
+		IL_EV_PRINTF_1("[.Net eif_access ((EIF_OBJECT) closure->data)] %p\n", eif_access ((EIF_OBJECT) closure->data));
+		IL_EV_PRINTF_1("[.Net params] %i\n", n_param_values - 1);
+		IL_EV_PRINTF_1("[.Net values] %p\n", ((GValue*)param_values + 1));
+		IL_EV_PRINTF("[.Net] Calling ev_gtk_callback_marshal causes a segmentation fault\n");
 #endif
 		ev_gtk_callback_marshal (
 #ifdef EIF_IL_DLL
@@ -102,7 +102,7 @@ void c_ev_gtk_callback_marshal (
 			(EIF_POINTER) ((GValue*)param_values + 1),
 			(EIF_POINTER) return_value
       	 	);
-		printf("after Calling ev_gtk_callback_marshal\n");
+		IL_EV_PRINTF("after Calling ev_gtk_callback_marshal\n");
 	}
 }
 
@@ -118,7 +118,7 @@ int c_ev_gtk_callback_marshal_true_callback (
 {
     if (c_ev_gtk_callback_marshal_is_enabled) {
 #ifdef EIF_IL_DLL
- 	printf("[.Net] Calling ev_gtk_callback_marshal\n");
+ 	IL_EV_PRINTF("[.Net] Calling ev_gtk_callback_marshal\n");
 #endif
 	ev_gtk_callback_marshal (
 #ifdef EIF_IL_DLL
@@ -138,7 +138,7 @@ int c_ev_gtk_callback_marshal_true_callback (
 void dummy_callback (void)
 {
 	// Do nothing
-	printf ("This should not be called\n");
+	EV_PRINTF ("This should not be called\n");
 }
 
 void gclosure_notify_eif_wean (gpointer data, GClosure *closure)
@@ -172,20 +172,20 @@ guint c_ev_gtk_callback_marshal_signal_connect (
 	guint connection_id;
 	GClosure *closure;
 
-	printf("[Start] c_ev_gtk_callback_marshal_signal_connect\n");
+	IL_EV_PRINTF("[Start] c_ev_gtk_callback_marshal_signal_connect\n");
 #ifdef EIF_IL_DLL
 	EIF_POINTER adopted_agent;
-	printf("[NET: c_ev_gtk_callback_marshal_signal_connect]: Calling c_ev_gtk_callback_marshal_signal_connect\n");
+	IL_EV_PRINTF("[NET: c_ev_gtk_callback_marshal_signal_connect]: Calling c_ev_gtk_callback_marshal_signal_connect\n");
 	// Since we pass a pointer we don't need anymore eif_adopt
 	//adopted_agent = (EIF_OBJECT) eif_adopt (agent);
 	adopted_agent = agent;
-	printf("[.Net agent] %p\n", agent);
+	IL_EV_PRINTF_1("[.Net agent] %p\n", agent);
 #else
 	EIF_OBJECT adopted_agent;
 	agent = (EIF_OBJECT) eif_adopt (agent);
 #endif
 	closure = g_closure_new_simple (sizeof(GClosure), adopted_agent);
-	printf("[closure] %p\n", closure);
+	IL_EV_PRINTF_1("[closure] %p\n", closure);
 	g_closure_add_invalidate_notifier(closure, (gpointer) adopted_agent, (GClosureNotify)gclosure_notify_eif_wean);
 #ifdef EIF_IL_DLL
 	/* pass the address of the new delegate*/
@@ -196,7 +196,7 @@ guint c_ev_gtk_callback_marshal_signal_connect (
 #endif
 
 	g_closure_set_marshal (closure, c_ev_gtk_callback_marshal);
-	printf("g_closure_set_marshal closure, c_ev_gtk_callback_marshal] %p ,  %p\n ", closure, c_ev_gtk_callback_marshal);
+	IL_EV_PRINTF_2("g_closure_set_marshal closure, c_ev_gtk_callback_marshal] %p ,  %p\n ", closure, c_ev_gtk_callback_marshal);
 
 	connection_id = g_signal_connect_closure (c_object, signal, closure, invoke_after_handler);
 	return connection_id;

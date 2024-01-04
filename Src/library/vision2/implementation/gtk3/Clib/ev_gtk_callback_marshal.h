@@ -20,7 +20,6 @@ indexing
 #include <ev_gtk.h>
 
 
-
 extern void c_ev_gtk_callback_marshal_init
 #ifdef EIF_IL_DLL
 		(

@@ -259,7 +259,9 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		local
 			lst: like signal_connections
 		do
-			print (generator + ".record_signal_connection%N")
+			debug ("gtk_signal")
+				print (generator + ".record_signal_connection (..., %"" + a_signal_name +"%", "+ a_connection_id.out +")%N")
+			end
 			if a_connection_id > 0 then
 				lst := signal_connections
 				if lst = Void then
@@ -491,7 +493,7 @@ invariant
 	has_c_object: not is_destroyed implies not c_object.is_default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -47,7 +47,6 @@ feature {NONE} -- Initialization
 			-- Initialize callbacks
 		once
 			print (generator + " initialize%N" )
-			--c_ev_gtk_callback_marshal_init ($marshal, $free)
 
 			create marshal_delegate.make (Current, $marshal)
 
@@ -59,10 +58,7 @@ feature {NONE} -- Initialization
 			dispatcher_object := {GC_HANDLE}.alloc (Current)
 
 			cgtk_set_dispatcher_object ({GC_HANDLE}.to_pointer (dispatcher_object))
-
-
 		end
-
 
 feature {NONE} -- Implementation
 
@@ -97,7 +93,9 @@ feature {NONE} -- Implementation
 				print (generator + " free%N" )
 			end
 
-			if attached {GC_HANDLE}.from_int_ptr (a_pointer) as h then h.free else  end
+			if attached {GC_HANDLE}.from_int_ptr (a_pointer) as h then
+				h.free
+			end
 		end
 
 feature {EV_ANY_IMP} -- Access
@@ -445,7 +443,7 @@ feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

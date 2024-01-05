@@ -89,7 +89,7 @@ void c_ev_gtk_callback_marshal (
 		IL_EV_PRINTF_1("[.Net eif_access ((EIF_OBJECT) closure->data)] %p\n", eif_access ((EIF_OBJECT) closure->data));
 		IL_EV_PRINTF_1("[.Net params] %i\n", n_param_values - 1);
 		IL_EV_PRINTF_1("[.Net values] %p\n", ((GValue*)param_values + 1));
-		IL_EV_PRINTF("[.Net] Calling ev_gtk_callback_marshal causes a segmentation fault\n");
+		IL_EV_PRINTF("[.Net] Calling ev_gtk_callback_marshal ...\n");
 #endif
 		ev_gtk_callback_marshal (
 #ifdef EIF_IL_DLL

@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 				<<eiffel_layout.general_preferences.name, eiffel_layout.platform_preferences.name>>, eiffel_layout.eiffel_preferences, version_2_0)
 			;(create {SETTABLE_COMPILER_OBJECTS}).set_preferences (create {EC_PREFERENCES}.make (l_preference_access))
 
-				-- Remaining initialization			
+				-- Remaining initialization
 			initialize
 
 				-- Execution
@@ -444,7 +444,7 @@ feature -- Properties
 			Result [use_settings_cmd_name] := use_settings_help
 			Result [app_info_cmd_name] := app_info_help
 			Result [version_cmd_name] := version_help
--- Hide -compat and -experiment flags.			
+-- Hide -compat and -experiment flags.
 --			Result [compat_cmd_name] := compat_help
 --			Result [experiment_cmd_name] := experiment_help
 		end
@@ -1046,7 +1046,7 @@ feature {NONE} -- Update
 							current_option := current_option + 1
 
 						else
-								-- Incorrect number of options	
+								-- Incorrect number of options
 							option_error_message := locale.translation ("Missing input class file path for option -pretty")
 						end
 
@@ -1476,7 +1476,7 @@ feature {NONE} -- Update
 						-- override the compilation option that was previously set.
 					create {EWB_TEST_EXECUTION} command
 					command_option := option
-				elseif option.same_string_general (compiler_profile.capability_option_name) then
+				elseif option_name.same_string_general (compiler_profile.capability_option_name) then
 						-- This options specifies how capabilities are processed.
 					if current_option < argument_count then
 						current_option := current_option + 1
@@ -1709,19 +1709,19 @@ note
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

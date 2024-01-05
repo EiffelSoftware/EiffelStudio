@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker exec -it eiffel-deliv-pp /bin/bash
+docker exec -u eiffel -it eiffel-deliv-pp /bin/bash

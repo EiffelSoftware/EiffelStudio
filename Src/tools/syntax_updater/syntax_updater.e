@@ -472,7 +472,7 @@ feature {NONE} -- Arguments processing
 
 	name: STRING = "Eiffel Syntax Updater"
 	version: STRING = "21.05.01"
-	copyright: STRING = "Copyright Eiffel Software 2007-2023. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 2007-2024. All Rights Reserved."
 
 	non_switched_argument_name: STRING = "Directory"
 	non_switched_argument_description: STRING = "Directory to process"

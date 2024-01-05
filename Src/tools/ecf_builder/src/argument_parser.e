@@ -65,7 +65,7 @@ feature -- Access
 	copyright: STRING
 			-- <Precursor>
 		do
-			Result := "Copyright Eiffel Software 2011-2023. All Rights Reserved."
+			Result := "Copyright Eiffel Software 2011-2024. All Rights Reserved."
 		end
 
 	clusters: detachable LIST [STRING]

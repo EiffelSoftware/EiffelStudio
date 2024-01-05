@@ -295,7 +295,7 @@ feature -- Usage
 	name: STRING_8 = "Eiffel COM Wizard"
 			-- Full name of application
 
-	copyright: STRING = "Copyright Eiffel Software 2005-2023. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 2005-2024. All Rights Reserved."
 			-- <Precursor>
 
 feature {NONE} -- Usage

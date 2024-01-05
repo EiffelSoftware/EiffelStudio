@@ -73,7 +73,7 @@ feature {NONE} -- Usage
 	version: STRING = "0.6"
 			-- <Precursor>
 
-	copyright: STRING = "Copyright Eiffel Software 2009-2023. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 2009-2024. All Rights Reserved."
 			-- <Precursor>
 
 	non_switched_argument_name: STRING = "Filename"

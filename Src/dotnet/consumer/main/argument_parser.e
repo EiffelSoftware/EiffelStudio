@@ -207,7 +207,7 @@ feature {NONE} -- Usage
 			end
 		end
 
-	copyright: STRING = "Copyright Eiffel Software 2006-2023. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 2006-2024. All Rights Reserved."
 			-- <Precursor>
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]

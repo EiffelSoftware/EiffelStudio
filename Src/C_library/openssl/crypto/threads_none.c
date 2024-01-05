@@ -1,7 +1,7 @@
 /*
- * Copyright 2016-2018 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2016-2023 The OpenSSL Project Authors. All Rights Reserved.
  *
- * Licensed under the OpenSSL license (the "License").  You may not use
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
  * in the file LICENSE in the source distribution or at
  * https://www.openssl.org/source/license.html
@@ -12,28 +12,32 @@
 
 #if !defined(OPENSSL_THREADS) || defined(CRYPTO_TDEBUG)
 
+# if defined(OPENSSL_SYS_UNIX)
+#  include <sys/types.h>
+#  include <unistd.h>
+# endif
+
 CRYPTO_RWLOCK *CRYPTO_THREAD_lock_new(void)
 {
     CRYPTO_RWLOCK *lock;
 
-    if ((lock = OPENSSL_zalloc(sizeof(unsigned int))) == NULL) {
+    if ((lock = CRYPTO_zalloc(sizeof(unsigned int), NULL, 0)) == NULL)
         /* Don't set error, to avoid recursion blowup. */
         return NULL;
-    }
 
     *(unsigned int *)lock = 1;
 
     return lock;
 }
 
-int CRYPTO_THREAD_read_lock(CRYPTO_RWLOCK *lock)
+__owur int CRYPTO_THREAD_read_lock(CRYPTO_RWLOCK *lock)
 {
     if (!ossl_assert(*(unsigned int *)lock == 1))
         return 0;
     return 1;
 }
 
-int CRYPTO_THREAD_write_lock(CRYPTO_RWLOCK *lock)
+__owur int CRYPTO_THREAD_write_lock(CRYPTO_RWLOCK *lock)
 {
     if (!ossl_assert(*(unsigned int *)lock == 1))
         return 0;
@@ -128,9 +132,40 @@ int CRYPTO_atomic_add(int *val, int amount, int *ret, CRYPTO_RWLOCK *lock)
     return 1;
 }
 
+int CRYPTO_atomic_or(uint64_t *val, uint64_t op, uint64_t *ret,
+                     CRYPTO_RWLOCK *lock)
+{
+    *val |= op;
+    *ret  = *val;
+
+    return 1;
+}
+
+int CRYPTO_atomic_load(uint64_t *val, uint64_t *ret, CRYPTO_RWLOCK *lock)
+{
+    *ret  = *val;
+
+    return 1;
+}
+
+int CRYPTO_atomic_load_int(int *val, int *ret, CRYPTO_RWLOCK *lock)
+{
+    *ret = *val;
+
+    return 1;
+}
+
 int openssl_init_fork_handlers(void)
 {
     return 0;
 }
 
+int openssl_get_fork_id(void)
+{
+# if defined(OPENSSL_SYS_UNIX)
+    return getpid();
+# else
+    return 0;
+# endif
+}
 #endif

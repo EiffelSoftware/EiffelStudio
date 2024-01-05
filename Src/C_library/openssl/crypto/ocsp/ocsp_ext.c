@@ -1,7 +1,7 @@
 /*
- * Copyright 2000-2016 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2000-2023 The OpenSSL Project Authors. All Rights Reserved.
  *
- * Licensed under the OpenSSL license (the "License").  You may not use
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
  * in the file LICENSE in the source distribution or at
  * https://www.openssl.org/source/license.html
@@ -12,7 +12,7 @@
 #include <openssl/objects.h>
 #include <openssl/x509.h>
 #include <openssl/ocsp.h>
-#include "ocsp_lcl.h"
+#include "ocsp_local.h"
 #include <openssl/rand.h>
 #include <openssl/x509v3.h>
 
@@ -268,8 +268,8 @@ static int ocsp_add1_nonce(STACK_OF(X509_EXTENSION) **exts,
         memcpy(tmpval, val, len);
     else if (RAND_bytes(tmpval, len) <= 0)
         goto err;
-    if (!X509V3_add1_i2d(exts, NID_id_pkix_OCSP_Nonce,
-                         &os, 0, X509V3_ADD_REPLACE))
+    if (X509V3_add1_i2d(exts, NID_id_pkix_OCSP_Nonce,
+                         &os, 0, X509V3_ADD_REPLACE) <= 0)
         goto err;
     ret = 1;
  err:
@@ -430,7 +430,7 @@ X509_EXTENSION *OCSP_archive_cutoff_new(char *tim)
  * two--NID_ad_ocsp, NID_id_ad_caIssuers--and GeneralName value.  This method
  * forces NID_ad_ocsp and uniformResourceLocator [6] IA5String.
  */
-X509_EXTENSION *OCSP_url_svcloc_new(X509_NAME *issuer, const char **urls)
+X509_EXTENSION *OCSP_url_svcloc_new(const X509_NAME *issuer, const char **urls)
 {
     X509_EXTENSION *x = NULL;
     ASN1_IA5STRING *ia5 = NULL;
@@ -439,6 +439,7 @@ X509_EXTENSION *OCSP_url_svcloc_new(X509_NAME *issuer, const char **urls)
 
     if ((sloc = OCSP_SERVICELOC_new()) == NULL)
         goto err;
+    X509_NAME_free(sloc->issuer);
     if ((sloc->issuer = X509_NAME_dup(issuer)) == NULL)
         goto err;
     if (urls && *urls
@@ -449,12 +450,11 @@ X509_EXTENSION *OCSP_url_svcloc_new(X509_NAME *issuer, const char **urls)
             goto err;
         if ((ad->method = OBJ_nid2obj(NID_ad_OCSP)) == NULL)
             goto err;
-        if ((ad->location = GENERAL_NAME_new()) == NULL)
-            goto err;
         if ((ia5 = ASN1_IA5STRING_new()) == NULL)
             goto err;
         if (!ASN1_STRING_set((ASN1_STRING *)ia5, *urls, -1))
             goto err;
+        /* ad->location is allocated inside ACCESS_DESCRIPTION_new */
         ad->location->type = GEN_URI;
         ad->location->d.ia5 = ia5;
         ia5 = NULL;

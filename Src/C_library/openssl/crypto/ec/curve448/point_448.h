@@ -1,8 +1,8 @@
 /*
- * Copyright 2017-2018 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2017-2023 The OpenSSL Project Authors. All Rights Reserved.
  * Copyright 2015-2016 Cryptography Research, Inc.
  *
- * Licensed under the OpenSSL license (the "License").  You may not use
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
  * in the file LICENSE in the source distribution or at
  * https://www.openssl.org/source/license.html
@@ -10,8 +10,8 @@
  * Originally written by Mike Hamburg
  */
 
-#ifndef HEADER_POINT_448_H
-# define HEADER_POINT_448_H
+#ifndef OSSL_CRYPTO_EC_CURVE448_POINT_448_H
+# define OSSL_CRYPTO_EC_CURVE448_POINT_448_H
 
 # include "curve448utils.h"
 # include "field.h"
@@ -69,17 +69,17 @@ typedef struct curve448_scalar_s {
 } curve448_scalar_t[1];
 
 /* A scalar equal to 1. */
-extern const curve448_scalar_t curve448_scalar_one;
+extern const curve448_scalar_t ossl_curve448_scalar_one;
 
 /* A scalar equal to 0. */
-extern const curve448_scalar_t curve448_scalar_zero;
+extern const curve448_scalar_t ossl_curve448_scalar_zero;
 
 /* The identity point on the curve. */
-extern const curve448_point_t curve448_point_identity;
+extern const curve448_point_t ossl_curve448_point_identity;
 
 /* Precomputed table for the base point on the curve. */
-extern const struct curve448_precomputed_s *curve448_precomputed_base;
-extern const niels_t *curve448_wnaf_base;
+extern const struct curve448_precomputed_s *ossl_curve448_precomputed_base;
+extern const niels_t *ossl_curve448_wnaf_base;
 
 /*
  * Read a scalar from wire format or from bytes.
@@ -92,8 +92,9 @@ extern const niels_t *curve448_wnaf_base;
  * C448_FAILURE: The scalar was greater than the modulus, and has been reduced
  * modulo that modulus.
  */
-c448_error_t curve448_scalar_decode(curve448_scalar_t out,
-                                    const unsigned char ser[C448_SCALAR_BYTES]);
+c448_error_t
+ossl_curve448_scalar_decode(curve448_scalar_t out,
+                            const unsigned char ser[C448_SCALAR_BYTES]);
 
 /*
  * Read a scalar from wire format or from bytes.  Reduces mod scalar prime.
@@ -102,7 +103,8 @@ c448_error_t curve448_scalar_decode(curve448_scalar_t out,
  * ser_len (in): Length of serialized form.
  * out (out): Deserialized form.
  */
-void curve448_scalar_decode_long(curve448_scalar_t out,
+void
+ossl_curve448_scalar_decode_long(curve448_scalar_t out,
                                  const unsigned char *ser, size_t ser_len);
 
 /*
@@ -111,17 +113,19 @@ void curve448_scalar_decode_long(curve448_scalar_t out,
  * ser (out): Serialized form of a scalar.
  * s (in): Deserialized scalar.
  */
-void curve448_scalar_encode(unsigned char ser[C448_SCALAR_BYTES],
+void
+ossl_curve448_scalar_encode(unsigned char ser[C448_SCALAR_BYTES],
                             const curve448_scalar_t s);
 
 /*
  * Add two scalars. |a|, |b| and |out| may alias each other.
- * 
+ *
  * a (in): One scalar.
  * b (in): Another scalar.
  * out (out): a+b.
  */
-void curve448_scalar_add(curve448_scalar_t out,
+void
+ossl_curve448_scalar_add(curve448_scalar_t out,
                          const curve448_scalar_t a, const curve448_scalar_t b);
 
 /*
@@ -130,31 +134,34 @@ void curve448_scalar_add(curve448_scalar_t out,
  * b (in): Another scalar.
  * out (out): a-b.
  */
-void curve448_scalar_sub(curve448_scalar_t out,
+void
+ossl_curve448_scalar_sub(curve448_scalar_t out,
                          const curve448_scalar_t a, const curve448_scalar_t b);
 
 /*
  * Multiply two scalars. |a|, |b| and |out| may alias each other.
- * 
+ *
  * a (in): One scalar.
  * b (in): Another scalar.
  * out (out): a*b.
  */
-void curve448_scalar_mul(curve448_scalar_t out,
+void
+ossl_curve448_scalar_mul(curve448_scalar_t out,
                          const curve448_scalar_t a, const curve448_scalar_t b);
 
 /*
 * Halve a scalar.  |a| and |out| may alias each other.
-* 
+*
 * a (in): A scalar.
 * out (out): a/2.
 */
-void curve448_scalar_halve(curve448_scalar_t out, const curve448_scalar_t a);
+void
+ossl_curve448_scalar_halve(curve448_scalar_t out, const curve448_scalar_t a);
 
 /*
  * Copy a scalar.  The scalars may alias each other, in which case this
  * function does nothing.
- * 
+ *
  * a (in): A scalar.
  * out (out): Will become a copy of a.
  */
@@ -183,13 +190,14 @@ static ossl_inline void curve448_point_copy(curve448_point_t a,
  *
  * a (in): A point.
  * b (in): Another point.
- * 
+ *
  * Returns:
  * C448_TRUE: The points are equal.
  * C448_FALSE: The points are not equal.
  */
-__owur c448_bool_t curve448_point_eq(const curve448_point_t a,
-                                     const curve448_point_t b);
+__owur c448_bool_t
+ossl_curve448_point_eq(const curve448_point_t a,
+                       const curve448_point_t b);
 
 /*
  * Double a point. Equivalent to curve448_point_add(two_a,a,a), but potentially
@@ -198,7 +206,8 @@ __owur c448_bool_t curve448_point_eq(const curve448_point_t a,
  * two_a (out): The sum a+a.
  * a (in): A point.
  */
-void curve448_point_double(curve448_point_t two_a, const curve448_point_t a);
+void
+ossl_curve448_point_double(curve448_point_t two_a, const curve448_point_t a);
 
 /*
  * RFC 7748 Diffie-Hellman scalarmul.  This function uses a different
@@ -213,9 +222,10 @@ void curve448_point_double(curve448_point_t two_a, const curve448_point_t a);
  * C448_FAILURE: The scalarmul didn't succeed, because the base point is in a
  * small subgroup.
  */
-__owur c448_error_t x448_int(uint8_t out[X448_PUBLIC_BYTES],
-                             const uint8_t base[X448_PUBLIC_BYTES],
-                             const uint8_t scalar[X448_PRIVATE_BYTES]);
+__owur c448_error_t
+ossl_x448_int(uint8_t out[X448_PUBLIC_BYTES],
+              const uint8_t base[X448_PUBLIC_BYTES],
+              const uint8_t scalar[X448_PRIVATE_BYTES]);
 
 /*
  * Multiply a point by X448_ENCODE_RATIO, then encode it like RFC 7748.
@@ -236,18 +246,20 @@ __owur c448_error_t x448_int(uint8_t out[X448_PUBLIC_BYTES],
  * out (out): The scaled and encoded point.
  * p (in): The point to be scaled and encoded.
  */
-void curve448_point_mul_by_ratio_and_encode_like_x448(
+void
+ossl_curve448_point_mul_by_ratio_and_encode_like_x448(
                                         uint8_t out[X448_PUBLIC_BYTES],
                                         const curve448_point_t p);
 
 /*
  * RFC 7748 Diffie-Hellman base point scalarmul.  This function uses a different
  * (non-Decaf) encoding.
- * 
+ *
  * out (out): The scaled point base*scalar
  * scalar (in): The scalar to multiply by.
  */
-void x448_derive_public_key(uint8_t out[X448_PUBLIC_BYTES],
+void
+ossl_x448_derive_public_key(uint8_t out[X448_PUBLIC_BYTES],
                             const uint8_t scalar[X448_PRIVATE_BYTES]);
 
 /*
@@ -257,8 +269,9 @@ void x448_derive_public_key(uint8_t out[X448_PUBLIC_BYTES],
  * base (in): The point to be scaled.
  * scalar (in): The scalar to multiply by.
  */
-void curve448_precomputed_scalarmul(curve448_point_t scaled,
-                                    const curve448_precomputed_s * base,
+void
+ossl_curve448_precomputed_scalarmul(curve448_point_t scaled,
+                                    const curve448_precomputed_s *base,
                                     const curve448_scalar_t scalar);
 
 /*
@@ -273,10 +286,11 @@ void curve448_precomputed_scalarmul(curve448_point_t scaled,
  * base2 (in): A second point to be scaled.
  * scalar2 (in) A second scalar to multiply by.
  *
- * Warning: This function takes variable time, and may leak the scalars used. 
+ * Warning: This function takes variable time, and may leak the scalars used.
  * It is designed for signature verification.
  */
-void curve448_base_double_scalarmul_non_secret(curve448_point_t combo,
+void
+ossl_curve448_base_double_scalarmul_non_secret(curve448_point_t combo,
                                                const curve448_scalar_t scalar1,
                                                const curve448_point_t base2,
                                                const curve448_scalar_t scalar2);
@@ -290,12 +304,13 @@ void curve448_base_double_scalarmul_non_secret(curve448_point_t combo,
  * C448_TRUE The point is valid.
  * C448_FALSE The point is invalid.
  */
-__owur c448_bool_t curve448_point_valid(const curve448_point_t to_test);
+__owur c448_bool_t
+ossl_curve448_point_valid(const curve448_point_t to_test);
 
 /* Overwrite scalar with zeros. */
-void curve448_scalar_destroy(curve448_scalar_t scalar);
+void ossl_curve448_scalar_destroy(curve448_scalar_t scalar);
 
 /* Overwrite point with zeros. */
-void curve448_point_destroy(curve448_point_t point);
+void ossl_curve448_point_destroy(curve448_point_t point);
 
-#endif                          /* HEADER_POINT_448_H */
+#endif                          /* OSSL_CRYPTO_EC_CURVE448_POINT_448_H */

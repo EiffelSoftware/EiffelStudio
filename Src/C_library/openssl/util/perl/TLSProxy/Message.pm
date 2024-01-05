@@ -1,6 +1,6 @@
-# Copyright 2016-2018 The OpenSSL Project Authors. All Rights Reserved.
+# Copyright 2016-2023 The OpenSSL Project Authors. All Rights Reserved.
 #
-# Licensed under the OpenSSL license (the "License").  You may not use
+# Licensed under the Apache License 2.0 (the "License").  You may not use
 # this file except in compliance with the License.  You can obtain a copy
 # in the file LICENSE in the source distribution or at
 # https://www.openssl.org/source/license.html
@@ -28,6 +28,7 @@ use constant {
     MT_CLIENT_KEY_EXCHANGE => 16,
     MT_FINISHED => 20,
     MT_CERTIFICATE_STATUS => 22,
+    MT_COMPRESSED_CERTIFICATE => 25,
     MT_NEXT_PROTO => 67
 };
 
@@ -59,6 +60,7 @@ my %message_type = (
     MT_CLIENT_KEY_EXCHANGE, "ClientKeyExchange",
     MT_FINISHED, "Finished",
     MT_CERTIFICATE_STATUS, "CertificateStatus",
+    MT_COMPRESSED_CERTIFICATE, "CompressedCertificate",
     MT_NEXT_PROTO, "NextProto"
 );
 
@@ -73,9 +75,12 @@ use constant {
     EXT_USE_SRTP => 14,
     EXT_ALPN => 16,
     EXT_SCT => 18,
+    EXT_CLIENT_CERT_TYPE => 19,
+    EXT_SERVER_CERT_TYPE => 20,
     EXT_PADDING => 21,
     EXT_ENCRYPT_THEN_MAC => 22,
     EXT_EXTENDED_MASTER_SECRET => 23,
+    EXT_COMPRESS_CERTIFICATE => 27,
     EXT_SESSION_TICKET => 35,
     EXT_KEY_SHARE => 51,
     EXT_PSK => 41,
@@ -86,10 +91,7 @@ use constant {
     EXT_SIG_ALGS_CERT => 50,
     EXT_RENEGOTIATE => 65281,
     EXT_NPN => 13172,
-    # This extension is an unofficial extension only ever written by OpenSSL
-    # (i.e. not read), and even then only when enabled. We use it to test
-    # handling of duplicate extensions.
-    EXT_DUPLICATE_EXTENSION => 0xfde8,
+    EXT_CRYPTOPRO_BUG_EXTENSION => 0xfde8,
     EXT_UNKNOWN => 0xfffe,
     #Unknown extension that should appear last
     EXT_FORCE_LAST => 0xffff
@@ -130,6 +132,11 @@ use constant {
     CIPHER_ADH_AES_128_SHA => 0x0034,
     CIPHER_TLS13_AES_128_GCM_SHA256 => 0x1301,
     CIPHER_TLS13_AES_256_GCM_SHA384 => 0x1302
+};
+
+use constant {
+    CLIENT => 0,
+    SERVER => 1
 };
 
 my $payload = "";
@@ -241,7 +248,7 @@ sub get_messages
                 $startoffset = $recoffset;
                 $recoffset += 4;
                 $payload = "";
-                
+
                 if ($recoffset <= $record->decrypt_len) {
                     #Some payload data is present in this record
                     if ($record->decrypt_len - $recoffset >= $messlen) {
@@ -341,6 +348,15 @@ sub create_message
             [@message_frag_lens]
         );
         $message->parse();
+    } elsif ($mt == MT_CERTIFICATE_REQUEST) {
+        $message = TLSProxy::CertificateRequest->new(
+            $server,
+            $data,
+            [@message_rec_list],
+            $startoffset,
+            [@message_frag_lens]
+        );
+        $message->parse();
     } elsif ($mt == MT_CERTIFICATE_VERIFY) {
         $message = TLSProxy::CertificateVerify->new(
             $server,
@@ -413,14 +429,15 @@ sub new
         $records,
         $startoffset,
         $message_frag_lens) = @_;
-    
+
     my $self = {
         server => $server,
         data => $data,
         records => $records,
         mt => $mt,
         startoffset => $startoffset,
-        message_frag_lens => $message_frag_lens
+        message_frag_lens => $message_frag_lens,
+        dupext => -1
     };
 
     return bless $self, $class;
@@ -436,7 +453,7 @@ sub ciphersuite
 }
 
 #Update all the underlying records with the modified data from this message
-#Note: Only supports re-encrypting for TLSv1.3
+#Note: Only supports TLSv1.3 and ETM encryption
 sub repack
 {
     my $self = shift;
@@ -478,15 +495,38 @@ sub repack
         # (If a length override is ever needed to construct invalid packets,
         #  use an explicit override field instead.)
         $rec->decrypt_len(length($rec->decrypt_data));
-        $rec->len($rec->len + length($msgdata) - $old_length);
-        # Only support re-encryption for TLSv1.3.
-        if (TLSProxy::Proxy->is_tls13() && $rec->encrypted()) {
-            #Add content type (1 byte) and 16 tag bytes
-            $rec->data($rec->decrypt_data
-                .pack("C", TLSProxy::Record::RT_HANDSHAKE).("\0"x16));
+        # Only support re-encryption for TLSv1.3 and ETM.
+        if ($rec->encrypted()) {
+            if (TLSProxy::Proxy->is_tls13()) {
+                #Add content type (1 byte) and 16 tag bytes
+                $rec->data($rec->decrypt_data
+                    .pack("C", TLSProxy::Record::RT_HANDSHAKE).("\0"x16));
+            } elsif ($rec->etm()) {
+                my $data = $rec->decrypt_data;
+                #Add padding
+                my $padval = length($data) % 16;
+                $padval = 15 - $padval;
+                for (0..$padval) {
+                    $data .= pack("C", $padval);
+                }
+
+                #Add MAC. Assumed to be 20 bytes
+                foreach my $macval (0..19) {
+                    $data .= pack("C", $macval);
+                }
+
+                if ($rec->version() >= TLSProxy::Record::VERS_TLS_1_1) {
+                    #Explicit IV
+                    $data = ("\0"x16).$data;
+                }
+                $rec->data($data);
+            } else {
+                die "Unsupported encryption: No ETM";
+            }
         } else {
             $rec->data($rec->decrypt_data);
         }
+        $rec->len(length($rec->data));
 
         #Update the fragment len in case we changed it above
         ${$self->message_frag_lens}[0] = length($msgdata)
@@ -574,6 +614,14 @@ sub encoded_length
 {
     my $self = shift;
     return TLS_MESSAGE_HEADER_LENGTH + length($self->data);
+}
+sub dupext
+{
+    my $self = shift;
+    if (@_) {
+        $self->{dupext} = shift;
+    }
+    return $self->{dupext};
 }
 sub successondata
 {

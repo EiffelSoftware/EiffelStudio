@@ -1,7 +1,7 @@
 #! /usr/bin/env perl
-# Copyright 2005-2018 The OpenSSL Project Authors. All Rights Reserved.
+# Copyright 2005-2022 The OpenSSL Project Authors. All Rights Reserved.
 #
-# Licensed under the OpenSSL license (the "License").  You may not use
+# Licensed under the Apache License 2.0 (the "License").  You may not use
 # this file except in compliance with the License.  You can obtain a copy
 # in the file LICENSE in the source distribution or at
 # https://www.openssl.org/source/license.html
@@ -83,6 +83,10 @@ my $PTR=" PTR";
 my $nasmref=2.03;
 my $nasm=0;
 
+# GNU as indicator, as opposed to $gas, which indicates acceptable
+# syntax
+my $gnuas=0;
+
 if    ($flavour eq "mingw64")	{ $gas=1; $elf=0; $win64=1;
 				  $prefix=`echo __USER_LABEL_PREFIX__ | $ENV{CC} -E -P -`;
 				  $prefix =~ s|\R$||; # Better chomp
@@ -99,6 +103,56 @@ elsif (!$gas)
     $win64=1;
     $elf=0;
     $decor="\$L\$";
+}
+# Find out if we're using GNU as
+elsif (`$ENV{CC} -Wa,-v -c -o /dev/null -x assembler /dev/null 2>&1`
+		=~ /GNU assembler version ([2-9]\.[0-9]+)/)
+{
+    $gnuas=1;
+}
+elsif (`$ENV{CC} --version 2>/dev/null`
+		=~ /(clang .*|Intel.*oneAPI .*)/)
+{
+    $gnuas=1;
+}
+elsif (`$ENV{CC} -V 2>/dev/null`
+		=~ /nvc .*/)
+{
+    $gnuas=1;
+}
+
+my $cet_property;
+if ($flavour =~ /elf/) {
+	# Always generate .note.gnu.property section for ELF outputs to
+	# mark Intel CET support since all input files must be marked
+	# with Intel CET support in order for linker to mark output with
+	# Intel CET support.
+	my $p2align=3; $p2align=2 if ($flavour eq "elf32");
+	my $section='.note.gnu.property, #alloc';
+	$section='".note.gnu.property", "a"' if $gnuas;
+	$cet_property = <<_____;
+	.section $section
+	.p2align $p2align
+	.long 1f - 0f
+	.long 4f - 1f
+	.long 5
+0:
+	# "GNU" encoded with .byte, since .asciz isn't supported
+	# on Solaris.
+	.byte 0x47
+	.byte 0x4e
+	.byte 0x55
+	.byte 0
+1:
+	.p2align $p2align
+	.long 0xc0000002
+	.long 3f - 2f
+2:
+	.long 3
+3:
+	.p2align $p2align
+4:
+_____
 }
 
 my $current_segment;
@@ -541,6 +595,7 @@ my %globals;
 	);
 
     my ($cfa_reg, $cfa_rsp);
+    my @cfa_stack;
 
     # [us]leb128 format is variable-length integer representation base
     # 2^128, with most significant bit of each byte being 0 denoting
@@ -648,7 +703,13 @@ my %globals;
 	    # why it starts with -8. Recall that CFA is top of caller's
 	    # stack...
 	    /startproc/	&& do {	($cfa_reg, $cfa_rsp) = ("%rsp", -8); last; };
-	    /endproc/	&& do {	($cfa_reg, $cfa_rsp) = ("%rsp",  0); last; };
+	    /endproc/	&& do {	($cfa_reg, $cfa_rsp) = ("%rsp",  0);
+				# .cfi_remember_state directives that are not
+				# matched with .cfi_restore_state are
+				# unnecessary.
+				die "unpaired .cfi_remember_state" if (@cfa_stack);
+				last;
+			      };
 	    /def_cfa_register/
 			&& do {	$cfa_reg = $$line; last; };
 	    /def_cfa_offset/
@@ -686,6 +747,14 @@ my %globals;
 				$self->{value} = ".cfi_escape\t" .
 					join(",", map(sprintf("0x%02x", $_),
 						      cfa_expression($$line)));
+				last;
+			      };
+	    /remember_state/
+			&& do {	push @cfa_stack, [$cfa_reg, $cfa_rsp];
+				last;
+			      };
+	    /restore_state/
+			&& do {	($cfa_reg, $cfa_rsp) = @{pop @cfa_stack};
 				last;
 			      };
 	    }
@@ -747,7 +816,7 @@ my %globals;
 				    }
 				    last;
 				  };
-		/\.rva|\.long|\.quad/
+		/\.rva|\.long|\.quad|\.byte/
 			    && do { $$line =~ s/([_a-z][_a-z0-9]*)/$globals{$1} or $1/gei;
 				    $$line =~ s/\.L/$decor/g;
 				    last;
@@ -1136,7 +1205,7 @@ while(defined(my $line=<>)) {
 
     $line =~ s|[#!].*$||;	# get rid of asm-style comments...
     $line =~ s|/\*.*\*/||;	# ... and C-style comments...
-    $line =~ s|^\s+||;		# ... and skip white spaces in beginning
+    $line =~ s|^\s+||;		# ... and skip whitespaces in beginning
     $line =~ s|\s+$||;		# ... and at the end
 
     if (my $label=label->re(\$line))	{ print $label->out(); }
@@ -1198,10 +1267,11 @@ while(defined(my $line=<>)) {
     print $line,"\n";
 }
 
+print "$cet_property"			if ($cet_property);
 print "\n$current_segment\tENDS\n"	if ($current_segment && $masm);
 print "END\n"				if ($masm);
 
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!;"
 
 #################################################
 # Cross-reference x86_64 ABI "card"

@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
-# Copyright 2017-2018 The OpenSSL Project Authors. All Rights Reserved.
+# Copyright 2017-2020 The OpenSSL Project Authors. All Rights Reserved.
 #
-# Licensed under the OpenSSL license (the "License").  You may not use
+# Licensed under the Apache License 2.0 (the "License").  You may not use
 # this file except in compliance with the License.  You can obtain a copy
 # in the file LICENSE in the source distribution or at
 # https://www.openssl.org/source/license.html
@@ -70,9 +70,10 @@
 #	Cortex-Mx, x>=3. Otherwise, non-NEON results for NEON-capable
 #	processors are presented mostly for reference purposes.
 
-$flavour = shift;
-if ($flavour=~/\w[\w\-]*\.\w+$/) { $output=$flavour; undef $flavour; }
-else { while (($output=shift) && ($output!~/\w[\w\-]*\.\w+$/)) {} }
+# $output is the last argument if it looks like a file (it has an extension)
+# $flavour is the first argument if it doesn't look like a file
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+$flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.| ? shift : undef;
 
 if ($flavour && $flavour ne "void") {
     $0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
@@ -80,9 +81,10 @@ if ($flavour && $flavour ne "void") {
     ( $xlate="${dir}../../perlasm/arm-xlate.pl" and -f $xlate) or
     die "can't locate arm-xlate.pl";
 
-    open STDOUT,"| \"$^X\" $xlate $flavour $output";
+    open STDOUT,"| \"$^X\" $xlate $flavour \"$output\""
+        or die "can't call $xlate: $!";
 } else {
-    open STDOUT,">$output";
+    $output and open STDOUT,">$output";
 }
 
 my @C = map("r$_",(0..9));
@@ -113,14 +115,14 @@ my @T = map([ 8*$_, 8*($_+1), 8*($_+2), 8*($_+3), 8*($_+4) ], (30,35,40,45,50));
 $code.=<<___;
 #include "arm_arch.h"
 
-.text
-
 #if defined(__thumb2__)
 .syntax	unified
 .thumb
 #else
 .code	32
 #endif
+
+.text
 
 .type	iotas32, %object
 .align	5
@@ -691,7 +693,14 @@ ___
 $code.=<<___;
 	blo	.Lround2x
 
+#if __ARM_ARCH__>=5
 	ldr	pc,[sp,#440]
+#else
+	ldr	lr,[sp,#440]
+	tst	lr,#1
+	moveq	pc,lr		@ be binary compatible with V4, yet
+	bx	lr		@ interoperable with Thumb ISA:-)
+#endif
 .size	KeccakF1600_int,.-KeccakF1600_int
 
 .type	KeccakF1600, %function
@@ -730,7 +739,14 @@ KeccakF1600:
 	stmia	@E[1], {@C[0]-@C[9]}
 
 	add	sp,sp,#440+20
+#if __ARM_ARCH__>=5
 	ldmia	sp!,{r4-r11,pc}
+#else
+	ldmia	sp!,{r4-r11,lr}
+	tst	lr,#1
+	moveq	pc,lr		@ be binary compatible with V4, yet
+	bx	lr		@ interoperable with Thumb ISA:-)
+#endif
 .size	KeccakF1600,.-KeccakF1600
 ___
 { my ($A_flat,$inp,$len,$bsz) = map("r$_",(10..12,14));
@@ -905,7 +921,14 @@ SHA3_absorb:
 .Labsorb_abort:
 	add	sp,sp,#456+32
 	mov	r0,$len			@ return value
+#if __ARM_ARCH__>=5
 	ldmia	sp!,{r4-r12,pc}
+#else
+	ldmia	sp!,{r4-r12,lr}
+	tst	lr,#1
+	moveq	pc,lr		@ be binary compatible with V4, yet
+	bx	lr		@ interoperable with Thumb ISA:-)
+#endif
 .size	SHA3_absorb,.-SHA3_absorb
 ___
 }
@@ -1055,7 +1078,14 @@ SHA3_squeeze:
 .align	4
 .Lsqueeze_done:
 	add	sp,sp,#24
+#if __ARM_ARCH__>=5
 	ldmia	sp!,{r4-r10,pc}
+#else
+	ldmia	sp!,{r4-r10,lr}
+	tst	lr,#1
+	moveq	pc,lr		@ be binary compatible with V4, yet
+	bx	lr		@ interoperable with Thumb ISA:-)
+#endif
 .size	SHA3_squeeze,.-SHA3_squeeze
 ___
 }
@@ -1104,9 +1134,9 @@ KeccakF1600_neon:
 .align	4
 .Loop_neon:
 	@ Theta
-	vst1.64		{q4},  [r0:64]		@ offload A[0..1][4]
+	vst1.64		{q4},  [r0,:64]		@ offload A[0..1][4]
 	veor		q13, q0,  q5		@ A[0..1][0]^A[2..3][0]
-	vst1.64		{d18}, [r1:64]		@ offload A[2][4]
+	vst1.64		{d18}, [r1,:64]		@ offload A[2][4]
 	veor		q14, q1,  q6		@ A[0..1][1]^A[2..3][1]
 	veor		q15, q2,  q7		@ A[0..1][2]^A[2..3][2]
 	veor		d26, d26, d27		@ C[0]=A[0][0]^A[1][0]^A[2][0]^A[3][0]
@@ -1149,10 +1179,10 @@ KeccakF1600_neon:
 	veor		d16, d16, d28		@ A[2][3] ^= C[2]
 	veor		d17, d17, d28		@ A[3][3] ^= C[2]
 	veor		d23, d23, d28		@ A[4][3] ^= C[2]
-	vld1.64		{q4},  [r0:64]		@ restore A[0..1][4]
+	vld1.64		{q4},  [r0,:64]		@ restore A[0..1][4]
 	vmov		d28, d29
 
-	vld1.64		{d18}, [r1:64]		@ restore A[2][4]
+	vld1.64		{d18}, [r1,:64]		@ restore A[2][4]
 	veor		q2,  q2,  q13		@ A[0..1][2] ^= D[2]
 	veor		q7,  q7,  q13		@ A[2..3][2] ^= D[2]
 	veor		d22, d22, d27		@ A[4][2]    ^= D[2]
@@ -1227,7 +1257,7 @@ KeccakF1600_neon:
 	veor		q13, q13, q0		@ A[0..1][0] ^ (~A[0..1][1] & A[0..1][2])
 	veor		q14, q14, q1		@ A[0..1][1] ^ (~A[0..1][2] & A[0..1][3])
 	veor		q2,  q2,  q15		@ A[0..1][2] ^= (~A[0..1][3] & A[0..1][4])
-	vst1.64		{q13}, [r0:64]		@ offload A[0..1][0]
+	vst1.64		{q13}, [r0,:64]		@ offload A[0..1][0]
 	vbic		q13, q0,  q4
 	vbic		q15, q1,  q0
 	vmov		q1,  q14		@ A[0..1][1]
@@ -1248,10 +1278,10 @@ KeccakF1600_neon:
 	vmov		q14, q10		@ A[4][0..1]
 	veor		q9,  q9,  q13		@ A[2..3][4] ^= (~A[2..3][0] & A[2..3][1])
 
-	vld1.64		d25, [r2:64]!		@ Iota[i++]
+	vld1.64		d25, [r2,:64]!		@ Iota[i++]
 	vbic		d26, d22, d21
 	vbic		d27, d23, d22
-	vld1.64		{q0}, [r0:64]		@ restore A[0..1][0]
+	vld1.64		{q0}, [r0,:64]		@ restore A[0..1][0]
 	veor		d20, d20, d26		@ A[4][0] ^= (~A[4][1] & A[4][2])
 	vbic		d26, d24, d23
 	veor		d21, d21, d27		@ A[4][1] ^= (~A[4][2] & A[4][3])
@@ -1265,7 +1295,7 @@ KeccakF1600_neon:
 	subs	r3, r3, #1
 	bne	.Loop_neon
 
-	bx	lr
+	ret
 .size	KeccakF1600_neon,.-KeccakF1600_neon
 
 .global	SHA3_absorb_neon
@@ -1279,32 +1309,32 @@ SHA3_absorb_neon:
 	mov	r5, r2			@ len
 	mov	r6, r3			@ bsz
 
-	vld1.32	{d0}, [r0:64]!		@ A[0][0]
-	vld1.32	{d2}, [r0:64]!		@ A[0][1]
-	vld1.32	{d4}, [r0:64]!		@ A[0][2]
-	vld1.32	{d6}, [r0:64]!		@ A[0][3]
-	vld1.32	{d8}, [r0:64]!		@ A[0][4]
+	vld1.32	{d0}, [r0,:64]!		@ A[0][0]
+	vld1.32	{d2}, [r0,:64]!		@ A[0][1]
+	vld1.32	{d4}, [r0,:64]!		@ A[0][2]
+	vld1.32	{d6}, [r0,:64]!		@ A[0][3]
+	vld1.32	{d8}, [r0,:64]!		@ A[0][4]
 
-	vld1.32	{d1}, [r0:64]!		@ A[1][0]
-	vld1.32	{d3}, [r0:64]!		@ A[1][1]
-	vld1.32	{d5}, [r0:64]!		@ A[1][2]
-	vld1.32	{d7}, [r0:64]!		@ A[1][3]
-	vld1.32	{d9}, [r0:64]!		@ A[1][4]
+	vld1.32	{d1}, [r0,:64]!		@ A[1][0]
+	vld1.32	{d3}, [r0,:64]!		@ A[1][1]
+	vld1.32	{d5}, [r0,:64]!		@ A[1][2]
+	vld1.32	{d7}, [r0,:64]!		@ A[1][3]
+	vld1.32	{d9}, [r0,:64]!		@ A[1][4]
 
-	vld1.32	{d10}, [r0:64]!		@ A[2][0]
-	vld1.32	{d12}, [r0:64]!		@ A[2][1]
-	vld1.32	{d14}, [r0:64]!		@ A[2][2]
-	vld1.32	{d16}, [r0:64]!		@ A[2][3]
-	vld1.32	{d18}, [r0:64]!		@ A[2][4]
+	vld1.32	{d10}, [r0,:64]!		@ A[2][0]
+	vld1.32	{d12}, [r0,:64]!		@ A[2][1]
+	vld1.32	{d14}, [r0,:64]!		@ A[2][2]
+	vld1.32	{d16}, [r0,:64]!		@ A[2][3]
+	vld1.32	{d18}, [r0,:64]!		@ A[2][4]
 
-	vld1.32	{d11}, [r0:64]!		@ A[3][0]
-	vld1.32	{d13}, [r0:64]!		@ A[3][1]
-	vld1.32	{d15}, [r0:64]!		@ A[3][2]
-	vld1.32	{d17}, [r0:64]!		@ A[3][3]
-	vld1.32	{d19}, [r0:64]!		@ A[3][4]
+	vld1.32	{d11}, [r0,:64]!		@ A[3][0]
+	vld1.32	{d13}, [r0,:64]!		@ A[3][1]
+	vld1.32	{d15}, [r0,:64]!		@ A[3][2]
+	vld1.32	{d17}, [r0,:64]!		@ A[3][3]
+	vld1.32	{d19}, [r0,:64]!		@ A[3][4]
 
-	vld1.32	{d20-d23}, [r0:64]!	@ A[4][0..3]
-	vld1.32	{d24}, [r0:64]		@ A[4][4]
+	vld1.32	{d20-d23}, [r0,:64]!	@ A[4][0..3]
+	vld1.32	{d24}, [r0,:64]		@ A[4][4]
 	sub	r0, r0, #24*8		@ rewind
 	b	.Loop_absorb_neon
 
@@ -1411,32 +1441,32 @@ SHA3_absorb_neon:
 
 .align	4
 .Labsorbed_neon:
-	vst1.32	{d0}, [r0:64]!		@ A[0][0..4]
-	vst1.32	{d2}, [r0:64]!
-	vst1.32	{d4}, [r0:64]!
-	vst1.32	{d6}, [r0:64]!
-	vst1.32	{d8}, [r0:64]!
+	vst1.32	{d0}, [r0,:64]!		@ A[0][0..4]
+	vst1.32	{d2}, [r0,:64]!
+	vst1.32	{d4}, [r0,:64]!
+	vst1.32	{d6}, [r0,:64]!
+	vst1.32	{d8}, [r0,:64]!
 
-	vst1.32	{d1}, [r0:64]!		@ A[1][0..4]
-	vst1.32	{d3}, [r0:64]!
-	vst1.32	{d5}, [r0:64]!
-	vst1.32	{d7}, [r0:64]!
-	vst1.32	{d9}, [r0:64]!
+	vst1.32	{d1}, [r0,:64]!		@ A[1][0..4]
+	vst1.32	{d3}, [r0,:64]!
+	vst1.32	{d5}, [r0,:64]!
+	vst1.32	{d7}, [r0,:64]!
+	vst1.32	{d9}, [r0,:64]!
 
-	vst1.32	{d10}, [r0:64]!		@ A[2][0..4]
-	vst1.32	{d12}, [r0:64]!
-	vst1.32	{d14}, [r0:64]!
-	vst1.32	{d16}, [r0:64]!
-	vst1.32	{d18}, [r0:64]!
+	vst1.32	{d10}, [r0,:64]!		@ A[2][0..4]
+	vst1.32	{d12}, [r0,:64]!
+	vst1.32	{d14}, [r0,:64]!
+	vst1.32	{d16}, [r0,:64]!
+	vst1.32	{d18}, [r0,:64]!
 
-	vst1.32	{d11}, [r0:64]!		@ A[3][0..4]
-	vst1.32	{d13}, [r0:64]!
-	vst1.32	{d15}, [r0:64]!
-	vst1.32	{d17}, [r0:64]!
-	vst1.32	{d19}, [r0:64]!
+	vst1.32	{d11}, [r0,:64]!		@ A[3][0..4]
+	vst1.32	{d13}, [r0,:64]!
+	vst1.32	{d15}, [r0,:64]!
+	vst1.32	{d17}, [r0,:64]!
+	vst1.32	{d19}, [r0,:64]!
 
-	vst1.32	{d20-d23}, [r0:64]!	@ A[4][0..4]
-	vst1.32	{d24}, [r0:64]
+	vst1.32	{d20-d23}, [r0,:64]!	@ A[4][0..4]
+	vst1.32	{d24}, [r0,:64]
 
 	mov	r0, r5			@ return value
 	vldmia	sp!, {d8-d15}
@@ -1471,64 +1501,64 @@ SHA3_squeeze_neon:
 
 	vstmdb	sp!,  {d8-d15}
 
-	vld1.32	{d0}, [r0:64]!		@ A[0][0..4]
-	vld1.32	{d2}, [r0:64]!
-	vld1.32	{d4}, [r0:64]!
-	vld1.32	{d6}, [r0:64]!
-	vld1.32	{d8}, [r0:64]!
+	vld1.32	{d0}, [r0,:64]!		@ A[0][0..4]
+	vld1.32	{d2}, [r0,:64]!
+	vld1.32	{d4}, [r0,:64]!
+	vld1.32	{d6}, [r0,:64]!
+	vld1.32	{d8}, [r0,:64]!
 
-	vld1.32	{d1}, [r0:64]!		@ A[1][0..4]
-	vld1.32	{d3}, [r0:64]!
-	vld1.32	{d5}, [r0:64]!
-	vld1.32	{d7}, [r0:64]!
-	vld1.32	{d9}, [r0:64]!
+	vld1.32	{d1}, [r0,:64]!		@ A[1][0..4]
+	vld1.32	{d3}, [r0,:64]!
+	vld1.32	{d5}, [r0,:64]!
+	vld1.32	{d7}, [r0,:64]!
+	vld1.32	{d9}, [r0,:64]!
 
-	vld1.32	{d10}, [r0:64]!		@ A[2][0..4]
-	vld1.32	{d12}, [r0:64]!
-	vld1.32	{d14}, [r0:64]!
-	vld1.32	{d16}, [r0:64]!
-	vld1.32	{d18}, [r0:64]!
+	vld1.32	{d10}, [r0,:64]!		@ A[2][0..4]
+	vld1.32	{d12}, [r0,:64]!
+	vld1.32	{d14}, [r0,:64]!
+	vld1.32	{d16}, [r0,:64]!
+	vld1.32	{d18}, [r0,:64]!
 
-	vld1.32	{d11}, [r0:64]!		@ A[3][0..4]
-	vld1.32	{d13}, [r0:64]!
-	vld1.32	{d15}, [r0:64]!
-	vld1.32	{d17}, [r0:64]!
-	vld1.32	{d19}, [r0:64]!
+	vld1.32	{d11}, [r0,:64]!		@ A[3][0..4]
+	vld1.32	{d13}, [r0,:64]!
+	vld1.32	{d15}, [r0,:64]!
+	vld1.32	{d17}, [r0,:64]!
+	vld1.32	{d19}, [r0,:64]!
 
-	vld1.32	{d20-d23}, [r0:64]!	@ A[4][0..4]
-	vld1.32	{d24}, [r0:64]
+	vld1.32	{d20-d23}, [r0,:64]!	@ A[4][0..4]
+	vld1.32	{d24}, [r0,:64]
 	sub	r0, r0, #24*8		@ rewind
 
 	bl	KeccakF1600_neon
 
 	mov	r12, r0			@ A_flat
-	vst1.32	{d0}, [r0:64]!		@ A[0][0..4]
-	vst1.32	{d2}, [r0:64]!
-	vst1.32	{d4}, [r0:64]!
-	vst1.32	{d6}, [r0:64]!
-	vst1.32	{d8}, [r0:64]!
+	vst1.32	{d0}, [r0,:64]!		@ A[0][0..4]
+	vst1.32	{d2}, [r0,:64]!
+	vst1.32	{d4}, [r0,:64]!
+	vst1.32	{d6}, [r0,:64]!
+	vst1.32	{d8}, [r0,:64]!
 
-	vst1.32	{d1}, [r0:64]!		@ A[1][0..4]
-	vst1.32	{d3}, [r0:64]!
-	vst1.32	{d5}, [r0:64]!
-	vst1.32	{d7}, [r0:64]!
-	vst1.32	{d9}, [r0:64]!
+	vst1.32	{d1}, [r0,:64]!		@ A[1][0..4]
+	vst1.32	{d3}, [r0,:64]!
+	vst1.32	{d5}, [r0,:64]!
+	vst1.32	{d7}, [r0,:64]!
+	vst1.32	{d9}, [r0,:64]!
 
-	vst1.32	{d10}, [r0:64]!		@ A[2][0..4]
-	vst1.32	{d12}, [r0:64]!
-	vst1.32	{d14}, [r0:64]!
-	vst1.32	{d16}, [r0:64]!
-	vst1.32	{d18}, [r0:64]!
+	vst1.32	{d10}, [r0,:64]!		@ A[2][0..4]
+	vst1.32	{d12}, [r0,:64]!
+	vst1.32	{d14}, [r0,:64]!
+	vst1.32	{d16}, [r0,:64]!
+	vst1.32	{d18}, [r0,:64]!
 
-	vst1.32	{d11}, [r0:64]!		@ A[3][0..4]
-	vst1.32	{d13}, [r0:64]!
-	vst1.32	{d15}, [r0:64]!
-	vst1.32	{d17}, [r0:64]!
-	vst1.32	{d19}, [r0:64]!
+	vst1.32	{d11}, [r0,:64]!		@ A[3][0..4]
+	vst1.32	{d13}, [r0,:64]!
+	vst1.32	{d15}, [r0,:64]!
+	vst1.32	{d17}, [r0,:64]!
+	vst1.32	{d19}, [r0,:64]!
 
-	vst1.32	{d20-d23}, [r0:64]!	@ A[4][0..4]
+	vst1.32	{d20-d23}, [r0,:64]!	@ A[4][0..4]
 	mov	r14, r6			@ bsz
-	vst1.32	{d24}, [r0:64]
+	vst1.32	{d24}, [r0,:64]
 	mov	r0,  r12		@ rewind
 
 	vldmia	sp!, {d8-d15}
@@ -1603,4 +1633,4 @@ foreach (split($/,$code)) {
 	print $_,"\n";
 }
 
-close STDOUT; # enforce flush
+close STDOUT or die "error closing STDOUT: $!"; # enforce flush

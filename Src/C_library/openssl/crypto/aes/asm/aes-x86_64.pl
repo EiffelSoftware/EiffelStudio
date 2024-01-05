@@ -1,7 +1,7 @@
 #! /usr/bin/env perl
-# Copyright 2005-2016 The OpenSSL Project Authors. All Rights Reserved.
+# Copyright 2005-2020 The OpenSSL Project Authors. All Rights Reserved.
 #
-# Licensed under the OpenSSL license (the "License").  You may not use
+# Licensed under the Apache License 2.0 (the "License").  You may not use
 # this file except in compliance with the License.  You can obtain a copy
 # in the file LICENSE in the source distribution or at
 # https://www.openssl.org/source/license.html
@@ -33,9 +33,10 @@
 #
 # (*) with hyper-threading off
 
-$flavour = shift;
-$output  = shift;
-if ($flavour =~ /\./) { $output = $flavour; undef $flavour; }
+# $output is the last argument if it looks like a file (it has an extension)
+# $flavour is the first argument if it doesn't look like a file
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+$flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.| ? shift : undef;
 
 $win64=0; $win64=1 if ($flavour =~ /[nm]asm|mingw64/ || $output =~ /\.asm$/);
 
@@ -44,7 +45,8 @@ $0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
 ( $xlate="${dir}../../perlasm/x86_64-xlate.pl" and -f $xlate) or
 die "can't locate x86_64-xlate.pl";
 
-open OUT,"| \"$^X\" \"$xlate\" $flavour \"$output\"";
+open OUT,"| \"$^X\" \"$xlate\" $flavour \"$output\""
+    or die "can't call $xlate: $!";
 *STDOUT=*OUT;
 
 $verticalspin=1;	# unlike 32-bit version $verticalspin performs
@@ -326,6 +328,7 @@ $code.=<<___;
 .type	_x86_64_AES_encrypt,\@abi-omnipotent
 .align	16
 _x86_64_AES_encrypt:
+.cfi_startproc
 	xor	0($key),$s0			# xor with key
 	xor	4($key),$s1
 	xor	8($key),$s2
@@ -361,6 +364,7 @@ ___
 	}
 $code.=<<___;
 	.byte	0xf3,0xc3			# rep ret
+.cfi_endproc
 .size	_x86_64_AES_encrypt,.-_x86_64_AES_encrypt
 ___
 
@@ -554,6 +558,7 @@ $code.=<<___;
 .type	_x86_64_AES_encrypt_compact,\@abi-omnipotent
 .align	16
 _x86_64_AES_encrypt_compact:
+.cfi_startproc
 	lea	128($sbox),$inp			# size optimization
 	mov	0-128($inp),$acc1		# prefetch Te4
 	mov	32-128($inp),$acc2
@@ -587,6 +592,7 @@ $code.=<<___;
 	xor	8($key),$s2
 	xor	12($key),$s3
 	.byte	0xf3,0xc3			# rep ret
+.cfi_endproc
 .size	_x86_64_AES_encrypt_compact,.-_x86_64_AES_encrypt_compact
 ___
 
@@ -600,6 +606,7 @@ $code.=<<___;
 asm_AES_encrypt:
 AES_encrypt:
 .cfi_startproc
+	endbranch
 	mov	%rsp,%rax
 .cfi_def_cfa_register	%rax
 	push	%rbx
@@ -908,6 +915,7 @@ $code.=<<___;
 .type	_x86_64_AES_decrypt,\@abi-omnipotent
 .align	16
 _x86_64_AES_decrypt:
+.cfi_startproc
 	xor	0($key),$s0			# xor with key
 	xor	4($key),$s1
 	xor	8($key),$s2
@@ -950,6 +958,7 @@ ___
 	}
 $code.=<<___;
 	.byte	0xf3,0xc3			# rep ret
+.cfi_endproc
 .size	_x86_64_AES_decrypt,.-_x86_64_AES_decrypt
 ___
 
@@ -1161,6 +1170,7 @@ $code.=<<___;
 .type	_x86_64_AES_decrypt_compact,\@abi-omnipotent
 .align	16
 _x86_64_AES_decrypt_compact:
+.cfi_startproc
 	lea	128($sbox),$inp			# size optimization
 	mov	0-128($inp),$acc1		# prefetch Td4
 	mov	32-128($inp),$acc2
@@ -1203,6 +1213,7 @@ $code.=<<___;
 	xor	8($key),$s2
 	xor	12($key),$s3
 	.byte	0xf3,0xc3			# rep ret
+.cfi_endproc
 .size	_x86_64_AES_decrypt_compact,.-_x86_64_AES_decrypt_compact
 ___
 
@@ -1216,6 +1227,7 @@ $code.=<<___;
 asm_AES_decrypt:
 AES_decrypt:
 .cfi_startproc
+	endbranch
 	mov	%rsp,%rax
 .cfi_def_cfa_register	%rax
 	push	%rbx
@@ -1333,6 +1345,7 @@ $code.=<<___;
 .align	16
 AES_set_encrypt_key:
 .cfi_startproc
+	endbranch
 	push	%rbx
 .cfi_push	%rbx
 	push	%rbp
@@ -1365,6 +1378,7 @@ AES_set_encrypt_key:
 .type	_x86_64_AES_set_encrypt_key,\@abi-omnipotent
 .align	16
 _x86_64_AES_set_encrypt_key:
+.cfi_startproc
 	mov	%esi,%ecx			# %ecx=bits
 	mov	%rdi,%rsi			# %rsi=userKey
 	mov	%rdx,%rdi			# %rdi=key
@@ -1546,6 +1560,7 @@ $code.=<<___;
 	mov	\$-1,%rax
 .Lexit:
 	.byte	0xf3,0xc3			# rep ret
+.cfi_endproc
 .size	_x86_64_AES_set_encrypt_key,.-_x86_64_AES_set_encrypt_key
 ___
 
@@ -1611,6 +1626,7 @@ $code.=<<___;
 .align	16
 AES_set_decrypt_key:
 .cfi_startproc
+	endbranch
 	push	%rbx
 .cfi_push	%rbx
 	push	%rbp
@@ -1725,10 +1741,13 @@ $code.=<<___;
 asm_AES_cbc_encrypt:
 AES_cbc_encrypt:
 .cfi_startproc
+	endbranch
 	cmp	\$0,%rdx	# check length
 	je	.Lcbc_epilogue
 	pushfq
-.cfi_push	49		# %rflags
+# This could be .cfi_push 49, but libunwind fails on registers it does not
+# recognize. See https://bugzilla.redhat.com/show_bug.cgi?id=217087.
+.cfi_adjust_cfa_offset	8
 	push	%rbx
 .cfi_push	%rbx
 	push	%rbp
@@ -1751,6 +1770,7 @@ AES_cbc_encrypt:
 	cmp	\$0,%r9
 	cmoveq	%r10,$sbox
 
+.cfi_remember_state
 	mov	OPENSSL_ia32cap_P(%rip),%r10d
 	cmp	\$$speed_limit,%rdx
 	jb	.Lcbc_slow_prologue
@@ -1986,6 +2006,7 @@ AES_cbc_encrypt:
 #--------------------------- SLOW ROUTINE ---------------------------#
 .align	16
 .Lcbc_slow_prologue:
+.cfi_restore_state
 	# allocate aligned stack frame...
 	lea	-88(%rsp),%rbp
 	and	\$-64,%rbp
@@ -1997,8 +2018,10 @@ AES_cbc_encrypt:
 	sub	%r10,%rbp
 
 	xchg	%rsp,%rbp
+.cfi_def_cfa_register	%rbp
 	#add	\$8,%rsp	# reserve for return address!
 	mov	%rbp,$_rsp	# save %rsp
+.cfi_cfa_expression	$_rsp,deref,+64
 .Lcbc_slow_body:
 	#mov	%rdi,$_inp	# save copy of inp
 	#mov	%rsi,$_out	# save copy of out
@@ -2187,7 +2210,9 @@ AES_cbc_encrypt:
 .cfi_def_cfa	%rsp,16
 .Lcbc_popfq:
 	popfq
-.cfi_pop	49		# %rflags
+# This could be .cfi_pop 49, but libunwind fails on registers it does not
+# recognize. See https://bugzilla.redhat.com/show_bug.cgi?id=217087.
+.cfi_adjust_cfa_offset	-8
 .Lcbc_epilogue:
 	ret
 .cfi_endproc
@@ -2899,4 +2924,4 @@ $code =~ s/\`([^\`]*)\`/eval($1)/gem;
 
 print $code;
 
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

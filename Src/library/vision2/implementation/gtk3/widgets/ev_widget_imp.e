@@ -144,10 +144,10 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 				-- TODO: potential optimization connect only unmap , once the widget was mapped once
 			real_signal_connect_after (a_c_object,
 					{EV_GTK_EVENT_STRINGS}.map_event_name,
-					agent (l_app_imp.gtk_marshal).on_widget_mapped_signal_intermediary (a_c_object))
+					agent (l_app_imp.gtk_marshal).on_widget_mapped_signal_intermediary (a_c_object, ?))
 			real_signal_connect_after (a_c_object,
 					{EV_GTK_EVENT_STRINGS}.unmap_event_name,
-					agent (l_app_imp.gtk_marshal).on_widget_unmapped_signal_intermediary (a_c_object))
+					agent (l_app_imp.gtk_marshal).on_widget_unmapped_signal_intermediary (a_c_object, ?))
 			real_signal_connect_after (a_c_object,
 					{EV_GTK_EVENT_STRINGS}.hide_signal_name,
 					agent (l_app_imp.gtk_marshal).on_widget_hide_signal_intermediary (a_c_object))
@@ -752,7 +752,7 @@ feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	interface: detachable EV_WIDGET note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

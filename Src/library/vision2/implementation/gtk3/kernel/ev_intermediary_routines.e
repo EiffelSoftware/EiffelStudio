@@ -39,7 +39,7 @@ feature {EV_ANY_IMP} -- Notebook agent routines
 
 feature -- map,unmap event
 
-	on_widget_mapped_signal_intermediary (a_c_object: POINTER)
+	on_widget_mapped_signal_intermediary (a_c_object: POINTER; a_evt: POINTER)
 			-- Set mapped handling intermediary.
 		do
 			if attached {EV_WIDGET_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_widget_imp then
@@ -47,7 +47,7 @@ feature -- map,unmap event
 			end
 		end
 
-	on_widget_unmapped_signal_intermediary (a_c_object: POINTER)
+	on_widget_unmapped_signal_intermediary (a_c_object: POINTER; a_evt: POINTER)
 			-- Set unmapped handling intermediary.
 		do
 			if attached {EV_WIDGET_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_widget_imp then
@@ -212,7 +212,7 @@ feature {EV_ANY_IMP} -- Dialog agent routines
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

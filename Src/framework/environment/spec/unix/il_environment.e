@@ -338,6 +338,8 @@ feature -- Helpers
 								if a_using_reference then
 									dn := loc.name
 									s.append (".Ref")
+										-- usually .../dotnet/ or .../.dotnet/
+									dn.replace_substring_all ("/.dotnet/shared/", "/.dotnet/packs/")
 									dn.replace_substring_all ("/dotnet/shared/", "/dotnet/packs/")
 									dn.append (".Ref")
 									create l_rt_name.make_from_string_general (s)

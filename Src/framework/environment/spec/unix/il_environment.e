@@ -338,9 +338,15 @@ feature -- Helpers
 								if a_using_reference then
 									dn := loc.name
 									s.append (".Ref")
-										-- usually .../dotnet/ or .../.dotnet/
-									dn.replace_substring_all ("/.dotnet/shared/", "/.dotnet/packs/")
+										-- try using root locations
+									across
+										dotnet_potential_root_locations as root_loc
+									loop
+										dn.replace_substring_all (root_loc.extended ("shared").name, root_loc.extended ("packs").name)
+									end
+										-- Just in case it is elsewhere
 									dn.replace_substring_all ("/dotnet/shared/", "/dotnet/packs/")
+										-- Complete the runtime location
 									dn.append (".Ref")
 									create l_rt_name.make_from_string_general (s)
 									create loc.make_from_string (dn)
@@ -379,24 +385,24 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

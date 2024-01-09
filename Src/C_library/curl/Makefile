@@ -5,11 +5,11 @@
 #                            | (__| |_| |  _ <| |___
 #                             \___|\___/|_| \_\_____|
 #
-# Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+# Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
 #
 # This software is licensed as described in the file COPYING, which
 # you should have received as part of this distribution. The terms
-# are also available at https://curl.haxx.se/docs/copyright.html.
+# are also available at https://curl.se/docs/copyright.html.
 #
 # You may opt to use, copy, modify, merge, publish, distribute and/or sell
 # copies of the Software, and permit persons to whom the Software is
@@ -18,6 +18,8 @@
 # This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
 # KIND, either express or implied.
 #
+# SPDX-License-Identifier: curl
+#
 ###########################################################################
 
 all:
@@ -25,65 +27,29 @@ all:
 	make
 
 ssl:
-	./configure --with-ssl
+	./configure --with-openssl
 	make
 
-borland:
-	cd lib
-	$(MAKE) -f Makefile.b32
-	cd ..\src
-	$(MAKE) -f Makefile.b32
-
-borland-ssl:
-	cd lib
-	$(MAKE) -f Makefile.b32 WITH_SSL=1
-	cd ..\src
-	$(MAKE) -f Makefile.b32 WITH_SSL=1
-
-borland-ssl-zlib:
-	cd lib
-	$(MAKE) -f Makefile.b32 WITH_SSL=1 WITH_ZLIB=1
-	cd ..\src
-	$(MAKE) -f Makefile.b32 WITH_SSL=1 WITH_ZLIB=1
-
-borland-clean:
-	cd lib
-	$(MAKE) -f Makefile.b32 clean
-	cd ..\src
-	$(MAKE) -f Makefile.b32 clean
-
-watcom: .SYMBOLIC
-	cd lib && $(MAKE) -u -f Makefile.Watcom
-	cd src && $(MAKE) -u -f Makefile.Watcom
-
-watcom-clean: .SYMBOLIC
-	cd lib && $(MAKE) -u -f Makefile.Watcom clean
-	cd src && $(MAKE) -u -f Makefile.Watcom clean
-
-watcom-vclean: .SYMBOLIC
-	cd lib && $(MAKE) -u -f Makefile.Watcom vclean
-	cd src && $(MAKE) -u -f Makefile.Watcom vclean
-
 mingw32:
-	$(MAKE) -C lib -f Makefile.m32
-	$(MAKE) -C src -f Makefile.m32
+	$(MAKE) -C lib -f Makefile.mk
+	$(MAKE) -C src -f Makefile.mk
 
 mingw32-clean:
-	$(MAKE) -C lib -f Makefile.m32 clean
-	$(MAKE) -C src -f Makefile.m32 clean
-	$(MAKE) -C docs/examples -f Makefile.m32 clean
+	$(MAKE) -C lib -f Makefile.mk clean
+	$(MAKE) -C src -f Makefile.mk clean
+	$(MAKE) -C docs/examples -f Makefile.mk clean
 
 mingw32-vclean mingw32-distclean:
-	$(MAKE) -C lib -f Makefile.m32 vclean
-	$(MAKE) -C src -f Makefile.m32 vclean
-	$(MAKE) -C docs/examples -f Makefile.m32 vclean
+	$(MAKE) -C lib -f Makefile.mk vclean
+	$(MAKE) -C src -f Makefile.mk vclean
+	$(MAKE) -C docs/examples -f Makefile.mk vclean
 
 mingw32-examples%:
-	$(MAKE) -C docs/examples -f Makefile.m32 CFG=$@
+	$(MAKE) -C docs/examples -f Makefile.mk CFG=$@
 
 mingw32%:
-	$(MAKE) -C lib -f Makefile.m32 CFG=$@
-	$(MAKE) -C src -f Makefile.m32 CFG=$@
+	$(MAKE) -C lib -f Makefile.mk CFG=$@
+	$(MAKE) -C src -f Makefile.mk CFG=$@
 
 vc:
 	cd winbuild
@@ -93,46 +59,21 @@ vc-x64:
 	cd winbuild
 	nmake /f Makefile.vc MACHINE=x64
 
-djgpp:
-	$(MAKE) -C lib -f Makefile.dj
-	$(MAKE) -C src -f Makefile.dj
+djgpp%:
+	$(MAKE) -C lib -f Makefile.mk CFG=$@ CROSSPREFIX=i586-pc-msdosdjgpp-
+	$(MAKE) -C src -f Makefile.mk CFG=$@ CROSSPREFIX=i586-pc-msdosdjgpp-
 
 cygwin:
 	./configure
 	make
 
 cygwin-ssl:
-	./configure --with-ssl
+	./configure --with-openssl
 	make
 
-amiga:
-	cd ./lib && make -f makefile.amiga
-	cd ./src && make -f makefile.amiga
-
-netware:
-	$(MAKE) -C lib -f Makefile.netware
-	$(MAKE) -C src -f Makefile.netware
-
-netware-clean:
-	$(MAKE) -C lib -f Makefile.netware clean
-	$(MAKE) -C src -f Makefile.netware clean
-	$(MAKE) -C docs/examples -f Makefile.netware clean
-
-netware-vclean netware-distclean:
-	$(MAKE) -C lib -f Makefile.netware vclean
-	$(MAKE) -C src -f Makefile.netware vclean
-	$(MAKE) -C docs/examples -f Makefile.netware vclean
-
-netware-install:
-	$(MAKE) -C lib -f Makefile.netware install
-	$(MAKE) -C src -f Makefile.netware install
-
-netware-examples-%:
-	$(MAKE) -C docs/examples -f Makefile.netware CFG=$@
-
-netware-%:
-	$(MAKE) -C lib -f Makefile.netware CFG=$@
-	$(MAKE) -C src -f Makefile.netware CFG=$@
+amiga%:
+	$(MAKE) -C lib -f Makefile.mk CFG=$@ CROSSPREFIX=m68k-amigaos-
+	$(MAKE) -C src -f Makefile.mk CFG=$@ CROSSPREFIX=m68k-amigaos-
 
 unix: all
 
@@ -142,7 +83,7 @@ linux: all
 
 linux-ssl: ssl
 
-ca-bundle: lib/mk-ca-bundle.pl
+ca-bundle: scripts/mk-ca-bundle.pl
 	@echo "generate a fresh ca-bundle.crt"
 	@perl $< -b -l -u lib/ca-bundle.crt
 

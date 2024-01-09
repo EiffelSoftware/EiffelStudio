@@ -7,11 +7,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2014, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at https://curl.haxx.se/docs/copyright.html.
+ * are also available at https://curl.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -20,10 +20,12 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
+ * SPDX-License-Identifier: curl
+ *
  ***************************************************************************/
 #include "tool_setup.h"
 
-#if defined(MSDOS) || defined(WIN32)
+#if defined(_WIN32) || defined(MSDOS)
 
 #define SANITIZE_ALLOW_COLONS    (1<<0)  /* Allow colons */
 #define SANITIZE_ALLOW_PATH      (1<<1)  /* Allow path separators and colons */
@@ -55,14 +57,16 @@ char **__crt0_glob_function(char *arg);
 
 #endif /* MSDOS && (__DJGPP__ || __GO32__) */
 
-#ifdef WIN32
+#ifdef _WIN32
 
 CURLcode FindWin32CACert(struct OperationConfig *config,
-                         const char *bundle_file);
+                         curl_sslbackend backend,
+                         const TCHAR *bundle_file);
+struct curl_slist *GetLoadedModulePaths(void);
+CURLcode win32_init(void);
 
-#endif /* WIN32 */
+#endif /* _WIN32 */
 
-#endif /* MSDOS || WIN32 */
+#endif /* _WIN32 || MSDOS */
 
 #endif /* HEADER_CURL_TOOL_DOSWIN_H */
-

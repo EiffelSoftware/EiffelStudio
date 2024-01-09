@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at https://curl.haxx.se/docs/copyright.html.
+ * are also available at https://curl.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -18,18 +18,21 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
+ * SPDX-License-Identifier: curl
+ *
  ***************************************************************************/
 #include "tool_setup.h"
 
 #include <sys/stat.h>
 
-#ifdef HAVE_SIGNAL_H
-#include <signal.h>
+#ifdef _WIN32
+#include <tchar.h>
 #endif
 
-#ifdef USE_NSS
-#include <nspr.h>
-#include <plarenas.h>
+#include <signal.h>
+
+#ifdef HAVE_FCNTL_H
+#include <fcntl.h>
 #endif
 
 #define ENABLE_CURLX_PRINTF
@@ -37,13 +40,13 @@
 #include "curlx.h"
 
 #include "tool_cfgable.h"
-#include "tool_convert.h"
+#include "tool_doswin.h"
 #include "tool_msgs.h"
 #include "tool_operate.h"
-#include "tool_panykey.h"
 #include "tool_vms.h"
 #include "tool_main.h"
 #include "tool_libinfo.h"
+#include "tool_stderr.h"
 
 /*
  * This is low-level hard-hacking memory leak tracking and similar. Using
@@ -68,35 +71,37 @@ int vms_show = 0;
  * when command-line argument globbing is enabled under the MSYS shell, so turn
  * it off.
  */
+extern int _CRT_glob;
 int _CRT_glob = 0;
 #endif /* __MINGW32__ */
 
 /* if we build a static library for unit tests, there is no main() function */
 #ifndef UNITTESTS
 
+#if defined(HAVE_PIPE) && defined(HAVE_FCNTL)
 /*
  * Ensure that file descriptors 0, 1 and 2 (stdin, stdout, stderr) are
  * open before starting to run.  Otherwise, the first three network
  * sockets opened by curl could be used for input sources, downloaded data
  * or error logs as they will effectively be stdin, stdout and/or stderr.
+ *
+ * fcntl's F_GETFD instruction returns -1 if the file descriptor is closed,
+ * otherwise it returns "the file descriptor flags (which typically can only
+ * be FD_CLOEXEC, which is not set here).
  */
-static void main_checkfds(void)
+static int main_checkfds(void)
 {
-#ifdef HAVE_PIPE
-  int fd[2] = { STDIN_FILENO, STDIN_FILENO };
-  while(fd[0] == STDIN_FILENO ||
-        fd[0] == STDOUT_FILENO ||
-        fd[0] == STDERR_FILENO ||
-        fd[1] == STDIN_FILENO ||
-        fd[1] == STDOUT_FILENO ||
-        fd[1] == STDERR_FILENO)
-    if(pipe(fd) < 0)
-      return;   /* Out of handles. This isn't really a big problem now, but
-                   will be when we try to create a socket later. */
-  close(fd[0]);
-  close(fd[1]);
-#endif
+  int fd[2];
+  while((fcntl(STDIN_FILENO, F_GETFD) == -1) ||
+        (fcntl(STDOUT_FILENO, F_GETFD) == -1) ||
+        (fcntl(STDERR_FILENO, F_GETFD) == -1))
+    if(pipe(fd))
+      return 1;
+  return 0;
 }
+#else
+#define main_checkfds() 0
+#endif
 
 #ifdef CURLDEBUG
 static void memory_tracking_init(void)
@@ -111,10 +116,10 @@ static void memory_tracking_init(void)
       env[CURL_MT_LOGFNAME_BUFSIZE-1] = '\0';
     strcpy(fname, env);
     curl_free(env);
-    curl_memdebug(fname);
-    /* this weird stuff here is to make curl_free() get called
-       before curl_memdebug() as otherwise memory tracking will
-       log a free() without an alloc! */
+    curl_dbg_memdebug(fname);
+    /* this weird stuff here is to make curl_free() get called before
+       curl_dbg_memdebug() as otherwise memory tracking will log a free()
+       without an alloc! */
   }
   /* if CURL_MEMLIMIT is set, this enables fail-on-alloc-number-N feature */
   env = curlx_getenv("CURL_MEMLIMIT");
@@ -122,7 +127,7 @@ static void memory_tracking_init(void)
     char *endptr;
     long num = strtol(env, &endptr, 10);
     if((endptr != env) && (endptr == env + strlen(env)) && (num > 0))
-      curl_memlimit(num);
+      curl_dbg_memlimit(num);
     curl_free(env);
   }
 }
@@ -145,8 +150,9 @@ static CURLcode main_init(struct GlobalConfig *config)
 #endif
 
   /* Initialise the global config */
-  config->showerror = -1;             /* Will show errors */
-  config->errors = stderr;            /* Default errors to stderr */
+  config->showerror = FALSE;          /* show errors when silent */
+  config->styled_output = TRUE;       /* enable detection */
+  config->parallel_max = PARALLEL_DEFAULT;
 
   /* Allocate the initial operate config */
   config->first = config->last = malloc(sizeof(struct OperationConfig));
@@ -158,45 +164,31 @@ static CURLcode main_init(struct GlobalConfig *config)
       result = get_libcurl_info();
 
       if(!result) {
-        /* Get a curl handle to use for all forthcoming curl transfers */
-        config->easy = curl_easy_init();
-        if(config->easy) {
-          /* Initialise the config */
-          config_init(config->first);
-          config->first->easy = config->easy;
-          config->first->global = config;
-        }
-        else {
-          helpf(stderr, "error initializing curl easy handle\n");
-          result = CURLE_FAILED_INIT;
-          free(config->first);
-        }
+        /* Initialise the config */
+        config_init(config->first);
+        config->first->global = config;
       }
       else {
-        helpf(stderr, "error retrieving curl library information\n");
+        errorf(config, "error retrieving curl library information");
         free(config->first);
       }
     }
     else {
-      helpf(stderr, "error initializing curl library\n");
+      errorf(config, "error initializing curl library");
       free(config->first);
     }
   }
   else {
-    helpf(stderr, "error initializing curl\n");
+    errorf(config, "error initializing curl");
     result = CURLE_FAILED_INIT;
   }
 
   return result;
 }
 
-static void free_config_fields(struct GlobalConfig *config)
+static void free_globalconfig(struct GlobalConfig *config)
 {
   Curl_safefree(config->trace_dump);
-
-  if(config->errors_fopened && config->errors)
-    fclose(config->errors);
-  config->errors = NULL;
 
   if(config->trace_fopened && config->trace_stream)
     fclose(config->trace_stream);
@@ -212,22 +204,9 @@ static void free_config_fields(struct GlobalConfig *config)
 static void main_free(struct GlobalConfig *config)
 {
   /* Cleanup the easy handle */
-  curl_easy_cleanup(config->easy);
-  config->easy = NULL;
-
   /* Main cleanup */
   curl_global_cleanup();
-  convert_cleanup();
-  metalink_cleanup();
-#ifdef USE_NSS
-  if(PR_Initialized()) {
-    /* prevent valgrind from reporting still reachable mem from NSRP arenas */
-    PL_ArenaFinish();
-    /* prevent valgrind from reporting possibly lost memory (fd cache, ...) */
-    PR_Cleanup();
-  }
-#endif
-  free_config_fields(config);
+  free_globalconfig(config);
 
   /* Free the config structures */
   config_free(config->last);
@@ -238,13 +217,46 @@ static void main_free(struct GlobalConfig *config)
 /*
 ** curl tool main function.
 */
+#ifdef _UNICODE
+#if defined(__GNUC__)
+/* GCC doesn't know about wmain() */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-prototypes"
+#pragma GCC diagnostic ignored "-Wmissing-declarations"
+#endif
+int wmain(int argc, wchar_t *argv[])
+#else
 int main(int argc, char *argv[])
+#endif
 {
   CURLcode result = CURLE_OK;
   struct GlobalConfig global;
   memset(&global, 0, sizeof(global));
 
-  main_checkfds();
+  tool_init_stderr();
+
+#ifdef _WIN32
+  /* Undocumented diagnostic option to list the full paths of all loaded
+     modules. This is purposely pre-init. */
+  if(argc == 2 && !_tcscmp(argv[1], _T("--dump-module-paths"))) {
+    struct curl_slist *item, *head = GetLoadedModulePaths();
+    for(item = head; item; item = item->next)
+      printf("%s\n", item->data);
+    curl_slist_free_all(head);
+    return head ? 0 : 1;
+  }
+  /* win32_init must be called before other init routines. */
+  result = win32_init();
+  if(result) {
+    errorf(&global, "(%d) Windows-specific init failed", result);
+    return result;
+  }
+#endif
+
+  if(main_checkfds()) {
+    errorf(&global, "out of file descriptors");
+    return CURLE_FAILED_INIT;
+  }
 
 #if defined(HAVE_SIGNAL) && defined(SIGPIPE)
   (void)signal(SIGPIPE, SIG_IGN);
@@ -260,18 +272,13 @@ int main(int argc, char *argv[])
     /* Start our curl operation */
     result = operate(&global, argc, argv);
 
-#ifdef __SYMBIAN32__
-    if(global.showerror)
-      tool_pressanykey();
-#endif
-
     /* Perform the main cleanup */
     main_free(&global);
   }
 
-#ifdef __NOVELL_LIBC__
-  if(getenv("_IN_NETWARE_BASH_") == NULL)
-    tool_pressanykey();
+#ifdef _WIN32
+  /* Flush buffers of all streams opened in write or update mode */
+  fflush(NULL);
 #endif
 
 #ifdef __VMS
@@ -280,5 +287,11 @@ int main(int argc, char *argv[])
   return (int)result;
 #endif
 }
+
+#ifdef _UNICODE
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
+#endif
 
 #endif /* ndef UNITTESTS */

@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at https://curl.haxx.se/docs/copyright.html.
+ * are also available at https://curl.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -18,35 +18,46 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
+ * SPDX-License-Identifier: curl
+ *
  ***************************************************************************/
 #include "tool_setup.h"
+
+#if defined(HAVE_STRCASECMP) && defined(HAVE_STRINGS_H)
+#include <strings.h>
+#endif
 
 #include "tool_util.h"
 
 #include "memdebug.h" /* keep this as LAST include */
 
-#if defined(WIN32) && !defined(MSDOS)
+#if defined(_WIN32)
 
+/* In case of bug fix this function has a counterpart in timeval.c */
 struct timeval tvnow(void)
 {
-  /*
-  ** GetTickCount() is available on _all_ Windows versions from W95 up
-  ** to nowadays. Returns milliseconds elapsed since last system boot,
-  ** increases monotonically and wraps once 49.7 days have elapsed.
-  **
-  ** GetTickCount64() is available on Windows version from Windows Vista
-  ** and Windows Server 2008 up to nowadays. The resolution of the
-  ** function is limited to the resolution of the system timer, which
-  ** is typically in the range of 10 milliseconds to 16 milliseconds.
-  */
   struct timeval now;
-#if defined(_WIN32_WINNT) && (_WIN32_WINNT >= 0x0600)
-  ULONGLONG milliseconds = GetTickCount64();
-#else
-  DWORD milliseconds = GetTickCount();
+  if(tool_isVistaOrGreater) { /* QPC timer might have issues pre-Vista */
+    LARGE_INTEGER count;
+    QueryPerformanceCounter(&count);
+    now.tv_sec = (long)(count.QuadPart / tool_freq.QuadPart);
+    now.tv_usec = (long)((count.QuadPart % tool_freq.QuadPart) * 1000000 /
+                         tool_freq.QuadPart);
+  }
+  else {
+    /* Disable /analyze warning that GetTickCount64 is preferred  */
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable:28159)
 #endif
-  now.tv_sec = (long)(milliseconds / 1000);
-  now.tv_usec = (milliseconds % 1000) * 1000;
+    DWORD milliseconds = GetTickCount();
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+
+    now.tv_sec = (long)(milliseconds / 1000);
+    now.tv_usec = (long)((milliseconds % 1000) * 1000);
+  }
   return now;
 }
 
@@ -65,7 +76,7 @@ struct timeval tvnow(void)
   struct timespec tsnow;
   if(0 == clock_gettime(CLOCK_MONOTONIC, &tsnow)) {
     now.tv_sec = tsnow.tv_sec;
-    now.tv_usec = tsnow.tv_nsec / 1000;
+    now.tv_usec = (int)(tsnow.tv_nsec / 1000);
   }
   /*
   ** Even when the configure process has truly detected monotonic clock
@@ -77,7 +88,7 @@ struct timeval tvnow(void)
     (void)gettimeofday(&now, NULL);
 #else
   else {
-    now.tv_sec = (long)time(NULL);
+    now.tv_sec = time(NULL);
     now.tv_usec = 0;
   }
 #endif
@@ -106,7 +117,7 @@ struct timeval tvnow(void)
   ** time() returns the value of time in seconds since the Epoch.
   */
   struct timeval now;
-  now.tv_sec = (long)time(NULL);
+  now.tv_sec = time(NULL);
   now.tv_usec = 0;
   return now;
 }
@@ -123,4 +134,28 @@ long tvdiff(struct timeval newer, struct timeval older)
 {
   return (long)(newer.tv_sec-older.tv_sec)*1000+
     (long)(newer.tv_usec-older.tv_usec)/1000;
+}
+
+/* Case insensitive compare. Accept NULL pointers. */
+int struplocompare(const char *p1, const char *p2)
+{
+  if(!p1)
+    return p2? -1: 0;
+  if(!p2)
+    return 1;
+#ifdef HAVE_STRCASECMP
+  return strcasecmp(p1, p2);
+#elif defined(HAVE_STRCMPI)
+  return strcmpi(p1, p2);
+#elif defined(HAVE_STRICMP)
+  return stricmp(p1, p2);
+#else
+  return strcmp(p1, p2);
+#endif
+}
+
+/* Indirect version to use as qsort callback. */
+int struplocompare4sort(const void *p1, const void *p2)
+{
+  return struplocompare(* (char * const *) p1, * (char * const *) p2);
 }

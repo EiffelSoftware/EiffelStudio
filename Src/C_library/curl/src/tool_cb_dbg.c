@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at https://curl.haxx.se/docs/copyright.html.
+ * are also available at https://curl.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -17,6 +17,8 @@
  *
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
+ *
+ * SPDX-License-Identifier: curl
  *
  ***************************************************************************/
 #include "tool_setup.h"
@@ -26,51 +28,108 @@
 #include "curlx.h"
 
 #include "tool_cfgable.h"
-#include "tool_convert.h"
 #include "tool_msgs.h"
 #include "tool_cb_dbg.h"
 #include "tool_util.h"
 
 #include "memdebug.h" /* keep this as LAST include */
 
-static void dump(const char *timebuf, const char *text,
+static void dump(const char *timebuf, const char *idsbuf, const char *text,
                  FILE *stream, const unsigned char *ptr, size_t size,
                  trace tracetype, curl_infotype infotype);
 
 /*
+ * Return the formatted HH:MM:SS for the tv_sec given.
+ * NOT thread safe.
+ */
+static const char *hms_for_sec(time_t tv_sec)
+{
+  static time_t cached_tv_sec;
+  static char hms_buf[12];
+  static time_t epoch_offset;
+  static int known_epoch;
+
+  if(tv_sec != cached_tv_sec) {
+    struct tm *now;
+    time_t secs;
+    /* recalculate */
+    if(!known_epoch) {
+      epoch_offset = time(NULL) - tv_sec;
+      known_epoch = 1;
+    }
+    secs = epoch_offset + tv_sec;
+    /* !checksrc! disable BANNEDFUNC 1 */
+    now = localtime(&secs);  /* not thread safe but we don't care */
+    msnprintf(hms_buf, sizeof(hms_buf), "%02d:%02d:%02d",
+              now->tm_hour, now->tm_min, now->tm_sec);
+    cached_tv_sec = tv_sec;
+  }
+  return hms_buf;
+}
+
+static void log_line_start(FILE *log, const char *timebuf,
+                           const char *idsbuf, curl_infotype type)
+{
+  /*
+   * This is the trace look that is similar to what libcurl makes on its
+   * own.
+   */
+  static const char * const s_infotype[] = {
+    "* ", "< ", "> ", "{ ", "} ", "{ ", "} "
+  };
+  if((timebuf && *timebuf) || (idsbuf && *idsbuf))
+    fprintf(log, "%s%s%s", timebuf, idsbuf, s_infotype[type]);
+  else
+    fputs(s_infotype[type], log);
+}
+
+#define TRC_IDS_FORMAT_IDS_1  "[%" CURL_FORMAT_CURL_OFF_T "-x] "
+#define TRC_IDS_FORMAT_IDS_2  "[%" CURL_FORMAT_CURL_OFF_T "-%" \
+                                   CURL_FORMAT_CURL_OFF_T "] "
+/*
 ** callback for CURLOPT_DEBUGFUNCTION
 */
-
 int tool_debug_cb(CURL *handle, curl_infotype type,
                   char *data, size_t size,
                   void *userdata)
 {
   struct OperationConfig *operation = userdata;
   struct GlobalConfig *config = operation->global;
-  FILE *output = config->errors;
+  FILE *output = tool_stderr;
   const char *text;
   struct timeval tv;
-  struct tm *now;
   char timebuf[20];
-  time_t secs;
-  static time_t epoch_offset;
-  static int    known_offset;
+  /* largest signed 64bit is: 9,223,372,036,854,775,807
+   * max length in decimal: 1 + (6*3) = 19
+   * formatted via TRC_IDS_FORMAT_IDS_2 this becomes 2 + 19 + 1 + 19 + 2 = 43
+   * negative xfer-id are not printed, negative conn-ids use TRC_IDS_FORMAT_1
+   */
+  char idsbuf[60];
+  curl_off_t xfer_id, conn_id;
 
   (void)handle; /* not used */
 
   if(config->tracetime) {
     tv = tvnow();
-    if(!known_offset) {
-      epoch_offset = time(NULL) - tv.tv_sec;
-      known_offset = 1;
-    }
-    secs = epoch_offset + tv.tv_sec;
-    now = localtime(&secs);  /* not thread safe but we don't care */
-    snprintf(timebuf, sizeof(timebuf), "%02d:%02d:%02d.%06ld ",
-             now->tm_hour, now->tm_min, now->tm_sec, (long)tv.tv_usec);
+    msnprintf(timebuf, sizeof(timebuf), "%s.%06ld ",
+              hms_for_sec(tv.tv_sec), (long)tv.tv_usec);
   }
   else
     timebuf[0] = 0;
+
+  if(handle && config->traceids &&
+     !curl_easy_getinfo(handle, CURLINFO_XFER_ID, &xfer_id) && xfer_id >= 0) {
+    if(!curl_easy_getinfo(handle, CURLINFO_CONN_ID, &conn_id) &&
+        conn_id >= 0) {
+      msnprintf(idsbuf, sizeof(idsbuf), TRC_IDS_FORMAT_IDS_2,
+                xfer_id, conn_id);
+    }
+    else {
+      msnprintf(idsbuf, sizeof(idsbuf), TRC_IDS_FORMAT_IDS_1, xfer_id);
+    }
+  }
+  else
+    idsbuf[0] = 0;
 
   if(!config->trace_stream) {
     /* open for append */
@@ -78,7 +137,7 @@ int tool_debug_cb(CURL *handle, curl_infotype type,
       config->trace_stream = stdout;
     else if(!strcmp("%", config->trace_dump))
       /* Ok, this is somewhat hackish but we do it undocumented for now */
-      config->trace_stream = config->errors;  /* aka stderr */
+      config->trace_stream = tool_stderr;
     else {
       config->trace_stream = fopen(config->trace_dump, FOPEN_WRITETEXT);
       config->trace_fopened = TRUE;
@@ -94,25 +153,18 @@ int tool_debug_cb(CURL *handle, curl_infotype type,
   }
 
   if(config->tracetype == TRACE_PLAIN) {
-    /*
-     * This is the trace look that is similar to what libcurl makes on its
-     * own.
-     */
-    static const char * const s_infotype[] = {
-      "*", "<", ">", "{", "}", "{", "}"
-    };
-    size_t i;
-    size_t st = 0;
     static bool newl = FALSE;
     static bool traced_data = FALSE;
 
     switch(type) {
     case CURLINFO_HEADER_OUT:
       if(size > 0) {
+        size_t st = 0;
+        size_t i;
         for(i = 0; i < size - 1; i++) {
           if(data[i] == '\n') { /* LF */
             if(!newl) {
-              fprintf(output, "%s%s ", timebuf, s_infotype[type]);
+              log_line_start(output, timebuf, idsbuf, type);
             }
             (void)fwrite(data + st, i - st + 1, 1, output);
             st = i + 1;
@@ -120,7 +172,7 @@ int tool_debug_cb(CURL *handle, curl_infotype type,
           }
         }
         if(!newl)
-          fprintf(output, "%s%s ", timebuf, s_infotype[type]);
+          log_line_start(output, timebuf, idsbuf, type);
         (void)fwrite(data + st, i - st + 1, 1, output);
       }
       newl = (size && (data[size - 1] != '\n')) ? TRUE : FALSE;
@@ -129,7 +181,7 @@ int tool_debug_cb(CURL *handle, curl_infotype type,
     case CURLINFO_TEXT:
     case CURLINFO_HEADER_IN:
       if(!newl)
-        fprintf(output, "%s%s ", timebuf, s_infotype[type]);
+        log_line_start(output, timebuf, idsbuf, type);
       (void)fwrite(data, size, 1, output);
       newl = (size && (data[size - 1] != '\n')) ? TRUE : FALSE;
       traced_data = FALSE;
@@ -143,10 +195,11 @@ int tool_debug_cb(CURL *handle, curl_infotype type,
            to stderr or stdout, we don't display the alert about the data not
            being shown as the data _is_ shown then just not via this
            function */
-        if(!config->isatty || ((output != stderr) && (output != stdout))) {
+        if(!config->isatty ||
+           ((output != tool_stderr) && (output != stdout))) {
           if(!newl)
-            fprintf(output, "%s%s ", timebuf, s_infotype[type]);
-          fprintf(output, "[%zd bytes data]\n", size);
+            log_line_start(output, timebuf, idsbuf, type);
+          fprintf(output, "[%zu bytes data]\n", size);
           newl = FALSE;
           traced_data = TRUE;
         }
@@ -161,32 +214,9 @@ int tool_debug_cb(CURL *handle, curl_infotype type,
     return 0;
   }
 
-#ifdef CURL_DOES_CONVERSIONS
-  /* Special processing is needed for CURLINFO_HEADER_OUT blocks
-   * if they contain both headers and data (separated by CRLFCRLF).
-   * We dump the header text and then switch type to CURLINFO_DATA_OUT.
-   */
-  if((type == CURLINFO_HEADER_OUT) && (size > 4)) {
-    size_t i;
-    for(i = 0; i < size - 4; i++) {
-      if(memcmp(&data[i], "\r\n\r\n", 4) == 0) {
-        /* dump everything through the CRLFCRLF as a sent header */
-        text = "=> Send header";
-        dump(timebuf, text, output, (unsigned char *)data, i + 4,
-             config->tracetype, type);
-        data += i + 3;
-        size -= i + 4;
-        type = CURLINFO_DATA_OUT;
-        data += 1;
-        break;
-      }
-    }
-  }
-#endif /* CURL_DOES_CONVERSIONS */
-
   switch(type) {
   case CURLINFO_TEXT:
-    fprintf(output, "%s== Info: %s", timebuf, data);
+    fprintf(output, "%s%s== Info: %.*s", timebuf, idsbuf, (int)size, data);
     /* FALLTHROUGH */
   default: /* in case a new one is introduced to shock us */
     return 0;
@@ -211,12 +241,12 @@ int tool_debug_cb(CURL *handle, curl_infotype type,
     break;
   }
 
-  dump(timebuf, text, output, (unsigned char *) data, size, config->tracetype,
-       type);
+  dump(timebuf, idsbuf, text, output, (unsigned char *) data, size,
+       config->tracetype, type);
   return 0;
 }
 
-static void dump(const char *timebuf, const char *text,
+static void dump(const char *timebuf, const char *idsbuf, const char *text,
                  FILE *stream, const unsigned char *ptr, size_t size,
                  trace tracetype, curl_infotype infotype)
 {
@@ -229,7 +259,8 @@ static void dump(const char *timebuf, const char *text,
     /* without the hex output, we can fit more on screen */
     width = 0x40;
 
-  fprintf(stream, "%s%s, %zd bytes (0x%zx)\n", timebuf, text, size, size);
+  fprintf(stream, "%s%s%s, %zu bytes (0x%zx)\n", timebuf, idsbuf,
+          text, size, size);
 
   for(i = 0; i < size; i += width) {
 
@@ -252,21 +283,9 @@ static void dump(const char *timebuf, const char *text,
         i += (c + 2 - width);
         break;
       }
-#ifdef CURL_DOES_CONVERSIONS
-      /* repeat the 0D0A check above but use the host encoding for CRLF */
-      if((tracetype == TRACE_ASCII) &&
-         (i + c + 1 < size) && (ptr[i + c] == '\r') &&
-         (ptr[i + c + 1] == '\n')) {
-        i += (c + 2 - width);
-        break;
-      }
-      /* convert to host encoding and print this character */
-      fprintf(stream, "%c", convert_char(infotype, ptr[i + c]));
-#else
       (void)infotype;
-      fprintf(stream, "%c", ((ptr[i + c] >= 0x20) && (ptr[i + c] < 0x80)) ?
+      fprintf(stream, "%c", ((ptr[i + c] >= 0x20) && (ptr[i + c] < 0x7F)) ?
               ptr[i + c] : UNPRINTABLE_CHAR);
-#endif /* CURL_DOES_CONVERSIONS */
       /* check again for 0D0A, to avoid an extra \n if it's at width */
       if((tracetype == TRACE_ASCII) &&
          (i + c + 2 < size) && (ptr[i + c + 1] == 0x0D) &&
@@ -279,4 +298,3 @@ static void dump(const char *timebuf, const char *text,
   }
   fflush(stream);
 }
-

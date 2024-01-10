@@ -109,7 +109,7 @@ feature {NONE} -- Externals
 	frozen couple_object_id_with_gtk_object (a_gtk_object: POINTER; a_object_id: INTEGER)
 			-- Associate GtkObject `a_gtk_object' with object id `a_object_id'
 		external
-			"C inline use %"ev_any_imp.h%""
+			"C inline use %"ev_gtk.h%""
 		alias
 			"[
 	            g_object_set_data (
@@ -156,17 +156,14 @@ feature {EV_ANY_I} -- Implementation
 
 	on_activate
 			-- `Current' has been activated.
-		local
-			p_imp: detachable EV_MENU_ITEM_LIST_IMP
 		do
-			p_imp ?= parent_imp
-			if p_imp /= Void then
+			if attached {EV_MENU_ITEM_LIST_IMP} parent_imp as p_imp then
 				if p_imp.item_select_actions_internal /= Void then
 					p_imp.item_select_actions.call ([attached_interface])
 				end
 			end
-			if select_actions_internal /= Void then
-				select_actions_internal.call (Void)
+			if attached select_actions_internal as acts then
+				acts.call (Void)
 			end
 		end
 
@@ -188,7 +185,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

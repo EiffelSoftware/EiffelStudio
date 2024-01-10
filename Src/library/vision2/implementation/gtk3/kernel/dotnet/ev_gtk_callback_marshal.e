@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 	free (a_pointer: POINTER)
 		do
 			debug("gtk_net")
-				print (generator + " free%N" )
+				print (generator + ".free%N" )
 			end
 
 			if attached {GC_HANDLE}.from_int_ptr (a_pointer) as h then
@@ -125,22 +125,19 @@ feature -- Implementation
 			--			and thus can be collected by the GC
 		do
 			debug("gtk_net")
-				print (generator + " signal_connect%N" )
+				print (generator + ".signal_connect ("+a_c_object.out +"," + a_signal_name.string.out + "," + an_agent.out + "," + invoke_after_handler.out + ")%N" )
 			end
 
-
 				-- How do we convert a ROUTINE to a Pointer.
-			dispatcher_procedure :=  {GC_HANDLE}.alloc(an_agent)
+			dispatcher_procedure :=  {GC_HANDLE}.alloc (an_agent)
 
-			last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
-				a_c_object,
-				a_signal_name.item,
-				{GC_HANDLE}.to_int_ptr (dispatcher_procedure),
-				invoke_after_handler
-			)
+			last_signal_connection_id := c_signal_connect (a_c_object,
+									a_signal_name.item,
+									{GC_HANDLE}.to_int_ptr (dispatcher_procedure),
+									invoke_after_handler)
 
 			debug("gtk_net")
-				print (generator + " after signal_connect%N" )
+				print (generator + ".signal_connect (..): AFTER%N" )
 			end
 
 			debug("gtk_signal")
@@ -159,6 +156,9 @@ feature -- Implementation
 				)
 			-- Signal connect, invoke after default handler.
 		do
+			debug("gtk_net")
+				print (generator + ".signal_connect_after ("+a_c_object.out +"," + a_signal_name.string.out + "," + an_agent.out + ")%N" )
+			end
 			signal_connect (a_c_object, a_signal_name, an_agent, True)
 		end
 
@@ -166,6 +166,9 @@ feature -- Implementation
 			-- Close connection `a_conn_id` for object `a_c_object`.
 			-- Note: the associated Eiffel agent will be "wean" by the run-time
 		do
+			debug("gtk_net")
+				print (generator + ".signal_disconnect ("+a_c_object.out +"," + a_conn_id.out + ")%N" )
+			end
 			{GTK2}.signal_disconnect (a_c_object, a_conn_id)
 		end
 
@@ -208,21 +211,37 @@ feature {NONE} -- Implementation
 			action: SYSTEM_OBJECT
 		do
 			debug("gtk_net")
-				print (generator + " marshal%N" )
+				print ("%N" + generator + ".marshal (" + action_ptr.out+"," + n_args.out + "," + args.out + "," + a_return_value.out + ") <<!>>%N")
+				if retry_count > 0 then
+					print (generator + ".marshal (..) retry_count=" + retry_count.out + "%N")
+				end
 			end
 			action := if attached {GC_HANDLE}.from_int_ptr (action_ptr) as h then h.target else Void end
-
-			if retry_count = 0 and then attached action then
+			if action = Void then
+				debug("gtk_net")
+					print (generator +  ".marshal(..) action is not set!%N")
+				end
+			elseif retry_count = 0 then
 				if attached {PROCEDURE [detachable TUPLE [POINTER]]} action as l_action then
 					debug("gtk_net")
-						print (generator +  "{PROCEDURE [detachable TUPLE [POINTER]]} " )
+						print (generator +  ".marshal(..) -> {PROCEDURE [detachable TUPLE [POINTER]]} %N")
+						print (generator +  ".marshal(..) -> " + l_action.out + "%N")
 					end
 					if n_args > 0 then
 						l_pointer_tuple := pointer_tuple
 						l_pointer_tuple.pointer := args
 					end
 					b := False
-					l_action.call (l_pointer_tuple)
+					if l_action.valid_operands (l_pointer_tuple) then
+						debug("gtk_net")
+							print (generator +  ".marshal(..)  before action.call (arg_1)%N")
+						end
+						l_action.call (l_pointer_tuple)
+					else
+						debug("gtk_net")
+							print (generator +  ".marshal(..)  cancel action.call due to invalid operands!%N")
+						end
+					end
 				elseif attached {FUNCTION [TUPLE, POINTER]} action as fct then
 					debug("gtk_net")
 						print (generator +  "{FUNCTION [TUPLE, POINTER]} " )
@@ -234,7 +253,13 @@ feature {NONE} -- Implementation
 						l_pointer_tuple.pointer := args
 					end
 					b := False
-					l_any := fct.item (l_pointer_tuple)
+					if fct.valid_operands (l_pointer_tuple) then
+						l_any := fct.item (l_pointer_tuple)
+					else
+						debug("gtk_net")
+							print (generator +  ".marshal(..)  cancel fct.item due to invalid operands!%N")
+						end
+					end
 					if attached {BOOLEAN} l_any as l_bool then
 						b := l_bool
 					end
@@ -249,7 +274,13 @@ feature {NONE} -- Implementation
 						l_pointer_tuple.pointer := args
 					end
 					b := False
-					l_any := fct.item (l_pointer_tuple)
+					if fct.valid_operands (l_pointer_tuple) then
+						l_any := fct.item (l_pointer_tuple)
+					else
+						debug("gtk_net")
+							print (generator +  ".marshal(..)  cancel fct.item due to invalid operands!%N")
+						end
+					end
 					if attached {BOOLEAN} l_any as l_bool then
 						b := l_bool
 					end
@@ -265,7 +296,13 @@ feature {NONE} -- Implementation
 						l_integer_pointer_tuple.pointer := args
 					end
 					b := False
-					l_any := fct.item (l_integer_pointer_tuple)
+					if fct.valid_operands (l_integer_pointer_tuple) then
+						l_any := fct.item (l_integer_pointer_tuple)
+					else
+						debug("gtk_net")
+							print (generator +  ".marshal(..)  cancel fct.item due to invalid operands!%N")
+						end
+					end
 					if attached {BOOLEAN} l_any as l_bool then
 						b := l_bool
 					end
@@ -286,12 +323,20 @@ feature {NONE} -- Implementation
 							print (generator +  "{PROCEDURE [TUPLE]} " )
 							print ("%N")
 						end
-						l_proc_action.call (l_integer_pointer_tuple)
+						if l_proc_action.open_count = 0 then
+							l_proc_action.call (Void)
+						elseif l_proc_action.valid_operands (l_integer_pointer_tuple) then
+							l_proc_action.call (l_integer_pointer_tuple)
+						else
+							debug("gtk_net")
+								print (generator +  ".marshal(..)  cancel proc_action.call due to invalid operands!%N")
+							end
+						end
 					end
 				end
 
 				debug("gtk_net")
-					print (generator + " marshal completed%N")
+					print (generator + ".marshal (..) completed%N")
 				end
 				if a_return_value /= default_pointer then
 					{GTK2}.g_value_set_boolean (a_return_value, b) -- TODO: #gtk check if this is ok to return FALSE?
@@ -299,7 +344,7 @@ feature {NONE} -- Implementation
 
 			elseif retry_count = 1 then
 				debug("gtk_net")
-					print (generator + " marshal retry%N")
+					print (generator + ".marshal (...) RETRY<1>%N")
 				end
 				check attached {EV_APPLICATION_IMP} (create {EV_ENVIRONMENT}).implementation.application_i as app_imp then
 					app_imp.on_exception_action (app_imp.new_exception)
@@ -347,10 +392,7 @@ feature {NONE} -- Tuple optimizations.
 
 feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 
-
-	frozen c_ev_gtk_callback_marshal_init (
-		a_marshal: like marshal_delegate; a_free: like free_delegate
-		)
+	frozen c_ev_gtk_callback_marshal_init (a_marshal: like marshal_delegate; a_free: like free_delegate)
 			-- See ev_gtk_callback_marshal.c
 		external
 			"C inline use <ev_gtk_callback_marshal.h>"
@@ -370,17 +412,20 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 			is_class: class
 		end
 
-
 feature {NONE} -- Externals
 
 	cgtk_set_dispatcher_object (dispatcher: POINTER)
 		external
-			"C macro signature (EIF_OBJECT) use %"ev_gtk_callback_marshal.h%""
+			"C inline use <ev_gtk_callback_marshal.h>"
+		alias
+			"cgtk_set_dispatcher_object($dispatcher)"
 		end
 
 	cgtk_release_dispatcher_object
 		external
-			"C [macro %"ev_gtk_callback_marshal.h%"]"
+			"C inline use <ev_gtk_callback_marshal.h>"
+		alias
+			"cgtk_release_dispatcher_object"
 		end
 
 feature -- Implementation
@@ -405,18 +450,50 @@ feature -- Implementation
 			is_class: class
 		end
 
-feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
+feature {EV_ANY_IMP} -- Disposal implementation
 
-	frozen set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;
-		c_object_dispose_address: POINTER)
-				-- Store Eiffel object_id in `gtk_object'.
-				-- Set up signal handlers.
-		external
-			"C macro use <ev_any_imp.h>"
-		ensure
-			is_class: class
+	frozen on_destroy_event (oid: INTEGER)
+			-- Dispose object associated with eif object id `oid`, if any and not yet destroyed.
+		do
+			debug("gtk_net")
+				-- print ("dispose oid="+ oid.out+"..%N")
+			end
+			if
+				oid >= 0 and then
+				attached {EV_ANY_IMP} eif_id_object (oid) as obj and then
+				not obj.is_destroyed
+			then
+				obj.c_object_dispose
+			end
 		end
 
+feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
+
+	frozen set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER)
+				-- Store Eiffel object_id in `gtk_object'.
+				-- Set up signal handlers.
+		do
+			c_g_object_set_eif_oid_data (a_c_object, eif_oid)
+			if {GTK}.gtk_is_tree_view_column (a_c_object) then
+				-- Signal destroy is not applicable to object type GtkTreeViewColumn
+			else
+				signal_connect (a_c_object, {EV_GTK_EVENT_STRINGS}.destroy_event_string, agent on_destroy_event (eif_oid), False)
+			end
+		end
+
+	frozen c_g_object_set_eif_oid_data (a_gtk_object: POINTER; a_object_id: INTEGER)
+			-- Associate GtkObject `a_gtk_object' with object id `a_object_id'
+		external
+			"C inline use %"ev_gtk.h%""
+		alias
+			"[
+				g_object_set_data (
+					GObject ($a_gtk_object),
+					"eif_oid",
+					(gpointer) (rt_int_ptr) $a_object_id
+				);
+			]"
+		end
 
 	frozen c_signal_connect (a_c_object: POINTER; a_signal_name: POINTER;
 		an_agent: POINTER; invoke_after_handler: BOOLEAN): INTEGER

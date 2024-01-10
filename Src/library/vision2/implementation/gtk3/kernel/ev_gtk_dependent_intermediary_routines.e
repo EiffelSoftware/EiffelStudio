@@ -22,29 +22,28 @@ feature -- Implementation
 	new_toolbar_item_select_actions_intermediary (a_object_id: INTEGER)
 			-- Intermediary agent for toolbar button select action
 		local
-			a_toolbar_button_imp: detachable EV_TOOL_BAR_BUTTON_IMP
-			a_radio_button_imp: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
+			obj: ANY
 		do
-			a_toolbar_button_imp ?= eif_id_object (a_object_id)
-			a_radio_button_imp ?= a_toolbar_button_imp
-			if a_radio_button_imp /= Void then
-				if a_radio_button_imp.is_selected and then attached a_radio_button_imp.select_actions_internal as l_radio_button_select_actions then
+			obj := eif_id_object (a_object_id)
+			if attached {EV_TOOL_BAR_RADIO_BUTTON_IMP} obj as a_radio_button_imp then
+				if
+					a_radio_button_imp.is_selected and then
+					attached a_radio_button_imp.select_actions_internal as l_radio_button_select_actions
+				then
 					l_radio_button_select_actions.call (Void)
 				end
-			elseif a_toolbar_button_imp /= Void then
+			elseif attached {EV_TOOL_BAR_BUTTON_IMP} obj as a_toolbar_button_imp then
 				a_toolbar_button_imp.call_select_actions
 			end
 		end
 
 	pnd_deferred_parent_start_transport_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Start of pick and drop transport
-		local
-			pnd_par: detachable EV_PND_DEFERRED_ITEM_PARENT
 		do
-			pnd_par ?= c_get_eif_reference_from_object_id (a_c_object)
-			check pnd_par /= Void end
-			if pnd_par /= Void then
+			if attached {EV_PND_DEFERRED_ITEM_PARENT} eif_object_from_c (a_c_object) as pnd_par then
 				pnd_par.on_mouse_button_event (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			else
+				check is_pnd_par: False end
 			end
 		end
 
@@ -62,10 +61,11 @@ feature -- Implementation
 		local
 			a_column_ptr: POINTER
 			temp_width: INTEGER
-			a_mcl: detachable EV_MULTI_COLUMN_LIST_IMP
 		do
-			a_mcl ?= eif_id_object (a_object_id)
-			if a_mcl /= Void and then a_mcl.column_resized_actions_internal /= Void then
+			if
+				attached {EV_MULTI_COLUMN_LIST_IMP} eif_id_object (a_object_id) as a_mcl and then
+				a_mcl.column_resized_actions_internal /= Void
+			then
 				if a_column > 0 then
 					a_column_ptr := {GTK2}.gtk_tree_view_get_column (a_mcl.tree_view, a_column - 1)
 					temp_width := {GTK2}.gtk_tree_view_column_get_width (a_column_ptr)
@@ -82,11 +82,12 @@ feature -- Implementation
 	text_buffer_mark_set_intermediary (a_object_id: INTEGER; nargs: INTEGER; args: POINTER)
 			-- Used for caret positioning events
 		local
-			a_rich_text: detachable EV_RICH_TEXT_IMP
 			a_text_iter, a_text_mark: POINTER
 		do
-			a_rich_text ?= eif_id_object (a_object_id)
-			if a_rich_text /= Void and then not a_rich_text.is_destroyed then
+			if
+				attached {EV_RICH_TEXT_IMP} eif_id_object (a_object_id) as a_rich_text and then
+				not a_rich_text.is_destroyed
+			then
 				a_text_iter := {GTK2}.gtk_value_pointer ({GTK2}.g_value_array_i_th (args, 1))
 				a_text_mark := {GTK2}.gtk_value_pointer ({GTK2}.g_value_array_i_th (args, 2))
 				a_rich_text.on_text_mark_changed (a_text_iter, a_text_mark )
@@ -96,12 +97,13 @@ feature -- Implementation
 	tree_row_expansion_change_intermediary (a_object_id: INTEGER; is_expanded: BOOLEAN; nargs: INTEGER; args: POINTER)
 			-- Used for calling expansion actions for tree nodes
 		local
-			a_tree_imp: detachable EV_TREE_IMP
 			a_tree_node: detachable EV_TREE_NODE_IMP
 			a_tree_path: POINTER
 		do
-			a_tree_imp ?= eif_id_object (a_object_id)
-			if a_tree_imp /= Void and then not a_tree_imp.is_destroyed then
+			if
+				attached {EV_TREE_IMP} eif_id_object (a_object_id) as a_tree_imp and then
+				not a_tree_imp.is_destroyed
+			then
 				a_tree_path := {GTK2}.gtk_value_pointer ({GTK2}.gtk_args_array_i_th (args, 1))
 				a_tree_node := a_tree_imp.node_from_tree_path (a_tree_path)
 				if is_expanded then
@@ -121,11 +123,12 @@ feature -- Implementation
 	boolean_cell_renderer_toggle_intermediary (a_object_id: INTEGER; nargs: INTEGER; args: POINTER)
 			-- Called when a cell renderer is toggled (EV_CHECKABLE_LIST)
 		local
-			a_list_imp: detachable EV_GTK_TREE_VIEW
 			a_tree_path_str: POINTER
 		do
-			a_list_imp ?= eif_id_object (a_object_id)
-			if a_list_imp /= Void and then not a_list_imp.is_destroyed then
+			if
+				attached {EV_GTK_TREE_VIEW} eif_id_object (a_object_id) as a_list_imp and then
+				not a_list_imp.is_destroyed
+			then
 				a_tree_path_str := {GTK2}.gtk_value_pointer ({GTK2}.gtk_args_array_i_th (args, 0))
 				a_list_imp.on_tree_path_toggle (a_tree_path_str)
 			end
@@ -170,28 +173,25 @@ feature -- Implementation
 	toolbar_item_select_actions_intermediary (a_object_id: INTEGER)
 			-- Intermediary agent for toolbar button select action
 		local
-			a_toolbar_button_imp: detachable EV_TOOL_BAR_BUTTON_IMP
-			a_radio_button_imp: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
+			obj: ANY
 		do
-			a_toolbar_button_imp ?= eif_id_object (a_object_id)
-			a_radio_button_imp ?= a_toolbar_button_imp
-			if a_radio_button_imp /= Void then
+			obj := eif_id_object (a_object_id)
+			if attached {EV_TOOL_BAR_RADIO_BUTTON_IMP} obj as a_radio_button_imp then
 				if a_radio_button_imp.is_selected and then attached a_radio_button_imp.select_actions_internal as l_radio_button_select_actions then
 					l_radio_button_select_actions.call (Void)
 				end
-			elseif a_toolbar_button_imp /= Void and then attached a_toolbar_button_imp.select_actions_internal as l_toolbar_button_select_actions then
+			elseif
+				attached {EV_TOOL_BAR_BUTTON_IMP} obj as a_toolbar_button_imp and then
+				attached a_toolbar_button_imp.select_actions_internal as l_toolbar_button_select_actions
+			then
 				l_toolbar_button_select_actions.call (Void)
 			end
 		end
 
 	gdk_event_dispatcher (a_object_id: INTEGER; n_args: INTEGER; args: POINTER)
 			-- Intermediary agent for gdk events.
-		local
-			l_any_imp: detachable EV_ANY_IMP
 		do
-			l_any_imp ?= eif_id_object (a_object_id)
-			check l_any_imp /= Void end
-			if l_any_imp /= Void then
+			if attached {EV_ANY_IMP}  eif_id_object (a_object_id) as l_any_imp then
 				l_any_imp.process_gdk_event (n_args, args)
 			else
 				check event_object_not_coupled: False end
@@ -200,18 +200,35 @@ feature -- Implementation
 
 feature {EV_ANY_I} -- Externals
 
-	frozen c_get_eif_reference_from_object_id (a_c_object: POINTER): detachable EV_ANY_IMP
+	frozen eif_object_from_c, c_get_eif_reference_from_object_id (a_c_object: POINTER): detachable EV_ANY_IMP
 			-- Get Eiffel object from `a_c_object'.
+		local
+			l_eif_oid: INTEGER
+		do
+			l_eif_oid := get_object_data_eif_oid (a_c_object)
+			if
+				l_eif_oid >= 0 and then
+				attached {EV_ANY_IMP} eif_id_object (l_eif_oid) as res
+			then
+				Result := res
+			end
+		ensure
+			is_class: class
+		end
+
+	frozen get_object_data_eif_oid (a_c_object: POINTER): INTEGER
 		external
-			"C (GtkWidget*): EIF_REFERENCE | %"ev_any_imp.h%""
+			"C inline use <ev_gtk.h>"
 		alias
-			"c_ev_any_imp_get_eif_reference_from_object_id"
+			"[
+				(EIF_INTEGER) (rt_int_ptr) g_object_get_data (G_OBJECT($a_c_object), "eif_oid")
+			]"
 		ensure
 			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -221,18 +238,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES
-
-
-
-
-
-
-
-
-
-
-

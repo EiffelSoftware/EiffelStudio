@@ -342,7 +342,7 @@ feature {EV_ANY_I} -- Implementation
 					print (" " + cs.string.to_string_8)
 
 					print ("=" + w.out)
-					if attached {EV_ANY_IMP} ({EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}.c_get_eif_reference_from_object_id (w)) as l_any_imp then
+					if attached {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}.eif_object_from_c (w) as l_any_imp then
 						print (" {" + l_any_imp.generator + "}")
 					end
 				end
@@ -1527,7 +1527,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 				until
 					Result /= Void or else gtkwid.is_default_pointer
 				loop
-					Result := {EV_ANY_IMP}.eif_object_from_c (gtkwid)
+					Result := {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}.eif_object_from_c (gtkwid)
 					gtkwid := {GTK}.gtk_widget_get_parent (gtkwid)
 				end
 				if Result /= Void and then Result.is_destroyed then
@@ -1719,7 +1719,7 @@ feature {NONE} -- Externals
 		-- Pointer to the global static mutex
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

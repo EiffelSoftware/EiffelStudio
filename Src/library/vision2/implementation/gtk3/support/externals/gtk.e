@@ -880,6 +880,15 @@ feature -- Button
 			"C (GtkRadioButton*, GSList*) | <ev_gtk.h>"
 		end
 
+feature -- Tree view
+
+	frozen gtk_is_tree_view_column (w: POINTER): BOOLEAN
+		external
+			"C [macro <ev_gtk.h>]"
+		alias
+			"GTK_IS_TREE_VIEW_COLUMN"
+		end
+
 feature -- Menu
 
 	frozen gtk_is_menu (w: POINTER): BOOLEAN
@@ -1774,7 +1783,7 @@ feature -- Gobject Type
 		end
 
 note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

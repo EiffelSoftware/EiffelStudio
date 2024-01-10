@@ -285,16 +285,46 @@ feature -- Implementation
 			is_class: class
 		end
 
+feature {EV_ANY_IMP} -- Disposal implementation
+
+	frozen on_destroy_event (oid: INTEGER)
+			-- Dispose object associated with eif object id `oid`, if any and not yet destroyed.
+		do
+			if
+				oid >= 0 and then
+				attached {EV_ANY_IMP} eif_id_object (oid) as obj and then
+				not obj.is_destroyed
+			then
+				obj.c_object_dispose
+			end
+		end
+
 feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 
-	frozen set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;
-		c_object_dispose_address: POINTER)
+	frozen set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER)
 				-- Store Eiffel object_id in `gtk_object'.
 				-- Set up signal handlers.
+		do
+			set_object_data_eif_oid (a_c_object, eif_oid)
+			if {GTK}.gtk_is_tree_view_column (a_c_object) then
+				-- Signal destroy is not applicable to object type GtkTreeViewColumn
+			else
+				signal_connect (a_c_object, {EV_GTK_EVENT_STRINGS}.destroy_event_string, agent on_destroy_event (eif_oid), False)
+			end
+		end
+
+	frozen set_object_data_eif_oid (a_gtk_object: POINTER; a_object_id: INTEGER)
+			-- Associate GtkObject `a_gtk_object' with object id `a_object_id'
 		external
-			"C macro use <ev_any_imp.h>"
-		ensure
-			is_class: class
+			"C inline use %"ev_gtk.h%""
+		alias
+			"[
+	            g_object_set_data (
+	                G_OBJECT ($a_gtk_object),
+	                "eif_oid",
+	                (gpointer) (rt_int_ptr) $a_object_id
+	            );
+			]"
 		end
 
 	frozen c_signal_connect (a_c_object: POINTER; a_signal_name: POINTER;
@@ -322,7 +352,7 @@ feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

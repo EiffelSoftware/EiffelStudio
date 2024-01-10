@@ -44,9 +44,9 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 
 OBJECTS = gtk3_eiffel.o ILgtk3_eiffel.o
 
-VISION_OBJECTS = io_watcher.o ev_any_imp.o ev_c_util.o ev_gtk_callback_marshal.o
+VISION_OBJECTS = io_watcher.o ev_c_util.o ev_gtk_callback_marshal.o
 
-IL_VISION_OBJECTS = ILev_any_imp.o ILev_c_util.o ILev_gtk_callback_marshal.o
+IL_VISION_OBJECTS = ILev_c_util.o ILev_gtk_callback_marshal.o
 
 ALL_OBJECTS = $(OBJECTS)
 
@@ -65,9 +65,6 @@ ILgtk3_eiffel.o: $(IL_VISION_OBJECTS)
 #.NET targets.
 #ILio_watcher.o: io_watcher.c
 #	$(CC) $(ILCFLAGS) $(OUTPUT_CMD)$@ -c $?
-
-ILev_any_imp.o: ev_any_imp.c
-	$(CC) $(ILCFLAGS) -c $? -o $@
 
 ILev_c_util.o: ev_c_util.c
 	$(CC) $(ILCFLAGS) -c $? -o $@

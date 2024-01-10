@@ -15,6 +15,8 @@ feature -- Event names
 
 	window_state_event_name: STRING = "window-state-event"
 
+	destroy_event_name: STRING = "destroy"
+
 	delete_event_name: STRING = "delete-event"
 
 	key_press_event_name: STRING = "key-press-event"
@@ -115,6 +117,13 @@ feature -- Event names
 			--
 		once
 			Result := window_state_event_name
+		end
+
+	destroy_event_string: EV_GTK_C_STRING
+		once
+			Result := destroy_event_name
+		ensure
+			instance_free: class
 		end
 
 	delete_event_string: EV_GTK_C_STRING
@@ -220,7 +229,7 @@ feature -- Event names
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -75,7 +75,7 @@ feature {EV_ANY_I} -- Access
 			if internal_id = 0 then
 				internal_id := eif_current_object_id
 			end
-			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, internal_id, $c_object_dispose) -- No ref count increase from the C code, handled by the previous line
+			app_implementation.gtk_marshal.set_eif_oid_in_c_object (l_c_object, internal_id) -- No ref count increase from the C code, handled by the previous line
 
 			c_object := l_c_object
 			if
@@ -125,10 +125,16 @@ feature {EV_ANY_I} -- Access
 
 	frozen eif_object_from_c (a_c_object: POINTER): detachable EV_ANY_IMP
 			-- Retrieve the EV_ANY_IMP stored in `a_c_object'.
-		external
-			"C inline use <ev_any_imp.h>"
-		alias
-			"c_ev_any_imp_get_eif_reference_from_object_id ($a_c_object)"
+		local
+			l_eif_oid: INTEGER
+		do
+			l_eif_oid := {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}.get_object_data_eif_oid (a_c_object)
+			if
+				l_eif_oid >= 0 and then
+				attached {EV_ANY_IMP} eif_id_object (l_eif_oid) as res
+			then
+				Result := res
+			end
 		ensure
 			is_class: class
 		end
@@ -343,6 +349,8 @@ feature {NONE} -- Implementation
 			end
 			Precursor {IDENTIFIED}
 		end
+
+feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation		
 
 	c_object_dispose
 			-- Called when `c_object' is destroyed.

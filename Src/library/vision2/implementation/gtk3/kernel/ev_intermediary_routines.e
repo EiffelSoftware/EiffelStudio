@@ -31,7 +31,7 @@ feature {EV_ANY_IMP} -- Notebook agent routines
 		local
 			gtkarg2: POINTER
 		do
-			if attached {EV_NOTEBOOK_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_notebook_imp then
+			if attached {EV_NOTEBOOK_IMP} eif_object_from_c (a_c_object) as l_notebook_imp then
 				gtkarg2 := {GTK2}.gtk_args_array_i_th (arguments, 1)
 				l_notebook_imp.page_switch ({GTK2}.gtk_value_uint (gtkarg2).to_integer_32)
 			end
@@ -42,7 +42,8 @@ feature -- map,unmap event
 	on_widget_mapped_signal_intermediary (a_c_object: POINTER; a_evt: POINTER)
 			-- Set mapped handling intermediary.
 		do
-			if attached {EV_WIDGET_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_widget_imp then
+
+			if attached {EV_WIDGET_IMP} eif_object_from_c (a_c_object) as l_widget_imp then
 				l_widget_imp.on_widget_mapped
 			end
 		end
@@ -50,7 +51,7 @@ feature -- map,unmap event
 	on_widget_unmapped_signal_intermediary (a_c_object: POINTER; a_evt: POINTER)
 			-- Set unmapped handling intermediary.
 		do
-			if attached {EV_WIDGET_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_widget_imp then
+			if attached {EV_WIDGET_IMP} eif_object_from_c (a_c_object) as l_widget_imp then
 				l_widget_imp.on_widget_unmapped
 			end
 		end
@@ -58,7 +59,7 @@ feature -- map,unmap event
 	on_widget_hide_signal_intermediary (a_c_object: POINTER)
 			-- Set ::hide handling intermediary.
 		do
-			if attached {EV_WIDGET_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_widget_imp then
+			if attached {EV_WIDGET_IMP} eif_object_from_c (a_c_object) as l_widget_imp then
 				l_widget_imp.on_widget_hidden
 			end
 		end
@@ -71,7 +72,7 @@ feature -- Draw and configure signal
 			-- 		False: execute remaining processing (including default)
 			--		True: stop all processing
 		do
-			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
+			if attached {EV_ANY_IMP} eif_object_from_c (a_c_object) as l_any_imp then
 				Result := l_any_imp.process_draw_event ({GTK2}.gtk_value_pointer (arguments))
 			end
 		end
@@ -84,7 +85,7 @@ feature -- Draw and configure signal
 		local
 			l_gdk_configure: POINTER
 		do
-			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
+			if attached {EV_ANY_IMP} eif_object_from_c (a_c_object) as l_any_imp then
 				l_gdk_configure := {GTK2}.gtk_value_pointer (arguments)
 				Result := l_any_imp.process_configure_event ({GDK}.gdk_event_configure_struct_x (l_gdk_configure), {GDK}.gdk_event_configure_struct_y (l_gdk_configure), {GDK}.gdk_event_configure_struct_width (l_gdk_configure), {GDK}.gdk_event_configure_struct_height (l_gdk_configure))
 			end
@@ -95,7 +96,7 @@ feature {EV_ANY_IMP} -- Scrolling event
 	scroll_event (a_c_object: POINTER; arguments: POINTER): BOOLEAN
 			-- "leave-notify-event" signal has been emitted.
 		do
-			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
+			if attached {EV_ANY_IMP} eif_object_from_c (a_c_object) as l_any_imp then
 				Result := l_any_imp.process_scroll_event ({GTK2}.gtk_value_pointer (arguments))
 			end
 		end
@@ -105,7 +106,7 @@ feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 	on_gauge_value_changed_intermediary (a_c_object: POINTER)
 			-- Gauge value changed
 		do
-			if attached {EV_GAUGE_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_gauge_imp then
+			if attached {EV_GAUGE_IMP} eif_object_from_c (a_c_object) as l_gauge_imp then
 				l_gauge_imp.value_changed_handler
 			else
 				check is_gauge_imp: False end
@@ -149,7 +150,7 @@ feature {EV_ANY_IMP} -- Text component agent routines
 	text_component_change_intermediary (a_c_object: POINTER)
 			-- Changed
 		do
-			check attached {EV_TEXT_COMPONENT_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_text_component_imp then
+			check attached {EV_TEXT_COMPONENT_IMP} eif_object_from_c (a_c_object) as l_text_component_imp then
 				l_text_component_imp.on_change_actions
 			end
 		end
@@ -157,21 +158,21 @@ feature {EV_ANY_IMP} -- Text component agent routines
 	text_field_return_intermediary (a_c_object: POINTER)
 			-- Return
 		do
-			check attached {EV_TEXT_FIELD_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_text_field_imp then
+			check attached {EV_TEXT_FIELD_IMP} eif_object_from_c (a_c_object) as l_text_field_imp then
 				if attached l_text_field_imp.return_actions_internal as l_text_field_return_actions then
 					l_text_field_return_actions.call (Void)
 				end
 			end
 		end
 
-feature -- Button agent routines	
+feature -- Button agent routines
 
 	button_select_intermediary (a_c_object: POINTER)
 			-- Selected
 		local
 			l_any_imp: detachable EV_ANY_IMP
 		do
-			l_any_imp := c_get_eif_reference_from_object_id (a_c_object)
+			l_any_imp := eif_object_from_c (a_c_object)
 			if
 				attached {EV_RADIO_BUTTON_IMP} l_any_imp as l_rad_imp and then
 				not l_rad_imp.is_selected
@@ -192,7 +193,7 @@ feature {EV_ANY_IMP} -- Menu agent routines
 			-- Item activated
 		do
 			if
-				attached {EV_MENU_ITEM_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_menu_item_imp and then
+				attached {EV_MENU_ITEM_IMP} eif_object_from_c (a_c_object) as l_menu_item_imp and then
 				l_menu_item_imp.allow_on_activate
 			then
 					-- Add event to idle actions so that menu may closed
@@ -206,7 +207,7 @@ feature {EV_ANY_IMP} -- Dialog agent routines
 	gtk_dialog_response_event (a_c_object: POINTER; arguments: POINTER): POINTER
 			-- Dialog "response" signal intermediary.
 		do
-			check attached {EV_STANDARD_DIALOG_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_sd then
+			check attached {EV_STANDARD_DIALOG_IMP} eif_object_from_c (a_c_object) as l_sd then
 				l_sd.on_response ({GTK2}.gtk_value_int (arguments))
 			end
 		end

@@ -203,7 +203,7 @@ feature -- Status report
 				until
 					Result /= Void or else gtkwid.is_default_pointer
 				loop
-					if attached {EV_WIDGET_IMP} ({EV_GTK_CALLBACK_MARSHAL}.c_get_eif_reference_from_object_id (gtkwid)) as w_imp then
+					if attached {EV_WIDGET_IMP} ({EV_GTK_CALLBACK_MARSHAL}.eif_object_from_c (gtkwid)) as w_imp then
 						Result := w_imp
 					else
 						gtkwid := {GTK}.gtk_widget_get_parent (gtkwid)
@@ -1173,7 +1173,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SCREEN note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

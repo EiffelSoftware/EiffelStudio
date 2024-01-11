@@ -488,7 +488,7 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 		alias
 			"[
 				g_object_set_data (
-					GObject ($a_gtk_object),
+					G_OBJECT ($a_gtk_object),
 					"eif_oid",
 					(gpointer) (rt_int_ptr) $a_object_id
 				);

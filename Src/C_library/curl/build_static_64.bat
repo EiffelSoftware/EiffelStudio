@@ -25,7 +25,7 @@ espawn "nmake RTLIBCFG=static /f Makefile.vc mode=static GEN_PDB=no DEBUG=no MAC
 
 cd ..
 mkdir spec\win64\static\lib
-copy %cd%\builds\libcurl-vc-x64-release-static-ipv6-sspi-winssl\lib\libcurl_a.lib  %cd%\spec\win64\static\lib
+copy %cd%\builds\libcurl-vc-x64-release-static-ipv6-sspi-schannel\lib\libcurl_a.lib  %cd%\spec\win64\static\lib
 
 
 IF exist %current_dir%builds ( 

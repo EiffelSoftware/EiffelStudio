@@ -25,7 +25,7 @@ IF "%ISE_PLATFORM%" NEQ "windows" set espawn_cmd=%espawn_cmd% --x86
 
 cd ..
 mkdir spec\windows\static\lib
-copy %cd%\builds\libcurl-vc-x86-release-static-ipv6-sspi-winssl\lib\libcurl_a.lib %cd%\spec\windows\static\lib
+copy %cd%\builds\libcurl-vc-x86-release-static-ipv6-sspi-schannel\lib\libcurl_a.lib %cd%\spec\windows\static\lib
 
 IF exist %current_dir%builds ( 
 	rd /s /q %current_dir%builds

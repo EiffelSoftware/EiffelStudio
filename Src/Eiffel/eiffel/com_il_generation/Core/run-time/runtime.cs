@@ -59,8 +59,7 @@ public delegate void EIFFEL_PROCEDURE_DELEGATE (object args);
 public delegate object EIFFEL_FUNCTION_DELEGATE (object args);
 public delegate void EIFFEL_EVENT_HANDLER (object sender, EIFFEL_EVENT_ARGS a);
 
-public delegate int GTK_MARSHAL_DISPATCHER_DELEGATE (IntPtr c_object, IntPtr signal, IntPtr agent, bool invoke_after_handler);
-
+public delegate int GTK_MARSHAL_DISPATCHER_DELEGATE (IntPtr action, int n_args, IntPtr args, IntPtr return_value);
 // Generic event arguments
 public class EIFFEL_EVENT_ARGS : EventArgs
 {

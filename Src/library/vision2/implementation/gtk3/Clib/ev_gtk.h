@@ -31,9 +31,12 @@ indexing
 #define EV_PRINTF_2(str, p1, p2) printf(str, p1, p1)
 
 #ifdef EIF_IL_DLL
-#define IL_EV_PRINTF(str) EV_PRINTF(str)
-#define IL_EV_PRINTF_1(str, p1) EV_PRINTF_1(str, p1)
-#define IL_EV_PRINTF_2(str, p1, p2) EV_PRINTF_2(str, p1, p1)
+/* 
+ * Uncomment the following definition when debugging .Net projects
+ */
+#define IL_EV_PRINTF(str) //EV_PRINTF(str)
+#define IL_EV_PRINTF_1(str, p1) //EV_PRINTF_1(str, p1)
+#define IL_EV_PRINTF_2(str, p1, p2) //EV_PRINTF_2(str, p1, p1)
 #else
 #define IL_EV_PRINTF(str)
 #define IL_EV_PRINTF_1(str, p1)

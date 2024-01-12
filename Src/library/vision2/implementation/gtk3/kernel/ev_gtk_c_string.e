@@ -40,13 +40,17 @@ feature {NONE} -- Initialization
 			n: like {STRING_8}.count
 			a: ANY
 		do
-			s := a_path.utf_8_name
-			n := s.count
-			item := {GTK}.g_malloc (n + 1)
-			a := s.to_c
-			item.memory_copy ($a, n + 1)
-			string_length := n
-			is_shared := False
+			if {PLATFORM}.is_dotnet then
+				set_with_eiffel_string (a_path.utf_8_name)
+			else
+				s := a_path.utf_8_name
+				n := s.count
+				item := {GTK}.g_malloc (n + 1)
+				a := s.to_c
+				item.memory_copy ($a, n + 1)
+				string_length := n
+				is_shared := False
+			end
 		end
 
 feature -- Access
@@ -61,76 +65,10 @@ feature -- Access
 			-- Locale string representation of the UTF8 string
 		local
 			l_ptr: MANAGED_POINTER
-			l_nat8: NATURAL_8
-			l_code: NATURAL_32
-			i, nb, cnt: INTEGER
 		do
-				-- TODO: Use `{UTF_CONVERTER}`.
-			from
-				i := 0
-				cnt := 0
-				nb := string_length
-				l_ptr := shared_pointer_helper
-				l_ptr.set_from_pointer (item, nb)
-				create Result.make (nb)
-				Result.set_count (nb)
-			until
-				i = nb
-			loop
-				l_nat8 := l_ptr.read_natural_8 (i)
-				cnt := cnt + 1
-				if l_nat8 <= 127 then
-						-- Form 0xxxxxxx.
-					Result.put (l_nat8.to_character_8, cnt)
-
-				elseif (l_nat8 & 0xE0) = 0xC0 then
-						-- Form 110xxxxx 10xxxxxx.
-					l_code := (l_nat8 & 0x1F).to_natural_32 |<< 6
-					i := i + 1
-					l_nat8 := l_ptr.read_natural_8 (i)
-					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.put (l_code.to_character_32, cnt)
-
-				elseif (l_nat8 & 0xF0) = 0xE0 then
-					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
-					l_code := (l_nat8 & 0x0F).to_natural_32 |<< 12
-					l_nat8 := l_ptr.read_natural_8 (i + 1)
-					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
-					l_nat8 := l_ptr.read_natural_8 (i + 2)
-					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.put (l_code.to_character_32, cnt)
-					i := i + 2
-
-				elseif (l_nat8 & 0xF8) = 0xF0 then
-					-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
-					l_code := (l_nat8 & 0x07).to_natural_32 |<< 18
-					l_nat8 := l_ptr.read_natural_8 (i + 1)
-					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 12)
-					l_nat8 := l_ptr.read_natural_8 (i + 2)
-					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
-					l_nat8 := l_ptr.read_natural_8 (i + 3)
-					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.put (l_code.to_character_32, cnt)
-					i := i + 3
-
-				elseif (l_nat8 & 0xFC) = 0xF8 then
-					-- Starts with 111110xx
-					-- This seems to be a 5 bytes character,
-					-- but UTF-8 is restricted to 4, then substitute with a space
-					Result.put (' ', cnt)
-					i := i + 4
-
-				else
-					-- Starts with 1111110x
-					-- This seems to be a 6 bytes character,
-					-- but UTF-8 is restricted to 4, then substitute with a space
-					Result.put (' ', cnt)
-					i := i + 5
-
-				end
-				i := i + 1
-			end
-			Result.set_count (cnt)
+			l_ptr := shared_pointer_helper
+			l_ptr.set_from_pointer (item, string_length)
+			Result := {UTF_CONVERTER}.utf_8_0_pointer_to_string_32 (l_ptr)
 
 				-- Reset shared pointer.
 			l_ptr.set_from_pointer (default_pointer, 0)

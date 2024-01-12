@@ -68,7 +68,7 @@ feature -- Access
 		do
 			l_ptr := shared_pointer_helper
 			l_ptr.set_from_pointer (item, string_length)
-			Result := {UTF_CONVERTER}.utf_8_0_pointer_to_string_32 (l_ptr)
+			Result := {UTF_CONVERTER}.utf_8_0_pointer_to_escaped_string_32 (l_ptr)
 
 				-- Reset shared pointer.
 			l_ptr.set_from_pointer (default_pointer, 0)

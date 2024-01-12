@@ -28,6 +28,8 @@ feature -- Status setting
 		require
 			valid_platform: not {PLATFORM}.is_dotnet
 		do
+		ensure
+			class
 		end
 
 	disable_tracing
@@ -35,6 +37,8 @@ feature -- Status setting
 		require
 			valid_platform: not {PLATFORM}.is_dotnet
 		do
+		ensure
+			class
 		end
 
 note

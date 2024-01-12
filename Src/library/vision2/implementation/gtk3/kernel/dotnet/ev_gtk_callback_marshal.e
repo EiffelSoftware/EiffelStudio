@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			-- Delegate for callbacks.
 
 	free_delegate: detachable WEL_ENUM_WINDOW_DELEGATE note option: stable attribute end
-			-- Delegate for callbacks.		
+			-- Delegate for callbacks.
 
 	procedure_delegate: detachable EIFFEL_PROCEDURE_DELEGATE
 
@@ -123,17 +123,21 @@ feature -- Implementation
 			--		- on connect the agent `an_agent` is eif_adopt-ed by the run-time
 			--		- on disconnect the eif_adopt-ed agent `an_agent` is eif_wean-ed by the run-time
 			--			and thus can be collected by the GC
+		local
+			l_agent_hdl: POINTER
 		do
-			debug("gtk_net")
-				print (generator + ".signal_connect ("+a_c_object.out +"," + a_signal_name.string.out + "," + an_agent.out + "," + invoke_after_handler.out + ")%N" )
-			end
 
 				-- How do we convert a ROUTINE to a Pointer.
 			dispatcher_procedure :=  {GC_HANDLE}.alloc (an_agent)
+			l_agent_hdl := {GC_HANDLE}.to_int_ptr (dispatcher_procedure)
+
+			debug("gtk_net")
+				print (generator + ".signal_connect ("+a_c_object.out +"," + a_signal_name.string.out + "," + an_agent.out + " -> "+ l_agent_hdl.out +"," + invoke_after_handler.out + ")%N" )
+			end
 
 			last_signal_connection_id := c_signal_connect (a_c_object,
 									a_signal_name.item,
-									{GC_HANDLE}.to_int_ptr (dispatcher_procedure),
+									l_agent_hdl,
 									invoke_after_handler)
 
 			debug("gtk_net")

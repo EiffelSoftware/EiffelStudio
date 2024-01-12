@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			if s.is_equal ("%R") then
 				output.append_text ("Key press string event occurred : Enter%N")
 			else
-				output.append_text ("Key press string event occurred : " + s + "%N")
+				output.append_text ({STRING_32} "Key press string event occurred : " + s + {STRING_32} "%N")
 			end
 		end
 

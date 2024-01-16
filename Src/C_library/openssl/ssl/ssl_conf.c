@@ -898,12 +898,9 @@ static int ctrl_switch_option(SSL_CONF_CTX *cctx, const ssl_conf_cmd_tbl *cmd)
     /* Find index of command in table */
     size_t idx = cmd - ssl_conf_cmds;
     const ssl_switch_tbl *scmd;
-
     /* Sanity check index */
-    if (idx >= OSSL_NELEM(ssl_cmd_switches)) {
-        ERR_raise(ERR_LIB_SSL, ERR_R_INTERNAL_ERROR);
+    if (idx >= OSSL_NELEM(ssl_cmd_switches))
         return 0;
-    }
     /* Obtain switches entry with same index */
     scmd = ssl_cmd_switches + idx;
     ssl_set_option(cctx, scmd->name_flags, scmd->option_value, 1);
@@ -919,33 +916,28 @@ int SSL_CONF_cmd(SSL_CONF_CTX *cctx, const char *cmd, const char *value)
     }
 
     if (!ssl_conf_cmd_skip_prefix(cctx, &cmd))
-        goto unknown_cmd;
+        return -2;
 
     runcmd = ssl_conf_cmd_lookup(cctx, cmd);
 
     if (runcmd) {
-        int rv = -3;
-
+        int rv;
         if (runcmd->value_type == SSL_CONF_TYPE_NONE) {
             return ctrl_switch_option(cctx, runcmd);
         }
         if (value == NULL)
-            goto bad_value;
+            return -3;
         rv = runcmd->cmd(cctx, value);
         if (rv > 0)
             return 2;
-        if (rv != -2)
-            rv = 0;
-
- bad_value:
+        if (rv == -2)
+            return -2;
         if (cctx->flags & SSL_CONF_FLAG_SHOW_ERRORS)
             ERR_raise_data(ERR_LIB_SSL, SSL_R_BAD_VALUE,
-                           "cmd=%s, value=%s", cmd,
-                           value != NULL ? value : "<EMPTY>");
-        return rv;
+                           "cmd=%s, value=%s", cmd, value);
+        return 0;
     }
 
- unknown_cmd:
     if (cctx->flags & SSL_CONF_FLAG_SHOW_ERRORS)
         ERR_raise_data(ERR_LIB_SSL, SSL_R_UNKNOWN_CMD_NAME, "cmd=%s", cmd);
 

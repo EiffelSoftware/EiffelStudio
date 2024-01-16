@@ -169,11 +169,8 @@ int X509v3_asid_add_inherit(ASIdentifiers *asid, int which)
     if (*choice == NULL) {
         if ((*choice = ASIdentifierChoice_new()) == NULL)
             return 0;
-        if (((*choice)->u.inherit = ASN1_NULL_new()) == NULL) {
-            ASIdentifierChoice_free(*choice);
-            *choice = NULL;
+        if (((*choice)->u.inherit = ASN1_NULL_new()) == NULL)
             return 0;
-        }
         (*choice)->type = ASIdentifierChoice_inherit;
     }
     return (*choice)->type == ASIdentifierChoice_inherit;
@@ -199,23 +196,18 @@ int X509v3_asid_add_id_or_range(ASIdentifiers *asid,
     default:
         return 0;
     }
-    if (*choice != NULL && (*choice)->type != ASIdentifierChoice_asIdsOrRanges)
+    if (*choice != NULL && (*choice)->type == ASIdentifierChoice_inherit)
         return 0;
     if (*choice == NULL) {
         if ((*choice = ASIdentifierChoice_new()) == NULL)
             return 0;
         (*choice)->u.asIdsOrRanges = sk_ASIdOrRange_new(ASIdOrRange_cmp);
-        if ((*choice)->u.asIdsOrRanges == NULL) {
-            ASIdentifierChoice_free(*choice);
-            *choice = NULL;
+        if ((*choice)->u.asIdsOrRanges == NULL)
             return 0;
-        }
         (*choice)->type = ASIdentifierChoice_asIdsOrRanges;
     }
     if ((aor = ASIdOrRange_new()) == NULL)
         return 0;
-    if (!sk_ASIdOrRange_reserve((*choice)->u.asIdsOrRanges, 1))
-        goto err;
     if (max == NULL) {
         aor->type = ASIdOrRange_id;
         aor->u.id = min;
@@ -228,8 +220,7 @@ int X509v3_asid_add_id_or_range(ASIdentifiers *asid,
         ASN1_INTEGER_free(aor->u.range->max);
         aor->u.range->max = max;
     }
-    /* Cannot fail due to the reservation above */
-    if (!ossl_assert(sk_ASIdOrRange_push((*choice)->u.asIdsOrRanges, aor)))
+    if (!(sk_ASIdOrRange_push((*choice)->u.asIdsOrRanges, aor)))
         goto err;
     return 1;
 

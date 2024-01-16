@@ -147,7 +147,6 @@ int tls_setup_write_buffer(OSSL_RECORD_LAYER *rl, size_t numwpipes,
     TLS_BUFFER *wb;
     size_t currpipe;
     size_t defltlen = 0;
-    size_t contenttypelen = 0;
 
     if (firstlen == 0 || (numwpipes > 1 && nextlen == 0)) {
         if (rl->isdtls)
@@ -155,26 +154,21 @@ int tls_setup_write_buffer(OSSL_RECORD_LAYER *rl, size_t numwpipes,
         else
             headerlen = SSL3_RT_HEADER_LENGTH;
 
-        /* TLSv1.3 adds an extra content type byte after payload data */
-        if (rl->version == TLS1_3_VERSION)
-            contenttypelen = 1;
-
 #if defined(SSL3_ALIGN_PAYLOAD) && SSL3_ALIGN_PAYLOAD != 0
         align = SSL3_ALIGN_PAYLOAD - 1;
 #endif
 
-        defltlen = align + headerlen + rl->eivlen + rl->max_frag_len
-                   + contenttypelen + SSL3_RT_SEND_MAX_ENCRYPTED_OVERHEAD;
+        defltlen = rl->max_frag_len + SSL3_RT_SEND_MAX_ENCRYPTED_OVERHEAD
+                   + headerlen + align + rl->eivlen;
 #ifndef OPENSSL_NO_COMP
         if (tls_allow_compression(rl))
             defltlen += SSL3_RT_MAX_COMPRESSED_OVERHEAD;
 #endif
         /*
          * We don't need to add eivlen here since empty fragments only occur
-         * when we don't have an explicit IV. The contenttype byte will also
-         * always be 0 in these protocol versions
+         * when we don't have an explicit IV
          */
-        if ((rl->options & SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS) == 0)
+        if (!(rl->options & SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS))
             defltlen += headerlen + align + SSL3_RT_SEND_MAX_ENCRYPTED_OVERHEAD;
     }
 

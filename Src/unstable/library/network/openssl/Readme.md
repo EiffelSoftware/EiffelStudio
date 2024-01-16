@@ -12,7 +12,7 @@ Previous Contributors:
 
 Supported Version
 =================
-OpenSSL version 1.1.1a.
+OpenSSL version 3.2.0
 
 
 1. OpenSSL Binaries 
@@ -45,10 +45,10 @@ How to build OpenSSL on Windows.
 ================================
 
 Requirements.
-	* Perl Installation    : http://www.activestate.com/activeperl/downloads
+	* Perl Installation    : http://strawberryperl.com
 	* OpenSSL source code  : http://www.openssl.org/source/
 	* C compiler (for example: Visual Studio)
-	* Netwide Assembler, a.k.a. NASM, available from http://www.nasm.us,is required if you intend to utilize assembler modules.
+	* Netwide Assembler, a.k.a. NASM, available from http://www.nasm.us is required if you intend to utilize assembler modules.
 
 
 How to build OpenSSL with VisualStudio  
@@ -95,13 +95,13 @@ Documentation
 
 
 
-#How to use the latest OpenSSL 1.1.1a on Ubuntu
+#How to use the latest OpenSSL 3.2.0 on Ubuntu
 ================================================
 
 ```bash
-$>wget https://www.openssl.org/source/openssl-1.1.1a.tar.gz
-$>tar xzvf openssl-1.1.1a.tar.gz
-$>cd openssl-1.1.1a
+$>wget https://www.openssl.org/source/openssl-3.2.0.tar.gz
+$>tar xzvf openssl-3.2.0.tar.gz
+$>cd openssl-3.2.0
 $>./config -Wl,--enable-new-dtags,-rpath,`$(LIBRPATH)`
 $>make
 $>sudo make install
@@ -131,5 +131,7 @@ http://mac-dev-env.patrickbougie.com/openssl/
 
 Using home-brew package manager
 
-`brew install openssl@1.1`
+https://formulae.brew.sh/formula/openssl@3
+
+`brew install openssl@3`
 

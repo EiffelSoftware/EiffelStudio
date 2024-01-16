@@ -10,17 +10,17 @@ inherit
 	MD_TABLE_ACCESS
 
 create
-	make
+	make_and_prepare
 
 feature {NONE} -- Initialization
 
-	make (tb: MD_TABLE; col_tb: MD_TABLE; a_column_value_function: FUNCTION [E, PE_LIST])
+	make_and_prepare (tb: MD_TABLE; col_tb: MD_TABLE; a_column_value_function: FUNCTION [E, PE_LIST]; a_is_using_additional_pointer_tables: BOOLEAN)
 		do
 			table := tb
 			table_for_column := col_tb
 			value_for := a_column_value_function
 			create remap.make (col_tb)
-			prepare (a_column_value_function)
+			prepare (a_column_value_function, a_is_using_additional_pointer_tables)
 		end
 
 feature -- Access
@@ -41,81 +41,76 @@ feature -- Access
 
 feature -- Preparation
 
-	prepare (a_value_for: FUNCTION [E, PE_LIST])
+	prepare (a_value_for: FUNCTION [E, PE_LIST]; a_is_using_additional_pointer_tables: BOOLEAN)
 		local
 			i,n, col_nb: NATURAL_32
 			tb: like table
 			p_list: PE_LIST
 			idx, e_index: NATURAL_32
 			l_indexes: like indexes
-			l_sorted_indexes: like sorted_indexes
+			l_processed_indexes: HASH_TABLE [NATURAL_32, NATURAL_32]
 			l_sorter: QUICK_SORTER [NATURAL_32]
-			c: CURSOR
 		do
+				-- FIXME: improve speed !!!
+
 			tb := table
 			col_nb := table_for_column.size
 				-- Get indexes
 			create l_indexes.make (tb.count)
 			indexes := l_indexes
 
-			create l_sorted_indexes.make (tb.count)
-			sorted_indexes := l_sorted_indexes
-			from
-				i := 1
-				n := tb.size
-			until
-				i > n
-			loop
-				if attached {E} tb [i] as e then
-					p_list := value_for (e)
-					if p_list.is_list_index_set then
-						if not l_sorted_indexes.has (p_list.index) then
-							l_sorted_indexes.force (p_list.index)
+			create sorted_indexes.make (tb.count)
+			if attached sorted_indexes as l_sorted_indexes then
+					-- Use `l_sorted_indexes` in this limited scope
+				from
+					i := 1
+					n := tb.size
+				until
+					i > n
+				loop
+					if attached {E} tb [i] as e then
+						p_list := value_for (e)
+						if p_list.is_list_index_set then
+							if not l_sorted_indexes.has (p_list.index) then
+								l_sorted_indexes.force (p_list.index)
+							end
+							l_indexes.force ([p_list, 0])
 						end
-						l_indexes.force ([p_list, 0])
-
+					else
+						check expected: False end
+	--					l_indexes.force (Void)
 					end
-				else
-					check expected: False end
---					l_indexes.force (Void)
+					i := i + 1
 				end
-				i := i + 1
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [NATURAL_32]})
+				l_sorter.sort (l_sorted_indexes)
+			else
+				check has_sorted_indexes: False end
 			end
-			create l_sorter.make (create {COMPARABLE_COMPARATOR [NATURAL_32]})
-			l_sorter.sort (l_sorted_indexes)
 
 				-- When an index is repeated, set the N-1 first occurences as NULL index
 			from
 				l_indexes.start
+				create l_processed_indexes.make (l_indexes.count)
 			until
 				l_indexes.off
 			loop
 				p_list := l_indexes.item_for_iteration.list_index
-				if p_list /= Void then
+				if p_list /= Void and then not p_list.is_null_index then
 					idx := p_list.index
+					check idx <= col_nb end
 					if idx > col_nb then
-						-- Index is count + 1, i.e NULL index
+							-- Index is count + 1, i.e NULL index
 						p_list.set_null_index
-					else
-						c := l_indexes.cursor
-						from
-							l_indexes.forth
-						until
-							l_indexes.after or p_list.is_null_index
-						loop
-							if
-								attached l_indexes.item_for_iteration as lst and then
-								lst.list_index.index = idx
-							then
-								p_list.set_null_index
-							end
-							l_indexes.forth
-						end
-						l_indexes.go_to (c)
+					elseif l_processed_indexes.has (idx) then
+							-- Index repeated ! set to null index
+						p_list.set_null_index
 					end
+					l_processed_indexes.force (idx, idx)
 				end
 				l_indexes.forth
 			end
+			l_processed_indexes.wipe_out
 
 				-- Compute each list count.
 				-- Get the index of the end of the list
@@ -140,6 +135,7 @@ feature -- Preparation
 				l_indexes.forth
 			end
 
+				-- Remove null indexes from `indexes`
 			from
 				l_indexes.start
 			until
@@ -151,6 +147,7 @@ feature -- Preparation
 					l_indexes.forth
 				end
 			end
+			check indexes_set: indexes = l_indexes end
 		end
 
 feature -- Apply token remapping
@@ -179,6 +176,7 @@ feature -- Apply token remapping
 		end
 
 	table_dump: STRING_8
+			-- Table string representation, mainly for debugging.
 		local
 			i: NATURAL_32
 			i_start, i_end: NATURAL_32
@@ -240,6 +238,7 @@ feature -- Apply token remapping
 		end
 
 	remapped_table_dump: STRING_8
+			-- Remapped table string representation, mainly for debugging.
 		local
 			i: NATURAL_32
 			i_start, i_end: NATURAL_32
@@ -302,6 +301,7 @@ feature -- Apply token remapping
 		end
 
 	remapped_indexes_dump: STRING_8
+			-- Table indexes representation, mainly for debugging.
 		local
 			i_start, i_end: NATURAL_32
 			col_name: STRING
@@ -349,14 +349,11 @@ feature -- Sorting
 		local
 			i: INTEGER
 			idx: NATURAL_32
---			tb: MD_TABLE
---			l_col_value_fct: like value_for
 			p_list: PE_LIST
 			prev, ref: NATURAL_32
 			prev_count, ref_count: INTEGER
 			lst: like indexes
 		do
---			tb := table
 			create Result.make (3)
 			prev := 0
 			prev_count := 0
@@ -371,21 +368,6 @@ feature -- Sorting
 				if prev > idx then
 					ref := prev
 					ref_count := prev_count
---					from
---						j := i - 2
---					until
---						j < lst.lower or done
---					loop
---						prev := remap.token (lst [j].list_index.index)
---						prev_count := lst [j].list_count
---						if prev > idx and prev < ref then
---							ref := prev
---							ref_count := prev_count
---						else
---							done := True
---						end
---						j := j - 1
---					end
 					Result.force ([ref, ref_count, idx, item.list_count])
 				end
 				prev := idx

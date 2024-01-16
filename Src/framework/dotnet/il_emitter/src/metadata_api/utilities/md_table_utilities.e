@@ -32,15 +32,35 @@ feature -- Saving preparation
 					print (fn)
 					print ("%N")
 				end
+				{MD_DBG_CHRONO}.start ("ensure_list_indexes_are_ordered")
 			end
-
 			ensure_list_indexes_are_ordered
-
+			debug ("il_emitter_table_map")
+				{MD_DBG_CHRONO}.stop ("ensure_list_indexes_are_ordered")
+				{MD_DBG_CHRONO}.start ("update_index_list_in_tables")
+			end
 				-- Update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)
 			update_index_list_in_tables
-
+			debug ("il_emitter_table_map")
+				{MD_DBG_CHRONO}.stop ("update_index_list_in_tables")
+				{MD_DBG_CHRONO}.start ("ensure_expected_tables_are_sorted")
+			end
 				-- Sort tables...
 			ensure_expected_tables_are_sorted
+			debug ("il_emitter_table_map")
+				{MD_DBG_CHRONO}.stop ("ensure_expected_tables_are_sorted")
+				if attached associated_filename as fn then
+					print ("-> File: ")
+					print (fn)
+					print ("%N")
+				end
+				print ({MD_DBG_CHRONO}.report_line ("ensure_list_indexes_are_ordered"))
+				print ({MD_DBG_CHRONO}.report_line ("update_index_list_in_tables"))
+				print ({MD_DBG_CHRONO}.report_line ("ensure_expected_tables_are_sorted"))
+				{MD_DBG_CHRONO}.remove ("ensure_list_indexes_are_ordered")
+				{MD_DBG_CHRONO}.remove ("update_index_list_in_tables")
+				{MD_DBG_CHRONO}.remove ("ensure_expected_tables_are_sorted")
+			end
 		end
 
 feature -- Access
@@ -260,7 +280,7 @@ feature -- Table sorting
 				-- Below the commented lines are related to the tables the compiler does not use for now [2023-07-13]
 --			ensure_table_is_sorted ({PE_TABLES}.tclasslayout)
 --			ensure_table_is_sorted ({PE_TABLES}.tconstant)
-			ensure_table_is_sorted ({PE_TABLES}.tcustomattribute)
+--			ensure_table_is_sorted ({PE_TABLES}.tcustomattribute)
 --			ensure_table_is_sorted ({PE_TABLES}.tdeclsecurity)
 --			ensure_table_is_sorted ({PE_TABLES}.tfieldlayout)
 --			ensure_table_is_sorted ({PE_TABLES}.tfieldmarshal)
@@ -268,9 +288,13 @@ feature -- Table sorting
 --			ensure_table_is_sorted ({PE_TABLES}.tgenericparam)
 --			ensure_table_is_sorted ({PE_TABLES}.tgenericparamconstraint)
 --			ensure_table_is_sorted ({PE_TABLES}.timplmap)
+
+
 			ensure_table_is_sorted ({PE_TABLES}.tinterfaceimpl)
 			ensure_table_is_sorted ({PE_TABLES}.tmethodimpl)
 			ensure_table_is_sorted ({PE_TABLES}.tmethodsemantics)
+
+
 --			ensure_table_is_sorted ({PE_TABLES}.tnestedclass)
 		end
 
@@ -357,17 +381,35 @@ feature -- Operation: List indexes sorting
 						-- FIXME: optimization = check first if the table are not order, and only in this case, use related Pointer table [2023-07-17]
 						-- TODO: for now, ParamPointer, PropertyPointer and EventPointer are not needed for Eiffel .net compilation, but to be safe
 						--		 this could be added as well.
-
+				debug ("il_emitter_table_map")
+					{MD_DBG_CHRONO}.start ("order-field")
+				end
 				ensure_field_list_column_is_ordered_using_field_pointer_table
+				debug ("il_emitter_table_map")
+					{MD_DBG_CHRONO}.stop ("order-field")
+					print ({MD_DBG_CHRONO}.report_line ("order-field"))
+
+					{MD_DBG_CHRONO}.start ("order-method")
+				end
 				ensure_method_list_column_is_ordered_using_method_pointer_table
+				debug ("il_emitter_table_map")
+					{MD_DBG_CHRONO}.stop ("order-method")
+					print ({MD_DBG_CHRONO}.report_line ("order-method"))
+
+					{MD_DBG_CHRONO}.start ("order-param")
+				end
 					-- Ensure ParamList column is ordered in MethodDef
-				ensure_param_list_column_is_ordered
+				ensure_param_list_column_is_ordered (True)
+				debug ("il_emitter_table_map")
+					{MD_DBG_CHRONO}.stop ("order-param")
+					print ({MD_DBG_CHRONO}.report_line ("order-param"))
+				end
 			else
 						-- Ensure FieldList and MethodList columns are ordered in TypeDef
-				ensure_field_list_column_is_ordered
-				ensure_method_list_column_is_ordered
+				ensure_field_list_column_is_ordered (False)
+				ensure_method_list_column_is_ordered (False)
 					-- Ensure ParamList column is ordered in MethodDef
-				ensure_param_list_column_is_ordered
+				ensure_param_list_column_is_ordered (False)
 			end
 		end
 
@@ -411,12 +453,12 @@ feature -- Operation: List indexes sorting using additional FieldPointer and Met
 						end
 					end
 					remap.commit
+
 					if not remap.is_empty then
 						-- Update tables with remapped tokens!
-						debug ("il_emitter_table_map")
+						debug ("il_emitter_table_map_dump")
 							print (remap.dump)
 						end
-
 							-- Updated tokens in the related tables (For instance: TypeDef table, ...)
 						create vis.make_using_pointer_table (remap)
 						vis.visit_emitter (emitter)
@@ -468,7 +510,7 @@ feature -- Operation: List indexes sorting using additional FieldPointer and Met
 					remap.commit
 					if not remap.is_empty then
 						-- Update tables with remapped tokens!
-						debug ("il_emitter_table_map")
+						debug ("il_emitter_table_map_dump")
 							print (remap.dump)
 						end
 
@@ -486,7 +528,7 @@ feature -- Operation: List indexes sorting using additional FieldPointer and Met
 
 feature -- Operation: List indexes sorting
 
-	ensure_field_list_column_is_ordered
+	ensure_field_list_column_is_ordered (a_is_using_additional_pointer_tables: BOOLEAN)
 			-- FieldList column sorting in TypeDef
 		local
 			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
@@ -496,11 +538,11 @@ feature -- Operation: List indexes sorting
 				attached typedef_table as tb and then
 				attached field_table as col_tb
 			then
-				create ut.make (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.fields end)
+				create ut.make_and_prepare (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.fields end, a_is_using_additional_pointer_tables)
 				sort_list_column (ut)
 				if not ut.remap.is_empty then
 					-- Update tables with remapped tokens!
-					debug ("il_emitter_table_map")
+					debug ("il_emitter_table_map_dump")
 						print (ut.remap.dump)
 					end
 					ut.apply_remapping
@@ -513,7 +555,7 @@ feature -- Operation: List indexes sorting
 			end
 		end
 
-	ensure_method_list_column_is_ordered
+	ensure_method_list_column_is_ordered (a_is_using_additional_pointer_tables: BOOLEAN)
 			-- MethodList column sorting in TypeDef
 		local
 			ut: MD_TABLE_COLUMN_UTILITIES [PE_TYPE_DEF_TABLE_ENTRY]
@@ -523,11 +565,11 @@ feature -- Operation: List indexes sorting
 				attached typedef_table as tb and then
 				attached methoddef_table as col_tb
 			then
-				create ut.make (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.methods end)
+				create ut.make_and_prepare (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.methods end, a_is_using_additional_pointer_tables)
 
 				sort_list_column (ut)
 				if not ut.remap.is_empty then
-					debug ("il_emitter_table_map")
+					debug ("il_emitter_table_map_dump")
 						print (ut.remap.dump)
 					end
 
@@ -539,7 +581,7 @@ feature -- Operation: List indexes sorting
 			end
 		end
 
-	ensure_param_list_column_is_ordered
+	ensure_param_list_column_is_ordered (a_is_using_additional_pointer_tables: BOOLEAN)
 			-- ParamList column sorting in MethodDef
 		local
 			ut: MD_TABLE_COLUMN_UTILITIES [PE_METHOD_DEF_TABLE_ENTRY]
@@ -549,18 +591,47 @@ feature -- Operation: List indexes sorting
 				attached methoddef_table as tb and then
 				attached param_table as col_tb
 			then
-				create ut.make (tb, col_tb, agent (e: PE_METHOD_DEF_TABLE_ENTRY): PE_LIST do Result := e.param_index end)
-
+				debug ("il_emitter_table_map")
+					{MD_DBG_CHRONO}.start ("param")
+					{MD_DBG_CHRONO}.start ("param.prepare")
+				end
+				create ut.make_and_prepare (tb, col_tb, agent (e: PE_METHOD_DEF_TABLE_ENTRY): PE_LIST do Result := e.param_index end, a_is_using_additional_pointer_tables)
+				debug ("il_emitter_table_map")
+					{MD_DBG_CHRONO}.stop ("param.prepare")
+					print ({MD_DBG_CHRONO}.report_line ("param.prepare"))
+					{MD_DBG_CHRONO}.start ("param.sort")
+				end
 				sort_list_column (ut)
+				debug ("il_emitter_table_map")
+					{MD_DBG_CHRONO}.stop ("param.sort")
+					print ({MD_DBG_CHRONO}.report_line ("param.sort"))
+				end
 				if not ut.remap.is_empty then
-					debug ("il_emitter_table_map")
+					debug ("il_emitter_table_map_dump")
 						print (ut.remap.dump)
 					end
-
+					debug ("il_emitter_table_map")
+						{MD_DBG_CHRONO}.start ("param.apply")
+					end
 					ut.apply_remapping
+					debug ("il_emitter_table_map")
+						{MD_DBG_CHRONO}.stop ("param.apply")
+						print ({MD_DBG_CHRONO}.report_line ("param.apply"))
+					end
 						-- Updated tokens in the related tables (For instance: TypeDef table, ...)
+					debug ("il_emitter_table_map")
+						{MD_DBG_CHRONO}.start ("param.visit")
+					end
 					create vis.make (ut.remap)
 					vis.visit_emitter (emitter)
+					debug ("il_emitter_table_map")
+						{MD_DBG_CHRONO}.stop ("param.visit")
+						print ({MD_DBG_CHRONO}.report_line ("param.visit"))
+					end
+				end
+				debug ("il_emitter_table_map")
+					{MD_DBG_CHRONO}.stop ("param")
+					print ({MD_DBG_CHRONO}.report_line ("param"))
 				end
 			end
 		end

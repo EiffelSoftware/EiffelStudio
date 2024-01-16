@@ -444,6 +444,7 @@ feature -- Properties
 			Result [use_settings_cmd_name] := use_settings_help
 			Result [app_info_cmd_name] := app_info_help
 			Result [version_cmd_name] := version_help
+			Result [metadata_cache_path_cmd_name] := metadata_cache_path_help
 -- Hide -compat and -experiment flags.
 --			Result [compat_cmd_name] := compat_help
 --			Result [experiment_cmd_name] := experiment_help
@@ -1704,24 +1705,24 @@ feature {NONE} -- Option extension
 		end
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

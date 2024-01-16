@@ -238,9 +238,11 @@ feature {NONE}
 
 	gc_stats_help: STRING_GENERAL do Result := locale.translation ("Show GC statistics") end
 
+	metadata_cache_path_help: STRING_GENERAL do Result := locale.translation ("Location of .NET MetadData consumer cache") end
+
 note
 	ca_ignore: "CA033", "CA033: too large class"
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

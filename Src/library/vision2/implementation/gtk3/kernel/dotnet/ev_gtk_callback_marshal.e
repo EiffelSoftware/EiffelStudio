@@ -46,7 +46,9 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize callbacks
 		once
-			print (generator + " initialize%N" )
+			debug("gtk_net")
+				print (generator + " initialize%N" )
+			end
 
 			create marshal_delegate.make (Current, $marshal)
 
@@ -269,7 +271,7 @@ feature {NONE} -- Implementation
 					end
 				elseif attached {PREDICATE [TUPLE [POINTER]]} action as fct then
 					debug("gtk_net")
-						print (generator +  "{PREDICATE [TUPLE [POINTER]]} " )
+						print (generator +  ".marshal -> " + fct.generating_type.out)
 						print ("%N")
 					end
 
@@ -279,6 +281,9 @@ feature {NONE} -- Implementation
 					end
 					b := False
 					if fct.valid_operands (l_pointer_tuple) then
+						debug("gtk_net")
+							print (generator +  ".marshal(..)  call fct.item with pointer tuple operands%N")
+						end
 						l_any := fct.item (l_pointer_tuple)
 					else
 						debug("gtk_net")

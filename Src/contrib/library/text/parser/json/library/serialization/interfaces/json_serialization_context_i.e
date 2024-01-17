@@ -6,6 +6,44 @@ note
 deferred class
 	JSON_SERIALIZATION_CONTEXT_I
 
+inherit
+	ANY
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Initialization
+
+	default_create
+		do
+			is_type_name_included := True
+			type_field_name := "$TYPE"
+		end
+
+feature -- Settings
+
+	is_type_name_included: BOOLEAN assign set_is_type_name_included
+			-- Is JSON output includes type name when possible?
+			-- Default: True
+
+	type_field_name: STRING assign sst_type_field_name
+			-- Field name to hold the type name informations
+
+feature -- Settings change
+
+	set_is_type_name_included (b: BOOLEAN)
+			-- Set `is_type_name_included' to `b'.
+		do
+			is_type_name_included := b
+		end
+
+	sst_type_field_name (s: STRING)
+		require
+			valid_field_name: s /= Void and then not s.is_whitespace
+		do
+			type_field_name := s
+		end
+
 feature -- Cleaning
 
 	reset
@@ -14,6 +52,6 @@ feature -- Cleaning
 		end
 
 note
-	copyright: "2016-2016, Jocelyn Fiat and Eiffel Software"
-	license: "Eiffel Forum License v2 (see https://www.eiffel.com/licensing/forum.txt)"
+	copyright: "2010-2024, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

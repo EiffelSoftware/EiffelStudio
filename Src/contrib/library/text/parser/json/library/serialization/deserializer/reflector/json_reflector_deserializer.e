@@ -182,9 +182,12 @@ feature {NONE} -- Helpers	: Array
 
 feature {NONE} -- Helpers: Object		
 
-	type_name_from_json_object (a_json_object: JSON_OBJECT): detachable READABLE_STRING_32
+	type_name_from_json_object (a_json_object: JSON_OBJECT; ctx: JSON_DESERIALIZER_CONTEXT): detachable READABLE_STRING_32
 		do
-			if attached {JSON_STRING} a_json_object.item ({JSON_REFLECTOR_SERIALIZER}.type_field_name) as s_type_name then
+			if
+				ctx.is_type_name_included and then
+				attached {JSON_STRING} a_json_object.item (ctx.type_field_name) as s_type_name
+			then
 				Result := s_type_name.item
 			end
 		end
@@ -199,7 +202,9 @@ feature {NONE} -- Helpers: Object
 			l_field_static_types: like fields_infos
 		do
 			if Result = Void then
-				l_type_name := type_name_from_json_object (a_json_object)
+				if ctx.is_type_name_included then
+					l_type_name := type_name_from_json_object (a_json_object, ctx)
+				end
 				Result := new_instance_of (l_type_name, a_type)
 				if Result = Void then
 					if l_type_name /= Void then
@@ -262,7 +267,7 @@ feature {NONE} -- Helpers: Object
 							else
 							end
 							ctx.on_deserialization_field_end (Result, fn)
-						elseif fn.same_string ({JSON_REFLECTOR_SERIALIZER}.type_field_name) then
+						elseif ctx.is_type_name_included and then fn.same_string (ctx.type_field_name) then
 								-- Ignore
 						else
 								-- No such field ! Ignore for now
@@ -322,6 +327,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2024, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

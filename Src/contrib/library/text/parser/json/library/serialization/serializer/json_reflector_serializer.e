@@ -14,11 +14,6 @@ inherit
 
 	JSON_TYPE_UTILITIES
 
-feature -- Constants
-
-	type_field_name: STRING = "$TYPE"
-			-- Field name related to type name information.
-
 feature {NONE} -- Implementation		
 
 	reference_to_json (obj: detachable ANY; ctx: JSON_SERIALIZER_CONTEXT): JSON_VALUE
@@ -63,7 +58,7 @@ feature {NONE} -- Implementation
 
 						if ctx.is_type_name_included then
 							create j_object.make_with_capacity (1 + l_fields_count)
-							j_object.put_string (l_type_name, type_field_name)
+							j_object.put_string (l_type_name, ctx.type_field_name)
 						else
 							create j_object.make_with_capacity (l_fields_count)
 						end
@@ -152,6 +147,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2024, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

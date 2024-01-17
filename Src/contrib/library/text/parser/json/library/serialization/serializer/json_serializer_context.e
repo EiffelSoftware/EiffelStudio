@@ -19,9 +19,9 @@ feature {NONE} -- Initialization
 
 	default_create
 		do
+			Precursor
 			create serializers.make (1)
 			create serializer_location.make_empty
-			is_type_name_included := True
 		end
 
 feature -- Settings / output
@@ -33,12 +33,6 @@ feature -- Settings / output
 		do
 			Result := not is_pretty_printing
 		end
-
-feature -- Settings / behavior		
-
-	is_type_name_included: BOOLEAN assign set_is_type_name_included
-			-- Is JSON output includes type name when possible?
-			-- Default: True
 
 feature -- Status
 
@@ -106,12 +100,6 @@ feature -- Status
 		end
 
 feature -- Settings change
-
-	set_is_type_name_included (b: BOOLEAN)
-			-- Set `is_type_name_included' to `b'.
-		do
-			is_type_name_included := b
-		end
 
 	set_pretty_printing
 			-- Set JSON generation to use pretty printing (indentation, ...).
@@ -287,6 +275,6 @@ feature {NONE} -- Implementation
 	serializers_cache: detachable HASH_TABLE [JSON_SERIALIZER, TYPE [detachable ANY]]
 
 ;note
-	copyright: "2010-2022, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2024, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

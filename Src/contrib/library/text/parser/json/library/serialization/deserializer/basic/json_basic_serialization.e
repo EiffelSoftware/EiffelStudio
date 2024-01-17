@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		do
 			create conv
 			serialization := conv
-			conv.register_default (create {JSON_CORE_SERIALIZER})
+			conv.register_default (create {JSON_BASIC_SERIALIZER})
 			conv.register_default (create {JSON_BASIC_DESERIALIZER [detachable ANY]})
 
 				-- Serializers
@@ -145,6 +145,6 @@ invariant
 	serialization /= Void
 
 note
-	copyright: "2010-2021, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2024, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

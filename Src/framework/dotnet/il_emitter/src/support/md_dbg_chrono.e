@@ -77,7 +77,7 @@ feature -- Access
 
 	remove (id: READABLE_STRING_GENERAL)
 		do
-			timers [id] := Void
+			timers.remove (id)
 		ensure
 			class
 		end

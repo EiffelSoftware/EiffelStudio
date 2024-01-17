@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			emitter := e
 		end
 
-feature -- Saving preparation	
+feature -- Saving preparation
 
 	prepare_to_save
 			-- Prepare data to be save
@@ -275,12 +275,11 @@ feature -- Table sorting
 				--|	and a 1-based record index in the three least-significant bytes. Metadata tables and their respective
 				--|	indexes are described in §II.22.2 and later subclauses.
 				--|	Coded metadata tokens also contain table and record indexes, but in a different format. For details on
-				--|	the encoding see II.24.2.6			
+				--|	the encoding see II.24.2.6
 
 				-- Below the commented lines are related to the tables the compiler does not use for now [2023-07-13]
 --			ensure_table_is_sorted ({PE_TABLES}.tclasslayout)
 --			ensure_table_is_sorted ({PE_TABLES}.tconstant)
---			ensure_table_is_sorted ({PE_TABLES}.tcustomattribute)
 --			ensure_table_is_sorted ({PE_TABLES}.tdeclsecurity)
 --			ensure_table_is_sorted ({PE_TABLES}.tfieldlayout)
 --			ensure_table_is_sorted ({PE_TABLES}.tfieldmarshal)
@@ -290,6 +289,7 @@ feature -- Table sorting
 --			ensure_table_is_sorted ({PE_TABLES}.timplmap)
 
 
+			ensure_table_is_sorted ({PE_TABLES}.tcustomattribute)
 			ensure_table_is_sorted ({PE_TABLES}.tinterfaceimpl)
 			ensure_table_is_sorted ({PE_TABLES}.tmethodimpl)
 			ensure_table_is_sorted ({PE_TABLES}.tmethodsemantics)

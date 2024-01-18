@@ -26,7 +26,7 @@ feature -- Settings
 			-- Is JSON output includes type name when possible?
 			-- Default: True
 
-	type_field_name: STRING assign sst_type_field_name
+	type_field_name: STRING assign set_type_field_name
 			-- Field name to hold the type name informations
 
 feature -- Settings change
@@ -37,7 +37,7 @@ feature -- Settings change
 			is_type_name_included := b
 		end
 
-	sst_type_field_name (s: STRING)
+	set_type_field_name (s: STRING)
 		require
 			valid_field_name: s /= Void and then not s.is_whitespace
 		do

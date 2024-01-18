@@ -1421,6 +1421,49 @@ feature -- Definition: Creation
 			end
 		end
 
+    define_generic_param (a_name: CLI_STRING; token: INTEGER; index: INTEGER; param_flags: INTEGER; type_constraints: ARRAY [INTEGER]): INTEGER
+    		--| Define a formal type parameter for the given TypeDef or MethodDef `token'.
+			--| token: TypeDef or MethodDef
+			--| type_constratins : Array of type constraints (TypeDef,TypeRef,TypeSpec)
+			--| index:  Index of the type parameter
+			--| param_flags: Flags, for future use (e.g. variance)
+			--| a_name: Name
+    	    -- Define a formal type parameter for the given TypeDef or MethodDef `token'.
+        note
+            eis: "name=GenericParam table II.22.20", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=254&zoom=100,116,309", "protocol"
+        local
+            l_owner_index: NATURAL_32
+            l_generic_param_entry: PE_GENERIC_PARAM_TABLE_ENTRY
+            d: like extract_table_type_and_row
+            l_generic_param_name_index: INTEGER_32
+            l_generic_param_flags: INTEGER
+            l_generic_param_entry_index: NATURAL_32
+        do
+           	 -- Extract table type and row from the method token
+            d := extract_table_type_and_row (token)
+            l_owner_index := d.table_row_index
+
+            debug ("il_emitter_table")
+                print ({STRING_32} "GenericParam: owner=" + token.to_hex_string + " owner.index=" + l_owner_index.out + " name=" + a_name.string_32 + " index=" + index.out)
+            end
+
+ 	           -- Convert the parameter name to UTF-16 and add it to the string heap
+            l_generic_param_name_index := pe_writer.hash_string (a_name.string_32).to_integer_32
+
+            l_generic_param_flags := param_flags
+
+     	       -- Create a new PE_GENERIC_PARAM_TABLE_ENTRY instance with the given data
+            create l_generic_param_entry.make_with_data (index.to_natural_16, l_generic_param_flags.to_natural_16, create_type_def_or_method_def (token, l_owner_index), l_generic_param_name_index.to_natural_32)
+
+           		 -- Add the new PE_GENERIC_PARAM_TABLE_ENTRY instance to the metadata tables.
+            l_generic_param_entry_index := next_table_index ({PE_TABLES}.tGenericParam)
+            Result := add_table_entry (l_generic_param_entry).to_integer_32
+
+            debug ("il_emitter_table")
+                print ({STRING_32} " -> #" + index.out + " token=" + Result.to_hex_string + "%N")
+            end
+        end
+
 feature -- Constants
 
 	accurate: INTEGER = 0x0000

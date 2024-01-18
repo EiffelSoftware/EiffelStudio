@@ -511,8 +511,8 @@ feature -- Drawing operations
 						end
 					else
 						{PANGO}.layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 3)
-						{PANGO}.layout_set_width (a_pango_layout, a_width * {PANGO}.scale)
 					end
+					{PANGO}.layout_set_width (a_pango_layout, a_width * {PANGO}.scale)
 				end
 				if a_angle /= 0.0 then
 					{CAIRO}.translate (l_drawable, l_x, l_y)

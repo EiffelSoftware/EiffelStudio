@@ -961,11 +961,15 @@ feature {EV_ANY_I} -- Implementation
 			l_result: POINTER
 		do
 			l_module := main_module
-			if l_module /= default_pointer then
+			if not l_module.is_default_pointer then
 				l_symbol_name := a_symbol_name
 				l_success := {GTK}.g_module_symbol (l_module, l_symbol_name.item, $l_result)
 				if l_success then
 					Result := l_result
+				else
+					debug ("gtk_error")
+						print (generator + ".symbol_from_symbol_name ("+ a_symbol_name +"): failure "+ l_success.out +" result="+ l_result.out+"!%N")
+					end
 				end
 			end
 		end

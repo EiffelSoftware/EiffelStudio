@@ -56,6 +56,9 @@ feature -- Constants
 feature -- Externals
 
 	layout_set_ellipsize_call (a_function: POINTER; a_layout: POINTER; a_ellipsize_mode: INTEGER)
+		require
+			valid_function: not a_function.is_default_pointer
+			valid_layout: not a_layout.is_default_pointer
 		external
 			"C inline use <ev_gtk.h>"
 		alias
@@ -572,7 +575,7 @@ feature -- Pango Attribute
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

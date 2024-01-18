@@ -183,9 +183,10 @@ feature {NONE} -- Helpers	: Array
 feature {NONE} -- Helpers: Object		
 
 	type_name_from_json_object (a_json_object: JSON_OBJECT; ctx: JSON_DESERIALIZER_CONTEXT): detachable READABLE_STRING_32
+		require
+			ctx.is_type_name_included
 		do
 			if
-				ctx.is_type_name_included and then
 				attached {JSON_STRING} a_json_object.item (ctx.type_field_name) as s_type_name
 			then
 				Result := s_type_name.item

@@ -502,14 +502,18 @@ feature -- Drawing operations
 				if internal_font_imp /= Void then
 					{PANGO}.layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
 				end
-
 				if a_width >= 0 then
 						-- We need to perform ellipsizing on text if available, otherwise we clip.
 					l_ellipsize_symbol := pango_layout_set_ellipsize_symbol
-					{PANGO}.layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 3)
-					{PANGO}.layout_set_width (a_pango_layout, a_width * {PANGO}.scale)
+					if l_ellipsize_symbol.is_default_pointer then
+						debug ("gtk_error")
+							print (generator + ".draw_text_internal (..) [ERROR] pango_layout_set_ellipsize_symbol is NULL!%N")
+						end
+					else
+						{PANGO}.layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 3)
+						{PANGO}.layout_set_width (a_pango_layout, a_width * {PANGO}.scale)
+					end
 				end
-
 				if a_angle /= 0.0 then
 					{CAIRO}.translate (l_drawable, l_x, l_y)
 
@@ -1020,7 +1024,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DRAWABLE note option: stable attribute end
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

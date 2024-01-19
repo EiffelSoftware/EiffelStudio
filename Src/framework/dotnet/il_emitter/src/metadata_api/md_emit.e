@@ -27,11 +27,13 @@ create
 
 feature {NONE}
 
-	make
+	make (a_md_ui: MD_UI)
 			-- Create a new instance of METADATA_EMIT
 			--| creates a set of in-memory metadata tables,
 			--| generates a unique GUID (module version identifier, or MVID) for the metadata,
 		do
+			md_ui := a_md_ui
+
 				-- Using PE_GENERATOR to get access helper features.
 			create pe_writer.make
 			create stream_headers.make_filled (0, 5, 2)
@@ -102,6 +104,10 @@ feature -- Access
 	pe_writer: PE_GENERATOR
 			-- helper class to generate the PE file.
 			--| using as a helper class to access needed features.
+
+
+	md_ui: MD_UI
+			-- Integration with UI to process UI events.
 
 feature -- Optimization
 

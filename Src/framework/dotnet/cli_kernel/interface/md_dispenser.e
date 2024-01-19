@@ -9,8 +9,8 @@ deferred class
 
 feature -- Definition
 
-	emitter: MD_EMIT
-			-- Create new scope and returns an emitter.	
+	emitter (md_ui: MD_UI): MD_EMIT
+			-- Create new scope and returns an emitter.
 		deferred
 		end
 

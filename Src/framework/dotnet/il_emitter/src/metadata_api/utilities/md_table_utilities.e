@@ -273,7 +273,7 @@ feature -- Table sorting
 				--|	Metadata items (records in the metadata tables) are addressed by metadata tokens. Uncoded metadata
 				--|	tokens are 4-byte unsigned integers, which contain the metadata table index in the most significant byte
 				--|	and a 1-based record index in the three least-significant bytes. Metadata tables and their respective
-				--|	indexes are described in §II.22.2 and later subclauses.
+				--|	indexes are described in   7II.22.2 and later subclauses.
 				--|	Coded metadata tokens also contain table and record indexes, but in a different format. For details on
 				--|	the encoding see II.24.2.6
 
@@ -538,7 +538,7 @@ feature -- Operation: List indexes sorting
 				attached typedef_table as tb and then
 				attached field_table as col_tb
 			then
-				create ut.make_and_prepare (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.fields end, a_is_using_additional_pointer_tables)
+				create ut.make_and_prepare (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.fields end, a_is_using_additional_pointer_tables, emitter)
 				sort_list_column (ut)
 				if not ut.remap.is_empty then
 					-- Update tables with remapped tokens!
@@ -565,7 +565,7 @@ feature -- Operation: List indexes sorting
 				attached typedef_table as tb and then
 				attached methoddef_table as col_tb
 			then
-				create ut.make_and_prepare (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.methods end, a_is_using_additional_pointer_tables)
+				create ut.make_and_prepare (tb, col_tb, agent (e: PE_TYPE_DEF_TABLE_ENTRY): PE_LIST do Result := e.methods end, a_is_using_additional_pointer_tables, emitter)
 
 				sort_list_column (ut)
 				if not ut.remap.is_empty then
@@ -595,7 +595,7 @@ feature -- Operation: List indexes sorting
 					{MD_DBG_CHRONO}.start ("param")
 					{MD_DBG_CHRONO}.start ("param.prepare")
 				end
-				create ut.make_and_prepare (tb, col_tb, agent (e: PE_METHOD_DEF_TABLE_ENTRY): PE_LIST do Result := e.param_index end, a_is_using_additional_pointer_tables)
+				create ut.make_and_prepare (tb, col_tb, agent (e: PE_METHOD_DEF_TABLE_ENTRY): PE_LIST do Result := e.param_index end, a_is_using_additional_pointer_tables, emitter)
 				debug ("il_emitter_table_map")
 					{MD_DBG_CHRONO}.stop ("param.prepare")
 					print ({MD_DBG_CHRONO}.report_line ("param.prepare"))

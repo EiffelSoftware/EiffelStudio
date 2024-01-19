@@ -11,7 +11,7 @@ inherit
 		rename
 			emitter as emit
 		end
-		
+
 create
 	make
 
@@ -23,10 +23,10 @@ feature -- Scope Definition
 			-- create emit.make
 		end
 
-	emit: MD_EMIT
+	emit (md_ui: MD_UI): MD_EMIT
 			-- Emit metadata
 		do
-			create Result.make
+			create Result.make (md_ui)
 		end
 
 end

@@ -14,16 +14,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make_and_prepare (tb: MD_TABLE; col_tb: MD_TABLE; a_column_value_function: FUNCTION [E, PE_LIST]; a_is_using_additional_pointer_tables: BOOLEAN)
+	make_and_prepare (tb: MD_TABLE; col_tb: MD_TABLE; a_column_value_function: FUNCTION [E, PE_LIST];
+				a_is_using_additional_pointer_tables: BOOLEAN;
+				a_emitter: MD_EMIT)
 		do
 			table := tb
 			table_for_column := col_tb
 			value_for := a_column_value_function
+			emitter := a_emitter
 			create remap.make (col_tb)
 			prepare (a_column_value_function, a_is_using_additional_pointer_tables)
 		end
 
 feature -- Access
+
+	emitter : MD_EMIT
 
 	remap: MD_REMAP_TOKEN_MANAGER
 
@@ -98,6 +103,9 @@ feature -- Preparation
 				p_list := l_indexes.item_for_iteration.list_index
 				if p_list /= Void and then not p_list.is_null_index then
 					idx := p_list.index
+					if idx \\ 100 = 0 then
+						emitter.md_ui.checkpoint (Void)
+					end
 					check idx <= col_nb end
 					if idx > col_nb then
 							-- Index is count + 1, i.e NULL index
@@ -114,7 +122,7 @@ feature -- Preparation
 
 				-- Compute each list count.
 				-- Get the index of the end of the list
-				-- if none, the index is also NULL				
+				-- if none, the index is also NULL
 			from
 				l_indexes.start
 			until
@@ -123,6 +131,9 @@ feature -- Preparation
 				p_list := l_indexes.item_for_iteration.list_index
 				if p_list /= Void and then not p_list.is_null_index then
 					idx := p_list.index
+					if idx \\ 100 = 0 then
+						emitter.md_ui.checkpoint (Void)
+					end
 					if idx <= col_nb then
 						e_index := end_index_of_list (p_list.index)
 						if e_index < p_list.index then

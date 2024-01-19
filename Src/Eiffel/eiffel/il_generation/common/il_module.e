@@ -19,6 +19,11 @@ inherit
 			{ANY} system, workbench
 		end
 
+	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
+
 	CLI_EMITTER_SERVICE
 		export
 			{NONE} all
@@ -1147,11 +1152,19 @@ feature -- Code generation
 			i: INTEGER
 			rt_v: STRING_32
 			l_mod_name_string: CLI_STRING
+			md_ui: MD_UI
 		do
 				-- Mark Current has being generated.
 			is_generated := True
 
-			md_emit := a_dispenser.emitter
+			create md_ui.make_with_action (agent (m: detachable READABLE_STRING_GENERAL)
+					do
+						degree_output.flush_output
+					end)
+
+			md_ui.checkpoint (generator + ".prepare")
+
+			md_emit := a_dispenser.emitter (md_ui)
 			create method_writer.make
 
 				-- Create Unicode string buffer.
@@ -4049,24 +4062,24 @@ invariant
 	dll_or_console_valid: not is_assembly_module implies (is_dll and is_console_application)
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

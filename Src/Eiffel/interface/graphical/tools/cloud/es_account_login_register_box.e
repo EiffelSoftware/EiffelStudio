@@ -1,4 +1,4 @@
-note
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -59,6 +59,7 @@ feature {NONE} -- Initialization
 			l_learn_more_box: EV_FRAME
 			txt: EVS_LABEL
 			lnk: EV_LINK_LABEL
+			lab_collapse: EV_LABEL
 			l_weblnk: EV_HIGHLIGHT_LINK_LABEL
 			but: EV_BUTTON
 			cbut: EV_CHECK_BUTTON
@@ -103,8 +104,16 @@ feature {NONE} -- Initialization
 			l_weblnk.select_actions.extend (agent open_url (cloud_service.associated_website_url + "/site/terms", Void))
 			vb_learn.extend (l_weblnk)
 			vb_learn.disable_item_expand (l_weblnk)
-
-			l_learn_more_box.extend (vb_learn)
+			create hb
+			hb.extend (vb_learn)
+			create lab_collapse.make_with_text (cloud_names.symbol_close)
+			lab_collapse.set_foreground_color (colors.disabled_foreground_color)
+			lab_collapse.set_minimum_width (lab_collapse.font.string_width (lab_collapse.text) + 4)
+			lab_collapse.align_text_center
+			lab_collapse.align_text_top
+			hb.extend (lab_collapse)
+			hb.disable_item_expand (lab_collapse)
+			l_learn_more_box.extend (hb)
 			l_learn_more_box.hide
 			create lnk.make_with_text (cloud_names.label_learn_more)
 			lnk.align_text_left
@@ -113,6 +122,12 @@ feature {NONE} -- Initialization
 					i_learn_more_box.show
 					i_lnk.hide
 				end(l_learn_more_box, lnk))
+			lab_collapse.pointer_button_press_actions.extend (agent (i_learn_more_box: EV_WIDGET; i_lnk: EV_WIDGET; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+				do
+					i_learn_more_box.hide
+					i_lnk.show
+				end(l_learn_more_box, lnk,?,?,?,?,?,?,?,?)
+			)
 			txt.pointer_double_press_actions.extend (agent (i_learn_more_box: EV_WIDGET; i_lnk: EV_WIDGET; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
 					do
 						i_learn_more_box.hide
@@ -141,13 +156,13 @@ feature {NONE} -- Initialization
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 
-			if attached es_cloud_s.service as cld then
-				create lnk.make_with_text (cloud_names.label_open_eiffelstudio_account_web_site)
-				lnk.align_text_left
-				lnk.select_actions.extend (agent open_account_url (cld, Void))
-				vb.extend (lnk)
-				vb.disable_item_expand (lnk)
-			end
+--			if attached es_cloud_s.service as cld then
+--				create lnk.make_with_text (cloud_names.label_open_eiffelstudio_account_web_site)
+--				lnk.align_text_left
+--				lnk.select_actions.extend (agent open_account_url (cld, Void))
+--				vb.extend (lnk)
+--				vb.disable_item_expand (lnk)
+--			end
 
 				-- Offline access token.
 			if is_offline_allowed then
@@ -292,6 +307,8 @@ feature {NONE} -- Initialization
 			l_focus: detachable EV_WIDGET
 			l_scaler: EVS_DPI_SCALER
 			l_kept_credential: detachable TUPLE [username, password: READABLE_STRING_32]
+			hb: EV_HORIZONTAL_BOX
+			lnk: EV_HIGHLIGHT_LINK_LABEL
 		do
 			create l_scaler.make
 			l_field_width := l_scaler.scaled_size (300)
@@ -321,6 +338,7 @@ feature {NONE} -- Initialization
 			Result.disable_item_expand (lab)
 
 			create cb.make_with_text (cloud_names.button_remember_credentials)
+			cb.enable_select
 			cb.set_tooltip (cloud_names.tooltip_do_not_use_on_public_machine)
 			layout_constants.set_default_width_for_button (cb)
 			create but.make_with_text_and_action (
@@ -334,12 +352,29 @@ feature {NONE} -- Initialization
 			append_label_and_item_horizontally ("", cb, Result)
 
 
-			create lab.make_with_text (cloud_names.prompt_note_support_account_usage)
-			lab.set_foreground_color (colors.stock_colors.dark_grey)
-			lab.set_font (fonts.italic_label_font)
+			create hb
+			create lab.make_with_text (cloud_names.prompt_note_account_usage)
+--			lab.set_foreground_color (colors.stock_colors.dark_grey)
+--			lab.set_font (fonts.italic_label_font)
 			lab.align_text_left
-			Result.extend (lab)
-			Result.disable_item_expand (lab)
+			hb.extend (lab)
+			hb.disable_item_expand (lab)
+
+			if attached es_cloud_s.service as cld then
+				create lab.make_with_text (" ");
+				hb.extend (lab);
+				hb.disable_item_expand (lab);
+
+				create lnk.make_with_text (cloud_names.label_short_open_eiffelstudio_account_web_site)
+				lnk.align_text_left
+				lnk.select_actions.extend (agent open_account_url (cld, Void));
+	--			lnk.select_actions.extend (agent set_register_mode (fr))
+				hb.extend (lnk)
+				hb.disable_item_expand (lnk)
+			end
+
+			Result.extend (hb)
+			Result.disable_item_expand (hb)
 
 			tf_username.return_actions.extend (agent tf_password.set_focus)
 			tf_password.return_actions.extend (agent (i_but: EV_BUTTON) do i_but.select_actions.call (Void) end(but))
@@ -805,7 +840,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

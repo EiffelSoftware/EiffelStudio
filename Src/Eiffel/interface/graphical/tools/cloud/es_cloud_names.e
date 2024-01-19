@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {ES_CLOUD_NAMES}."
 	author: ""
 	date: "$Date$"
@@ -26,7 +26,7 @@ feature -- Authentication
 			Result := locale.formatted_string (locale.translation_in_context ("User information provided during the registration process is used solely for the purpose of creating a user account at $1 and enforcing the usage rules (number of concurrent sessions) according to the terms of the EiffelStudio license. Eiffel Software does not share such information with any third party.", "eiffel.account"), [a_url])
 		end
 
-	prompt_note_support_account_usage: STRING_32 do Result := locale.translation_in_context ("Note: You can use //support.eiffel.com/ account", "eiffel.account") end
+	prompt_note_account_usage: STRING_32 do Result := locale.translation_in_context ("You can use your account at https://account.eiffel.com/", "eiffel.account") end
 
 	link_create_new_account: STRING_32 do Result := locale.translation_in_context ("Create a new account", "eiffel.account") end
 
@@ -34,6 +34,7 @@ feature -- Authentication
 	tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on a public machine! Password is stored in plain text.", "eiffel.account") end
 
 	label_open_eiffelstudio_account_web_site: STRING_32 do Result := locale.translation_in_context ("Open EiffelStudio account website in web browser.", "eiffel.account") end
+	label_short_open_eiffelstudio_account_web_site: STRING_32 do Result := locale.translation_in_context ({STRING_32} " ⮞ Open Site", "eiffel.account") end
 
 	label_can_continue_as_guest_for_n_days (nb_days: INTEGER): READABLE_STRING_32
 		do
@@ -44,7 +45,7 @@ feature -- Authentication
 	label_cannot_continue_as_guest: STRING_32 do Result := locale.translation ("You can not continue as guest anymore!") end
 
 	label_no_account_text: STRING_32 do Result := locale.translation ("No account?") end
-	label_create_new_account: STRING_32 do Result := locale.translation ("Create one!") end
+	label_create_new_account: STRING_32 do Result := locale.translation (" ⮞ Create one!") end
 
 	label_sign_in_with_existing_account: STRING_32 do Result := locale.translation ("You already have an account? Sign in >>") end
 
@@ -53,6 +54,8 @@ feature -- Authentication
 	label_last_name: STRING_32 do Result := locale.translation ("Last Name") end
 	label_password: STRING_32 do Result := locale.translation ("Password") end
 	label_email: STRING_32 do Result := locale.translation ("Email") end
+
+	symbol_close: STRING_32 once Result := {STRING_32} "❌" end
 
 feature -- Account tool	
 
@@ -134,7 +137,7 @@ feature -- General
 	tooltip_button_update: STRING_32 do Result := locale.translation_in_context ("Update account information (synchronize)", "cloud.info") end
 
 ;note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -6,6 +6,9 @@ note
 class
 	TEST_MODULES_NET_FRAMEWORK
 
+inherit
+	TEST_I
+	
 feature -- Test
 
 	test_modules
@@ -24,7 +27,6 @@ feature -- app_module
 
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
@@ -64,8 +66,7 @@ feature -- app_module
 			mscorlib_token: INTEGER
 			l_type_token: INTEGER
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
@@ -213,7 +214,6 @@ feature -- Modules
 			-- Define a Module2 with a Class B and method J
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
@@ -236,8 +236,7 @@ feature -- Modules
 			string_token: INTEGER
 			mscorlib_token: INTEGER
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (1)

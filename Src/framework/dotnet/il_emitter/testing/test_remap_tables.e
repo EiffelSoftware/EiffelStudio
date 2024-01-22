@@ -7,6 +7,9 @@ note
 class
 	TEST_REMAP_TABLES
 
+inherit
+	TEST_I
+
 feature -- Tests
 
 	test_build_tables
@@ -30,17 +33,15 @@ feature -- Tests
 			l_mock: MD_TABLE_MOCK
 			l_typedef: MD_TABLE
 			l_field: MD_TABLE
-			dispenser: MD_DISPENSER
 			md: MD_EMIT
 			mdu: MD_TABLE_UTILITIES
 			l_expected_typedef: MD_TABLE
 			l_expected_field: MD_TABLE
 		do
-			create dispenser.make
 			create l_mock
 			l_typedef := l_mock.build_typedef_fields_unsorted_case1
 			l_field := l_mock.build_field_list_type_def_case1
-			md := dispenser.emit
+			md := new_emitter
 			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
 			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
@@ -76,7 +77,7 @@ feature -- Tests
 			create l_mock
 			l_typedef := l_mock.build_typedef_fields_unsorted_case2
 			l_field := l_mock.build_field_list_type_def_case2
-			create md.make
+			md := new_emitter
 			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
 			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
@@ -108,7 +109,7 @@ feature -- Tests
 			create l_mock
 			l_typedef := l_mock.build_typedef_fields_unsorted_case3
 			l_field := l_mock.build_field_list_type_def_case3
-			create md.make
+			md := new_emitter
 			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
 			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
@@ -139,7 +140,7 @@ feature -- Tests
 			create l_mock
 			l_typedef := l_mock.build_typedef_fields_unsorted_case4
 			l_field := l_mock.build_field_list_type_def_case4
-			create md.make
+			md := new_emitter
 			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
 			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
@@ -165,7 +166,7 @@ feature -- Tests
 			create l_mock
 			l_typedef := l_mock.build_typedef_fields_unsorted_case5
 			l_field := l_mock.build_field_list_type_def_case5
-			create md.make
+			md := new_emitter
 			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
 			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 

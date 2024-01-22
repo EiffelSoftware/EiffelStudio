@@ -7,6 +7,9 @@ note
 class
 	TEST_AST_PROCESS
 
+inherit
+	TEST_I
+
 feature -- Tests
 
 	test_ast_process
@@ -19,7 +22,7 @@ feature -- Tests
 			-- Interface L
 			-- 	  no methods.
 			-- Class C: I, J, L
-			--     implements I.M, P, N, I.J
+			--     implements I.M, P, N, I.M
 			-- Class Programs that uses C
 			-- following this process
 			--
@@ -40,7 +43,6 @@ feature -- Tests
 			-- The current example doesn't support Params and Fields
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
@@ -79,8 +81,7 @@ feature -- Tests
 			my_p_method: INTEGER
 			my_n_method: INTEGER
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (1) -- set_minor_version
@@ -632,7 +633,6 @@ feature -- Tests
 			-- Compare the output with the cs\basic_interface example.
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
@@ -663,8 +663,7 @@ feature -- Tests
 			imark_token: INTEGER
 			local_sig: MD_LOCAL_SIGNATURE
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (1) -- set_minor_version
@@ -1054,7 +1053,6 @@ feature -- Tests
 
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
@@ -1085,8 +1083,7 @@ feature -- Tests
 			body: MD_METHOD_BODY
 			local_sig: MD_LOCAL_SIGNATURE
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (1)
@@ -1618,7 +1615,6 @@ feature -- Tests
 
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
@@ -1646,8 +1642,7 @@ feature -- Tests
 			body: MD_METHOD_BODY
 			local_sig: MD_LOCAL_SIGNATURE
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (1)
@@ -2106,7 +2101,6 @@ feature -- Tests
 
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
@@ -2134,8 +2128,7 @@ feature -- Tests
 			body: MD_METHOD_BODY
 			local_sig: MD_LOCAL_SIGNATURE
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (1)
@@ -2592,7 +2585,6 @@ feature -- Tests
 
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
@@ -2629,8 +2621,7 @@ feature -- Tests
 			l_ise_runtime_token,
 			ise_any_type_token: INTEGER
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (1)

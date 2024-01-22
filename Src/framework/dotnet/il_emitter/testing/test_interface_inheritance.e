@@ -6,6 +6,8 @@ note
 class
 	TEST_INTERFACE_INHERITANCE
 
+inherit
+	TEST_I
 
 feature
 
@@ -38,7 +40,6 @@ feature
 			-- The current example doesn't support Params and Fields		    	
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
@@ -76,8 +77,7 @@ feature
 			m_fetching_token: INTEGER
 			my_n_method: INTEGER
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (1) -- set_minor_version
@@ -529,5 +529,6 @@ feature
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.set_entry_point_token (my_main)
 			l_pe_file.save
+
 		end
 end

@@ -7,6 +7,9 @@ note
 class
 	TEST_MODULES_TK
 
+inherit
+	TEST_I
+
 feature -- Test
 
 	test_modules
@@ -25,7 +28,6 @@ feature -- app_module
 
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
@@ -63,8 +65,7 @@ feature -- app_module
 			class_b_method_j_token: INTEGER
 			class_b_object_ctor: INTEGER
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (1) -- set_minor_version
@@ -406,7 +407,6 @@ feature -- Modules
 			-- Define a Module2 with a Class B and method J
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
@@ -428,11 +428,7 @@ feature -- Modules
 			j_method: INTEGER
 			string_token: INTEGER
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
-
-			create md_dispenser.make
-			md_emit := md_dispenser.emit
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (6)

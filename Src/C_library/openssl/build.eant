@@ -7,7 +7,10 @@
 
 	<target name="help">
 		<echo message="usage:"/>
-		<echo message=" geant compile"/>
+		<echo message=" geant build_openssl_32_static"/>
+		<echo message=" geant build_openssl_64_static"/>
+		<echo message=" geant build_openssl_32_dynamic"/>
+		<echo message=" geant build_openssl_64_dynamic"/>
 		<echo message=" geant clean"/>
 		<echo message=" geant clobber"/>
 	</target>
@@ -15,6 +18,29 @@
 	<target name="compile" >
 		<exec executable="finish_freezing -library" />
 	</target>
+
+	
+	<target name="build_openssl_32_static" >
+		<echo message="- Build static for Windows (x86)" if="${ISE_PLATFORM}=windows" />
+		<exec executable="build_static_32.bat" if="${ISE_PLATFORM}=windows" />
+	</target>
+
+	<target name="build_openssl_64_static" >
+		<echo message="- Build static for Windows (x86-64)" if="${ISE_PLATFORM}=win64" />
+		<exec executable="build_static_64.bat" if="${ISE_PLATFORM}=win64" />
+	</target>
+
+
+	<target name="build_openssl_32_dynamic" >
+		<echo message="- Build dynamic for Windows (x86)" if="${ISE_PLATFORM}=windows" />
+		<exec executable="build_dyn_32.bat" if="${ISE_PLATFORM}=windows" />
+	</target>
+
+	<target name="build_openssl_64_dynamic" >
+		<echo message="- Build dynamic for Windows (x86-64)" if="${ISE_PLATFORM}=win64" />
+		<exec executable="build_dyn_64.bat" if="${ISE_PLATFORM}=win64" />
+	</target>
+
 	
 	<target name="clean" >  
 		<echo message="- Clean [C_library/openssl]" />

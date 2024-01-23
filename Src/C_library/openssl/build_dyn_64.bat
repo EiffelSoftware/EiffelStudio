@@ -13,12 +13,12 @@ mkdir dynamic_64
 
 cd ..
 
-@echo Building a 64-Bit static library (/MD) using the option `shared` with VC-WIN64A
+@echo Building a 64-Bit dynamic library (/MD) using the option `shared` with VC-WIN64A
 @echo Compiling OpenSSL 64bits dynamic
 
-perl Configure VC-WIN64A no-shared --prefix=%current_dir%builds\dynamic_64
+perl Configure VC-WIN64A no-shared --prefix=%current_dir%builds\dynamic_64 --openssldir=%current_dir%builds\dynamic_64
 nmake 
-nmake install
+nmake install_sw
 
 
 

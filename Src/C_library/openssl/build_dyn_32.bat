@@ -16,9 +16,9 @@ cd ..
 @echo Building a 32-Bit dynamic library (/MD) using the option `shared` with VC-WIN32
 @echo Compiling OpenSSL 32bits dynamic
 
-perl Configure VC-WIN32 shared --prefix=%current_dir%builds\dynamic_32
+perl Configure VC-WIN32 shared --prefix=%current_dir%builds\dynamic_32 --openssldir=%current_dir%builds\dynamic_32
 nmake 
-nmake install
+nmake install_sw
 
 
 

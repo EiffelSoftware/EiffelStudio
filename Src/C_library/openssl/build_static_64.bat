@@ -16,9 +16,9 @@ cd ..
 @echo Building a 64-Bit static library (/MT) using the option `no-shared` with VC-WIN64A
 @echo Compiling OpenSSL 64bits statically
 
-perl Configure VC-WIN64A no-shared --prefix=%current_dir%builds\static_64
+perl Configure VC-WIN64A no-shared --prefix=%current_dir%builds\static_64 --openssldir=%current_dir%builds\static_64
 nmake 
-nmake install
+nmake install_sw
 
 
 

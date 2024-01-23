@@ -16,13 +16,10 @@ cd ..
 @echo Building a 32-Bit static library (/MT) using the option `no-shared` with VC-WIN32
 @echo Compiling OpenSSL 32bits statically
 
-perl Configure VC-WIN32 no-shared --prefix=%current_dir%builds\static_32
+perl Configure VC-WIN32 no-shared --prefix=%current_dir%builds\static_32 --openssldir=%current_dir%builds\static_32
 nmake 
-nmake install
+nmake install_sw
 
 
 
 
-rem IF exist %current_dir%builds ( 
-rem 	rmdir /s /q %current_dir%builds
-rem )

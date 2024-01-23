@@ -7,10 +7,10 @@
 
 	<target name="help">
 		<echo message="usage:"/>
-		<echo message=" geant build_openssl_32_static"/>
-		<echo message=" geant build_openssl_64_static"/>
-		<echo message=" geant build_openssl_32_dynamic"/>
-		<echo message=" geant build_openssl_64_dynamic"/>
+		<echo message=" geant build_static_32"/>
+		<echo message=" geant build_static_64"/>
+		<echo message=" geant build_dynamic_32"/>
+		<echo message=" geant build_dynamic_64"/>
 		<echo message=" geant clean"/>
 		<echo message=" geant clobber"/>
 	</target>
@@ -20,23 +20,23 @@
 	</target>
 
 	
-	<target name="build_openssl_32_static" >
+	<target name="build_static_32" >
 		<echo message="- Build static for Windows (x86)" if="${ISE_PLATFORM}=windows" />
 		<exec executable="build_static_32.bat" if="${ISE_PLATFORM}=windows" />
 	</target>
 
-	<target name="build_openssl_64_static" >
+	<target name="build_static_64" >
 		<echo message="- Build static for Windows (x86-64)" if="${ISE_PLATFORM}=win64" />
 		<exec executable="build_static_64.bat" if="${ISE_PLATFORM}=win64" />
 	</target>
 
 
-	<target name="build_openssl_32_dynamic" >
+	<target name="build_dynamic_32" >
 		<echo message="- Build dynamic for Windows (x86)" if="${ISE_PLATFORM}=windows" />
 		<exec executable="build_dyn_32.bat" if="${ISE_PLATFORM}=windows" />
 	</target>
 
-	<target name="build_openssl_64_dynamic" >
+	<target name="build_dynamic_64" >
 		<echo message="- Build dynamic for Windows (x86-64)" if="${ISE_PLATFORM}=win64" />
 		<exec executable="build_dyn_64.bat" if="${ISE_PLATFORM}=win64" />
 	</target>

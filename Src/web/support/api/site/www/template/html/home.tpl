@@ -19,7 +19,7 @@
 								<h2 class="info">Assisted Support</h2>
 								<p style="width:360px">View and submit problem and bug reports to the Eiffel Software Team through this web site.
 									Customers with a higher priority <a href="http://www.eiffel.com/services/support/" target="_blank" class="info">Support Plan</a> receive faster response times and problem resolution.
-									Additional support options include email, phone, fax and <a href="http://www.eiffel.com/services/training/index.html" target="_blank" class="info">training courses</a> from an Eiffel Software professional.
+									Additional support options are available upon request (email, phone, zoom, teams, ...) and training courses from an Eiffel Software professional.
 								</p>
 							</div>
 						</div>

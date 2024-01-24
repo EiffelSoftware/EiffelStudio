@@ -22,6 +22,9 @@ function doall_sed {
 function do_update_copyright_eiffel_software {
 	do_sed "s/\(Copyright Eiffel Software [0-9][0-9][0-9][0-9]-\)[0-9][0-9][0-9][0-9]/\1$curr_year/g" "$1"
 }
+function do_update_copyright_eiffel_software_html_yyyy {
+	do_sed "s/\(Copyright &copy; \)[0-9][0-9][0-9][0-9]/\1$curr_year/g" "$1"
+}
 
 if [ -z "$EIFFEL_SRC" ]; then export EIFFEL_SRC=$(readlink -n -q -m `pwd`/..) ; fi
 
@@ -81,7 +84,10 @@ do_update_copyright_eiffel_software $EIFFEL_SRC/framework/web/xebra/eiffel_proje
 do_update_copyright_eiffel_software $EIFFEL_SRC/framework/web/xebra/tools/installer/win/xebra_deployer/xd_argument_parser.e
 
 # $EIFFEL_SRC/web/eiffel-cloud/site/modules/custom_block/templates/block_cloud_footer.tpl
-do_update_copyright_eiffel_software $EIFFEL_SRC/web/eiffel-cloud/site/modules/custom_block/templates/block_cloud_footer.tpl
+do_update_copyright_eiffel_software_html_yyyy $EIFFEL_SRC/web/eiffel-cloud/site/modules/custom_block/templates/block_cloud_footer.tpl
+
+# $EIFFEL_SRC/web/support/api/site/www/template/html/master/footer.tpl
+do_update_copyright_eiffel_software_html_yyyy $EIFFEL_SRC/web/support/api/site/www/template/html/master/footer.tpl
 
 # sqlite3 examples
 do_update_copyright_eiffel_software $EIFFEL_SRC/unstable/library/persistency/database/sqlite3/examples/liteterm/argument_parser.e

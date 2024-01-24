@@ -156,9 +156,15 @@ RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
 /* Exported routines (used by the generated C code or run-time) */
 RT_LNK void expop(struct xstack *stk);	/* Pops an execution vector off */
 #ifdef EIF_IL_DLL
+#ifdef EIF_WINDOWS
 #define com_eraise(tag,num) eraise (tag,num)
 #define eraise(tag,num) RaiseException(num, 0, 0, NULL)
 #define enomem() RaiseException(EN_OMEM, 0, 0, NULL)
+#else
+#define com_eraise(tag,num) eraise (tag,num)
+#define eraise(tag,num) raise(num)
+#define enomem() raise(EN_OMEM)
+#endif
 #else
 RT_LNK void eraise(const char *tag, long num);		/* Raise Eiffel exception */
 RT_LNK void com_eraise(const char *tag, long num);	/* Raise EiffelCOM exception */

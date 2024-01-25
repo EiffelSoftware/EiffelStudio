@@ -46,6 +46,17 @@ feature -- Execution
 					else
 						report_missing_installation_id (a_version, l_user, req, res)
 					end
+				elseif req.is_put_request_method then
+					if attached {WSF_STRING} req.path_parameter ("installation_id") as iid then
+						l_inst_id := iid.value
+					elseif attached {WSF_STRING} req.form_parameter ("installation_id") as iid then
+						l_inst_id := iid.value
+					end
+					if l_inst_id /= Void then
+						handle_user_installation_put (a_version, l_user, l_inst_id, req, res)
+					else
+						report_missing_installation_id (a_version, l_user, req, res)
+					end
 				elseif req.is_delete_request_method then
 					handle_user_delete (a_version, l_user, req, res)
 				else
@@ -123,7 +134,7 @@ feature -- Execution
 						end
 						r.add_self (r.location)
 							-- Added all adapted licenses ... the user should be able to change current licence
-						if attached adapted_licenses (a_version, a_user, inst) as l_adapted_licenses then
+						if attached es_cloud_api.adapted_licenses (a_user, inst) as l_adapted_licenses then
 								-- All valid licenses, so the user may pick from one of them.
 							create tb.make (l_adapted_licenses.count)
 							across
@@ -387,11 +398,62 @@ feature -- Execution
 			end
 		end
 
+	handle_user_installation_put (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; a_installation_id: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
+		require
+			req.is_post_request_method
+		local
+			r: like new_response
+			f: CMS_FORM
+			l_op: READABLE_STRING_GENERAL
+			l_installation: ES_CLOUD_INSTALLATION
+		do
+			if a_user.same_as (api.user) or else api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_accounts) then
+				r := new_response (req, res)
+				f := handle_user_installation_form (req)
+				f.process (r)
+				if
+					attached f.last_data as fd and then not fd.has_error
+				then
+					check
+						same_installation_id: attached fd.string_item ("installation_id") as f_installation_id and then a_installation_id.same_string (f_installation_id)
+					end
+					if
+						attached fd.string_item ("license_id") as f_license_id and then
+						attached fd.string_item ("new_license_id") as f_new_license_id and then
+						attached es_cloud_api.license_by_key (f_license_id) as lic and then
+						attached es_cloud_api.installation (a_installation_id, lic.id) as inst and then
+						attached es_cloud_api.license_by_key (f_new_license_id) as new_lic
+					then
+						es_cloud_api.update_installation_license (inst, new_lic)
+						r.add_link ("es:installation", "installation", (api.absolute_url (r.location, Void) + "/" + api.url_encoded (inst.id)))
+						add_installation_to (a_version, a_user, inst, r)
+						add_cloud_user_links_to (a_version, a_user, r)
+						add_user_links_to (a_user, r)
+						r.execute
+					else
+						r := new_bad_request_error_response ("Missing value to assign installation to new license", req, res)
+						add_cloud_user_links_to (a_version, a_user, r)
+						add_user_links_to (a_user, r)
+						r.execute
+					end
+				else
+					r := new_error_response ("Error", req, res)
+					add_cloud_user_links_to (a_version, a_user, r)
+					add_user_links_to (a_user, r)
+					r.execute
+				end
+			else
+				r := new_access_denied_error_response (Void, req, res)
+				r.execute
+			end
+		end
+
 	handle_user_installation_form (req: WSF_REQUEST): CMS_FORM
 		do
 			create Result.make (req.percent_encoded_path_info, "es-form")
 			Result.extend_text_field ("installation_id", Void)
 			Result.extend_text_field ("license_id", Void)
+			Result.extend_text_field ("new_license_id", Void)
 			Result.extend_text_field ("session_id", Void)
 			Result.extend_text_field ("info", Void)
 			Result.extend_text_field ("session_title", Void)
@@ -715,53 +777,6 @@ feature {NONE} -- User installation post handling
 		end
 
 feature {NONE} -- Implementation: Helpers
-
-	adapted_licenses (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; a_inst: ES_CLOUD_INSTALLATION): detachable ARRAYED_LIST [ES_CLOUD_LICENSE]
-			-- Adapted license for a installation and a user.
-		local
-			lic: ES_CLOUD_LICENSE
-			l_has_valid_license: BOOLEAN
-			l_inst_limit: NATURAL
-			pl,ve: READABLE_STRING_GENERAL
-			l_licenses: LIST [ES_CLOUD_USER_LICENSE]
-		do
-			pl := a_inst.platform
-			ve := a_inst.product_version
-				-- REQUIRE: user, platform, version !
-			l_licenses := es_cloud_api.user_licenses (a_user)
-			if l_licenses = Void or else l_licenses.is_empty then
-				if attached es_cloud_api.user_subscription (a_user) as l_sub then
-					lic := es_cloud_api.converted_license_from_user_subscription (l_sub, a_inst)
-					l_licenses := es_cloud_api.user_licenses (a_user)
-				end
-			end
-			if l_licenses /= Void and then not l_licenses.is_empty then
-				create Result.make (l_licenses.count)
-				across
-					l_licenses as ic
-				loop
-					lic := ic.item.license
-					if lic.is_valid (pl, ve) then
-						l_has_valid_license := True
-
-						l_inst_limit := lic.installations_limit
-						if
-							l_inst_limit = 0
-							or else (
-								attached es_cloud_api.license_installations (lic) as lst and then
-								lst.count.to_natural_32 < l_inst_limit
-							)
-						then
-							Result.force (lic)
-						else
-								-- Reached installation limit for this license!
-							lic := Void
-						end
-					end
-				end
-				lic := Void
-			end
-		end
 
 	session_state_name (sess: ES_CLOUD_SESSION): STRING_8
 		do

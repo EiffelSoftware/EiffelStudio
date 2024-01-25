@@ -19,6 +19,10 @@ div.user-view-cloud-box:hover {
   padding: 0 1rem 0 1rem;
 }
 
+div.es-adapted-licenses div.es-license {
+  display: inline;
+}
+
 div.es-licenses.es-stats div.es-license {
   margin-bottom: 2px;
   position: relative;
@@ -52,7 +56,7 @@ div.es-licenses.es-stats div.es-license span.details span.status {
   display: block;
 }
 div.es-licenses.es-stats div.es-license span.details span.usage {
-  padding-right: .5rem;
+  padding-right: 0.5rem;
   display: inline-block;
 }
 div.es-licenses.es-stats div.es-license span.warning {
@@ -77,9 +81,9 @@ form#cloud_account_edit div.description {
   font-style: italic;
   color: #555;
 }
-form#cloud_account_edit input[type="submit"] {
-  margin: .5rem;
-  padding: .5rem 2rem;
+form#cloud_account_edit input[type=submit] {
+  margin: 0.5rem;
+  padding: 0.5rem 2rem;
   font-size: 120%;
   font-weight: bold;
   color: white;

@@ -9,11 +9,26 @@ class
 
 inherit
 	ES_CLOUD_ADMIN_HANDLER
+		rename
+			make as make_admin_handler
+		end
 
 	WSF_URI_HANDLER
 
 create
 	make
+
+feature {NONE} -- Creation
+
+	make (a_es_cloud_api: ES_CLOUD_API; a_admin_module: ES_CLOUD_MODULE_ADMINISTRATION)
+		do
+			admin_module := a_admin_module
+			make_admin_handler (a_es_cloud_api)
+		end
+
+feature -- Access
+
+	admin_module: ES_CLOUD_MODULE_ADMINISTRATION
 
 feature -- Execution
 
@@ -46,6 +61,9 @@ feature -- Execution
 					end
 					if inst /= Void then
 						r := new_generic_response (req, res)
+						r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
+						r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
+
 						add_primary_tabs (r)
 
 						if l_user /= Void then
@@ -55,9 +73,11 @@ feature -- Execution
 							s.append (" | ")
 							s.append (" <a href=%"" + req.script_url (req.percent_encoded_path_info) + "?user="+ l_user.id.out +"%">all installations</a>")
 							s.append ("<p><strong>User:</strong> " + api.user_html_administration_link (l_user))
+							s.append ("</p>%N")
 						else
-							create s.make_from_string ("<h1>Installation %""+ html_encoded (inst.id) +"%"</h1>")
+							create s.make_from_string ("<h1>Installation %""+ html_encoded (inst.id) +"%"</h1>%N")
 						end
+
 						l_only_active := attached {WSF_STRING} req.query_parameter ("only_active") as p and then p.is_case_insensitive_equal ("true")
 						l_url := req.script_url (req.percent_encoded_path_info) + "?installation="+ url_encoded (inst.id)
 						if l_user /= Void then
@@ -68,8 +88,35 @@ feature -- Execution
 						else
 							s.append (" (<a href=%"" + l_url +"%">all sessions</a>)")
 						end
-						s.append ("</p>")
-						s.append ("<p><strong>Installation:</strong> " + html_encoded (inst.id) + "</p>")
+
+						s.append ("<div class=%"es-installation%"><strong>Installation:</strong> " + html_encoded (inst.id) + "%N")
+						if
+							attached inst.license_id as lic_id and then
+							attached es_cloud_api.license (lic_id) as lic and then
+							attached es_cloud_api.user_for_license (lic) as lic_user
+						then
+							s.append ("<div class=%"license%"><strong>License:</strong>")
+							es_cloud_api.append_one_line_license_view_to_html (lic, lic_user, admin_module.module, s)
+							s.append ("</div>%N")
+							if attached es_cloud_api.adapted_licenses (lic_user, inst) as l_adapted_licenses then
+								s.append ("<div class=%"es-adapted-licenses%"><strong>Available license(s):</strong><ul>")
+									-- All valid licenses, so the user may pick from one of them.
+								across
+									l_adapted_licenses as ic
+								loop
+									if attached ic.item as l_other_lic then
+										s.append ("<li class=%"available%""
+														+" data-user-id=%""+ lic_user.id.out +"%" data-installation-id=%""+percent_encoded (inst.id)+"%""
+														+" data-license-id=%""+ percent_encoded (lic.key) +"%""
+														+" data-new-license-id=%""+ percent_encoded (l_other_lic.key) +"%""
+														+">")
+										es_cloud_api.append_one_line_license_view_to_html (l_other_lic, lic_user, admin_module.module, s)
+										s.append ("</li>%N")
+									end
+								end
+							end
+							s.append ("</ul></div>%N")
+						end
 						if attached inst.info as l_info and then not l_info.is_whitespace and then not l_info.is_case_insensitive_equal_general ("{}") then
 							s.append ("<p class=%"info%"><strong>Information:</strong><pre class=%"es-info%">")
 							s.append (html_encoded (l_info))
@@ -135,6 +182,7 @@ feature -- Execution
 						else
 							s.append ("<p>No session information</p>")
 						end
+						s.append ("</div><!-- end of installation "+ url_encoded (inst.id) +"-->%N")
 						r.set_main_content (s)
 						r.execute
 

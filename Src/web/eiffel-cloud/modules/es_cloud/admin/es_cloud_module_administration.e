@@ -59,7 +59,7 @@ feature {NONE} -- Router/administration
 				a_router.handle (admin_licenses_location, create {ES_CLOUD_LICENSES_ADMIN_HANDLER}.make (l_es_cloud_api, Current), a_router.methods_get_post)
 				a_router.handle (admin_licenses_location + "{license}", create {ES_CLOUD_LICENSES_ADMIN_HANDLER}.make (l_es_cloud_api, Current), a_router.methods_get_post)
 				a_router.handle ("/cloud/account/{user}", create {ES_CLOUD_ACCOUNTS_ADMIN_HANDLER}.make (l_es_cloud_api, Current), a_router.methods_get_post)
-				a_router.handle ("/cloud/installations/", create {ES_CLOUD_INSTALLATIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
+				a_router.handle ("/cloud/installations/", create {ES_CLOUD_INSTALLATIONS_ADMIN_HANDLER}.make (l_es_cloud_api, Current), a_router.methods_get_post)
 				create plan_hlr.make (l_es_cloud_api)
 				a_router.handle ("/cloud/plans/", plan_hlr, a_router.methods_get_post)
 				a_router.handle ("/cloud/plans/{pid}", plan_hlr, a_router.methods_get_post)

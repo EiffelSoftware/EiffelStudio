@@ -1168,6 +1168,56 @@ feature -- Access: subscriptions
 			Result := es_cloud_storage.license_installations (a_license.id)
 		end
 
+	adapted_licenses (a_user: ES_CLOUD_USER; a_inst: ES_CLOUD_INSTALLATION): detachable ARRAYED_LIST [ES_CLOUD_LICENSE]
+			-- Adapted license for a installation and a user.
+		local
+			lic: ES_CLOUD_LICENSE
+			l_has_valid_license: BOOLEAN
+			l_inst_limit: NATURAL
+			pl,ve: READABLE_STRING_GENERAL
+			l_licenses: LIST [ES_CLOUD_USER_LICENSE]
+		do
+			pl := a_inst.platform
+			ve := a_inst.product_version
+				-- REQUIRE: user, platform, version !
+			l_licenses := user_licenses (a_user)
+			if l_licenses = Void or else l_licenses.is_empty then
+				if attached user_subscription (a_user) as l_sub then
+					lic := converted_license_from_user_subscription (l_sub, a_inst)
+					l_licenses := user_licenses (a_user)
+				end
+			end
+			if l_licenses /= Void and then not l_licenses.is_empty then
+				create Result.make (l_licenses.count)
+				across
+					l_licenses as ic
+				loop
+					lic := ic.item.license
+					if lic.is_valid (pl, ve) then
+						l_has_valid_license := True
+
+						l_inst_limit := lic.installations_limit
+						if
+							l_inst_limit = 0
+							or else (
+								attached license_installations (lic) as lst and then
+								lst.count.to_natural_32 < l_inst_limit
+							)
+						then
+							Result.force (lic)
+						else
+								-- Reached installation limit for this license!
+							lic := Void
+						end
+					end
+				end
+				lic := Void
+				if Result.is_empty then
+					Result := Void
+				end
+			end
+		end
+
 	user_installations_sorter: SORTER [ES_CLOUD_INSTALLATION]
 		local
 			comp: AGENT_EQUALITY_TESTER [ES_CLOUD_INSTALLATION]
@@ -1432,7 +1482,8 @@ feature -- HTML factory
 			else
 				s.append ("<span class=%"status warning%">Expired</span>")
 			end
-			s.append ("</div>")
+			s.append ("</span>")
+			s.append ("</div>%N")
 		end
 
 	append_short_license_view_to_html (lic: ES_CLOUD_LICENSE; u: ES_CLOUD_USER; es_cloud_module: ES_CLOUD_MODULE; s: STRING_8)

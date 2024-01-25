@@ -54,7 +54,10 @@ if [ -d $2/framework/dotnet/il_emitter/Clib ]; then
 	cd $2/framework/dotnet/il_emitter/Clib
 	default_make
 else
-	remtrace IL Emitter Clib: directory not found
+	if [ -d $2/framework ]; then
+		#report error only if framework exists (i.e not for ISE_EIFFEL)
+		remtrace IL Emitter Clib: directory not found "$2/framework/dotnet/il_emitter/Clib"
+	fi
 fi
 
 cd $2

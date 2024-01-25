@@ -68,6 +68,10 @@ feature -- Change
 		deferred
 		end
 
+	update_installation_license (inst: ES_CLOUD_INSTALLATION; a_lic: ES_CLOUD_LICENSE)
+		deferred
+		end
+
 	save_session (a_session: ES_CLOUD_SESSION)
 		deferred
 		end

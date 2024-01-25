@@ -584,6 +584,28 @@ feature -- Element change license
 			es_cloud_storage.save_license (a_license)
 		end
 
+	convert_to_fallback (a_license: ES_CLOUD_LICENSE; a_version: READABLE_STRING_GENERAL)
+		require
+			existing_license: license (a_license.id) /= Void
+			a_license.may_be_eligible_to_fallback
+		do
+			a_license.set_version (a_version)
+			a_license.set_fallback_date (create {DATE_TIME}.make_now_utc)
+			es_cloud_storage.save_license (a_license)
+		ensure
+			a_license.is_fallback
+		end
+
+	undo_convert_to_fallback (a_license: ES_CLOUD_LICENSE)
+		require
+			existing_license: license (a_license.id) /= Void
+			a_license.is_fallback
+		do
+--			a_license.set_version (Void) -- should we ??
+			a_license.set_fallback_date (Void)
+			es_cloud_storage.save_license (a_license)
+		end
+
 	remove_expiration_date (a_license: ES_CLOUD_LICENSE)
 		require
 			existing_license: license (a_license.id) /= Void
@@ -1083,6 +1105,12 @@ feature -- Access: subscriptions
 	discard_installation (inst: ES_CLOUD_INSTALLATION; a_user: detachable ES_CLOUD_USER)
 		do
 			es_cloud_storage.discard_installation (inst, a_user)
+		end
+
+	update_installation_license (inst: ES_CLOUD_INSTALLATION; a_lic: ES_CLOUD_LICENSE)
+		do
+			es_cloud_storage.update_installation_license (inst, a_lic)
+			inst.update_license (a_lic)
 		end
 
 	all_user_installations: LIST [ES_CLOUD_INSTALLATION]

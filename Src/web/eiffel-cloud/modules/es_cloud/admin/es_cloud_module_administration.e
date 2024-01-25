@@ -330,6 +330,14 @@ feature -- Hooks configuration
 						a_cloud_api.discard_license (l_lic)
 					elseif attached fd.string_item ("es-lic-op-no-exp-date") then
 						a_cloud_api.remove_expiration_date (l_lic)
+					elseif attached fd.string_item ("es-lic-op-fallback") then
+						if attached fd.string_item ("es-lic-version") as v then
+							a_cloud_api.convert_to_fallback (l_lic, v)
+						else
+--							ERROR: FIXME
+						end
+					elseif attached fd.string_item ("es-lic-op-undo-fallback") then
+						a_cloud_api.undo_convert_to_fallback (l_lic)
 					end
 				end
 			end
@@ -487,10 +495,34 @@ feature -- Hooks configuration
 					create l_submit.make_with_text ("es-lic-op-suspend", "Suspend License")
 					h.extend (l_submit)
 				end
+				if a_license.is_fallback then
+					create h.make
+					h.add_css_class ("horizontal")
+					h.add_css_class ("fallback")
+					lic_fset.extend (h)
+					create l_submit.make_with_text ("es-lic-op-undo-fallback", "Undo FallBack")
+					h.extend (l_submit)
+				elseif
+					a_license.may_be_eligible_to_fallback
+				then
+					create h.make
+					h.add_css_class ("horizontal")
+					h.add_css_class ("may-fallback")
+					lic_fset.extend (h)
+					if attached a_license.version as v then
+						h.extend (create {WSF_FORM_TEXT_INPUT}.make_with_text ("es-lic-version", v))
+					else
+						h.extend (create {WSF_FORM_TEXT_INPUT}.make_with_text ("es-lic-version", "Enter a valid version!!!"))
+					end
+					create l_submit.make_with_text ("es-lic-op-fallback", "Make FallBack")
+					h.extend (l_submit)
+				end
+
 			else
 				create l_submit.make_with_text ("es-lic-op", "Save License")
 				h.extend (l_submit)
 			end
+
 		end
 
 	cloud_user_from_form (a_form: CMS_FORM; a_response: CMS_RESPONSE): detachable ES_CLOUD_USER

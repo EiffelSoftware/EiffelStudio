@@ -341,6 +341,20 @@ feature -- Change
 			end
 		end
 
+	update_installation_license (inst: ES_CLOUD_INSTALLATION; a_lic: ES_CLOUD_LICENSE)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (3)
+			l_params.force (inst.id, "iid")
+			l_params.force (inst.license_id, "lid")
+			l_params.force (a_lic.id, "nlid")
+
+			sql_modify (sql_update_installation_license, l_params)
+			sql_finalize_modify (sql_update_installation_license)
+		end
+
 	save_session (a_session: ES_CLOUD_SESSION)
 		local
 			l_params: STRING_TABLE [detachable ANY]
@@ -404,6 +418,8 @@ feature {NONE} -- Queries: installations
 	sql_insert_installation: STRING = "INSERT INTO es_installations (iid, lid, name, info, status, creation) VALUES (:iid, :lid, :name, :info, :status, :creation);"
 
 	sql_update_installation: STRING = "UPDATE es_installations SET info=:info, name=:name, status=:status WHERE iid=:iid AND lid=:lid;"
+
+	sql_update_installation_license: STRING = "UPDATE es_installations SET lid=:nlid WHERE iid=:iid AND lid=:lid;"
 
 	sql_delete_installation: STRING = "DELETE FROM es_installations WHERE iid=:iid AND lid=:lid;"
 

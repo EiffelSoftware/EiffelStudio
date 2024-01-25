@@ -268,6 +268,10 @@ feature -- Change
 		do
 		end
 
+	update_installation_license (inst: ES_CLOUD_INSTALLATION; a_lic: ES_CLOUD_LICENSE)
+		do
+		end
+
 	save_session (a_session: ES_CLOUD_SESSION)
 		do
 		end

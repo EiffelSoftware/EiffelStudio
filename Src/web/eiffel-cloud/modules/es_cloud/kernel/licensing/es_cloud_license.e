@@ -73,6 +73,19 @@ feature -- Access
 			Result := fallback_date /= Void
 		end
 
+	may_be_eligible_to_fallback: BOOLEAN
+		local
+			dt: DATE_TIME
+		do
+			if plan.has_price then
+				create dt.make_now_utc
+				dt.day_add (-365)
+				if creation_date < dt then
+					Result := True
+				end
+			end
+		end
+
 feature -- Status report
 
 	has_id: BOOLEAN

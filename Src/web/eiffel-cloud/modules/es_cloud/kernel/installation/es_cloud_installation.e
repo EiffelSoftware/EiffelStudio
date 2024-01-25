@@ -135,6 +135,11 @@ feature -- Element change
 
 feature {ES_CLOUD_API} -- Update element
 
+	update_license (a_license: ES_CLOUD_LICENSE)
+		do
+			update_license_id (a_license.id)
+		end
+
 	update_license_id (a_license_id: like license_id)
 		do
 			license_id := a_license_id

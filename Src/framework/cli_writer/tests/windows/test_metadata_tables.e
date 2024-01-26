@@ -13,20 +13,23 @@ class
 inherit
 	EQA_TEST_SET
 
+	TEST_I
+		undefine
+			default_create
+		end
+
 feature -- Test routines
 
 	test_empty_assembly
 			-- New test routine
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			size: INTEGER
 		do
 			(create {CLI_COM}).initialize_com
 
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 			create l_pe_file.make ("test_empty_com.dll", True, True, False, md_emit)
 			l_pe_file.save
 		end
@@ -35,15 +38,13 @@ feature -- Test routines
 			-- New test routine
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			my_assembly: INTEGER
 		do
 			(create {CLI_COM}).initialize_com
 
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
@@ -58,15 +59,13 @@ feature -- Test routines
 	test_define_module
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			l_pub_key_token: MD_PUBLIC_KEY_TOKEN
 			my_assembly, mscorlib_token: INTEGER
 
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
@@ -120,7 +119,6 @@ feature -- Test routines
 	test_define_type_ref
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			object_type_token, mscorlib_token, object_ctor, tasks_type_token, system_type_token: INTEGER
@@ -136,8 +134,7 @@ feature -- Test routines
 			system_exception_token: INTEGER
 			md_pub_key_token: MD_PUBLIC_KEY_TOKEN
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
@@ -169,7 +166,6 @@ feature -- Test routines
 	test_define_member_ref
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			object_type_token, mscorlib_token, object_ctor: INTEGER
@@ -185,8 +181,7 @@ feature -- Test routines
 			system_exception_token: INTEGER
 			md_pub_key_token: MD_PUBLIC_KEY_TOKEN
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
@@ -230,7 +225,6 @@ feature -- Test routines
 	test_define_method
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			object_type_token, mscorlib_token, object_ctor: INTEGER
@@ -246,8 +240,7 @@ feature -- Test routines
 			system_exception_token: INTEGER
 			md_pub_key_token: MD_PUBLIC_KEY_TOKEN
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
@@ -298,7 +291,6 @@ feature -- Test routines
 	test_define_field
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			object_type_token, mscorlib_token, object_ctor: INTEGER
@@ -314,8 +306,7 @@ feature -- Test routines
 			system_exception_token: INTEGER
 			md_pub_key_token: MD_PUBLIC_KEY_TOKEN
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
@@ -372,7 +363,6 @@ feature -- Test routines
 	test_define_signature_local
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			object_type_token, mscorlib_token, object_ctor: INTEGER
@@ -388,8 +378,7 @@ feature -- Test routines
 			system_exception_token: INTEGER
 			md_pub_key_token: MD_PUBLIC_KEY_TOKEN
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
@@ -453,7 +442,6 @@ feature -- Test routines
 			-- Creation procedure.
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			object_type_token, mscorlib_token, object_ctor: INTEGER
@@ -469,8 +457,7 @@ feature -- Test routines
 			system_exception_token: INTEGER
 			md_pub_key_token: MD_PUBLIC_KEY_TOKEN
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
@@ -570,7 +557,6 @@ feature -- Test routines
 			-- New test routine
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			sig: MD_METHOD_SIGNATURE
 			method_writer: MD_METHOD_WRITER
@@ -584,8 +570,7 @@ feature -- Test routines
 			md_pub_key_token: MD_PUBLIC_KEY_TOKEN
 			l_entry_type_token, console_type_token, write_line_token, console_token, string_type_token, system_type_token: INTEGER
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
@@ -675,7 +660,6 @@ feature -- Test routines
 	test_define_file
 		local
 			l_pe_file: CLI_PE_FILE
-			md_dispenser: MD_DISPENSER
 			md_emit: MD_EMIT
 			md_assembly_info: MD_ASSEMBLY_INFO
 			object_type_token, mscorlib_token, object_ctor, tasks_type_token, system_type_token: INTEGER
@@ -698,8 +682,7 @@ feature -- Test routines
 			l_file: CLI_STRING
 			l_token_file: INTEGER
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (1) -- set_minor_version

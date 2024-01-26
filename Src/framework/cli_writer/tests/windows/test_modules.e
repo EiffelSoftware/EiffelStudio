@@ -6,6 +6,9 @@ note
 class
 	TEST_MODULES
 
+inherit
+	TEST_I
+
 feature -- Test
 
 	test_modules
@@ -64,8 +67,7 @@ feature -- app_module
 			mscorlib_token: INTEGER
 			l_type_token: INTEGER
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
@@ -243,8 +245,7 @@ feature -- Modules
 			string_token: INTEGER
 			mscorlib_token: INTEGER
 		do
-			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := new_emitter
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (1)

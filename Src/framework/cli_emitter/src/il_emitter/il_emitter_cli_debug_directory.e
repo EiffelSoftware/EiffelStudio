@@ -1,5 +1,5 @@
 note
-	description: "Data regarding debugger info in PE file, this class is just a workaround with NULL operations."
+	description: "Data regarding debugger info in PE file"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,8 +20,16 @@ feature {NONE} -- Initialization
 	make
 			-- Allocate `item'
 		do
-			to_implement ("TODO add implementation")
+			create dbg_directory
+			set_characteristics (0)
+			set_date_stamp ({CLI_TIME}.time (default_pointer))
+			set_major_version (0)
+			set_minor_version (0)
+			set_type ({CLI_DEBUG_CONSTANTS}.Type_codeview)
 		end
+
+
+	dbg_directory: CLI_IMG_DEBUG_DIRECTORY
 
 feature -- Settings
 
@@ -30,7 +38,7 @@ feature -- Settings
 		require
 			valid_size: a_size >= 0
 		do
-			to_implement ("TODO add implementation")
+			dbg_directory.set_size_of_data (a_size)
 		end
 
 	set_address_of_data (a_rva: INTEGER)
@@ -38,7 +46,7 @@ feature -- Settings
 		require
 			valid_rva: a_rva /= 0
 		do
-			to_implement ("TODO add implementation")
+			dbg_directory.set_address_of_raw_data (a_rva)
 		end
 
 	set_pointer_to_data (a_pos: INTEGER)
@@ -46,12 +54,45 @@ feature -- Settings
 		require
 			valid_rva: a_pos /= 0
 		do
-			to_implement ("TODO add implementation")
+			dbg_directory.set_pointer_to_raw_data (a_pos)
+		end
+
+
+feature {NONE} -- Implementation
+
+	set_characteristics (a_characteristics: INTEGER_32)
+			-- Set `characteristics' with `a_characteristics'.
+		do
+			dbg_directory.set_characteristics (a_characteristics)
+		end
+
+	set_date_stamp (a_date_stamp: INTEGER_32)
+			-- Set `date_stamp' with `a_date_stamp'.
+		do
+			dbg_directory.set_time_date_stamp (a_date_stamp)
+		end
+
+	set_major_version (a_major_version: INTEGER_16)
+			-- Set `major_version' with `a_major_version'.
+		do
+			dbg_directory.set_major_version (a_major_version)
+		end
+
+	set_minor_version (a_minor_version: INTEGER_16)
+			-- Set `minor_version' with `a_minor_version'.
+		do
+			dbg_directory.set_minor_version (a_minor_version)
+		end
+
+	set_type (a_dbg_type: INTEGER_32)
+			-- Set `dbg_type' with `a_dbg_type'.
+		do
+			dbg_directory.set_dbg_type (a_dbg_type)
 		end
 
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

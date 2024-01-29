@@ -9,19 +9,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -36,7 +36,7 @@ indexing
 		]"
 
 */
-	
+
 using System;
 using System.Collections;
 using System.Text;
@@ -44,6 +44,7 @@ using System.Reflection;
 using EiffelSoftware.Runtime.CA;
 using EiffelSoftware.Runtime.Enums;
 using EiffelSoftware.Runtime.Types;
+using System.Runtime.InteropServices;
 
 namespace EiffelSoftware.Runtime {
 
@@ -60,6 +61,7 @@ public delegate object EIFFEL_FUNCTION_DELEGATE (object args);
 public delegate void EIFFEL_EVENT_HANDLER (object sender, EIFFEL_EVENT_ARGS a);
 
 public delegate int GTK_MARSHAL_DISPATCHER_DELEGATE (IntPtr action, int n_args, IntPtr args, IntPtr return_value);
+
 // Generic event arguments
 public class EIFFEL_EVENT_ARGS : EventArgs
 {
@@ -93,7 +95,7 @@ feature {NONE} -- Initialization
 /*
 feature -- Assertions
 */
-	
+
 	public static bool in_assertion ()
 		// Is checking of assertions needed?
 	{
@@ -286,7 +288,7 @@ feature -- Assertions
 			// If `is_global_assertion_level_set' is set, then we can return
 			// the global one.
 		if (is_global_assertion_level_set) {
-			caller_supplier_precondition = 
+			caller_supplier_precondition =
 				(global_assertion_level & ASSERTION_LEVEL_ENUM.supplier_precond ) == ASSERTION_LEVEL_ENUM.supplier_precond;
 			return Result;
 		} else if ((assertion_levels != null)) {
@@ -299,7 +301,7 @@ feature -- Assertions
 		} else {
 			type_assertion_level = ASSERTION_LEVEL_ENUM.no;
 		}
-		caller_supplier_precondition = 
+		caller_supplier_precondition =
 			((type_assertion_level & ASSERTION_LEVEL_ENUM.supplier_precond ) == ASSERTION_LEVEL_ENUM.supplier_precond);
 		return Result;
 	}
@@ -420,7 +422,7 @@ feature -- Exceptions
 		}
 		return l_t;
 	}
-	
+
 	[EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
 	public static bool is_ignore_contract_violation_once;
 			//Should next/current contract violation be ignored?
@@ -443,7 +445,7 @@ feature -- Exceptions
 			{
 				throw;
 			}else
-			{	
+			{
 				//reset flag first
 				is_ignore_contract_violation_once = false;
 
@@ -536,7 +538,7 @@ feature {NONE} -- RT Extension
 	[ThreadStatic]
 	public static RT_EXTENSION_I rt_extension_object;
 		// RT_EXTENSION object
-	
+
 /*
 feature {NONE} -- Implementation
 */
@@ -570,7 +572,7 @@ feature {NONE} -- Implementations: Assertions
 	[ThreadStatic]
 	private static bool internal_in_precondition = false;
 	// Flag if in precondition checking.
-	
+
 	[ThreadStatic]
 	private static bool caller_supplier_precondition = false;
 		// Flag used to detect whether the caller has supplier
@@ -655,16 +657,16 @@ feature -- Builtin implementations for Eiffel classes, see Eiffel classes for co
 		return true;
 	}
 	public static bool builtin_PLATFORM_is_windows () {
-		return true;
+		return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 	}
 	public static bool builtin_PLATFORM_is_unix () {
-		return false;
+		return (! RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 	}
 	public static bool builtin_PLATFORM_is_vms () {
 		return false;
 	}
 	public static bool builtin_PLATFORM_is_mac () {
-		return false;
+		return RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 	}
 	public static bool builtin_PLATFORM_is_vxworks () {
 		return false;
@@ -1001,7 +1003,7 @@ feature -- Status report
 		// Given an Eiffel object `an_obj' retrieves its associated type if any.
 	{
 		EIFFEL_TYPE_INFO l_object = an_obj as EIFFEL_TYPE_INFO;
-		
+
 		if (l_object != null) {
 			return l_object.____type ();
 		} else {
@@ -1052,7 +1054,7 @@ feature -- Status report
 			t = type_of_generic_parameter (current, f_t.position);
 		}
 		return attempted_on_type (t,obj);
-	}	
+	}
 
 //FIXME: to remove when TUPLE is updated not to use this routine anymore.
 	public static Type type_of_generic_parameter (object an_obj, int pos)
@@ -1149,7 +1151,7 @@ feature -- Status report
 
 		if (is_eiffel_array (o)) {
 				// Get SPECIAL object
-			eiffel_array_type = o.GetType();	
+			eiffel_array_type = o.GetType();
 			area_info = eiffel_array_type.GetField ("$$area");
 			if (area_info == null) {
 				area_info = eiffel_array_type.GetField ("$$Area");
@@ -1177,7 +1179,7 @@ feature -- Status report
 /*
 feature -- Hash code
 */
-	public static Int32 hash_code (Object o) 
+	public static Int32 hash_code (Object o)
 		// Result of call of `o.GetHashCode()'.
 	{
 		return o.GetHashCode();
@@ -1251,7 +1253,7 @@ feature -- Introspection
 			// BIT types are not implemented on .NET
 		return 0;
 	}
-	
+
 	[CLSCompliant(false)]
 	public static ulong object_size (object obj)
 		// Physical size of an object.

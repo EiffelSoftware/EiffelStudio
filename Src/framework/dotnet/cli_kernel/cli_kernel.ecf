@@ -16,6 +16,7 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="interface" location=".\interface\" recursive="true"/>
 		<cluster name="metadata" location=".\metadata\" recursive="true"/>
+		<cluster name="constants" location=".\constants\" recursive="true"/>
 		<cluster name="misc" location=".\misc\" recursive="true">
 			<file_rule>
 				<exclude>/others$</exclude>

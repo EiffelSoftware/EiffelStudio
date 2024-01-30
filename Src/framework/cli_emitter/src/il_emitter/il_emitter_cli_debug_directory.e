@@ -22,10 +22,10 @@ feature {NONE} -- Initialization
 		do
 			create dbg_directory
 			set_characteristics (0)
-			set_date_stamp ({IL_CLI_TIME}.time (default_pointer))
+			set_date_stamp ({CLI_TIME}.time (default_pointer))
 			set_major_version (0)
 			set_minor_version (0)
-			set_type ({IL_CLI_DEBUG_CONSTANTS}.Type_codeview)
+			set_type ({CLI_DEBUG_CONSTANTS}.Type_codeview)
 		end
 
 

@@ -1172,8 +1172,8 @@ feature -- Access: subscriptions
 			Result := es_cloud_storage.license_installations (a_license.id)
 		end
 
-	adapted_licenses (a_user: ES_CLOUD_USER; a_inst: ES_CLOUD_INSTALLATION): detachable ARRAYED_LIST [ES_CLOUD_LICENSE]
-			-- Adapted license for a installation and a user.
+	other_adapted_licenses (a_user: ES_CLOUD_USER; a_inst: ES_CLOUD_INSTALLATION): detachable ARRAYED_LIST [ES_CLOUD_LICENSE]
+			-- Other adapted licenses for a installation and a user.
 		local
 			lic: ES_CLOUD_LICENSE
 			l_has_valid_license: BOOLEAN
@@ -1197,7 +1197,10 @@ feature -- Access: subscriptions
 					l_licenses as ic
 				loop
 					lic := ic.item.license
-					if lic.is_valid (pl, ve) then
+					if
+						lic.is_valid (pl, ve) and then
+						lic.id /= a_inst.license_id -- Exclude current installation license
+					then
 						l_has_valid_license := True
 
 						l_inst_limit := lic.installations_limit

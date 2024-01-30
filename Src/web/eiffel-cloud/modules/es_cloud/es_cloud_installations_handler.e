@@ -138,7 +138,7 @@ feature -- Execution
 				es_cloud_api.append_one_line_license_view_to_html (l_inst_lic, u, es_cloud_module, s)
 				s.append ("</div>")
 			end
-			if attached es_cloud_api.adapted_licenses (u, inst) as lst then
+			if attached es_cloud_api.other_adapted_licenses (u, inst) as lst then
 				s.append ("<div class=%"title%">Available license(s)</div>%N")
 				s.append ("<div class=%"es-adapted-licenses%"><ul>%N")
 				across

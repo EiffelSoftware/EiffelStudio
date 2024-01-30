@@ -134,7 +134,7 @@ feature -- Execution
 						end
 						r.add_self (r.location)
 							-- Added all adapted licenses ... the user should be able to change current licence
-						if attached es_cloud_api.adapted_licenses (a_user, inst) as l_adapted_licenses then
+						if attached es_cloud_api.other_adapted_licenses (a_user, inst) as l_adapted_licenses then
 								-- All valid licenses, so the user may pick from one of them.
 							create tb.make (l_adapted_licenses.count)
 							across

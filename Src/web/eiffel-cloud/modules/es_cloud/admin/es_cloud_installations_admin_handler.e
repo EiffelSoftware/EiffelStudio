@@ -98,7 +98,7 @@ feature -- Execution
 							s.append ("<div class=%"license%"><strong>License:</strong>")
 							es_cloud_api.append_one_line_license_view_to_html (lic, lic_user, admin_module.module, s)
 							s.append ("</div>%N")
-							if attached es_cloud_api.adapted_licenses (lic_user, inst) as l_adapted_licenses then
+							if attached es_cloud_api.other_adapted_licenses (lic_user, inst) as l_adapted_licenses then
 								s.append ("<div class=%"es-adapted-licenses%"><strong>Available license(s):</strong><ul>")
 									-- All valid licenses, so the user may pick from one of them.
 								across

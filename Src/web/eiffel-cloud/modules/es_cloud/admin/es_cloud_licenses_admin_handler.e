@@ -781,7 +781,11 @@ feature -- Execution
 							lic := ic.item
 							l_export.append (lic.key)
 							l_export.append_character (',')
-							if lic.is_expired then
+							if lic.is_suspended then
+								l_export.append ("suspended,,") -- status, no days
+							elseif lic.is_fallback then
+								l_export.append ("fallback,,") -- status, no days
+							elseif lic.is_expired then
 								l_export.append ("expired,,") -- status, no days
 							elseif lic.expiration_date /= Void then
 								l_export.append_character (',') -- status

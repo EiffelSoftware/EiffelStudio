@@ -161,9 +161,12 @@ feature -- Hooks configuration
 								lic_fset.add_css_style ("margin-bottom: 1em; border: solid 1px blue;")
 								fset.extend (lic_fset)
 								create s.make_empty
-								s.append ("<div class=%"license")
+								s.append ("<div class=%"es-license")
 								if l_license.is_expired then
 									s.append (" expired")
+								end
+								if l_license.is_suspended then
+									s.append (" suspended")
 								end
 								if l_license.is_fallback then
 									s.append (" fallback")
@@ -181,9 +184,12 @@ feature -- Hooks configuration
 									s.append (" until <span class=%"date%">")
 									s.append (date_time_to_string (dt))
 									s.append ("</span>")
-									if l_license.is_expired then
-										s.append (" <span class=%"expired%">(Expired)</span>")
-									end
+								end
+								if l_license.is_suspended then
+									s.append (" <span class=%"status warning suspended%">(Suspended)</span>")
+								end
+								if l_license.is_expired then
+									s.append (" <span class=%"status warning expired%">(Expired)</span>")
 								end
 								if attached l_license.fallback_date as l_fb then
 									s.append (" <span class=%"fallback%">(Fallback since " + date_time_to_string (l_fb) + ")</span>")

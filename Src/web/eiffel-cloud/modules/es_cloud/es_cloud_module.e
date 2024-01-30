@@ -162,6 +162,7 @@ feature -- Access: router
 			h_stats: ES_CLOUD_STATISTICS_HANDLER
 			h_act: ES_CLOUD_ACTIVITIES_HANDLER
 			h_lic: ES_CLOUD_LICENSES_HANDLER
+			h_inst: ES_CLOUD_INSTALLATIONS_HANDLER
 			h_redeem: ES_CLOUD_REDEEM_TOKEN_HANDLER
 		do
 			if attached es_cloud_api as l_mod_api then
@@ -191,6 +192,10 @@ feature -- Access: router
 				a_router.handle ("/" + licenses_location + "_/{action}", h_lic, a_router.methods_get_post)
 				a_router.handle ("/" + licenses_location + "_/{action}/", h_lic, a_router.methods_get_post)
 
+				create h_inst.make (Current, l_mod_api)
+				a_router.handle ("/" + installations_location + "{installation_id}", h_inst, a_router.methods_get)
+				a_router.handle ("/" + installations_location, h_inst, a_router.methods_get)
+
 				create h_redeem.make (Current, l_mod_api)
 				a_router.handle ("/" + redeem_location, h_redeem, a_router.methods_get_post)
 				a_router.handle ("/" + redeem_location + "{redeem}", h_redeem, a_router.methods_get_post)
@@ -211,6 +216,8 @@ feature -- Access: router
 
 	licenses_location: STRING = "licenses/"
 
+	installations_location: STRING = "installations/"
+
 	redeem_location: STRING = "redeem/"
 
 	license_activities_location (lic: ES_CLOUD_LICENSE): STRING
@@ -221,6 +228,11 @@ feature -- Access: router
 	license_location (lic: ES_CLOUD_LICENSE): STRING
 		do
 			Result := licenses_location + url_encoded (lic.key)
+		end
+
+	installation_location (inst: ES_CLOUD_INSTALLATION): STRING
+		do
+			Result := installations_location + url_encoded (inst.id)
 		end
 
 	user_cloud_profile_location (u: ES_CLOUD_USER): STRING
@@ -621,7 +633,7 @@ feature -- Hooks: block
 					lst as ic
 				loop
 					lic := ic.item.license
-					if not lic.is_expired then
+					if lic.is_active then
 						l_active_count := l_active_count + 1
 					end
 					api.append_short_license_view_to_html (lic, a_user, Current, l_html)
@@ -630,7 +642,11 @@ feature -- Hooks: block
 			if l_active_count = 0 then
 				l_html.append ("<a href=%"" + a_response.location_url (licenses_location, Void) + "%">No active license...</a>")
 			end
+			l_html.append ("<div class=%"es-installations%">")
+			l_html.append ("<a href=%"" + a_response.location_url (installations_location, Void) + "%">Your installations ...</a>")
 			l_html.append ("</div>")
+			l_html.append ("</div><!-- es_summary -->%N")
+
 			create Result.make_raw ("cloud_account_summary", Void, l_html, a_response.api.formats.full_html)
 		end
 

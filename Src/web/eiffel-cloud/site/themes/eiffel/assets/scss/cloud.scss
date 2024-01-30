@@ -148,7 +148,8 @@ div.es-new-license {
 		}
 	}
 }
-div.es-license {
+div.es-licenses div.es-license, 
+div.es_summary div.es-license {
 	color: #5b5b5b;
 	padding: 1rem;
 	border: solid 1px #ccc;

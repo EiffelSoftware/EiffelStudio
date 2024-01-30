@@ -131,6 +131,9 @@ feature -- Helper
 feature {NONE} -- Response helper
 
 	license_to_table (lic: ES_CLOUD_LICENSE): STRING_TABLE [detachable ANY]
+		local
+			exp: DATE_TIME
+			l_days_remaining: INTEGER
 		do
 			create Result.make (8)
 --			Result.force (lic.id, "id")
@@ -140,10 +143,21 @@ feature {NONE} -- Response helper
 			Result.force (date_time_to_string (lic.creation_date), "creation")
 			Result.force (lic.is_active, "is_active")
 			Result.force (lic.is_fallback, "is_fallback")
-			if attached lic.expiration_date as exp then
-				Result.force (date_time_to_string (exp), "expiration")
-				Result.force (lic.days_remaining, "days_remaining")
+			if lic.is_suspended then
+				Result.force (True, "is_suspended")
+					-- Ensure old version of EiffelStudio acknowledges the license is not active!
+				create exp.make_now_utc
+				exp.day_add (-15)
+				l_days_remaining := 0
+			else
+				exp := lic.expiration_date
+				l_days_remaining := lic.days_remaining
 			end
+			if exp /= Void then
+				Result.force (date_time_to_string (exp), "expiration")
+				Result.force (l_days_remaining, "days_remaining")
+			end
+
 			if attached es_cloud_api.license_limitations_string (lic) as lim then
 				Result.force (lim, "plan_limitations")
 			end
@@ -156,6 +170,7 @@ feature {NONE} -- Response helper
 			Result.force (lic.plan.id, "plan_id")
 			Result.force (date_time_to_string (lic.creation_date), "creation")
 			Result.force (lic.is_active, "is_active")
+			Result.force (lic.is_fallback, "is_fallback")
 			if attached lic.expiration_date as exp then
 				Result.force (date_time_to_string (exp), "expiration")
 				Result.force (lic.days_remaining, "days_remaining")

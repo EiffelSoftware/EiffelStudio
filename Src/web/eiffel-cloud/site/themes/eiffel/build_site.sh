@@ -5,13 +5,10 @@ scss2css()
 	sass --scss --sourcemap=none -t expanded scss/$1.scss:css/$1.css
 }
 
-echo [es_cloud] Build css files from scss 
+echo [themes/eiffel] Build css files from scss 
 
-pushd site/files
+pushd assets
 #sass --scss --sourcemap=none -t expanded scss/es_cloud-admin.scss:css/es_cloud-admin.css
-scss2css es_cloud
-scss2css es_cloud-admin
-scss2css es_forms
-scss2css pricing
+scss2css style
 
 popd

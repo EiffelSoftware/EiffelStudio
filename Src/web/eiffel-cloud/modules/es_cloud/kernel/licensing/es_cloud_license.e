@@ -96,9 +96,11 @@ feature -- Status report
 	is_active: BOOLEAN
 		do
 			if is_suspended then
-					-- False
-			elseif attached expiration_date as l_exp_date then
-				Result := l_exp_date >= (create {DATE_TIME}.make_now_utc)
+				Result := False
+			elseif is_fallback then
+				Result := True
+			elseif is_expired then
+				Result := False
 			else
 				Result := True
 			end
@@ -114,7 +116,9 @@ feature -- Status report
 
 	is_expired: BOOLEAN
 		do
-			Result := not is_active
+			if attached expiration_date as l_exp_date then
+				Result := l_exp_date < (create {DATE_TIME}.make_now_utc)
+			end
 		end
 
 	days_remaining: INTEGER

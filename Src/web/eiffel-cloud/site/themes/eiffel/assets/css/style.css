@@ -6,7 +6,7 @@
     opacity: 1;
   }
 }
-.box, #main .es-message, #main div.es-plans ul li.es-plan-box, div.login-box {
+.box, div.login-box, #main div.es-plans ul li.es-plan-box, #main .es-message {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
@@ -24,7 +24,7 @@
     opacity: 1;
   }
 }
-.box, #main .es-message, #main div.es-plans ul li.es-plan-box, div.login-box {
+.box, div.login-box, #main div.es-plans ul li.es-plan-box, #main .es-message {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
@@ -181,74 +181,86 @@ div.es-new-license form .button {
   top: -4rem;
   right: 1rem;
   margin: 1rem;
-  padding: .3rem;
+  padding: 0.3rem;
   color: #fff;
   background-color: #00a6fd;
   border-radius: 20px;
-  border: solid .3rem #00a6fd;
+  border: solid 0.3rem #00a6fd;
   font-size: 110%;
   font-weight: bold;
 }
 div.es-new-license form .button:hover {
   color: #00a6fd;
-  border: solid .3rem #00a6fd;
-  background-color: #00a6fd20;
+  border: solid 0.3rem #00a6fd;
+  background-color: rgba(0, 166, 253, 0.1254901961);
 }
 
-div.es-license {
+div.es-licenses div.es-license,
+div.es_summary div.es-license {
   color: #5b5b5b;
   padding: 1rem;
   border: solid 1px #ccc;
   background-color: #f5f5f5;
   margin-bottom: 1rem;
 }
-div.es-license div.header {
+div.es-licenses div.es-license div.header,
+div.es_summary div.es-license div.header {
   padding: 1rem;
   background-color: #fff;
   position: relative;
   box-sizing: border-box;
 }
-div.es-license div.header div.title {
+div.es-licenses div.es-license div.header div.title,
+div.es_summary div.es-license div.header div.title {
   font-weight: bold;
   font-size: larger;
 }
-div.es-license div.header div.license-id {
+div.es-licenses div.es-license div.header div.license-id,
+div.es_summary div.es-license div.header div.license-id {
   box-sizing: border-box;
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
 }
-div.es-license div.header div.license-id span.id {
+div.es-licenses div.es-license div.header div.license-id span.id,
+div.es_summary div.es-license div.header div.license-id span.id {
   display: block;
   font-weight: bold;
 }
-div.es-license div.details div.es-installations {
+div.es-licenses div.es-license div.details div.es-installations,
+div.es_summary div.es-license div.details div.es-installations {
   margin-top: 0.2rem;
 }
-div.es-license div.details li {
+div.es-licenses div.es-license div.details li,
+div.es_summary div.es-license div.details li {
   margin-bottom: 0.2rem;
 }
-div.es-license div.details li span.title {
+div.es-licenses div.es-license div.details li span.title,
+div.es_summary div.es-license div.details li span.title {
   font-weight: bold;
 }
-div.es-license div.details li.status.warning {
+div.es-licenses div.es-license div.details li.status.warning,
+div.es_summary div.es-license div.details li.status.warning {
   color: red !important;
   font-weight: bold;
 }
-div.es-license div.details li.es-installation {
+div.es-licenses div.es-license div.details li.es-installation,
+div.es_summary div.es-license div.details li.es-installation {
   font-style: italic;
 }
-div.es-license div.details li.es-installation button {
+div.es-licenses div.es-license div.details li.es-installation button,
+div.es_summary div.es-license div.details li.es-installation button {
   color: #c00;
   padding: 2px 4px 2px 4px;
   border-radius: 3px;
   border: solid 1px #ccc;
   font-size: larger;
   font-weight: bold;
-  margin-left: .5rem;
-  margin-right: .5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
-div.es-license div.details li.es-installation button:hover {
+div.es-licenses div.es-license div.details li.es-installation button:hover,
+div.es_summary div.es-license div.details li.es-installation button:hover {
   color: white;
   background-color: #f00;
 }
@@ -256,7 +268,7 @@ div.es-license div.details li.es-installation button:hover {
 .es_summary div.es-license {
   padding: 0;
   border: none;
-  margin-bottom: .02rem;
+  margin-bottom: 0.02rem;
 }
 .es_summary div.header {
   border: solid 1px #ccc;
@@ -285,7 +297,7 @@ body {
   min-height: 100%;
   position: relative;
   background-color: #ececee;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-family: Arial, Tahoma, sans-serif;
   line-height: 1.6rem;
   box-sizing: border-box;
@@ -337,8 +349,8 @@ body {
   font-family: "Lato", sans-serif;
   text-transform: uppercase;
   font-weight: bold;
-  letter-spacing: .02em;
-  font-size: .9em;
+  letter-spacing: 0.02em;
+  font-size: 0.9em;
 }
 #header #menu-bar ul.horizontal li.active {
   color: #fff;
@@ -355,8 +367,8 @@ body {
   display: flex;
   margin-left: auto;
   padding: 10px 20px 0 20px;
-  background: white;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 40%, #75c1ff 100%);
+  background: rgb(255, 255, 255);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 40%, rgb(117, 193, 255) 100%);
 }
 #header div#built-with-eiffel a {
   color: #000;
@@ -379,7 +391,7 @@ div.with-tooltip div.tooltip {
   border-radius: 6px;
   text-align: center;
   padding: 1rem;
-  	  	/*
+  /*
   	  	&::after {
   	  	  content: " ";
   	  	  position: absolute;
@@ -389,8 +401,8 @@ div.with-tooltip div.tooltip {
   	  	  border-width: 8px;
   	  	  border-style: solid;
   	  	  border-color: transparent transparent #373c8d transparent;
-		}
-		*/
+  }
+  */
   z-index: 999;
 }
 div.with-tooltip div.tooltip.blue {
@@ -414,7 +426,7 @@ div.with-tooltip:hover .tooltip.down {
   -o-transition: margin-top 0.2s ease-in-out;
   -ms-transition: margin-top 0.2s ease-in-out;
   transition: margin-top 0.2s ease-in-out;
-  margin-top: .3rem;
+  margin-top: 0.3rem;
 }
 
 div#content {
@@ -482,29 +494,24 @@ div#footer div.footer_copyright a:hover, footer div.footer_copyright a:hover {
   #header #logo {
     padding-left: 2rem;
   }
-
   #header #menu-bar {
     position: absolute;
     left: 0;
     top: 0;
     clear: both;
   }
-
   div#built-with-eiffel {
     display: none;
   }
-
   div#content {
     flex-direction: column;
   }
-
   #menu-bar div.menu li.icon {
     display: inline-block !important;
   }
   #menu-bar div.menu li:not(.icon) {
     display: none !important;
   }
-
   #menu-bar div.menu.responsive {
     background-color: white !important;
   }
@@ -576,7 +583,8 @@ form div.description.collapsible div:nth-child(0n+1):not(expanded)::before {
 form div.description.collapsible div:nth-child(0n+1).expanded::before {
   content: "[ - ] ";
 }
+
 ul.pagination li {
-    margin-right: .5em;
-    display: inline-block;
+  margin-right: 0.5em;
+  display: inline-block;
 }

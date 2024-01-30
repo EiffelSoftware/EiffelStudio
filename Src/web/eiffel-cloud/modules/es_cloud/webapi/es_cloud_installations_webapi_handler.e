@@ -404,8 +404,6 @@ feature -- Execution
 		local
 			r: like new_response
 			f: CMS_FORM
-			l_op: READABLE_STRING_GENERAL
-			l_installation: ES_CLOUD_INSTALLATION
 		do
 			if a_user.same_as (api.user) or else api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_accounts) then
 				r := new_response (req, res)
@@ -494,8 +492,14 @@ feature {NONE} -- User installation post handling
 					elseif not a_license.is_valid (a_installation.platform, a_installation.product_version) then
 						-- ERROR: invalid license!
 						create err_msg.make_from_string_general ({STRING_32} "invalid license <"+ a_license.key +{STRING_32} ">")
-						if a_license.is_expired then
-							err_msg.append ({STRING_32} " EXPIRED")
+						if not a_license.is_active then
+							if a_license.is_expired then
+								err_msg.append ({STRING_32} " EXPIRED")
+							elseif a_license.is_suspended then
+								err_msg.append ({STRING_32} " SUSPENDED")
+							else
+								err_msg.append ({STRING_32} " INACTIVE")
+							end
 						else
 							if attached a_license.version as l_version then
 								create l_expecting.make_from_string ({STRING_32} " version=" + l_version)

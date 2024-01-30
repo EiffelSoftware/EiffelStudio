@@ -81,7 +81,7 @@ feature -- Routes
 			qp: CMS_DATA_QUERY_PARAMETERS
 			l_page_helper: CMS_PAGINATION_GENERATOR
 			s_pager: STRING
-			l_lower, l_upper: NATURAL_64
+--			l_lower, l_upper: NATURAL_64
 		do
 			if api.cms_api.has_permission (perm_admin_nodes) then
 				if attached {WSF_STRING} req.path_parameter ("type") as p_node_type then
@@ -92,12 +92,11 @@ feature -- Routes
 							nb := l_node_api.nodes_of_type_count (nt)
 
 							create s_pager.make_empty
-							create l_page_helper.make (req.path_info + "?page={page}&size={size}", nb, 25) -- FIXME: Make this default page size a global CMS settings
+							create l_page_helper.make (req.percent_encoded_path_info + "?page={page}&size={size}", nb, 25) -- FIXME: Make this default page size a global CMS settings
 							l_page_helper.get_setting_from_request (req)
 							if l_page_helper.has_upper_limit and then l_page_helper.pages_count > 1 then
 								l_page_helper.append_to_html (l_response, s_pager)
 							end
-
 
 							s.append ("<h1>" + nb.out + " " + html_encoded (nt.title) + " nodes ...</h1>%N")
 							s.append (s_pager)

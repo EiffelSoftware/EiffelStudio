@@ -27,6 +27,7 @@
 			<renaming old_name="MD_DISPENSER" new_name="IL_MD_DISPENSER"/>
 			<renaming old_name="MD_EMIT" new_name="IL_MD_EMIT"/>
 			<renaming old_name="CLI_TIME" new_name="IL_CLI_TIME"/>
+			<renaming old_name="CLI_DEBUG_CONSTANTS" new_name="IL_CLI_DEBUG_CONSTANTS"/>
 			<renaming old_name="MD_STRONG_NAME" new_name="IL_MD_STRONG_NAME"/>
 			<renaming old_name="CLI_PE_FILE" new_name="IL_EMITTER_CLI_PE_FILE"/>
 		</library>

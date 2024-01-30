@@ -52,21 +52,52 @@ feature -- Execution
 		local
 			r: like new_generic_response
 			s: STRING
+			l_user: ES_CLOUD_USER
+			inst: ES_CLOUD_INSTALLATION
 		do
-			if
-				attached api.user as u and then
-				attached es_cloud_api.user_installation (u, a_inst_id) as inst
-			then
-				r := new_generic_response (req, res)
-				r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
-				r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
-				r.set_title ("Installation")
-				s := ""
-				s.append ("<div class=%"es-installation%">")
-				append_installation_to_html (inst, u, s)
-				s.append ("</div>") -- es-installation
-				r.set_main_content (s)
-				r.execute
+			if attached api.user as u then
+				inst := es_cloud_api.user_installation (u, a_inst_id)
+				if inst = Void then
+					if
+						attached es_cloud_api.installations_for (a_inst_id) as lst and then
+						lst.count = 1
+					then
+						inst := lst.first
+						if
+							attached es_cloud_api.license (inst.license_id) as inst_lic and then
+							attached es_cloud_api.user_for_license (inst_lic) as inst_user
+						then
+							if
+								u.same_as (inst_user)
+								or else api.has_permission (es_cloud_module.perm_view_es_installations)
+							then
+								l_user := inst_user
+							else
+								l_user := Void
+							end
+						end
+					end
+				else
+					l_user := u
+				end
+				if
+					inst /= Void and then
+					l_user /= Void and then
+					( u.same_as (l_user) or else api.has_permission (es_cloud_module.perm_view_es_installations) )
+				then
+					r := new_generic_response (req, res)
+					r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
+					r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
+					r.set_title ("Installation")
+					s := ""
+					s.append ("<div class=%"es-installation%">")
+					append_installation_to_html (inst, l_user, s)
+					s.append ("</div>") -- es-installation
+					r.set_main_content (s)
+					r.execute
+				else
+					send_access_denied (req, res)
+				end
 			else
 				send_access_denied (req, res)
 			end

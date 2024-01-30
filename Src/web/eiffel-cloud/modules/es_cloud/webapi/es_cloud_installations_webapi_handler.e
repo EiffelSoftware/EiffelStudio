@@ -366,13 +366,21 @@ feature -- Execution
 								l_new_lic := es_cloud_api.license_by_key (p_lic_id.value)
 							end
 							if l_new_lic /= Void and then not l_new_lic.key.same_string (lic.key) then
-									-- Update license for `l_installation`
-								es_cloud_api.update_installation_license (l_installation, l_new_lic)
-								r := new_response (req, res)
-								r.add_link ("es:installation", "installation", (api.absolute_url (r.location, Void) + "/" + api.url_encoded (l_installation.id)))
-								add_cloud_user_links_to (a_version, a_user, r)
-								add_user_links_to (a_user, r)
-								r.execute
+								if
+									(a_user.same_as (api.user) and then api.has_permission ({ES_CLOUD_MODULE}.perm_update_own_installations))
+									or else api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_accounts)
+								then
+										-- Update license for `l_installation`
+									es_cloud_api.update_installation_license (l_installation, l_new_lic)
+									r := new_response (req, res)
+									r.add_link ("es:installation", "installation", (api.absolute_url (r.location, Void) + "/" + api.url_encoded (l_installation.id)))
+									add_cloud_user_links_to (a_version, a_user, r)
+									add_user_links_to (a_user, r)
+									r.execute
+								else
+									r := new_access_denied_error_response (Void, req, res)
+									r.execute
+								end
 							else
 								r := new_error_response ("Error [update_license]: unexpected license", req, res)
 								add_cloud_user_links_to (a_version, a_user, r)
@@ -422,12 +430,20 @@ feature -- Execution
 						attached es_cloud_api.installation (a_installation_id, lic.id) as inst and then
 						attached es_cloud_api.license_by_key (f_new_license_id) as new_lic
 					then
-						es_cloud_api.update_installation_license (inst, new_lic)
-						r.add_link ("es:installation", "installation", (api.absolute_url (r.location, Void) + "/" + api.url_encoded (inst.id)))
-						add_installation_to (a_version, a_user, inst, r)
-						add_cloud_user_links_to (a_version, a_user, r)
-						add_user_links_to (a_user, r)
-						r.execute
+						if
+							(a_user.same_as (api.user) and then api.has_permission ({ES_CLOUD_MODULE}.perm_update_own_installations))
+							or else api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_accounts)
+						then
+							es_cloud_api.update_installation_license (inst, new_lic)
+							r.add_link ("es:installation", "installation", (api.absolute_url (r.location, Void) + "/" + api.url_encoded (inst.id)))
+							add_installation_to (a_version, a_user, inst, r)
+							add_cloud_user_links_to (a_version, a_user, r)
+							add_user_links_to (a_user, r)
+							r.execute
+						else
+							r := new_access_denied_error_response (Void, req, res)
+							r.execute
+						end
 					else
 						r := new_bad_request_error_response ("Missing value to assign installation to new license", req, res)
 						add_cloud_user_links_to (a_version, a_user, r)

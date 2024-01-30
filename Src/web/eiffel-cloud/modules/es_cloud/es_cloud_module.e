@@ -74,6 +74,7 @@ feature {CMS_MODULE} -- Access control
 			Result.force (perm_view_es_licenses)
 			Result.force (perm_view_es_installations)
 			Result.force (perm_discard_own_installations)
+			Result.force (perm_update_own_installations)
 			Result.force (perm_view_any_es_activities)
 			Result.force (perm_view_es_sessions)
 			Result.force (perm_buy_es_license)
@@ -90,6 +91,7 @@ feature -- Access control
 	perm_view_any_es_activities: STRING = "view any es activities"
 	perm_view_es_sessions: STRING = "view es sessions"
 	perm_discard_own_installations: STRING = "discard own installations"
+	perm_update_own_installations: STRING = "update own installations"
 	perm_manage_es_licenses: STRING = "manager es licenses"
 	perm_buy_es_license: STRING = "buy es licenses"
 	perm_access_es_stats: STRING = "access es stats"

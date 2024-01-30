@@ -1,5 +1,6 @@
 note
 	description: "Summary description for {ES_CLOUD_INSTALLATIONS_HANDLER}."
+	fixme: "Show the Revoke or Assign behavior only if permitted."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -155,7 +156,6 @@ feature -- Execution
 			l_inst_lic,
 			lic: ES_CLOUD_LICENSE
 		do
-			-- FIXME jfiat [2024/01/26] : es_cloud_api.append_license_to_html (lic, u, es_cloud_module, s)
 			s.append ("<div class=%"es-installation%"><p><strong>")
 			s.append (percent_encoded (inst.id))
 			s.append ("</strong>:")

@@ -40,7 +40,7 @@ class ESCL_inst_trash {
 		$(this.discard_widget).on('click', this, function(event) { 
 			if (event.data.deleted) {
 			} else {
-				var result = confirm(("You are about to revoke installation\n").concat(event.data.iid, "\nDo you confirm?"));
+				var result = confirm(("You are about to revoke this installation\n").concat(event.data.iid, "\nDo you confirm?"));
 				if (result == true) {
 					event.data.process_discard();
 				} else {
@@ -112,14 +112,14 @@ class ESCL_inst_reassign {
 		}
 	}	
 	insert_form() {
-		var but = $("<button title=\"Assign installation to license\">&#x27F3; assign</button>");
+		var but = $("<button title=\"Assign the installation to this license\">&#x27F3; Assign</button>");
 		this.line.append(but);
 		this.discard_widget = but;
 
 		$(this.discard_widget).on('click', this, function(event) { 
 			if (event.data.assigned) {
 			} else {
-				var result = confirm(("You are about to assign installation\n")
+				var result = confirm(("You are about to assign the installation\n")
 						.concat(event.data.iid, "\nto license ", event.data.nlid, "\nDo you confirm?"));
 				if (result == true) {
 					event.data.process_assign();
@@ -143,7 +143,8 @@ class ESCL_inst_reassign {
 			this.assigned = true;
 			this.line.append(data); 
 			$(this.discard_link).remove();
-			$(this.line).before("<li class=\"assigned\">Installation re-assigned</li>");
+			console.log (data);
+			$(this.line).before("<li class=\"assigned\">Installation assigned to license ["+ data['es:license']['key'] + "] <em>(reloading the page in 3 seconds...)</em></li>");
 			$(this.line).fadeOut (1000); // 1 second
 			setTimeout(function() { location.reload(); }, 3000); /* 3 sec */
 		});	

@@ -28,6 +28,10 @@ note
 class
 	CLI_IMG_DEBUG_DIRECTORY
 
+inherit
+
+	CLI_DEBUG_DIRECTORY_I
+
 feature -- Access
 
 	characteristics: INTEGER_32

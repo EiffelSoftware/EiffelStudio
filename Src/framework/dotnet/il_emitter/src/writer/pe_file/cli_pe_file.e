@@ -33,9 +33,13 @@ feature {NONE} -- Initialization
 			a_name_not_empty: not a_name.is_empty
 			valid_app_type: dll_app implies console_app
 			emitter_attached: attached e
+
 		local
 			l_characteristics: INTEGER_16
+			l_code_view: CLI_CODE_VIEW
+			l_path: PATH
 		do
+			is_debug_enabled := True
 			is_valid := True
 			file_name := a_name
 			is_dll := dll_app
@@ -72,6 +76,17 @@ feature {NONE} -- Initialization
 			end
 
 			create text_section_header.make (".text")
+
+				--| Note: the following code is to test
+				--| how to generate a debug directory entry in a PE file.
+			if is_debug_enabled and then
+			 attached debug_directory as l_debug_directory then
+				create l_path.make_current
+				l_path := l_path.extended ("debug.pdb")
+				create l_code_view.make (l_path.canonical_path.out)
+				set_debug_information (l_debug_directory, l_code_view.item.managed_pointer)
+			end
+
 			create reloc_section_header.make (".reloc")
 
 			create iat.make
@@ -133,18 +148,32 @@ feature -- Status
 			Result := resources /= Void
 		end
 
+	is_debug_enabled: BOOLEAN
+		-- is debug output enabled?
+		--| pdb generation.	
+
 feature -- Access
 
 	debug_directory: detachable CLI_DEBUG_DIRECTORY_I
+		local
+			l_result : CLI_IMG_DEBUG_DIRECTORY
 		do
-			to_implement ("Not yet implemented")
+			Result := internal_debug_directory
+			if Result = Void  then
+				create l_result
+				l_result.set_characteristics (0)
+				l_result.set_time_date_stamp ({CLI_TIME}.time (default_pointer))
+				l_result.set_major_version (0)
+				l_result.set_minor_version (0)
+				l_result.set_dbg_type ({CLI_DEBUG_CONSTANTS}.Type_codeview)
+				Result := l_result
+				internal_debug_directory := Result
+			end
 		end
+
 
 	debug_info: detachable MANAGED_POINTER
 			-- Data for storing debug information in PE files.
-		do
-			to_implement ("Not yet implemented")
-		end
 
 	text_section_header: CLI_SECTION_HEADER
 	reloc_section_header: CLI_SECTION_HEADER
@@ -155,6 +184,10 @@ feature -- Access
 		do
 			to_implement ("Not yet implemented")
 		end
+
+feature {NONE} -- Implementation
+
+	internal_debug_directory: detachable CLI_DEBUG_DIRECTORY_I
 
 feature -- Access
 
@@ -216,7 +249,7 @@ feature -- Settings
 			-- Set `debug_directory' to `a_cli_debug_directory' and `debug_info'
 			-- to `a_debug_info'.
 		do
-			to_implement ("Not yet implemented")
+			debug_info := a_debug_info
 		end
 
 	set_public_key (a_key: like public_key; a_signing: like signing)
@@ -242,7 +275,7 @@ feature -- Saving
 			l_padding: MANAGED_POINTER
 --			l_signature: MANAGED_POINTER
 			l_strong_name_location: INTEGER
---			l_size: INTEGER
+			l_size: INTEGER
 			l_uni_string: CLI_STRING
 			l_meta_data_file_name: like file_name
 		do
@@ -268,6 +301,9 @@ feature -- Saving
 			l_pe_file.put_managed_pointer (pe_header.item, 0, pe_header.count)
 			l_pe_file.put_managed_pointer (optional_header.item, 0, optional_header.count)
 			l_pe_file.put_managed_pointer (text_section_header.item, 0, text_section_header.count)
+
+				-- debug
+
 			l_pe_file.put_managed_pointer (reloc_section_header.item, 0, reloc_section_header.count)
 
 				-- Add padding to .text section
@@ -285,19 +321,21 @@ feature -- Saving
 				l_pe_file.put_managed_pointer (l_method_writer.item, 0, code_size)
 			end
 
--- No debug
---			if
---				attached debug_directory as d and then
---				attached debug_info as i
---			then
---				l_pe_file.put_managed_pointer (d, 0, d.count)
---				l_pe_file.put_managed_pointer (i, 0, i.count)
---				l_size := padding (d.count + i.count, 16)
---				if l_size > 0 then
---					create l_padding.make (l_size)
---					l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
---				end
---			end
+
+				-- Debug
+			if
+				is_debug_enabled and then
+				attached {CLI_IMG_DEBUG_DIRECTORY} debug_directory as d and then
+				attached debug_info as i
+			then
+				l_pe_file.put_managed_pointer (d.item, 0, d.size_of)
+				l_pe_file.put_managed_pointer (i, 0, i.count)
+				l_size := padding (d.size_of + i.count, 16)
+				if l_size > 0 then
+					create l_padding.make (l_size)
+					l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
+				end
+			end
 
 			if has_strong_name then
 				l_strong_name_location := l_pe_file.count
@@ -412,15 +450,16 @@ feature {NONE} -- Saving
 				code_size := 0
 			end
 
--- No debug support for now
---			if
---				attached debug_directory as d and then
---				attached debug_info as i
---			then
---				debug_size := pad_up (d.count + i.count, 16)
---			else
---				debug_size := 0
---			end
+				-- Debug support for now
+			if
+				is_debug_enabled and then
+				attached {CLI_IMG_DEBUG_DIRECTORY} debug_directory as d and then
+				attached debug_info as i
+			then
+				debug_size := pad_up (d.size_of + i.count, 16)
+			else
+				debug_size := 0
+			end
 
 -- No signing for now
 --			if
@@ -478,7 +517,7 @@ feature {NONE} -- Saving
 		local
 			import_directory, reloc_directory,
 			iat_directory, cli_directory: CLI_DIRECTORY
-			--l_debug_directory: CLI_DIRECTORY
+			l_debug_directory: CLI_DIRECTORY
 		do
 				-- Update optional header section.
 			optional_header.set_code_size (text_size_on_disk)
@@ -502,22 +541,23 @@ feature {NONE} -- Saving
 			reloc_directory.set_rva (reloc_rva)
 			reloc_directory.set_data_size (reloc_size)
 
--- No debug directory
---			if
---				attached debug_directory as d and then
---				attached debug_info as i
---			then
---				l_debug_directory := optional_header.directory (
---					{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_debug)
---				l_debug_directory.set_rva (text_rva + iat.count + cli_header.count + code_size)
---				l_debug_directory.set_data_size (d.count)
+				-- debug directory
+			if
+				is_debug_enabled and then
+				attached {CLI_IMG_DEBUG_DIRECTORY}debug_directory as d and then
+				attached debug_info as i
+			then
+				l_debug_directory := optional_header.directory (
+					{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_debug)
+				l_debug_directory.set_rva (text_rva + iat.count + cli_header.count + code_size)
+				l_debug_directory.set_data_size (d.size_of)
 
---				d.set_address_of_data (text_rva + iat.count + cli_header.count +
---					code_size + d.count)
---				d.set_pointer_to_data (headers_size_on_disk + iat.count +
---					cli_header.count + code_size + d.count)
---				d.set_size (i.count)
---			end
+				d.set_address_of_raw_data (text_rva + iat.count + cli_header.count +
+					code_size + d.size_of)
+				d.set_pointer_to_raw_data (headers_size_on_disk + iat.count +
+					cli_header.count + code_size + d.size_of)
+				d.set_size_of_data (i.count)
+			end
 
 			iat_directory := optional_header.directory (
 					{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_iat)
@@ -538,6 +578,11 @@ feature {NONE} -- Saving
 				{CLI_SECTION_CONSTANTS}.code |
 				{CLI_SECTION_CONSTANTS}.execute |
 				{CLI_SECTION_CONSTANTS}.read)
+
+				-- TODO check if we need to update the debug section header	
+
+				-- Update debug
+
 
 			reloc_section_header.set_virtual_size (pad_up (reloc_size, 4))
 			reloc_section_header.set_virtual_address (reloc_rva)

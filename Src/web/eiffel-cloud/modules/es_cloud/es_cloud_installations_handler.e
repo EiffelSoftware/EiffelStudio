@@ -170,7 +170,8 @@ feature -- Execution
 				s.append ("</div>")
 			end
 			if attached es_cloud_api.other_adapted_licenses (u, inst) as lst then
-				s.append ("<div class=%"title%">Available license(s)</div>%N")
+				s.append ("<div class=%"title%">Other available license(s)</div>%N")
+				s.append ("<div class=%"description%">It is possible to change the license used by the installation with one of following license(s)...</div>%N")
 				s.append ("<div class=%"es-adapted-licenses%"><ul>%N")
 				across
 					lst as ic

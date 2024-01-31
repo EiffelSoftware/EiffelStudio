@@ -518,17 +518,19 @@ feature -- Hooks configuration
 					if attached a_license.version as v then
 						h.extend (create {WSF_FORM_TEXT_INPUT}.make_with_text ("es-lic-version", v))
 					else
-						h.extend (create {WSF_FORM_TEXT_INPUT}.make_with_text ("es-lic-version", "Enter a valid version!!!"))
+						if attached a_license.version as pv then
+							h.extend (create {WSF_FORM_TEXT_INPUT}.make_with_text ("es-lic-version", pv))
+						else
+							h.extend (create {WSF_FORM_TEXT_INPUT}.make_with_text ("es-lic-version", "Enter a valid version!!!"))
+						end
 					end
 					create l_submit.make_with_text ("es-lic-op-fallback", "Make FallBack")
 					h.extend (l_submit)
 				end
-
 			else
 				create l_submit.make_with_text ("es-lic-op", "Save License")
 				h.extend (l_submit)
 			end
-
 		end
 
 	cloud_user_from_form (a_form: CMS_FORM; a_response: CMS_RESPONSE): detachable ES_CLOUD_USER

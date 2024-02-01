@@ -104,6 +104,32 @@ feature -- Creation Procedures
 
 	tGenericParamConstraint: NATURAL_32 = 44
 
+
+
+feature -- PDB tables
+
+	tDocument: NATURAL_32 = 48
+		-- The Document table
+
+
+	tMethodDebugInformation: NATURAL_32 = 49
+
+
+	tLocalScope: NATURAL_32 = 50
+
+
+	tLocalVariable: NATURAL_32 = 51
+
+
+	tLocalConstant: NATURAL_32 = 52
+
+	tImportScope: NATURAL_32 = 53
+
+	tStateMachineMethod: NATURAL_32 = 54
+
+	tCustomDebugInformation: NATURAL_32 = 55
+
+
 feature -- Instances
 
 	instances: ITERABLE [NATURAL_32]

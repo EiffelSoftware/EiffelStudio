@@ -80,11 +80,12 @@ feature {NONE} -- Initialization
 				--| Note: the following code is to test
 				--| how to generate a debug directory entry in a PE file.
 			if is_debug_enabled and then
-			 attached debug_directory as l_debug_directory then
+			 attached {CLI_IMG_DEBUG_DIRECTORY} debug_directory as l_debug_directory then
 				create l_path.make_current
 				l_path := l_path.extended ("debug.pdb")
-				create l_code_view.make (l_path.canonical_path.out)
+				create l_code_view.make ("test_bbb_impl.pdb")
 				set_debug_information (l_debug_directory, l_code_view.item.managed_pointer)
+				--build_pdb_file(l_code_view, l_debug_directory)
 			end
 
 			create reloc_section_header.make (".reloc")
@@ -186,6 +187,31 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	build_pdb_file (a_code_view: CLI_CODE_VIEW; a_debug_directory: CLI_IMG_DEBUG_DIRECTORY)
+		local
+			l_file: RAW_FILE
+			l_bac: BYTE_ARRAY_CONVERTER
+			l_cmp: CLI_MANAGED_POINTER
+			l_arr: ARRAY [NATURAL_8]
+		do
+			create l_file.make_create_read_write (a_code_view.path)
+
+			a_debug_directory.set_time_date_stamp (l_file.date)
+			create l_bac.make_from_string ("Eiffel.NetCore 2024")
+			l_arr := l_bac.to_natural_8_array
+			create l_cmp.make (32)
+			l_cmp.put_natural_8_array (l_arr)
+			l_cmp.put_padding (32 - l_arr.count, 0)
+
+			l_file.put_managed_pointer (l_cmp.managed_pointer, 0, 32)
+
+			create l_cmp.make (16)
+			l_cmp.put_natural_8_array (a_code_view.guid)
+
+			l_file.put_managed_pointer (l_cmp.managed_pointer, 0, 4)
+			l_file.close
+		end
 
 	internal_debug_directory: detachable CLI_DEBUG_DIRECTORY_I
 
@@ -301,8 +327,6 @@ feature -- Saving
 			l_pe_file.put_managed_pointer (pe_header.item, 0, pe_header.count)
 			l_pe_file.put_managed_pointer (optional_header.item, 0, optional_header.count)
 			l_pe_file.put_managed_pointer (text_section_header.item, 0, text_section_header.count)
-
-				-- debug
 
 			l_pe_file.put_managed_pointer (reloc_section_header.item, 0, reloc_section_header.count)
 

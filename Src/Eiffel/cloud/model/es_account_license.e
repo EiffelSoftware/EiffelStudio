@@ -33,14 +33,24 @@ feature -- Access
 
 	is_fallback: BOOLEAN
 
+	is_suspended: BOOLEAN
+
 	is_active: BOOLEAN
 		do
+			Result := (not is_expired or is_fallback) and then not is_suspended
+		ensure
+			Result implies (not is_expired or is_fallback)
+			Result implies not is_suspended
+		end
+
+	is_expired: BOOLEAN
+		do
 			if attached expiration_date as l_exp then
-				Result := l_exp >= create {DATE_TIME}.make_now_utc
+				Result := l_exp < create {DATE_TIME}.make_now_utc
 			elseif days_remaining < 0 then
-				Result := False
-			else
 				Result := True
+			else
+				Result := False
 			end
 		end
 
@@ -65,6 +75,11 @@ feature -- Element change
 	set_is_fallback (b: Like is_fallback)
 		do
 			is_fallback := b
+		end
+
+	set_is_suspended (b: like is_suspended)
+		do
+			is_suspended := b
 		end
 
 	set_plan_name (a_plan_name: READABLE_STRING_8)
@@ -98,7 +113,7 @@ feature -- Element change
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

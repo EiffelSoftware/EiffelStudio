@@ -149,6 +149,9 @@ feature {NONE} -- Initialization
 				create installation.make_with_id (s.to_string_8)
 			else
 				create l_id.make_empty
+				if eiffel_layout.is_workbench then
+					l_id.append ("wb.")
+				end
 				l_id.append (env.product_name)
 				l_id.append_character ('_')
 				create syscsts
@@ -690,6 +693,25 @@ feature -- Sign
 			on_account_signed_out (acc)
 		end
 
+	sign_in_with_credential_as_client (a_username: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL)
+			-- <Precursor>
+		do
+			if attached web_api.account_using_basic_authorization (a_username, a_password) as acc then
+				reset_guest_session
+				active_account := acc
+--				update_account (acc)
+--				store
+				on_account_signed_in (acc)
+			else
+				active_account := Void
+				active_session := Void
+					-- If guest, remains guest.
+				if web_api.has_error then
+					check_cloud_availability
+				end
+			end
+		end
+
 	sign_in_with_credential (a_username: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
@@ -966,6 +988,20 @@ feature -- Updating
 			Result := web_api.account_installations (acc.access_token.token)
 		end
 
+feature -- Installation
+
+	account_installation (acc: ES_ACCOUNT; a_installation_id: READABLE_STRING_GENERAL): detachable ES_ACCOUNT_INSTALLATION
+		do
+			Result := web_api.installation (acc.access_token.token, a_installation_id)
+		end
+
+	update_installation_license (acc: ES_ACCOUNT; a_installation: ES_ACCOUNT_INSTALLATION; a_lic: ES_ACCOUNT_LICENSE)
+		local
+			inst: ES_ACCOUNT_INSTALLATION
+		do
+			inst := web_api.update_installation (acc.access_token.token, a_installation, a_lic)
+		end
+
 feature -- Events
 
 	on_account_signed_in (acc: ES_ACCOUNT)
@@ -1220,7 +1256,7 @@ feature {NONE} -- Implementation: Internal cache
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

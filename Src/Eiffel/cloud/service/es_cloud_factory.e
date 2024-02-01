@@ -14,8 +14,13 @@ feature -- Creation
 			create {ES_CLOUD} Result.make
 		end
 
+	new_es_cloud_at (a_server_url: READABLE_STRING_8): ES_CLOUD_S
+		do
+			create {ES_CLOUD} Result.make_with_url (a_server_url)
+		end
+
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -430,6 +430,42 @@ feature -- Installation
 			end
 		end
 
+	update_installation (a_token: READABLE_STRING_8; a_installation: ES_ACCOUNT_INSTALLATION; a_lic: ES_ACCOUNT_LICENSE): ES_ACCOUNT_INSTALLATION
+		local
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+			resp: like response
+			l_installations_href, l_new_installation_href: READABLE_STRING_8
+		do
+			reset_api_call
+			if
+				attached new_http_client_session as sess
+			then
+				ctx := new_jwt_auth_context (a_token)
+
+				l_installations_href := es_account_installations_endpoint_for_token (a_token, sess)
+				if l_installations_href /= Void then
+					ctx.add_form_parameter ("installation_id", a_installation.id)
+					ctx.add_form_parameter ("operation", "update_license")
+					ctx.add_form_parameter ("license_id", a_lic.key)
+					resp := response_post (sess, l_installations_href, ctx, Void)
+					if not has_error then
+						if attached resp.string_8_item ("_links|es:installation|href") as v then
+							l_new_installation_href := v
+							record_endpoint_for_token (a_token, "_links|es:installation|href;installation=" + a_installation.id, l_new_installation_href)
+						end
+					end
+					if l_new_installation_href /= Void then
+						ctx := new_jwt_auth_context (a_token)
+
+						resp := response_get (sess, l_new_installation_href, ctx)
+						if not has_error then
+							Result := installation_from_response (resp)
+						end
+					end
+				end
+			end
+		end
+
 	begin_session (a_token: READABLE_STRING_8; params: ES_CLOUD_API_SESSION_PARAMETERS)
 		local
 			d: ES_CLOUD_PING_DATA
@@ -1106,6 +1142,9 @@ feature {NONE} -- Json handling
 				if r.boolean_item_is_true ("is_fallback") then
 					Result.set_is_fallback (True)
 				end
+				if r.boolean_item_is_true ("is_suspended") then
+					Result.set_is_suspended (True)
+				end
 				if attached r.integer_64_item ("days_remaining") as l_days_remaining then
 					Result.set_days_remaining (l_days_remaining.to_integer_32)
 				end
@@ -1134,6 +1173,8 @@ feature {NONE} -- Json handling
 	installation_from_response (resp: like response): detachable ES_ACCOUNT_INSTALLATION
 		require
 			no_error: not has_error
+		local
+			lics: ARRAYED_LIST [ES_ACCOUNT_LICENSE]
 		do
 			if attached resp.string_8_item ("es:installation|id") as v then
 				create Result.make_with_id (v)
@@ -1160,6 +1201,22 @@ feature {NONE} -- Json handling
 				attached plan_from_response (r_plan) as l_plan
 			then
 				Result.set_associated_plan (l_plan)
+			end
+			if
+				attached resp.table_item ("es:adapted_licenses") as r_lics and then
+				not r_lics.is_empty
+--				 and then
+--				attached license_from_response (r_lic) as l_lic
+			then
+				create lics.make (r_lics.count)
+				across
+					r_lics as ic
+				loop
+					if attached license_from_response (ic.item) as l_lic then
+						lics.force (l_lic)
+					end
+				end
+				Result.set_adapted_licenses (lics)
 			end
 		end
 
@@ -1225,7 +1282,7 @@ feature {NONE} -- Implementation
 			s: STRING
 			pref: STRING
 		do
-			pref := log_prefix
+			create pref.make_from_string (log_prefix)
 			io.error.put_string (pref)
 			if attached r.status_line as l_status_line then
 				io.error.put_string (l_status_line)
@@ -1254,7 +1311,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

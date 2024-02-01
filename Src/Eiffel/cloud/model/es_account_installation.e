@@ -30,6 +30,7 @@ feature -- Access
 
 	associated_plan: detachable ES_ACCOUNT_PLAN
 
+	adapted_licenses: detachable LIST [ES_ACCOUNT_LICENSE]
 
 feature -- Status report
 
@@ -49,6 +50,11 @@ feature -- Element change
 			else
 				associated_plan := Void
 			end
+		end
+
+	set_adapted_licenses (lics: like adapted_licenses)
+		do
+			adapted_licenses := lics
 		end
 
 	set_associated_plan (a_plan: like associated_plan)
@@ -87,7 +93,7 @@ feature -- Element change
 
 
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

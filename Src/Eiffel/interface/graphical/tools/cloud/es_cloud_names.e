@@ -48,12 +48,17 @@ feature -- Authentication
 	label_create_new_account: STRING_32 do Result := locale.translation (" ⮞ Create one!") end
 
 	label_sign_in_with_existing_account: STRING_32 do Result := locale.translation ("You already have an account? Sign in >>") end
+	label_no_license_for_installation: STRING_32 do Result := locale.translation ("No available license for this installation") end
 
 	label_user_name: STRING_32 do Result := locale.translation ("User Name") end
 	label_first_name: STRING_32 do Result := locale.translation ("First Name") end
 	label_last_name: STRING_32 do Result := locale.translation ("Last Name") end
 	label_password: STRING_32 do Result := locale.translation ("Password") end
 	label_email: STRING_32 do Result := locale.translation ("Email") end
+	label_license: STRING_32 do Result := locale.translation ("License") end
+	label_plan: STRING_32 do Result := locale.translation ("Plan") end
+	label_info: STRING_32 do Result := locale.translation ("Information") end
+	label_fallback_in_parentheses: STRING_32 do Result := locale.translation ("(fallback)") end
 
 	symbol_close: STRING_32 once Result := {STRING_32} "❌" end
 
@@ -83,7 +88,12 @@ feature -- Dialog
 	button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("My web account...", "cloud.info") end
 	tooltip_button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("Visit my online account (in web browser).", "cloud.info") end
 
+	button_visit_web_manage_installation: STRING_32 do Result := locale.translation_in_context ("Manage Installation...", "cloud.info") end
+	tooltip_button_visit_web_manage_installation: STRING_32 do Result := locale.translation_in_context ("Manage the current Installation online (in web browser).", "cloud.info") end
+
+
 	title_license_expired: STRING_32 do Result := locale.translation_in_context ("Your license has EXPIRED.", "cloud.info") end
+	title_license_suspended: STRING_32 do Result := locale.translation_in_context ("Your license has SUSPENDED.", "cloud.info") end
 	title_license_issue: STRING_32 do Result := locale.translation_in_context ("Issue with your license.", "cloud.info") end
 
 	title_session_paused: STRING_32 do Result := locale.translation_in_context ("This session is PAUSED.", "cloud.info") end
@@ -120,6 +130,8 @@ feature -- General
 	label_learn_more: STRING_32 do Result := locale.translation_in_context ("Learn more...", "cloud") end
 	label_terms_of_use: STRING_32 do Result := locale.translation_in_context ("Terms of use", "cloud") end
 	label_double_click_to_collapse: STRING_32 do Result := locale.translation_in_context ("Double click to collapse", "cloud") end
+	button_select: STRING_32 do Result := locale.translation_in_context ("Use license", "cloud") end
+	tooltip_button_select: STRING_32 do Result := locale.translation_in_context ("Use the selected license for the current installation", "cloud") end
 	button_guest: STRING_32 do Result := locale.translation_in_context ("Guest", "cloud") end
 	tooltip_button_guest: STRING_32 do Result := locale.translation_in_context ("Continue using EiffelStudio as a guest", "cloud") end
 	button_retry: STRING_32 do Result := locale.translation_in_context ("Retry", "cloud") end

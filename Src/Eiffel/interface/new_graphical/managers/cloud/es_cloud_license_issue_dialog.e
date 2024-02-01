@@ -32,15 +32,17 @@ feature {NONE} -- Initialization
 		local
 			lab: EV_LABEL
 			errlab: like error_label
-			b_continue, b_quit, b_check_again: EV_BUTTON
+			cl: like inner_cell
+			b_select, b_quit, b_check_again: EV_BUTTON
 			hb: EV_HORIZONTAL_BOX
-			vb: EV_VERTICAL_BOX
+			vb,tvb: EV_VERTICAL_BOX
 			sep: EV_HORIZONTAL_SEPARATOR
 			min_but_w: INTEGER
 			l_scaler: EVS_DPI_SCALER
 			l_report_label: EVS_ELLIPSIS_LABEL
-			l_weblnk: EV_HIGHLIGHT_LINK_LABEL
+			l_weblnk, l_guestlnk: EV_HIGHLIGHT_LINK_LABEL
 			l_split: EV_VERTICAL_SPLIT_AREA
+			l_lic_txt: EV_TEXT_FIELD
 		do
 			Precursor
 
@@ -48,19 +50,25 @@ feature {NONE} -- Initialization
 			create errlab
 			error_label := errlab
 
+			create cl
+			inner_cell := cl
+
 			set_size (l_scaler.scaled_size (350), l_scaler.scaled_size (150))
 			min_but_w := l_scaler.scaled_size (80)
-			create lab.make_with_text (locale.translation_in_context ("[
-Issue with your EiffelStudio license!
+			create lab.make_with_text (locale.translation_in_context ("An issue occurred with your EiffelStudio license!", "cloud.info"))
+			create l_lic_txt
+			license_text := l_lic_txt
 
-Choose [Guest] to use EiffelStudio as Guest account.
-]", "cloud.info"))
+			create l_guestlnk.make_with_text (locale.translation_in_context ("Use EiffelStudio as Guest.", "cloud.info"))
+			l_guestlnk.set_tooltip (locale.translation_in_context ("You can continue using EiffelStudio as a guest account for now.", "cloud.info"))
+			l_guestlnk.select_actions.extend (agent on_guest)
 
 			create l_weblnk.make_with_text (locale.translation_in_context ("Please visit your web account.", "cloud.info"))
 			l_weblnk.set_tooltip (locale.translation_in_context ("Please visit your web account for more information and options.", "cloud.info"))
 
-			create b_continue.make_with_text (cloud_names.button_guest)
-			b_continue.set_tooltip (cloud_names.tooltip_button_guest)
+			create b_select.make_with_text (cloud_names.button_select)
+			button_select := b_select
+			b_select.set_tooltip (cloud_names.tooltip_button_select)
 			create b_quit.make_with_text (cloud_names.button_quit)
 			b_quit.set_tooltip (cloud_names.tooltip_button_quit)
 			create b_check_again.make_with_text (cloud_names.button_check_again)
@@ -69,13 +77,32 @@ Choose [Guest] to use EiffelStudio as Guest account.
 			vb.set_padding_width (l_scaler.scaled_size (5))
 			vb.set_border_width (l_scaler.scaled_size (3))
 
+
+
 			create l_split
 			vb.extend (l_split)
-			l_split.set_first (lab)
-			l_split.set_second (errlab)
+
+			create tvb
+			tvb.set_padding_width (l_scaler.scaled_size (5))
+			tvb.set_border_width (l_scaler.scaled_size (3))
+
+			tvb.extend (lab)
+			tvb.disable_item_expand (lab)
+
+			l_lic_txt.hide
+			tvb.extend (l_lic_txt)
+			tvb.disable_item_expand (l_lic_txt)
+
+			tvb.extend (errlab)
+			l_split.set_first (tvb)
+			l_split.set_second (cl)
 			errlab.set_minimum_height (2 * errlab.font.height)
 --			vb.disable_item_expand (errlab)
 			errlab.hide
+			cl.hide
+
+			vb.extend (l_guestlnk)
+			vb.disable_item_expand (l_guestlnk)
 
 			vb.extend (l_weblnk)
 			vb.disable_item_expand (l_weblnk)
@@ -100,17 +127,18 @@ Choose [Guest] to use EiffelStudio as Guest account.
 			b_quit.set_minimum_width (min_but_w)
 			hb.disable_item_expand (b_check_again)
 
-			hb.extend (b_continue)
-			b_continue.set_minimum_width (min_but_w)
-			hb.disable_item_expand (b_continue)
+			hb.extend (b_select)
+			b_select.set_minimum_width (min_but_w)
+			hb.disable_item_expand (b_select)
+			b_select.hide
 
 			hb.extend (b_quit)
 			b_quit.set_minimum_width (min_but_w)
 			hb.disable_item_expand (b_quit)
 
-			set_default_cancel_button (b_continue)
+			set_default_cancel_button (b_check_again)
 
-			b_continue.select_actions.extend (agent on_guest)
+			b_select.select_actions.extend (agent on_select)
 			b_check_again.select_actions.extend (agent on_retry)
 			b_quit.select_actions.extend (agent on_quit)
 			l_weblnk.select_actions.extend (agent on_web_account (l_report_label))
@@ -122,35 +150,91 @@ feature -- Access: widgets
 
 	error_label: EV_TEXT
 
+	inner_cell: EV_CELL
+
+	button_select: EV_BUTTON
+
+	license_text: EV_TEXT_FIELD
+
 feature -- Access
 
 	service: ES_CLOUD_S
 
 	issue: detachable ES_ACCOUNT_LICENSE_ISSUE
+	installation: detachable ES_ACCOUNT_INSTALLATION
 
-	set_issue (a_issue: detachable ES_ACCOUNT_LICENSE_ISSUE)
+	alternative_license_selection: detachable TUPLE [license: ES_ACCOUNT_LICENSE; installation: ES_ACCOUNT_INSTALLATION; account: ES_ACCOUNT]
+
+	set_issue (a_issue: ES_ACCOUNT_LICENSE_ISSUE)
+		local
+			t: STRING_32
+			selbox: ES_CLOUD_LICENSE_SELECTION_BOX
+			inst: ES_ACCOUNT_INSTALLATION
 		do
+			button_select.hide
 			error_label.remove_text
 			error_label.hide
 			issue := a_issue
+			inst := service.installation
+			installation := inst
+			if attached a_issue.license as lic then
+				license_text.set_text (lic.key)
+				license_text.show
+			else
+				license_text.hide
+			end
 			if attached a_issue.reason as l_reason then
-				if l_reason.is_case_insensitive_equal_general ("license expired") then
+				if
+					l_reason.is_case_insensitive_equal_general ("license expired") or else
+					(attached a_issue.license as lic and then lic.is_expired)
+				then
 					set_license_expired
 				else
 					set_title (l_reason)
 				end
-				error_label.set_text (l_reason)
-				error_label.show
+				create t.make_from_string_general (l_reason)
 			elseif attached a_issue.license as lic then
-				set_license_expired
+				if lic.is_suspended then
+					set_license_suspended
+					create t.make_from_string_general (Cloud_names.title_license_suspended)
+				elseif lic.is_expired then
+					set_license_expired
+					create t.make_from_string_general (Cloud_names.title_license_expired)
+				else
+					set_license_issue
+				end
 			else
 				set_license_issue
+			end
+			if
+				attached inst.adapted_licenses as lics and then
+				not lics.is_empty and then
+				attached service.active_account as acc
+			then
+				create selbox.make (service, acc, inst, agent on_license_selected (acc, inst, ?, ?))
+				selbox.set_title (locale.translation_in_context ("Select a license (double-click to validate)", "cloud.info"))
+				inner_cell.replace (selbox)
+				inner_cell.show
+				button_select.show
+			else
+				inner_cell.hide
+			end
+			if t /= Void and then not t.is_whitespace then
+				error_label.set_text (t)
+				error_label.show
+			else
+				error_label.hide
 			end
 		end
 
 	set_license_expired
 		do
 			set_title (cloud_names.title_license_expired)
+		end
+
+	set_license_suspended
+		do
+			set_title (cloud_names.title_license_suspended)
 		end
 
 	set_license_issue
@@ -172,6 +256,41 @@ feature -- Callbacks
 			close
 		end
 
+	on_select
+		do
+			if
+				attached alternative_license_selection as sel
+			then
+				service.update_installation_license (sel.account, sel.installation, sel.license)
+				service.update_account (sel.account)
+				close
+			else
+				check has_selected_license: False end
+			end
+		end
+
+	on_license_selected (acc: ES_ACCOUNT; inst: ES_ACCOUNT_INSTALLATION; lic: detachable ES_ACCOUNT_LICENSE; lic_is_choosen: BOOLEAN)
+		do
+			if
+				lic /= Void
+			then
+				alternative_license_selection := [lic, inst, acc]
+				if lic_is_choosen then
+					on_select
+--					service.update_installation_license (acc, inst, lic)
+--					service.update_account (acc)
+--					close
+				end
+			else
+				alternative_license_selection := Void
+			end
+			if alternative_license_selection /= Void then
+				button_select.enable_sensitive
+			else
+				button_select.disable_sensitive
+			end
+		end
+
 	on_guest
 		do
 			service.continue_as_guest
@@ -186,7 +305,13 @@ feature -- Callbacks
 	close
 		do
 				-- Clean
+			error_label.remove_text
+			error_label.hide
+			inner_cell.wipe_out
+			inner_cell.hide
 			issue := Void
+			installation := Void
+			alternative_license_selection := Void
 			destroy
 		end
 
@@ -203,7 +328,7 @@ feature {NONE} -- Implementatopm
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

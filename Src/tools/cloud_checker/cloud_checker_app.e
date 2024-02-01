@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			l_verbose: INTEGER
 			l_check_connection: BOOLEAN
 			v: READABLE_STRING_32
+			l_custom_server_url: READABLE_STRING_8
 			acc: ES_ACCOUNT
 		do
 			set_eiffel_layout (create {EC_EIFFEL_LAYOUT})
@@ -75,6 +76,12 @@ feature {NONE} -- Initialization
 						if v /= Void and then v.is_integer  then
 							l_conn_timeout := v.to_integer
 						end
+					elseif arg.same_string ("--server")  and i < n then
+						i := i + 1
+						v := argument (i)
+						if v /= Void and then not v.is_whitespace and then v.is_valid_as_string_8 then
+							l_custom_server_url := v.to_string_8
+						end
 					elseif arg.same_string ("--timeout")  and i < n then
 						i := i + 1
 						v := argument (i)
@@ -92,6 +99,8 @@ feature {NONE} -- Initialization
 						print ("  --token access_token         %N")
 						print ("  --connection_timeout nb_secs %N")
 						print ("  --timeout nb_secs            %N")
+						print ("  --server custom_url          %N")
+						print ("       default:https://account.eiffel.com/api%N")
 						print ("  --check_http_clients        : check the http clients first%N")
 						print ("  --verbose|-v                : verbose output%N")
 						print ("  --help|-h                   : show this help%N")
@@ -106,7 +115,11 @@ feature {NONE} -- Initialization
 			end
 
 			create cloud_factory
-			cl := cloud_factory.new_es_cloud
+			if l_custom_server_url /= Void then
+				cl := cloud_factory.new_es_cloud_at (l_custom_server_url)
+			else
+				cl := cloud_factory.new_es_cloud
+			end
 			if l_conn_timeout > 0 then
 				cl.set_connection_timeout (l_conn_timeout)
 			end
@@ -147,7 +160,7 @@ feature {NONE} -- Initialization
 							p := get_password_from_input ("> Enter your password: ")
 							p.left_adjust; p.right_adjust
 						end
-						cl.sign_in_with_credential (u, p)
+						cl.sign_in_with_credential_as_client (u, p)
 					end
 				end
 				acc := cl.active_account
@@ -164,18 +177,8 @@ feature {NONE} -- Initialization
 				if acc /= Void then
 					if attached cl.installation as l_curr_installation then
 						print ("- Local installation:%N")
-						print ("  id=" + l_curr_installation.id + "%N")
-						if attached l_curr_installation.info as l_info then
-							print ("  info=" + l_info + "%N")
-						end
-						if attached l_curr_installation.associated_plan as pl then
-							print ("  plan=" + pl.name + "%N")
-						end
-						if attached l_curr_installation.associated_license as lic then
-							print ("  license=")
-							print_license (lic)
-							print ("%N")
-						end
+						print ("  id=")
+						print_installation (l_curr_installation, False, "  ")
 					end
 
 					print ("- checking licenses ... %N")
@@ -201,8 +204,13 @@ feature {NONE} -- Initialization
 						across
 							lst as inst
 						loop
-							print ("  |  " + inst.id + ": ")
-							print ("%N")
+							print ("  |  ")
+							if attached cl.account_installation (acc, inst.id) as l_installation then
+								print_installation (l_installation, False, "  |    ")
+							else
+								print_installation (inst, True, " ")
+								print ("%N")
+							end
 						end
 					elseif cl.has_error then
 						print_error (cl)
@@ -318,6 +326,55 @@ feature -- Access
 feature -- Change
 
 feature {NONE} -- Implementation
+
+	print_installation (inst: ES_ACCOUNT_INSTALLATION; a_inline: BOOLEAN; a_sep: STRING)
+		do
+			print (inst.id)
+			if a_inline then
+				print (":")
+			else
+				print ("%N")
+			end
+			if attached inst.creation_date as l_creation_date then
+				print (a_sep)
+				print ("creation=" + l_creation_date.out)
+				if not a_inline then
+					print ("%N")
+				end
+			end
+			if
+				attached inst.info as l_info and then
+				not l_info.is_whitespace and then
+				not l_info.same_string ("{}")
+			then
+				print (a_sep)
+				print ("info=" + l_info)
+				if not a_inline then
+					print ("%N")
+				end
+			end
+			if attached inst.associated_plan as pl then
+				print (a_sep)
+				print ("plan=" + pl.name)
+				if not a_inline then
+					print ("%N")
+				end
+			end
+			if attached inst.associated_license as lic then
+				print (a_sep)
+				print ("license=" + lic.key)
+				if not lic.is_active then
+					print (" INACTIVE")
+				end
+				if lic.is_fallback then
+					print (" FALLBACK")
+				end
+--				print_license (lic)
+				if not a_inline then
+					print ("%N")
+				end
+			end
+		end
 
 	print_license (lic: ES_ACCOUNT_LICENSE)
 		do

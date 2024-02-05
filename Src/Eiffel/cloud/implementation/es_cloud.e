@@ -748,6 +748,26 @@ feature -- Sign
 			end
 		end
 
+	new_cloud_sign_in_request (a_info: detachable READABLE_STRING_GENERAL): detachable ES_CLOUD_SIGN_IN_REQUEST
+		do
+			Result := web_api.new_sign_in_request (a_info)
+		end
+
+	check_cloud_sign_in_request (rqst: ES_CLOUD_SIGN_IN_REQUEST)
+		do
+			if attached web_api.account_using_sign_in_request (rqst) as acc then
+				active_account := acc
+				reset_guest_session
+				update_account (acc)
+				store
+				on_account_signed_in (acc)
+			else
+				active_account := Void
+				active_session := Void
+					-- If guest, remains guest.
+			end
+		end
+
 	sign_out
 		local
 			acc: like active_account
@@ -1120,6 +1140,7 @@ feature -- Storage
 								session_heartbeat := d.session_heartbeat
 							end
 						end
+						f.close
 					else
 							-- FIXME: should be created at installation... and presence may be mandatory
 							-- to avoid user to delete it ...

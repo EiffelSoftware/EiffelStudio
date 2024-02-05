@@ -285,6 +285,78 @@ feature -- ROC Account
 			end
 		end
 
+	new_sign_in_request (a_info: detachable READABLE_STRING_GENERAL): detachable ES_CLOUD_SIGN_IN_REQUEST
+		local
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+			resp: like response
+			lnk: detachable READABLE_STRING_8
+			l_client_id: IMMUTABLE_STRING_8
+		do
+			reset_api_call
+			if attached new_http_client_session as sess then
+				lnk := jwt_client_sign_in_endpoint (sess)
+				if lnk /= Void then
+					create ctx.make
+					l_client_id := "es-" + {UUID_GENERATOR}.generate_uuid.out
+					ctx.add_form_parameter ("client_id", l_client_id)
+					ctx.add_form_parameter ("information", a_info)
+					ctx.add_form_parameter ("device", "cloud_api_client")
+					resp := response_post (sess, lnk, ctx, Void)
+					if
+						not has_error and then
+						attached resp.string_8_item ("_links|jwt:client_sign_in_link|href") as l_challenge_lnk and then
+						attached resp.string_8_item ("_links|jwt:client_sign_in_request_link|href") as l_request_lnk
+					then
+						create Result.make (l_client_id, l_challenge_lnk, l_request_lnk, resp.date_time_item ("jwt:client_sign_in_expiration_date"))
+					end
+				end
+			end
+		end
+
+	account_using_sign_in_request (rqst: ES_CLOUD_SIGN_IN_REQUEST): detachable ES_ACCOUNT
+		local
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+			resp: like response
+			lnk: detachable READABLE_STRING_8
+			acc: ES_ACCOUNT
+		do
+			reset_api_call
+			if attached new_http_client_session as sess then
+				lnk := rqst.sign_in_request_url
+				create ctx.make
+				ctx.add_form_parameter ("client_id", rqst.client_id)
+				resp := response_post (sess, lnk, ctx, Void)
+				if not has_error then
+					if resp.boolean_item_is_true ("denied") then
+						rqst.mark_is_denied
+					elseif resp.boolean_item_is_true ("expired") then
+						rqst.mark_is_expired
+					else
+						create acc.make ("FIXME-sign-in")
+						if attached resp.integer_64_item ("user|uid") as l_uid then
+							acc.set_user_id (l_uid)
+						elseif attached resp.string_32_item ("user|uid") as s_uid then
+							acc.set_user_id (s_uid.to_integer_64)
+						else
+							acc := Void
+						end
+						if acc = Void then
+							rqst.report_error ("missing account information")
+						else
+							if
+								attached jwt_token_from_response (resp) as tok and then
+								attached account (tok.token) as l_updated_account
+							then
+								rqst.mark_is_approved (l_updated_account)
+								l_updated_account.set_access_token (tok)
+								Result := l_updated_account
+							end
+						end
+					end
+				end
+			end
+		end
+
 	discard_token (a_token: READABLE_STRING_8): BOOLEAN
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
@@ -813,6 +885,33 @@ feature {NONE} -- Endpoints
 		end
 
 feature {NONE} -- JWT endpoints
+
+	get_jwt_client_sign_in_endpoint (sess: attached like new_http_client_session)
+		do
+			-- Get `is_available` value.
+			if
+				attached response_get (sess, config.root_endpoint, Void) as resp
+			then
+				if has_error then
+					reset_error
+				else
+					if attached resp.string_8_item ("_links|jwt:client_sign_in|href") as v then
+						record_endpoint ("jwt:client_sign_in", v)
+					end
+				end
+			end
+		end
+
+	jwt_client_sign_in_endpoint (sess: like new_http_client_session): IMMUTABLE_STRING_8
+			-- (export status {NONE})
+		do
+			reset_api_call
+			Result := endpoint ("jwt:client_sign_in")
+			if Result = Void then
+				get_jwt_client_sign_in_endpoint (sess)
+				Result := endpoint ("jwt:client_sign_in")
+			end
+		end
 
 	jwt_access_token_endpoint (sess: HTTP_CLIENT_SESSION; ctx: HTTP_CLIENT_REQUEST_CONTEXT): detachable IMMUTABLE_STRING_8
 		local

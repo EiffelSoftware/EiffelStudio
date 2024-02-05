@@ -214,6 +214,16 @@ feature -- Sign in
 		deferred
 		end
 
+	new_cloud_sign_in_request (a_info: detachable READABLE_STRING_GENERAL): detachable ES_CLOUD_SIGN_IN_REQUEST
+			-- Request a new sign-in challenge  (sign-in using browser)
+		deferred
+		end
+
+	check_cloud_sign_in_request (rqst: ES_CLOUD_SIGN_IN_REQUEST)
+			-- Check status of sign-in challenge request, and get associated data if approved.
+		deferred
+		end
+
 	sign_out
 			-- Sign out current session.
 		deferred

@@ -27,11 +27,16 @@ feature {NONE} -- Router/administration
 			-- <Precursor>
 		local
 			h: JWT_AUTH_TOKEN_WEBAPI_HANDLER
+			h_si: JWT_AUTH_SIGN_IN_WEBAPI_HANDLER
 		do
 			if attached module.jwt_auth_api as l_jwt_auth_api then
 				create h.make (Current, l_jwt_auth_api)
 				a_router.handle ("/user/{uid}/jwt_access_token", h, a_router.methods_get_post)
 				a_router.handle ("/user/{uid}/new_jwt_magic_link", h, a_router.methods_get_post)
+
+				create h_si.make (Current, l_jwt_auth_api)
+				a_router.handle ("/auth/client-sign-in/", h_si, a_router.methods_post)
+				a_router.handle ("/auth/client-sign-in/{challenge}", h_si, a_router.methods_post)
 			end
 		end
 
@@ -45,6 +50,13 @@ feature -- Permissions
 		end
 
 	perm_use_jwt_auth: STRING = "use jwt_auth"
+
+feature -- Link factory
+
+	client_sign_in_request_link (a_api: CMS_API; a_challenge: JWT_AUTH_SIGN_IN_CHALLENGE): STRING_8
+		do
+			Result := a_api.webapi_path ("/auth/client-sign-in/" + percent_encoded (a_challenge.challenge))
+		end
 
 feature -- Access: filter
 
@@ -70,17 +82,21 @@ feature -- Hook
 	webapi_response_alter (rep: WEBAPI_RESPONSE)
 		do
 			if
-				attached rep.user as u and then
 				attached {HM_WEBAPI_RESPONSE} rep as hm and then
 				rep.is_root
 			then
-				hm.add_link ("jwt:access_token", Void, rep.api.webapi_path ("user/" + u.id.out + "/jwt_access_token"))
-				if
-					not rep.api.user_is_administrator and then -- Forbid this magic link for administrator! (security)
-					rep.has_permission ({JWT_AUTH_MODULE}.perm_use_magic_login)
-				then
-					hm.add_link ("jwt:new_magic_login", Void, rep.api.webapi_path ("user/" + u.id.out + "/new_jwt_magic_link"))
+				if attached rep.user as u then
+					hm.add_link ("jwt:access_token", Void, rep.api.webapi_path ("user/" + u.id.out + "/jwt_access_token"))
+					if
+						not rep.api.user_is_administrator and then -- Forbid this magic link for administrator! (security)
+						rep.has_permission ({JWT_AUTH_MODULE}.perm_use_magic_login)
+					then
+						hm.add_link ("jwt:new_magic_login", Void, rep.api.webapi_path ("user/" + u.id.out + "/new_jwt_magic_link"))
+					end
 				end
+--				if rep.has_permission ({JWT_AUTH_MODULE}.perm_use_client_sign_in) then
+					hm.add_link ("jwt:client_sign_in", Void, rep.api.webapi_path ("auth/client-sign-in/"))
+--				end
 			end
 		end
 

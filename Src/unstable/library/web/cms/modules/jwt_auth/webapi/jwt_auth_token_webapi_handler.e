@@ -133,6 +133,7 @@ feature -- Request execution
 								rep := new_response (req, res)
 								rep.add_string_field ("access_token", l_refreshed_token.token)
 								rep.add_string_field ("refresh_key", l_refreshed_token.refresh_key)
+								rep.add_link ("jwt:refresh_token", Void, rep.api.webapi_path ("user/" + u.id.out + "/jwt_access_token?refresh=" + l_refreshed_token.refresh_key))
 							else
 								rep := new_error_response ("Could not refresh token", req, res)
 							end

@@ -17,7 +17,7 @@ feature -- Error handler
 			create Result.make
 		end
 
-feature -- Access
+feature -- Access/token
 
 	token (a_token: READABLE_STRING_GENERAL): detachable JWT_AUTH_TOKEN
 			-- <Precursor>
@@ -29,7 +29,7 @@ feature -- Access
 		do
 		end
 
-feature -- Change
+feature -- Change/token
 
 	record_user_token (a_info: JWT_AUTH_TOKEN)
 			-- <Precursor>
@@ -43,6 +43,26 @@ feature -- Change
 
 	discard_all_user_tokens (a_user: CMS_USER)
 			-- Discard all tokens for `a_user`.
+		do
+		end
+
+feature -- Access/challenge
+
+	sign_in_challenge (ch: READABLE_STRING_GENERAL): detachable JWT_AUTH_SIGN_IN_CHALLENGE
+		do
+		end
+
+feature -- Change/challenge
+
+	record_sign_in_challenge (ch: JWT_AUTH_SIGN_IN_CHALLENGE)
+		do
+		end
+
+	discard_sign_in_challenge (ch: READABLE_STRING_GENERAL)
+		do
+		end
+
+	clean_sign_in_challenges
 		do
 		end
 

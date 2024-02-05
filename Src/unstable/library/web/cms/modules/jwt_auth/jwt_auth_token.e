@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {JWT_AUTH_INFO}."
+	description: "Summary description for {JWT_AUTH_TOKEN}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

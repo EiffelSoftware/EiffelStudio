@@ -7,7 +7,7 @@ class
 	JWT_AUTH_MODULE
 
 inherit
-	CMS_MODULE
+	CMS_MODULE_WITH_SQL_STORAGE
 		rename
 			module_api as jwt_auth_api
 		redefine
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			version := "1.0"
+			version := "1.1"
 			description := "JWT authentication"
 			package := "jwt_auth"
 			add_optional_dependency ({CMS_SESSION_AUTH_MODULE})
@@ -46,10 +46,12 @@ feature -- Access
 		do
 			Result := Precursor
 			Result.force (perm_use_magic_login)
+			Result.force (perm_use_client_sign_in)
 			Result.force (perm_manage_own_tokens)
 		end
 
 	perm_use_magic_login: STRING = "use magic_login"
+	perm_use_client_sign_in: STRING = "use client_sign_in"
 	perm_manage_own_tokens: STRING = "manage own jwt tokens"
 
 feature {CMS_API} -- Module Initialization			
@@ -72,7 +74,7 @@ feature {CMS_API} -- Module management
 				if l_sql_storage.has_error then
 					api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
 				else
-					Precursor {CMS_MODULE} (api)
+					Precursor {CMS_MODULE_WITH_SQL_STORAGE} (api)
 				end
 			end
 		end
@@ -97,6 +99,8 @@ feature -- Access: router
 			if attached jwt_auth_api as l_jwt_auth_api then
 				a_router.handle ("/user/{uid}/jwt_access_token", create {JWT_AUTH_TOKEN_USER_HANDLER}.make (l_jwt_auth_api), a_router.methods_get_post)
 				a_router.handle ("/user/{uid}/magic-login/{token}", create {JWT_AUTH_MAGIC_LOGIN_HANDLER}.make (l_jwt_auth_api), a_router.methods_get)
+
+				a_router.handle ("/auth/client-sign-in/{challenge}", create {JWT_AUTH_SIGN_IN_HANDLER}.make (l_jwt_auth_api), a_router.methods_get_post)
 			end
 		end
 
@@ -104,11 +108,8 @@ feature -- Link factory
 
 	new_magic_login_link (a_user: CMS_USER; a_expiration_in_seconds: NATURAL_32): detachable STRING
 		do
-			if
-				attached jwt_auth_api as l_jwt_api and then
-				attached {JWT_AUTH_TOKEN} l_jwt_api.new_token_with_expiration (a_user, <<"magic-login">>, a_expiration_in_seconds) as l_magic_token
-			then
-				Result := l_jwt_api.cms_api.absolute_url ("/user/" + a_user.id.out + "/magic-login/" + url_encoded (l_magic_token.token), Void)
+			if attached jwt_auth_api as l_jwt_api then
+				Result := l_jwt_api.new_magic_login_link (a_user, a_expiration_in_seconds)
 			end
 		end
 

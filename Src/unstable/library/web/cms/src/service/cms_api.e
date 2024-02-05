@@ -673,6 +673,33 @@ feature -- Helpers: URLs
 			end
 		end
 
+	logout_destination_location (req: WSF_REQUEST): detachable STRING
+			-- Destination value from `req`.
+			-- If the location includes the `base_url` part, remove it.
+		local
+			s: READABLE_STRING_32
+		do
+			if attached {WSF_STRING} req.item ("logout_destination") as p_destination then
+--TODO: check why previous code sometimes used the url encoded value.
+--				Result := p_destination.url_encoded_value
+				s := p_destination.value
+				if s.is_valid_as_string_8 then
+					Result := s.to_string_8
+				else
+					Result := p_destination.url_encoded_value.to_string_8
+				end
+			end
+			if
+				Result /= Void and then
+				attached base_url as l_base_url and then
+				Result.count >= l_base_url.count - 1
+			then
+				if l_base_url.same_characters (Result, 1, l_base_url.count - 1, 2) then
+					Result.remove_head (l_base_url.count) -- there must be a slash to remove
+				end
+			end
+		end
+
 feature -- Helpers: html links
 
 	user_display_name (u: CMS_USER): READABLE_STRING_32
@@ -1109,6 +1136,29 @@ feature -- Formating
 			Result.append_integer (i)
 		end
 
+feature -- Serialization
+
+	to_json (obj: detachable ANY): STRING
+			-- Dump `obj` to JSON string.
+			-- mostly for debugging and information purpose.
+		do
+			Result := json_serialization.to_json_string (obj)
+		end
+
+feature {NONE} -- Serialization		
+
+	json_serialization: JSON_SERIALIZATION
+		local
+			jfact: JSON_SERIALIZATION_FACTORY
+		once
+			Result := jfact.smart_serialization
+			Result.context.register_serializer (create {DATE_TIME_JSON_SERIALIZER}, {DATE_TIME})
+			Result.context.register_serializer (create {DATE_TIME_JSON_SERIALIZER}, {DATE})
+			Result.context.register_serializer (create {DATE_TIME_JSON_SERIALIZER}, {TIME})
+			Result.context.serializer_context.set_is_type_name_included (False)
+			Result.set_pretty_printing
+		end
+
 feature -- Factory
 
 	random_generator: RANDOM
@@ -1256,6 +1306,9 @@ feature {NONE} -- Emails implementation
 						--| As a Reply-To address is already set,
 						--| ignore previous from address.
 				end
+			end
+			if attached to_json (e) as txt then
+				print (txt)
 			end
 		end
 
@@ -1987,7 +2040,7 @@ invariant
 	attached base_url as inv_base_url implies inv_base_url [inv_base_url.count] /= '/'
 
 note
-	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2024, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

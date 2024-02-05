@@ -205,7 +205,9 @@ feature {NONE} -- Implementation: routes
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				r.set_status_code ({HTTP_CONSTANTS}.found)
 			end
-			if attached api.destination_location (req) as v then
+			if attached api.logout_destination_location (req) as v then
+				r.set_redirection (secured_url_content (v))
+			elseif attached api.destination_location (req) as v then
 				r.set_redirection (secured_url_content (v))
 			else
 				r.set_redirection (r.absolute_url ("", Void))

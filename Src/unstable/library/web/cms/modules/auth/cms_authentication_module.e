@@ -454,9 +454,11 @@ feature -- Handler
 				loc := ""
 			end
 				-- Do not try to redirect to previous page or destination!
---			if attached r.destination_location as l_destination then
---				loc.append ("?destination=" + secured_html_content (l_destination))
---			end
+			if attached r.destination_location as l_destination then
+				if not loc.has ('?') then
+					loc.append ("?logout_destination=" + secured_html_content (l_destination))
+				end
+			end
 			r.set_redirection (loc)
 			r.execute
 		end

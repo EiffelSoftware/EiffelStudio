@@ -78,6 +78,11 @@ feature -- Fields
 			resource.put_string (a_value, a_name)
 		end
 
+	add_date_time_field (a_name: READABLE_STRING_GENERAL; a_value: DATE_TIME)
+		do
+			add_string_field (a_name, date_time_to_iso8601_string (a_value))
+		end
+
 	add_boolean_field (a_name: READABLE_STRING_GENERAL; a_value: BOOLEAN)
 		do
 			resource.put_boolean (a_value, a_name)
@@ -203,6 +208,6 @@ feature {NONE} -- Implementation factory
 invariant
 
 note
-	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2024, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

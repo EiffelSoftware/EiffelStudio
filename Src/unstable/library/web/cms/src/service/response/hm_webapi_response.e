@@ -33,6 +33,10 @@ feature -- Element change
 		deferred
 		end
 
+	add_date_time_field (a_name: READABLE_STRING_GENERAL; a_value: DATE_TIME)
+		deferred
+		end
+
 	add_boolean_field (a_name: READABLE_STRING_GENERAL; a_value: BOOLEAN)
 		deferred
 		end
@@ -60,6 +64,6 @@ feature -- Element change
 invariant
 
 note
-	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2024, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

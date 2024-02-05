@@ -1,6 +1,7 @@
 note
 	description: "[
-			Client representation of the cloud sign-in challenge (see associated CMS)."
+			Client representation of the cloud sign-in challenge (see associated CMS).
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,7 +31,7 @@ feature -- Access
 
 	client_id: IMMUTABLE_STRING_8
 
-feature -- Status	
+feature -- Status
 
 	is_approved: BOOLEAN
 		do

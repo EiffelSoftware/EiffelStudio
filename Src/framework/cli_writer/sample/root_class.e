@@ -34,7 +34,7 @@ feature -- Initialization
 			(create {CLI_COM}).initialize_com
 
 			create md_dispenser.make
-			md_emit := md_dispenser.emitter
+			md_emit := md_dispenser.emitter (create {MD_UI})
 
 			create md_assembly_info.make
 			md_assembly_info.set_major_version (5)
@@ -167,7 +167,7 @@ feature -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

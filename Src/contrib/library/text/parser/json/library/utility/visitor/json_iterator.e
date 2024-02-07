@@ -6,11 +6,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	JSON_ITERATOR
 
 inherit
-
 	JSON_VISITOR
 
 feature -- Visitor Pattern
@@ -46,8 +45,14 @@ feature -- Visitor Pattern
 			across
 				a_json_object as c
 			loop
-				c.item.accept (Current)
+				visit_json_object_member (c.key, c.item)
 			end
+		end
+
+	visit_json_object_member (a_json_name: JSON_STRING; a_json_value: JSON_VALUE)
+			-- Visit `a_json_object'.
+		do
+			a_json_value.accept (Current)
 		end
 
 	visit_json_string (a_json_string: JSON_STRING)
@@ -56,6 +61,6 @@ feature -- Visitor Pattern
 		end
 
 note
-	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2024, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

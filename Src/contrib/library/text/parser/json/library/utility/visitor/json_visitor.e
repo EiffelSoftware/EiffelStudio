@@ -1,7 +1,7 @@
 note
 	description: "JSON Visitor"
 	pattern: "Visitor"
-	author: "Javier Velilla"
+	author: "Jocelyn Fiat & Javier Velilla"
 	license: "MIT (see http://www.opensource.org/licenses/mit-license.php)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,6 +54,6 @@ feature -- Visitor Pattern
 		end
 
 note
-	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2024, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

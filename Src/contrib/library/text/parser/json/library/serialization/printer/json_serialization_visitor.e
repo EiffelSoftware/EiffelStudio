@@ -1,5 +1,6 @@
 note
 	description: "JSON_SERIALIZATION_VISITOR Generates a compact JSON-String for a JSON_VALUE"
+	author: "Jocelyn Fiat & Javier Velilla"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -88,15 +89,21 @@ feature -- Visitor Pattern
 			until
 				l_pairs.off
 			loop
-				l_pairs.key_for_iteration.accept (Current)
-				l_output.append_code (58) -- ':' : 58
-				l_pairs.item_for_iteration.accept (Current)
+				visit_json_object_member (l_pairs.key_for_iteration, l_pairs.item_for_iteration)
 				l_pairs.forth
 				if not l_pairs.after then
 					l_output.append_code (44) -- ',' : 44
 				end
 			end
 			l_output.append_code (125) -- '}' : 125
+		end
+
+	visit_json_object_member (a_json_name: JSON_STRING; a_json_value: JSON_VALUE)
+			-- Visit object member `a_json_name`: `a_json_value`.
+		do
+			a_json_name.accept (Current)
+			output.append_code (58) -- ':' : 58
+			a_json_value.accept (Current)
 		end
 
 	visit_json_string (a_json_string: JSON_STRING)
@@ -111,7 +118,7 @@ feature -- Visitor Pattern
 		end
 
 note
-	copyright: "2016-2016, Jocelyn Fiat and Eiffel Software"
-	license: "Eiffel Forum License v2 (see https://www.eiffel.com/licensing/forum.txt)"
+	copyright: "2010-2024, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end
 

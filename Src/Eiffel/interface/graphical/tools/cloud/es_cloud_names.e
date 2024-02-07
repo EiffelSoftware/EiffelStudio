@@ -29,6 +29,9 @@ feature -- Authentication
 	prompt_note_account_usage: STRING_32 do Result := locale.translation_in_context ("You can use your account at https://account.eiffel.com/", "eiffel.account") end
 
 	link_create_new_account: STRING_32 do Result := locale.translation_in_context ("Create a new account", "eiffel.account") end
+	link_web_sign_in_challenge: STRING_32 do Result := locale.translation_in_context ("Sign-in using browser", "eiffel.account") end
+	link_login_with_credentials: STRING_32 do Result := locale.translation_in_context ("Login with credentials", "eiffel.account") end
+	link_login_with_offline_token: STRING_32 do Result := locale.translation_in_context ("Use offline token", "eiffel.account") end
 
 	button_remember_credentials: STRING_32 do Result := locale.translation_in_context ("Remember my credentials", "eiffel.account") end
 	tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on a public machine! Password is stored in plain text.", "eiffel.account") end
@@ -61,6 +64,8 @@ feature -- Authentication
 	label_fallback_in_parentheses: STRING_32 do Result := locale.translation ("(fallback)") end
 
 	symbol_close: STRING_32 once Result := {STRING_32} "❌" end
+
+	label_or_space: STRING_32 once Result := locale.translation ("Or ") end
 
 feature -- Account tool	
 
@@ -106,6 +111,15 @@ feature -- Dialog
 	label_error_opening_url (a_url: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation_in_context ("Error: could not open $1", "cloud.error"), [a_url])
+		end
+
+	label_error_message (err: detachable READABLE_STRING_GENERAL): STRING_32
+		do
+			if err /= Void then
+				Result := locale.formatted_string (locale.translation_in_context ({STRING_32} "Error: $1", "cloud.error"), [err])
+			else
+				Result := locale.translation_in_context ({STRING_32} "Error", "cloud.error")
+			end
 		end
 
 	button_check_again: STRING_32 do Result := locale.translation_in_context ("Check again", "cloud") end

@@ -36,6 +36,14 @@ feature -- Settings
 		deferred
 		end
 
+	is_basic_auth_allowed: BOOLEAN
+		deferred
+		end
+
+	is_sign_in_challenge_auth_allowed: BOOLEAN
+		deferred
+		end
+
 	is_verbose (a_level: INTEGER): BOOLEAN
 			-- has Verbose output for level `a_level` ?
 			-- (mostly for debugging).

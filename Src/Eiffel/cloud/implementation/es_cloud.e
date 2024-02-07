@@ -636,6 +636,26 @@ feature -- Settings
 		do
 			if attached eiffel_layout.get_environment_8 ("ES_CLOUD_OFFLINE_ALLOWED") as v then
 				Result := v.is_case_insensitive_equal_general ("yes")
+			else
+				Result := False -- Default
+			end
+		end
+
+	is_basic_auth_allowed: BOOLEAN
+		do
+			if attached eiffel_layout.get_environment_8 ("ES_CLOUD_BASIC_AUTH_ALLOWED") as v then
+				Result := v.is_case_insensitive_equal_general ("yes")
+			else
+				Result := True -- Default
+			end
+		end
+
+	is_sign_in_challenge_auth_allowed: BOOLEAN
+		do
+			if attached eiffel_layout.get_environment_8 ("ES_CLOUD_SIGN_IN_ALLOWED") as v then
+				Result := v.is_case_insensitive_equal_general ("yes")
+			else
+				Result := True -- Default
 			end
 		end
 

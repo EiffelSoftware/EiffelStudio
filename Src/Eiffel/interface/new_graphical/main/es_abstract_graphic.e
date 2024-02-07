@@ -320,7 +320,7 @@ feature {NONE} -- Welcome dialog
 			end
 			win := first_window.window
 
-			create pg.make (Current)
+			pg := (create {ES_STARTUP_PAGE_FACTORY}).startup_page (Current)
 			pg.set_quit_action (agent do (create {EB_EXIT_APPLICATION_COMMAND}).execute_with_confirmation (False) end)
 			pg.set_next_action (agent load_interface)
 			pg.dialog.set_size (first_window.scaled_size (300), first_window.scaled_size (100))
@@ -597,7 +597,7 @@ invariant
 		valid_branded_edition: is_branded_edition implies not edition_name.is_whitespace
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

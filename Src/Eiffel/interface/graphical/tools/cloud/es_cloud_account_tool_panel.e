@@ -207,6 +207,7 @@ feature {NONE} -- Action handlers
 			s: STRING
 			l_dbg: BOOLEAN
 			acc: detachable ES_ACCOUNT
+			l_scaler: EVS_DPI_SCALER
 		do
 			b := main_box
 			b.wipe_out
@@ -418,6 +419,11 @@ feature {NONE} -- Action handlers
 				if is_cloud_available then
 					if acc /= Void then
 						create hb
+						create l_scaler.make
+						hb.set_padding_width (l_scaler.scaled_size (5))
+						hb.set_border_width (l_scaler.scaled_size (3))
+
+
 						b.extend (hb)
 						b.disable_item_expand (hb)
 						hb.extend (create {EV_CELL})
@@ -495,7 +501,7 @@ feature {NONE} -- Action handlers
 								l_startup_page: ES_STARTUP_PAGE
 							do
 								if attached i_cld.eiffel_edition as ed then
-									create l_startup_page.make (ed)
+									l_startup_page := (create {ES_STARTUP_PAGE_FACTORY}).startup_page (ed)
 									l_startup_page.switch_to_account_page (i_cld, Void, not {ES_IDE_SETTINGS}.cloud_required)
 									l_startup_page.set_quit_action (agent do (create {EB_EXIT_APPLICATION_COMMAND}).execute_with_confirmation (False) end)
 									l_startup_page.show_modal_to_window (develop_window.window)

@@ -20,7 +20,7 @@ inherit
 
 	SHARED_LOCALE
 
-create
+create {ES_STARTUP_PAGE_FACTORY}
 	make
 
 feature {NONE} -- Initialization
@@ -240,6 +240,7 @@ feature -- Execution
 			end
 			main_box.set_background_color (bg)
 			main_box.propagate_background_color
+			wid.set_default_mode
 		end
 
 feature -- Access: edition		
@@ -296,6 +297,13 @@ feature -- Access: widgets
 
 	main_box: EV_CELL
 	dialog: EV_DIALOG
+
+feature -- Status report
+
+	is_useable: BOOLEAN
+		do
+			Result := not dialog.is_destroyed
+		end
 
 feature -- Access: actions
 
@@ -428,7 +436,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

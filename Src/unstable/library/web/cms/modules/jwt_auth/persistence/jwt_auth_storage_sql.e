@@ -260,8 +260,8 @@ feature -- Change/challenge
 				sql_finalize_insert (sql_insert_sign_in_challenge)
 			else
 				create l_parameters.make (4)
-				l_parameters.put (ch.client, "client")
 				l_parameters.put (ch.challenge, "challenge")
+				l_parameters.put (ch.client, "client")
 				l_parameters.put (ch.status, "status")
 				l_parameters.put (ch.user_id, "uid")
 				reset_error
@@ -299,9 +299,9 @@ feature {NONE} -- Queries/token
 
 	sql_insert_sign_in_challenge: STRING = "INSERT INTO jwt_auth_challenges (challenge, client, info, expiration, apps, status, uid) VALUES (:challenge, :client, :info, :expiration, :apps, :status, :uid);"
 
-	sql_update_sign_in_challenge: STRING = "UPDATE jwt_auth_challenges SET status=:status, uid=:uid WHERE challenge=:challenge ;"
+	sql_update_sign_in_challenge: STRING = "UPDATE jwt_auth_challenges SET status=:status, uid=:uid WHERE challenge=:challenge AND client=:client;"
 
-	sql_delete_sign_in_challenge: STRING = "DELETE FROM jwt_auth_challenges WHERE challenge=:challenge ;"
+	sql_delete_sign_in_challenge: STRING = "DELETE FROM jwt_auth_challenges WHERE challenge=:challenge;"
 
 	sql_delete_expired_sign_in_challenges: STRING = "DELETE FROM jwt_auth_challenges WHERE status=:status OR expiration < :date ;"
 

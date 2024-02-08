@@ -13,6 +13,7 @@
 	</target>
 	
 	<target name="compile" >
+		<echo message="   - EiffelStore Oracle Clib" />
 		<available resource="${EIFFEL_SRC}/headers/apps" variable="tmp_available"/>
 		<setenv name="JDK_HOME" 
 			 value="${EIFFEL_SRC}${path_separator}headers${path_separator}apps${path_separator}jdk1.1.8" 
@@ -20,7 +21,7 @@
 		<setenv name="ORACLE_HOME" 
 			 value="${EIFFEL_SRC}${path_separator}headers${path_separator}apps${path_separator}oracle" 
 			 if="${tmp_available}=true" />
-		<exec executable="finish_freezing -library" if="${tmp_available}=true" />
+		<exec executable="finish_freezing -library" if="${tmp_available}=true" accept_errors="true" />
 		<setenv name="JDK_HOME" value="" />
 		<setenv name="ORACLE_HOME" value="" />
 	</target>

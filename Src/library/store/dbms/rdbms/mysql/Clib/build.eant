@@ -13,7 +13,8 @@
 	</target>
 	
 	<target name="compile" >
-		<exec executable="finish_freezing -library" />
+		<echo message="   - EiffelStore MySQL Clib" />
+		<exec executable="finish_freezing -library" accept_errors="true" />
 	</target>
 	
 	<target name="clean" >

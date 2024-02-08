@@ -60,7 +60,7 @@ while test $# -gt 0; do
 				else
 					if [ -n "$MARIADBLIB" ]; then
 						result=" $result -L${MARIADBLIB} -lmariadb"
-					else
+					#else
 						# MySQL client (or MariaDB) dev package is not installed!
 					fi
 				fi
@@ -80,7 +80,7 @@ while test $# -gt 0; do
 				else
 					if [ -n "$MARIADBINC" ]; then
 						result=" $result -I${MARIADBINC} -I${MARIADBINC}/mysql "
-					else
+					#else
 						# MySQL client (or MariaDB) dev package is not installed!
 					fi
 				fi

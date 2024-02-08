@@ -108,14 +108,14 @@ feature -- Request execution
 					s.append ("<ul class=%"choices%">")
 
 					if attached api.user as l_user then
-						rep.set_title ("Authenticate with " + api.real_user_display_name (l_user) + " ?")
+						rep.set_title ({STRING_32} "Authenticate with " + api.real_user_display_name (l_user) + " ?")
 						if
 					 		l_user.is_active and then
 							not api.user_api.is_admin_user (l_user) and then -- Forbid this possibility for the site administrator
 							api.has_permission ({JWT_AUTH_MODULE}.perm_use_client_sign_in)
 						then
 							s.append ("<li class=%"current-account%">")
-							f := new_sign_in_form (ch, "current", "account " + api.real_user_display_name (l_user) + " ...", req.request_uri)
+							f := new_sign_in_form (ch, "current", {STRING_32} "account " + api.real_user_display_name (l_user) + " ...", req.request_uri)
 							f.append_to_html (rep.wsf_theme, s)
 							s.append ("</li>")
 						else

@@ -18,6 +18,7 @@ feature {NONE} -- Initialization
 		do
 			set_handler (h)
 			uri := a_uri
+			query_ignored := True
 		end
 
 	make_trailing_slash_ignored (a_uri: READABLE_STRING_8; h: like handler)
@@ -38,10 +39,19 @@ feature -- Access
 
 	trailing_slash_ignored: BOOLEAN
 
+	query_ignored: BOOLEAN
+
 feature -- Change
 
 	set_handler	(h: like handler)
 		deferred
+		end
+
+	ignore_query (b: BOOLEAN)
+			-- Ignore query part of the uri.
+			-- (i.e ?....")
+		do
+			query_ignored := b
 		end
 
 feature -- Documentation
@@ -55,9 +65,16 @@ feature -- Status
 		local
 			p: READABLE_STRING_8
 			l_uri: like uri
+			i: INTEGER
 		do
 			p := a_path
 			l_uri := based_uri (uri, a_router)
+			if query_ignored then
+				i := l_uri.last_index_of ('?', l_uri.count)
+				if i > 0 then
+					l_uri := l_uri.head (i - 1)
+				end
+			end
 			if trailing_slash_ignored then
 				if l_uri.ends_with ("/") then
 					if not p.ends_with ("/") then

@@ -25,11 +25,6 @@
 			</condition>
 		</external_include>
 		<external_include location="$(ISE_LIBRARY)/library/store/dbms/rdbms/mysql/Clib"/>
-		<external_include location="$(MYSQLINC)">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_include>
 		<external_object location="$(ISE_LIBRARY)\library\store\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mysql_store.lib">
 			<condition>
 				<platform value="windows"/>
@@ -40,26 +35,16 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="-L$(ISE_LIBRARY)/library/store/spec/$(ISE_PLATFORM)/lib">
+		<external_cflag value="`${ISE_LIBRARY}/library/store/dbms/rdbms/mysql/Clib/mysql-config --cflags`">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
-		</external_object>
-		<external_object location="-lmysql_store">
+		</external_cflag>
+		<external_linker_flag value="`${ISE_LIBRARY}/library/store/dbms/rdbms/mysql/Clib/mysql-config --libs`">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
-		</external_object>
-		<external_object location="-L$(MYSQLLIB)">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_object>
-		<external_object location="-lmysqlclient">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_object>
+		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

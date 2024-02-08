@@ -1,0 +1,90 @@
+#!/bin/sh
+
+usage()
+{
+	cat <<EOF
+Usage: mysql-config [OPTIONS]
+Options
+	[--cflags]
+	[--libs]
+EOF
+	exit $1
+}
+
+pkg_config()
+{
+	if command -v mysql_config > /dev/null 2>&1
+	then
+		echo `mysql_config $*`
+	else
+		if command -v mariadb_config > /dev/null 2>&1
+		then
+			echo `mariadb_config $*`
+		else
+			echo ""
+		fi 
+	fi
+}
+
+if test $# -eq 0; then
+	usage 1 1>&2
+fi
+
+true_val=1
+false_val=0
+
+prefix=""
+postfix=""
+result=""
+
+
+needs_cflags=$false_val
+needs_libs=$false_val
+
+#Check if ISE_LIBRARY is defined, if not we use ISE_EIFFEL.
+if [ -z "$ISE_LIBRARY" ]; then
+	ISE_LIBRARY=$ISE_EIFFEL
+fi
+
+while test $# -gt 0; do
+	case $1 in
+		--libs)
+		if [ $needs_libs = $false_val ]; then
+			needs_libs=$true_val
+			v=`pkg_config --libs`
+			if [ -n "$v" ]; then
+				result="$result $v"
+			else
+				if [ -n "$MYSQLLIB" ]; then
+					result=" $result -L${MYSQLLIB} -lmysqlclient "
+				else
+					result=" $result -L${MARIADBLIB} -lmariadb"
+				fi
+			fi
+			postfix=" $postfix_path -L${ISE_LIBRARY}/library/store/spec/${ISE_PLATFORM}/lib/ -lmysql_store"
+		fi
+		;;
+		--cflags)
+		if [ $needs_cflags = $false_val ]; then
+			needs_cflags=$true_val
+			v=`pkg_config --cflags`
+			if [ -n "$v" ]; then
+				result="$result $v"
+			else
+				if [ -n "$MYSQLINC" ]; then
+					result=" $result -I${MYSQLINC} "
+				else
+					result=" $result -I${MARIADBINC} -I${MARIADBINC}/mysql "
+				fi
+			fi
+		fi
+		;;
+		*)
+		usage 1 1>&2
+		;;
+ 	esac
+	shift
+done
+
+echo $prefix $result $postfix
+

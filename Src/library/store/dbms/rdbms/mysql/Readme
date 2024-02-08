@@ -9,18 +9,25 @@ You need to have $(MYSQL) in your environment, set to the directory where the My
 
 On Linux
 --------
-You need to have in your environment:
-$(MYSQLINC) set to the directory where mysql.h is located.
-$(MYSQLLIB) set to the directory where libmysqlclient.a is location.
+Either you install libmysqlclient-dev or libmariadb-dev packages
+For instance on debian:
+	apt install libmysqlclient-dev
+	(or apt install libmariadb-dev)
+
+Or, you can also use a custom installation and set in your environment:
+ - $(MYSQLINC) set to the directory where mysql.h is located.
+ - $(MYSQLLIB) set to the directory where libmysqlclient.a is location.
 
 For instance, on debian:
 - To install the needed MySQL packages:
 	apt-get install libmysqlclient-dev
+	(or apt-get install libmariadb-dev)
 
-- And then, set the variables:
+- Note that if mysql_config (or mariadb_config) is not available you should set your environment:
 	export MYSQLINC=/usr/include/mysql
 	export MYSQLLIB=/usr/lib/mysql
 	export MYSQLLIB=/usr/lib/i386-linux-gnu
+  Check your system for the exact locations.
 
 Note: If you use an old libmysqlclient (before MySQL 5.5, back at the end of 2009), you may need to
 edit the .ecf, to use libmysqlclient_r instead of libmysqlclient in multi-threaded applications.

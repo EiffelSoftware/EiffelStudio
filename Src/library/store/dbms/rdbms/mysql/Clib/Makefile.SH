@@ -14,7 +14,7 @@ $spitshell >Makefile <<!GROK!THIS!
 SHELL = /bin/sh
 CC= $cc
 AR = ar rc
-CFLAGS = $optimize $ccflags $large -I$rt_include -I\$(MYSQLINC)
+CFLAGS = $optimize $ccflags $large -I$rt_include `${ISE_LIBRARY}/library/store/dbms/rdbms/mysql/Clib/mysql-config --cflags`
 LDFLAGS = $ldflags
 LIBS = $libs
 MAKE = $make

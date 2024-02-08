@@ -51,14 +51,18 @@ while test $# -gt 0; do
 		--libs)
 		if [ $needs_libs = $false_val ]; then
 			needs_libs=$true_val
-			v=`pkg_config --libs`
-			if [ -n "$v" ]; then
-				result="$result $v"
+			if [ -n "$MYSQLLIB" ]; then
+				result=" $result -L${MYSQLLIB} -lmysqlclient "
 			else
-				if [ -n "$MYSQLLIB" ]; then
-					result=" $result -L${MYSQLLIB} -lmysqlclient "
+				v=`pkg_config --libs`
+				if [ -n "$v" ]; then
+					result="$result $v"
 				else
-					result=" $result -L${MARIADBLIB} -lmariadb"
+					if [ -n "$MARIADBLIB" ]; then
+						result=" $result -L${MARIADBLIB} -lmariadb"
+					else
+						# MySQL client (or MariaDB) dev package is not installed!
+					fi
 				fi
 			fi
 			postfix=" $postfix_path -L${ISE_LIBRARY}/library/store/spec/${ISE_PLATFORM}/lib/ -lmysql_store"
@@ -67,16 +71,21 @@ while test $# -gt 0; do
 		--cflags)
 		if [ $needs_cflags = $false_val ]; then
 			needs_cflags=$true_val
-			v=`pkg_config --cflags`
-			if [ -n "$v" ]; then
-				result="$result $v"
+			if [ -n "$MYSQLINC" ]; then
+				result=" $result -I${MYSQLINC} "
 			else
-				if [ -n "$MYSQLINC" ]; then
-					result=" $result -I${MYSQLINC} "
+				v=`pkg_config --cflags`
+				if [ -n "$v" ]; then
+					result="$result $v"
 				else
-					result=" $result -I${MARIADBINC} -I${MARIADBINC}/mysql "
+					if [ -n "$MARIADBINC" ]; then
+						result=" $result -I${MARIADBINC} -I${MARIADBINC}/mysql "
+					else
+						# MySQL client (or MariaDB) dev package is not installed!
+					fi
 				fi
 			fi
+			postfix=" $postfix_path -I${ISE_LIBRARY}/library/store/dbms/rdbms/mysql/Clib"
 		fi
 		;;
 		*)

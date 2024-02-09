@@ -580,9 +580,9 @@ feature -- Access
 				l_tokens.after
 			loop
 				if attached {EDITOR_TOKEN_EOL} l_tokens.item as l_eol then
-					Result.append (l_tokens.item.wide_image)
-				else
 					Result.append_character ('%N')
+				else
+					Result.append (l_tokens.item.wide_image)
 				end
 				l_tokens.forth
 			end
@@ -1125,7 +1125,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

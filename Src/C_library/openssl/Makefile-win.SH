@@ -1,6 +1,6 @@
 all:: 
 
-  rem Remove the build directory if it exists
+  echo Remove the builds directory if it exists
   if exist builds rmdir /s /q builds
 
   if $(ISE_PLATFORM) EQU win64 (

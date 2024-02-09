@@ -1033,7 +1033,6 @@ feature{NONE} -- Implementation
 			a_token_attached: a_token /= Void
 			a_position_attached: a_position /= Void
 		local
-			l_editor_token: EDITOR_TOKEN_TEXT
 			l_splited_token_position: EV_RECTANGLE
 			l_ellipsis_position: EV_RECTANGLE
 			l_image: IMMUTABLE_STRING_32
@@ -1045,12 +1044,14 @@ feature{NONE} -- Implementation
 			l_ellipsis_token: like ellipsis_token
 			l_mid: INTEGER
 		do
-			l_editor_token := {like ellipsis_token} / a_token.twin
 			l_start_x := a_position.x
 			l_line_height := actual_line_height
 			l_ellipsis_token := ellipsis_token
 			l_ellipsis_width := token_width (l_ellipsis_token, l_ellipsis_token.wide_image)
-			if l_editor_token /= Void and then not l_editor_token.wide_image.is_empty then
+			if
+				attached {EDITOR_TOKEN_TEXT} a_token.twin as l_editor_token and then
+				not l_editor_token.wide_image.is_empty
+			then
 				l_token_width := token_width (l_editor_token, l_editor_token.wide_image)
 				if l_start_x + l_token_width + l_ellipsis_width > a_max_width then
 					from
@@ -1080,11 +1081,11 @@ feature{NONE} -- Implementation
 				end
 				create l_splited_token_position.make (l_start_x, a_position.y, l_token_width, l_line_height)
 				create l_ellipsis_position.make (l_start_x + l_token_width, a_position.y, l_ellipsis_width, l_line_height)
+				Result := [l_editor_token, l_splited_token_position, l_ellipsis_position]
 			else
-				l_editor_token := Void
 				create l_ellipsis_position.make (l_start_x, a_position.y, l_ellipsis_width, l_line_height)
+				Result := [Void, Void, l_ellipsis_position]
 			end
-			Result := [l_editor_token, l_splited_token_position, l_ellipsis_position]
 		ensure
 			result_attached: Result /= Void
 			result_valid: (Result.splited_token /= Void implies Result.splited_token_position /= Void) and then

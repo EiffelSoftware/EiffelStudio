@@ -363,8 +363,6 @@ feature -- Mode selection
 			fr.extend (vb)
 
 			fr.propagate_background_color
-			but.set_background_color (colors.stock_colors.green)
---			but.set_foreground_color (colors.stock_colors.white)
 		end
 
 	request_cloud_sign_in (cld: ES_CLOUD_S; b: EV_VERTICAL_BOX)

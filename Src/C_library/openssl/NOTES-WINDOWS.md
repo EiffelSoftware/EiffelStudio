@@ -1,4 +1,4 @@
-[Notes](Notes) for Windows platforms
+Notes for Windows platforms
 ===========================
 
  - [Native builds using Visual C++](#native-builds-using-visual-c++)

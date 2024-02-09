@@ -1,20 +1,17 @@
 all:: 
-  if $(ISE_PLATFORM) EQU win64 (
-    echo Compiling openssl for Windows 64bits
-    perl Configure VC-WIN64A
-  ) ELSE (
-    echo Compiling openssl for Windows 32bits
-    perl Configure VC-WIN32
-  )
 
   rem Remove the build directory if it exists
-  if exist build rmdir /s /q build
+  if exist builds rmdir /s /q builds
 
-  rem Create the build directory
-  mkdir build
+  if $(ISE_PLATFORM) EQU win64 (
+    echo Compiling openssl for Windows 64bits
+    build_dynamic_64
+  	echo Compiling successed. 
+  	cp builds\dynamic_64\bin\*.dll $(EIFFEL_SRC)\Delivery\studio\spec\$(ISE_PLATFORM)\bin  
+  ) else (
+    echo Compiling openssl for Windows 32bits
+    build_dynamic_32
+  	echo Compiling successed. 
+  	cp builds\dynamic_32\bin\*.dll $(EIFFEL_SRC)\Delivery\studio\spec\$(ISE_PLATFORM)\bin  
+  )
 
-  nmake OUTDIR=%cd%\build
-  echo Compiling successed. 
-
-  cp .\libeay32.dll $(EIFFEL_SRC)\Delivery\studio\spec\$(ISE_PLATFORM)\bin  
-  cp .\ssleay32.dll $(EIFFEL_SRC)\Delivery\studio\spec\$(ISE_PLATFORM)\bin  

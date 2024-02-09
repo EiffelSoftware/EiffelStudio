@@ -1,17 +1,17 @@
-all:: 
+TOP = ..
+DIR = $dir_sep
+OUTDIR= .
+INDIR= .
+LN = copy
+MV = $mv
+RM = $del
+MAKE = $make
+MKDIR = $mkdir
 
-  echo Remove the builds directory if it exists
-  if exist builds rmdir /s /q builds
-
-  if $(ISE_PLATFORM) EQU win64 (
-    echo Compiling openssl for Windows 64bits
-    build_dynamic_64
-  	echo Compiling successed. 
-  	cp builds\dynamic_64\bin\*.dll $(EIFFEL_SRC)\Delivery\studio\spec\$(ISE_PLATFORM)\bin  
-  ) else (
-    echo Compiling openssl for Windows 32bits
-    build_dynamic_32
-  	echo Compiling successed. 
-  	cp builds\dynamic_32\bin\*.dll $(EIFFEL_SRC)\Delivery\studio\spec\$(ISE_PLATFORM)\bin  
-  )
+all::
+	echo Compiling static openssl for $(ISE_PLATFORM)
+	if $(ISE_PLATFORM) EQU win64 build_dyn_64.bat
+	if $(ISE_PLATFORM) EQU win64 $(MV) builds$(DIR)dynamic_64$(DIR)bin$(DIR)*.dll $(EIFFEL_SRC)$(DIR)Delivery$(DIR)studio$(DIR)spec$(DIR)$(ISE_PLATFORM)$(DIR)bin  
+	if $(ISE_PLATFORM) EQU windows build_dyn_32.bat
+	if $(ISE_PLATFORM) EQU windows $(MV) builds$(DIR)dynamic_32$(DIR)bin$(DIR)*.dll $(EIFFEL_SRC)$(DIR)Delivery$(DIR)studio$(DIR)spec$(DIR)$(ISE_PLATFORM)$(DIR)bin  
 

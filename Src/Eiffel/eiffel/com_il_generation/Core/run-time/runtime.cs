@@ -657,16 +657,28 @@ feature -- Builtin implementations for Eiffel classes, see Eiffel classes for co
 		return true;
 	}
 	public static bool builtin_PLATFORM_is_windows () {
+#if NET5_0_OR_GREATER
 		return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+#else
+		return true;
+#endif
 	}
 	public static bool builtin_PLATFORM_is_unix () {
+#if NET5_0_OR_GREATER
 		return (! RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
+#else
+		return false;
+#endif
 	}
 	public static bool builtin_PLATFORM_is_vms () {
 		return false;
 	}
 	public static bool builtin_PLATFORM_is_mac () {
+#if NET5_0_OR_GREATER
 		return RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+#else
+		return false;
+#endif
 	}
 	public static bool builtin_PLATFORM_is_vxworks () {
 		return false;

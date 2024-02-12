@@ -59,6 +59,7 @@
 		<delete directory="${cwd}${path_separator}obj" />
 	</target>
 	<target name="install_netcore_debug">
+		<mkdir directory="${cwd}${path_separator}netcore" />
 		<echo message="- Install .Net CORE [EiffelSoftware.Runtime.dll] into ${cwd}${path_separator}netcore" />
 		<exec executable="dotnet publish -c Debug runtime_core.csproj --output ${cwd}${path_separator}netcore" />
 		<delete directory="${cwd}${path_separator}bin" />

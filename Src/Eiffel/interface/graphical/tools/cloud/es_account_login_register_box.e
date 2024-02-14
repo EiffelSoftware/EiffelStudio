@@ -450,7 +450,8 @@ feature -- Mode selection
 			create lab.make_with_text (cloud_names.label_error_message (err))
 			b.extend (lab)
 
-			create but.make_with_text ("TRY AGAIN")
+			create but.make_with_text (locale.translation_in_context ("TRY AGAIN", "eiffel.account"))
+			but.set_font (fonts.highlighted_label_font)
 			but.select_actions.extend (agent request_cloud_sign_in (cld, b))
 			but.set_background_color (colors.stock_colors.red)
 			but.set_foreground_color (colors.stock_colors.white)
@@ -505,6 +506,10 @@ feature -- Mode selection
 							on_user_signed_in (acc)
 						elseif rqst.has_error then
 							err := rqst.error_message
+							report_cloud_sign_in_error (cld, err, b)
+						else
+							check False end
+							err := "Unexpected case"
 							report_cloud_sign_in_error (cld, err, b)
 						end
 					else

@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			a_module_id_non_negative: a_module_id > 0
 		local
 			i: INTEGER
-			f_ext, ext: READABLE_STRING_32
+			f_ext, ext: READABLE_STRING_8
 		do
 			debug ("il_emitter_table")
 				print ({STRING_32} "IL_MODULE: " + a_module_name_with_extension + "%N")
@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 
 			i := a_file_name.last_index_of ('.', a_file_name.count)
 			if i > 0 then
-				f_ext := a_file_name.substring (i + 1, a_file_name.count)
+				f_ext := a_file_name.substring (i + 1, a_file_name.count).to_string_8 -- It is unexpected to be Unicode extension here.
 			else
 				check module_file_name_has_extension: False end
 				f_ext := "dll" -- Default
@@ -1267,7 +1267,7 @@ feature -- Code generation
 						rt_v := "6.0" -- Hardcoded value!!!
 					end
 					create ca.make
-					ca.put_string (".NETCoreApp,Version=v" + rt_v)
+					ca.put_string (".NETCoreApp,Version=v" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (rt_v))
 					ca.put_integer_16 (0)
 
 -- The "FrameworkDisplayName" is not required
@@ -2888,7 +2888,10 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			in_debug_mode: is_debug_info_enabled
 		do
 			Result := internal_dbg_documents.item (a_class_id)
-			if Result = Void and then attached system.class_of_id (a_class_id) as l_class then
+			if
+				Result = Void and then
+				attached system.class_of_id (a_class_id) as l_class
+			then
 				Result := dbg_writer.define_document (uni_string (l_class.file_name), language_guid,
 					vendor_guid, document_type_guid)
 				internal_dbg_documents.put (Result, a_class_id)
@@ -4067,19 +4070,19 @@ note
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

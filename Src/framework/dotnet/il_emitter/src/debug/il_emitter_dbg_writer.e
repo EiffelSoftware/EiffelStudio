@@ -7,7 +7,7 @@ class
 	IL_EMITTER_DBG_WRITER
 
 inherit
-	DBG_WRITER
+	DBG_WRITER_I
 
 	REFACTORING_HELPER
 
@@ -16,12 +16,24 @@ create
 
 feature {NONE} -- Initialization
 
-	make (emitter: MD_EMIT; name: CLI_STRING; full_build: BOOLEAN)
+	make (a_emitter: MD_EMIT_I; name: CLI_STRING; full_build: BOOLEAN)
 		do
+			check attached {MD_EMIT} a_emitter as md then
+				emitter := md
+			end
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
 			end
+
+			is_closed := False
+			is_successful := True
+		ensure
+			not_is_closed: not is_closed
 		end
+
+feature -- Access
+
+	emitter: MD_EMIT
 
 feature -- Update
 
@@ -31,6 +43,7 @@ feature -- Update
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
 			end
+			is_successful := False
 		end
 
 	close_method
@@ -39,6 +52,7 @@ feature -- Update
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
 			end
+			is_successful := False
 		end
 
 	open_method (a_meth_token: INTEGER)
@@ -47,6 +61,7 @@ feature -- Update
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
 			end
+			is_successful := False
 		end
 
 	open_scope (start_offset: INTEGER)
@@ -55,6 +70,7 @@ feature -- Update
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
 			end
+			is_successful := False
 		end
 
 	close_scope (end_offset: INTEGER)
@@ -63,11 +79,12 @@ feature -- Update
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
 			end
+			is_successful := False
 		end
 
 feature -- PE file data
 
-	debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER
+	debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY_I): MANAGED_POINTER
 			-- Retrieve debug info required to be inserted in PE file.
 		do
 			-- FIXME
@@ -75,55 +92,101 @@ feature -- PE file data
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
 			end
+			is_successful := False
 		end
 
 feature -- Status report
 
 	is_closed: BOOLEAN
 			-- Can further operation be applied on Current?
-		do
-			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
-			end
-		end
 
 	is_successful: BOOLEAN
 			-- Was last call successful?
-		do
-			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
-			end
-		end
 
 feature -- Definition
 
-	define_document (url: CLI_STRING; language, vendor, doc_type: CIL_GUID): detachable DBG_DOCUMENT_WRITER
+	define_document (url: CLI_STRING; language, vendor, doc_type: CIL_GUID): detachable DBG_DOCUMENT_WRITER_I
 			-- Create a new document writer needed to generated debug info.
 		do
 			debug ("refactor_fixme")
 				to_implement ("TODO: DBG_DOCUMENT_WRITER")
 			end
-		ensure then
-			not_yet_implemented: False
+			debug ("il_emitter_dbg")
+				print (generator + ".define_document (")
+				print (url.string_32)
+				print (", ..)%N")
+			end
+			if attached {MD_EMIT} emitter as l_md_emit then
+				create {IL_EMITTER_DBG_DOCUMENT_WRITER} Result.make (Current, l_md_emit, url, language, vendor, doc_type)
+				is_successful := True
+			else
+				is_successful := False
+			end
 		end
 
-	define_sequence_points (document: DBG_DOCUMENT_WRITER; count: INTEGER; offsets, start_lines,
+	define_sequence_points (document: DBG_DOCUMENT_WRITER_I; count: INTEGER; offsets, start_lines,
 			start_columns, end_lines, end_columns: ARRAY [INTEGER])
-
 			-- Set sequence points for `document'
+		local
+			n: INTEGER
 		do
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
 			end
+			debug ("il_emitter_dbg")
+				print (generator + ".define_sequence_points (doc, " + count.out + ", ")
+				if count > 0 then
+					across
+						<<offsets, start_lines, start_columns, end_lines, end_columns>> as arr
+					loop
+						print (", [")
+						n := 0
+						across
+							arr as i
+						until
+							n >= count
+						loop
+							print (i.out)
+							n := n + 1
+							if n < count then
+								print (",")
+							end
+						end
+						print ("]")
+					end
+				else
+					print (",,,,,")
+				end
+				print (")%N")
+
+			end
+			document.define_sequence_points (count, offsets, start_lines, start_columns, end_lines, end_columns)
+			is_successful := document.is_successful
 		end
 
 	define_local_variable (name: CLI_STRING; pos: INTEGER; signature: MD_TYPE_SIGNATURE)
 			-- Define local variable `name' at position `pos' in current method using
 			-- `signature' of current method.
+		local
+			e: PE_LOCAL_VARIABLE_TABLE_ENTRY
+			l_attributes: NATURAL_16
+			l_name_index: NATURAL_32
+			idx: NATURAL_32
 		do
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
 			end
+			debug ("il_emitter_dbg")
+				print (generator + ".define_local_variable (%"")
+				print (name.string_32)
+				print ("%", " + pos.out + ", " + signature.debug_output)
+				print (")%N")
+			end
+			l_attributes := 0 -- FIXME: All, DebuggerHidden ...
+			l_name_index := emitter.pe_writer.hash_string (name.string_32)
+			create e.make_with_data (l_attributes, pos.to_natural_16, l_name_index)
+			idx := emitter.add_pdb_table_entry (e)
+			is_successful := False
 		end
 
 	define_parameter (name: CLI_STRING; pos: INTEGER)
@@ -132,6 +195,13 @@ feature -- Definition
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
 			end
+			debug ("il_emitter_dbg")
+				print (generator + ".define_parameter (%"")
+				print (name.string_32)
+				print ("%", " + pos.out)
+				print (")%N")
+			end
+			is_successful := False
 		end
 
 feature -- Settings
@@ -142,10 +212,16 @@ feature -- Settings
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
 			end
+			debug ("il_emitter_dbg")
+				print (generator + ".set_user_entry_point (%"")
+				print (entry_point_token.out)
+				print (")%N")
+			end
+			is_successful := False
 		end
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

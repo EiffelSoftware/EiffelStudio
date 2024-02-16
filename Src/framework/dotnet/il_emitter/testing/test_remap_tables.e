@@ -42,17 +42,17 @@ feature -- Tests
 			l_typedef := l_mock.build_typedef_fields_unsorted_case1
 			l_field := l_mock.build_field_list_type_def_case1
 			md := new_emitter
-			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
-			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
+			tables (md).put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
+			tables (md).put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
 			create mdu.make (md, Void)
 			mdu.ensure_field_list_column_is_ordered (False)
 			mdu.update_index_list_in_tables
 
 
-			l_mock.print_type_def_table (md.md_table ({PE_TABLES}.ttypedef))
+			l_mock.print_type_def_table (md_table (md, {PE_TABLES}.ttypedef))
 			io.put_new_line
-			l_mock.print_field_def_table (md.md_table ({PE_TABLES}.tfield))
+			l_mock.print_field_def_table (md_table (md, {PE_TABLES}.tfield))
 			io.put_new_line
 
 			l_expected_typedef := l_mock.build_expected_field_list_type_def_case1
@@ -78,16 +78,16 @@ feature -- Tests
 			l_typedef := l_mock.build_typedef_fields_unsorted_case2
 			l_field := l_mock.build_field_list_type_def_case2
 			md := new_emitter
-			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
-			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
+			tables (md).put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
+			tables (md).put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
 			create mdu.make (md, Void)
 			mdu.ensure_field_list_column_is_ordered (False)
 			mdu.update_index_list_in_tables
 
-			l_mock.print_type_def_table (md.md_table ({PE_TABLES}.ttypedef))
+			l_mock.print_type_def_table (md_table (md, {PE_TABLES}.ttypedef))
 			io.put_new_line
-			l_mock.print_field_def_table (md.md_table ({PE_TABLES}.tfield))
+			l_mock.print_field_def_table (md_table (md, {PE_TABLES}.tfield))
 			io.put_new_line
 
 			l_expected_typedef := l_mock.build_expected_typedef_fields_case2
@@ -110,12 +110,12 @@ feature -- Tests
 			l_typedef := l_mock.build_typedef_fields_unsorted_case3
 			l_field := l_mock.build_field_list_type_def_case3
 			md := new_emitter
-			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
-			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
+			tables (md).put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
+			tables (md).put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
-			-- l_mock.print_type_def_table (md.md_table ({PE_TABLES}.ttypedef))
+			-- l_mock.print_type_def_table (md_table (md, {PE_TABLES}.ttypedef))
 			-- io.put_new_line
-			-- l_mock.print_field_def_table (md.md_table ({PE_TABLES}.tfield))
+			-- l_mock.print_field_def_table (md_table (md, {PE_TABLES}.tfield))
 			-- io.put_new_line
 
 
@@ -123,9 +123,9 @@ feature -- Tests
 			mdu.ensure_field_list_column_is_ordered (False)
 			mdu.update_index_list_in_tables
 
-			l_mock.print_type_def_table (md.md_table ({PE_TABLES}.ttypedef))
+			l_mock.print_type_def_table (md_table (md, {PE_TABLES}.ttypedef))
 			io.put_new_line
-			l_mock.print_field_def_table (md.md_table ({PE_TABLES}.tfield))
+			l_mock.print_field_def_table (md_table (md, {PE_TABLES}.tfield))
 			io.put_new_line
 		end
 
@@ -141,16 +141,16 @@ feature -- Tests
 			l_typedef := l_mock.build_typedef_fields_unsorted_case4
 			l_field := l_mock.build_field_list_type_def_case4
 			md := new_emitter
-			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
-			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
+			tables (md).put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
+			tables (md).put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
 			create mdu.make (md, Void)
 			mdu.ensure_field_list_column_is_ordered (False)
 			mdu.update_index_list_in_tables
 
-			l_mock.print_type_def_table (md.md_table ({PE_TABLES}.ttypedef))
+			l_mock.print_type_def_table (md_table (md, {PE_TABLES}.ttypedef))
 			io.put_new_line
-			l_mock.print_field_def_table (md.md_table ({PE_TABLES}.tfield))
+			l_mock.print_field_def_table (md_table (md, {PE_TABLES}.tfield))
 			io.put_new_line
 		end
 
@@ -167,16 +167,16 @@ feature -- Tests
 			l_typedef := l_mock.build_typedef_fields_unsorted_case5
 			l_field := l_mock.build_field_list_type_def_case5
 			md := new_emitter
-			md.tables.put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
-			md.tables.put (l_field,   {PE_TABLES}.tfield.to_integer_32)
+			tables (md).put (l_typedef, {PE_TABLES}.ttypedef.to_integer_32)
+			tables (md).put (l_field,   {PE_TABLES}.tfield.to_integer_32)
 
 			create mdu.make (md, Void)
 			mdu.ensure_field_list_column_is_ordered (False)
 			mdu.update_index_list_in_tables
 
-			l_mock.print_type_def_table (md.md_table ({PE_TABLES}.ttypedef))
+			l_mock.print_type_def_table (md_table (md, {PE_TABLES}.ttypedef))
 			io.put_new_line
-			l_mock.print_field_def_table (md.md_table ({PE_TABLES}.tfield))
+			l_mock.print_field_def_table (md_table (md, {PE_TABLES}.tfield))
 			io.put_new_line
 		end
 

@@ -71,7 +71,13 @@ feature -- Access
 
 	md_table (idx: NATURAL_32): detachable MD_TABLE
 		do
-			Result := emitter.md_table (idx)
+			Result := emitter.pe_writer.md_table (idx)
+		end
+
+	pdb_md_table (idx: NATURAL_32): detachable MD_TABLE
+		do
+			check {PDB_TABLES}.tdocument <= idx and idx <= {PDB_TABLES}.tcustomdebuginformation end
+			Result := emitter.pdb_writer.md_table (idx)
 		end
 
 	typedef_table: detachable MD_TABLE

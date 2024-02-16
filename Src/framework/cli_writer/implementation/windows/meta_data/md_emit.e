@@ -145,6 +145,9 @@ feature -- Definition: creation
 		local
 			a: ANY
 		do
+			debug ("il_emitter_table")
+				print ({STRING_32} "TypeDef: " + type_name.string_32)
+			end
 			if implements /= Void then
 				a := implements.to_c
 				last_call_success := c_define_type_def (item, type_name.item, flags,
@@ -152,6 +155,9 @@ feature -- Definition: creation
 			else
 				last_call_success := c_define_type_def (item, type_name.item, flags,
 					extend_token, default_pointer, $Result)
+			end
+			debug ("il_emitter_table")
+				print ({STRING_32} " -> token="+ Result.to_hex_string + "%N")
 			end
 		end
 
@@ -180,14 +186,27 @@ feature -- Definition: creation
 			Result := assembly_emitter.define_file (file_name, hash_value, file_flags)
 		end
 
+	last_define_method_class: INTEGER
+
 	define_method (method_name: CLI_STRING; in_class_token: INTEGER;
 			method_flags: INTEGER; a_signature: MD_METHOD_SIGNATURE;
 			impl_flags: INTEGER): INTEGER
 			-- Create new method in class `in_class_token'.
 		do
+			debug ("il_emitter_table")
+				if in_class_token < last_define_method_class then
+					print ({STRING_32} "<!> ")
+				end
+				last_define_method_class := in_class_token
+				print ({STRING_32} "Method: " + method_name.string_32 + " (class:"+ in_class_token.to_hex_string + ")")
+			end
 			last_call_success := c_define_method (item, in_class_token,
 				method_name.item, method_flags, a_signature.item.item, a_signature.count,
 				0, impl_flags, $Result)
+
+			debug ("il_emitter_table")
+				print ({STRING_32} " -> token=" + Result.to_hex_string +"%N")
+			end
 		end
 
 	define_method_impl (in_class_token, method_token, used_method_declaration_token: INTEGER)

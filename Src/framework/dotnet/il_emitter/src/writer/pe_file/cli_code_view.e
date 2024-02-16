@@ -13,15 +13,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: STRING)
+	make (a_path: PATH)
 		do
 			set_path (a_path)
 			guid := new_random_guid
 			age := 1
 		end
+
 feature -- Access
 
-	signagture: STRING = "RSDS"
+	signature: STRING = "RSDS"
 
     guid: ARRAY [NATURAL_8]
     	-- GUID (Globally Unique Identifier) of the associated PDB.
@@ -29,10 +30,11 @@ feature -- Access
     age: INTEGER
     	-- Iteration of the PDB. The first iteration is 1. The iteration is incremented each time the PDB content is augmented.
 
-    path: STRING
-		-- 	UTF-8 NUL-terminated path to the associated .pdb file
+    path: PATH
+    		-- Associated .pdb file location
 
-
+	utf8_path_value: STRING_8
+			-- UTF-8 NUL-terminated path to the associated .pdb file location
 
 feature -- Change Element
 
@@ -50,10 +52,11 @@ feature -- Change Element
 			age_set: age = a_age
 		end
 
-	set_path (a_path: STRING)
+	set_path (a_path: PATH)
 			-- Set path with a_path
 		do
-			path := a_path + "%U"
+			path := a_path
+			utf8_path_value := a_path.utf_8_name + "%U"
 		end
 
 feature -- Managed Pointer
@@ -67,7 +70,7 @@ feature -- Managed Pointer
 			create Result.make (size_of)
 
 				-- signature
-			create ac.make_from_string (signagture)
+			create ac.make_from_string (signature)
 			Result.put_natural_8_array (ac.to_natural_8_array)
 
 				-- Guid
@@ -77,7 +80,7 @@ feature -- Managed Pointer
 			Result.put_integer_32 (age)
 
 				-- Path
-			create ac.make_from_string (path)
+			create ac.make_from_string (utf8_path_value)
 			Result.put_natural_8_array (ac.to_natural_8_array)
 		ensure
 			item.position = size_of
@@ -98,11 +101,9 @@ feature -- Measurement
 				-- age
 			s.put_integer_32
 				-- path
-			s.put_natural_8_array (path.count)
+			s.put_natural_8_array (utf8_path_value.count)
 			Result := s
 		end
-
-
 
 feature {NONE} -- Random
 

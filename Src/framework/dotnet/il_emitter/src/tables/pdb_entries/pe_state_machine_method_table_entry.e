@@ -58,7 +58,7 @@ feature -- Operations
 
 	table_index: NATURAL_32
 		once
-			Result := {PE_TABLES}.tStateMachineMethod
+			Result := {PDB_TABLES}.tStateMachineMethod
 		end
 
 	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32

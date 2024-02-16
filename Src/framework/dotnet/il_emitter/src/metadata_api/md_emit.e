@@ -36,11 +36,10 @@ feature {NONE}
 
 				-- Using PE_GENERATOR to get access helper features.
 			create pe_writer.make
-			create stream_headers.make_filled (0, 5, 2)
-			initialize_metadata_tables
-			initialize_guid
-			initialize_unit
-			create tables_header
+			create pdb_writer.make
+			initialize_module_guid
+			initialize_compilation_unit
+
 				-- we don't initialize the compilation unit since we don't provide the name of it (similar to the COM interface)
 
 			create opt_data_for_type_def.make (5)
@@ -48,24 +47,7 @@ feature {NONE}
 			module_guid_set: module_guid.count = 16
 		end
 
-	initialize_metadata_tables
-			-- Initialize an in-memory metadata tables
-		local
-			i,n: INTEGER
-		do
-			from
-				i := 0
-				n := {PE_TABLE_CONSTANTS}.max_tables
-				create tables.make_empty (n)
-			until
-				i >= n
-			loop
-				tables.force (create {MD_TABLE}.make (i.to_natural_32), i)
-				i := i + 1
-			end
-		end
-
-	initialize_unit
+	initialize_compilation_unit
 			-- Initialize the compilation unit
 		local
 			l_type_def: PE_TYPEDEF_OR_REF
@@ -80,31 +62,23 @@ feature {NONE}
 			l_unused_token := add_table_entry (l_table)
 		end
 
-	initialize_guid
-			-- Create a unide GUID.
+	initialize_module_guid
+			-- Create a unique GUID.
 			--| The module version identifier.
 		do
-			module_GUID := pe_writer.create_guid
+			module_guid := pe_writer.create_guid
 			guid_index := pe_writer.hash_guid (module_guid)
 		end
 
 feature -- Access
 
-	tables: SPECIAL [MD_TABLE]
-			--  in-memory metadata tables
-
-	md_table (a_tb_id: NATURAL_32): MD_TABLE
-		require
-			tables.valid_index (a_tb_id.to_integer_32)
-		do
-			Result := tables [a_tb_id.to_integer_32]
-		end
-
-	--pe_writer: PE_WRITER
 	pe_writer: PE_GENERATOR
 			-- helper class to generate the PE file.
 			--| using as a helper class to access needed features.
 
+	pdb_writer: PE_GENERATOR
+			-- helper class to generate the PDB content|file.
+			--| using as a helper class to access needed features.
 
 	md_ui: MD_UI
 			-- Integration with UI to process UI events.
@@ -147,7 +121,7 @@ feature -- Optimization
 
 feature -- Access
 
-	module_GUID: ARRAY [NATURAL_8]
+	module_guid: ARRAY [NATURAL_8]
 			-- Unique GUID
 			--|the length should be 16.
 
@@ -158,18 +132,14 @@ feature -- Access
 			-- Index of the GUID
 			-- where it should be located in the metadata tables.
 
-	tables_header: PE_DOTNET_META_TABLES_HEADER
-			-- `tables_header'
-
-	stream_headers: ARRAY2 [NATURAL_32]
-			-- defined as streamHeaders_[5][2];
-
 feature -- Status report
 
 	is_successful: BOOLEAN
 			-- Was last call successful?
 		do
-			to_implement ("TODO: for now, always return True")
+			debug ("refactor_fixme")
+				to_implement ("TODO: for now, always return True")
+			end
 			Result := True
 		end
 
@@ -187,242 +157,7 @@ feature -- Access
 				--| The size of the metadata header and table header.
 				--| The final result is the size of the metadata in bytes.
 
-			Result := compute_metadata_size.to_integer_32
-		end
-
-	retrieve_user_string (a_token: INTEGER): STRING_32
-			-- Retrieve the user string for `token'.
-		require
-			valid_user_string_token: is_user_string_token (a_token)
-		local
-			l_index: INTEGER_32
-			l_length: INTEGER_32
-			l_bytes: STRING_8
-			i: INTEGER_32
-			j: INTEGER_32
-			us_heap: SPECIAL [NATURAL_8]
-		do
-				-- <<0, 1, 58, 0, 36, 0, ..... >>
-				--      ^   - -
-				-- Copy the Userstring heap,
-				-- the underlying String needs to be retrieved as UTF-16
-				-- TODO check if we have an efficient algorithm to
-				-- convert an array of bytes to utf-16.
-
-			us_heap := pe_writer.us.base
-
-				-- Compute the index.
-			l_index := a_token - 0x7000_0000 -- 0x70 table type: UserString heap
-
-				-- Get the length of the string, reading the next byte.
-				-- Per character we use two bytes and it ends with a null character.
-			l_length := us_heap [l_index] -- 0-based container
-
-			i := l_index
-			if us_heap [i] < 128 then -- 0x80 = 1000 0000
-				l_length := us_heap [i]
-				i := i + 1
-			elseif us_heap [i] < 192 then -- 0xC0 = 1100 0000
-				-- 256 = 0x100 = 1 0000 0000
-				l_length := (us_heap [i] - 128) * 256 + us_heap [i + 1]
-				i := i + 2
-			else
-				-- 16777216 = 0x100_0000 = 1 00000000 00000000 00000000
-				-- 65536 	=   0x1_0000 =          1 00000000 00000000
-				-- 256 		=      0x100 =                   1 00000000
-				l_length := (us_heap [i] - 192) * 0x100_0000
-							  + us_heap [i + 1] * 0x1_0000
-							  + us_heap [i + 2] * 0x100
-							  + us_heap [i + 3]
-				i := i + 4
-			end
-
-			create l_bytes.make (l_length - 1)
-			from
-				j := 0
-			until
-				j > l_length - 1 --| Do not load the final flag 0 or 1
-			loop
-				l_bytes.append_character (us_heap[i + j].to_character_8)
-				j := j + 1
-			end
-
-			Result := {UTF_CONVERTER}.utf_16le_string_8_to_string_32 (l_bytes)
-		end
-
-	is_user_string_token (a_token: INTEGER_32): BOOLEAN
-			-- Checks if the given integer value `a_token` corresponds to a valid user string token.
-		do
-			Result := (a_token >= 0x7000_0000) and (a_token < (0x7000_0000 + pe_writer.us.size.to_integer_32))
-		end
-
-feature {NONE} -- Implementation
-
-	compute_metadata_size: NATURAL_32
-			--| Computes the size of the metadata for the current emitted assembly.
-			--| Iterate through each table and multiplying the size of the table by the number of entries in the table.
-			--| Adds the size of each heap (string, user string, blob, and GUID)
-			--| The size of the metadata header and table header.
-			--| The final result is the size of the metadata in bytes.
-		note
-			EIS: "name=Metadata Root", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297", "protocol=uri"
-		local
-			l_current_rva: NATURAL_32
-			l_counts: ARRAY [NATURAL_32]
-			l_temp: NATURAL_32
-			l_buffer: ARRAY [NATURAL_8]
-			i,n: INTEGER
-		do
-			l_current_rva := 16
-				-- metadata header offest
-				-- Signature + Major Version + MinorVersion + Reserved + Length
-
-			l_current_rva := l_current_rva + pe_writer.compute_rtv_string_size
-				-- Version.
-				--| The Version string shall be
-				--| Standard CLI 2005
-
-			if (l_current_rva \\ 4) /= 0 then
-				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
-			end
-				-- Padding to next 4 byte boundary
-
-			l_current_rva := l_current_rva + 2
-				-- flags
-
-			l_current_rva := l_current_rva + 2
-				-- streams, will be 5 in our implementation
-				-- check stream_names feature.
-
-				-- StreamHeaders. Array of n StreamHdr structures
-				-- "#~", "#Strings", "#US", "#GUID", "#Blob"
-				--   1 ,      2    ,   3  ,     4  ,    5
-			across pe_writer.stream_names as elem loop
-				l_current_rva := l_current_rva + 8 + (elem.count + 1).to_natural_32
-				if (l_current_rva \\ 4) /= 0 then
-					l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
-				end
-			end
-
-			stream_headers [1, 1] := l_current_rva
-
-			tables_header.major_version := 2
-			tables_header.reserved2 := 1
--- Why having Event and Property sorted? anyway, the Eiffel compiler does not use them.
---			tables_header.mask_sorted := 0b0000000000000000000101100000000000110011001001011111101000000000
-
-			tables_header.mask_sorted := 0b0000000000000000000101100000000000110011000000011111101000000000
-			--
-				--FIXME: check if size is about rows count, or offset (for Blob)
-				-- See II.24.2.6 #~ stream
-				-- Check size >= 2^16 = 0x1_0000
-			if strings_heap_size >= 0x1_0000 then
-				tables_header.heap_offset_sizes := tables_header.heap_offset_sizes | 0x1
-			end
-			if guid_heap_size >= 0x1_0000 then
-				tables_header.heap_offset_sizes := tables_header.heap_offset_sizes | 0x2
-			end
-			if blob_heap_size >= 0x1_0000 then
-				tables_header.heap_offset_sizes := tables_header.heap_offset_sizes | 0x4
-			end
-
-			create l_counts.make_filled (0, 1, Max_tables + Extra_indexes)
-			l_counts [t_string + 1] := strings_heap_size
-			l_counts [t_us + 1] := us_heap_size
-			l_counts [t_guid + 1] := guid_heap_size
-			l_counts [t_blob + 1] := blob_heap_size
-
-			from
-				i := 0
-				n := tables.count
-			until
-				i >= n
-			loop
-				if not tables [i].is_empty then
-					l_counts [i + 1] := tables [i].size
-					tables_header.mask_valid := tables_header.mask_valid | ({INTEGER_64} 1 |<< i)
-					l_temp := l_temp + 1
-				end
-				i := i + 1
-			end
-			l_current_rva := l_current_rva + {PE_DOTNET_META_TABLES_HEADER}.size_of.to_natural_32
-				-- tables header
-			l_current_rva := l_current_rva + (l_temp * ({PLATFORM}.natural_32_bytes).to_natural_32)
-				-- table counts
-				-- Dword is 4 bytes.
-
-			from
-				i := 0
-				n := tables.count
-			until
-				i >= n
-			loop
-				if l_counts [i + 1] /= 0 then
-					create l_buffer.make_filled (0, 1, 512)
-					l_temp := tables [i][{NATURAL_32} 1].render (l_counts, l_buffer)
-					l_temp := l_temp * (l_counts [i + 1])
-					l_current_rva := l_current_rva + l_temp
-				end
-				i := i + 1
-			end
-
-			if (l_current_rva \\ 4) /= 0 then
-				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
-			end
-
-			stream_headers [1, 2] := l_current_rva - stream_headers [1, 1]
-			stream_headers [2, 1] := l_current_rva
-			l_current_rva := l_current_rva + pe_writer.strings.size
-
-			if (l_current_rva \\ 4) /= 0 then
-				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
-			end
-
-			stream_headers [2, 2] := l_current_rva - stream_headers [2, 1]
-			stream_headers [3, 1] := l_current_rva
-			if pe_writer.us.size = 0 then
-				l_current_rva := l_current_rva + pe_writer.default_us.count.to_natural_32
-					-- US May be empty in our implementation we put an empty string there
-			else
-				l_current_rva := l_current_rva + pe_writer.us.size
-			end
-
-				-- TODO refactor this code into a feature.
-			if (l_current_rva \\ 4) /= 0 then
-				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
-			end
-
-			stream_headers [3, 2] := l_current_rva - stream_headers [3, 1]
-			stream_headers [4, 1] := l_current_rva
-			l_current_rva := l_current_rva + pe_writer.guid.size
-
-			if (l_current_rva \\ 4) /= 0 then
-				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
-			end
-
-			stream_headers [4, 2] := l_current_rva - stream_headers [4, 1]
-			stream_headers [5, 1] := l_current_rva
-			l_current_rva := l_current_rva + pe_writer.blob.size
-
-			if (l_current_rva \\ 4) /= 0 then
-				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
-			end
-
-			stream_headers [5, 2] := l_current_rva - stream_headers [5, 1]
-
-			Result := l_current_rva.to_natural_32
-		end
-
-feature -- Save
-
-	assembly_memory: MANAGED_POINTER
-			-- Save Current into a MEMORY location.
-			-- Allocated here and needs to be freed by caller.
-		do
-			create Result.make (save_size)
-			to_implement ("TODO implement, double check if we really need it")
-		ensure
-			valid_result: Result /= Void
+			Result := pe_writer.compute_metadata_size.to_integer_32
 		end
 
 feature -- Pre-Save
@@ -457,6 +192,7 @@ feature -- Save
 
 	append_to_file (f: FILE)
 			-- Append current assembly to file `f`.
+			-- note: this does not include PDB content.
 		local
 			l_expected_size: INTEGER
 		do
@@ -466,12 +202,12 @@ feature -- Save
 				-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297
 				-- and the rtv_string.
 
-			write_metadata_headers (f)
-			write_tables (f)
-			write_strings (f)
-			write_us (f)
-			write_guid (f)
-			write_blob (f)
+			write_metadata_headers (pe_writer, f)
+			write_tables (pe_writer, f)
+			write_strings (pe_writer, f)
+			write_us (pe_writer, f)
+			write_guid (pe_writer, f)
+			write_blob (pe_writer, f)
 
 				-- Workaround to align
 			if not is_aligned (f, 4) then
@@ -483,7 +219,7 @@ feature -- Save
 
 feature {NONE} -- Implementation
 
-	write_tables (a_file: FILE)
+	write_tables (a_writer: PE_GENERATOR; a_file: FILE)
 			-- Write the metadata table to a binary file `a_file'.
 		require
 			open_write: a_file.is_open_write
@@ -496,12 +232,12 @@ feature {NONE} -- Implementation
 			j,m: NATURAL_32
 		do
 			create l_counts.make_filled (0, 1, max_tables + extra_indexes)
-			l_counts [t_string + 1] := strings_heap_size
-			l_counts [t_us + 1] := us_heap_size
-			l_counts [t_guid + 1] := guid_heap_size
-			l_counts [t_blob + 1] := blob_heap_size
+			l_counts [t_string + 1] := a_writer.strings_heap_size
+			l_counts [t_us + 1] := a_writer.us_heap_size
+			l_counts [t_guid + 1] := a_writer.guid_heap_size
+			l_counts [t_blob + 1] := a_writer.blob_heap_size
 
-			put_tables_header (a_file, tables_header)
+			put_tables_header (a_file, a_writer.tables_header)
 
 				-- Write table size
 			from
@@ -510,7 +246,7 @@ feature {NONE} -- Implementation
 			until
 				i >= n
 			loop
-				tb := md_table (i.to_natural_32)
+				tb := a_writer.md_table (i.to_natural_32)
 				l_sz := tb.size
 				debug("il_emitter_table")
 					if l_sz /= 0 then
@@ -531,7 +267,7 @@ feature {NONE} -- Implementation
 			until
 				i >= n
 			loop
-				tb := md_table (i.to_natural_32)
+				tb := a_writer.md_table (i.to_natural_32)
 
 					-- TODO: what if l_counts [i + 1] = 0 ?
 				debug ("il_emitter_table")
@@ -561,52 +297,52 @@ feature {NONE} -- Implementation
 			align (a_file, 4)
 		end
 
-	write_strings (a_file: FILE)
+	write_strings (a_writer: PE_GENERATOR; a_file: FILE)
 			-- Write the string heap to a binary file.
 			-- II.24.2.3 #Strings heap
 		require
 			open_write: a_file.is_open_write
 		do
-			put_subspecial (a_file, pe_writer.strings.base, 0, pe_writer.strings.size.to_integer_32)
+			put_subspecial (a_file, a_writer.strings.base, 0, a_writer.strings.size.to_integer_32)
 			align (a_file, 4)
 		end
 
-	write_us (a_file: FILE)
+	write_us (a_writer: PE_GENERATOR; a_file: FILE)
 			-- Write the user string heap to a binary file
 			-- II.24.2.4 #US heap
 		require
 			open_write: a_file.is_open_write
 		do
 				-- TODO check how to write String as a manifest string instead of a Byte Array.
-			if pe_writer.us.size = 0 then
-				put_array (a_file, pe_writer.default_us)
+			if a_writer.us.size = 0 then
+				put_array (a_file, a_writer.default_us)
 			else
-				put_subspecial (a_file, pe_writer.us.base, 0, pe_writer.us.size.to_integer_32)
+				put_subspecial (a_file, a_writer.us.base, 0, a_writer.us.size.to_integer_32)
 			end
 			align (a_file, 4)
 		end
 
-	write_guid (a_file: FILE)
+	write_guid (a_writer: PE_GENERATOR; a_file: FILE)
 			-- Write the guid heap to a file.
 			-- II.24.2.5 #GUID heap
 		require
 			open_write: a_file.is_open_write
 		do
-			put_subspecial (a_file, pe_writer.guid.base, 0, pe_writer.guid.size.to_integer_32)
+			put_subspecial (a_file, a_writer.guid.base, 0, a_writer.guid.size.to_integer_32)
 			align (a_file, 4)
 		end
 
-	write_blob (a_file: FILE)
+	write_blob (a_writer: PE_GENERATOR; a_file: FILE)
 			-- Write the blob heap to a binary file
 			-- II.24.2.4 #Blob heap
 		require
 			open_write: a_file.is_open_write
 		do
-			put_subspecial (a_file, pe_writer.blob.base, 0, pe_writer.blob.size.to_integer_32)
+			put_subspecial (a_file, a_writer.blob.base, 0, a_writer.blob.size.to_integer_32)
 			align (a_file, 4)
 		end
 
-	write_metadata_headers (a_file: FILE)
+	write_metadata_headers (a_writer: PE_GENERATOR; a_file: FILE)
 			-- Write the metadata headers to binary file.
 		require
 			open_write: a_file.is_open_write
@@ -616,12 +352,14 @@ feature {NONE} -- Implementation
 			l_data: NATURAL_16
 			l_names: STRING_32
 			l_rvt_string: STRING_32
+			stream_headers: ARRAY2 [NATURAL_32]
 		do
 				--| TODO: check if we need to use
 				--| UTF-8 for l_names.
 			align (a_file, 4)
-			put_metadata_headers (a_file, pe_writer.meta_header1)
-			l_rvt_string := pe_writer.rtv_string + "%U"
+			put_metadata_headers (a_file, a_writer.meta_header1)
+			stream_headers := a_writer.stream_headers
+			l_rvt_string := a_writer.rtv_string + "%U"
 			n := l_rvt_string.count
 			if n \\ 4 /= 0 then
 				n := n + 4 - (n \\ 4)
@@ -642,12 +380,13 @@ feature {NONE} -- Implementation
 
 					-- Adding a null character a the end of the string
 					-- C++ code uses put(streamNames_[i], strlen(streamNames_[i]) + 1);
-				l_names := pe_writer.stream_names [i].twin
+				l_names := a_writer.stream_names [i].twin
 				if
 					l_names.same_string_general ("#~") and
 					(
-						tables [{PE_TABLES}.tmethodptr.to_integer_32].count +
-						tables [{PE_TABLES}.tfieldptr.to_integer_32].count > 0
+						a_writer.md_table ({PE_TABLES}.tmethodptr).count +
+						a_writer.md_table ({PE_TABLES}.tfieldptr).count
+						> 0
 					)
 				then
 						-- When using FieldPointer or MethodPointer tables, #~ should be #-
@@ -778,7 +517,7 @@ feature -- Settings
 				--  	retrieve_table_row (from specific table entry)
 			if
 				attached extract_table_type_and_row (method_token) as d and then
-				attached md_table (d.table_type_index) as l_method_def_table and then
+				attached pe_writer.md_table (d.table_type_index) as l_method_def_table and then
 				attached {PE_METHOD_DEF_TABLE_ENTRY} l_method_def_table [d.table_row_index] as l_method_def
 			then
 					-- Set RVA value in method definition table entry
@@ -821,7 +560,7 @@ feature -- Definition: Access
 				--| {PE_TABLES}.is_valid_table (l_table_type)
 				--|
 				--| l_table_row: exists.
-			check exist_table_row: attached md_table (l_tuple.table_type_index)[l_tuple.table_row_index] end
+			check exist_table_row: attached pe_writer.md_table (l_tuple.table_type_index)[l_tuple.table_row_index] end
 
 				-- ResolutionScope : an index into a Module, ModuleRef, AssemblyRef or TypeRef table,or null
 			if resolution_scope & Md_mask = md_module then
@@ -871,7 +610,7 @@ feature -- Definition: Access
 				-- Create a new PE_MEMBER_REF_PARENT instance with the extracted table row index and the in_class_tokebn
 			l_member_ref := create_member_ref (in_class_token, l_tuple.table_row_index)
 
-			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
+			l_method_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 			l_name_index := pe_writer.hash_string (method_name.string_32)
 
 				-- Create a new PE_MEMBER_REF_TABLE_ENTRY instance with the given data
@@ -998,7 +737,7 @@ feature -- Definition: Creation
 			l_type_def_entry: PE_TYPE_SPEC_TABLE_ENTRY
 			l_type_signature: NATURAL_32
 		do
-			l_type_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
+			l_type_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 
 				-- Create a new PE_TYPE_SPEC_TABLE_ENTRY instance with the given data
 			create l_type_def_entry.make_with_data (l_type_signature)
@@ -1041,7 +780,7 @@ feature -- Definition: Creation
 				-- See II.22.26 MethodDef : 0x06
 
 
-			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
+			l_method_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 			l_name_index := pe_writer.hash_string (method_name.string_32)
 
 				-- Create a new PE_METHOD_DEF_TABLE_ENTRY instance with the given data
@@ -1062,7 +801,7 @@ feature -- Definition: Creation
 				-- Extract table type and row from the in_class_token
 			if
 				attached extract_table_type_and_row (in_class_token) as d and then
-				attached {MD_TABLE} md_table (d.table_type_index) as tb and then
+				attached {MD_TABLE} pe_writer.md_table (d.table_type_index) as tb and then
 				attached {PE_TYPE_DEF_TABLE_ENTRY} tb[d.table_row_index] as e
 			then
 				if not e.is_method_list_index_set then
@@ -1122,7 +861,7 @@ feature -- Definition: Creation
 			l_method := create_method_def_or_ref (method_token, extract_table_type_and_row (method_token).table_row_index)
 
 				-- Get Method signature data
-			l_method_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
+			l_method_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 
 				-- Create a new PE_METHOD_IMPL_TABLE_ENTRY instance with the given data
 			create l_method_spec_entry.make_with_data (l_method, l_method_signature)
@@ -1150,7 +889,7 @@ feature -- Definition: Creation
 				print ({STRING_32} "Property: type=" + type_token.to_hex_string + " name="+ name.string_32 + " .. ")
 			end
 				-- Compute the signature token
-			l_property_signature := hash_blob (signature.as_array, signature.count.to_natural_32)
+			l_property_signature := pe_writer.hash_blob (signature.as_array, signature.count.to_natural_32)
 
 				-- Create a new PE_PROPERTY_TABLE_ENTRY instance with the given data.
 			create {PE_PROPERTY_TABLE_ENTRY} l_property.make_with_data (
@@ -1265,7 +1004,7 @@ feature -- Definition: Creation
 			end
 
 			if
-				attached {PE_METHOD_DEF_TABLE_ENTRY} md_table (d.table_type_index)[d.table_row_index] as e
+				attached {PE_METHOD_DEF_TABLE_ENTRY} pe_writer.md_table (d.table_type_index)[d.table_row_index] as e
 			then
 				if not e.is_param_list_index_set then
 					e.set_param_list_index (l_param_entry_index)
@@ -1290,7 +1029,7 @@ feature -- Definition: Creation
 			l_parent := create_field_marshal (a_token, l_tuple.table_row_index)
 
 				-- Generate an index for the native type by hashing its blob representation.
-			l_index_native_type := hash_blob (a_native_type_sig.as_array, a_native_type_sig.count.to_natural_32)
+			l_index_native_type := pe_writer.hash_blob (a_native_type_sig.as_array, a_native_type_sig.count.to_natural_32)
 
 				-- Create a new `PE_FIELD_MARSHAL_TABLE_ENTRY` instance with the parent and native type index.
 			create l_entry.make_with_data (l_parent, l_index_native_type)
@@ -1311,7 +1050,7 @@ feature -- Definition: Creation
 				print ({STRING_32} "Field: " + field_name.string_32 + " (class:"+ in_class_token.to_hex_string)
 			end
 
-			l_field_signature := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
+			l_field_signature := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 			l_name_index := pe_writer.hash_string (field_name.string_32)
 
 				-- Create a new PE_FIELD_TABLE_ENTRY instance with the given data
@@ -1333,8 +1072,8 @@ feature -- Definition: Creation
 
 			if
 				attached extract_table_type_and_row (in_class_token) as d and then
-				attached {MD_TABLE} md_table (d.table_type_index) as tb and then
-				attached {PE_TYPE_DEF_TABLE_ENTRY} tb[d.table_row_index] as e
+				attached {MD_TABLE} pe_writer.md_table (d.table_type_index) as tb and then
+				attached {PE_TYPE_DEF_TABLE_ENTRY} tb [d.table_row_index] as e
 			then
 				if not e.is_field_list_index_set then
 					e.set_field_list_index (l_field_index)
@@ -1349,7 +1088,7 @@ feature -- Definition: Creation
 			l_signature_hash: NATURAL_32
 			l_signature_entry: PE_STANDALONE_SIG_TABLE_ENTRY
 		do
-			l_signature_hash := hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
+			l_signature_hash := pe_writer.hash_blob (a_signature.as_array, a_signature.count.to_natural_32)
 
 			create l_signature_entry.make_with_data (l_signature_hash)
 			Result := add_table_entry (l_signature_entry).to_integer_32
@@ -1368,7 +1107,7 @@ feature -- Definition: Creation
 			l_us_index: NATURAL_32
 		do
 			create l_str.make_from_string (str.string_32)
-			l_us_index := hash_us (l_str, l_str.count)
+			l_us_index := pe_writer.hash_us (l_str, l_str.count)
 			Result := (l_us_index | ({NATURAL_32} 0x70 |<< 24)).to_integer_32
 		end
 
@@ -1397,7 +1136,7 @@ feature -- Definition: Creation
 			if ca /= Void then
 				blob_count := ca.count
 					-- Compute the blob signature of the custom attribute
-				l_ca_blob := hash_blob (ca.item.read_array (0, blob_count), blob_count.to_natural_32)
+				l_ca_blob := pe_writer.hash_blob (ca.item.read_array (0, blob_count), blob_count.to_natural_32)
 			end
 
 				-- Create a new PE_CUSTOM_ATTRIBUTE instance with the corresponding tag and index
@@ -1469,6 +1208,19 @@ feature -- Definition: Creation
                 print ({STRING_32} " -> #" + index.out + " token=" + Result.to_hex_string + "%N")
             end
         end
+
+feature -- PDB creation
+
+	define_pdb_string (str: CLI_STRING): INTEGER
+			-- Define a new token for `str'.
+		local
+			l_str: STRING_32
+			l_us_index: NATURAL_32
+		do
+			create l_str.make_from_string (str.string_32)
+			l_us_index := pdb_writer.hash_us (l_str, l_str.count)
+			Result := (l_us_index | ({NATURAL_32} 0x70 |<< 24)).to_integer_32
+		end
 
 feature -- Constants
 

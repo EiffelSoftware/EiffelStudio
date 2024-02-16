@@ -31,11 +31,6 @@ feature -- Access
 
 	dbg_writer (emitter: MD_EMIT; name: CLI_STRING; full_build: BOOLEAN): DBG_WRITER
 		do
-			debug ("refactor_fixme")
-				to_implement ("TODO: DBG_WRITER")
-			end
-			check not_yet_implemented: False end
-
 			create {IL_EMITTER_DBG_WRITER} Result.make (emitter, name, full_build)
 		end
 
@@ -50,7 +45,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

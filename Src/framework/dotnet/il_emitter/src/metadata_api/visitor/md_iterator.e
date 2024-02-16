@@ -23,7 +23,14 @@ feature -- Access
 	visit_emitter (o: MD_EMIT)
 		do
 			across
-				o.tables as t
+				o.pe_writer.tables as t
+			loop
+				if attached {MD_TABLE} t as tb then
+					tb.accepts (Current)
+				end
+			end
+			across
+				o.pdb_writer.tables as t
 			loop
 				if attached {MD_TABLE} t as tb then
 					tb.accepts (Current)

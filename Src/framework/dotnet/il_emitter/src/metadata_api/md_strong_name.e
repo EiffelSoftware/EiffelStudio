@@ -63,26 +63,12 @@ feature -- Access
 	hash_of_file (a_file_path: CLI_STRING): MANAGED_POINTER
 			-- Compute hash of `a_file_path' using default algorithm.
 		local
-			l_file: RAW_FILE
-			l_s: STRING_8
-			l_converter: BYTE_ARRAY_CONVERTER
-			b: BOOLEAN
-			t1,t2: TIME
+			v: ARRAY [NATURAL_8]
 		do
-			create l_file.make_open_read (a_file_path.string_32)
-
-			print ("sha1 of " + l_file.path.utf_8_name + " (count:"+ l_file.count.out +") -> ")
-			create t1.make_now
-				-- Disable assertion checking, if any, otherwise `hash_from_file` may be way too slow.
-			b := {ISE_RUNTIME}.check_assert (False)
-			l_s := hash_from_file (l_file)
-				-- Restore assertion checking to previous state
-			b := {ISE_RUNTIME}.check_assert (b)
-			create t2.make_now
-			print (l_s + " (" + t2.relative_duration (t1).fine_seconds_count.out + " secs)%N")
-			l_file.close
-			create l_converter.make_from_string (l_s)
-			create Result.make_from_array (l_converter.to_natural_8_array)
+			v := {MD_HASH_UTILITIES}.sha1_bytes_for_file_name (a_file_path.string_32)
+			create Result.make_from_array (v)
+		ensure then
+			class
 		end
 
 feature -- Status report
@@ -92,20 +78,6 @@ feature -- Status report
 			debug ("refactor_fixme")
 				to_implement (generator + ".exists")
 			end
-		end
-
-
-feature {NONE} -- Implementation
-
-	hash_from_file (a_file: FILE): STRING_8
-			-- Compute the SHA-1 hash of a file `a_file' and return it as a string.
-		local
-			sha1: SHA1
-		do
-			create sha1.make
-			sha1.update_from_io_medium (a_file)
-			Result := sha1.digest_as_string
-			sha1.reset
 		end
 
 

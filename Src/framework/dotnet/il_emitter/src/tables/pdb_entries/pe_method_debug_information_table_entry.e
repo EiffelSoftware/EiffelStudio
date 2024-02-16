@@ -38,7 +38,7 @@ feature -- Access
 	sequence_points_index: PE_BLOB
 			-- Blob heap index, 0 if the method doesn’t have sequence points, encoding: sequence points blob.
 			-- https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md#sequence-points-blob
-			--| PE_SEQUENCE_POINTS_BLOB 
+			--| PE_SEQUENCE_POINTS_BLOB
 			--| Sequence points blob has the following structure:
 			--| Blob ::= header SequencePointRecord (SequencePointRecord | document-record)*
 			--| SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
@@ -47,7 +47,7 @@ feature -- Operations
 
 	table_index: NATURAL_32
 		once
-			Result := {PE_TABLES}.tMethodDebugInformation
+			Result := {PDB_TABLES}.tMethodDebugInformation
 		end
 
 	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32

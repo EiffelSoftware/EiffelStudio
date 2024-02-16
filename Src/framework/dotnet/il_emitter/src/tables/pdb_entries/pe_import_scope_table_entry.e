@@ -37,7 +37,7 @@ feature -- Access
 	imports_index: PE_BLOB
 			-- Blob index, encoding: Imports blob.
 			-- https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md#imports-blob
-			--| PE_IMPORTS_BLOB 
+			--| PE_IMPORTS_BLOB
 			--| Blob ::= Import*
 			--| Import ::= kind alias? target-assembly? target-namespace? target-type?
 
@@ -45,7 +45,7 @@ feature -- Operations
 
 	table_index: NATURAL_32
 		once
-			Result := {PE_TABLES}.tImportScope
+			Result := {PDB_TABLES}.tImportScope
 		end
 
 	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32

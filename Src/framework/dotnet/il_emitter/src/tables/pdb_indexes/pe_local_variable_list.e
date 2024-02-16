@@ -4,8 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	PE_LOCAL_CONSTANT_LIST
-
+	PE_LOCAL_VARIABLE_LIST
 
 inherit
 	PE_LIST
@@ -18,7 +17,7 @@ feature -- Access
 
 	associated_table_index: NATURAL_32
 		do
-			Result := {PE_TABLES}.tLocalConstant
+			Result := {PDB_TABLES}.tLocalVariable
 		end
 
 

@@ -32,12 +32,12 @@ feature {NONE} -- Bridge to MD_EMIT
 			Result := md_emit.create_implementation (a_token, a_index)
 		end
 
-	frozen hash_blob (a_blob_data: ARRAY [NATURAL_8]; a_blob_len: NATURAL_32): NATURAL_32
+	frozen hash_blob (a_writer: PE_GENERATOR; a_blob_data: ARRAY [NATURAL_8]; a_blob_len: NATURAL_32): NATURAL_32
 			-- Computes the hash of a blob `a_blob_data'
 			-- if the blob already exists in a heap, returns the index of the existing blob
 			-- otherwise computes the hash and returns the index of the new blob.
 		do
-			Result := md_emit.hash_blob (a_blob_data, a_blob_len)
+			Result := a_writer.hash_blob (a_blob_data, a_blob_len)
 		end
 
 feature {NONE} -- Change tables
@@ -48,7 +48,7 @@ feature {NONE} -- Change tables
 			-- note the data for the table will be a class inherited from TableEntryBase,
 			--  and this class will self-report the table index to use
 		require
-			valid_entry_table_index: md_emit.tables.valid_index (a_entry.table_index.to_integer_32)
+			valid_entry_table_index: md_emit.pe_writer.is_valid_md_table_id (a_entry.table_index)
 		do
 			Result := md_emit.add_table_entry (a_entry)
 		end

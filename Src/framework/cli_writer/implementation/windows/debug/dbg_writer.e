@@ -13,6 +13,9 @@ class
 
 inherit
 	COM_OBJECT
+		export
+			{DBG_DOCUMENT_WRITER, DBG_WRITER_I} item
+		end
 
 	DBG_WRITER_I
 
@@ -107,30 +110,19 @@ feature -- Definition
 			check
 				p_not_null: p /= default_pointer
 			end
-			create {DBG_DOCUMENT_WRITER} Result.make_by_pointer (p)
+			create {DBG_DOCUMENT_WRITER} Result.make (Current, p)
 		end
 
 	define_sequence_points (document: DBG_DOCUMENT_WRITER_I; count: INTEGER; offsets, start_lines,
 			start_columns, end_lines, end_columns: ARRAY [INTEGER])
 			-- Set sequence points for `document'
-		local
-			l_offsets, l_start_lines, l_start_columns, l_end_lines, l_end_columns: ANY
 		do
-			if count > 0 then
-				l_offsets := offsets.to_c
-				l_start_lines := start_lines.to_c
-				l_start_columns := start_columns.to_c
-				l_end_lines := end_lines.to_c
-				l_end_columns := end_columns.to_c
-				if attached {DBG_DOCUMENT_WRITER} document as doc then
-					last_call_success := c_define_sequence_points (item, doc.item, count,
-						$l_offsets, $l_start_lines, $l_start_columns, $l_end_lines, $l_end_columns)
-				else
-					check has_expected_document: False end
-					last_call_success := -1 -- FIXME
-				end
+			document.define_sequence_points (count, offsets, start_lines,
+			start_columns, end_lines, end_columns)
+			if attached {DBG_DOCUMENT_WRITER} document as doc then
+				last_call_success := doc.last_call_success
 			else
-				last_call_success := 0
+				check expected_dbg_document_writer: False end
 			end
 		end
 
@@ -310,7 +302,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

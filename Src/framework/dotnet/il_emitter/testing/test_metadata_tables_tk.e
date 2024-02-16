@@ -120,7 +120,7 @@ feature -- Test
 			across
 				tb as t
 			loop
-				l_str := md_emit.retrieve_user_string (t)
+				l_str := retrieve_user_string (md_emit, t)
 				if l_str.ends_with_general ("%U") then
 					l_str.remove_tail (1)
 				end
@@ -200,23 +200,23 @@ feature -- Test
 
 			create l_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
-			l_pub_key1 := md_emit.hash_blob (l_pub_key_token.item.read_array (0, l_pub_key_token.item.count), l_pub_key_token.item.count.to_natural_32)
+			l_pub_key1 := hash_blob (md_emit, l_pub_key_token.item.read_array (0, l_pub_key_token.item.count), l_pub_key_token.item.count.to_natural_32)
 
 			create l_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB0, 0x3F, 0x5F, 0x7F, 0x11, 0xD5, 0x0A, 0x3A>>)
-			l_pub_key2 := md_emit.hash_blob (l_pub_key_token.item.read_array (0, l_pub_key_token.item.count), l_pub_key_token.item.count.to_natural_32)
+			l_pub_key2 := hash_blob (md_emit, l_pub_key_token.item.read_array (0, l_pub_key_token.item.count), l_pub_key_token.item.count.to_natural_32)
 
 			check l_pub_key1 /= l_pub_key2 end
 
 			create l_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
-			l_pub_key3 := md_emit.hash_blob (l_pub_key_token.item.read_array (0, l_pub_key_token.item.count), l_pub_key_token.item.count.to_natural_32)
+			l_pub_key3 := hash_blob (md_emit, l_pub_key_token.item.read_array (0, l_pub_key_token.item.count), l_pub_key_token.item.count.to_natural_32)
 
 			check l_pub_key1 = l_pub_key3 end
 
 			create l_pub_key_token.make_from_array (
 				{ARRAY [NATURAL_8]} <<0xB0, 0x3F, 0x5F, 0x7F, 0x11, 0xD5, 0x0A, 0x3A>>)
-			l_pub_key4 := md_emit.hash_blob (l_pub_key_token.item.read_array (0, l_pub_key_token.item.count), l_pub_key_token.item.count.to_natural_32)
+			l_pub_key4 := hash_blob (md_emit, l_pub_key_token.item.read_array (0, l_pub_key_token.item.count), l_pub_key_token.item.count.to_natural_32)
 			check l_pub_key2 = l_pub_key4 end
 
 				-- signature like void f()
@@ -224,13 +224,13 @@ feature -- Test
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig_token1 := md_emit.hash_blob (sig.as_array, sig.count.to_natural_32)
+			sig_token1 := hash_blob (md_emit, sig.as_array, sig.count.to_natural_32)
 
 			create sig.make
 			sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 			sig.set_parameter_count (0)
 			sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			sig_token2 := md_emit.hash_blob (sig.as_array, sig.count.to_natural_32)
+			sig_token2 := hash_blob (md_emit, sig.as_array, sig.count.to_natural_32)
 
 			check sig_token1 = sig_token2 end
 

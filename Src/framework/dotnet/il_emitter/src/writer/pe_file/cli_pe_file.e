@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 		local
 			l_characteristics: INTEGER_16
 			l_code_view: CLI_CODE_VIEW
-			l_path: PATH
 		do
 			is_debug_enabled := True
 			is_valid := True
@@ -79,13 +78,15 @@ feature {NONE} -- Initialization
 
 				--| Note: the following code is to test
 				--| how to generate a debug directory entry in a PE file.
-			if is_debug_enabled and then
-			 attached {CLI_IMG_DEBUG_DIRECTORY} debug_directory as l_debug_directory then
-				create l_path.make_current
-				l_path := l_path.extended ("debug.pdb")
-				create l_code_view.make ("test_bbb_impl.pdb")
+			if
+				is_debug_enabled and then
+			 	attached {CLI_IMG_DEBUG_DIRECTORY} debug_directory as l_debug_directory
+			 then
+				create l_code_view.make (associated_pdb_file_name)
 				set_debug_information (l_debug_directory, l_code_view.item.managed_pointer)
-				--build_pdb_file(l_code_view, l_debug_directory)
+				debug ("il_emitter_dbg")
+--					build_pdb_file(l_code_view, l_debug_directory)
+				end
 			end
 
 			create reloc_section_header.make (".reloc")
@@ -139,6 +140,19 @@ feature -- Status
 
 	file_name: READABLE_STRING_32
 			-- Name of current PE file on disk.
+
+	associated_pdb_file_name: PATH
+		local
+			fn: READABLE_STRING_32
+			p: PATH
+		do
+			fn := file_name
+			create p.make_from_string (fn)
+			if attached p.extension as ext then
+				create p.make_from_string (fn.head (fn.count - ext.count - 1))
+			end
+			Result := p.appended_with_extension ("pdb")
+		end
 
 	has_strong_name: BOOLEAN
 			-- Does current have a strong name signature?
@@ -195,7 +209,11 @@ feature {NONE} -- Implementation
 			l_cmp: CLI_MANAGED_POINTER
 			l_arr: ARRAY [NATURAL_8]
 		do
-			create l_file.make_create_read_write (a_code_view.path)
+			debug ("il_emitter_dbg")
+				print ("Build PDF file %"" + a_code_view.utf8_path_value + "%": start%N")
+			end
+			create l_file.make_with_path (a_code_view.path)
+			l_file.create_read_write
 
 			a_debug_directory.set_time_date_stamp (l_file.date)
 			create l_bac.make_from_string ("Eiffel.NetCore 2024")
@@ -211,6 +229,10 @@ feature {NONE} -- Implementation
 
 			l_file.put_managed_pointer (l_cmp.managed_pointer, 0, 4)
 			l_file.close
+			debug ("il_emitter_dbg")
+				print ("Build PDF file: completed%N")
+			end
+
 		end
 
 	internal_debug_directory: detachable CLI_DEBUG_DIRECTORY_I
@@ -373,6 +395,10 @@ feature -- Saving
 				l_pe_file.put_managed_pointer (p, 0, resources_size)
 			end
 
+			debug ("il_emitter")
+				{MD_DBG_CHRONO}.start ("pe_file")
+			end
+
 			if emitter.appending_to_file_supported then
 				emitter.append_to_file (l_pe_file)
 			else
@@ -391,6 +417,10 @@ feature -- Saving
 				l_meta_data_file.close
 				safe_delete (l_meta_data_file)
 			end
+			debug ("il_emitter")
+				print ({STRING_32} "PE file saving: " + {MD_DBG_CHRONO}.report ("pe_file") + "%N")
+			end
+
 
 			if import_table_padding > 0 then
 				create l_padding.make (import_table_padding)

@@ -42,7 +42,8 @@ feature -- Execution
 					then
 						r := new_response (req, res)
 						r.add_integer_64_field ("uid", l_user.id)
-						r.add_string_field ("name", api.real_user_display_name (l_user))
+						r.add_string_field ("name", l_user.cms_user.name)
+						r.add_string_field ("display_name", api.real_user_display_name (l_user))
 						l_licenses := es_cloud_api.user_licenses (l_user)
 						if l_licenses = Void or else l_licenses.is_empty then
 								-- Auto trial ?

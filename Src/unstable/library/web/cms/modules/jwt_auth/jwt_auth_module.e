@@ -100,7 +100,7 @@ feature -- Access: router
 				a_router.handle ("/user/{uid}/jwt_access_token", create {JWT_AUTH_TOKEN_USER_HANDLER}.make (l_jwt_auth_api), a_router.methods_get_post)
 				a_router.handle ("/user/{uid}/magic-login/{token}", create {JWT_AUTH_MAGIC_LOGIN_HANDLER}.make (l_jwt_auth_api), a_router.methods_get)
 
-				a_router.handle ("/auth/client-sign-in/{challenge}", create {JWT_AUTH_SIGN_IN_HANDLER}.make (l_jwt_auth_api), a_router.methods_get_post)
+				a_router.handle ("/auth/client-sign-in/{challenge}", create {JWT_AUTH_SIGN_IN_HANDLER}.make (l_jwt_auth_api, Current), a_router.methods_get_post)
 			end
 		end
 

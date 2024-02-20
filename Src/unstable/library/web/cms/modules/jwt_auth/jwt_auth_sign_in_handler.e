@@ -20,15 +20,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_jwt_auth_api: JWT_AUTH_API)
+	make (a_jwt_auth_api: JWT_AUTH_API; mod: JWT_AUTH_MODULE)
 		do
 			make_with_cms_api (a_jwt_auth_api.cms_api)
 			jwt_auth_api := a_jwt_auth_api
+			module := mod
 		end
 
 feature -- API
 
 	jwt_auth_api: JWT_AUTH_API
+
+	module: JWT_AUTH_MODULE
 
 feature -- Execution
 
@@ -77,6 +80,7 @@ feature -- Request execution
 			now: DATE_TIME
 			s: STRING_8
 			f: CMS_FORM
+			tpl_p: PATH
 		do
 			create now.make_now_utc
 			if attached jwt_auth_api.sign_in_challenge (a_challenge) as ch then
@@ -105,7 +109,7 @@ feature -- Request execution
 						font-weight: bold;
 					}
 					]")
-					s.append ("<ul class=%"choices%">")
+					s.append ("<ul class=%"sign-in choices%">")
 
 					if attached api.user as l_user then
 						rep.set_title ({STRING_32} "Authenticate with " + api.real_user_display_name (l_user) + " ?")
@@ -127,6 +131,15 @@ feature -- Request execution
 						f.extend_hidden_input ("destination", req.percent_encoded_path_info)
 						f.append_to_html (rep.wsf_theme, s)
 						s.append ("</li>")
+
+						create tpl_p.make_from_string ("templates")
+
+						if
+							attached api.module_theme_resource_location (module, tpl_p.extended ("sign-in-with.tpl")) as loc and then
+							attached api.resolved_smarty_template_text (loc) as tpl_str
+						then
+							s.append (tpl_str)
+						end
 					else
 							-- Sign in ...
 						s.append ("<li class=%"other-account%">")
@@ -172,7 +185,8 @@ feature -- Request execution
 								jwt_auth_api.approve_sign_in_challenge (ch, l_user)
 								rep := new_generic_response (req, res)
 								rep.set_title ({STRING_32} "Sign-in for " + api.real_user_display_name (l_user) + " approved.")
-								rep.add_success_message ("Successfully signed-in as user " +  api.user_html_link (l_user) + " .")
+								rep.add_success_message ("Successfully signed-in as user [" +  html_encoded (api.real_user_display_name (l_user)) + "].")
+								rep.set_main_content ("Now, you can close this page.")
 								rep.execute
 							else
 								send_bad_request (req, res)

@@ -132,14 +132,6 @@ feature -- Request execution
 						f.append_to_html (rep.wsf_theme, s)
 						s.append ("</li>")
 
-						create tpl_p.make_from_string ("templates")
-
-						if
-							attached api.module_theme_resource_location (module, tpl_p.extended ("sign-in-with.tpl")) as loc and then
-							attached api.resolved_smarty_template_text (loc) as tpl_str
-						then
-							s.append (tpl_str)
-						end
 					else
 							-- Sign in ...
 						s.append ("<li class=%"other-account%">")
@@ -150,6 +142,21 @@ feature -- Request execution
 						s.append ("</li>")
 					end
 					s.append ("</ul>") -- choice
+
+					create tpl_p.make_from_string ("templates")
+					if
+						attached api.module_theme_resource_location (module, tpl_p.extended ("footer-sign-in-with.tpl")) as loc and then
+						attached api.resolved_smarty_template (loc) as tpl
+					then
+						tpl.set_value (ch.information, "info")
+						tpl.set_value (api.date_time_to_iso8601_string (ch.expiration_date), "expiration")
+						if attached ch.remaining as d then
+							tpl.set_value (d.minutes, "remaining_minutes")
+							tpl.set_value (d.seconds, "remaining_seconds")
+						end
+						s.append (tpl.string)
+					end
+
 					s.append ("</div>%N") -- box
 
 					rep.set_main_content (s)
@@ -158,6 +165,16 @@ feature -- Request execution
 					rep := new_generic_response (req, res)
 					rep.set_title ({STRING_32} "This sign-in request is not valid anymore.")
 					rep.add_error_message ("Cancelling this sign-in request ["+ percent_encoded (ch.challenge) + "] as it is not valid anymore.")
+					create s.make_empty
+					create tpl_p.make_from_string ("templates")
+					if
+						attached api.module_theme_resource_location (module, tpl_p.extended ("footer-sign-in-with-error.tpl")) as loc and then
+						attached api.resolved_smarty_template (loc) as tpl
+					then
+						tpl.set_value (ch.information, "info")
+						s.append (tpl.string)
+					end
+					rep.set_main_content (s)
 					rep.execute
 				end
 			else
@@ -170,6 +187,8 @@ feature -- Request execution
 		local
 			rep: CMS_RESPONSE
 			now: DATE_TIME
+			tpl_p: PATH
+			s: STRING_8
 		do
 			create now.make_now_utc
 			if attached jwt_auth_api.sign_in_challenge (a_challenge) as ch then
@@ -186,7 +205,19 @@ feature -- Request execution
 								rep := new_generic_response (req, res)
 								rep.set_title ({STRING_32} "Sign-in for " + api.real_user_display_name (l_user) + " approved.")
 								rep.add_success_message ("Successfully signed-in as user [" +  html_encoded (api.real_user_display_name (l_user)) + "].")
-								rep.set_main_content ("Now, you can close this page.")
+
+								create s.make_empty
+								create tpl_p.make_from_string ("templates")
+								if
+									attached api.module_theme_resource_location (module, tpl_p.extended ("footer-sign-in-with-success.tpl")) as loc and then
+									attached api.resolved_smarty_template (loc) as tpl
+								then
+									tpl.set_value (ch.information, "info")
+									s.append (tpl.string)
+								else
+									s.append ("Now, you can close this page.")
+								end
+								rep.set_main_content (s)
 								rep.execute
 							else
 								send_bad_request (req, res)

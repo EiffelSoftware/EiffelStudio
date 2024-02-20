@@ -41,6 +41,22 @@ feature -- Access
 
 	expiration_date: DATE_TIME
 
+	remaining_seconds: INTEGER_64
+			-- Remaining seconds before expiration.
+		do
+			if attached expiration_date.relative_duration (create {DATE_TIME}.make_now_utc) as d then
+				Result := d.seconds_count
+			end
+		end
+
+	remaining: detachable TUPLE [minutes, seconds: INTEGER_64]
+			-- Remaining minutes+seconds before expiration.
+		do
+			if attached expiration_date.relative_duration (create {DATE_TIME}.make_now_utc) as d then
+				Result := [d.seconds_count // 60, d.seconds_count \\ 60]
+			end
+		end
+
 	applications: detachable LIST [READABLE_STRING_GENERAL]
 			-- Applications accepting this `challenge`
 

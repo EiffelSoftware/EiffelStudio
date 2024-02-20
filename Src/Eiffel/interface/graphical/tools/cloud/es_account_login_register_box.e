@@ -370,7 +370,6 @@ feature -- Mode selection
 			lnk: like new_link_label
 			lab: EV_LABEL
 			hb: EV_HORIZONTAL_BOX
-			t: EV_TIMEOUT
 			sep: EV_WIDGET
 		do
 			if
@@ -430,8 +429,7 @@ feature -- Mode selection
 				hb.extend (create {EV_CELL})
 
 				start_waiting (lab)
-				create t.make_with_interval (3_000)
-				t.actions.extend_kamikaze (agent check_request_cloud_sign_in (cld, rqst, lab, b))
+				check_request_cloud_sign_in (cld, rqst, lab, b)
 
 				b.propagate_background_color
 
@@ -469,9 +467,6 @@ feature -- Mode selection
 		do
 			if not cld.is_available then
 				cld.async_check_availability (False)
-
-				create t.make_with_interval (3_000)
-				t.actions.extend_kamikaze (agent check_request_cloud_sign_in (cld, rqst, lab, b))
 			else
 				if cld.is_signed_in and then attached cld.active_account as acc then
 						-- Already authenticated !!!
@@ -480,7 +475,6 @@ feature -- Mode selection
 					cld.check_cloud_sign_in_request (rqst)
 					if rqst.is_approved or rqst.has_error then
 						stop_waiting
---						print ("EXIT Sign-in request status checking ...%N")
 							-- Exit
 						b.wipe_out
 						create l_mesg
@@ -513,12 +507,20 @@ feature -- Mode selection
 							report_cloud_sign_in_error (cld, err, b)
 						end
 					else
-						create t.make_with_interval (5_000)
-						t.actions.extend_kamikaze (agent check_request_cloud_sign_in (cld, rqst, lab, b))
+						t := check_request_cloud_sign_in_timer
+						if t = Void or else t.is_destroyed then
+							create t.make_with_interval (5_000)
+							t.actions.extend (agent check_request_cloud_sign_in (cld, rqst, lab, b))
+							check_request_cloud_sign_in_timer := t
+						else
+							-- wait for next timeout event ...
+						end
 					end
 				end
 			end
 		end
+
+	check_request_cloud_sign_in_timer: detachable EV_TIMEOUT
 
 	waiting_timer: detachable EV_TIMEOUT
 
@@ -569,6 +571,10 @@ feature -- Mode selection
 			if attached waiting_timer as t then
 				t.destroy
 				waiting_timer := Void
+			end
+			if attached check_request_cloud_sign_in_timer as t then
+				t.destroy
+				check_request_cloud_sign_in_timer := Void
 			end
 		end
 

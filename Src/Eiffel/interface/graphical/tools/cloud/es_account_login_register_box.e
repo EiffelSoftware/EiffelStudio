@@ -274,6 +274,8 @@ feature -- Mode selection
 				b.disable_item_expand (hb)
 			end
 
+			alternative_login_box := hb
+
 			fr.wipe_out
 			fr.extend (b)
 			b.show
@@ -309,6 +311,7 @@ feature -- Mode selection
 				vb_off.extend (l_box)
 				vb_off.disable_item_expand (l_box)
 			end
+			alternative_login_box := Void
 
 			fr.extend (vb_off)
 			fr.propagate_background_color
@@ -348,6 +351,8 @@ feature -- Mode selection
 			vb.extend (l_inner)
 			vb.extend (create {EV_CELL})
 
+			alternative_login_box := Void
+
 			if attached new_credential_sign_in_link (fr) as l_box then
 				create hb
 				vb.extend (hb)
@@ -357,6 +362,7 @@ feature -- Mode selection
 				hb.extend (l_box)
 				hb.disable_item_expand (l_box)
 				hb.extend (create {EV_LABEL})
+				alternative_login_box := hb
 			end
 
 			fr.wipe_out
@@ -432,6 +438,9 @@ feature -- Mode selection
 				check_request_cloud_sign_in (cld, rqst, lab, b)
 
 				b.propagate_background_color
+				if attached alternative_login_box as alt_box and then not alt_box.is_destroyed then
+					alt_box.hide
+				end
 
 			else
 				report_cloud_sign_in_error (cloud_service, locale.translation_in_context ("could not request Sign-in", "cloud.error"), b)
@@ -454,6 +463,10 @@ feature -- Mode selection
 			but.set_background_color (colors.stock_colors.red)
 			but.set_foreground_color (colors.stock_colors.white)
 			but.set_minimum_width (scaler.scaled_size (100))
+
+			if attached alternative_login_box as alt_box and then not alt_box.is_destroyed then
+				alt_box.show
+			end
 
 			b.extend (but)
 			b.disable_item_expand (but)
@@ -594,6 +607,7 @@ feature -- Mode selection
 			fr.extend (b)
 			b.show
 			fr.propagate_background_color
+			alternative_login_box := Void
 		end
 
 	new_credential_sign_box: EV_VERTICAL_BOX
@@ -830,6 +844,8 @@ feature -- Status report
 		end
 
 feature -- Optional properties
+
+	alternative_login_box: detachable EV_WIDGET
 
 	username_input: detachable EV_TEXT_FIELD
 

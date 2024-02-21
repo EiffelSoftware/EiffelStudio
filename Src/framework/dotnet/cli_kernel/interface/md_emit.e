@@ -414,4 +414,30 @@ feature -- Settings
 			is_successful
 		end
 
+feature -- Helpers
+
+	extract_table_type_and_row (a_token: INTEGER): TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
+			-- Given a token `a_token' return a TUPLE with the table_type_index and the
+			-- table_row_index.
+			--| Metadata tokens
+			--| Many CIL instructions are followed by a "metadata token". This is a 4-byte value, that specifies a
+			--| row in a metadata table, or a starting byte offset in the User String heap. The most-significant
+			--| byte of the token specifies the table or heap. For example, a value of 0x02 specifies the TypeDef
+			--| table; a value of 0x70 specifies the User String heap. The value corresponds to the number
+			--| assigned to that metadata table (see Partition II for the full list of tables) or to 0x70 for the User
+			--| String heap. The least-significant 3 bytes specify the target row within that metadata table, or
+			--| starting byte offset within the User String heap. The rows within metadata tables are numbered
+			--| one upwards, whilst offsets in the heap are numbered zero upwards. (So, for example, the
+			--| metadata token with value 0x02000007 specifies row number 7 in the TypeDef table)
+		local
+			l_table_type_index: NATURAL_32
+			l_table_row_index: NATURAL_32
+		do
+				-- 2^8 -1 = 255 = 0xFF
+			l_table_type_index := ((a_token |>> 24) & 0xFF).to_natural_32
+				-- 2^ 24 -1 = 16777215 = 0xFF_FFFF
+			l_table_row_index := (a_token & 0xFF_FFFF).to_natural_32
+			Result := [l_table_type_index, l_table_row_index]
+		end
+
 end

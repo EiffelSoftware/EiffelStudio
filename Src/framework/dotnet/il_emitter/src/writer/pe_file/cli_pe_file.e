@@ -297,6 +297,7 @@ feature -- Settings
 			-- Set `debug_directory' to `a_cli_debug_directory' and `debug_info'
 			-- to `a_debug_info'.
 		do
+			internal_debug_directory := a_cli_debug_directory
 			debug_info := a_debug_info
 		end
 

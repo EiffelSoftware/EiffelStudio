@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			l_hash_algo_guid_idx, l_hash_blob_idx: NATURAL_32
 		do
 			dbg_writer := a_dbg_writer
-			emitter := a_md_emit
+			md_emit := a_md_emit
 			url := a_url
 			language := a_language
 			vendor := a_vendor
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	emitter: MD_EMIT_I
+	md_emit: MD_EMIT_I
 
 	dbg_writer: DBG_WRITER_I
 

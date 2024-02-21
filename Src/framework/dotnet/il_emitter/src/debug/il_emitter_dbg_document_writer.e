@@ -8,6 +8,7 @@ class
 	IL_EMITTER_DBG_DOCUMENT_WRITER
 
 inherit
+
 	DBG_DOCUMENT_WRITER_I
 
 create
@@ -17,10 +18,14 @@ feature {NONE} -- Initialization
 
 	make (a_dbg_writer: DBG_WRITER_I; a_md_emit: MD_EMIT; a_url: CLI_STRING; a_language, a_vendor, a_doc_type: CIL_GUID)
 		local
-			url_id, lang_idx: NATURAL_32
---			vendor_idx, doc_type_idx: NATURAL_32
+			l_token, lang_idx: NATURAL_32
+			l_owner_index : NATURAL_32
+			l_name_index: NATURAL_32
+			l_document_entry_index: NATURAL_32
 			l_hash_algo_guid_idx, l_hash_blob_idx: NATURAL_32
+			d: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
 		do
+				-- https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md#document-table-0x30
 			dbg_writer := a_dbg_writer
 			md_emit := a_md_emit
 			url := a_url
@@ -28,17 +33,29 @@ feature {NONE} -- Initialization
 			vendor := a_vendor
 			doc_type := a_doc_type
 
-			url_id := a_md_emit.define_pdb_string (a_url).to_natural_32
-			lang_idx := a_md_emit.pdb_writer.hash_guid (a_language.to_array_natural_8)
---			vendor_idx := a_md_emit.pdb_writer.hash_guid (a_vendor.to_array_natural_8)
---			doc_type_idx := a_md_emit.pdb_writer.hash_guid (a_doc_type.to_array_natural_8)
+				-- Compute the Pdb Document token
+			l_token := a_md_emit.define_pdb_string (a_url).to_natural_32
 
---			l_hash_algo_guid_idx := a_md_emit.pdb_writer.hash_guid_for_sha1_hash_algorithm
---			l_hash_blob_idx := a_md_emit.pdb_writer.hash_blob_file_content (a_url, a_md_emit.pe_writer.hash_algo_sha1)
+				-- Extract table type and row from the method token
+            d := a_md_emit.extract_table_type_and_row (l_token.to_integer_32)
+            l_owner_index := d.table_row_index
+
+            debug ("il_emitter_table")
+                print ({STRING_32} "DefineDocument: owner=" + l_token.to_hex_string + " owner.index=" + l_owner_index.out + " name=" + url.string_32 )
+            end
+
+            	-- Compute the name index
+			l_name_index := a_md_emit.pdb_writer.hash_string (a_url.string_32)
+
+
+			lang_idx := a_md_emit.pdb_writer.hash_guid (a_language.to_array_natural_8)
 			l_hash_algo_guid_idx := a_md_emit.pdb_writer.hash_guid_for_sha256_hash_algorithm
 			l_hash_blob_idx := a_md_emit.pdb_writer.hash_blob_file_content (a_url, a_md_emit.pe_writer.hash_algo_sha256)
 
-			create entry.make_with_data (url_id, l_hash_algo_guid_idx, l_hash_blob_idx, lang_idx) --a_name_index, a_hash_algorithm_index, a_hash_index, a_language_index: NATURAL_32)
+				 -- Create a new PE_DOCUMENT_TABLE_ENTRY instance with the given data
+			create entry.make_with_data (l_name_index, l_hash_algo_guid_idx, l_hash_blob_idx, lang_idx)
+
+			l_document_entry_index := a_md_emit.next_table_index ({PDB_TABLES}.tdocument)
 			entry_index := a_md_emit.add_pdb_table_entry (entry)
 		end
 
@@ -56,6 +73,7 @@ feature -- Status
 
 	is_successful: BOOLEAN
 			-- Was last call to a COM routine of `Current' successful?
+
 
 feature -- Properties
 

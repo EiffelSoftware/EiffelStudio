@@ -14,14 +14,23 @@ inherit
 	PE_TABLE_ENTRY_BASE
 
 create
+	make,
 	make_with_data
 
 feature {NONE} -- Implementation
+
+	make (a_document_row_id: NATURAL_32)
+		do
+			create document_row_id.make_with_index (a_document_row_id)
+			create sequence_points_index.make_with_index (0)
+			default_sequence_points := True
+		end
 
 	make_with_data (a_document_row_id: NATURAL_32; a_sequence_points_index: NATURAL_32)
 		do
 			create document_row_id.make_with_index (a_document_row_id)
 			create sequence_points_index.make_with_index (a_sequence_points_index)
+			default_sequence_points := False
 
 			-- The table is a logical extension of MethodDef table (adding a column to the table)
 			-- and as such can be indexed by MethodDef row id.
@@ -42,6 +51,8 @@ feature -- Access
 			--| Sequence points blob has the following structure:
 			--| Blob ::= header SequencePointRecord (SequencePointRecord | document-record)*
 			--| SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
+
+	default_sequence_points: BOOLEAN
 
 feature -- Operations
 

@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 				to_implement ("TODO add implementation")
 			end
 
+			current_method_token := -1
 			is_closed := False
 			is_successful := True
 		ensure
@@ -34,6 +35,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	emitter: MD_EMIT
+
+	current_method_token: INTEGER
 
 feature -- Update
 
@@ -49,19 +52,25 @@ feature -- Update
 	close_method
 			-- Close current method.
 		do
-			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
-			end
-			is_successful := False
+			check current_method_token /= -1 end
+			current_method_token := -1
+			is_successful := True
 		end
 
 	open_method (a_meth_token: INTEGER)
 			-- Open method `a_meth_token'.
+		local
+			l_document_row_id: NATURAL_32
 		do
-			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
+			check current_method_token = -1 end
+			if attached {MD_EMIT} emitter as l_md_emit then
+
+					-- Set up state for new method.
+				current_method_token := a_meth_token
+				is_successful := True
+			else
+				is_successful := False
 			end
-			is_successful := False
 		end
 
 	open_scope (start_offset: INTEGER)
@@ -220,7 +229,10 @@ feature -- Settings
 			is_successful := False
 		end
 
-note
+
+
+
+;note
 	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

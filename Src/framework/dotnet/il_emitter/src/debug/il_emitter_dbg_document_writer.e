@@ -1,6 +1,5 @@
 note
 	description: "Abstraction of a SymDocumentWriter"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,7 +18,7 @@ feature {NONE} -- Initialization
 	make (a_dbg_writer: DBG_WRITER_I; a_md_emit: MD_EMIT; a_url: CLI_STRING; a_language, a_vendor, a_doc_type: CIL_GUID)
 		local
 			l_token, lang_idx: NATURAL_32
-			l_owner_index : NATURAL_32
+			l_owner_index: NATURAL_32
 			l_name_index: NATURAL_32
 			l_document_entry_index: NATURAL_32
 			l_hash_algo_guid_idx, l_hash_blob_idx: NATURAL_32
@@ -37,22 +36,21 @@ feature {NONE} -- Initialization
 			l_token := a_md_emit.define_pdb_string (a_url).to_natural_32
 
 				-- Extract table type and row from the method token
-            d := a_md_emit.extract_table_type_and_row (l_token.to_integer_32)
-            l_owner_index := d.table_row_index
+			d := a_md_emit.extract_table_type_and_row (l_token.to_integer_32)
+			l_owner_index := d.table_row_index
 
-            debug ("il_emitter_table")
-                print ({STRING_32} "DefineDocument: owner=" + l_token.to_hex_string + " owner.index=" + l_owner_index.out + " name=" + url.string_32 )
-            end
+			debug ("il_emitter_table")
+				print ({STRING_32} "DefineDocument: owner=" + l_token.to_hex_string + " owner.index=" + l_owner_index.out + " name=" + url.string_32)
+			end
 
-            	-- Compute the name index
+				-- Compute the name index
 			l_name_index := a_md_emit.pdb_writer.hash_string (a_url.string_32)
-
 
 			lang_idx := a_md_emit.pdb_writer.hash_guid (a_language.to_array_natural_8)
 			l_hash_algo_guid_idx := a_md_emit.pdb_writer.hash_guid_for_sha256_hash_algorithm
 			l_hash_blob_idx := a_md_emit.pdb_writer.hash_blob_file_content (a_url, a_md_emit.pe_writer.hash_algo_sha256)
 
-				 -- Create a new PE_DOCUMENT_TABLE_ENTRY instance with the given data
+				-- Create a new PE_DOCUMENT_TABLE_ENTRY instance with the given data
 			create entry.make_with_data (l_name_index, l_hash_algo_guid_idx, l_hash_blob_idx, lang_idx)
 
 			l_document_entry_index := a_md_emit.next_table_index ({PDB_TABLES}.tdocument)
@@ -61,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	md_emit: MD_EMIT_I
+	md_emit: MD_EMIT
 
 	dbg_writer: DBG_WRITER_I
 
@@ -73,7 +71,6 @@ feature -- Status
 
 	is_successful: BOOLEAN
 			-- Was last call to a COM routine of `Current' successful?
-
 
 feature -- Properties
 
@@ -89,29 +86,46 @@ feature -- Definition
 			start_columns, end_lines, end_columns: ARRAY [INTEGER])
 			-- Set sequence points for `document'
 		local
---			l_offsets, l_start_lines, l_start_columns, l_end_lines, l_end_columns: ANY
---			e: PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY
+			i: INTEGER
+			blob_data: ARRAY [NATURAL_8]
+			blob_len: NATURAL_32
+			blob_hash: NATURAL_32
+			l_method_dbgi_table_entry: PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY
 		do
---			create e.make_with_data (entry_index, a_sequence_points_index: NATURAL_32)
+			if count > 0 then
+					-- Build the blob_data from the input arrays
+				create blob_data.make_filled (0, 1, count * 5)
+				from
+					i := 1
+				until
+					i > count
+				loop
+					blob_data [i] := offsets [i].to_natural_8
+					blob_data [i + 1] := start_lines [i].to_natural_8
+					blob_data [i + 2] := start_columns [i].to_natural_8
+					blob_data [i + 3] := end_lines [i].to_natural_8
+					blob_data [i + 4] := end_columns [i].to_natural_8
+					i := i + 5
+				end
 
---			if count > 0 then
---				l_offsets := offsets.to_c
---				l_start_lines := start_lines.to_c
---				l_start_columns := start_columns.to_c
---				l_end_lines := end_lines.to_c
---				l_end_columns := end_columns.to_c
---				last_call_success := c_define_sequence_points (dbg_writer.item, item, count,
---					$l_offsets, $l_start_lines, $l_start_columns, $l_end_lines, $l_end_columns)
---			else
---				last_call_success := 0
---			end
-			is_successful := False
+					-- Compute the blob length
+				blob_len := blob_data.count.to_natural_32
+
+					-- Compute the Sequence Points Blob using hash_blob feature
+				blob_hash := md_emit.pdb_writer.hash_blob (blob_data, blob_len)
+
+					-- Create a new PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY for the method with the
+					-- entry index (the current document id and the blob hash)
+				create l_method_dbgi_table_entry.make_with_data (entry_index, blob_hash)
+			else
+				create l_method_dbgi_table_entry.make_with_data (entry_index, 0)
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

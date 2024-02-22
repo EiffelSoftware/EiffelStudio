@@ -17,26 +17,26 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
-		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\lib\libcrypto.lib">
+		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\lib\static\libcrypto.lib">
 			<condition>
 				<platform value="windows"/>
 				<custom name="openssl_static" value="true"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\lib\libssl.lib">
+		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\lib\static\libssl.lib">
 			<condition>
 				<platform value="windows"/>
 				<custom name="openssl_static" value="true"/>
 			</condition>
 		</external_object>
 
-		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\bin\libcrypto.lib">
+		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\lib\dynamic\libcrypto.lib">
 			<condition>
 				<platform value="windows"/>
 				<custom name="openssl_static" excluded_value="true"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\bin\libssl.lib">
+		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\lib\dynamic\libssl.lib">
 			<condition>
 				<platform value="windows"/>
 				<custom name="openssl_static" excluded_value="true"/>

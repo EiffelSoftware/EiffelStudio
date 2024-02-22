@@ -38,6 +38,11 @@ feature -- Access
 
 	current_method_token: INTEGER
 
+	current_start_offset: INTEGER
+
+	current_end_offset: INTEGER
+
+
 feature -- Update
 
 	close
@@ -63,7 +68,7 @@ feature -- Update
 			l_document_row_id: NATURAL_32
 		do
 			check current_method_token = -1 end
-			if attached {MD_EMIT} emitter as l_md_emit then
+			if attached {MD_EMIT} emitter then
 
 					-- Set up state for new method.
 				current_method_token := a_meth_token
@@ -76,19 +81,18 @@ feature -- Update
 	open_scope (start_offset: INTEGER)
 			-- Create a new scope for defining local variables.
 		do
-			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
-			end
-			is_successful := False
+			check current_method_token /= -1 end
+			current_start_offset := start_offset
+			is_successful := 	True
 		end
 
 	close_scope (end_offset: INTEGER)
 			-- Close most recently opened scope.
 		do
-			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
-			end
-			is_successful := False
+			check current_method_token /= -1 end
+			current_end_offset := end_offset
+			check current_end_offset > current_start_offset  end
+			is_successful := True
 		end
 
 feature -- PE file data

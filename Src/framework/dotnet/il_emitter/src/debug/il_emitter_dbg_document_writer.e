@@ -20,7 +20,8 @@ feature {NONE} -- Initialization
 			l_token, lang_idx: NATURAL_32
 			l_owner_index: NATURAL_32
 			l_name_index: NATURAL_32
-			l_document_entry_index: NATURAL_32
+			l_scope_entry_index, l_document_entry_index: NATURAL_32
+			l_entry: NATURAL_32
 			l_hash_algo_guid_idx, l_hash_blob_idx: NATURAL_32
 			d: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
 		do
@@ -54,7 +55,11 @@ feature {NONE} -- Initialization
 			create entry.make_with_data (l_name_index, l_hash_algo_guid_idx, l_hash_blob_idx, lang_idx)
 
 			l_document_entry_index := a_md_emit.next_table_index ({PDB_TABLES}.tdocument)
-			entry_index := a_md_emit.add_pdb_table_entry (entry)
+			document_entry_index := a_md_emit.add_pdb_table_entry (entry)
+
+				-- Create a new PE_IMPORT_SCOPE_TABLE_ENTRY instance with the given data
+			l_scope_entry_index := a_md_emit.next_table_index ({PDB_TABLES}.timportscope)
+			scope_entry_index := a_md_emit.add_pdb_table_entry (create {PE_IMPORT_SCOPE_TABLE_ENTRY}.make_with_data (0, 0))
 		end
 
 feature -- Access
@@ -65,7 +70,9 @@ feature -- Access
 
 	entry: PE_DOCUMENT_TABLE_ENTRY
 
-	entry_index: NATURAL_32
+	document_entry_index: NATURAL_32
+
+	scope_entry_index: NATURAL_32
 
 feature -- Status
 
@@ -116,9 +123,9 @@ feature -- Definition
 
 					-- Create a new PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY for the method with the
 					-- entry index (the current document id and the blob hash)
-				create l_method_dbgi_table_entry.make_with_data (entry_index, blob_hash)
+				create l_method_dbgi_table_entry.make_with_data (document_entry_index, blob_hash)
 			else
-				create l_method_dbgi_table_entry.make_with_data (entry_index, 0)
+				create l_method_dbgi_table_entry.make_with_data (document_entry_index, 0)
 			end
 		end
 

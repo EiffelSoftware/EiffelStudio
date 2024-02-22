@@ -21,7 +21,7 @@ dynamic:
 	if $(ISE_PLATFORM) EQU windows $(MV) builds$(DIR)dynamic_32$(DIR)bin$(DIR)*.dll spec$(DIR)$(ISE_PLATFORM)$(DIR)bin  
 	if $(ISE_PLATFORM) EQU windows $(MV) builds$(DIR)dynamic_32$(DIR)lib$(DIR)*.lib spec$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)dynamic
 	echo Copy the dll into the Delivery folders...
-	$(CP) spec$(DIR)$(ISE_PLATFORM)$(DIR)bin$(DIR)*.dll $(EIFFEL_SRC)$(DIR)Delivery$(DIR)studio$(DIR)spec$(DIR)$(ISE_PLATFORM)$(DIR)bin  
+	copy spec$(DIR)$(ISE_PLATFORM)$(DIR)bin$(DIR)*.dll $(EIFFEL_SRC)$(DIR)Delivery$(DIR)studio$(DIR)spec$(DIR)$(ISE_PLATFORM)$(DIR)bin  
 
 static:
 	echo Compiling static openssl for $(ISE_PLATFORM)

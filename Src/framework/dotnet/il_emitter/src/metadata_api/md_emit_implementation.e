@@ -227,5 +227,14 @@ feature -- Access
 			Result := pe_writer.next_md_table_index (a_table_id)
 		end
 
+	next_pdb_table_index (a_table_id: NATURAL_32): NATURAL_32
+			-- Table for id `a_table_id`
+			-- See `{PDB_TABLES}` for table ids.
+		require
+			valid_table_index: pdb_writer.is_valid_md_table_id (a_table_id)
+		do
+			Result := pdb_writer.next_md_table_index (a_table_id)
+		end
+
 end
 

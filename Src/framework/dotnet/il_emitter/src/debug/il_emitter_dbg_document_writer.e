@@ -54,11 +54,11 @@ feature {NONE} -- Initialization
 				-- Create a new PE_DOCUMENT_TABLE_ENTRY instance with the given data
 			create entry.make_with_data (l_name_index, l_hash_algo_guid_idx, l_hash_blob_idx, lang_idx)
 
-			l_document_entry_index := a_md_emit.next_table_index ({PDB_TABLES}.tdocument)
+			l_document_entry_index := a_md_emit.next_pdb_table_index ({PDB_TABLES}.tdocument)
 			document_entry_index := a_md_emit.add_pdb_table_entry (entry)
 
 				-- Create a new PE_IMPORT_SCOPE_TABLE_ENTRY instance with the given data
-			l_scope_entry_index := a_md_emit.next_table_index ({PDB_TABLES}.timportscope)
+			l_scope_entry_index := a_md_emit.next_pdb_table_index ({PDB_TABLES}.timportscope)
 			scope_entry_index := a_md_emit.add_pdb_table_entry (create {PE_IMPORT_SCOPE_TABLE_ENTRY}.make_with_data (0, 0))
 		end
 
@@ -98,6 +98,7 @@ feature -- Definition
 			blob_len: NATURAL_32
 			blob_hash: NATURAL_32
 			l_method_dbgi_table_entry: PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY
+			l_idx: NATURAL_32
 		do
 			if count > 0 then
 					-- Build the blob_data from the input arrays
@@ -127,6 +128,9 @@ feature -- Definition
 			else
 				create l_method_dbgi_table_entry.make_with_data (document_entry_index, 0)
 			end
+
+			l_idx := md_emit.next_pdb_table_index ({PDB_TABLES}.tmethoddebuginformation)
+
 		end
 
 note

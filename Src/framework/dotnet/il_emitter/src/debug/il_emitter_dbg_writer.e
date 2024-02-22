@@ -42,6 +42,8 @@ feature -- Access
 
 	current_end_offset: INTEGER
 
+	current_variables_scope: NATURAL_32
+
 
 feature -- Update
 
@@ -64,8 +66,6 @@ feature -- Update
 
 	open_method (a_meth_token: INTEGER)
 			-- Open method `a_meth_token'.
-		local
-			l_document_row_id: NATURAL_32
 		do
 			check current_method_token = -1 end
 			if attached {MD_EMIT} emitter then
@@ -81,6 +81,7 @@ feature -- Update
 	open_scope (start_offset: INTEGER)
 			-- Create a new scope for defining local variables.
 		do
+			current_variables_scope := 0
 			check current_method_token /= -1 end
 			current_start_offset := start_offset
 			is_successful := 	True
@@ -88,10 +89,29 @@ feature -- Update
 
 	close_scope (end_offset: INTEGER)
 			-- Close most recently opened scope.
+		local
+			l_local_scope_entry: PE_LOCAL_SCOPE_TABLE_ENTRY
+			l_local_scope_index: NATURAL_32
+			idx: NATURAL_32
 		do
 			check current_method_token /= -1 end
 			current_end_offset := end_offset
 			check current_end_offset > current_start_offset  end
+
+
+				-- create a new entry to PE_LOCAL_SCOPE_TABLE_ENTRY
+				-- we use the current method teoken `current_method_token`
+				-- whith the current entry in the importscope table
+				-- then we compute the first entry to the localvariable rowid ( using the current index - (number of variables added in the scope)
+			create l_local_scope_entry.make_with_data (current_method_token.to_natural_32,
+													   emitter.pdb_writer.md_table ({PDB_TABLES}.timportscope).size,
+													   emitter.pdb_writer.md_table ({PDB_TABLES}.tlocalvariable).size - current_variables_scope,
+													   0,
+													   current_start_offset.to_natural_32, (current_end_offset - current_start_offset).to_natural_32)
+
+			l_local_scope_index := emitter.next_pdb_table_index ({PDB_TABLES}.tlocalscope)
+			idx := emitter.add_pdb_table_entry (l_local_scope_entry)
+
 			is_successful := True
 		end
 
@@ -185,6 +205,7 @@ feature -- Definition
 			l_attributes: NATURAL_16
 			l_name_index: NATURAL_32
 			idx: NATURAL_32
+			l_local_entry_entry_index: NATURAL_32
 		do
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
@@ -196,10 +217,12 @@ feature -- Definition
 				print (")%N")
 			end
 			l_attributes := 0 -- FIXME: All, DebuggerHidden ...
-			l_name_index := emitter.pe_writer.hash_string (name.string_32)
+			l_name_index := emitter.pdb_writer.hash_string (name.string_32)
 			create e.make_with_data (l_attributes, pos.to_natural_16, l_name_index)
+			l_local_entry_entry_index := emitter.next_pdb_table_index ({PDB_TABLES}.tlocalvariable)
 			idx := emitter.add_pdb_table_entry (e)
-			is_successful := False
+			current_variables_scope := current_variables_scope + 1
+			is_successful := True
 		end
 
 	define_parameter (name: CLI_STRING; pos: INTEGER)

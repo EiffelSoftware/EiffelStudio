@@ -23,7 +23,7 @@ For questions regarding eJSON please contact
 ## Current version and status 
 
 The latest release is 0.8.0. eJSON has been improved and cleaned.
-The converters are not obsolete and replaced by the "serialization" interfaces.
+The converters are now obsolete and are replaced by the "serialization" interfaces.
 
 
 # Introduction 

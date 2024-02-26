@@ -61,6 +61,15 @@ feature -- Access
 	length: NATURAL_32
 			-- The scope length in bytes.
 
+
+feature -- Status
+
+	less_than (o: like Current): BOOLEAN
+			-- Is Current less than `a_other` in associated table?
+		do
+			Result := method_row_id.less_than_index (o.method_row_id)
+		end
+
 feature -- Operations
 
 	table_index: NATURAL_32

@@ -68,6 +68,7 @@ feature -- Update
 			-- Open method `a_meth_token'.
 		do
 			check current_method_token = -1 end
+
 			if attached {MD_EMIT} emitter then
 
 					-- Set up state for new method.
@@ -125,6 +126,7 @@ feature -- PE file data
 			debug ("refactor_fixme")
 				to_implement ("TODO add implementation")
 			end
+			-- Check CIL_CODE_VIEW.item
 			is_successful := False
 		end
 

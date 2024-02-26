@@ -160,6 +160,19 @@ feature -- Access
 			Result := pe_writer.compute_metadata_size.to_integer_32
 		end
 
+	save_pdb_size: INTEGER
+			-- Size of Current emitted assembly in memory if we were to emit it now.
+		do
+				--| Computes the size of the metadata for the current emitted assembly.
+				--| Iterate through each table and multiplying the size of the table by the number of entries in the table.
+				--| Adds the size of each heap (string, user string, blob, and GUID)
+				--| The size of the metadata header and table header.
+				--| The final result is the size of the metadata in bytes.
+
+			Result := pdb_writer.compute_metadata_size.to_integer_32
+		end
+
+
 feature -- Pre-Save
 
 	prepare_to_save (fn: READABLE_STRING_GENERAL)
@@ -171,6 +184,15 @@ feature -- Pre-Save
 
 			create md.make (Current, fn)
 			md.prepare_to_save
+		end
+
+	prepare_pdb_to_save (fn: READABLE_STRING_GENERAL)
+			-- Prepare data to be save
+		local
+			md: MD_TABLE_UTILITIES
+		do
+			create md.make (Current, fn)
+			md.prepare_pdb_to_save
 		end
 
 feature -- Save
@@ -197,6 +219,33 @@ feature -- Save
 			l_expected_size: INTEGER
 		do
 			l_expected_size := f.count + save_size
+				-- This code also writes the PE_DOTNET_META_HEADER
+				-- see II.24.2 File headers, II.24.2.1 Metadata root
+				-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297
+				-- and the rtv_string.
+
+			write_metadata_headers (pe_writer, f)
+			write_tables (pe_writer, f)
+			write_strings (pe_writer, f)
+			write_us (pe_writer, f)
+			write_guid (pe_writer, f)
+			write_blob (pe_writer, f)
+
+				-- Workaround to align
+			if not is_aligned (f, 4) then
+				check should_not_happen: False end
+ 				align (f, 4)
+			end
+			check valid_size: l_expected_size = f.count end
+		end
+
+
+	append_to_pdb_file (f: FILE)
+			-- Append current assembly to file `f`.
+		local
+			l_expected_size: INTEGER
+		do
+			l_expected_size := f.count + save_pdb_size
 				-- This code also writes the PE_DOTNET_META_HEADER
 				-- see II.24.2 File headers, II.24.2.1 Metadata root
 				-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297

@@ -63,6 +63,47 @@ feature -- Saving preparation
 			end
 		end
 
+	prepare_pdb_to_save
+			-- Prepare pdb data to be save
+		do
+--			debug ("il_emitter_table_map")
+--				if attached associated_filename as fn then
+--					print ("%N")
+--					print ("Prepare ")
+--					print (fn)
+--					print ("%N")
+--				end
+--				{MD_DBG_CHRONO}.start ("ensure_list_indexes_are_ordered")
+--			end
+			ensure_pdb_list_indexes_are_ordered
+--			debug ("il_emitter_table_map")
+--				{MD_DBG_CHRONO}.stop ("ensure_list_indexes_are_ordered")
+--				{MD_DBG_CHRONO}.start ("update_index_list_in_tables")
+--			end
+--				-- Update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)
+--			update_index_list_in_tables
+--			debug ("il_emitter_table_map")
+--				{MD_DBG_CHRONO}.stop ("update_index_list_in_tables")
+--				{MD_DBG_CHRONO}.start ("ensure_expected_tables_are_sorted")
+--			end
+				-- Sort tables...
+			ensure_pdb_expected_tables_are_sorted
+			debug ("il_emitter_table_map")
+				{MD_DBG_CHRONO}.stop ("ensure_expected_tables_are_sorted")
+				if attached associated_filename as fn then
+					print ("-> File: ")
+					print (fn)
+					print ("%N")
+				end
+				print ({MD_DBG_CHRONO}.report_line ("ensure_list_indexes_are_ordered"))
+				print ({MD_DBG_CHRONO}.report_line ("update_index_list_in_tables"))
+				print ({MD_DBG_CHRONO}.report_line ("ensure_expected_pdb_tables_are_sorted"))
+				{MD_DBG_CHRONO}.remove ("ensure_list_indexes_are_ordered")
+				{MD_DBG_CHRONO}.remove ("update_index_list_in_tables")
+				{MD_DBG_CHRONO}.remove ("ensure_expected_tables_are_sorted")
+			end
+		end
+
 feature -- Access
 
 	associated_filename: detachable READABLE_STRING_GENERAL
@@ -98,6 +139,11 @@ feature -- Access
 	param_table: detachable MD_TABLE
 		do
 			Result := md_table ({PE_TABLES}.tparam)
+		end
+
+	local_scope_table: detachable MD_TABLE
+		do
+			Result := md_table ({PDB_TABLES}.tlocalscope)
 		end
 
 feature -- Update missing indexes
@@ -304,6 +350,15 @@ feature -- Table sorting
 --			ensure_table_is_sorted ({PE_TABLES}.tnestedclass)
 		end
 
+	ensure_pdb_expected_tables_are_sorted
+			-- Ensure pdb tables that should be sorted are sorted.
+			-- See https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md
+		do
+			-- LocalScope table
+			-- ImportScope table
+			ensure_pdb_table_is_sorted ({PDB_TABLES}.tlocalscope)
+		end
+
 	ensure_table_is_sorted (tb_id: NATURAL_32)
 			-- Ensure table associated with `tb_id` is sorted.
 		do
@@ -320,6 +375,24 @@ feature -- Table sorting
 				check tb.is_sorted (l_sorter) end
 			end
 		end
+
+	ensure_pdb_table_is_sorted (tb_id: NATURAL_32)
+			-- Ensure table associated with `tb_id` is sorted.
+		do
+			if
+				attached pdb_md_table (tb_id) as tb and then
+				attached pdb_table_sorter (tb_id) as l_sorter
+			then
+				debug ("il_emitter")
+					if not tb.is_sorted (l_sorter) then
+						print ("Table ["+ tb_id.to_natural_8.to_hex_string +"] is NOT sorted%N")
+					end
+				end
+				tb.sort (l_sorter)
+				check tb.is_sorted (l_sorter) end
+			end
+		end
+
 
 	table_sorter (tb_id: NATURAL_32): detachable QUICK_SORTER [PE_TABLE_ENTRY_BASE]
 			-- Sorter for table associated with `tb_id`.
@@ -375,6 +448,31 @@ feature -- Table sorting
 			end
 		end
 
+
+	pdb_table_sorter (tb_id: NATURAL_32): detachable QUICK_SORTER [PE_TABLE_ENTRY_BASE]
+			-- Sorter for table associated with `tb_id`.
+		local
+			l_comparator: AGENT_EQUALITY_TESTER [PE_TABLE_ENTRY_BASE]
+		do
+			inspect tb_id
+			when {PDB_TABLES}.tlocalscope then
+				create l_comparator.make (agent (e1, e2: PE_TABLE_ENTRY_BASE): BOOLEAN
+					do
+						if
+							attached {PE_LOCAL_SCOPE_TABLE_ENTRY} e1 as o1 and then
+							attached {PE_LOCAL_SCOPE_TABLE_ENTRY} e2 as o2
+						then
+							Result := o1.less_than (o2)
+						end
+					end)
+			else
+				-- Not implemented or not needed
+			end
+			if l_comparator /= Void then
+				create Result.make (l_comparator)
+			end
+		end
+
 feature -- Operation: List indexes sorting
 
 	is_using_additional_pointer_tables: BOOLEAN = True
@@ -418,6 +516,12 @@ feature -- Operation: List indexes sorting
 				ensure_param_list_column_is_ordered (False)
 			end
 		end
+
+		ensure_pdb_list_indexes_are_ordered
+			do
+					-- Not sure if it's really needed
+				{REFACTORING_HELPER}.to_implement ("To implement")
+			end
 
 feature -- Operation: List indexes sorting using additional FieldPointer and MethodPointer tables
 
@@ -641,6 +745,8 @@ feature -- Operation: List indexes sorting
 				end
 			end
 		end
+
+
 
 feature -- Column sorting
 

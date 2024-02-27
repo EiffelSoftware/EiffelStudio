@@ -1,36 +1,32 @@
 note
-	description: "[
-			Parameters used by CMS_HOOK_EXPORT subscribers.
-		]"
+	description: "Summary description for {CMS_HOOK_WITH_LOG_CONTEXT}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CMS_EXPORT_CONTEXT
-
-inherit
 	CMS_HOOK_CONTEXT_WITH_LOG
-		rename
-			make as make_context
-		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_location: PATH)
+	make
 		do
-			location := a_location
-			make_context
+			create logs.make (10)
 		end
 
-feature -- Access
+feature -- Logs
 
-	location: PATH
-			-- Location of export folder.		
+	logs: ARRAYED_LIST [READABLE_STRING_8]
+			-- Associated exportation logs.
 
-invariant
+	log (m: READABLE_STRING_8)
+			-- Add message `m' into `logs'.
+		do
+			logs.force (m)
+		end
 
 note
 	copyright: "2011-2024, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

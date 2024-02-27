@@ -37,6 +37,7 @@ feature -- Security
 			Result.force ("admin cache")
 			Result.force ("admin core caches")
 			Result.force ("clear blocks cache")
+			Result.force (perm_admin_cleanup)
 			Result.force ("admin export")
 			Result.force ("admin import")
 			Result.force ("admin formats")
@@ -52,6 +53,7 @@ feature -- Security
 	perm_access_admin: STRING = "access admin"
 	perm_view_logs: STRING = "view logs"
 	perm_view_mails: STRING = "view mails"
+	perm_admin_cleanup: STRING = "admin cleanup"
 
 feature -- Form identifiers
 
@@ -77,6 +79,7 @@ feature {NONE} -- Router/administration
 			l_admin_mails_handler: CMS_ADMIN_MAILS_HANDLER
 
 			l_admin_cache_handler: CMS_ADMIN_CACHE_HANDLER
+			l_admin_cleanup_handler: CMS_ADMIN_CLEANUP_HANDLER
 			l_admin_export_handler: CMS_ADMIN_EXPORT_HANDLER
 			l_admin_import_handler: CMS_ADMIN_IMPORT_HANDLER
 			l_admin_path_alias_handler: CMS_ADMIN_PATH_ALIAS_HANDLER
@@ -124,6 +127,10 @@ feature {NONE} -- Router/administration
 
 			create l_admin_cache_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/cache", l_admin_cache_handler)
+			a_router.map (l_uri_mapping, a_router.methods_get_post)
+
+			create l_admin_cleanup_handler.make (a_api)
+			create l_uri_mapping.make_trailing_slash_ignored ("/cleanup", l_admin_cleanup_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get_post)
 
 			create l_admin_export_handler.make (a_api)
@@ -250,6 +257,13 @@ feature -- Hooks
 					if attached {CMS_LOCAL_LINK} support_lnk as ll then
 						ll.set_weight (10)
 					end
+						-- Per module cleanup and archive permission!
+					create lnk.make ("Cleanup", l_api.administration_path_location ("cleanup"))
+					lnk.set_help ("Cleanup ...")
+					lnk.set_permission_arguments (<<perm_admin_cleanup>>)
+					lnk.set_weight (7)
+					support_lnk.extend (lnk)
+
 						-- Per module export permission!
 					create lnk.make ("Export", l_api.administration_path_location ("export"))
 					lnk.set_help ("Export CMS contents, and modules contents.")

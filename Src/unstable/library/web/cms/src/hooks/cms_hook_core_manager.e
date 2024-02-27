@@ -307,6 +307,28 @@ feature {NONE} -- Hook: cache
 			retry
 		end
 
+feature -- Hook: cleanup
+
+	subscribe_to_cleanup_hook (h: CMS_HOOK_CLEANUP)
+			-- Add `h' as subscriber of cleanup hooks CMS_HOOK_CLEANUP.		
+		do
+			subscribe_to_hook (h, {CMS_HOOK_CLEANUP})
+		end
+
+	invoke_cleanup (ctx: CMS_HOOK_CLEANUP_CONTEXT; a_response: CMS_RESPONSE)
+			-- Invoke response cleanup hook for response `a_response'.		
+		do
+			if attached subscribers ({CMS_HOOK_CLEANUP}) as lst then
+				across
+					lst as ic
+				loop
+					if attached {CMS_HOOK_CLEANUP} ic.item as h then
+						h.cleanup (ctx, a_response)
+					end
+				end
+			end
+		end
+
 feature -- Hook: export
 
 	subscribe_to_export_hook (h: CMS_HOOK_EXPORT)
@@ -365,6 +387,6 @@ feature -- Hook: import
 
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2024, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

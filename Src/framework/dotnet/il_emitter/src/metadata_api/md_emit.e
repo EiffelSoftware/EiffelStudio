@@ -254,6 +254,7 @@ feature -- Save
 				-- TODO update pe_write pdb_writer.
 			-- write_metadata_headers (pdb_writer, f)
 			-- write_pdb_streams (todo)
+			write_pdb_streams (pdb_writer, f)
 			write_tables (pdb_writer, f)
 			write_strings (pdb_writer, f)
 			write_us (pdb_writer, f)
@@ -345,6 +346,16 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
+			align (a_file, 4)
+		end
+
+	write_pdb_streams (a_writer: PE_GENERATOR; a_file: FILE)
+			-- Write the string heap to a binary file.
+			-- II.24.2.3 #Strings heap
+		require
+			open_write: a_file.is_open_write
+		do
+			a_file.put_managed_pointer (a_writer.pdb_stream.item.managed_pointer, 0, a_writer.pdb_stream.size_of)
 			align (a_file, 4)
 		end
 

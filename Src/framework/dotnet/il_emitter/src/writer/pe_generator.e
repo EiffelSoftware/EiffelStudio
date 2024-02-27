@@ -28,6 +28,7 @@ feature {NONE} -- Initalizatiob
 			create tables_header
 			create string_map.make (0)
 			initialize_metadata_tables
+			create pdb_stream.make
 			is_pe_generator := True
 		end
 
@@ -42,6 +43,7 @@ feature {NONE} -- Initalizatiob
 			create tables_header
 			create string_map.make (0)
 			initialize_metadata_tables
+			create pdb_stream.make
 		end
 
 
@@ -182,6 +184,11 @@ feature -- Access / streams
 
 	guid: PE_POOL
 			-- The #GUID header points to a sequence of 128-bit GUIDs
+
+
+	pdb_stream: CLI_PDB_STREAM
+			-- #Pdb only used when generate a pdb stream
+
 
 feature -- Sizes
 

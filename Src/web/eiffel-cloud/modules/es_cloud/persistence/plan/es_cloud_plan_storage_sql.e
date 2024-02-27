@@ -275,6 +275,7 @@ feature -- Access: License
 	license (a_license_id: INTEGER_64): detachable ES_CLOUD_LICENSE
 		local
 			l_params: STRING_TABLE [detachable ANY]
+			sql: STRING_8
 		do
 			reset_error
 			create l_params.make (1)
@@ -286,6 +287,24 @@ feature -- Access: License
 				check valid_record: Result /= Void end
 			end
 			sql_finalize_query (sql_select_license_by_id)
+
+			if Result = Void then
+					-- Search in archive
+				reset_error
+				create sql.make_from_string (sql_select_license_by_id)
+				sql.replace_substring_all ("es_licenses", "es_licenses_archive")
+				sql_query (sql, l_params)
+
+				sql_start
+				if not has_error and not sql_after then
+					Result := fetch_license (Void)
+					if Result /= Void then
+						Result.set_is_archived (True)
+					end
+					check valid_record: Result /= Void end
+				end
+				sql_finalize_query (sql)
+			end
 		end
 
 	license_by_key (a_license_key: READABLE_STRING_GENERAL): detachable ES_CLOUD_LICENSE
@@ -307,8 +326,7 @@ feature -- Access: License
 			if Result = Void then
 					-- Search in archive
 				reset_error
-				create l_params.make (1)
-				l_params.force (a_license_key.as_lower, "lowerkey")
+
 				create sql.make_from_string (sql_select_license_by_key)
 				sql.replace_substring_all ("es_licenses", "es_licenses_archive")
 				sql_query (sql, l_params)

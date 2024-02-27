@@ -17,7 +17,7 @@ class
 
 feature -- Access
 
-	pdb_id: detachable ARRAY [NATURAL_32]
+	pdb_id: detachable ARRAY [NATURAL_8]
 			-- A byte sequence uniquely representing the debugging metadata blob content.
 			-- size 20 (5 bytes)
 
@@ -25,11 +25,43 @@ feature -- Access
 			-- Entry point MethodDef token, or 0 if not applicable. The same value as stored in CLI header of the PE file.
 			-- See ECMA-335-II 15.4.1.2.
 
-	referenced_type_system_tables: detachable ARRAY [NATURAL_32]
+	referenced_type_system_tables: detachable ARRAY [NATURAL_8]
 			-- Bit vector of referenced type system metadata tables, let n be the number of bits that are 1.
 			-- Size 8 (2 bytes)
 
 	type_system_table_rows: detachable ARRAY [NATURAL_32]
 			-- Array of n 4-byte unsigned integers indicating the number of rows for each referenced type system metadata table.
+
+
+feature -- Change Element
+
+	set_pdb_id (a_pdb_id: ARRAY [NATURAL_8])
+			-- Set `pdb_id` with `a_pdb_id`
+		require
+			valid_length: a_pdb_id.count = 5
+		do
+			pdb_id := a_pdb_id
+		end
+
+	set_entry_point (a_entry_point: INTEGER_32)
+			-- Set 	`entry_point` with `a_entry_point`.
+		do
+			entry_point := a_entry_point
+		end
+
+	set_referenced_type_system_tables (a_references: ARRAY [NATURAL_8])
+			-- Set `referenced_type_system_tables` with `a_references`.
+		require
+			valid_length: a_references.count = 2
+		do
+			create referenced_type_system_tables.make_from_array (a_references)
+		end
+
+	set_type_system_table_rows (a_rows: ARRAY [NATURAL_32])
+			-- Set `type_system_table_rows` with `a_rows`.
+		do
+			create type_system_table_rows.make_from_array (a_rows)
+		end
+
 
 end

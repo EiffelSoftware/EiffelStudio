@@ -73,6 +73,8 @@ feature -- Helper
 					| ({NATURAL_64} 1 |<< tImportScope.to_integer_32)
 					| ({NATURAL_64} 1 |<< tStateMachineMethod.to_integer_32)
 					| ({NATURAL_64} 1 |<< tCustomDebugInformation.to_integer_32)
+		ensure
+			is_static: class
 		end
 
 end

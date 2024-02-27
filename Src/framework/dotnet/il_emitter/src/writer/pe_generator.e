@@ -725,7 +725,49 @@ feature {MD_EMIT} -- Implementation
 		end
 
 
+	update_pdb_stream (a_pdb_stream: CLI_PDB_STREAM)
+			-- Update the current pdb stream with
+			-- ReferencedTypeSystemTables and TypeSystemTableRows
+
+		local
+			l_md_tables: like {PE_GENERATOR}.tables
+			i,n: INTEGER
+			l_referenced_type_system_tables: ARRAY [NATURAL_8]
+			l_type_system_table_rows: ARRAYED_LIST [NATURAL_32]
+		do
+				-- Compute the ReferencedTypeSystemTables and TypeSystemTableRows
+			create l_referenced_type_system_tables.make_filled (0, 1, 2)
+			create l_type_system_table_rows.make (1)
+			l_md_tables := tables
+			from
+			    i := 0
+			    n := l_md_tables.count
+			until
+			    i >= n
+			loop
+			    if not l_md_tables [i].is_empty and is_known_pdb_table(i) then
+			       	 	-- Update the bit vector using bit or.
+			        l_referenced_type_system_tables [i // 8 + 1] := l_referenced_type_system_tables [i // 8 + 1] | ({NATURAL_8}1 |<< (i.to_natural_8 \\ 8))
+
+			        	-- Update the l_type_system_table_rows array
+ 			       l_type_system_table_rows [i + 1] := l_md_tables [i].size
+
+			    end
+			    i := i + 1
+			end
+				-- Update pdb stream
+			a_pdb_stream.set_referenced_type_system_tables (l_referenced_type_system_tables)
+			a_pdb_stream.set_type_system_table_rows (l_type_system_table_rows.to_array)
+		end
+
 feature {NONE} -- Implementation
+
+	is_known_pdb_table(i: INTEGER): BOOLEAN
+   	 do
+
+        Result := ({PDB_TABLES}.tKnownTablesMask.bit_and ({NATURAL_64} 1 |<< i.to_integer_32)) /= 0
+    end
+
 
 	new_random_guid: ARRAY [NATURAL_8]
 			-- Create a random GUID.

@@ -599,6 +599,7 @@ feature -- Hook
 			-- Cleanup
 		local
 			dt: DATE_TIME
+			cl: CELL [INTEGER]
 		do
 			if attached module.es_cloud_api as l_es_cloud_api then
 				ctx.log ("Cleanup ES Cloud")
@@ -610,7 +611,9 @@ feature -- Hook
 					else
 						dt.day_add (-1 * l_es_cloud_api.config.license_archive_age)
 					end
-					l_es_cloud_api.cleanup_licenses (dt)
+					create cl.put (0)
+					l_es_cloud_api.cleanup_licenses (dt, cl)
+					ctx.log ("Archived " + cl.item.out + " licenses")
 				end
 				if attached ctx.parameter ("session-archive") as s and then s.same_string ("on") then
 					ctx.log ("Archive old sessions")

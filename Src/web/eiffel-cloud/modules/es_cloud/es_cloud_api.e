@@ -681,9 +681,10 @@ feature -- Element change license
 			end
 		end
 
-	cleanup_licenses (dt: DATE_TIME)
+	cleanup_licenses (dt: DATE_TIME; a_archived_count: detachable CELL [INTEGER])
 		local
 			lic: ES_CLOUD_LICENSE
+			nb: INTEGER
 		do
 			if
 				attached trial_plan as pl and then
@@ -698,9 +699,13 @@ feature -- Element change license
 							attached lic.expiration_date as exp and then
 							exp < dt
 						then
+							nb := nb + 1
 							archive_license (lic)
 						end
 					end
+				end
+				if a_archived_count /= Void then
+					a_archived_count.replace (nb)
 				end
 			end
 		end

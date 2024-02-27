@@ -69,7 +69,7 @@ feature -- Change: redeem tokens
 
 feature -- Access: License
 
-	licenses: LIST [TUPLE [ES_CLOUD_LICENSE, detachable ES_CLOUD_USER, detachable READABLE_STRING_8, detachable ES_CLOUD_ORGANIZATION]]
+	licenses: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
 			-- Licenses
 		deferred
 		end
@@ -159,6 +159,10 @@ feature -- Element change: license
 		deferred
 		ensure
 			user_id_for_license (a_email_license.license) = a_user.id
+		end
+
+	archive_license (lic: ES_CLOUD_LICENSE)
+		deferred
 		end
 
 note

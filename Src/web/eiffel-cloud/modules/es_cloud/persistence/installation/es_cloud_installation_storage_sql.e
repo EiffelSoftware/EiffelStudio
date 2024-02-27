@@ -453,7 +453,7 @@ feature {NONE} -- Sessions
 
 	sql_delete_installation_sessions: STRING = "DELETE FROM es_sessions WHERE iid=:iid;"
 
-	sql_archive_old_sessions: STRING = "INSERT INTO es_sessions_archive (sid, iid, uid, state, first, last, title, data) SELECT sid, iid, uid, state, first, last, title, data FROM es_sessions WHERE last <= :last";
+	sql_archive_old_sessions: STRING = "INSERT INTO es_sessions_archive (sid, iid, uid, state, first, last, title, data) SELECT sid, iid, uid, state, first, last, title, data FROM es_sessions WHERE last <= :last;"
 
 	sql_delete_old_sessions: STRING = "DELETE FROM es_sessions WHERE last <= :last;"
 

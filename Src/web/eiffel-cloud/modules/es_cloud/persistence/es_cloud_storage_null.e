@@ -142,6 +142,10 @@ feature -- Element change: license
 			assign_license_to_user (a_email_license.license, a_user)
 		end
 
+	archive_license (lic: ES_CLOUD_LICENSE)
+		do
+		end
+
 feature -- Subscriptions		
 
 	subscriptions: LIST [ES_CLOUD_PLAN_SUBSCRIPTION]

@@ -39,6 +39,9 @@ feature -- Access
 	session_archive_age: INTEGER assign set_session_archive_age
 			-- Age in days for sessions to be archived.
 
+	license_archive_age: INTEGER assign set_license_archive_age
+			-- Age in days for license to be archived.
+
 feature -- Element change
 
 	set_api_secret (s: detachable READABLE_STRING_GENERAL)
@@ -60,6 +63,13 @@ feature -- Element change
 			d > 0
 		do
 			session_archive_age := d
+		end
+
+	set_license_archive_age (d: INTEGER)
+		require
+			d > 0
+		do
+			license_archive_age := d
 		end
 
 	set_shop_provider_name (v: READABLE_STRING_GENERAL)

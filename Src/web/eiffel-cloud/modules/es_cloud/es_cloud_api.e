@@ -56,6 +56,9 @@ feature {NONE} -- Initialization
 				if attached cfg.resolved_text_item ("session.archive_age") as s then
 					config.session_archive_age := s.to_integer
 				end
+				if attached cfg.resolved_text_item ("license.archive_age") as s then
+					config.license_archive_age := s.to_integer
+				end
 				if
 					attached cfg.resolved_text_item ("license.auto_trial") as s and then
 					s.is_case_insensitive_equal_general ("yes")
@@ -676,6 +679,37 @@ feature -- Element change license
 					notify_new_license (l_cms_user, l_cms_user.profile_name, l_email, Result, Void)
 				end
 			end
+		end
+
+	cleanup_licenses (dt: DATE_TIME)
+		local
+			lic: ES_CLOUD_LICENSE
+		do
+			if
+				attached trial_plan as pl and then
+				attached es_cloud_storage.licenses_for_plan (pl) as lst
+			then
+				across
+					lst as ic
+				loop
+					lic := ic.item.license
+					if lic.is_expired then
+						if
+							attached lic.expiration_date as exp and then
+							exp < dt
+						then
+							archive_license (lic)
+						end
+					end
+				end
+			end
+		end
+
+	archive_license (lic: ES_CLOUD_LICENSE)
+		require
+			lic.has_id
+		do
+			es_cloud_storage.archive_license (lic)
 		end
 
 feature -- Emailing

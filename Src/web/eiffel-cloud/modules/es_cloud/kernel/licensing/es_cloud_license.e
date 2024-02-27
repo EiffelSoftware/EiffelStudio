@@ -121,6 +121,8 @@ feature -- Status report
 			end
 		end
 
+	is_archived: BOOLEAN
+
 	days_remaining: INTEGER
 			-- Number of days remaining.
 			-- Relevant only when `expiration_date` is set!
@@ -375,6 +377,11 @@ feature -- Element change
 	set_status (st: like status)
 		do
 			status := st
+		end
+
+	set_is_archived (b: BOOLEAN)
+		do
+			is_archived := True
 		end
 
 	suspend

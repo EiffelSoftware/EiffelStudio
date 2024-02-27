@@ -251,12 +251,14 @@ feature -- Save
 				-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297
 				-- and the rtv_string.
 
-			write_metadata_headers (pe_writer, f)
-			write_tables (pe_writer, f)
-			write_strings (pe_writer, f)
-			write_us (pe_writer, f)
-			write_guid (pe_writer, f)
-			write_blob (pe_writer, f)
+				-- TODO update pe_write pdb_writer.
+			-- write_metadata_headers (pdb_writer, f)
+			-- write_pdb_streams (todo)
+			write_tables (pdb_writer, f)
+			write_strings (pdb_writer, f)
+			write_us (pdb_writer, f)
+			write_guid (pdb_writer, f)
+			write_blob (pdb_writer, f)
 
 				-- Workaround to align
 			if not is_aligned (f, 4) then

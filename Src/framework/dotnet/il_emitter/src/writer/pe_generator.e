@@ -12,7 +12,8 @@ inherit
 	REFACTORING_HELPER
 
 create
-	make
+	make,
+	make_pdb
 
 feature {NONE} -- Initalizatiob
 
@@ -27,7 +28,22 @@ feature {NONE} -- Initalizatiob
 			create tables_header
 			create string_map.make (0)
 			initialize_metadata_tables
+			is_pe_generator := True
 		end
+
+	make_pdb
+			-- Creation procedure to instance a new object.
+		do
+			create guid.make
+			create blob.make
+			create us.make
+			create strings.make
+			create stream_headers.make_filled (0, 5, 2)
+			create tables_header
+			create string_map.make (0)
+			initialize_metadata_tables
+		end
+
 
 	initialize_metadata_tables
 			-- Initialize an in-memory metadata tables
@@ -170,6 +186,9 @@ feature -- Access / streams
 feature -- Sizes
 
 feature -- Status report
+
+	is_pe_generator: BOOLEAN
+			-- Is pe generator?
 
 	us_heap_size: NATURAL_32
 			-- User string heap size.
@@ -617,24 +636,30 @@ feature {MD_EMIT} -- Implementation
 			end
 			l_stream_headers [1, 1] := l_current_rva
 
-			l_tables_header.major_version := 2
-			l_tables_header.reserved2 := 1
+
+-- Double check how to filter this code for PDB file generator.
+-- table_header is not used see https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md
+
+			if  is_pe_generator then
+				l_tables_header.major_version := 2
+				l_tables_header.reserved2 := 1
 -- Why having Event and Property sorted? anyway, the Eiffel compiler does not use them.
 --			l_tables_header.mask_sorted := 0b0000000000000000000101100000000000110011001001011111101000000000
 
-			l_tables_header.mask_sorted := 0b0000000000000000000101100000000000110011000000011111101000000000
+				l_tables_header.mask_sorted := 0b0000000000000000000101100000000000110011000000011111101000000000
 			--
 				--FIXME: check if size is about rows count, or offset (for Blob)
 				-- See II.24.2.6 #~ stream
 				-- Check size >= 2^16 = 0x1_0000
-			if strings_heap_size >= 0x1_0000 then
-				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x1
-			end
-			if guid_heap_size >= 0x1_0000 then
-				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x2
-			end
-			if blob_heap_size >= 0x1_0000 then
-				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x4
+				if strings_heap_size >= 0x1_0000 then
+					l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x1
+				end
+				if guid_heap_size >= 0x1_0000 then
+					l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x2
+				end
+				if blob_heap_size >= 0x1_0000 then
+					l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x4
+				end
 			end
 
 			create l_counts.make_filled (0, 1, Max_tables + Extra_indexes)

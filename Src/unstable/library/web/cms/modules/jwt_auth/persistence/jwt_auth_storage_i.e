@@ -54,6 +54,10 @@ feature -- Change/token
 		deferred
 		end
 
+	discard_expired_tokens (dt: DATE_TIME; a_discarded_count: detachable CELL [INTEGER])
+		deferred
+		end
+
 feature -- Access/challenge
 
 	sign_in_challenge (ch: READABLE_STRING_GENERAL): detachable JWT_AUTH_SIGN_IN_CHALLENGE

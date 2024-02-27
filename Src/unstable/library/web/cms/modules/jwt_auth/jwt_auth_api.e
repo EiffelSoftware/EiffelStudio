@@ -262,6 +262,18 @@ feature -- Change
 			jwt_auth_storage.discard_all_user_tokens (a_user)
 		end
 
+	discard_expired_tokens (a_date: DATE_TIME; a_discarded_count: detachable CELL [INTEGER])
+			-- Discard expired tokens at date `dt`.
+		local
+			dt: DATE_TIME
+		do
+			dt := a_date
+			if dt = Void then
+				create dt.make_now_utc
+			end
+			jwt_auth_storage.discard_expired_tokens (dt, a_discarded_count)
+		end
+
 feature {NONE} -- Implementation
 
 	new_secret_key (len, off: INTEGER): STRING_8

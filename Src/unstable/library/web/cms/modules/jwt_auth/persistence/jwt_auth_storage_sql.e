@@ -180,11 +180,61 @@ feature -- Change/token
 			sql_finalize_delete (sql_delete_user_token)
 		end
 
+	discard_expired_tokens (dt: DATE_TIME; a_discarded_count: detachable CELL [INTEGER])
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+			tok: JWT_AUTH_TOKEN
+			l_fake_user: CMS_USER
+			l_tokens: ARRAYED_LIST [JWT_AUTH_TOKEN]
+		do
+			reset_error
+			create l_parameters.make (0)
+			sql_query (sql_select_tokens, l_parameters)
+			if not has_error then
+				create l_tokens.make (0)
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					if
+						attached sql_read_string (2) as l_tok and then
+						not l_tok.is_whitespace and then
+						attached sql_read_string (5) as l_ref_tok
+					then
+						create {CMS_PARTIAL_USER} l_fake_user.make_with_id (sql_read_integer_64 (1))
+						create tok.make (l_fake_user, l_tok, l_ref_tok)
+						if attached sql_read_string (3) as sec then
+							tok.set_secret (sec)
+						end
+						if tok.is_expired (dt) then
+							l_tokens.force (tok)
+						end
+					end
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_tokens)
+			if l_tokens /= Void and then not l_tokens.is_empty then
+				across
+					l_tokens as ic
+				loop
+					tok := ic.item
+					discard_user_token (ic.item.user, ic.item.token)
+				end
+				if a_discarded_count /= Void then
+					a_discarded_count.replace (l_tokens.count)
+				end
+			end
+		end
+
 feature {NONE} -- Queries/token
 
 	sql_select_user_for_token: STRING = "SELECT uid, token, secret, apps, refresh FROM jwt_auth WHERE token=:token;"
 
 	sql_select_user_tokens: STRING = "SELECT uid, token, secret, apps, refresh FROM jwt_auth WHERE uid=:uid;"
+
+	sql_select_tokens: STRING = "SELECT uid, token, secret, apps, refresh FROM jwt_auth;"
 
 	sql_insert_user_token: STRING = "INSERT INTO jwt_auth (uid, token, secret, apps, refresh) VALUES (:uid, :token, :secret, :apps, :refresh);"
 

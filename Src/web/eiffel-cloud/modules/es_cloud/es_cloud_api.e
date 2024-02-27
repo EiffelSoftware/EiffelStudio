@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 				if attached cfg.resolved_text_item ("session.expiration_delay") as s then
 					config.session_expiration_delay := s.to_integer
 				end
-				if attached cfg.resolved_text_item ("session.session_age") as s then
+				if attached cfg.resolved_text_item ("session.archive_age") as s then
 					config.session_archive_age := s.to_integer
 				end
 				if attached cfg.resolved_text_item ("license.archive_age") as s then

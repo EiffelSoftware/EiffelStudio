@@ -1,0 +1,12 @@
+
+table.cms-roles {
+	table-layout: auto;
+	th.cms_role {
+		text-orientation: mixed;
+		writing-mode: vertical-lr;
+	}
+	td.cms_role_permission {
+		white-space: nowrap;
+		font-style: italic;
+	}
+}

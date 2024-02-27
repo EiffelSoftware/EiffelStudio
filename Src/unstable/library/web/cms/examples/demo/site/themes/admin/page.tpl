@@ -10,6 +10,9 @@
 	<script src="{$theme_path/}js/jquery-1.10.2.min.js"></script>
 	<script src="{$theme_path/}js/popup_search.js"></script>
 
+	<!-- CMS JS -->
+	<script src="{$theme_path/}js/cms.js"></script>
+
 {if isset="$head"}{$head/}{/if}
 {if isset="$styles"}{$styles/}{/if}
 {if isset="$scripts"}{$scripts/}{/if}
@@ -38,18 +41,14 @@
       {/if}
     </div> 
 	<!-- Page search -->
-	<div class="row">
-		<div class="col-md-2 col-md-offset-9">
-			<form action="{$site_url/}gcse" class="search-form" id="gcse_search_form">
-				<div class="form-group has-feedback">
-					<input type="search" class="form-control" name="q" id="gcse_search" placeholder="search" value="{htmlentities}{$cms_search_query/}{/htmlentities}" >
-					<span class="glyphicon glyphicon-search form-control-feedback"></span>
-				</div>
-			</form>
+	<form action="{$site_url/}gcse" class="search-form" id="gcse_search_form">
+		<div class="form-group has-feedback">
+			<input type="search" class="form-control" name="q" id="gcse_search" placeholder="search" value="{htmlentities}{$cms_search_query/}{/htmlentities}" >
+			<span class="glyphicon glyphicon-search form-control-feedback"></span>
 		</div>
-	</div>
+	</form>
     <!-- General Page Content -->
-    <div id='content' class='row-fluid'>
+    <div id='content'>
 		<!-- Left Sidebar sidebar_first -->
 		{unless isempty="$page.region_sidebar_first"}
 		<div id="sidebar_first" class="sidebar">{$page.region_sidebar_first/}</div>
@@ -60,7 +59,8 @@
 		{/unless}
 
         <!-- Highlighted, Help, Content -->      
-        <div id='main' class='span8 main'>
+        <div id='main' {unless isempty="$page.page_class_css"}class="{$page.page_class_css/}"{/unless}>
+
           <!-- Highlighted Section -->
           {unless isempty="$page.region_highlighted"}
 		  <div id="highlighted">{$page.region_highlighted/}</div>
@@ -71,7 +71,7 @@
 		  {/unless}
 
           <!-- Main Content Section -->
-		  {unless isempty="$page_title"}<h1 class="page-title">{$page_title/}</h1>{/unless}
+		  {unless isempty="$page.page_title"}<h1 class="page-title">{$page.page_title/}</h1>{/unless}
           {$page.region_content/}   
 		  {if condition="$page.is_front"}
 			  {if isset="$page.region_feed_news"}

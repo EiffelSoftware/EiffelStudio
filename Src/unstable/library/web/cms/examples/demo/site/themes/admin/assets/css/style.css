@@ -34,8 +34,33 @@ ul.horizontal li {
   border-top: solid 3px blue;
 }
 
+.menu ul.vertical {
+  list-style: none;
+  padding-left: .5rem;
+}
+.menu ul.vertical > li > a {
+  border-bottom: dotted 1px #ccc;
+}
+.menu ul.vertical ul {
+  padding-left: 1rem;
+}
+.menu ul.vertical li {
+  padding-left: .3rem;
+}
+.menu ul.vertical li.active > a {
+  font-weight: bold;
+}
+
+form.search-form div {
+  position: absolute;
+  top: .5rem;
+  right: 0px;
+  z-index: -1;
+}
+
 #content {
-  margin-left: 20px;
+  display: flex;
+  flex-direction: row;
 }
 #content #highlighted {
   position: relative;
@@ -51,26 +76,41 @@ ul.horizontal li {
   border: solid 1px red;
 }
 
-.sidebar {
+#content .sidebar {
   padding: 5px;
   margin: 3px;
-  /* border: solid 1px #ccc; */
 }
-.sidebar#sidebar_first {
-  width: 250px;
-  position: fixed;
-  top: 45px;
-  left: 0;
-  bottom: 0;
+#content .sidebar#sidebar_first {
+  flex: 1 0 auto;
+  max-width: 200px;
   width: 200px;
-  border-right: solid 1px #ddd;
+  border-right: solid 1px #ccc;
 }
-.sidebar#sidebar_second {
-  width: 250px;
+#content .sidebar#sidebar_second {
+  flex: 1 0 auto;
+  max-width: 240px;
+  width: 240px;
   float: right;
 }
-.sidebar + .main {
-  margin-left: 200px;
+#content .sidebar + #main {
+  margin-left: 1rem;
+}
+#content span.sidebar_toggle {
+  padding: .2rem;
+  width: 2rem;
+  border: solid 1px #999;
+  background-color: #ccc;
+  display: none;
+  cursor: pointer;
+}
+#content span.sidebar_toggle:hover {
+  border: solid 1px #333;
+  background-color: #fff;
+}
+#content #main {
+  flex: 1;
+  min-width: 300px;
+  margin-left: 2rem;
 }
 
 #primary-tabs ul.horizontal {
@@ -100,4 +140,33 @@ table.with_border thead td {
 table.with_border td {
   border: solid 1px #ccc;
   padding: 2px 5px 2px 5px;
+}
+
+@media screen and (max-width: 600px) {
+  div#content {
+    flex-direction: column;
+  }
+  div#content span.sidebar_toggle {
+    display: block;
+  }
+  div#content span.sidebar_toggle + div.sidebar {
+    display: none;
+  }
+  div#content span.sidebar_toggle + div.sidebar {
+    display: none;
+  }
+  div#content span.sidebar_toggle + div.sidebar[data-display=no] {
+    display: none;
+  }
+  div#content span.sidebar_toggle + div.sidebar[data-display=yes] {
+    display: block;
+  }
+
+  form.search-form div {
+    position: relative;
+  }
+}
+ul.pagination li {
+    margin-right: .5em;
+    display: inline-block;
 }

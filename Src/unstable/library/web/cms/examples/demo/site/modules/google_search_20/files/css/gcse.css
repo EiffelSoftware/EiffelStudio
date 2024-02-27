@@ -1,0 +1,8 @@
+.gcse_searchresults table {
+  border: none !important;
+  border-collapse: separate !important;
+  table-layout: auto;
+}
+.gcse_searchresults td {
+  border: none !important;
+}

@@ -85,4 +85,62 @@ form#modules_collection {
 	}
 }
 
+ul.logs {
+	li { 
+		border-bottom: dotted 1px #ccc;
+		&.section {
+			font-weight: bold;
+			list-style: none;
+			margin-left: 0;
+			padding-left: 0;
+			padding-right: 1rem;
+			border-bottom: solid 1px #999;
+			margin-top: 1rem; 
+			margin-bottom: 1rem; 
+			text-align: right;
+			position: relative;
+			left: -2rem;
+		}
+		div.log-header {
+			display: inline-block;
+		}
+		div.log-name {
+			display: inline-block;
+			font-weight: bold;
+			padding-right: 1rem;
+		}
+		div.log-category {
+			display: inline-block;
+			padding-right: 1rem;
+			font-weight: bold;
+		}
+		div.log-message {
+			display: inline;
+		}
+		div.log-date {
+			display: inline-block;
+			padding-right: 1rem;
+		}
+		div.log-link {
+			display: inline-block;
+			padding-right: 1rem;
+		}
+		&.log-error div.log-name {
+			color: red;
+		}
 
+		&.active {
+			div.log-header {
+				display: block;
+			}
+			div.log-message {
+				display: block;
+				clear: both;
+				border: solid 1px #ccc;
+				padding: 1rem;
+				font-family: monospace;
+				white-space: pre;
+			}
+		}
+	}
+}

@@ -39,8 +39,31 @@ ul.horizontal {
 		}
 	}
 }
+.menu ul.vertical {
+	list-style: none;
+	padding-left: .5rem;
+	& > li > a {
+		border-bottom: dotted 1px #ccc;
+	}
+	ul {
+		padding-left: 1rem;
+	}
+	li {
+		padding-left: .3rem;
+	}
+	li.active > a {
+		font-weight: bold;
+	}
+}
+form.search-form div {
+	position: absolute;
+	top: .5rem;
+	right: 0px;
+	z-index: -1;
+}
 #content {
-	margin-left: 20px;
+	display: flex;
+	flex-direction: row;
 	#highlighted {
 		position: relative;
 		border: solid 1px #ddd;
@@ -55,26 +78,42 @@ ul.horizontal {
 		border: solid 1px red;
 	}
 }
-.sidebar {
-	padding: 5px;
-	margin: 3px;
-	/* border: solid 1px #ccc; */
-	&#sidebar_first {
-		width: 250px;
-		position: fixed;
-		top: 45px;
-		left: 0;
-		bottom: 0;
-		width: 200px;
-		border-right: solid 1px #ddd;
+#content {
+	.sidebar {
+		padding: 5px;
+		margin: 3px;
+		&#sidebar_first {
+			flex: 1 0 auto;
+			max-width: 200px;
+			width: 200px;
+			border-right: solid 1px #ccc;
+		}
+		&#sidebar_second {
+			flex: 1 0 auto;
+			max-width: 240px;
+			width: 240px;
+			float: right;
+		}
+		&+#main {
+			margin-left: 1rem;
+		}
 	}
-	&#sidebar_second {
-		width: 250px;
-		float: right;
+	span.sidebar_toggle {
+		padding: .2rem;
+		width: 2rem;
+		border: solid 1px #999;
+		background-color: #ccc;
+		display: none;
+		cursor: pointer;
+		&:hover {
+			border: solid 1px #333;
+			background-color: #fff;
+		}
 	}
-
-	&+.main {
-		margin-left: 200px;
+	#main {
+		flex: 1;
+		min-width: 300px;
+		margin-left: 2rem;
 	}
 }
 #primary-tabs {
@@ -108,3 +147,29 @@ table.with_border {
 		padding: 2px 5px 2px 5px;
 	}
 }
+
+@media screen and (max-width: 600px) {
+  div#content {
+  	flex-direction: column; 
+	span.sidebar_toggle {
+		display: block;
+		&+div.sidebar {
+			display: none;
+		}
+	}
+	span.sidebar_toggle {
+		&+div.sidebar { display: none; }
+		&+div.sidebar[data-display=no] { display: none; }
+		&+div.sidebar[data-display=yes] { display: block; }
+	}
+  }
+  form.search-form div {
+	position: relative;
+  }
+}
+
+ul.pagination li {
+    margin-right: .5em;
+    display: inline-block;
+}
+

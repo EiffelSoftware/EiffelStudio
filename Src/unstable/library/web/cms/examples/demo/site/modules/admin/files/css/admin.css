@@ -77,3 +77,58 @@ form#modules_collection tr {
 form#modules_collection td {
   padding: 3px;
 }
+
+ul.logs li {
+  border-bottom: dotted 1px #ccc;
+}
+ul.logs li.section {
+  font-weight: bold;
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  padding-right: 1rem;
+  border-bottom: solid 1px #999;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  text-align: right;
+  position: relative;
+  left: -2rem;
+}
+ul.logs li div.log-header {
+  display: inline-block;
+}
+ul.logs li div.log-name {
+  display: inline-block;
+  font-weight: bold;
+  padding-right: 1rem;
+}
+ul.logs li div.log-category {
+  display: inline-block;
+  padding-right: 1rem;
+  font-weight: bold;
+}
+ul.logs li div.log-message {
+  display: inline;
+}
+ul.logs li div.log-date {
+  display: inline-block;
+  padding-right: 1rem;
+}
+ul.logs li div.log-link {
+  display: inline-block;
+  padding-right: 1rem;
+}
+ul.logs li.log-error div.log-name {
+  color: red;
+}
+ul.logs li.active div.log-header {
+  display: block;
+}
+ul.logs li.active div.log-message {
+  display: block;
+  clear: both;
+  border: solid 1px #ccc;
+  padding: 1rem;
+  font-family: monospace;
+  white-space: pre;
+}

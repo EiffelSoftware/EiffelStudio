@@ -17,13 +17,16 @@ create
 feature {NONE} -- Initialization
 
 	make (a_emitter: MD_EMIT_I; name: CLI_STRING; full_build: BOOLEAN)
+			--  Create a new IL_EMITTER_DBG_WRITER object using `emitter' in a file `name'.
 		do
 			check attached {MD_EMIT} a_emitter as md then
 				emitter := md
 			end
 			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
+				to_implement ("TODO double check current implementation")
 			end
+
+			file_name := name
 
 			current_method_token := -1
 			is_closed := False
@@ -43,6 +46,10 @@ feature -- Access
 	current_end_offset: INTEGER
 
 	current_variables_scope: NATURAL_32
+
+	file_name: CLI_STRING
+
+	entry_point_token: INTEGER
 
 
 feature -- Update
@@ -101,7 +108,7 @@ feature -- Update
 
 
 				-- create a new entry to PE_LOCAL_SCOPE_TABLE_ENTRY
-				-- we use the current method teoken `current_method_token`
+				-- we use the current method token `current_method_token`
 				-- whith the current entry in the importscope table
 				-- then we compute the first entry to the localvariable rowid ( using the current index - (number of variables added in the scope)
 			create l_local_scope_entry.make_with_data (current_method_token.to_natural_32,
@@ -120,14 +127,12 @@ feature -- PE file data
 
 	debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY_I): MANAGED_POINTER
 			-- Retrieve debug info required to be inserted in PE file.
+		local
+			l_code_view: CLI_CODE_VIEW
 		do
-			-- FIXME
-			create Result.make (0)
-			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
-			end
-			-- Check CIL_CODE_VIEW.item
-			is_successful := False
+			create l_code_view.make (associated_pdb_file_name)
+			Result := l_code_view.item.managed_pointer
+			is_successful := True
 		end
 
 feature -- Status report
@@ -231,7 +236,8 @@ feature -- Definition
 			-- Define parameter `name' at position `pos' in current method.
 		do
 			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
+				to_implement ("TODO this feature is not used by the old .Net implemenation")
+					-- Double check if the current implementation needs it.
 			end
 			debug ("il_emitter_dbg")
 				print (generator + ".define_parameter (%"")
@@ -244,20 +250,37 @@ feature -- Definition
 
 feature -- Settings
 
-	set_user_entry_point (entry_point_token: INTEGER)
+	set_user_entry_point (a_entry_point_token: INTEGER)
 			-- Set `entry_point_token' as entry point.
 		do
 			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
+				to_implement ("TODO double check if this is the correct way to setup the current entry point.")
+
 			end
 			debug ("il_emitter_dbg")
 				print (generator + ".set_user_entry_point (%"")
-				print (entry_point_token.out)
+				print (a_entry_point_token.out)
 				print (")%N")
 			end
-			is_successful := False
+			entry_point_token := a_entry_point_token
+			is_successful := True
 		end
 
+
+feature {NONE} -- Implementation
+
+	associated_pdb_file_name: PATH
+		local
+			fn: READABLE_STRING_32
+			p: PATH
+		do
+			fn := file_name.string_32
+			create p.make_from_string (fn)
+			if attached p.extension as ext then
+				create p.make_from_string (fn.head (fn.count - ext.count - 1))
+			end
+			Result := p.appended_with_extension ("pdb")
+		end
 
 
 

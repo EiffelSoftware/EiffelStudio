@@ -15,6 +15,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			session_expiration_delay := 60 -- minutes
+			session_archive_age := 730 -- ~ 2 years
 			shop_provider_name := "Eiffel Software"
 		end
 
@@ -35,6 +36,9 @@ feature -- Access
 
 	additional_error_notification_email: detachable IMMUTABLE_STRING_8
 
+	session_archive_age: INTEGER assign set_session_archive_age
+			-- Age in days for sessions to be archived.
+
 feature -- Element change
 
 	set_api_secret (s: detachable READABLE_STRING_GENERAL)
@@ -49,6 +53,13 @@ feature -- Element change
 	set_session_expiration_delay (d: INTEGER)
 		do
 			session_expiration_delay := d
+		end
+
+	set_session_archive_age (d: INTEGER)
+		require
+			d > 0
+		do
+			session_archive_age := d
 		end
 
 	set_shop_provider_name (v: READABLE_STRING_GENERAL)

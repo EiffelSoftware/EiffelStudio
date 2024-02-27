@@ -61,7 +61,7 @@ CREATE TABLE es_sessions(
   `data` TEXT
 );
 
-CREATE TABLE es_sessions_archive (
+CREATE TABLE es_sessions_archive(
   `sid` VARCHAR(255) PRIMARY KEY NOT NULL ,
   `iid` VARCHAR(255) NOT NULL ,
   `uid`	INTEGER NOT NULL,

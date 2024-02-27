@@ -15,5 +15,5 @@ CREATE TABLE jwt_auth_challenges(
   `apps` 	TEXT,
   `status`  INTEGER,
   `uid`	INTEGER,
-  CONSTRAINT PK_challenge_apps_key PRIMARY KEY (challenge,apps,client)
+  CONSTRAINT PK_challenge_key PRIMARY KEY (challenge,client)
 );

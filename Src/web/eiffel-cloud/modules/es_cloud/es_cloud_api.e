@@ -53,6 +53,9 @@ feature {NONE} -- Initialization
 				if attached cfg.resolved_text_item ("session.expiration_delay") as s then
 					config.session_expiration_delay := s.to_integer
 				end
+				if attached cfg.resolved_text_item ("session.archive_age") as s then
+					config.session_archive_age := s.to_integer
+				end
 				if
 					attached cfg.resolved_text_item ("license.auto_trial") as s and then
 					s.is_case_insensitive_equal_general ("yes")
@@ -1349,6 +1352,11 @@ feature -- Access: subscriptions
 					end
 				)
 			create {QUICK_SORTER [ES_CLOUD_SESSION]} Result.make (comp)
+		end
+
+	cleanup_sessions (dt: DATE_TIME)
+		do
+			es_cloud_storage.cleanup_sessions (dt)
 		end
 
 feature -- Change	

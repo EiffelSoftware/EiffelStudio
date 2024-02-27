@@ -21,6 +21,8 @@ inherit
 
 	CMS_HOOK_RESPONSE_ALTER
 
+	CMS_HOOK_CLEANUP
+
 create
 	make
 
@@ -90,6 +92,7 @@ feature -- Hooks configuration
 			a_hooks.subscribe_to_menu_system_alter_hook (Current)
 			a_hooks.subscribe_to_response_alter_hook (Current)
 			a_hooks.subscribe_to_form_alter_hook (Current)
+			a_hooks.subscribe_to_cleanup_hook (Current)
 		end
 
 	response_alter (a_response: CMS_RESPONSE)
@@ -141,6 +144,8 @@ feature -- Hooks configuration
 			fset, lic_fset: WSF_FORM_FIELD_SET
 			s: STRING
 			l_license: detachable ES_CLOUD_LICENSE
+			l_dt_input: WSF_FORM_NUMBER_INPUT
+			b_input: WSF_FORM_CHECKBOX_INPUT
 		do
 			if
 				attached module.es_cloud_api as l_cloud_api and then
@@ -233,6 +238,19 @@ feature -- Hooks configuration
 --							a_form.validation_actions.extend (agent license_form_validation_action (?, l_user, l_license, l_cloud_api))
 --						end
 					end
+				elseif l_form_id.same_string ({CMS_ADMIN_CLEANUP_HANDLER}.form_admin_cleanup_id) then
+					create fset.make
+					create b_input.make ("cleanup-params[session-archive]")
+					b_input.set_checked (True)
+					b_input.set_title ("Archive old sessions?")
+					fset.extend (b_input)
+
+					create l_dt_input.make ("cleanup-params[session-age-in-days]")
+					l_dt_input.set_label ("Archive sessions before age (in days) ...")
+					l_dt_input.set_text_value (l_cloud_api.config.session_archive_age.out)
+					l_dt_input.set_description ("Archive sessions older than specified N days")
+					fset.extend (l_dt_input)
+					a_form.extend (fset)
 				end
 			end
 		end
@@ -555,6 +573,28 @@ feature -- Hooks configuration
 				j := s.index_of ('-', i + 1)
 				if j > 0 then
 					create Result.make (s.substring (1, i - 1).to_integer, s.substring (i + 1, j - 1).to_integer, s.substring (j + 1, s.count).to_integer)
+				end
+			end
+		end
+
+feature -- Hook	
+
+	cleanup (ctx: CMS_HOOK_CLEANUP_CONTEXT; a_response: CMS_RESPONSE)
+			-- Cleanup
+		local
+			dt: DATE_TIME
+		do
+			if attached module.es_cloud_api as l_es_cloud_api then
+				ctx.log ("Cleanup ES Cloud")
+				if attached ctx.parameter ("session-archive") as s and then s.same_string ("on") then
+					ctx.log ("Archive old sessions")
+					create dt.make_now_utc
+					if attached ctx.parameter ("session-age-in-days") as s_days and then s_days.is_integer_32 then
+						dt.day_add (- s_days.to_integer_32)
+					else
+						dt.day_add (-1 * l_es_cloud_api.config.session_archive_age)
+					end
+					l_es_cloud_api.cleanup_sessions (dt)
 				end
 			end
 		end

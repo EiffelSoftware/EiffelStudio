@@ -24,6 +24,8 @@ feature {NONE} -- Initialization
 				-- Debug mode.
 			is_debug := attached string_8_item ("site.debug") as l_debug and then l_debug.is_case_insensitive_equal_general ("yes")
 
+			is_environment_log := attached string_8_item ("site.log") as l_log and then l_log.is_case_insensitive_equal_general ("env")
+
 				--| Site id, used to identified a site, this could be set to a uuid, or else
 			site_id := string_8_item_or_default ("site.id", "_ROC_CMS_NO_ID_")
 
@@ -378,6 +380,9 @@ feature -- Settings
 	is_debug: BOOLEAN
 			-- Is debug mode enabled?
 
+	is_environment_log: BOOLEAN
+			-- Is environment logger?
+
 	set_site_mode
 			-- Switch to site mode.
 			--| 	- Change theme
@@ -634,6 +639,6 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2024, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

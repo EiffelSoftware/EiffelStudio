@@ -27,8 +27,6 @@ inherit
 
 	REFACTORING_HELPER
 
-	SHARED_LOGGER
-
 create
 	make
 

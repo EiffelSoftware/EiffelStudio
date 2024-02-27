@@ -121,9 +121,9 @@ feature -- Execution
 			debug ("roc_storage")
 				print ("# sql_post_execution.%N")
 			end
-			-- FIXME
 			if sqlite.has_error then
-				write_critical_log (generator + ".post_execution Error occurred!")
+				-- FIXME
+--				write_critical_log (generator + ".post_execution Error occurred!")
 			end
 		end
 

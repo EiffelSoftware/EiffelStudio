@@ -736,7 +736,6 @@ feature -- Registration
 
 													-- Send Email
 												create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (i_oauth20_api.cms_api))
-												write_debug_log (generator + ".handle_callback_oauth: send_contact_welcome_email")
 												es.send_contact_welcome_email (l_email, l_user, i_oauth20_api.cms_api.absolute_url ("", Void))
 											end
 										else

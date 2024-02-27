@@ -18,8 +18,6 @@ inherit
 create
 	make
 
-feature -- Access	
-
 feature -- Change
 
 	save_contact_message (m: CONTACT_MESSAGE)
@@ -29,8 +27,6 @@ feature -- Change
 		do
 			error_handler.reset
 			create now.make_now_utc
-
-			write_information_log (generator + ".save_contact_message")
 
 			create s.make_empty
 			s.append ("date=")

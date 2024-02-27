@@ -7,8 +7,7 @@ deferred class
 	DATABASE_HANDLER
 
 inherit
-
-	SHARED_LOGGER
+--	SHARED_LOGGER
 
 feature -- Access
 
@@ -177,7 +176,6 @@ feature -- Error handling
 		do
 			if attached db_change as l_change and then not l_change.is_ok then
 				database_error_handler.add_database_error (l_change.error_message_32, l_change.error_code)
-				write_error_log (generator + ".check_database_change_error: " + l_change.error_message_32)
 				l_change.reset
 			end
 		end
@@ -187,7 +185,6 @@ feature -- Error handling
 		do
 			if attached db_selection as l_selection and then not l_selection.is_ok then
 				database_error_handler.add_database_error (l_selection.error_message_32, l_selection.error_code)
-				write_error_log (generator + ".check_database_selection_error: " + l_selection.error_message_32)
 				l_selection.reset
 			end
 		end

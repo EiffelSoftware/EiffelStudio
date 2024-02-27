@@ -18,8 +18,6 @@ inherit
 
 	CMS_HOOK_BLOCK_HELPER
 
-	SHARED_LOGGER
-
 feature {NONE} -- Initialization
 
 	make

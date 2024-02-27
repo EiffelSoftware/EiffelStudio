@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		local
 			l_env: CMS_ENVIRONMENT
 		do
-			if attached execution_environment.arguments.separate_character_option_value ('d') as l_dir then
+			if attached {EXECUTION_ENVIRONMENT}.arguments.separate_character_option_value ('d') as l_dir then
 				create l_env.make_with_directory_name (l_dir)
 			else
 				create l_env.make_default

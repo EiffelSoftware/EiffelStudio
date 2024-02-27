@@ -386,7 +386,6 @@ feature -- Openid Login
 
 									-- Send Email
 							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
-							write_debug_log (generator + ".handle_callback_openid: send_contact_welcome_email")
 							es.send_contact_welcome_email (l_email, l_user, req.absolute_script_url (""))
 						end
 					end

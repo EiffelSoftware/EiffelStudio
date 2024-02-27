@@ -6,8 +6,6 @@ note
 deferred class
 	CMS_STORAGE_SQL_I
 
-inherit
-	SHARED_LOGGER
 
 feature -- Access
 
@@ -544,6 +542,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2024, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

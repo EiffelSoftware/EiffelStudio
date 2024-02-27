@@ -21,8 +21,7 @@ inherit
 
 create
 	make,
-	make_with_environment,
-	make_with_layout
+	make_with_environment
 
 feature {NONE} -- Initialization
 
@@ -37,14 +36,6 @@ feature {NONE} -- Initialization
 		do
 			make
 			apply_environment (app)
-		end
-
-	make_with_layout (app: APPLICATION_ENVIRONMENT)
-			-- Initialize a logger object with an application layout `app'.
-		obsolete
-			"Use make_with_environment"
-		do
-			make_with_environment (app)
 		end
 
 feature -- Change
@@ -218,6 +209,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2024, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

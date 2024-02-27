@@ -27,7 +27,6 @@ feature -- Access User
 			l_uid: INTEGER_64
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_by_session_token")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_query (Select_user_id_by_token, l_parameters)
@@ -53,7 +52,6 @@ feature -- Access User
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".has_user_token")
 			create l_parameters.make (1)
 			l_parameters.put (a_user.id, "uid")
 			sql_query (Select_user_token, l_parameters)
@@ -75,7 +73,6 @@ feature -- Change User token
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".new_user_session")
 			create l_parameters.make (3)
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_token, "token")
@@ -92,7 +89,6 @@ feature -- Change User token
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".update_user_session_auth")
 			create l_parameters.make (3)
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_token, "token")

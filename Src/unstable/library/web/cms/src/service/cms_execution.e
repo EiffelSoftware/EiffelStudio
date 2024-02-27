@@ -33,7 +33,7 @@ inherit
 
 	REFACTORING_HELPER
 
-	SHARED_LOGGER
+--	SHARED_LOGGER
 
 --create
 --	make
@@ -406,6 +406,10 @@ feature -- Filters
 			f.set_next (l_filter)
 			l_filter := f
 
+--			create {WSF_REQUEST_ID_SETTER_FILTER} f
+--			f.set_next (l_filter)
+--			l_filter := f
+
 			if fut.file_exists (".debug") then
 				create {WSF_DEBUG_FILTER} f
 				f.set_next (l_filter)
@@ -509,7 +513,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2024, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

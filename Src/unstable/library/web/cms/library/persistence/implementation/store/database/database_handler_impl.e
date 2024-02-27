@@ -44,7 +44,6 @@ feature -- Functionality
 					items := l_store.execute_reader (l_db_selection)
 					check_database_selection_error
 				end
-				write_debug_log ( generator+".execute_reader Successful")
 			end
 		rescue
 			l_retried := True
@@ -69,7 +68,6 @@ feature -- Functionality
 					l_store.execute_writer (l_db_change)
 					check_database_change_error
 				end
-				write_debug_log ( generator+".execute_writer Successful")
 			end
 		rescue
 			l_retried := True

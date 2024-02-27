@@ -112,11 +112,14 @@ feature -- Persistence
 					end
 					a_node.set_parent (ct.new_node (l_parent))
 				else
-					write_debug_log ("Invalid parent node id!")
+					debug ("cms_node")
+						if attached api as l_cms_api then
+							l_cms_api.log ({CMS_NODE_MODULE}.name, "Invalid parent node id!", 0, Void)
+						end
+					end
 				end
 			end
 		end
-
 
 	delete_node (a_node: CMS_PAGE)
 			-- <Precursor>

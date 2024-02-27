@@ -16,8 +16,6 @@ inherit
 
 	REFACTORING_HELPER
 
-	SHARED_LOGGER
-
 feature -- URL aliases
 
 	set_path_alias (a_source: READABLE_STRING_8; a_alias: READABLE_STRING_8)
@@ -787,6 +785,6 @@ feature -- Misc
 
 
 note
-	copyright: "2011-2023, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2024, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -32,7 +32,11 @@ feature {NONE} -- Initialize
 			response := resp
 			setup := a_setup
 			create error_handler.make
-			create {CMS_ENV_LOGGER} logger.make
+			if a_setup.is_environment_log then
+				create {CMS_ENV_LOGGER} logger.make
+			else
+				create {CMS_NULL_LOGGER} logger
+			end
 			create hooks.make
 			initialize
 		ensure

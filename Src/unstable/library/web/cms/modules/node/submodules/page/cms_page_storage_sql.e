@@ -24,8 +24,6 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".children")
-
 			from
 				create l_parameters.make (1)
 				l_parameters.put (a_node.id, "nid")
@@ -50,8 +48,6 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".available_parents_for_node")
-
 			from
 				create l_parameters.make (1)
 				l_parameters.put (a_node.id, "nid")

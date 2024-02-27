@@ -6,9 +6,6 @@ note
 deferred class
 	CMS_USER_STORAGE_I
 
-inherit
-	SHARED_LOGGER
-
 feature -- Error Handling
 
 	error_handler: ERROR_HANDLER
@@ -318,6 +315,6 @@ feature -- New Temp User
 		end
 
 note
-	copyright: "2011-2023, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2024, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

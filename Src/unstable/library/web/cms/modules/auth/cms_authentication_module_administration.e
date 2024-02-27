@@ -20,8 +20,6 @@ inherit
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
 
-	SHARED_LOGGER
-
 create
 	make
 
@@ -241,7 +239,6 @@ feature -- Request handling
 							end
 							if attached l_temp_user.email as l_email then
 								create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (a_auth_api.cms_api))
-								write_debug_log (generator + ".handle register: send_contact_activation_reject_email")
 								es.send_contact_activation_reject_email (l_email, l_temp_user, req.absolute_script_url (""), l_reason)
 							end
 						else
@@ -315,7 +312,6 @@ feature -- Request handling
 											-- Send Email to webmaster
 									if attached l_user.personal_information as l_personal_information then
 										create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (a_auth_api.cms_api))
-										write_debug_log (generator + ".handle register: send_register_email")
 										es.send_admin_account_evaluation (l_user, l_personal_information, l_url_activate, l_url_reject, req.absolute_script_url (""))
 									end
 								end

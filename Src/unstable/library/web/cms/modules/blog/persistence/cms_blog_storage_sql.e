@@ -21,7 +21,6 @@ feature -- Access
 			-- <Precursor>
 		do
 			error_handler.reset
-			write_information_log (generator + ".blogs_count")
 			sql_query (sql_select_blog_count, Void)
 			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
@@ -35,7 +34,7 @@ feature -- Access
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".blogs_count_from_user")
+
 			create l_parameters.make (2)
 			l_parameters.put (a_user.id, "user")
 			sql_query (sql_select_blog_count_from_user, l_parameters)
@@ -51,7 +50,6 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".blogs")
 
 			from
 				sql_query (sql_select_blogs_order_created_desc, Void)
@@ -75,7 +73,6 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".blogs_limited")
 
 			from
 				create l_parameters.make (2)
@@ -102,7 +99,6 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".blogs_from_user_limited")
 
 			from
 				create l_parameters.make (3)
@@ -130,7 +126,6 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".blogs_from_user_with_title")
 
 			from
 				create l_parameters.make (2)

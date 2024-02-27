@@ -44,8 +44,6 @@ inherit
 
 	REFACTORING_HELPER
 
-	SHARED_LOGGER
-
 create
 	make
 
@@ -563,7 +561,6 @@ feature -- Handler
 
 								-- Send Email
 							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (a_auth_api.cms_api))
-							write_debug_log (generator + ".handle register: send_contact_password_email")
 							es.send_contact_password_email (l_email, l_user, l_url, req.absolute_script_url (""))
 						else
 							r.set_value ("The email does not exist !", "error_email")
@@ -587,7 +584,6 @@ feature -- Handler
 
 							-- Send Email
 						create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (a_auth_api.cms_api))
-						write_debug_log (generator + ".handle register: send_contact_password_email")
 						es.send_contact_password_email (l_user_email, l_user, l_url, req.absolute_script_url (""))
 					else
 						r.set_value ("The username does not exist !", "error_username")
@@ -1159,7 +1155,6 @@ feature {NONE} -- Implementation
 			api: RECAPTCHA_API
 			l_errors: STRING
 		do
-			write_debug_log (generator + ".is_captcha_verified with response: [" + utf_8_encoded (a_response) + "]")
 			create api.make (a_secret, a_response)
 			if cfg.is_version_3 then
 				Result := api.verify_score (0.5, recaptcha_action)
@@ -1176,7 +1171,6 @@ feature {NONE} -- Implementation
 					l_errors.append (ic.item)
 					l_errors.append_character ('%N')
 				end
-				write_error_log (generator + ".is_captcha_verified api_errors [" + l_errors + "]")
 			end
 		end
 

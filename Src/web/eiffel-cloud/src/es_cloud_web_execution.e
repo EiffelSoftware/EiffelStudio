@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		local
 			l_env: CMS_ENVIRONMENT
 		do
-			if attached execution_environment.arguments.separate_character_option_value ('d') as l_dir then
+			if attached {EXECUTION_ENVIRONMENT}.arguments.separate_character_option_value ('d') as l_dir then
 				create l_env.make_with_directory_name (l_dir)
 			else
 				create l_env.make_default
@@ -34,6 +34,7 @@ feature -- CMS storage
 	setup_storage (a_setup: CMS_SETUP)
 		do
 			a_setup.storage_drivers.force (create {CMS_STORAGE_SQLITE3_BUILDER}.make, "sqlite3")
+--			a_setup.storage_drivers.force (create {CMS_STORAGE_STORE_MARIADB_BUILDER}.make, "mariadb")
 			a_setup.storage_drivers.force (create {CMS_STORAGE_STORE_MYSQL_BUILDER}.make, "mysql")
 --			a_setup.storage_drivers.force (create {CMS_STORAGE_STORE_ODBC_BUILDER}.make, "odbc")
 		end

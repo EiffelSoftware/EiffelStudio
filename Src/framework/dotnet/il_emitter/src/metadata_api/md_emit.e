@@ -266,10 +266,12 @@ feature -- Save
 			check valid_size: l_expected_size = f.count end
 		end
 
-	update_pdb_stream_pdb_id (a_guid: ARRAY [NATURAL_8])
-			-- Update the pdb_id using a GUID `a_guid`.
+	update_pdb_stream_pdb_id (a_pdb_id: ARRAY [NATURAL_8])
+			-- Update the pdb_id using a `a_pdb_id`.
+		require
+			a_pdb_id.count = 20
 		do
-			pdb_writer.pdb_stream.set_pdb_id (a_guid)
+			pdb_writer.pdb_stream.set_pdb_id (a_pdb_id)
 		end
 
 	update_pdb_stream_entry_point (a_entry_point: INTEGER)

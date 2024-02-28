@@ -60,9 +60,11 @@ feature -- Update
 			-- Stop all processing on current.
 		local
 			l_pdb_file: CLI_PDB_FILE
+			l_pdb_id: ARRAY [NATURAL_8]
 		do
 				-- update pdb_stream entry point and pdb_id
-			emitter.update_pdb_stream_pdb_id (associated_code_view.guid)
+			create l_pdb_id.make_filled (8, 1, 20) -- FIXME: for now, use fake PID id (easy to identify in binary, a sequence of 20 `08` values.
+			emitter.update_pdb_stream_pdb_id (l_pdb_id)
 			emitter.update_pdb_stream_entry_point (entry_point_token)
 			create l_pdb_file.make (associated_pdb_file_name.name, emitter)
 			l_pdb_file.save

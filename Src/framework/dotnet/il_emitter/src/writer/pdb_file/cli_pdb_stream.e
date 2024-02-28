@@ -51,7 +51,7 @@ feature -- Change Element
 	set_pdb_id (a_pdb_id: ARRAY [NATURAL_8])
 			-- Set `pdb_id` with `a_pdb_id`
 		require
-			valid_length: a_pdb_id.count = 5
+			valid_length: a_pdb_id.count = 20
 		do
 			pdb_id := a_pdb_id
 		end
@@ -65,7 +65,7 @@ feature -- Change Element
 	set_referenced_type_system_tables (a_references: ARRAY [NATURAL_8])
 			-- Set `referenced_type_system_tables` with `a_references`.
 		require
-			valid_length: a_references.count = 2
+			valid_length: a_references.count = 8
 		do
 			create referenced_type_system_tables.make_from_array (a_references)
 		end
@@ -81,41 +81,26 @@ feature -- Managed Pointer
 	item: CLI_MANAGED_POINTER
 			-- write the items to the buffer in  little-endian format.
 		local
-			l_data: ARRAY [NATURAL_8]
-			i: INTEGER
 		do
 			create Result.make (size_of)
 
 				-- pdb-id
+			check pdb_id.count = 20 end
 			Result.put_natural_8_array (pdb_id)
 
 				-- entry_point
 			Result.put_integer_32 (entry_point)
 
 				-- referenced_type_system_tables
+			check referenced_type_system_tables.count = 8 end
 			Result.put_natural_8_array (referenced_type_system_tables)
 
 				-- type_system_table_rows
-				-- Convert the type_system_table_rows into an array of
-				-- natural_8 `l_data`
-				-- put_natural_8_array
-
-			create l_data.make_filled (0, 1, type_system_table_rows.count * 4)
-			from
-			    i := 1
-			until
-			    i > type_system_table_rows.count
+			across
+				type_system_table_rows as ic
 			loop
-			        -- convert NATURAL_32 into four NATURAL_8s
-			    l_data [(i - 1) * 4 + 1] := (type_system_table_rows [i] |>> 24).to_natural_8          -- 1st
-			    l_data [(i - 1) * 4 + 2] := ((type_system_table_rows [i] |>> 16) & 0xFF).to_natural_8 -- 2nd
-			    l_data [(i - 1) * 4 + 3] := ((type_system_table_rows [i] |>> 8) & 0xFF).to_natural_8  -- 3rd
-			    l_data [(i - 1) * 4 + 4] := (type_system_table_rows [i] & 0xFF).to_natural_8          -- 4th
-			    i := i + 1
+				Result.put_natural_32 (ic.item)
 			end
-
-			Result.put_natural_8_array (l_data)
-
 		ensure
 			item.position = size_of
 		end
@@ -130,15 +115,17 @@ feature -- Measurement
 			create s.make
 
 				-- pdb_id
+			check pdb_id.count = 20 end
 			s.put_natural_8_array (pdb_id.count)
 
 				-- entry_point
 			s.put_integer_32
 
 				-- referenced_type_system_tables
+			check referenced_type_system_tables.count = 8 end
 			s.put_natural_8_array (referenced_type_system_tables.count)
 
-				-- type_system_table_rows
+				-- type_system_table_rows	
 			s.put_natural_8_array (type_system_table_rows.count * 4)
 
 			Result := s

@@ -38,12 +38,6 @@ feature -- Access
 
 feature -- Change Element
 
-	random_guid
-			-- Set `guid` with a random guid.
-		do
-			guid := new_random_guid
-		end
-
 	set_age (a_age: INTEGER)
 			-- Set `age` with `a_age`
 		do

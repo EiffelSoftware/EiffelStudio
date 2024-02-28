@@ -826,36 +826,47 @@ feature {MD_EMIT} -- Implementation
 			Result := l_current_rva.to_natural_32
 		end
 
-
 	update_pdb_stream
 			-- Update the current pdb stream with
 			-- ReferencedTypeSystemTables and TypeSystemTableRows
 
 		local
 			l_md_tables: like {PE_GENERATOR}.tables
-			i,n: INTEGER
+			i,j,n,l_upper: INTEGER
 			l_referenced_type_system_tables: ARRAY [NATURAL_8]
 			l_type_system_table_rows: ARRAYED_LIST [NATURAL_32]
 		do
 				-- Compute the ReferencedTypeSystemTables and TypeSystemTableRows
-			create l_referenced_type_system_tables.make_filled (0, 1, 2)
+				-- the PDB has 8 relevant MD tables
+				--	0x30 Document
+				--	0x31 MethodDebugInformation
+				--	0x32 LocalScope
+				--	0x33 LocalVariable
+				--	0x34 LocalConstant
+				--	0x35 ImportScope
+				--	0x36 StateMachineMethod
+				--	0x37 CustomDebugInformation
+			create l_referenced_type_system_tables.make_filled (0, 1, 8) -- 1-based index.
 			create l_type_system_table_rows.make (1)
 			l_md_tables := tables
 			from
-			    i := 0
-			    n := l_md_tables.count
+				i := 0x30 --l_md_tables.lower +
+				l_upper := 0x37 --l_md_tables.upper
+				j := 1 -- 1-based index
+				n := 0 -- the number of bits that are 1 in l_referenced_type_system_tables
 			until
-			    i >= n
+				i >= l_upper
 			loop
-			    if not l_md_tables [i].is_empty and is_known_pdb_table(i) then
-			       	 	-- Update the bit vector using bit or.
-			        l_referenced_type_system_tables [i // 8 + 1] := l_referenced_type_system_tables [i // 8 + 1] | ({NATURAL_8}1 |<< (i.to_natural_8 \\ 8))
+				if not l_md_tables [i].is_empty and is_known_pdb_table (i) then
+						-- Update the bit vector using bit or.
+					l_referenced_type_system_tables [j] := {NATURAL_8} 1
 
-			        	-- Update the l_type_system_table_rows array
- 			       l_type_system_table_rows [i + 1] := l_md_tables [i].size
-
-			    end
-			    i := i + 1
+						-- Update the l_type_system_table_rows array
+					l_type_system_table_rows.force (l_md_tables [i].size)
+					n := n + 1
+				end
+				j := j + 1
+				i := i + 1
 			end
 				-- Update pdb stream
 			pdb_stream.set_referenced_type_system_tables (l_referenced_type_system_tables)
@@ -866,8 +877,8 @@ feature {NONE} -- Implementation
 
 	is_known_pdb_table (i: INTEGER): BOOLEAN
 		do
-	        Result := ({PDB_TABLES}.tKnownTablesMask.bit_and ({NATURAL_64} 1 |<< i.to_integer_32)) /= 0
-    	end
+			Result := ({PDB_TABLES}.tKnownTablesMask.bit_and ({NATURAL_64} 1 |<< i.to_integer_32)) /= 0
+		end
 
 	new_random_guid: ARRAY [NATURAL_8]
 			-- Create a random GUID.

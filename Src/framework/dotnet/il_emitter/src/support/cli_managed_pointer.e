@@ -86,6 +86,12 @@ feature -- Change
 			position := position + {PLATFORM}.natural_8_bytes
 		end
 
+	put_natural_32 (v: NATURAL_32)
+		do
+			mp.put_natural_32_le (v, position)
+			position := position + {PLATFORM}.natural_32_bytes
+		end
+
 	put_integer_32 (v: INTEGER_32)
 		do
 			mp.put_integer_32_le (v, position)

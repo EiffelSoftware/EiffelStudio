@@ -22,9 +22,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	META_SIG: NATURAL_32 = 0x424A5342
+	META_SIG: NATURAL_32 = 0x424A5342 -- BSJB
 
-	singature: NATURAL_32
+	signature: NATURAL_32
 
 	major: NATURAL_16
 
@@ -37,9 +37,9 @@ feature -- Element Change
 	set_signature (a_val: NATURAL)
 			-- Set `signature` with `a_val`.
 		do
-			singature := a_val
+			signature := a_val
 		ensure
-			signature_set: singature = a_Val
+			signature_set: signature = a_Val
 		end
 
 	set_major (a_val: NATURAL_16)
@@ -76,7 +76,7 @@ feature -- Managed Pointer
 			l_pos := 0
 
 				--signature
-			Result.put_natural_32_le (singature, l_pos)
+			Result.put_natural_32_le (signature, l_pos)
 			l_pos := l_pos + {PLATFORM}.natural_32_bytes
 
 				--major

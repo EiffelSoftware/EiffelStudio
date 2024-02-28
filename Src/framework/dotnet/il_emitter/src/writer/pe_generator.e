@@ -20,23 +20,28 @@ feature {NONE} -- Initalizatiob
 	make
 			-- Creation procedure to instance a new object.
 		do
-			create guid.make
-			create blob.make
-			create us.make
-			create strings.make
-			create stream_headers.make_filled (0, 5, 2)
-			create tables_header
-			create string_map.make (0)
-			initialize_metadata_tables
-			create pdb_stream.make
-			is_pe_generator := True
+			set_is_pe_generator (True)
+			initialize
 		end
 
 	make_pdb
 			-- Creation procedure to instance a new object.
 		do
-			make
-			is_pe_generator := False
+			set_is_pdb_generator (True)
+			initialize
+		end
+
+	initialize
+		do
+			create stream_headers.make_filled (0, streams_count, 2)
+			create guid.make
+			create blob.make
+			create us.make
+			create strings.make
+			create tables_header
+			create string_map.make (0)
+			initialize_metadata_tables
+			create pdb_stream.make
 		end
 
 	initialize_metadata_tables
@@ -58,12 +63,36 @@ feature {NONE} -- Initalizatiob
 
 feature -- Constant
 
-	RTV_STRING: STRING = "v4.0.30319"
+	version_string: STRING
+			-- PE or PDB version string (after the BSJB binary sequence)
+		do
+			if is_pe_generator then
+				Result := Runtime_version_STRING
+			else
+				check is_pdb_generator end
+				Result := PDB_version_string
+			end
+		end
+
+	Runtime_version_STRING: STRING = "v4.0.30319"
 			--this is a CUSTOM version string for microsoft.
 			--standard CIL differs
 			--| The Version string shall be 'Standard CLI 2005' 
 			--| for any file that is intended to be executed on any
 			--| conforming implementation of the CLI
+
+	PDB_version_string: STRING = "PDB v1.0"
+
+feature -- Streams indexes
+
+	streams_count: INTEGER
+
+	stream_pdb_index: INTEGER  -- #Pdb
+	stream_tilda_index: INTEGER  -- #~
+	stream_strings_index: INTEGER  -- #Strings
+	stream_us_index: INTEGER  -- #US
+	stream_guid_index: INTEGER  -- #GUID
+	stream_blob_index: INTEGER  -- #Blob
 
 feature -- Access / table
 
@@ -133,21 +162,26 @@ feature -- Access / streams
 
 	stream_headers: ARRAY2 [NATURAL_32]
 			-- defined as streamHeaders_[5][2]
-			--|  There are five possible kinds of streams.
-			--| A stream header with name `#Strings` that points to the physical representation of the string heap where
-			--|	identifier strings are stored
-			--| A stream header with name `#US` that points to the physical representation
-			--| of the user string heap
-			--| A stream header with name `#Blob` that points to the physical representation of the blob heap,
-			--| A stream header with name `#GUID` that points to the physical representation of the GUID heap and
-			--| A stream header with name `#~` that points to the physical representation of a set of tables.
+			--| There are five possible kinds of streams.
+			--| - stream header with name `#~` that points to the physical representation of a set of tables.			
+			--| - stream header with name `#Strings` that points to the physical representation of the
+			--|     strings heap where identifier strings are stored
+			--| - stream header with name `#US` that points to the physical representation of the
+			--|     user strings heap
+			--| - stream header with name `#Blob` that points to the physical representation of the blob heap,
+			--| - stream header with name `#GUID` that points to the physical representation of the GUID heap
+			--|
+			--| And for PDB file generation, an additional stream (at first position):
+			--| - stream header with name `#Pdb` that points to the PDB debugging data.
 
 	stream_names: ARRAY [STRING_32]
 		do
-				-- TODO: for PDB, it should also include #Pdb ?
-			Result := {ARRAY [STRING_32]} <<"#~", "#Strings", "#US", "#GUID", "#Blob">>
-		ensure
-			instance_free: class
+			if is_pe_generator then
+				Result := {ARRAY [STRING_32]} <<"#~", "#Strings", "#US", "#GUID", "#Blob">>
+			else
+				check is_pdb_generator end
+				Result := {ARRAY [STRING_32]} <<"#Pdb", "#~", "#Strings", "#US", "#GUID", "#Blob">>
+			end
 		end
 
 	default_us: ARRAY [NATURAL_8]
@@ -182,13 +216,51 @@ feature -- Access / streams
 	pdb_stream: CLI_PDB_STREAM
 			-- #Pdb only used when generate a pdb stream
 
-
-feature -- Sizes
-
 feature -- Status report
 
-	is_pe_generator: BOOLEAN
+	is_pe_generator: BOOLEAN assign set_is_pe_generator
 			-- Is pe generator?
+		do
+			Result := not is_pdb_generator
+		end
+
+	is_pdb_generator: BOOLEAN assign set_is_pdb_generator
+			-- Is PDB generator?
+
+feature -- Status settings
+
+	set_is_pe_generator (b: BOOLEAN)
+		do
+			set_is_pdb_generator (not b)
+		ensure
+			is_pe_generator = b
+			b implies stream_blob_index = 5
+		end
+
+	set_is_pdb_generator (b: BOOLEAN)
+		local
+			i: INTEGER
+		do
+			is_pdb_generator := b
+			if b then
+				i := 1
+			else
+				i := 0
+			end
+			stream_pdb_index := i
+			stream_tilda_index := i + 1
+			stream_strings_index := i + 2
+			stream_us_index := i + 3
+			stream_guid_index := i + 4
+			stream_blob_index := i + 5
+
+			streams_count := stream_blob_index
+		ensure
+			is_pdb_generator = b
+			b implies stream_blob_index = 6
+		end
+
+feature -- Sizes			
 
 	us_heap_size: NATURAL_32
 			-- User string heap size.
@@ -576,10 +648,9 @@ feature {MD_EMIT} -- Implementation
 			instance_free: class
 		end
 
-	compute_rtv_string_size: NATURAL
+	compute_version_string_size: NATURAL
 		do
-			fixme ("To double check this works as expected")
-			Result := (rtv_string.count + 1).to_natural_32
+			Result := (version_string.count + 1).to_natural_32
 		end
 
 	compute_metadata_size: NATURAL_32
@@ -608,10 +679,8 @@ feature {MD_EMIT} -- Implementation
 				-- metadata header offest
 				-- Signature + Major Version + MinorVersion + Reserved + Length
 
-			l_current_rva := l_current_rva + compute_rtv_string_size
-				-- Version.
-				--| The Version string shall be
-				--| Standard CLI 2005
+			l_current_rva := l_current_rva + compute_version_string_size
+				-- Version (PE or PDB)
 
 			if (l_current_rva \\ 4) /= 0 then
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
@@ -627,20 +696,24 @@ feature {MD_EMIT} -- Implementation
 
 				-- StreamHeaders. Array of n StreamHdr structures
 				-- "#~", "#Strings", "#US", "#GUID", "#Blob"
-				--   1 ,      2    ,   3  ,     4  ,    5
 			across stream_names as elem loop
 				l_current_rva := l_current_rva + 8 + (elem.count + 1).to_natural_32
 				if (l_current_rva \\ 4) /= 0 then
 					l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 				end
 			end
-			l_stream_headers [1, 1] := l_current_rva
-
+			if is_pdb_generator then
+				l_stream_headers [stream_pdb_index, 1] := l_current_rva
+				l_current_rva := l_current_rva + pdb_stream.size_of.to_natural_32 -- TODO: check
+				l_stream_headers [stream_tilda_index, 1] := l_current_rva
+			else
+				l_stream_headers [stream_tilda_index, 1] := l_current_rva
+			end
 
 -- Double check how to filter this code for PDB file generator.
 -- table_header is not used see https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md
 
-			if  is_pe_generator then
+			if is_pe_generator then
 				l_tables_header.major_version := 2
 				l_tables_header.reserved2 := 1
 -- Why having Event and Property sorted? anyway, the Eiffel compiler does not use them.
@@ -663,6 +736,10 @@ feature {MD_EMIT} -- Implementation
 			end
 
 			create l_counts.make_filled (0, 1, Max_tables + Extra_indexes)
+			-- TODO check for PDB ...
+			if is_pdb_generator then
+				l_counts [t_pdb + 1] := pdb_stream.size_of.to_natural_32
+			end
 			l_counts [t_string + 1] := strings_heap_size
 			l_counts [t_us + 1] := us_heap_size
 			l_counts [t_guid + 1] := guid_heap_size
@@ -706,16 +783,16 @@ feature {MD_EMIT} -- Implementation
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
 
-			l_stream_headers [1, 2] := l_current_rva - l_stream_headers [1, 1]
-			l_stream_headers [2, 1] := l_current_rva
+			l_stream_headers [stream_tilda_index, 2] := l_current_rva - l_stream_headers [stream_tilda_index, 1]
+			l_stream_headers [stream_strings_index, 1] := l_current_rva
 			l_current_rva := l_current_rva + strings.size
 
 			if (l_current_rva \\ 4) /= 0 then
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
 
-			l_stream_headers [2, 2] := l_current_rva - l_stream_headers [2, 1]
-			l_stream_headers [3, 1] := l_current_rva
+			l_stream_headers [stream_strings_index, 2] := l_current_rva - l_stream_headers [stream_strings_index, 1]
+			l_stream_headers [stream_us_index, 1] := l_current_rva
 			if us.size = 0 then
 				l_current_rva := l_current_rva + default_us.count.to_natural_32
 					-- US May be empty in our implementation we put an empty string there
@@ -728,23 +805,23 @@ feature {MD_EMIT} -- Implementation
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
 
-			l_stream_headers [3, 2] := l_current_rva - l_stream_headers [3, 1]
-			l_stream_headers [4, 1] := l_current_rva
+			l_stream_headers [stream_us_index, 2] := l_current_rva - l_stream_headers [stream_us_index, 1]
+			l_stream_headers [stream_guid_index, 1] := l_current_rva
 			l_current_rva := l_current_rva + guid.size
 
 			if (l_current_rva \\ 4) /= 0 then
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
 
-			l_stream_headers [4, 2] := l_current_rva - l_stream_headers [4, 1]
-			l_stream_headers [5, 1] := l_current_rva
+			l_stream_headers [stream_guid_index, 2] := l_current_rva - l_stream_headers [stream_guid_index, 1]
+			l_stream_headers [stream_blob_index, 1] := l_current_rva
 			l_current_rva := l_current_rva + blob.size
 
 			if (l_current_rva \\ 4) /= 0 then
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
 
-			l_stream_headers [5, 2] := l_current_rva - l_stream_headers [5, 1]
+			l_stream_headers [stream_blob_index, 2] := l_current_rva - l_stream_headers [stream_blob_index, 1]
 
 			Result := l_current_rva.to_natural_32
 		end
@@ -787,12 +864,10 @@ feature {MD_EMIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	is_known_pdb_table(i: INTEGER): BOOLEAN
-   	 do
-
-        Result := ({PDB_TABLES}.tKnownTablesMask.bit_and ({NATURAL_64} 1 |<< i.to_integer_32)) /= 0
-    end
-
+	is_known_pdb_table (i: INTEGER): BOOLEAN
+		do
+	        Result := ({PDB_TABLES}.tKnownTablesMask.bit_and ({NATURAL_64} 1 |<< i.to_integer_32)) /= 0
+    	end
 
 	new_random_guid: ARRAY [NATURAL_8]
 			-- Create a random GUID.

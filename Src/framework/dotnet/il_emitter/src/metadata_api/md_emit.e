@@ -172,7 +172,6 @@ feature -- Access
 			Result := pdb_writer.compute_metadata_size.to_integer_32
 		end
 
-
 feature -- Pre-Save
 
 	prepare_to_save (fn: READABLE_STRING_GENERAL)
@@ -249,11 +248,9 @@ feature -- Save
 				-- This code also writes the PE_DOTNET_META_HEADER
 				-- see II.24.2 File headers, II.24.2.1 Metadata root
 				-- https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297
-				-- and the rtv_string.
+				-- and the version_string.
 
-				-- TODO update pe_write pdb_writer.
-			-- write_metadata_headers (pdb_writer, f)
-			-- write_pdb_streams (todo)
+			write_metadata_headers (pdb_writer, f)
 			write_pdb_streams (pdb_writer, f)
 			write_tables (pdb_writer, f)
 			write_strings (pdb_writer, f)
@@ -284,6 +281,9 @@ feature {NONE} -- Implementation
 			j,m: NATURAL_32
 		do
 			create l_counts.make_filled (0, 1, max_tables + extra_indexes)
+			if a_writer.is_pdb_generator then
+				l_counts [t_pdb + 1] := a_writer.pdb_stream.size_of.to_natural_32 -- TODO: check if this is correct				
+			end
 			l_counts [t_string + 1] := a_writer.strings_heap_size
 			l_counts [t_us + 1] := a_writer.us_heap_size
 			l_counts [t_guid + 1] := a_writer.guid_heap_size
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 			l_flags: NATURAL_16
 			l_data: NATURAL_16
 			l_names: STRING_32
-			l_rvt_string: STRING_32
+			l_version_string: STRING_32
 			stream_headers: ARRAY2 [NATURAL_32]
 		do
 				--| TODO: check if we need to use
@@ -426,19 +426,19 @@ feature {NONE} -- Implementation
 			align (a_file, 4)
 			put_metadata_headers (a_file, a_writer.meta_header1)
 			stream_headers := a_writer.stream_headers
-			l_rvt_string := a_writer.rtv_string + "%U"
-			n := l_rvt_string.count
+			l_version_string := a_writer.version_string + "%U"
+			n := l_version_string.count
 			if n \\ 4 /= 0 then
 				n := n + 4 - (n \\ 4)
 			end
 			a_file.put_integer_32 (n)
-			a_file.put_string (l_rvt_string.to_string_8)
+			a_file.put_string (l_version_string.to_string_8)
 			align (a_file, 4)
 			l_flags := 0
 			a_file.put_natural_16 (0)
 			l_data := 5
 			a_file.put_natural_16 (l_data)
-			across 1 |..| 5 as i loop
+			across 1 |..| a_writer.streams_count as i loop
 
 					-- TODO double check
 					-- C++ code uses put(&streamHeaders_[i][0], 4);
@@ -456,6 +456,7 @@ feature {NONE} -- Implementation
 						> 0
 					)
 				then
+					check a_writer.is_pe_generator end
 						-- When using FieldPointer or MethodPointer tables, #~ should be #-
 					l_names := "#-"
 				end

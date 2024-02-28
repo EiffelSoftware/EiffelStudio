@@ -266,6 +266,25 @@ feature -- Save
 			check valid_size: l_expected_size = f.count end
 		end
 
+	update_pdb_stream_pdb_id (a_guid: ARRAY [NATURAL_8])
+			-- Update the pdb_id using a GUID `a_guid`.
+		do
+			pdb_writer.pdb_stream.set_pdb_id (a_guid)
+		end
+
+	update_pdb_stream_entry_point (a_entry_point: INTEGER)
+			-- Update the pdb entry_point with `a_entry_point`
+		do
+			pdb_writer.pdb_stream.set_entry_point (a_entry_point)
+		end
+
+	update_pdb_stream
+			-- Update the current pdb stream with
+			-- ReferencedTypeSystemTables and TypeSystemTableRows
+		do
+			pdb_writer.update_pdb_stream
+		end
+
 feature {NONE} -- Implementation
 
 	write_tables (a_writer: PE_GENERATOR; a_file: FILE)

@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 
 		local
 			l_characteristics: INTEGER_16
-			l_code_view: CLI_CODE_VIEW
 		do
 			is_debug_enabled := True
 			is_valid := True

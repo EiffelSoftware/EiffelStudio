@@ -132,7 +132,7 @@ feature -- Definition
 			end
 
 			l_idx := md_emit.next_pdb_table_index ({PDB_TABLES}.tmethoddebuginformation)
-
+			is_successful := True
 		end
 
 note

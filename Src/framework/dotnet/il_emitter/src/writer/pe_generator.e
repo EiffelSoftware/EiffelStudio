@@ -827,7 +827,7 @@ feature {MD_EMIT} -- Implementation
 		end
 
 
-	update_pdb_stream (a_pdb_stream: CLI_PDB_STREAM)
+	update_pdb_stream
 			-- Update the current pdb stream with
 			-- ReferencedTypeSystemTables and TypeSystemTableRows
 
@@ -858,8 +858,8 @@ feature {MD_EMIT} -- Implementation
 			    i := i + 1
 			end
 				-- Update pdb stream
-			a_pdb_stream.set_referenced_type_system_tables (l_referenced_type_system_tables)
-			a_pdb_stream.set_type_system_table_rows (l_type_system_table_rows.to_array)
+			pdb_stream.set_referenced_type_system_tables (l_referenced_type_system_tables)
+			pdb_stream.set_type_system_table_rows (l_type_system_table_rows.to_array)
 		end
 
 feature {NONE} -- Implementation

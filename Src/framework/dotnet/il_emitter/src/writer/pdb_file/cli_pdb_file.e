@@ -107,6 +107,8 @@ feature -- Saving
 
 
 			if emitter.appending_to_file_supported then
+					-- Update the pdb metadata tables.
+				emitter.update_pdb_stream
 				emitter.append_to_pdb_file (l_pdb_file)
 			else
 				-- Save the metadata to `l_pe_file'. We cannot use `MD_EMIT.assembly_memory'

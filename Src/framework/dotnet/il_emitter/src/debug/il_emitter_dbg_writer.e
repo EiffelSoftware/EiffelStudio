@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 
 			file_name := name.string_32
 
+			initialize_code_view
 			current_method_token := -1
 			is_closed := False
 			is_successful := True
@@ -51,6 +52,7 @@ feature -- Access
 
 	entry_point_token: INTEGER
 
+	associated_code_view:  CLI_CODE_VIEW
 
 feature -- Update
 
@@ -59,6 +61,9 @@ feature -- Update
 		local
 			l_pdb_file: CLI_PDB_FILE
 		do
+				-- update pdb_stream entry point and pdb_id
+			emitter.update_pdb_stream_pdb_id (associated_code_view.guid)
+			emitter.update_pdb_stream_entry_point (entry_point_token)
 			create l_pdb_file.make (associated_pdb_file_name.name, emitter)
 			l_pdb_file.save
 			is_successful := True
@@ -128,19 +133,10 @@ feature -- PE file data
 
 	debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY_I): MANAGED_POINTER
 			-- Retrieve debug info required to be inserted in PE file.
-		local
-			l_code_view: CLI_CODE_VIEW
 		do
-			l_code_view := associated_code_view
-			if l_code_view = Void then
-				create l_code_view.make (associated_pdb_file_name)
-				associated_code_view := l_code_view
-			end
-			Result := l_code_view.item.managed_pointer
+			Result := associated_code_view.item.managed_pointer
 			is_successful := True
 		end
-
-	associated_code_view: detachable CLI_CODE_VIEW
 
 feature -- Status report
 
@@ -275,6 +271,13 @@ feature -- Settings
 
 
 feature {NONE} -- Implementation
+
+
+	initialize_code_view
+			-- Initialize associated code view.
+		do
+			create associated_code_view.make (associated_pdb_file_name)
+		end
 
 	associated_pdb_file_name: PATH
 		local

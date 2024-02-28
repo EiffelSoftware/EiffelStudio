@@ -346,29 +346,30 @@ feature {NONE} -- Implementation
 				i >= n
 			loop
 				tb := a_writer.md_table (i.to_natural_32)
-
-					-- TODO: what if l_counts [i + 1] = 0 ?
-				debug ("il_emitter_table")
-					if tb.size /= 0 and l_counts [i + 1] = 0 then check potential_issue: False end end
-				end
-				from
-					j := 1
-					m := tb.size
-				until
-					j > m
-				loop
-					create l_buffer.make_filled (0, 1, 512)
-					l_sz := tb [j].render (l_counts, l_buffer)
-					debug("il_emitter_table")
-						if l_sz /= 0 then
-							print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables[0x" + i.to_natural_8.to_hex_string + "]["+ j.out +"] -> entry size=" + l_sz.out
-								+ " content=" + {MD_DEBUG}.dump_special (l_buffer.to_special, 0, l_sz.to_integer_32) + "%N")
-						end
+				if not tb.is_empty then
+						-- TODO: what if l_counts [i + 1] = 0 ?
+					debug ("il_emitter_table")
+						if tb.size /= 0 and l_counts [i + 1] = 0 then check potential_issue: False end end
 					end
-						-- TODO double check
-						-- this is not efficient.
-					put_subarray (a_file, l_buffer, l_buffer.lower, l_sz.to_integer_32)
-					j := j + 1
+					from
+						j := 1
+						m := tb.size
+					until
+						j > m
+					loop
+						create l_buffer.make_filled (0, 1, 512)
+						l_sz := tb [j].render (l_counts, l_buffer)
+						debug("il_emitter_table")
+							if l_sz /= 0 then
+								print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables[0x" + i.to_natural_8.to_hex_string + "]["+ j.out +"] -> entry size=" + l_sz.out
+									+ " content=" + {MD_DEBUG}.dump_special (l_buffer.to_special, 0, l_sz.to_integer_32) + "%N")
+							end
+						end
+							-- TODO double check
+							-- this is not efficient.
+						put_subarray (a_file, l_buffer, l_buffer.lower, l_sz.to_integer_32)
+						j := j + 1
+					end
 				end
 				i := i + 1
 			end

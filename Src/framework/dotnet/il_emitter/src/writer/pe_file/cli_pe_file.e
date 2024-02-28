@@ -76,19 +76,6 @@ feature {NONE} -- Initialization
 
 			create text_section_header.make (".text")
 
-				--| Note: the following code is to test
-				--| how to generate a debug directory entry in a PE file.
-			if
-				is_debug_enabled and then
-			 	attached {CLI_IMG_DEBUG_DIRECTORY} debug_directory as l_debug_directory
-			 then
-				create l_code_view.make (associated_pdb_file_name)
-				set_debug_information (l_debug_directory, l_code_view.item.managed_pointer)
-				debug ("il_emitter_dbg")
---					build_pdb_file(l_code_view, l_debug_directory)
-				end
-			end
-
 			create reloc_section_header.make (".reloc")
 
 			create iat.make

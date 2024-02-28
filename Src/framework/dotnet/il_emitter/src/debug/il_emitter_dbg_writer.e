@@ -131,10 +131,16 @@ feature -- PE file data
 		local
 			l_code_view: CLI_CODE_VIEW
 		do
-			create l_code_view.make (associated_pdb_file_name)
+			l_code_view := associated_code_view
+			if l_code_view = Void then
+				create l_code_view.make (associated_pdb_file_name)
+				associated_code_view := l_code_view
+			end
 			Result := l_code_view.item.managed_pointer
 			is_successful := True
 		end
+
+	associated_code_view: detachable CLI_CODE_VIEW
 
 feature -- Status report
 

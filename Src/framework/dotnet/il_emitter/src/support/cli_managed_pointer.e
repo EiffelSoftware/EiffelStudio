@@ -116,6 +116,33 @@ feature -- Change
 			position := position + {PLATFORM}.pointer_bytes
 		end
 
+feature -- Debug purpose
+
+	to_bytes_string (nb: INTEGER): STRING_8
+		local
+			n8: NATURAL_8
+			i: INTEGER
+		do
+			if nb > 0 then
+				create Result.make (nb * 3)
+
+				across
+					managed_pointer.read_array (0, nb) as ic
+				loop
+					n8 := ic.item
+					Result.append (n8.to_hex_string)
+					i := i + 1
+					if i > 0 and i \\ 8 = 0 then
+						Result.append_character ('%N')
+					else
+						Result.append_character (' ')
+					end
+				end
+			else
+				create Result.make (0)
+			end
+		end
+
 invariant
 	is_valid_position: position <= count
 

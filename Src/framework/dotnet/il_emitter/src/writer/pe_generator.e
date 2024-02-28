@@ -837,21 +837,13 @@ feature {MD_EMIT} -- Implementation
 			l_type_system_table_rows: ARRAYED_LIST [NATURAL_32]
 		do
 				-- Compute the ReferencedTypeSystemTables and TypeSystemTableRows
-				-- the PDB has 8 relevant MD tables
-				--	0x30 Document
-				--	0x31 MethodDebugInformation
-				--	0x32 LocalScope
-				--	0x33 LocalVariable
-				--	0x34 LocalConstant
-				--	0x35 ImportScope
-				--	0x36 StateMachineMethod
-				--	0x37 CustomDebugInformation
+				-- there is potentially 64 md tables
 			create l_referenced_type_system_tables.make_filled (0, 1, 8) -- 1-based index.
 			create l_type_system_table_rows.make (1)
 			l_md_tables := tables
 			from
-				i := 0x30 --l_md_tables.lower +
-				l_upper := 0x37 --l_md_tables.upper
+				i := l_md_tables.lower
+				l_upper := l_md_tables.upper
 				j := 1 -- 1-based index
 				n := 0 -- the number of bits that are 1 in l_referenced_type_system_tables
 			until
@@ -859,7 +851,7 @@ feature {MD_EMIT} -- Implementation
 			loop
 				if not l_md_tables [i].is_empty and is_known_pdb_table (i) then
 						-- Update the bit vector using bit or.
-					l_referenced_type_system_tables [j] := {NATURAL_8} 1
+					l_referenced_type_system_tables [j // 8 + 1] := l_referenced_type_system_tables [j // 8 + 1] | ({NATURAL_8} 1 |<< (j.to_natural_8 \\ 8))
 
 						-- Update the l_type_system_table_rows array
 					l_type_system_table_rows.force (l_md_tables [i].size)

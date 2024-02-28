@@ -93,7 +93,7 @@ feature -- Definition
 			start_columns, end_lines, end_columns: ARRAY [INTEGER])
 			-- Set sequence points for `document'
 		local
-			i: INTEGER
+			i, j: INTEGER
 			blob_data: ARRAY [NATURAL_8]
 			blob_len: NATURAL_32
 			blob_hash: NATURAL_32
@@ -104,16 +104,18 @@ feature -- Definition
 					-- Build the blob_data from the input arrays
 				create blob_data.make_filled (0, 1, count * 5)
 				from
-					i := 1
+					i := 0
+					j := 1
 				until
-					i > count
+					i >= count
 				loop
-					blob_data [i] := offsets [i].to_natural_8
-					blob_data [i + 1] := start_lines [i].to_natural_8
-					blob_data [i + 2] := start_columns [i].to_natural_8
-					blob_data [i + 3] := end_lines [i].to_natural_8
-					blob_data [i + 4] := end_columns [i].to_natural_8
-					i := i + 5
+					blob_data [j] := offsets [offsets.lower + i].to_natural_8
+					blob_data [j + 1] := start_lines [start_lines.lower + i].to_natural_8
+					blob_data [j + 2] := start_columns [start_columns.lower + i].to_natural_8
+					blob_data [j + 3] := end_lines [end_lines.lower + i].to_natural_8
+					blob_data [j + 4] := end_columns [end_columns.lower + i].to_natural_8
+					j := j + 5
+					i := i + 1
 				end
 
 					-- Compute the blob length

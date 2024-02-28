@@ -32,7 +32,6 @@ feature -- Change
 			create now.make_now_utc
 			error_handler.reset
 
-			write_information_log (generator + ".save_contact_message")
 			create l_parameters.make (9)
 			l_parameters.put (m, "message")
 			l_parameters.put (now, "changed")

@@ -289,7 +289,9 @@ feature {NONE} -- Implementation
 			l_counts [t_guid + 1] := a_writer.guid_heap_size
 			l_counts [t_blob + 1] := a_writer.blob_heap_size
 
-			put_tables_header (a_file, a_writer.tables_header)
+			if a_writer.is_pe_generator then
+				put_tables_header (a_file, a_writer.tables_header)
+			end
 
 				-- Write table size
 			from
@@ -354,8 +356,11 @@ feature {NONE} -- Implementation
 			-- II.24.2.3 #Strings heap
 		require
 			open_write: a_file.is_open_write
+		local
+			l_pdb_stream: CLI_PDB_STREAM
 		do
-			a_file.put_managed_pointer (a_writer.pdb_stream.item.managed_pointer, 0, a_writer.pdb_stream.size_of)
+			l_pdb_stream := a_writer.pdb_stream
+			a_file.put_managed_pointer (l_pdb_stream.item.managed_pointer, 0, l_pdb_stream.size_of)
 			align (a_file, 4)
 		end
 

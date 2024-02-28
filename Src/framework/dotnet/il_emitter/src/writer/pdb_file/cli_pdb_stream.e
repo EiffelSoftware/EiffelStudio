@@ -76,7 +76,6 @@ feature -- Change Element
 			create type_system_table_rows.make_from_array (a_rows)
 		end
 
-
 feature -- Managed Pointer
 
 	item: CLI_MANAGED_POINTER

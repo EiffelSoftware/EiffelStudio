@@ -35,17 +35,9 @@ feature {NONE} -- Initalizatiob
 	make_pdb
 			-- Creation procedure to instance a new object.
 		do
-			create guid.make
-			create blob.make
-			create us.make
-			create strings.make
-			create stream_headers.make_filled (0, 5, 2)
-			create tables_header
-			create string_map.make (0)
-			initialize_metadata_tables
-			create pdb_stream.make
+			make
+			is_pe_generator := False
 		end
-
 
 	initialize_metadata_tables
 			-- Initialize an in-memory metadata tables
@@ -152,6 +144,7 @@ feature -- Access / streams
 
 	stream_names: ARRAY [STRING_32]
 		do
+				-- TODO: for PDB, it should also include #Pdb ?
 			Result := {ARRAY [STRING_32]} <<"#~", "#Strings", "#US", "#GUID", "#Blob">>
 		ensure
 			instance_free: class

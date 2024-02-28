@@ -47,7 +47,7 @@ feature -- Status
 			-- Is Current PE file still valid, i.e. not yet saved to disk?
 
 
-	file_name: READABLE_STRING_32
+	file_name: IMMUTABLE_STRING_32
 			-- Name of current Pdb file on disk.
 
 	has_strong_name: BOOLEAN
@@ -81,7 +81,7 @@ feature -- Saving
 
 	save
 		local
-			l_pe_file, l_meta_data_file: RAW_FILE
+			l_pdb_file, l_meta_data_file: RAW_FILE
 			l_padding: MANAGED_POINTER
 			l_strong_name_location: INTEGER
 			l_size: INTEGER
@@ -99,15 +99,15 @@ feature -- Saving
 			compute_sizes
 
 				-- Write to file now.
-			create l_pe_file.make_with_name (file_name)
-			l_pe_file.open_write
+			create l_pdb_file.make_with_name (file_name)
+			l_pdb_file.open_write
 
 				-- First the headers
 			-- l_pe_file.put_managed_pointer (dos_header, 0, dos_header.count)
 
 
 			if emitter.appending_to_file_supported then
-				emitter.append_to_pdb_file (l_pe_file)
+				emitter.append_to_pdb_file (l_pdb_file)
 			else
 				-- Save the metadata to `l_pe_file'. We cannot use `MD_EMIT.assembly_memory'
 				-- because on some platforms the amount of required memory cannot be allocated
@@ -120,34 +120,32 @@ feature -- Saving
 				create l_meta_data_file.make_with_name (l_meta_data_file_name)
 				l_meta_data_file.open_read
 				check valid_size: l_meta_data_file.count = meta_data_size end
-				l_meta_data_file.copy_to (l_pe_file)
+				l_meta_data_file.copy_to (l_pdb_file)
 				l_meta_data_file.close
 				safe_delete (l_meta_data_file)
 			end
 			debug ("il_emitter")
-				print ({STRING_32} "PE file saving: " + {MD_DBG_CHRONO}.report ("pe_file") + "%N")
+				print ({STRING_32} "PDB file saving: " + {MD_DBG_CHRONO}.report ("pdb_file") + "%N")
 			end
 
-
-
-			l_pe_file.close
+			l_pdb_file.close
 			is_valid := False
 
 			if
 				has_strong_name
 			then
-				create l_pe_file.make_with_name (file_name)
-				l_pe_file.open_read
-				create l_padding.make (l_pe_file.count)
-				l_pe_file.read_to_managed_pointer (l_padding, 0, l_padding.count)
-				l_pe_file.close
+				create l_pdb_file.make_with_name (file_name)
+				l_pdb_file.open_read
+				create l_padding.make (l_pdb_file.count)
+				l_pdb_file.read_to_managed_pointer (l_padding, 0, l_padding.count)
+				l_pdb_file.close
 
 				create l_uni_string.make (file_name)
 
-				create l_pe_file.make_with_name (file_name)
-				l_pe_file.open_write
-				l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
-				l_pe_file.close
+				create l_pdb_file.make_with_name (file_name)
+				l_pdb_file.open_write
+				l_pdb_file.put_managed_pointer (l_padding, 0, l_padding.count)
+				l_pdb_file.close
 			end
 		end
 

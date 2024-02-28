@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 				to_implement ("TODO double check current implementation")
 			end
 
-			file_name := name
+			file_name := name.string_32
 
 			current_method_token := -1
 			is_closed := False
@@ -47,7 +47,7 @@ feature -- Access
 
 	current_variables_scope: NATURAL_32
 
-	file_name: CLI_STRING
+	file_name: IMMUTABLE_STRING_32
 
 	entry_point_token: INTEGER
 
@@ -59,7 +59,7 @@ feature -- Update
 		local
 			l_pdb_file: CLI_PDB_FILE
 		do
-			create l_pdb_file.make (file_name.string_32, emitter)
+			create l_pdb_file.make (associated_pdb_file_name.name, emitter)
 			l_pdb_file.save
 			is_successful := True
 		end
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			fn: READABLE_STRING_32
 			p: PATH
 		do
-			fn := file_name.string_32
+			fn := file_name
 			create p.make_from_string (fn)
 			if attached p.extension as ext then
 				create p.make_from_string (fn.head (fn.count - ext.count - 1))

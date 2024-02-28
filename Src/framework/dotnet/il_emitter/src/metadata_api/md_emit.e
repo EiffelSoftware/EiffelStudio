@@ -36,7 +36,7 @@ feature {NONE}
 
 				-- Using PE_GENERATOR to get access helper features.
 			create pe_writer.make
-			create pdb_writer.make
+			create pdb_writer.make_pdb
 			initialize_module_guid
 			initialize_compilation_unit
 

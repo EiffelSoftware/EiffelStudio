@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 
 			i := a_file_name.last_index_of ('.', a_file_name.count)
 			if i > 0 then
-				f_ext := a_file_name.substring (i + 1, a_file_name.count).to_string_8 -- It is unexpected to be Unicode extension here.
+				f_ext := a_file_name.substring (i + 1, a_file_name.count).to_string_8 -- Unicode extension string is not expected
 			else
 				check module_file_name_has_extension: False end
 				f_ext := "dll" -- Default
@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 
 			i := a_module_name_with_extension.last_index_of ('.', a_module_name_with_extension.count)
 			if i > 0 then
-				ext := a_module_name_with_extension.substring (i + 1, a_module_name_with_extension.count)
+				ext := a_module_name_with_extension.substring (i + 1, a_module_name_with_extension.count).to_string_8 -- Unicode extension string is not expected
 				if ext.is_case_insensitive_equal ("exe") or ext.is_case_insensitive_equal ("dll") then
 					module_name_with_extension := a_module_name_with_extension
 					module_name := a_module_name_with_extension.substring (1, i - 1)

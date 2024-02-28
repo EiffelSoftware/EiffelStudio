@@ -312,27 +312,30 @@ feature {NONE} -- Implementation
 
 			if a_writer.is_pe_generator then
 				put_tables_header (a_file, a_writer.tables_header)
-			end
 
-				-- Write table size
-			from
-				i := 0
-				n := max_tables
-			until
-				i >= n
-			loop
-				tb := a_writer.md_table (i.to_natural_32)
-				l_sz := tb.size
-				debug("il_emitter_table")
-					if l_sz /= 0 then
-						print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables: Table #" + i.to_natural_8.to_hex_string + " -> count=" + l_sz.out + "%N")
+					-- Write table size
+				from
+					i := 0
+					n := max_tables
+				until
+					i >= n
+				loop
+					tb := a_writer.md_table (i.to_natural_32)
+					l_sz := tb.size
+					debug("il_emitter_table")
+						if l_sz /= 0 then
+							print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables: Table #" + i.to_natural_8.to_hex_string + " -> count=" + l_sz.out + "%N")
+						end
 					end
+					l_counts [i + 1] := l_sz
+					if l_sz /= 0 then
+						a_file.put_natural_32 (l_sz)
+					end
+					i := i + 1
 				end
-				l_counts [i + 1] := l_sz
-				if l_sz /= 0 then
-					a_file.put_natural_32 (l_sz)
-				end
-				i := i + 1
+			else
+				check a_writer.is_pdb_generator end
+				-- The table sizes are included in the PDB stream
 			end
 
 				-- Write table entries

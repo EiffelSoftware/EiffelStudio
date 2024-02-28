@@ -22,7 +22,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_name: like file_name; e: like emitter)
-			-- Create new PE file with name `a_name'.
+			-- Create new pdb file with name `a_name'.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 
 		local
 			l_characteristics: INTEGER_16
-			l_code_view: CLI_CODE_VIEW
 		do
 			is_debug_enabled := True
 			is_valid := True
@@ -49,20 +48,7 @@ feature -- Status
 
 
 	file_name: READABLE_STRING_32
-			-- Name of current PE file on disk.
-
-	associated_pdb_file_name: PATH
-		local
-			fn: READABLE_STRING_32
-			p: PATH
-		do
-			fn := file_name
-			create p.make_from_string (fn)
-			if attached p.extension as ext then
-				create p.make_from_string (fn.head (fn.count - ext.count - 1))
-			end
-			Result := p.appended_with_extension ("pdb")
-		end
+			-- Name of current Pdb file on disk.
 
 	has_strong_name: BOOLEAN
 			-- Does current have a strong name signature?
@@ -89,18 +75,6 @@ feature -- Access
 
 	emitter: MD_EMIT
 			-- Meta data emitter, needed for RVA update.
-
---	entry_data: CLI_ENTRY
---			-- Data about entry point.
-
-feature -- Settings
-
-	set_entry_point_token (token: INTEGER)
-			-- Set `token' as entry point of current CLI image.
-		do
-			-- 	Entry point MethodDef token, or 0 if not applicable. The same value as stored in CLI header of the PE file. See ECMA-335-II 15.4.1.
-			-- pdb_stream.set_entry_point_token (token)
-		end
 
 
 feature -- Saving

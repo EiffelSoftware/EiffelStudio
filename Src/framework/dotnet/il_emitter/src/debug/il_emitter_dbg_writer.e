@@ -56,11 +56,12 @@ feature -- Update
 
 	close
 			-- Stop all processing on current.
+		local
+			l_pdb_file: CLI_PDB_FILE
 		do
-			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
-			end
-			is_successful := False
+			create l_pdb_file.make (file_name.string_32, emitter)
+			l_pdb_file.save
+			is_successful := True
 		end
 
 	close_method

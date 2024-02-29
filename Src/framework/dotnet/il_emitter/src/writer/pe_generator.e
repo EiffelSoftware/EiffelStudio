@@ -839,7 +839,6 @@ feature {MD_EMIT} -- Implementation
 			-- Update the current pdb stream with
 			-- ReferencedTypeSystemTables and TypeSystemTableRows
 		local
-			l_md_tables: like {PE_GENERATOR}.tables
 			l_pdb_md_tables: like {PE_GENERATOR}.tables
 			l_pe_md_tables: like {PE_GENERATOR}.tables
 			i,j,n,l_upper: INTEGER
@@ -855,31 +854,32 @@ feature {MD_EMIT} -- Implementation
 			if attached associated_pe as pe then
 				l_pe_md_tables := pe.tables
 			else
+				check has_associated_pe: False end
+					-- when generating PDB , the associated_pe should be set!
 				l_pe_md_tables := l_pdb_md_tables
 			end
 			from
-				i := l_pdb_md_tables.lower
-				l_upper := l_pdb_md_tables.upper
+				i := l_pe_md_tables.lower
+				l_upper := l_pe_md_tables.upper
 				j := 1 -- 1-based index
 				n := 0 -- the number of bits that are 1 in l_referenced_type_system_tables
 			until
 				i >= l_upper
 			loop
 				if is_known_pdb_table (i) then
-					l_md_tables := Void -- the PDB stream only includes the information for the PE tables (not the PDB, see tables header for those)
+						-- the PDB stream only includes the information for the PE tables (not the PDB, see tables header for those)
 				else
-					l_md_tables := l_pe_md_tables
-				end
-				if
-					l_md_tables /= Void and then
-					not l_md_tables [i].is_empty
-				then
-						-- Update the bit vector using bit or.
-					l_referenced_type_system_tables [j // 8 + 1] := l_referenced_type_system_tables [j // 8 + 1] | ({NATURAL_8} 1 |<< ((j-1).to_natural_8 \\ 8))
+					if
+						l_pe_md_tables /= Void and then
+						not l_pe_md_tables [i].is_empty
+					then
+							-- Update the bit vector using bit or.
+						l_referenced_type_system_tables [j // 8 + 1] := l_referenced_type_system_tables [j // 8 + 1] | ({NATURAL_8} 1 |<< ((j-1).to_natural_8 \\ 8))
 
-						-- Update the l_type_system_table_rows array
-					l_type_system_table_rows.force (l_md_tables [i].size)
-					n := n + 1
+							-- Update the l_type_system_table_rows array
+						l_type_system_table_rows.force (l_pe_md_tables [i].size)
+						n := n + 1
+					end
 				end
 				j := j + 1
 				i := i + 1

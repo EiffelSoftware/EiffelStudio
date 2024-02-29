@@ -54,6 +54,8 @@ feature -- Access
 
 	associated_code_view:  CLI_CODE_VIEW
 
+	associated_pdb_checksum: CLI_PDB_CHECKSUM
+
 feature -- Update
 
 	close
@@ -74,7 +76,7 @@ feature -- Update
 				-- FIXME: is this the correct way to truncate SHA256 to 20 Bytes ?
 			l_pdb_id := l_sha256.subarray (l_sha256.lower, l_sha256.lower + 20 - 1)
 			l_pdb_file.update_pdb_stream_pdb_id (l_pdb_id)
-
+			associated_pdb_checksum.set_checksum (l_sha256)
 			is_successful := True
 		end
 
@@ -144,6 +146,7 @@ feature -- PE file data
 			-- Retrieve debug info required to be inserted in PE file.
 		do
 			Result := associated_code_view.item.managed_pointer
+			Result.append (associated_pdb_checksum.item.managed_pointer)
 			is_successful := True
 		end
 
@@ -283,9 +286,10 @@ feature {NONE} -- Implementation
 
 
 	initialize_code_view
-			-- Initialize associated code view.
+			-- Initialize associated code view and pdb checksum
 		do
 			create associated_code_view.make (associated_pdb_file_name)
+			create associated_pdb_checksum.make()
 		end
 
 	associated_pdb_file_name: PATH
@@ -315,13 +319,13 @@ feature {NONE} -- Implementation
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

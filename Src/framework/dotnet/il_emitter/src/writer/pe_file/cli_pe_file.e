@@ -170,6 +170,9 @@ feature -- Access
 				Result := l_result
 				internal_debug_directory := Result
 			end
+			if attached {IL_EMITTER_CLI_DEBUG_DIRECTORY} Result as dbgdir then
+				Result := dbgdir.dbg_directory
+			end
 		end
 
 
@@ -585,7 +588,7 @@ feature {NONE} -- Saving
 				-- debug directory
 			if
 				is_debug_enabled and then
-				attached {CLI_IMG_DEBUG_DIRECTORY}debug_directory as d and then
+				attached {CLI_IMG_DEBUG_DIRECTORY} debug_directory as d and then
 				attached debug_info as i
 			then
 				l_debug_directory := optional_header.directory (

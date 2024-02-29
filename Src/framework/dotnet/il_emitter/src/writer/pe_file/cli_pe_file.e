@@ -12,6 +12,10 @@ class
 
 inherit
 	CLI_PE_FILE_I
+		rename
+			set_debug_information as set_code_view_debug_information,
+			debug_directory as code_view_debug_directory
+		end
 
 	REFACTORING_HELPER
 		export {NONE} all end
@@ -155,26 +159,16 @@ feature -- Status
 
 feature -- Access
 
-	debug_directory: detachable CLI_DEBUG_DIRECTORY_I
-		local
-			l_result : CLI_IMG_DEBUG_DIRECTORY
+	code_view_debug_directory: detachable CLI_DEBUG_DIRECTORY_I
+			-- CodeView debug directory
 		do
-			Result := internal_debug_directory
+			Result := internal_code_view_debug_directory
 			if Result = Void  then
-				create l_result
-				l_result.set_characteristics (0)
-				l_result.set_time_date_stamp ({CLI_TIME}.time (default_pointer))
-				l_result.set_major_version (0)
-				l_result.set_minor_version (0)
-				l_result.set_dbg_type ({CLI_DEBUG_CONSTANTS}.Type_codeview)
-				Result := l_result
-				internal_debug_directory := Result
-			end
-			if attached {IL_EMITTER_CLI_DEBUG_DIRECTORY} Result as dbgdir then
-				Result := dbgdir.dbg_directory
+				check already_has_debug_directory: False end
+				create {IL_EMITTER_CLI_DEBUG_DIRECTORY} Result.make
+				internal_code_view_debug_directory := Result
 			end
 		end
-
 
 	debug_info: detachable MANAGED_POINTER
 			-- Data for storing debug information in PE files.
@@ -191,40 +185,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	build_pdb_file (a_code_view: CLI_CODE_VIEW; a_debug_directory: CLI_IMG_DEBUG_DIRECTORY)
-		local
-			l_file: RAW_FILE
-			l_bac: BYTE_ARRAY_CONVERTER
-			l_cmp: CLI_MANAGED_POINTER
-			l_arr: ARRAY [NATURAL_8]
-		do
-			debug ("il_emitter_dbg")
-				print ("Build PDF file %"" + a_code_view.utf8_path_value + "%": start%N")
-			end
-			create l_file.make_with_path (a_code_view.path)
-			l_file.create_read_write
-
-			a_debug_directory.set_time_date_stamp (l_file.date)
-			create l_bac.make_from_string ("Eiffel.NetCore 2024")
-			l_arr := l_bac.to_natural_8_array
-			create l_cmp.make (32)
-			l_cmp.put_natural_8_array (l_arr)
-			l_cmp.put_padding (32 - l_arr.count, 0)
-
-			l_file.put_managed_pointer (l_cmp.managed_pointer, 0, 32)
-
-			create l_cmp.make (16)
-			l_cmp.put_natural_8_array (a_code_view.guid)
-
-			l_file.put_managed_pointer (l_cmp.managed_pointer, 0, 4)
-			l_file.close
-			debug ("il_emitter_dbg")
-				print ("Build PDF file: completed%N")
-			end
-
-		end
-
-	internal_debug_directory: detachable CLI_DEBUG_DIRECTORY_I
+	internal_code_view_debug_directory: detachable CLI_DEBUG_DIRECTORY_I
 
 feature -- Access
 
@@ -236,10 +197,6 @@ feature -- Access
 
 	code: detachable MANAGED_POINTER
 			-- CLI code instruction stream.
-
---	debug_directory: detachable CLI_DEBUG_DIRECTORY
---	debug_info: detachable MANAGED_POINTER
---			-- Data for storing debug information in PE files.
 
 	strong_name_directory: detachable CLI_DIRECTORY
 	strong_name_info: detachable MANAGED_POINTER
@@ -281,12 +238,12 @@ feature -- Settings
 			cli_header.set_entry_point_token (token)
 		end
 
-	set_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY_I;
+	set_code_view_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY_I;
 			a_debug_info: MANAGED_POINTER)
-			-- Set `debug_directory' to `a_cli_debug_directory' and `debug_info'
+			-- Set `code_view_debug_directory' to `a_cli_debug_directory' and `debug_info'
 			-- to `a_debug_info'.
 		do
-			internal_debug_directory := a_cli_debug_directory
+			internal_code_view_debug_directory := a_cli_debug_directory
 			debug_info := a_debug_info
 		end
 
@@ -358,15 +315,26 @@ feature -- Saving
 			end
 
 
-				-- Debug
+				-- Debug Directory
 			if
 				is_debug_enabled and then
-				attached {CLI_IMG_DEBUG_DIRECTORY} debug_directory as d and then
+				attached {IL_EMITTER_CLI_DEBUG_DIRECTORY} code_view_debug_directory as l_codeview_dbg_dir and then
 				attached debug_info as i
 			then
-				l_pe_file.put_managed_pointer (d.item, 0, d.size_of)
+					-- add DebugDirectory for CodeView
+				l_pe_file.put_managed_pointer (l_codeview_dbg_dir.item, 0, l_codeview_dbg_dir.size_of)
+
+					-- TODO: add DebugDirectory for PdbChecksum
+--				l_pe_file.put_managed_pointer (l_pdbchecksum_dbg_dir.item, 0, l_pdbchecksum_dbg_dir.size_of)
+
+					-- RawData for Codeview
 				l_pe_file.put_managed_pointer (i, 0, i.count)
-				l_size := padding (d.size_of + i.count, 16)
+
+					-- TODO: add RawData for PdbChecksum
+--				l_pe_file.put_managed_pointer (l_pdbchecksum_rawdata, 0, l_pdbchecksum_rawdata.count)
+
+					-- TODO: check padding ... (work in progress)
+				l_size := padding (l_codeview_dbg_dir.size_of + i.count, 16)
 				if l_size > 0 then
 					create l_padding.make (l_size)
 					l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
@@ -497,7 +465,7 @@ feature {NONE} -- Saving
 				-- Debug support for now
 			if
 				is_debug_enabled and then
-				attached {CLI_IMG_DEBUG_DIRECTORY} debug_directory as d and then
+				attached {IL_EMITTER_CLI_DEBUG_DIRECTORY} code_view_debug_directory as d and then
 				attached debug_info as i
 			then
 				debug_size := pad_up (d.size_of + i.count, 16)
@@ -588,7 +556,7 @@ feature {NONE} -- Saving
 				-- debug directory
 			if
 				is_debug_enabled and then
-				attached {CLI_IMG_DEBUG_DIRECTORY} debug_directory as d and then
+				attached {IL_EMITTER_CLI_DEBUG_DIRECTORY} code_view_debug_directory as d and then
 				attached debug_info as i
 			then
 				l_debug_directory := optional_header.directory (

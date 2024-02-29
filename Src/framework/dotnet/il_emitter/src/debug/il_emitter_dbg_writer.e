@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 			file_name := name.string_32
 
-			initialize_code_view
+			initialize_debug_directiory
 			current_method_token := -1
 			is_closed := False
 			is_successful := True
@@ -63,8 +63,6 @@ feature -- Update
 		local
 			l_pdb_file: CLI_PDB_FILE
 			l_sha256, l_pdb_id: ARRAY [NATURAL_8]
-			i: INTEGER
-			f: RAW_FILE
 		do
 				-- update pdb_stream entry point
 
@@ -143,10 +141,9 @@ feature -- Update
 feature -- PE file data
 
 	debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY_I): MANAGED_POINTER
-			-- Retrieve debug info required to be inserted in PE file.
+			-- Retrieve CodeView debug info required to be inserted in PE file.
 		do
 			Result := associated_code_view.item.managed_pointer
-			Result.append (associated_pdb_checksum.item.managed_pointer)
 			is_successful := True
 		end
 
@@ -285,11 +282,11 @@ feature -- Settings
 feature {NONE} -- Implementation
 
 
-	initialize_code_view
+	initialize_debug_directiory
 			-- Initialize associated code view and pdb checksum
 		do
 			create associated_code_view.make (associated_pdb_file_name)
-			create associated_pdb_checksum.make()
+			create associated_pdb_checksum.make
 		end
 
 	associated_pdb_file_name: PATH

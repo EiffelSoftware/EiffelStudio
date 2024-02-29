@@ -20,9 +20,9 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	algorithm_name: ARRAY [NATURAL_8]
-			-- SHA256 <<53 48 41 32 35 36 00>>
-			-- SHA384 <<53 48 41 33 38 34 00>>
-			-- SHA512 <<53 48 41 35 31 32 00>>
+			-- SHA256 <<0x53 0x48 0x41 0x32 0x35 0x36 0x00>>
+			-- SHA384 <<0x53 0x48 0x41 0x33 0x38 0x34 0x00>>
+			-- SHA512 <<0x53 0x48 0x41 0x35 0x31 0x32 0x00>>
 
 
 	checksum: ARRAY[NATURAL_8]
@@ -99,19 +99,19 @@ feature {NONE} -- Implementation
 	sha_256: ARRAY [NATURAL_8]
 			-- Zero-terminated UTF8 string
 		do
-			Result := {ARRAY [NATURAL_8]} <<53, 48, 41, 32, 35, 36, 00>>
+			Result := {ARRAY [NATURAL_8]} <<0x53, 0x48, 0x41, 0x32, 0x35, 0x36, 0x00>>
 		end
 
 	sha_384: ARRAY [NATURAL_8]
 			-- Zero-terminated UTF8 string
 		do
-			Result := {ARRAY [NATURAL_8]} <<53, 48, 41, 33, 38, 34, 00>>
+			Result := {ARRAY [NATURAL_8]} <<0x53, 0x48, 0x41, 0x33, 0x38, 0x34, 0x00>>
 		end
 
 	sha_512: ARRAY [NATURAL_8]
 			-- Zero-terminated UTF8 string
 		do
-			Result := {ARRAY [NATURAL_8]} <<53, 48, 41, 35, 31, 32, 00>>
+			Result := {ARRAY [NATURAL_8]} <<0x53, 0x48, 0x41, 0x35, 0x31, 0x32, 0x00>>
 		end
 
 end

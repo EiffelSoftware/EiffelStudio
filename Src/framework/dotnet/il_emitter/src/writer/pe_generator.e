@@ -24,10 +24,11 @@ feature {NONE} -- Initalizatiob
 			initialize
 		end
 
-	make_pdb
+	make_pdb (a_associated_pe: PE_GENERATOR)
 			-- Creation procedure to instance a new object.
 		do
 			set_is_pdb_generator (True)
+			associated_pe := a_associated_pe
 			initialize
 		end
 
@@ -60,6 +61,11 @@ feature {NONE} -- Initalizatiob
 				i := i + 1
 			end
 		end
+
+feature -- Access
+
+	associated_pe: detachable PE_GENERATOR
+			-- Associated PE file generator when generating PDB content.
 
 feature -- Constant
 
@@ -713,26 +719,29 @@ feature {MD_EMIT} -- Implementation
 -- Double check how to filter this code for PDB file generator.
 -- table_header is not used see https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md
 
+			l_tables_header.major_version := 2
+			l_tables_header.reserved2 := 1
 			if is_pe_generator then
-				l_tables_header.major_version := 2
-				l_tables_header.reserved2 := 1
--- Why having Event and Property sorted? anyway, the Eiffel compiler does not use them.
---			l_tables_header.mask_sorted := 0b0000000000000000000101100000000000110011001001011111101000000000
 
-				l_tables_header.mask_sorted := 0b0000000000000000000101100000000000110011000000011111101000000000
-			--
-				--FIXME: check if size is about rows count, or offset (for Blob)
-				-- See II.24.2.6 #~ stream
-				-- Check size >= 2^16 = 0x1_0000
-				if strings_heap_size >= 0x1_0000 then
-					l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x1
-				end
-				if guid_heap_size >= 0x1_0000 then
-					l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x2
-				end
-				if blob_heap_size >= 0x1_0000 then
-					l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x4
-				end
+-- Why having Event and Property sorted? anyway, the Eiffel compiler does not use them.
+--				l_tables_header.mask_sorted := 0b00000000_00000000_00010110_00000000_00110011_00100101_11111010_00000000
+				l_tables_header.mask_sorted := 0b00000000_00000000_00010110_00000000_00110011_00000001_11111010_00000000
+			else
+				check is_pdb_generator end
+					-- Sorted tables are 0x32 LocalScope  and 0x37 CustomDebugInformation
+				l_tables_header.mask_sorted := 0b00000000_10000100_00000000_00000000_00000000_00000000_00000000_00000000 -- TO CHANGE !
+			end
+			--FIXME: check if size is about rows count, or offset (for Blob)
+			-- See II.24.2.6 #~ stream
+			-- Check size >= 2^16 = 0x1_0000
+			if strings_heap_size >= 0x1_0000 then
+				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x1
+			end
+			if guid_heap_size >= 0x1_0000 then
+				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x2
+			end
+			if blob_heap_size >= 0x1_0000 then
+				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x4
 			end
 
 			create l_counts.make_filled (0, 1, Max_tables + Extra_indexes)
@@ -758,7 +767,7 @@ feature {MD_EMIT} -- Implementation
 				end
 				i := i + 1
 			end
-			l_current_rva := l_current_rva + {PE_DOTNET_META_TABLES_HEADER}.size_of.to_natural_32
+			l_current_rva := l_current_rva + l_tables_header.size_of.to_natural_32
 				-- tables header
 			l_current_rva := l_current_rva + (l_temp * ({PLATFORM}.natural_32_bytes).to_natural_32)
 				-- table counts
@@ -829,9 +838,10 @@ feature {MD_EMIT} -- Implementation
 	update_pdb_stream
 			-- Update the current pdb stream with
 			-- ReferencedTypeSystemTables and TypeSystemTableRows
-
 		local
 			l_md_tables: like {PE_GENERATOR}.tables
+			l_pdb_md_tables: like {PE_GENERATOR}.tables
+			l_pe_md_tables: like {PE_GENERATOR}.tables
 			i,j,n,l_upper: INTEGER
 			l_referenced_type_system_tables: ARRAY [NATURAL_8]
 			l_type_system_table_rows: ARRAYED_LIST [NATURAL_32]
@@ -840,18 +850,32 @@ feature {MD_EMIT} -- Implementation
 				-- there is potentially 64 md tables
 			create l_referenced_type_system_tables.make_filled (0, 1, 8) -- 1-based index.
 			create l_type_system_table_rows.make (1)
-			l_md_tables := tables
+
+			l_pdb_md_tables := tables
+			if attached associated_pe as pe then
+				l_pe_md_tables := pe.tables
+			else
+				l_pe_md_tables := l_pdb_md_tables
+			end
 			from
-				i := l_md_tables.lower
-				l_upper := l_md_tables.upper
+				i := l_pdb_md_tables.lower
+				l_upper := l_pdb_md_tables.upper
 				j := 1 -- 1-based index
 				n := 0 -- the number of bits that are 1 in l_referenced_type_system_tables
 			until
 				i >= l_upper
 			loop
-				if not l_md_tables [i].is_empty and is_known_pdb_table (i) then
+				if is_known_pdb_table (i) then
+					l_md_tables := Void -- the PDB stream only includes the information for the PE tables (not the PDB, see tables header for those)
+				else
+					l_md_tables := l_pe_md_tables
+				end
+				if
+					l_md_tables /= Void and then
+					not l_md_tables [i].is_empty
+				then
 						-- Update the bit vector using bit or.
-					l_referenced_type_system_tables [j // 8 + 1] := l_referenced_type_system_tables [j // 8 + 1] | ({NATURAL_8} 1 |<< (j.to_natural_8 \\ 8))
+					l_referenced_type_system_tables [j // 8 + 1] := l_referenced_type_system_tables [j // 8 + 1] | ({NATURAL_8} 1 |<< ((j-1).to_natural_8 \\ 8))
 
 						-- Update the l_type_system_table_rows array
 					l_type_system_table_rows.force (l_md_tables [i].size)

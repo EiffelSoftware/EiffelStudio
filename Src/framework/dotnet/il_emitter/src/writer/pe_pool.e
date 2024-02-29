@@ -7,6 +7,7 @@ class
 	PE_POOL
 
 inherit
+	DEBUG_OUTPUT
 
 	REFACTORING_HELPER
 
@@ -49,6 +50,13 @@ feature -- Access
 			end
 		ensure
 			new_max_size: base.capacity.to_natural_64 = max_size
+		end
+
+feature -- Status report
+
+	debug_output: STRING_32
+		do
+			Result := "size=" + size.out + " (0x" + size.to_hex_string + ")"
 		end
 
 feature -- Element Change

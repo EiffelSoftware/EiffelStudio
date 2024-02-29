@@ -36,7 +36,7 @@ feature {NONE}
 
 				-- Using PE_GENERATOR to get access helper features.
 			create pe_writer.make
-			create pdb_writer.make_pdb
+			create pdb_writer.make_pdb (pe_writer)
 			initialize_module_guid
 			initialize_compilation_unit
 
@@ -310,32 +310,27 @@ feature {NONE} -- Implementation
 			l_counts [t_guid + 1] := a_writer.guid_heap_size
 			l_counts [t_blob + 1] := a_writer.blob_heap_size
 
-			if a_writer.is_pe_generator then
-				put_tables_header (a_file, a_writer.tables_header)
+			put_tables_header (a_file, a_writer.tables_header)
 
-					-- Write table size
-				from
-					i := 0
-					n := max_tables
-				until
-					i >= n
-				loop
-					tb := a_writer.md_table (i.to_natural_32)
-					l_sz := tb.size
-					debug("il_emitter_table")
-						if l_sz /= 0 then
-							print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables: Table #" + i.to_natural_8.to_hex_string + " -> count=" + l_sz.out + "%N")
-						end
-					end
-					l_counts [i + 1] := l_sz
+				-- Write table size
+			from
+				i := 0
+				n := max_tables
+			until
+				i >= n
+			loop
+				tb := a_writer.md_table (i.to_natural_32)
+				l_sz := tb.size
+				debug("il_emitter_table")
 					if l_sz /= 0 then
-						a_file.put_natural_32 (l_sz)
+						print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables: Table #" + i.to_natural_8.to_hex_string + " -> count=" + l_sz.out + "%N")
 					end
-					i := i + 1
 				end
-			else
-				check a_writer.is_pdb_generator end
-				-- The table sizes are included in the PDB stream
+				l_counts [i + 1] := l_sz
+				if l_sz /= 0 then
+					a_file.put_natural_32 (l_sz)
+				end
+				i := i + 1
 			end
 
 				-- Write table entries

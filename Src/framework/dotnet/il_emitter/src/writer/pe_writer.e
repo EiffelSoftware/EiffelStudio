@@ -1048,7 +1048,7 @@ feature -- Operations
 				end
 				i := i + 1
 			end
-			l_current_rva := l_current_rva + {PE_DOTNET_META_TABLES_HEADER}.size_of.to_natural_32
+			l_current_rva := l_current_rva + l_tables_header.size_of.to_natural_32
 				-- tables header
 			l_current_rva := l_current_rva + (l_n * {PLATFORM}.natural_32_bytes).to_natural_32
 				--table counts

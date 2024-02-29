@@ -55,6 +55,11 @@ feature -- Change
 			internal_size := internal_size + {PLATFORM}.natural_8_bytes
 		end
 
+	put_natural_32
+		do
+			internal_size := internal_size + {PLATFORM}.natural_32_bytes
+		end
+
 	put_integer_32
 		do
 			internal_size := internal_size + {PLATFORM}.integer_32_bytes

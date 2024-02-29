@@ -90,52 +90,61 @@ feature -- Element change
 
 feature -- Managed Pointer
 
-	managed_pointer: MANAGED_POINTER
-		local
-			l_pos: INTEGER
+	managed_pointer: CLI_MANAGED_POINTER
 		do
 			create Result.make (size_of)
-			l_pos := 0
 
 				-- reserved1
-			Result.put_natural_32_le (reserved1, l_pos)
-			l_pos := l_pos + {PLATFORM}.natural_32_bytes
+			Result.put_natural_32 (reserved1)
 
 				-- major_version
-			Result.put_natural_8_le (major_version, l_pos)
-			l_pos := l_pos + {PLATFORM}.natural_8_bytes
+			Result.put_natural_8 (major_version)
 
 				-- minor_version
-			Result.put_natural_8_le (minor_version, l_pos)
-			l_pos := l_pos + {PLATFORM}.natural_8_bytes
+			Result.put_natural_8 (minor_version)
 
 				-- heap_offset_sizes
-			Result.put_natural_8_le (heap_offset_sizes, l_pos)
-			l_pos := l_pos + {PLATFORM}.natural_8_bytes
+			Result.put_natural_8 (heap_offset_sizes)
 
 				-- reserved2
-			Result.put_natural_8_le (reserved2, l_pos)
-			l_pos := l_pos + {PLATFORM}.natural_8_bytes
+			Result.put_natural_8 (reserved2)
 
 				-- mask_valid
-			Result.put_integer_64_le (mask_valid, l_pos)
-			l_pos := l_pos + {PLATFORM}.integer_64_bytes
+			Result.put_integer_64 (mask_valid)
 
 				-- mask_sorted
-			Result.put_integer_64_le (mask_sorted, l_pos)
+			Result.put_integer_64 (mask_sorted)
 		end
 
 feature -- Measurement
 
 	size_of: INTEGER
+		local
+			s: CLI_MANAGED_POINTER_SIZE
 		do
-			Result := {PLATFORM}.natural_32_bytes
-					+ 4 * {PLATFORM}.natural_8_bytes
-					+ {PLATFORM}.integer_64_bytes
-					+ {PLATFORM}.integer_64_bytes
-		ensure
-			instance_free: class
-		end
+			create s.make
 
+				-- reserved1
+			s.put_natural_32
+
+				-- major_version
+			s.put_natural_8
+
+				-- minor_version
+			s.put_natural_8
+
+				-- heap_offset_sizes
+			s.put_natural_8
+
+				-- reserved2
+			s.put_natural_8
+
+				-- mask_valid
+			s.put_integer_64
+
+				-- mask_sorted
+			s.put_integer_64
+			Result := s
+		end
 
 end

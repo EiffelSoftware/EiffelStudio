@@ -80,7 +80,6 @@ feature -- Managed Pointer
 
 	item: CLI_MANAGED_POINTER
 			-- write the items to the buffer in  little-endian format.
-		local
 		do
 			create Result.make (size_of)
 

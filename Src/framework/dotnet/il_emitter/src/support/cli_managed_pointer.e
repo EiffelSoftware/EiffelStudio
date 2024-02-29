@@ -9,7 +9,9 @@ class
 	CLI_MANAGED_POINTER
 
 create
-	make
+	make,
+	make_from_pointer,
+	make_from_managed_pointer
 
 convert
 	managed_pointer: {MANAGED_POINTER}
@@ -21,6 +23,18 @@ feature {NONE} -- Initialization
 		do
 			create mp.make (a_size)
 			position := 0
+		end
+
+	make_from_pointer (p: POINTER; n: INTEGER)
+		do
+			create mp.make_from_pointer (p, n)
+			position := n + 1
+		end
+
+	make_from_managed_pointer (p: MANAGED_POINTER)
+		do
+			mp := p
+			position := mp.count + 1
 		end
 
 feature -- Access
@@ -124,16 +138,28 @@ feature -- Change
 
 feature -- Debug purpose
 
-	to_bytes_string (nb: INTEGER): STRING_8
+	to_bytes_string (len: INTEGER): STRING_8
 		local
+			n: INTEGER
 			n8: NATURAL_8
 			i: INTEGER
 		do
-			if nb > 0 then
-				create Result.make (nb * 3)
-
+			if len = 0 then
+				n := 0
+			else
+				if len < 0 then
+						-- -1: mean the whole pointer.
+					n := position + len + 1
+				else
+					n := len
+				end
+			end
+			if n <= 0 then
+				create Result.make (0)
+			else
+				create Result.make (n * 3)
 				across
-					managed_pointer.read_array (0, nb) as ic
+					mp.read_array (0, n) as ic
 				loop
 					n8 := ic.item
 					Result.append (n8.to_hex_string)
@@ -144,8 +170,6 @@ feature -- Debug purpose
 						Result.append_character (' ')
 					end
 				end
-			else
-				create Result.make (0)
 			end
 		end
 

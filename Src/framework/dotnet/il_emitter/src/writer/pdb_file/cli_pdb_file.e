@@ -168,6 +168,30 @@ feature -- Saving
 			retry
 		end
 
+	update_pdb_stream_pdb_id (a_pdb_id: ARRAY [NATURAL_8])
+		require
+			a_pdb_id.count = 20
+		local
+			f: RAW_FILE
+			fpos: INTEGER
+			mp: MANAGED_POINTER
+		do
+			if attached emitter.pdb_writer.pdb_stream as l_pdb_stream then
+				l_pdb_stream.set_pdb_id (a_pdb_id)
+				fpos := l_pdb_stream.recorded_binary_position
+				if fpos > 0 then
+					create f.make_with_name (file_name)
+					if f.exists then
+						f.open_read_write
+						f.go (fpos)
+						mp := l_pdb_stream.item.managed_pointer
+						f.put_managed_pointer (mp, 0, l_pdb_stream.size_of)
+						f.close
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Saving
 
 	prepare

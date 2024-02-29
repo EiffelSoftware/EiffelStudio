@@ -22,9 +22,9 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create pdb_id.make_filled (0, 1, 5)
+			create pdb_id.make_filled (0, 1, 20) -- Initialized to 0 (20 zeroed bytes).
 			entry_point := 0
-			create referenced_type_system_tables.make_filled (0, 1, 2)
+			create referenced_type_system_tables.make_filled (0, 1, 8)
 			create type_system_table_rows.make_empty
 		end
 
@@ -45,6 +45,21 @@ feature -- Access
 	type_system_table_rows: ARRAY [NATURAL_32]
 			-- Array of n 4-byte unsigned integers indicating the number of rows for each referenced type system metadata table.
 
+feature -- PDB id hack
+
+	record_binary_position (pos: INTEGER)
+		require
+			recorded_binary_position = 0
+			pos > 0
+		do
+			recorded_binary_position := pos
+		ensure
+			recorded_binary_position = pos
+		end
+
+	recorded_binary_position: INTEGER
+			-- Position of the Current PDB stream in the PDB binary
+			-- in order to set, in second step, the expected PDB id.
 
 feature -- Change Element
 

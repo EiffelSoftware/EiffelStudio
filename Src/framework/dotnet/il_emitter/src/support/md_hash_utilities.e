@@ -85,7 +85,7 @@ feature -- Hash SHA256
 			b := {ISE_RUNTIME}.check_assert (False)
 			create sha.make
 			sha.update_from_io_medium (a_file)
-			Result := sha.digest_as_string
+			Result := sha.digest_as_hexadecimal_string.as_lower
 			sha.reset
 			b := {ISE_RUNTIME}.check_assert (b)
 			debug ("il_emitter")
@@ -102,7 +102,7 @@ feature -- Hash SHA256
 		local
 			l_converter: BYTE_ARRAY_CONVERTER
 		do
-			create l_converter.make_from_string (sha256_string_for_file (a_file))
+			create l_converter.make_from_hex_string (sha256_string_for_file (a_file))
 			Result := l_converter.to_natural_8_array
 		ensure
 			class

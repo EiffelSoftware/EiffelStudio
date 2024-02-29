@@ -380,6 +380,9 @@ feature {NONE} -- Implementation
 			l_pdb_stream: CLI_PDB_STREAM
 		do
 			l_pdb_stream := a_writer.pdb_stream
+				-- record the file offset, in order to overwrite later the 20 bytes PDB id
+			l_pdb_stream.record_binary_position (a_file.position)
+
 			a_file.put_managed_pointer (l_pdb_stream.item.managed_pointer, 0, l_pdb_stream.size_of)
 			align (a_file, 4)
 		end

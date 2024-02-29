@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			set_type ({CLI_DEBUG_CONSTANTS}.Type_codeview)
 		end
 
+feature -- Access
 
 	dbg_directory: CLI_IMG_DEBUG_DIRECTORY
 

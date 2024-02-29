@@ -61,9 +61,27 @@ feature -- Update
 		local
 			l_pdb_file: CLI_PDB_FILE
 			l_pdb_id: ARRAY [NATURAL_8]
+			i: INTEGER
 		do
 				-- update pdb_stream entry point and pdb_id
-			create l_pdb_id.make_filled (8, 1, 20) -- FIXME: for now, use fake PID id (easy to identify in binary, a sequence of 20 `08` values.
+
+				-- FIXME: check how to compute the PDB id
+			create l_pdb_id.make_filled (8, 1, 20) -- FIXME: for now, use fake PID id (easy to identify in binary, a sequence of BAD values.
+			from
+				i := l_pdb_id.lower
+			until
+				i > l_pdb_id.upper
+			loop
+				inspect i \\ 4
+				when 1 then l_pdb_id[i] := ('B').code.to_natural_8
+				when 2 then l_pdb_id[i] := ('A').code.to_natural_8
+				when 3 then l_pdb_id[i] := ('D').code.to_natural_8
+				else
+					l_pdb_id[i] := ('-').code.to_natural_8
+				end
+				i := i + 1
+			end
+
 			emitter.update_pdb_stream_pdb_id (l_pdb_id)
 			emitter.update_pdb_stream_entry_point (entry_point_token)
 			create l_pdb_file.make (associated_pdb_file_name.name, emitter)

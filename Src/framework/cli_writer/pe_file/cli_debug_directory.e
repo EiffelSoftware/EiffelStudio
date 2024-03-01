@@ -52,6 +52,11 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
+	set_time_date_stamp (a_time_date_stamp: INTEGER)
+		do
+			c_set_date_stamp (item, a_time_date_stamp)
+		end
+
 	set_size (a_size: INTEGER)
 			--
 		require

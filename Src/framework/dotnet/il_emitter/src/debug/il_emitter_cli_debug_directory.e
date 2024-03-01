@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			make
 			set_time_date_stamp ({CLI_TIME}.time (default_pointer))
 			set_major_version (0)
-			set_minor_version (0)
+			set_minor_version (0x504d)
 			set_dbg_type ({CLI_DEBUG_CONSTANTS}.type_codeview)
 		end
 
@@ -106,7 +106,7 @@ feature -- Element change
 	set_time_date_stamp (a_time_date_stamp: like time_date_stamp)
 		do
 			time_date_stamp := a_time_date_stamp
-		ensure
+		ensure then
 			time_date_stamp_assigned: time_date_stamp = a_time_date_stamp
 		end
 

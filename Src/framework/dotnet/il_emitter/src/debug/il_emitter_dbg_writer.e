@@ -22,13 +22,10 @@ feature {NONE} -- Initialization
 			check attached {MD_EMIT} a_emitter as md then
 				emitter := md
 			end
-			debug ("refactor_fixme")
-				to_implement ("TODO double check current implementation")
-			end
 
 			file_name := name.string_32
 
-			initialize_debug_directiory
+			initialize_debug_directory
 			current_method_token := -1
 			is_closed := False
 			is_successful := True
@@ -143,8 +140,17 @@ feature -- PE file data
 
 	codeview_debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY_I): MANAGED_POINTER
 			-- Retrieve CodeView debug info required to be inserted in PE file.
+			-- note: it also update the timestamp !
+		local
+			t: INTEGER
 		do
-			Result := associated_code_view.item.managed_pointer
+			if attached associated_code_view as l_code_view then
+				t := associated_pdb_file_timestamp
+				if t > 0 then
+					a_dbg_directory.set_time_date_stamp (t)
+				end
+				Result := l_code_view.item.managed_pointer
+			end
 			is_successful := True
 		end
 
@@ -289,8 +295,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-
-	initialize_debug_directiory
+	initialize_debug_directory
 			-- Initialize associated code view and pdb checksum
 		do
 			create associated_code_view.make (associated_pdb_file_name)
@@ -298,6 +303,7 @@ feature {NONE} -- Implementation
 		end
 
 	associated_pdb_file_name: PATH
+			-- Location of the associated PDF file.
 		local
 			fn: READABLE_STRING_32
 			p: PATH
@@ -310,6 +316,16 @@ feature {NONE} -- Implementation
 			Result := p.appended_with_extension ("pdb")
 		end
 
+	associated_pdb_file_timestamp: INTEGER
+			-- timestamp of the associated PDB file, if it exists.
+		local
+			f: RAW_FILE
+		do
+			create f.make_with_path (associated_pdb_file_name)
+			if f.exists then
+				Result := f.change_date
+			end
+		end
 
 
 ;note

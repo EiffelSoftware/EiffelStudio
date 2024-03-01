@@ -16,7 +16,7 @@ feature -- Settings
 
 	is_debug_enabled: BOOLEAN
 		do
-			Result := not is_using_il_emitter -- False
+			Result := True
 		end
 
 	is_signing_enabled: BOOLEAN

@@ -1492,6 +1492,7 @@ feature -- Code generation
 					dbg_writer.close
 
 					if system.is_il_netcore then
+							-- Note: the call to `codeview_debug_info` also updates the related timestamp with PDF file information.
 						l_codeview_debug_info := dbg_writer.codeview_debug_info (l_codeview_dbg_directory)
 						l_pe_file.set_codeview_debug_information (l_codeview_dbg_directory, l_codeview_debug_info)
 						if l_checksum_dbg_directory /= Void then

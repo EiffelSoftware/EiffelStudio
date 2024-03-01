@@ -49,7 +49,6 @@ feature {NONE} -- Initialization
 			-- Allocate `item`
 		do
 			set_characteristics (0)
-			set_time_date_stamp ({CLI_TIME}.time (default_pointer))
 			set_major_version (0)
 			set_minor_version (0)
 			set_dbg_type ({CLI_DEBUG_CONSTANTS}.type_unknown)
@@ -59,6 +58,9 @@ feature {NONE} -- Initialization
 			-- Allocate `item`
 		do
 			make
+			set_time_date_stamp ({CLI_TIME}.time (default_pointer))
+			set_major_version (0)
+			set_minor_version (0)
 			set_dbg_type ({CLI_DEBUG_CONSTANTS}.type_codeview)
 		end
 

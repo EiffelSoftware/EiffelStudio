@@ -1474,6 +1474,8 @@ feature -- Code generation
 			l_codeview_debug_info: MANAGED_POINTER
 			l_checksum_debug_info: MANAGED_POINTER
 			l_checksum_dbg_directory: CLI_DEBUG_DIRECTORY
+			l_reproducible_dbg_directory: CLI_DEBUG_DIRECTORY
+			l_checksum_info: MANAGED_POINTER
 			ept: like entry_point_token
 			loc: PATH
 		do
@@ -1489,16 +1491,23 @@ feature -- Code generation
 						l_pe_file.set_checksum_debug_information (l_checksum_dbg_directory, l_checksum_debug_info)
 					end
 
+					l_reproducible_dbg_directory := md_factory.reproducible_debug_directory
+					if l_reproducible_dbg_directory /= Void then
+						l_pe_file.set_reproducible_debug_information (l_reproducible_dbg_directory)
+					end
+
 					dbg_writer.close
 
 					if system.is_il_netcore then
 							-- Note: the call to `codeview_debug_info` also updates the related timestamp with PDF file information.
+						dbg_writer.open_read
 						l_codeview_debug_info := dbg_writer.codeview_debug_info (l_codeview_dbg_directory)
 						l_pe_file.set_codeview_debug_information (l_codeview_dbg_directory, l_codeview_debug_info)
 						if l_checksum_dbg_directory /= Void then
 							l_checksum_debug_info := dbg_writer.checksum_debug_info (l_checksum_dbg_directory)
 							l_pe_file.set_checksum_debug_information (l_checksum_dbg_directory, l_checksum_debug_info)
 						end
+						dbg_writer.close_read
 					end
 				else
 					check implemented: False end

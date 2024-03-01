@@ -21,6 +21,10 @@ feature -- Access
 		deferred
 		end
 
+	reproducible_debug_directory: CLI_DEBUG_DIRECTORY
+		deferred
+		end
+
 	pe_file (a_name: READABLE_STRING_32; console_app, dll_app, is_32bits_app: BOOLEAN; e: MD_EMIT): CLI_PE_FILE
 		deferred
 		end

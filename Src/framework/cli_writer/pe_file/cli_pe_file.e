@@ -149,6 +149,7 @@ feature -- Access
 
 	checksum_debug_directory: detachable CLI_DEBUG_DIRECTORY
 	checksum_debug_info: detachable MANAGED_POINTER
+	reproducible_debug_directory: detachable CLI_DEBUG_DIRECTORY
 			-- Data for storing pdb checksum debug information in PE files.	
 
 	strong_name_directory: detachable CLI_DIRECTORY
@@ -214,6 +215,12 @@ feature -- Settings
 				checksum_debug_directory := a_cli_debug_directory
 				checksum_debug_info := a_checksum_info
 			end
+		end
+
+	set_reproducible_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY)
+				-- Set `reproducible_debug_information' to `a_cli_debug_directory'
+		do
+			reproducible_debug_directory := a_cli_debug_directory
 		end
 
 	set_public_key (a_key: like public_key; a_signing: like signing)

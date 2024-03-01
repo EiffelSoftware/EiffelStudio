@@ -160,7 +160,7 @@ feature -- Access
 		do
 			Result := internal_codeview_debug_directory
 			if Result = Void  then
-				check already_has_debug_directory: False end
+				--check already_has_debug_directory: False end
 				create {IL_EMITTER_CLI_DEBUG_DIRECTORY} Result.make_codeview
 				internal_codeview_debug_directory := Result
 			end
@@ -173,6 +173,10 @@ feature -- Access
 
 	checksum_debug_info: detachable MANAGED_POINTER
 			-- Data for storing debug information in PE files.
+
+
+	reproducible_debug_directory: detachable CLI_DEBUG_DIRECTORY_I
+			-- Data for storing reproducible debug information in PE files.
 
 	text_section_header: CLI_SECTION_HEADER
 	reloc_section_header: CLI_SECTION_HEADER
@@ -187,6 +191,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	internal_codeview_debug_directory: detachable CLI_DEBUG_DIRECTORY_I
+	internal_checksum_debug_directory: detachable CLI_DEBUG_DIRECTORY_I
 
 feature -- Access
 
@@ -260,6 +265,12 @@ feature -- Settings
 				checksum_debug_directory := a_cli_debug_directory
 				checksum_debug_info := a_checksum_info
 			end
+		end
+
+	set_reproducible_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY_I)
+				-- Set `reproducible_debug_information' to `a_cli_debug_directory'
+		do
+			reproducible_debug_directory := a_cli_debug_directory
 		end
 
 	set_public_key (a_key: like public_key; a_signing: like signing)
@@ -639,6 +650,7 @@ feature {NONE} -- Saving
 												+ l_code_view_dbg_dir.size_of)
 					l_code_view_dbg_dir.set_size_of_data (l_code_view_dbg_info.count)
 				end
+
 			end
 
 			iat_directory := optional_header.directory (

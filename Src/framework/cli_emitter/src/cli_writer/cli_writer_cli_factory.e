@@ -27,6 +27,12 @@ feature -- Access
 			create {CLI_WRITER_CLI_DEBUG_DIRECTORY} Result.make_pdbchecksum
 		end
 
+	reproducible_debug_directory: CLI_DEBUG_DIRECTORY
+		do
+			create {CLI_WRITER_CLI_DEBUG_DIRECTORY} Result.make_reproducible
+		end
+
+
 	pe_file (a_name: READABLE_STRING_32; console_app, dll_app, is_32bits_app: BOOLEAN; e: MD_EMIT): CLI_PE_FILE
 		do
 			create {CLI_WRITER_CLI_PE_FILE} Result.make (a_name, console_app, dll_app, is_32bits_app, e)

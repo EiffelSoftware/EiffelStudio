@@ -57,6 +57,27 @@ feature -- Update
 			is_successful
 		end
 
+	open_read
+			-- Open for update.
+		require
+			is_closed: is_closed
+		deferred
+		ensure
+			not_is_closed: not is_closed
+			is_successful
+		end
+
+	close_read
+			-- Close the update.
+		require
+			not_is_closed: not is_closed
+		deferred
+		ensure
+			is_closed: is_closed
+			is_successful
+		end
+
+
 feature -- PE file data
 
 	codeview_debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER

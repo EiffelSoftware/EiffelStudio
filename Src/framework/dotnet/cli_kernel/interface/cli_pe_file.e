@@ -29,13 +29,16 @@ feature -- Access
 		deferred
 		end
 
-
 	checksum_debug_directory: detachable CLI_DEBUG_DIRECTORY
 		deferred
 		end
 
 	checksum_debug_info: detachable MANAGED_POINTER
 			-- Data for storing debug information in PE files.	
+		deferred
+		end
+
+	reproducible_debug_directory: detachable CLI_DEBUG_DIRECTORY
 		deferred
 		end
 
@@ -109,6 +112,15 @@ feature -- Settings
 			checksum_debug_info_set: a_checksum_info.count /= 0 implies checksum_debug_info = a_checksum_info
 			a_checksum_info.count = 0 implies checksum_debug_directory = Void and checksum_debug_info = Void
 		end
+
+	set_reproducible_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY)
+				-- Set `reproducible_debug_information' to `a_cli_debug_directory'
+			require
+				a_cli_debug_directory_not_void: a_cli_debug_directory /= Void
+			deferred
+			ensure
+				checksum_debug_directory_set: reproducible_debug_directory = a_cli_debug_directory
+			end
 
 	set_public_key (a_key: like public_key; a_signing: like signing)
 			-- Set `public_key' to `a_key'.

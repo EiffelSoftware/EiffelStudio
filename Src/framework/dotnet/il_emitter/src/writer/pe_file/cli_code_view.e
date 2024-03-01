@@ -53,6 +53,16 @@ feature -- Change Element
 			utf8_path_value := a_path.utf_8_name + "%U"
 		end
 
+	set_gui (a_guid: ARRAY [NATURAL_8])
+			-- Set guid with `a_guid`.
+		require
+			valid_size: a_guid.count = 16
+		do
+			create guid.make_from_array (a_guid)
+		ensure
+			guid_set: guid.same_items (a_guid)
+		end
+
 feature -- Managed Pointer
 
 	item: CLI_MANAGED_POINTER

@@ -41,7 +41,8 @@ inherit
 create
 	make,
 	make_codeview,
-	make_pdbchecksum
+	make_pdbchecksum,
+	make_reproducible
 
 feature {NONE} -- Initialization
 
@@ -70,6 +71,16 @@ feature {NONE} -- Initialization
 			make
 			set_dbg_type ({CLI_DEBUG_CONSTANTS}.type_pdbchecksum)
 			set_major_version (1)
+			set_minor_version (0)
+		end
+
+
+	make_reproducible
+			-- Allocate `item`
+		do
+			make
+			set_dbg_type ({CLI_DEBUG_CONSTANTS}.type_reproducible)
+			set_major_version (0)
 			set_minor_version (0)
 		end
 

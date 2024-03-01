@@ -59,18 +59,25 @@ feature -- Update
 			-- Stop all processing on current.
 		local
 			l_pdb_file: CLI_PDB_FILE
-			l_sha256, l_pdb_id: ARRAY [NATURAL_8]
+			l_sha256, l_guid: ARRAY [NATURAL_8]
+			l_time: INTEGER
 		do
 				-- update pdb_stream entry point
+
 
 			emitter.update_pdb_stream_entry_point (entry_point_token)
 			create l_pdb_file.make (associated_pdb_file_name.name, emitter)
 			l_pdb_file.save
+			l_time := associated_pdb_file_timestamp
 
 			l_sha256 := {MD_HASH_UTILITIES}.sha256_bytes_for_file_name (l_pdb_file.file_name)
-				-- FIXME: is this the correct way to truncate SHA256 to 20 Bytes ?
-			l_pdb_id := l_sha256.subarray (l_sha256.lower, l_sha256.lower + 20 - 1)
-			l_pdb_file.update_pdb_stream_pdb_id (l_pdb_id)
+
+				-- We use the first 16 bytes as deterministic GUID 	
+			l_guid := l_sha256.subarray (l_sha256.lower, l_sha256.lower + 16 - 1)
+				-- We use this first 16 bytes as the GUID of CodeView
+			associated_code_view.set_gui (l_guid)
+
+			l_pdb_file.update_pdb_stream_pdb_id (compute_pdb_id (l_guid, l_time))
 			associated_pdb_checksum.set_checksum (l_sha256)
 			is_successful := True
 			is_closed := True
@@ -136,6 +143,18 @@ feature -- Update
 			is_successful := True
 		end
 
+	open_read
+		do
+			is_closed := False
+			is_successful := True
+		end
+
+	close_read
+		do
+			is_closed := True
+			is_successful := True
+		end
+
 feature -- PE file data
 
 	codeview_debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY_I): MANAGED_POINTER
@@ -150,6 +169,8 @@ feature -- PE file data
 					a_dbg_directory.set_time_date_stamp (t)
 				end
 				Result := l_code_view.item.managed_pointer
+			else
+				Result := associated_code_view.item.managed_pointer
 			end
 			is_successful := True
 		end
@@ -326,6 +347,20 @@ feature {NONE} -- Implementation
 				Result := f.change_date
 			end
 		end
+
+
+	compute_pdb_id (a_guid_bytes: ARRAY [NATURAL_8]; a_timestamp: INTEGER): ARRAY [NATURAL_8]
+	 	local
+			mp: MANAGED_POINTER
+		do
+			check a_guid_bytes.count = 16 end
+			create mp.make (20)
+			mp.put_array (a_guid_bytes, 0)
+			mp.put_integer_32_le (a_timestamp, 16)
+			Result := mp.read_array (0, 20)
+		ensure
+			valid_result: Result.count = 20
+        end
 
 
 ;note

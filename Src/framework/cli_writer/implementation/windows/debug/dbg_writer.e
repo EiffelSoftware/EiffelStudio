@@ -78,6 +78,18 @@ feature -- Update
 			last_call_success := c_close_scope (item, end_offset)
 		end
 
+	open_read
+		do
+			is_closed := False
+			last_call_success := 0
+		end
+
+	close_read
+		do
+			is_closed := True
+			last_call_success := 0
+		end
+
 feature -- PE file data
 
 	codeview_debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER

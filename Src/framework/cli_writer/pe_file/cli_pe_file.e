@@ -143,9 +143,13 @@ feature -- Access
 	code: detachable MANAGED_POINTER
 			-- CLI code instruction stream.
 
-	debug_directory: detachable CLI_DEBUG_DIRECTORY
-	debug_info: detachable MANAGED_POINTER
-			-- Data for storing debug information in PE files.
+	codeview_debug_directory: detachable CLI_DEBUG_DIRECTORY
+	codeview_debug_info: detachable MANAGED_POINTER
+			-- Data for storing codeview debug information in PE files.
+
+	checksum_debug_directory: detachable CLI_DEBUG_DIRECTORY
+	checksum_debug_info: detachable MANAGED_POINTER
+			-- Data for storing pdb checksum debug information in PE files.	
 
 	strong_name_directory: detachable CLI_DIRECTORY
 	strong_name_info: detachable MANAGED_POINTER
@@ -187,14 +191,29 @@ feature -- Settings
 			cli_header.set_entry_point_token (token)
 		end
 
-	set_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY;
+	set_codeview_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY;
 			a_debug_info: MANAGED_POINTER)
 
 			-- Set `debug_directory' to `a_cli_debug_directory' and `debug_info'
 			-- to `a_debug_info'.
 		do
-			debug_directory := a_cli_debug_directory
-			debug_info := a_debug_info
+			codeview_debug_directory := a_cli_debug_directory
+			codeview_debug_info := a_debug_info
+		end
+
+	set_checksum_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY;
+			a_checksum_info: MANAGED_POINTER)
+
+			-- Set `checksum_debug_directory' to `a_cli_debug_directory' and `checksum_info'
+			-- to `a_checksum_info'.
+		do
+			if a_checksum_info.count = 0 then
+				checksum_debug_directory := Void
+				checksum_debug_info := Void
+			else
+				checksum_debug_directory := a_cli_debug_directory
+				checksum_debug_info := a_checksum_info
+			end
 		end
 
 	set_public_key (a_key: like public_key; a_signing: like signing)
@@ -256,8 +275,8 @@ feature -- Saving
 			end
 
 			if
-				attached debug_directory as d and then
-				attached debug_info as i
+				attached codeview_debug_directory as d and then
+				attached codeview_debug_info as i
 			then
 				l_pe_file.put_managed_pointer (d, 0, d.count)
 				l_pe_file.put_managed_pointer (i, 0, i.count)
@@ -355,8 +374,8 @@ feature {NONE} -- Saving
 			end
 
 			if
-				attached debug_directory as d and then
-				attached debug_info as i
+				attached codeview_debug_directory as d and then
+				attached codeview_debug_info as i
 			then
 				debug_size := pad_up (d.count + i.count, 16)
 			else
@@ -439,8 +458,8 @@ feature {NONE} -- Saving
 			reloc_directory.set_data_size (reloc_size)
 
 			if
-				attached debug_directory as d and then
-				attached debug_info as i
+				attached codeview_debug_directory as d and then
+				attached codeview_debug_info as i
 			then
 				l_debug_directory := optional_header.directory (
 						{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_debug)
@@ -570,7 +589,7 @@ invariant
 	public_key_not_void: (is_valid and has_strong_name) implies public_key /= Void
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

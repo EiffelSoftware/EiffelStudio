@@ -59,10 +59,19 @@ feature -- Update
 
 feature -- PE file data
 
-	debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER
-			-- Retrieve debug info required to be inserted in PE file.
+	codeview_debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER
+			-- Retrieve CodeView debug info required to be inserted in PE file.
 		require
 			not_is_closed: not is_closed
+			a_dbg_directory_not_void: a_dbg_directory /= Void
+		deferred
+		ensure
+			is_successful
+		end
+
+	checksum_debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER
+			-- Retrieve PdbChecksum debug info required to be inserted in PE file.
+		require
 			a_dbg_directory_not_void: a_dbg_directory /= Void
 		deferred
 		ensure

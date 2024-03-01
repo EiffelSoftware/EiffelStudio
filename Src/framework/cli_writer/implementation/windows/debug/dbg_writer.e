@@ -80,7 +80,7 @@ feature -- Update
 
 feature -- PE file data
 
-	debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER
+	codeview_debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER
 			-- Retrieve debug info required to be inserted in PE file.
 		local
 			l_count: INTEGER
@@ -91,6 +91,13 @@ feature -- PE file data
 
 			create Result.make (l_count)
 			Result.item.memory_copy (l_data.item, l_count)
+		end
+
+	checksum_debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER
+			-- Retrieve checksum info required to be inserted in PE file.
+		do
+				-- Not implemented for COM interface.
+			create Result.make (0)
 		end
 
 feature -- Status report

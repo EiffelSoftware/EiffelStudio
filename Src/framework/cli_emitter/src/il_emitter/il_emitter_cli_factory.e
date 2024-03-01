@@ -14,9 +14,14 @@ inherit
 
 feature -- Access
 
-	debug_directory: CLI_DEBUG_DIRECTORY
+	codeview_debug_directory: CLI_DEBUG_DIRECTORY
 		do
-			create {IL_EMITTER_CLI_DEBUG_DIRECTORY} Result.make
+			create {IL_EMITTER_CLI_DEBUG_DIRECTORY} Result.make_codeview
+		end
+
+	pdbchecksum_debug_directory: CLI_DEBUG_DIRECTORY
+		do
+			create {IL_EMITTER_CLI_DEBUG_DIRECTORY} Result.make_pdbchecksum
 		end
 
 	pe_file (a_name: READABLE_STRING_32; console_app, dll_app, is_32bits_app: BOOLEAN; e: MD_EMIT): IL_EMITTER_CLI_PE_FILE

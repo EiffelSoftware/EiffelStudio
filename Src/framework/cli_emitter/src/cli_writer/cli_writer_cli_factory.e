@@ -17,9 +17,14 @@ feature -- Access
 			create {CLI_WRITER_DBG_WRITER} Result.make (emitter, name, full_build)
 		end
 
-	debug_directory: CLI_DEBUG_DIRECTORY
+	codeview_debug_directory: CLI_DEBUG_DIRECTORY
 		do
-			create {CLI_WRITER_CLI_DEBUG_DIRECTORY} Result.make
+			create {CLI_WRITER_CLI_DEBUG_DIRECTORY} Result.make_codeview
+		end
+
+	pdbchecksum_debug_directory: CLI_DEBUG_DIRECTORY
+		do
+			create {CLI_WRITER_CLI_DEBUG_DIRECTORY} Result.make_pdbchecksum
 		end
 
 	pe_file (a_name: READABLE_STRING_32; console_app, dll_app, is_32bits_app: BOOLEAN; e: MD_EMIT): CLI_PE_FILE
@@ -43,7 +48,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

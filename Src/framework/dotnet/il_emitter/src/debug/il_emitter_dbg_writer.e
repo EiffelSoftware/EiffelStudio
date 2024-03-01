@@ -76,6 +76,7 @@ feature -- Update
 			l_pdb_file.update_pdb_stream_pdb_id (l_pdb_id)
 			associated_pdb_checksum.set_checksum (l_sha256)
 			is_successful := True
+			is_closed := True
 		end
 
 	close_method
@@ -140,10 +141,17 @@ feature -- Update
 
 feature -- PE file data
 
-	debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY_I): MANAGED_POINTER
+	codeview_debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY_I): MANAGED_POINTER
 			-- Retrieve CodeView debug info required to be inserted in PE file.
 		do
 			Result := associated_code_view.item.managed_pointer
+			is_successful := True
+		end
+
+	checksum_debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY_I): MANAGED_POINTER
+			-- Retrieve checksum info required to be inserted in PE file.
+		do
+			Result := associated_pdb_checksum.item.managed_pointer
 			is_successful := True
 		end
 

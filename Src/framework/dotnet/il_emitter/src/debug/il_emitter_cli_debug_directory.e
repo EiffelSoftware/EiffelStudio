@@ -39,7 +39,9 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_codeview,
+	make_pdbchecksum
 
 feature {NONE} -- Initialization
 
@@ -50,7 +52,23 @@ feature {NONE} -- Initialization
 			set_time_date_stamp ({CLI_TIME}.time (default_pointer))
 			set_major_version (0)
 			set_minor_version (0)
+			set_dbg_type ({CLI_DEBUG_CONSTANTS}.type_unknown)
+		end
+
+	make_codeview
+			-- Allocate `item`
+		do
+			make
 			set_dbg_type ({CLI_DEBUG_CONSTANTS}.type_codeview)
+		end
+
+	make_pdbchecksum
+			-- Allocate `item`
+		do
+			make
+			set_dbg_type ({CLI_DEBUG_CONSTANTS}.type_pdbchecksum)
+			set_major_version (1)
+			set_minor_version (0)
 		end
 
 feature -- Access

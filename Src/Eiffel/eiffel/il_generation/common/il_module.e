@@ -1471,16 +1471,34 @@ feature -- Code generation
 			a_signing_not_void: public_key /= Void implies a_signing /= Void
 		local
 			l_pe_file: CLI_PE_FILE
-			l_debug_info: MANAGED_POINTER
+			l_codeview_debug_info: MANAGED_POINTER
+			l_checksum_debug_info: MANAGED_POINTER
+			l_checksum_dbg_directory: CLI_DEBUG_DIRECTORY
 			ept: like entry_point_token
 			loc: PATH
 		do
 			l_pe_file := md_factory.pe_file (module_file_name, is_dll or is_console_application, is_dll, is_32bits, md_emit)
 			if is_debug_info_enabled then
-				if attached md_factory.debug_directory as l_dbg_directory then
-					l_debug_info := dbg_writer.debug_info (l_dbg_directory)
-					l_pe_file.set_debug_information (l_dbg_directory, l_debug_info)
+				if attached md_factory.codeview_debug_directory as l_codeview_dbg_directory then
+					l_codeview_debug_info := dbg_writer.codeview_debug_info (l_codeview_dbg_directory)
+					l_pe_file.set_codeview_debug_information (l_codeview_dbg_directory, l_codeview_debug_info)
+
+					l_checksum_dbg_directory := md_factory.pdbchecksum_debug_directory
+					if l_checksum_dbg_directory /= Void then
+						l_checksum_debug_info := dbg_writer.checksum_debug_info (l_checksum_dbg_directory)
+						l_pe_file.set_checksum_debug_information (l_checksum_dbg_directory, l_checksum_debug_info)
+					end
+
 					dbg_writer.close
+
+					if system.is_il_netcore then
+						l_codeview_debug_info := dbg_writer.codeview_debug_info (l_codeview_dbg_directory)
+						l_pe_file.set_codeview_debug_information (l_codeview_dbg_directory, l_codeview_debug_info)
+						if l_checksum_dbg_directory /= Void then
+							l_checksum_debug_info := dbg_writer.checksum_debug_info (l_checksum_dbg_directory)
+							l_pe_file.set_checksum_debug_information (l_checksum_dbg_directory, l_checksum_debug_info)
+						end
+					end
 				else
 					check implemented: False end
 				end

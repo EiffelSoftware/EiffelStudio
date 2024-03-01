@@ -20,12 +20,22 @@ feature -- Status
 
 feature -- Access
 
-	debug_directory: detachable CLI_DEBUG_DIRECTORY
+	codeview_debug_directory: detachable CLI_DEBUG_DIRECTORY
 		deferred
 		end
 
-	debug_info: detachable MANAGED_POINTER
+	codeview_debug_info: detachable MANAGED_POINTER
 			-- Data for storing debug information in PE files.
+		deferred
+		end
+
+
+	checksum_debug_directory: detachable CLI_DEBUG_DIRECTORY
+		deferred
+		end
+
+	checksum_debug_info: detachable MANAGED_POINTER
+			-- Data for storing debug information in PE files.	
 		deferred
 		end
 
@@ -71,18 +81,33 @@ feature -- Settings
 		deferred
 		end
 
-	set_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY;
+	set_codeview_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY;
 			a_debug_info: MANAGED_POINTER)
 
-			-- Set `debug_directory' to `a_cli_debug_directory' and `debug_info'
+			-- Set `codeview_debug_directory' to `a_cli_debug_directory' and `debug_info'
 			-- to `a_debug_info'.
 		require
 			a_cli_debug_directory_not_void: a_cli_debug_directory /= Void
 			a_debug_info_not_void: a_debug_info /= Void
 		deferred
 		ensure
-			debug_directory_set: debug_directory = a_cli_debug_directory
-			debug_info_set: debug_info = a_debug_info
+			debug_directory_set: codeview_debug_directory = a_cli_debug_directory
+			codeview_debug_info_set: codeview_debug_info = a_debug_info
+		end
+
+	set_checksum_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY;
+			a_checksum_info: MANAGED_POINTER)
+
+			-- Set `checksum_debug_directory' to `a_cli_debug_directory' and `checksum_info'
+			-- to `a_checksum_info'.
+		require
+			a_cli_debug_directory_not_void: a_cli_debug_directory /= Void
+			a_debug_info_not_void: a_checksum_info /= Void
+		deferred
+		ensure
+			checksum_debug_directory_set: a_checksum_info.count /= 0 implies checksum_debug_directory = a_cli_debug_directory
+			checksum_debug_info_set: a_checksum_info.count /= 0 implies checksum_debug_info = a_checksum_info
+			a_checksum_info.count = 0 implies checksum_debug_directory = Void and checksum_debug_info = Void
 		end
 
 	set_public_key (a_key: like public_key; a_signing: like signing)

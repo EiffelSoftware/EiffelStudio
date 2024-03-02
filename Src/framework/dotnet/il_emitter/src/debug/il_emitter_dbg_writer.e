@@ -55,16 +55,18 @@ feature -- Access
 
 feature -- Update
 
-	close
+	close (a_pe_file: detachable CLI_PE_FILE)
 			-- Stop all processing on current.
 		local
 			l_pdb_file: CLI_PDB_FILE
 			l_sha256, l_guid: ARRAY [NATURAL_8]
 			l_time: INTEGER
+
+			l_codeview_debug_info,
+			l_checksum_debug_info: MANAGED_POINTER
+			l_codeview_dbg_directory: CLI_DEBUG_DIRECTORY_I
 		do
 				-- update pdb_stream entry point
-
-
 			emitter.update_pdb_stream_entry_point (entry_point_token)
 			create l_pdb_file.make (associated_pdb_file_name.name, emitter)
 			l_pdb_file.save
@@ -79,6 +81,18 @@ feature -- Update
 
 			l_pdb_file.update_pdb_stream_pdb_id (compute_pdb_id (l_guid, l_time))
 			associated_pdb_checksum.set_checksum (l_sha256)
+
+				-- Note: the call to `codeview_debug_info` also updates the related timestamp with PDF file information.
+			if a_pe_file /= Void then
+				l_codeview_dbg_directory := a_pe_file.codeview_debug_directory
+				l_codeview_debug_info := codeview_debug_info (l_codeview_dbg_directory)
+				a_pe_file.set_codeview_debug_information (l_codeview_dbg_directory, l_codeview_debug_info)
+				if attached a_pe_file.checksum_debug_directory as l_checksum_dbg_directory then
+					l_checksum_debug_info := checksum_debug_info (l_checksum_dbg_directory)
+					a_pe_file.set_checksum_debug_information (l_checksum_dbg_directory, l_checksum_debug_info)
+				end
+			end
+
 			is_successful := True
 			is_closed := True
 		end
@@ -140,18 +154,6 @@ feature -- Update
 			l_local_scope_index := emitter.next_pdb_table_index ({PDB_TABLES}.tlocalscope)
 			idx := emitter.add_pdb_table_entry (l_local_scope_entry)
 
-			is_successful := True
-		end
-
-	open_read
-		do
-			is_closed := False
-			is_successful := True
-		end
-
-	close_read
-		do
-			is_closed := True
 			is_successful := True
 		end
 

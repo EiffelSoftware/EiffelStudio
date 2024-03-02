@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Update
 
-	close
+	close (a_pe_file: detachable CLI_PE_FILE)
 			-- Stop all processing on current.
 		do
 			last_call_success := c_close (item)
@@ -76,18 +76,6 @@ feature -- Update
 			-- Close most recently opened scope.
 		do
 			last_call_success := c_close_scope (item, end_offset)
-		end
-
-	open_read
-		do
-			is_closed := False
-			last_call_success := 0
-		end
-
-	close_read
-		do
-			is_closed := True
-			last_call_success := 0
 		end
 
 feature -- PE file data

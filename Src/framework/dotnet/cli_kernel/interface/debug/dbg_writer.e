@@ -10,7 +10,7 @@ deferred class
 
 feature -- Update
 
-	close
+	close (a_pe_file: detachable CLI_PE_FILE)
 			-- Stop all processing on current.
 		require
 			not_is_closed: not is_closed
@@ -56,27 +56,6 @@ feature -- Update
 		ensure
 			is_successful
 		end
-
-	open_read
-			-- Open for update.
-		require
-			is_closed: is_closed
-		deferred
-		ensure
-			not_is_closed: not is_closed
-			is_successful
-		end
-
-	close_read
-			-- Close the update.
-		require
-			not_is_closed: not is_closed
-		deferred
-		ensure
-			is_closed: is_closed
-			is_successful
-		end
-
 
 feature -- PE file data
 

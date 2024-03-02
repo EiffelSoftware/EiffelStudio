@@ -1127,7 +1127,7 @@ feature -- Cleanup
 			internal_dbg_documents := Void
 			internal_dbg_pragma_documents := Void
 			if attached dbg_writer as l_dbg_writer and then not dbg_writer.is_closed then
-				dbg_writer.close
+				dbg_writer.close (Void)
 			end
 			dbg_writer := Void
 		end
@@ -1471,13 +1471,12 @@ feature -- Code generation
 			a_signing_not_void: public_key /= Void implies a_signing /= Void
 		local
 			l_pe_file: CLI_PE_FILE
-			l_codeview_debug_info: MANAGED_POINTER
-			l_checksum_debug_info: MANAGED_POINTER
-			l_checksum_dbg_directory: CLI_DEBUG_DIRECTORY
-			l_reproducible_dbg_directory: CLI_DEBUG_DIRECTORY
-			l_checksum_info: MANAGED_POINTER
 			ept: like entry_point_token
 			loc: PATH
+			l_codeview_debug_info,
+			l_checksum_debug_info: MANAGED_POINTER
+			l_checksum_dbg_directory,
+			l_reproducible_dbg_directory: CLI_DEBUG_DIRECTORY
 		do
 			l_pe_file := md_factory.pe_file (module_file_name, is_dll or is_console_application, is_dll, is_32bits, md_emit)
 			if is_debug_info_enabled then
@@ -1496,19 +1495,7 @@ feature -- Code generation
 						l_pe_file.set_reproducible_debug_information (l_reproducible_dbg_directory)
 					end
 
-					dbg_writer.close
-
-					if system.is_il_netcore then
-							-- Note: the call to `codeview_debug_info` also updates the related timestamp with PDF file information.
-						dbg_writer.open_read
-						l_codeview_debug_info := dbg_writer.codeview_debug_info (l_codeview_dbg_directory)
-						l_pe_file.set_codeview_debug_information (l_codeview_dbg_directory, l_codeview_debug_info)
-						if l_checksum_dbg_directory /= Void then
-							l_checksum_debug_info := dbg_writer.checksum_debug_info (l_checksum_dbg_directory)
-							l_pe_file.set_checksum_debug_information (l_checksum_dbg_directory, l_checksum_debug_info)
-						end
-						dbg_writer.close_read
-					end
+					dbg_writer.close (l_pe_file)
 				else
 					check implemented: False end
 				end

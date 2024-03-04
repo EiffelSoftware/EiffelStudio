@@ -156,8 +156,11 @@ feature -- Access
 				--| Adds the size of each heap (string, user string, blob, and GUID)
 				--| The size of the metadata header and table header.
 				--| The final result is the size of the metadata in bytes.
-
-			Result := pe_writer.compute_metadata_size.to_integer_32
+			Result := pe_writer.computed_metadata_size.to_integer_32
+			if Result = 0 then
+				pe_writer.compute_metadata_size
+				Result := pe_writer.computed_metadata_size.to_integer_32
+			end
 		end
 
 	save_pdb_size: INTEGER
@@ -169,7 +172,11 @@ feature -- Access
 				--| The size of the metadata header and table header.
 				--| The final result is the size of the metadata in bytes.
 
-			Result := pdb_writer.compute_metadata_size.to_integer_32
+			Result := pdb_writer.computed_metadata_size.to_integer_32
+			if Result = 0 then
+				pdb_writer.compute_metadata_size
+				Result := pdb_writer.computed_metadata_size.to_integer_32
+			end
 		end
 
 feature -- Pre-Save
@@ -302,9 +309,6 @@ feature {NONE} -- Implementation
 			j,m: NATURAL_32
 		do
 			create l_counts.make_filled (0, 1, max_tables + extra_indexes)
-			if a_writer.is_pdb_generator then
-				l_counts [t_pdb + 1] := a_writer.pdb_stream.size_of.to_natural_32 -- TODO: check if this is correct				
-			end
 			l_counts [t_string + 1] := a_writer.strings_heap_size
 			l_counts [t_us + 1] := a_writer.us_heap_size
 			l_counts [t_guid + 1] := a_writer.guid_heap_size
@@ -372,8 +376,7 @@ feature {NONE} -- Implementation
 		end
 
 	write_pdb_streams (a_writer: PE_GENERATOR; a_file: FILE)
-			-- Write the string heap to a binary file.
-			-- II.24.2.3 #Strings heap
+			-- Write the Pdb stream to a binary file.
 		require
 			open_write: a_file.is_open_write
 		local

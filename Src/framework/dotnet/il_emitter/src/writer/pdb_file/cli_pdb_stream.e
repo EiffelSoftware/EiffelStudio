@@ -140,7 +140,11 @@ feature -- Measurement
 			s.put_natural_8_array (referenced_type_system_tables.count)
 
 				-- type_system_table_rows	
-			s.put_natural_8_array (type_system_table_rows.count * 4)
+			across
+				type_system_table_rows as ic
+			loop
+				s.put_natural_32
+			end
 
 			Result := s
 		end

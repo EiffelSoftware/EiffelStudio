@@ -95,22 +95,21 @@ feature -- Saving
 				-- First update all uninitialized PE_LIST (FieldList, MethodList, ParamList, ...)
 			prepare
 
-				-- First compute size of PE file headers and sections.
-			compute_sizes
-
 				-- Write to file now.
 			create l_pdb_file.make_with_name (file_name)
 			l_pdb_file.open_write
 
-				-- First the headers
-			-- l_pe_file.put_managed_pointer (dos_header, 0, dos_header.count)
-
-
+				-- Update the #Pdb stream
+			emitter.update_pdb_stream
 			if emitter.appending_to_file_supported then
 					-- Update the pdb metadata tables.
-				emitter.update_pdb_stream
+					-- Compute size of PDB file headers and sections.
+				compute_sizes
 				emitter.append_to_pdb_file (l_pdb_file)
 			else
+					-- Compute size of PDB file headers and sections.
+				compute_sizes
+
 				-- Save the metadata to `l_pe_file'. We cannot use `MD_EMIT.assembly_memory'
 				-- because on some platforms the amount of required memory cannot be allocated
 				-- in one chunk.

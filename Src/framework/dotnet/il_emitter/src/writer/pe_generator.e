@@ -659,12 +659,15 @@ feature {MD_EMIT} -- Implementation
 			Result := (version_string.count + 1).to_natural_32
 		end
 
-	compute_metadata_size: NATURAL_32
+	computed_metadata_size: NATURAL_32
+			-- metadata size computed by previous call to `compute_metadata_size`
+
+	compute_metadata_size
 			--| Computes the size of the PE metadata for the current emitted assembly.
 			--| Iterate through each table and multiplying the size of the table by the number of entries in the table.
 			--| Adds the size of each heap (string, user string, blob, and GUID)
 			--| The size of the metadata header and table header.
-			--| The final result is the size of the metadata in bytes.
+			--| The size of the metadata (in bytes) in stored into `computed_metadata_size` attribute.
 		note
 			EIS: "name=Metadata Root", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297", "protocol=uri"
 		local
@@ -677,6 +680,7 @@ feature {MD_EMIT} -- Implementation
 			l_tables_header: PE_DOTNET_META_TABLES_HEADER
 			l_md_tables: like {PE_GENERATOR}.tables
 		do
+			computed_metadata_size := 0
 			l_md_tables := tables
 			l_stream_headers := stream_headers
 			l_tables_header := tables_header
@@ -701,7 +705,7 @@ feature {MD_EMIT} -- Implementation
 				-- check stream_names feature.
 
 				-- StreamHeaders. Array of n StreamHdr structures
-				-- "#~", "#Strings", "#US", "#GUID", "#Blob"
+				-- ("#Pdb), "#~", "#Strings", "#US", "#GUID", "#Blob"
 			across stream_names as elem loop
 				l_current_rva := l_current_rva + 8 + (elem.count + 1).to_natural_32
 				if (l_current_rva \\ 4) /= 0 then
@@ -711,6 +715,7 @@ feature {MD_EMIT} -- Implementation
 			if is_pdb_generator then
 				l_stream_headers [stream_pdb_index, 1] := l_current_rva
 				l_current_rva := l_current_rva + pdb_stream.size_of.to_natural_32 -- TODO: check
+				l_stream_headers [stream_pdb_index, 2] := l_current_rva - l_stream_headers [stream_pdb_index, 1]
 				l_stream_headers [stream_tilda_index, 1] := l_current_rva
 			else
 				l_stream_headers [stream_tilda_index, 1] := l_current_rva
@@ -745,10 +750,7 @@ feature {MD_EMIT} -- Implementation
 			end
 
 			create l_counts.make_filled (0, 1, Max_tables + Extra_indexes)
-			-- TODO check for PDB ...
-			if is_pdb_generator then
-				l_counts [t_pdb + 1] := pdb_stream.size_of.to_natural_32
-			end
+
 			l_counts [t_string + 1] := strings_heap_size
 			l_counts [t_us + 1] := us_heap_size
 			l_counts [t_guid + 1] := guid_heap_size
@@ -832,7 +834,9 @@ feature {MD_EMIT} -- Implementation
 
 			l_stream_headers [stream_blob_index, 2] := l_current_rva - l_stream_headers [stream_blob_index, 1]
 
-			Result := l_current_rva.to_natural_32
+			computed_metadata_size := l_current_rva.to_natural_32
+		ensure
+			computed_metadata_size > 0
 		end
 
 	update_pdb_stream

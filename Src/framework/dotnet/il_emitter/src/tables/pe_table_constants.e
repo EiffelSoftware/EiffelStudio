@@ -16,8 +16,6 @@ feature -- Access
 
 	Extra_indexes: INTEGER = 5
 
-	T_pdb: INTEGER = 64
-
 	T_string: INTEGER = 65
 
 	T_us: INTEGER = 66

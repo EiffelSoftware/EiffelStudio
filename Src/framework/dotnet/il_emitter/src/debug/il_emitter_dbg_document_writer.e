@@ -98,7 +98,7 @@ feature -- Definition
 			blob_len: NATURAL_32
 			blob_hash: NATURAL_32
 			l_method_dbgi_table_entry: PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY
-			l_idx: NATURAL_32
+			l_idx, l_method_index: NATURAL_32
 		do
 			if count > 0 then
 					-- Build the blob_data from the input arrays
@@ -130,8 +130,8 @@ feature -- Definition
 			else
 				create l_method_dbgi_table_entry.make_with_data (document_entry_index, 0)
 			end
-
 			l_idx := md_emit.next_pdb_table_index ({PDB_TABLES}.tmethoddebuginformation)
+			l_method_index := md_emit.add_pdb_table_entry (l_method_dbgi_table_entry)
 			is_successful := True
 		end
 

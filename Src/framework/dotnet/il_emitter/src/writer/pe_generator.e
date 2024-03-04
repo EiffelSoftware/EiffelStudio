@@ -160,6 +160,7 @@ feature -- Table change
 				{PE_TABLES}.tStandaloneSig
 			then
 				-- No duplication checking
+				do_nothing -- line to be able to set breakpoint
 			when
 				{PE_TABLES}.tmodule,
 				{PE_TABLES}.ttypedef,
@@ -181,11 +182,12 @@ feature -- Table change
 				{PDB_TABLES}.tCustomDebugInformation
 			then
 				-- No duplication checking				
+				do_nothing -- line to be able to set breakpoint
 			when
 				{PDB_TABLES}.tdocument
 			then
 				Result := a_entry.token_from_table (l_md_table)
-				
+
 			else
 				Result := a_entry.token_from_table (l_md_table)
 			end

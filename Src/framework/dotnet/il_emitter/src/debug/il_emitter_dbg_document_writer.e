@@ -21,7 +21,6 @@ feature {NONE} -- Initialization
 			l_owner_index: NATURAL_32
 			l_name_index: NATURAL_32
 			l_scope_entry_index, l_document_entry_index: NATURAL_32
-			l_entry: NATURAL_32
 			l_hash_algo_guid_idx, l_hash_blob_idx: NATURAL_32
 			d: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
 		do
@@ -130,7 +129,7 @@ feature -- Definition
 			else
 				create l_method_dbgi_table_entry.make_with_data (document_entry_index, 0)
 			end
-			l_idx := md_emit.next_pdb_table_index ({PDB_TABLES}.tmethoddebuginformation)
+			l_idx := md_emit.next_pdb_table_index (l_method_dbgi_table_entry.table_index)
 			l_method_index := md_emit.add_pdb_table_entry (l_method_dbgi_table_entry)
 			is_successful := True
 		end

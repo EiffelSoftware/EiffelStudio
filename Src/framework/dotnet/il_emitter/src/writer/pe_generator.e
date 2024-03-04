@@ -144,11 +144,50 @@ feature -- Table change
 
 			inspect a_entry.table_index
 			when
+				{PE_TABLES}.tmethoddef,
+				{PE_TABLES}.tparam,
+				{PE_TABLES}.tfield,
+				{PE_TABLES}.tassemblydef,
+				{PE_TABLES}.tClassLayout, -- Not used.
+				{PE_TABLES}.tconstant, -- Not used.
+				{PE_TABLES}.tcustomattribute,
+				{PE_TABLES}.tfieldmarshal,
+				{PE_TABLES}.tfieldrva,
+				{PE_TABLES}.tGenericParam, -- Not used.
+				{PE_TABLES}.tImplMap,
+				{PE_TABLES}.tMethodSemantics,
+				{PE_TABLES}.tNestedClass, -- Not used
+				{PE_TABLES}.tStandaloneSig
+			then
+				-- No duplication checking
+			when
+				{PE_TABLES}.tmodule,
+				{PE_TABLES}.ttypedef,
+				{PE_TABLES}.tassemblyref,
+				{PE_TABLES}.ttyperef,
+				{PE_TABLES}.tmemberref,
+				{PE_TABLES}.tmoduleref,
+				{PE_TABLES}.tinterfaceimpl
+			then
+				Result := a_entry.token_from_table (l_md_table)
+
+			when
+				{PDB_TABLES}.tmethoddebuginformation,
+				{PDB_TABLES}.tlocalscope,
+				{PDB_TABLES}.tlocalvariable,
+				{PDB_TABLES}.tlocalconstant,
+				{PDB_TABLES}.timportscope,
+				{PDB_TABLES}.tstatemachinemethod,
+				{PDB_TABLES}.tCustomDebugInformation
+			then
+				-- No duplication checking				
+			when
 				{PDB_TABLES}.tdocument
 			then
 				Result := a_entry.token_from_table (l_md_table)
+				
 			else
-				-- No duplication checking
+				Result := a_entry.token_from_table (l_md_table)
 			end
 			if Result = 0 then
 				l_md_table.force (a_entry)

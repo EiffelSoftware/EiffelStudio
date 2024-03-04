@@ -75,9 +75,9 @@ feature -- Operations
 		local
 			l_bytes: NATURAL_32
 		do
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, number, 0)
+			{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, number, 0)
 			l_bytes := 2
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, flags, 2)
+			{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, flags, 2)
 			l_bytes := l_bytes + 2
 
 			l_bytes := l_bytes + owner.render (a_sizes, a_dest, l_bytes)
@@ -90,9 +90,9 @@ feature -- Operations
 		local
 			l_bytes: NATURAL_32
 		do
-			number := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, 0)
+			number := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, 0)
 			l_bytes := 2
-			flags := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, 2)
+			flags := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, 2)
 			l_bytes := l_bytes + 2
 
 			l_bytes := l_bytes + owner.get (a_sizes, a_src, l_bytes)

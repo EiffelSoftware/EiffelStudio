@@ -79,11 +79,11 @@ feature -- Operations
 			l_bytes_written := 0
 
 				-- Write the attributes to the destination array
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, attributes, l_bytes_written.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, attributes, l_bytes_written.to_integer_32)
 			l_bytes_written := l_bytes_written + 2
 
 				-- Write the index to the destination array
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, index, l_bytes_written.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, index, l_bytes_written.to_integer_32)
 			l_bytes_written := l_bytes_written + 2
 
 				-- Render the name_index and add the number of bytes written to l_bytes_written
@@ -102,11 +102,11 @@ feature -- Operations
 			l_bytes := 0
 
 				-- Read the attributes from the source array
-			attributes := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, l_bytes.to_integer_32)
+			attributes := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
 
 				-- Read the index from the source array
-			index := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, l_bytes.to_integer_32)
+			index := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
 
 				-- Read the name_index

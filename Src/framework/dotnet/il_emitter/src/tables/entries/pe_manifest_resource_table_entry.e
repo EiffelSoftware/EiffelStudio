@@ -76,9 +76,9 @@ feature -- Operations
 		do
 				-- Initialize the bytes to write and set offset and flags to the buffer.
 			l_bytes := 0
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, offset, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, offset, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, flags, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, flags, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
 
 				-- Write name and implemention to the buffer and update the bytes.
@@ -94,9 +94,9 @@ feature -- Operations
 		do
 				-- Initialize the bytes to write and set offset and flags to the buffer.
 			l_bytes := 0
-			offset := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, l_bytes.to_integer_32)
+			offset := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
-			flags := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, l_bytes.to_integer_32)
+			flags := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
 
 				-- Get name and implemention to the buffer and update the bytes.

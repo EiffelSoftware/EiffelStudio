@@ -43,7 +43,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- Write action to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, action, 0)
+			{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, action, 0)
 
 				-- Intialize the number of bytes written
 			l_bytes := 2
@@ -61,7 +61,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- Set the action (from a_src)  to action
-			action := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, 0)
+			action := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, 0)
 
 				-- Intialize the number of bytes.
 			l_bytes := 2

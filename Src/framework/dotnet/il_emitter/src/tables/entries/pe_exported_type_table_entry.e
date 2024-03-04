@@ -77,12 +77,12 @@ feature -- Operations
 		local
 			l_bytes: NATURAL_32
 		do
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, flags, 0)
+			{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, flags, 0)
 
 			l_bytes := 4
 
 				-- Write type_def_id
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, type_def_id, 0)
+			{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, type_def_id, 0)
 			l_bytes := l_bytes + 4
 
 				-- Write type_name, type_name_space, implemenation and update bytes
@@ -97,12 +97,12 @@ feature -- Operations
 		local
 			l_bytes: NATURAL_32
 		do
-			flags := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)
+			flags := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, 0)
 
 			l_bytes := 4
 
 				-- Get type_def_id
-			type_def_id := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)
+			type_def_id := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, 0)
 			l_bytes := l_bytes + 4
 
 				-- Get type_name, type_name_space, implemenation and update bytes

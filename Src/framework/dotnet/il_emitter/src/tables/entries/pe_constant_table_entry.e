@@ -66,9 +66,9 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- Write the type to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_8 (a_dest, type, 0)
+			{BYTE_ARRAY_HELPER}.put_natural_8 (a_dest, type, 0)
 			l_bytes := 1
-			{BYTE_ARRAY_HELPER}.put_array_natural_8 (a_dest, 0, 1)
+			{BYTE_ARRAY_HELPER}.put_natural_8 (a_dest, 0, 1)
 			l_bytes := l_bytes + 1
 
 				-- Write the parent_index and value_index to the buffer and update the number of bytes
@@ -84,7 +84,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- Set the type (from a_src)  to the type
-			type := {BYTE_ARRAY_HELPER}.byte_array_to_natural_8 (a_src, 0)
+			type := {BYTE_ARRAY_HELPER}.natural_8_at (a_src, 0)
 				-- also unused byte +1
 
 				-- Initialize the number of bytes readad

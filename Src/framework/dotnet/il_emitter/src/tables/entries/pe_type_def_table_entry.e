@@ -146,7 +146,7 @@ feature -- Operations
 			fake_extends: PE_TYPEDEF_OR_REF
 		do
 				-- Write the flags to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_integer_32 (a_dest, flags, 0)
+			{BYTE_ARRAY_HELPER}.put_integer_32 (a_dest, flags, 0)
 
 				-- Initialize the number of bytes written
 			l_bytes := 4
@@ -175,7 +175,7 @@ feature -- Operations
 			fake_extends: PE_TYPEDEF_OR_REF
 		do
 				-- Set the flags (from a_src)  to the flags.
-			flags := {BYTE_ARRAY_HELPER}.byte_array_to_integer_32 (a_src, 0)
+			flags := {BYTE_ARRAY_HELPER}.integer_32_at (a_src, 0)
 
 				-- Initialize the number of bytes readed.
 			l_bytes := 4

@@ -214,19 +214,19 @@ feature -- Operations
 		do
 				-- Write the method.rva to the destination buffer `a_dest`.
 			if attached method as l_method then
-				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, l_method.rva, 0)
+				{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, l_method.rva, 0)
 			else
-				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, rva, 0)
+				{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, rva, 0)
 			end
 				-- Initialize the number of bytes written
 			l_bytes := 4
 
 				-- Write implementation flags to the destination buffer.
-			{BYTE_ARRAY_HELPER}.put_array_integer_16 (a_dest, impl_flags, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_integer_16 (a_dest, impl_flags, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
 
 				-- Write flags to the destination buffer.
-			{BYTE_ARRAY_HELPER}.put_array_integer_16 (a_dest, flags, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_integer_16 (a_dest, flags, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
 
 				-- Write the name_index, signature_index, param_index
@@ -245,17 +245,17 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- Set the rva (from a_src)  to rva.
-			rva := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)
+			rva := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, 0)
 
 				-- Initialize the number of bytes readed.
 			l_bytes := 4
 
 				-- Set the implementation flags (from a_src)  to impl_flags.
-			impl_flags := {BYTE_ARRAY_HELPER}.byte_array_to_integer_16 (a_src, l_bytes.to_integer_32)
+			impl_flags := {BYTE_ARRAY_HELPER}.integer_16_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
 
 				-- Set the flags (from a_src)  to flags.
-			flags := {BYTE_ARRAY_HELPER}.byte_array_to_integer_16 (a_src, l_bytes.to_integer_32)
+			flags := {BYTE_ARRAY_HELPER}.integer_16_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
 
 				-- Get the name_index, signature_index, param_index

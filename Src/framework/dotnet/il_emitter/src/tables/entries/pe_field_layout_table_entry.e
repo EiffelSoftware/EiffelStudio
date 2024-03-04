@@ -59,7 +59,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- Write offset to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, offset, 0)
+			{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, offset, 0)
 
 				-- Intialize the number of bytes written
 			l_bytes := 4
@@ -76,7 +76,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- Set the offset (from a_src)  to action
-			offset := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)
+			offset := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, 0)
 
 				-- Intialize the number of bytes.
 			l_bytes := 4

@@ -106,15 +106,15 @@ feature -- Operations
 			l_bytes := 0
 
 				-- Assembly version
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, major, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, major, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, minor, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, minor, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, build, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, build, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, revision, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, revision, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
-			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_integer_32 (a_dest, flags, l_bytes.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_integer_32 (a_dest, flags, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
 
 				-- Write public_key_index, name_index, culture_index and hash_index to the buffer and update the number of bytes.
@@ -136,15 +136,15 @@ feature -- Operations
 			l_bytes := 0
 
 				-- Assembly version
-			major := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, l_bytes.to_integer_32)
+			major := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
-			minor := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, l_bytes.to_integer_32)
+			minor := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
-			build := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, l_bytes.to_integer_32)
+			build := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
-			revision := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src, l_bytes.to_integer_32)
+			revision := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
-			flags := {BYTE_ARRAY_HELPER}.byte_array_to_integer_32 (a_src, l_bytes.to_integer_32)
+			flags := {BYTE_ARRAY_HELPER}.integer_32_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
 
 				-- Get the public_key_index, name_index  culture_index, hash_index and

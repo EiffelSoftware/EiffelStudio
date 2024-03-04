@@ -71,7 +71,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- Set flags to the buffer.
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, flags, 0)
+			{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, flags, 0)
 				-- Initialize the bytes
 			l_bytes := 4
 
@@ -87,7 +87,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- get flags from the buffer.
-			flags := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)
+			flags := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, 0)
 				-- Initialize the bytes
 			l_bytes := 4
 

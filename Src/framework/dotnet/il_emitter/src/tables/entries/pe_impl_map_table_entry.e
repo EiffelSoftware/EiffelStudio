@@ -108,7 +108,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- Write flags to the destination buffer `a_dest`.
-			{BYTE_ARRAY_HELPER}.put_array_integer_16 (a_dest, flags, 0)
+			{BYTE_ARRAY_HELPER}.put_integer_16 (a_dest, flags, 0)
 
 				-- Intialize the number of bytes written
 			l_bytes := 2
@@ -127,7 +127,7 @@ feature -- Operations
 			l_bytes: NATURAL_32
 		do
 				-- Set the flags (from a_src)  to flags
-			flags := {BYTE_ARRAY_HELPER}.byte_array_to_integer_16 (a_src, 0)
+			flags := {BYTE_ARRAY_HELPER}.integer_16_at (a_src, 0)
 
 				-- Intialize the number of bytes.
 			l_bytes := 2

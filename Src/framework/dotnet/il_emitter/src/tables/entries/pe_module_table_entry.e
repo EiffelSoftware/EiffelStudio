@@ -66,7 +66,7 @@ feature -- Operations
 			l_bytes_written: NATURAL_32
 		do
 				-- Initialize the first two bytes of dest to zero
-			{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, 0, 0)
+			{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, 0, 0)
 
 				-- Set the initial number of bytes written to 2
 			l_bytes_written := 2
@@ -83,17 +83,17 @@ feature -- Operations
 					-- If the size of the GUID table is greater than 65535, write two
 					-- zero-valued NATURAL_32 to the destination
 					--| DWord in C++
-				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, 0, l_bytes_written.to_integer_32)
+				{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, 0, l_bytes_written.to_integer_32)
 				l_bytes_written := l_bytes_written + 4
-				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, 0, l_bytes_written.to_integer_32)
+				{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, 0, l_bytes_written.to_integer_32)
 				l_bytes_written := l_bytes_written + 4
 			else
 					-- If the size of the GUID table is greater than 65535, write two
 					-- zero-valued NATURAL_16 to the destination
 					--| Word in C++
-				{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, 0, l_bytes_written.to_integer_32)
+				{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, 0, l_bytes_written.to_integer_32)
 				l_bytes_written := l_bytes_written + 2
-				{BYTE_ARRAY_HELPER}.put_array_natural_16 (a_dest, 0, l_bytes_written.to_integer_32)
+				{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, 0, l_bytes_written.to_integer_32)
 				l_bytes_written := l_bytes_written + 2
 			end
 

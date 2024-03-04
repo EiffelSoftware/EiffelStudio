@@ -97,11 +97,11 @@ feature -- Operations
 			l_bytes_written := l_bytes_written + constant_list_row_id.render (a_sizes, a_dest, l_bytes_written)
 
 				-- Write the start_offset to the destination array
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, start_offset, l_bytes_written.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, start_offset, l_bytes_written.to_integer_32)
 			l_bytes_written := l_bytes_written + 4
 
 				-- Write the length to the destination array
-			{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, length, l_bytes_written.to_integer_32)
+			{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, length, l_bytes_written.to_integer_32)
 			l_bytes_written := l_bytes_written + 4
 
 				-- Return the total number of bytes written
@@ -128,11 +128,11 @@ feature -- Operations
 			l_bytes := l_bytes + constant_list_row_id.get (a_sizes, a_src, l_bytes)
 
 				-- Read the start_offset from the source array
-			start_offset := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, l_bytes.to_integer_32)
+			start_offset := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
 
 				-- Read the length from the source array
-			length := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, l_bytes.to_integer_32)
+			length := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
 
 				-- Return the total number of bytes read

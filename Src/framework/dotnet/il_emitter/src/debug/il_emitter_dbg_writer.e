@@ -60,7 +60,9 @@ feature -- Update
 		local
 			l_pdb_file: CLI_PDB_FILE
 			l_sha256, l_guid: ARRAY [NATURAL_8]
+			l_sha256_mp: MANAGED_POINTER
 			l_time: INTEGER
+			g: CIL_GUID
 
 			l_codeview_debug_info,
 			l_checksum_debug_info: MANAGED_POINTER
@@ -73,9 +75,15 @@ feature -- Update
 			l_time := associated_pdb_file_timestamp
 
 			l_sha256 := {MD_HASH_UTILITIES}.sha256_bytes_for_file_name (l_pdb_file.file_name)
-
+			create l_sha256_mp.make_from_array (l_sha256)
 				-- We use the first 16 bytes as deterministic GUID 	
-			l_guid := l_sha256.subarray (l_sha256.lower, l_sha256.lower + 16 - 1)
+			create g.make (
+				l_sha256_mp.read_natural_32_le (0),
+				l_sha256_mp.read_natural_16_le (4),
+				l_sha256_mp.read_natural_16_le (6),
+				l_sha256_mp.read_array (8, 8)
+				)
+			l_guid := g.to_array_natural_8
 				-- We use this first 16 bytes as the GUID of CodeView
 			associated_code_view.set_gui (l_guid)
 

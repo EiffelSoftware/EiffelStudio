@@ -66,16 +66,16 @@ feature -- Update
 
 			l_codeview_debug_info,
 			l_checksum_debug_info: MANAGED_POINTER
-			l_codeview_dbg_directory: CLI_DEBUG_DIRECTORY_I
 		do
 				-- update pdb_stream entry point
 			emitter.update_pdb_stream_entry_point (entry_point_token)
 			create l_pdb_file.make (associated_pdb_file_name.name, emitter)
 			l_pdb_file.save
-			l_time := associated_pdb_file_timestamp
 
 			l_sha256 := {MD_HASH_UTILITIES}.sha256_bytes_for_file_name (l_pdb_file.file_name)
 			create l_sha256_mp.make_from_array (l_sha256)
+			l_time := associated_pdb_file_timestamp
+
 				-- We use the first 16 bytes as deterministic GUID 	
 			create g.make (
 				l_sha256_mp.read_natural_32_le (0),
@@ -92,12 +92,13 @@ feature -- Update
 
 				-- Note: the call to `codeview_debug_info` also updates the related timestamp with PDF file information.
 			if a_pe_file /= Void then
-				l_codeview_dbg_directory := a_pe_file.codeview_debug_directory
-				l_codeview_debug_info := codeview_debug_info (l_codeview_dbg_directory)
-				a_pe_file.set_codeview_debug_information (l_codeview_dbg_directory, l_codeview_debug_info)
-				if attached a_pe_file.checksum_debug_directory as l_checksum_dbg_directory then
-					l_checksum_debug_info := checksum_debug_info (l_checksum_dbg_directory)
-					a_pe_file.set_checksum_debug_information (l_checksum_dbg_directory, l_checksum_debug_info)
+				if attached a_pe_file.codeview_debug_directory as l_codeview_dbg_directory then
+					l_codeview_debug_info := codeview_debug_info (l_codeview_dbg_directory)
+					a_pe_file.set_codeview_debug_information (l_codeview_dbg_directory, l_codeview_debug_info)
+					if attached a_pe_file.checksum_debug_directory as l_checksum_dbg_directory then
+						l_checksum_debug_info := checksum_debug_info (l_checksum_dbg_directory)
+						a_pe_file.set_checksum_debug_information (l_checksum_dbg_directory, l_checksum_debug_info)
+					end
 				end
 			end
 

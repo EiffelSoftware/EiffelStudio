@@ -102,6 +102,7 @@ feature -- Definition
 			m: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
 			l_document_row_index: NATURAL_32
 			l_local_row_index: NATURAL_32
+			was_hidden_sequence: BOOLEAN
 		do
 			-- Blob ::= header SequencePointRecord (SequencePointRecord | document-record)*
 			-- SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
@@ -124,7 +125,7 @@ feature -- Definition
 				-- Double check what value should we put if the document_id is already set.
 				-- we put 0 in other case we need to use the current document id
 				-- document_entry_index.to_integer_32
-				l_sequence_points.set_document_id (0)
+				-- l_sequence_points.set_document_id (0)
 
 					-- Build the sequence points record
 					-- SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
@@ -136,6 +137,7 @@ feature -- Definition
 					if is_hidden_sequence_point (start_lines [start_lines.lower + i], end_lines [end_lines.lower + i],
 								 start_columns [start_columns.lower + i], end_columns [end_columns.lower + i]) then
 							-- Hidden-sequence-point-record
+						was_hidden_sequence := True
 						if i = 0 then
 							l_sequence_points.put_il_offset (offsets [offsets.lower + i])
 						else
@@ -152,8 +154,14 @@ feature -- Definition
 						end
 						l_sequence_points.put_lines (end_lines [end_lines.lower + i] - start_lines [start_lines.lower + i])
 						l_sequence_points.put_columns (end_columns [end_columns.lower + i] - start_columns [start_columns.lower + i])
-						l_sequence_points.put_start_line (start_lines [start_lines.lower + i])
-						l_sequence_points.put_start_column (start_columns [start_columns.lower + i])
+						if was_hidden_sequence = True or else i = 0 then
+							l_sequence_points.put_start_line (start_lines [start_lines.lower + i])
+							l_sequence_points.put_start_column (start_columns [start_columns.lower + i])
+							was_hidden_sequence := False
+						else
+							l_sequence_points.put_start_line (start_lines [start_lines.lower + i] - start_lines [start_lines.lower + (i-1)])
+							l_sequence_points.put_start_column (start_columns [start_columns.lower + i] - start_columns [start_columns.lower + (i-1)])
+						end
 					end
 					i := i + 1
 				end

@@ -73,14 +73,6 @@ feature -- Setting
 			compress_data (a_value)
 		end
 
-	put_end_line (a_value: INTEGER_32)
-			-- Insert `a_value' into Current.
-		require
-			valid_value: a_value <= 0x20000000
-		do
-			compress_data (a_value)
-		end
-
 	put_start_column (a_value: INTEGER_32)
 			-- Insert `a_value' into Current.
 		require
@@ -89,10 +81,18 @@ feature -- Setting
 			compress_data (a_value)
 		end
 
-	put_end_column (a_value: INTEGER_32)
+	put_lines (a_value: INTEGER_32)
 			-- Insert `a_value' into Current.
 		require
-			valid_value: a_value <= 0x10000
+			valid_value: a_value >= 0
+		do
+			compress_data (a_value)
+		end
+
+	put_columns (a_value: INTEGER_32)
+			-- Insert `a_value' into Current.
+		require
+			valid_value: a_value >= 0
 		do
 			compress_data (a_value)
 		end

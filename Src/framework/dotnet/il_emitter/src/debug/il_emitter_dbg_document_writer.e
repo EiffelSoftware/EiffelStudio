@@ -125,7 +125,7 @@ feature -- Definition
 				-- Double check what value should we put if the document_id is already set.
 				-- we put 0 in other case we need to use the current document id
 				-- document_entry_index.to_integer_32
-				-- l_sequence_points.set_document_id (0)
+				l_sequence_points.set_document_id (0)
 
 					-- Build the sequence points record
 					-- SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record

@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 			align (a_file, 4)
 			l_flags := 0
 			a_file.put_natural_16 (0)
-			l_data := 5
+			l_data := a_writer.streams_count.to_natural_16 --5
 			a_file.put_natural_16 (l_data)
 			across 1 |..| a_writer.streams_count as i loop
 

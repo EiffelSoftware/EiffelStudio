@@ -78,6 +78,20 @@ feature -- Update
 			last_call_success := c_close_scope (item, end_offset)
 		end
 
+	open_local_signature (a_token: INTEGER)
+			-- Open Local signature token for the current method token.
+		do
+				-- Not implemented for COM interface.
+			last_call_success := 0
+		end
+
+	close_local_signature
+			-- Close local signature fo the current Method.
+		do
+				-- Not implemented for COM interface.
+			last_call_success := 0
+		end
+
 feature -- PE file data
 
 	codeview_debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER

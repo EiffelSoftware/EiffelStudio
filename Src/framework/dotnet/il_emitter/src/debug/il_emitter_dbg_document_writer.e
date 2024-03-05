@@ -127,17 +127,34 @@ feature -- Definition
 				l_sequence_points.set_document_id (0)
 
 					-- Build the sequence points record
+					-- SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
 				from
 					i := 0
 				until
 					i >= count
 				loop
-
-					l_sequence_points.put_il_offset (offsets [offsets.lower + i])
-					l_sequence_points.put_start_line (start_lines [start_lines.lower + i])
-					l_sequence_points.put_start_column (start_columns [start_columns.lower + i])
-					l_sequence_points.put_end_line (end_lines [end_lines.lower + i])
-					l_sequence_points.put_end_column (end_columns [end_columns.lower + i])
+					if is_hidden_sequence_point (start_lines [start_lines.lower + i], end_lines [end_lines.lower + i],
+								 start_columns [start_columns.lower + i], end_columns [end_columns.lower + i]) then
+							-- Hidden-sequence-point-record
+						if i = 0 then
+							l_sequence_points.put_il_offset (offsets [offsets.lower + i])
+						else
+							l_sequence_points.put_il_offset (offsets [offsets.lower + i] - offsets [offsets.lower + (i - 1)])
+						end
+						l_sequence_points.put_lines (0)
+						l_sequence_points.put_columns (0)
+					else
+							-- sequence-point-record (it seems it the same as hidden)
+						if i = 0 then
+							l_sequence_points.put_il_offset (offsets [offsets.lower + i])
+						else
+							l_sequence_points.put_il_offset (offsets [offsets.lower + i] - offsets [offsets.lower + (i - 1)])
+						end
+						l_sequence_points.put_lines (end_lines [end_lines.lower + i] - start_lines [start_lines.lower + i])
+						l_sequence_points.put_columns (end_columns [end_columns.lower + i] - start_columns [start_columns.lower + i])
+						l_sequence_points.put_start_line (start_lines [start_lines.lower + i])
+						l_sequence_points.put_start_column (start_columns [start_columns.lower + i])
+					end
 					i := i + 1
 				end
 
@@ -158,6 +175,13 @@ feature -- Definition
 			l_idx := md_emit.next_pdb_table_index (l_method_dbgi_table_entry.table_index)
 			l_method_index := md_emit.add_pdb_table_entry (l_method_dbgi_table_entry)
 			is_successful := True
+		end
+
+
+	is_hidden_sequence_point (a_start_line, a_end_line: INTEGER; a_start_column, a_end_column: INTEGER): BOOLEAN
+			-- True if: Hidden sequence point is a sequence point whose Start Line = End Line = 0xfeefee and Start Column = End Column = 0.
+		do
+			Result := a_start_line = a_end_line and then a_start_line = 0xfeefee and then (a_start_column = a_end_column) and then a_start_column = 0
 		end
 
 note

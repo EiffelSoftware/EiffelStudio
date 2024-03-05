@@ -32,15 +32,16 @@ feature -- Access
 
 	pdb_id: ARRAY [NATURAL_8]
 			-- A byte sequence uniquely representing the debugging metadata blob content.
-			-- size 20 (5 bytes)
+			-- size 20.
 
 	entry_point: INTEGER_32
 			-- Entry point MethodDef token, or 0 if not applicable. The same value as stored in CLI header of the PE file.
 			-- See ECMA-335-II 15.4.1.2.
+			-- Size 4.
 
 	referenced_type_system_tables: ARRAY [NATURAL_8]
 			-- Bit vector of referenced type system metadata tables, let n be the number of bits that are 1.
-			-- Size 8 (2 bytes)
+			-- Size 8.
 
 	type_system_table_rows: ARRAY [NATURAL_32]
 			-- Array of n 4-byte unsigned integers indicating the number of rows for each referenced type system metadata table.

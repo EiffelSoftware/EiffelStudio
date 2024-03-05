@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dbg_writer: DBG_WRITER_I; a_md_emit: MD_EMIT; a_url: CLI_STRING; a_language, a_vendor, a_doc_type: CIL_GUID)
+	make (a_dbg_writer: IL_EMITTER_DBG_WRITER; a_md_emit: MD_EMIT; a_url: CLI_STRING; a_language, a_vendor, a_doc_type: CIL_GUID)
 		local
 			l_token, lang_idx: NATURAL_32
 			l_owner_index: NATURAL_32
@@ -65,7 +65,7 @@ feature -- Access
 
 	md_emit: MD_EMIT
 
-	dbg_writer: DBG_WRITER_I
+	dbg_writer: IL_EMITTER_DBG_WRITER
 
 	entry: PE_DOCUMENT_TABLE_ENTRY
 
@@ -92,42 +92,61 @@ feature -- Definition
 			start_columns, end_lines, end_columns: ARRAY [INTEGER])
 			-- Set sequence points for `document'
 		local
-			i, j: INTEGER
+			i: INTEGER
 			blob_data: ARRAY [NATURAL_8]
-			blob_len: NATURAL_32
 			blob_hash: NATURAL_32
 			l_method_dbgi_table_entry: PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY
 			l_idx, l_method_index: NATURAL_32
+			l_sequence_points: MD_SEQUENCE_POINTS
+			d: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
+			l_document_row_index: NATURAL_32
 		do
+			-- Blob ::= header SequencePointRecord (SequencePointRecord | document-record)*
+			-- SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
+
+			-- Extract table type and row from the method token
+			d := md_emit.extract_table_type_and_row (document_entry_index.to_integer_32)
+			l_document_row_index := d.table_row_index
+
 			if count > 0 then
-					-- Build the blob_data from the input arrays
-				create blob_data.make_filled (0, 1, count * 5)
+				create l_sequence_points.make
+					-- Build the header
+					-- LocalSignature (Method Token)
+					-- IntialDocuemnt (Current Document Entry)
+				l_sequence_points.set_local_signature (dbg_writer.current_method_token)
+				-- Double check what value should we put if the document_id is already set.
+				-- we put 0 in other case we need to use the current document id
+				-- document_entry_index.to_integer_32
+				--l_sequence_points.set_document_id (0)
+
+					-- Build the sequence points record
 				from
 					i := 0
-					j := 1
 				until
 					i >= count
 				loop
-					blob_data [j] := offsets [offsets.lower + i].to_natural_8
-					blob_data [j + 1] := start_lines [start_lines.lower + i].to_natural_8
-					blob_data [j + 2] := start_columns [start_columns.lower + i].to_natural_8
-					blob_data [j + 3] := end_lines [end_lines.lower + i].to_natural_8
-					blob_data [j + 4] := end_columns [end_columns.lower + i].to_natural_8
-					j := j + 5
+
+					l_sequence_points.put_il_offset (offsets [offsets.lower + i])
+					l_sequence_points.put_start_line (start_lines [start_lines.lower + i])
+					l_sequence_points.put_start_column (start_columns [start_columns.lower + i])
+					l_sequence_points.put_end_line (end_lines [end_lines.lower + i])
+					l_sequence_points.put_end_column (end_columns [end_columns.lower + i])
 					i := i + 1
 				end
 
-					-- Compute the blob length
-				blob_len := blob_data.count.to_natural_32
+					-- Set the document record 0 for the offset
+				l_sequence_points.put_document_record(l_document_row_index.to_integer_32)
+
+				blob_data := l_sequence_points.as_array.twin
 
 					-- Compute the Sequence Points Blob using hash_blob feature
-				blob_hash := md_emit.pdb_writer.hash_blob (blob_data, blob_len)
+				blob_hash := md_emit.pdb_writer.hash_blob (blob_data, blob_data.count.to_natural_32)
 
 					-- Create a new PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY for the method with the
 					-- entry index (the current document id and the blob hash)
-				create l_method_dbgi_table_entry.make_with_data (document_entry_index, blob_hash)
+				create l_method_dbgi_table_entry.make_with_data (l_document_row_index, blob_hash)
 			else
-				create l_method_dbgi_table_entry.make_with_data (document_entry_index, 0)
+				create l_method_dbgi_table_entry.make_with_data (l_document_row_index, 0)
 			end
 			l_idx := md_emit.next_pdb_table_index (l_method_dbgi_table_entry.table_index)
 			l_method_index := md_emit.add_pdb_table_entry (l_method_dbgi_table_entry)

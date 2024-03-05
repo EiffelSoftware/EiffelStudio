@@ -57,6 +57,25 @@ feature -- Update
 			is_successful
 		end
 
+	open_local_signature (a_token: INTEGER)
+			-- Open Local signature token for the current method token.
+		require
+			not_is_closed: not is_closed
+			valid_token: a_token >= 0
+		deferred
+		ensure
+			is_successful
+		end
+
+	close_local_signature
+			-- Close local signature fo the current Method.
+		require
+			not_is_closed: not is_closed
+		deferred
+		ensure
+			is_successful
+		end
+
 feature -- PE file data
 
 	codeview_debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER

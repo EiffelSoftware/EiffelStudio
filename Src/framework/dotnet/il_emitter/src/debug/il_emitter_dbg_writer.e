@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 
 			initialize_debug_directory
 			current_method_token := -1
+			local_token := -1
 			is_closed := False
 			is_successful := True
 		ensure
@@ -52,6 +53,10 @@ feature -- Access
 	associated_code_view:  CLI_CODE_VIEW
 
 	associated_pdb_checksum: CLI_PDB_CHECKSUM
+
+	local_token: INTEGER
+		-- Local token for the current method.
+		--| MD_LOCAL_SIGNATURE.
 
 feature -- Update
 
@@ -118,15 +123,9 @@ feature -- Update
 			-- Open method `a_meth_token'.
 		do
 			check current_method_token = -1 end
-
-			if attached {MD_EMIT} emitter then
-
 					-- Set up state for new method.
-				current_method_token := a_meth_token
-				is_successful := True
-			else
-				is_successful := False
-			end
+			current_method_token := a_meth_token
+			is_successful := True
 		end
 
 	open_scope (start_offset: INTEGER)
@@ -163,6 +162,21 @@ feature -- Update
 			l_local_scope_index := emitter.next_pdb_table_index ({PDB_TABLES}.tlocalscope)
 			idx := emitter.add_pdb_table_entry (l_local_scope_entry)
 
+			is_successful := True
+		end
+
+	open_local_signature (a_token: INTEGER)
+			-- Open Local signature token for the current method token.
+		do
+			local_token := a_token
+		    is_successful := True
+		end
+
+	close_local_signature
+			-- Close local signature fo the current Method.
+		do
+			check local_token /= -1 end
+			local_token := -1
 			is_successful := True
 		end
 

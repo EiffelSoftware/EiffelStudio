@@ -99,25 +99,32 @@ feature -- Definition
 			l_idx, l_method_index: NATURAL_32
 			l_sequence_points: MD_SEQUENCE_POINTS
 			d: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
+			m: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
 			l_document_row_index: NATURAL_32
+			l_local_row_index: NATURAL_32
 		do
 			-- Blob ::= header SequencePointRecord (SequencePointRecord | document-record)*
 			-- SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
 
-			-- Extract table type and row from the method token
+				-- Extract table type and row from the method token
 			d := md_emit.extract_table_type_and_row (document_entry_index.to_integer_32)
 			l_document_row_index := d.table_row_index
+
+				-- Extract table type and row from the local token
+			m := md_emit.extract_table_type_and_row (dbg_writer.local_token)
+			l_local_row_index := m.table_row_index
+
 
 			if count > 0 then
 				create l_sequence_points.make
 					-- Build the header
 					-- LocalSignature (Method Token)
 					-- IntialDocuemnt (Current Document Entry)
-				l_sequence_points.set_local_signature (dbg_writer.current_method_token)
+				l_sequence_points.set_local_signature (l_local_row_index.to_integer_32)
 				-- Double check what value should we put if the document_id is already set.
 				-- we put 0 in other case we need to use the current document id
 				-- document_entry_index.to_integer_32
-				--l_sequence_points.set_document_id (0)
+				l_sequence_points.set_document_id (0)
 
 					-- Build the sequence points record
 				from

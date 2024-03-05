@@ -175,7 +175,6 @@ feature -- Table change
 			when
 				{PDB_TABLES}.tmethoddebuginformation,
 				{PDB_TABLES}.tlocalscope,
-				{PDB_TABLES}.tlocalvariable,
 				{PDB_TABLES}.tlocalconstant,
 				{PDB_TABLES}.timportscope,
 				{PDB_TABLES}.tstatemachinemethod,
@@ -184,10 +183,10 @@ feature -- Table change
 				-- No duplication checking				
 				do_nothing -- line to be able to set breakpoint
 			when
-				{PDB_TABLES}.tdocument
+				{PDB_TABLES}.tdocument,
+				{PDB_TABLES}.tlocalvariable
 			then
 				Result := a_entry.token_from_table (l_md_table)
-
 			else
 				Result := a_entry.token_from_table (l_md_table)
 			end

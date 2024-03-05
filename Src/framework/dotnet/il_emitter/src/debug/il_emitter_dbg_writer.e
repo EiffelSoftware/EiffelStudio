@@ -143,6 +143,8 @@ feature -- Update
 			l_local_scope_entry: PE_LOCAL_SCOPE_TABLE_ENTRY
 			l_local_scope_index: NATURAL_32
 			idx: NATURAL_32
+			m: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
+			l_method_row_index: NATURAL_32
 		do
 			check current_method_token /= -1 end
 			current_end_offset := end_offset
@@ -153,7 +155,14 @@ feature -- Update
 				-- we use the current method token `current_method_token`
 				-- whith the current entry in the importscope table
 				-- then we compute the first entry to the localvariable rowid ( using the current index - (number of variables added in the scope)
-			create l_local_scope_entry.make_with_data (current_method_token.to_natural_32,
+
+				-- Extract table type and row from the current_method token
+			m := emitter.extract_table_type_and_row (current_method_token)
+			l_method_row_index := m.table_row_index
+
+
+
+			create l_local_scope_entry.make_with_data (l_method_row_index,
 													   emitter.pdb_writer.md_table ({PDB_TABLES}.timportscope).size,
 													   emitter.pdb_writer.md_table ({PDB_TABLES}.tlocalvariable).size - current_variables_scope,
 													   0,

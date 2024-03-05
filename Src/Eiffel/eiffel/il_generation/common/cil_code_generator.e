@@ -3256,6 +3256,7 @@ feature -- IL Generation
 				then
 					if is_debug_info_enabled then
 						dbg_writer.open_method (l_meth_token)
+						dbg_writer.open_local_signature(method_body.local_token)
 						across
 							current_module.method_sequence_points.item (l_token) as p
 						loop
@@ -3273,6 +3274,7 @@ feature -- IL Generation
 								)
 						end
 						generate_local_debug_info (l_token, l_class_type)
+						dbg_writer.close_local_signature
 						dbg_writer.close_method
 					end
 					method_writer.write_duplicate_body (l_token, l_meth_token)
@@ -3389,6 +3391,7 @@ feature -- IL Generation
 				start_new_body (l_meth_token)
 
 				if is_debug_info_enabled then
+					dbg_writer.open_local_signature(method_body.local_token)
 					dbg_writer.open_method (l_meth_token)
 					local_start_offset := method_body.count
 					create dbg_offsets.make_filled (0, 0, 5)
@@ -3410,6 +3413,7 @@ feature -- IL Generation
 						dbg_documents (current_class.class_id),
 						dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 						dbg_end_lines, dbg_end_columns)
+					dbg_writer.close_local_signature
 					dbg_writer.close_method
 					l_sequence_point_list :=
 						current_module.method_sequence_points.item (l_meth_token)
@@ -8522,7 +8526,7 @@ note
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: very long class",
 		"CA093", "CA093: manifest array type mismatch"
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

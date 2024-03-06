@@ -20,7 +20,8 @@ feature {NONE} -- Initialization
 			l_token, lang_idx: NATURAL_32
 			l_owner_index: NATURAL_32
 			l_name_index: NATURAL_32
-			l_scope_entry_index, l_document_entry_index: NATURAL_32
+--			l_document_entry_index,
+			l_scope_entry_index: NATURAL_32
 			l_hash_algo_guid_idx, l_hash_blob_idx: NATURAL_32
 			d: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
 		do
@@ -44,7 +45,7 @@ feature {NONE} -- Initialization
 			end
 
 				-- Compute the name index
-			l_name_index := a_md_emit.pdb_writer.hash_string (a_url.string_32)
+			l_name_index := hash_document_name_blob (a_url.string_32, a_md_emit.pdb_writer)
 
 			lang_idx := a_md_emit.pdb_writer.hash_guid (a_language.to_array_natural_8)
 			l_hash_algo_guid_idx := a_md_emit.pdb_writer.hash_guid_for_sha256_hash_algorithm
@@ -53,12 +54,12 @@ feature {NONE} -- Initialization
 				-- Create a new PE_DOCUMENT_TABLE_ENTRY instance with the given data
 			create entry.make_with_data (l_name_index, l_hash_algo_guid_idx, l_hash_blob_idx, lang_idx)
 
-			l_document_entry_index := a_md_emit.next_pdb_table_index ({PDB_TABLES}.tdocument)
-			document_entry_index := a_md_emit.add_pdb_table_entry (entry)
+			document_entry_index := a_md_emit.next_pdb_table_index ({PDB_TABLES}.tdocument)
+			document_entry_token := a_md_emit.add_pdb_table_entry (entry)
 
 				-- Create a new PE_IMPORT_SCOPE_TABLE_ENTRY instance with the given data
 			l_scope_entry_index := a_md_emit.next_pdb_table_index ({PDB_TABLES}.timportscope)
-			scope_entry_index := a_md_emit.add_pdb_table_entry (create {PE_IMPORT_SCOPE_TABLE_ENTRY}.make_with_data (0, 0))
+			scope_entry_token := a_md_emit.add_pdb_table_entry (create {PE_IMPORT_SCOPE_TABLE_ENTRY}.make_with_data (0, 0))
 		end
 
 feature -- Access
@@ -71,7 +72,9 @@ feature -- Access
 
 	document_entry_index: NATURAL_32
 
-	scope_entry_index: NATURAL_32
+	document_entry_token: NATURAL_32
+
+	scope_entry_token: NATURAL_32
 
 feature -- Status
 
@@ -85,6 +88,32 @@ feature -- Properties
 	doc_type: CIL_GUID
 
 	url: CLI_STRING
+
+feature -- Helper	
+
+	hash_document_name_blob (a_path: READABLE_STRING_GENERAL; pdb_writer: PE_GENERATOR): NATURAL_32
+		local
+			sep: CHARACTER_8
+			sep_code: NATURAL_8
+			p: PATH
+			bc: BYTE_ARRAY_CONVERTER
+			l_blob: MD_BLOB_DATA
+		do
+			sep := {OPERATING_ENVIRONMENT}.directory_separator -- TODO: check if this is valid for all platform for .net
+			sep_code := sep.natural_32_code.to_natural_8
+
+			create p.make_from_string (a_path)
+--			create l_bytes.make (0)
+			create l_blob.make
+			l_blob.put_natural_8 (sep_code)
+			across
+				p.components as l_part
+			loop
+				create bc.make_from_string (l_part.utf_8_name)
+				l_blob.put_compressed_natural_32 (pdb_writer.hash_blob (bc.to_natural_8_array, bc.count.to_natural_32))
+			end
+			Result := pdb_writer.hash_blob (l_blob.as_array, l_blob.count.to_natural_32)
+		end
 
 feature -- Definition
 
@@ -117,17 +146,25 @@ feature -- Definition
 
 
 			if count > 0 then
-				create l_sequence_points.make
-					-- Build the header
-					-- LocalSignature (Method Token)
-					-- IntialDocuemnt (Current Document Entry)
-				l_sequence_points.set_local_signature (l_local_row_index.to_integer_32)
-				-- Double check what value should we put if the document_id is already set.
-				-- we put 0 in other case we need to use the current document id
-				-- document_entry_index.to_integer_32
-				l_sequence_points.set_document_id (0)
+					--| See https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md#sequence-points-blob
+					--| PE_SEQUENCE_POINTS_BLOB
+					--| Sequence points blob has the following structure:
+					--| Blob ::= header SequencePointRecord (SequencePointRecord | document-record)*
+					--| SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
 
-					-- Build the sequence points record
+				create l_sequence_points.make
+
+					--| Build the header
+					--| LocalSignature (Method Token)
+				l_sequence_points.set_local_signature (l_local_row_index.to_integer_32)
+
+					--| IntialDocument (Current Document Entry)
+					--	   TODO: check what value should we put if the document_id is already set.
+					--	   we put 0 in other case we need to use the current document id
+				l_sequence_points.set_document_id (0)
+--				l_sequence_points.set_document_id (l_document_row_index.to_integer_32)
+
+					--| Build the sequence points record
 					-- SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
 				from
 					i := 0
@@ -167,9 +204,9 @@ feature -- Definition
 				end
 
 					-- Set the document record 0 for the offset
-				l_sequence_points.put_document_record(l_document_row_index.to_integer_32)
+				l_sequence_points.put_document_record (l_document_row_index.to_integer_32)
 
-				blob_data := l_sequence_points.as_array.twin
+				blob_data := l_sequence_points.as_array
 
 					-- Compute the Sequence Points Blob using hash_blob feature
 				blob_hash := md_emit.pdb_writer.hash_blob (blob_data, blob_data.count.to_natural_32)

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="pdb_analyzer" uuid="2E5348E6-0BD6-44FF-85D9-F4D26E65424A">
+	<target name="pdb_analyzer">
+		<root class="APPLICATION" feature="make"/>
+		<option warning="none" is_obsolete_iteration="true">
+			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="false"/>
+		<setting name="dead_code_removal" value="feature"/>
+		<capability>
+			<void_safety support="all"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
+			<option warning="none"/>
+		</library>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<cluster name="src" location="src\" recursive="true">
+			<option warning="none" is_obsolete_iteration="true"/>
+		</cluster>
+		<cluster name="tests" location="testing\" recursive="true">
+		</cluster>
+	</target>
+</system>

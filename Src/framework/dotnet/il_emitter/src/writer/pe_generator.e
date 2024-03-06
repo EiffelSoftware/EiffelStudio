@@ -502,13 +502,50 @@ feature -- Stream functions
 		end
 
 	hash_guid (a_guid: ARRAY [NATURAL_8]): NATURAL_32
-			-- return the stream index
+			-- return the GUID stream index
 		do
 			guid.confirm (17) -- 128 // 8 + 1 (null char)
 			Result := guid.size
 			guid.copy_data (Result.to_integer_32, a_guid, 16)
 			guid.increment_size_by (16)
 			Result := Result // 16 + 1
+		end
+
+	check_guid (a_guid: ARRAY [NATURAL_8]): NATURAL_32
+			-- Check if `a_guid` exists in `guid` and return its index if found, otherwise return 0.
+		local
+			l_heap: SPECIAL [NATURAL_8]
+			l_heap_size: NATURAL_32
+			i, j, k, target_size, current_size: INTEGER
+		do
+--			Result := 0 -- not found (yet)
+			l_heap := guid.base
+			l_heap_size := guid.size
+			target_size := a_guid.count
+			from
+				i := 0 --| Special are 0-based
+			until
+				i.to_natural_32 >= l_heap_size or else Result /= 0
+			loop
+				current_size := a_guid.count
+				check current_size = 16 end
+				from
+					k := 1
+				until
+					(i + k - 1).to_natural_32 > l_heap_size
+					or else k > target_size
+					or else a_guid [k] /= l_heap [i + k - 1]
+				loop
+					k := k + 1
+				end
+				if (k - 1) = target_size then
+						-- Found a match.
+					Result := (i + 1).to_natural_32
+				end
+				i := i + current_size
+			end
+		ensure
+			valid_result: Result >= 0
 		end
 
 	hash_blob (a_blob_data: ARRAY [NATURAL_8]; a_blob_len: NATURAL_32): NATURAL_32
@@ -520,7 +557,7 @@ feature -- Stream functions
 		local
 			l_blob_len: NATURAL_32
 		do
-			Result := check_blob (blob, a_blob_data)
+			Result := check_blob (a_blob_data)
 			if Result = 0 then
 				l_blob_len := a_blob_len
 				if blob.size = 0 then
@@ -551,19 +588,19 @@ feature -- Stream functions
 				blob.increment_size_by (l_blob_len)
 			end
 		ensure
-			hashed: Result = check_blob (blob, a_blob_data)
+			hashed: Result = check_blob (a_blob_data)
 		end
 
-	check_blob (a_blob: PE_POOL; target_blob: ARRAY [NATURAL_8]): NATURAL_32
-			-- Check if `target_blob` exists in `a_blob` and return its index if found, otherwise return 0.
+	check_blob (target_blob: ARRAY [NATURAL_8]): NATURAL_32
+			-- Check if `target_blob` exists in `blob` and return its index if found, otherwise return 0.
 		local
 			blob_heap: SPECIAL [NATURAL_8]
 			blob_size: NATURAL_32
 			i, j, k, target_size, current_size: INTEGER
 		do
 --			Result := 0 -- not found (yet)
-			blob_heap := a_blob.base
-			blob_size := a_blob.size
+			blob_heap := blob.base
+			blob_size := blob.size
 			target_size := target_blob.count
 			from
 				i := 1 --| 2 - 1  Special are 0-based

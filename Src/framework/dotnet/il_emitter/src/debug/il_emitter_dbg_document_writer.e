@@ -20,7 +20,6 @@ feature {NONE} -- Initialization
 			l_token, lang_idx: NATURAL_32
 			l_owner_index: NATURAL_32
 			l_name_index: NATURAL_32
---			l_document_entry_index,
 			l_scope_entry_index: NATURAL_32
 			l_hash_algo_guid_idx, l_hash_blob_idx: NATURAL_32
 			d: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
@@ -47,7 +46,14 @@ feature {NONE} -- Initialization
 				-- Compute the name index
 			l_name_index := hash_document_name_blob (a_url.string_32, a_md_emit.pdb_writer)
 
-			lang_idx := a_md_emit.pdb_writer.hash_guid (a_language.to_array_natural_8)
+			if attached a_language.to_array_natural_8 as l_lang_guid then
+					-- First check if the lang guid is known
+				lang_idx := a_md_emit.pdb_writer.check_guid (l_lang_guid)
+				if lang_idx = 0 then
+					lang_idx := a_md_emit.pdb_writer.hash_guid (l_lang_guid)
+				end
+			end
+
 			l_hash_algo_guid_idx := a_md_emit.pdb_writer.hash_guid_for_sha256_hash_algorithm
 			l_hash_blob_idx := a_md_emit.pdb_writer.hash_blob_file_content (a_url, a_md_emit.pe_writer.hash_algo_sha256)
 

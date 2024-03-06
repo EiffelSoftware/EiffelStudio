@@ -41,11 +41,133 @@ feature -- Access
 
 feature -- Element change
 
-	put_natural_8 (n8: NATURAL_8)
+	put_boolean (v: BOOLEAN)
+			-- Insert `v' at `current_position'.
 		do
-			internal_put (n8.to_integer_8, current_position)
-			current_position := current_position + 1
+			if v then
+				put_integer_8 (1)
+			else
+				put_integer_8 (0)
+			end
 		end
+
+	put_character (c: CHARACTER)
+			-- Insert `c' at `current_position'.
+		do
+			put_integer_16 (c.code.to_integer_16)
+		end
+
+	put_real_32 (r: REAL)
+			-- Insert `r' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 4)
+			item.put_real_32_le (r, l_pos)
+			current_position := l_pos + 4
+		end
+
+	put_real_64 (d: DOUBLE)
+			-- Insert `d' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 8)
+			item.put_real_64_le (d, l_pos)
+			current_position := l_pos + 8
+		end
+
+	put_integer_8 (i: INTEGER_8)
+			-- Insert `i' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 1)
+			item.put_integer_8_le (i, l_pos)
+			current_position := l_pos + 1
+		end
+
+	put_integer_16 (i: INTEGER_16)
+			-- Insert `i' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 2)
+			item.put_integer_16_le (i, l_pos)
+			current_position := l_pos + 2
+		end
+
+	put_integer_32 (i: INTEGER)
+			-- Insert `i' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 4)
+			item.put_integer_32_le (i, l_pos)
+			current_position := l_pos + 4
+		end
+
+	put_integer_64 (i: INTEGER_64)
+			-- Insert `i' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 8)
+			item.put_integer_64_le (i, l_pos)
+			current_position := l_pos + 8
+		end
+
+	put_natural_8 (n: NATURAL_8)
+			-- Insert `n' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 1)
+			item.put_natural_8_le (n, l_pos)
+			current_position := l_pos + 1
+		end
+
+	put_natural_16 (n: NATURAL_16)
+			-- Insert `n' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 2)
+			item.put_natural_16_le (n, l_pos)
+			current_position := l_pos + 2
+		end
+
+	put_natural_32 (n: NATURAL_32)
+			-- Insert `n' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 4)
+			item.put_natural_32_le (n, l_pos)
+			current_position := l_pos + 4
+		end
+
+	put_natural_64 (n: NATURAL_64)
+			-- Insert `n' at `current_position'.
+		local
+			l_pos: INTEGER
+		do
+			l_pos := current_position
+			allocate (l_pos + 8)
+			item.put_natural_64_le (n, l_pos)
+			current_position := l_pos + 8
+		end
+
+feature -- Compressed data
 
 	put_compressed_natural_32 (v: NATURAL_32)
 		do
@@ -102,13 +224,14 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	compress_unsigned_data (i: INTEGER)
-			-- Compress `i' using Partition II 22.2 specification
+			-- Compress `i' using Partition II 23.2 specification
 			-- and store it at currrent_position in current.
+		note
+			eis: "name=Unsigned Integers", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=237&zoom=100,116,848", "protocol=uri"
 		require
 			valid_i: i <= 0x20000000
 		local
 			l_pos, l_incr: INTEGER
-			l_val: INTEGER
 			n16: NATURAL_16
 			n32: NATURAL_32
 		do
@@ -137,10 +260,10 @@ feature {NONE} -- Implementation
 		end
 
 	compress_signed_data (i: INTEGER)
-			-- Compress `i' using using Partition II 22.2 specification for
+			-- Compress `i' using using Partition II 23.2 specification for
 			-- signed integers and store it at currrent_position in current.
 		note
-			eis: "name=Signed Ingegers", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=237&zoom=100,116,848", "protocol=uri"
+			eis: "name=Signed Integers", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=237&zoom=100,116,848", "protocol=uri"
 		require
 			valid_i:  i >= -0x10000000 and i <= 0x0FFFFFFF
 				--checks if the input integer i lies between -2^28 and 2^28 - 1 inclusive

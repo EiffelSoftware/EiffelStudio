@@ -4074,10 +4074,8 @@ feature -- IL Generation
 			l_meth_sig: like method_sig
 			l_field_sig: like field_sig
 			l_class_token: INTEGER
---			gen_i,
 			i, nb: INTEGER
 			l_context_class_type: CLASS_TYPE
---			p: CONSUMED_PROCEDURE
 			is_generic_method: BOOLEAN
 		do
 			is_generic_method := generic_method_parameters_info /= Void and then generic_method_parameters_info.has_generic
@@ -5100,7 +5098,6 @@ feature -- Assignments
 		local
 			l_token: INTEGER
 			l_type: TYPE_A
---			l_type_var,
 			l_obj_var: INTEGER
 		do
 			l_type := type_i.actual_type

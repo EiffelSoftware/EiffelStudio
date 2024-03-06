@@ -3391,7 +3391,6 @@ feature -- IL Generation
 				start_new_body (l_meth_token)
 
 				if is_debug_info_enabled then
-					dbg_writer.open_local_signature(method_body.local_token)
 					dbg_writer.open_method (l_meth_token)
 					local_start_offset := method_body.count
 					create dbg_offsets.make_filled (0, 0, 5)
@@ -3408,6 +3407,7 @@ feature -- IL Generation
 				method_writer.write_current_body
 
 				if is_debug_info_enabled then
+					dbg_writer.open_local_signature (method_body.local_token)
 					generate_local_debug_info (l_meth_token, current_class_type)
 					dbg_writer.define_sequence_points (
 						dbg_documents (current_class.class_id),
@@ -7397,11 +7397,12 @@ feature -- Line info
 				else
 					l_document := dbg_documents (a_class_type.associated_class.class_id)
 				end
+				dbg_writer.open_local_signature (method_body.local_token)
 				dbg_writer.define_sequence_points (
 					l_document,
 					dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 					dbg_end_lines, dbg_end_columns)
-
+				dbg_writer.close_local_signature
 				l_sequence_point_list :=
 					current_module.method_sequence_points.item (current_feature_token)
 				if l_sequence_point_list = Void then

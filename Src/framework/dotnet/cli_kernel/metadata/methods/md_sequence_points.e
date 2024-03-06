@@ -48,13 +48,13 @@ feature -- Setting
 	set_local_signature (a_value: INTEGER_32)
 			-- Insert `a_value' into Current.
 		do
-			compress_data (a_value)
+			compress_unsigned_data (a_value)
 		end
 
 	set_document_id (a_value: INTEGER_32)
 			-- Insert `a_value' into Current.
 		do
-			compress_data (a_value)
+			compress_unsigned_data (a_value)
 		end
 
 	put_il_offset (a_value: INTEGER_32)
@@ -62,7 +62,7 @@ feature -- Setting
 		require
 			valid_value: a_value <= 0x20000000
 		do
-			compress_data (a_value)
+			compress_unsigned_data (a_value)
 		end
 
 	put_start_line (a_value: INTEGER_32)
@@ -70,7 +70,7 @@ feature -- Setting
 		require
 			valid_value: a_value <= 0x20000000
 		do
-			compress_data (a_value)
+			compress_unsigned_data (a_value)
 		end
 
 	put_start_column (a_value: INTEGER_32)
@@ -78,7 +78,7 @@ feature -- Setting
 		require
 			valid_value: a_value <= 0x10000
 		do
-			compress_data (a_value)
+			compress_unsigned_data (a_value)
 		end
 
 	put_lines (a_value: INTEGER_32)
@@ -86,7 +86,7 @@ feature -- Setting
 		require
 			valid_value: a_value >= 0
 		do
-			compress_data (a_value)
+			compress_unsigned_data (a_value)
 		end
 
 	put_columns (a_value: INTEGER_32)
@@ -94,7 +94,7 @@ feature -- Setting
 		require
 			valid_value: a_value >= 0
 		do
-			compress_data (a_value)
+			compress_unsigned_data (a_value)
 		end
 
 
@@ -103,13 +103,18 @@ feature -- Setting
 		require
 			valid_value: a_value <= 0x20000000
 		do
-			compress_data (0) -- IL offset
-			compress_data (a_value)
+			compress_unsigned_data (0) -- IL offset
+			compress_unsigned_data (a_value)
 		end
 
 	put_signed (a_value: INTEGER_32)
 		do
-			signed_compress (a_value)
+			compress_signed_data (a_value)
+		end
+
+	put_unsigned_value (a_value: INTEGER_32)
+		do
+			compress_unsigned_data (a_value)
 		end
 
 feature -- Copy
@@ -161,7 +166,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	compress_data (i: INTEGER)
+	compress_unsigned_data (i: INTEGER)
 			-- Compress `i' using Partition II 22.2 specification
 			-- and store it at currrent_position in current.
 		require
@@ -169,6 +174,8 @@ feature {NONE} -- Implementation
 		local
 			l_pos, l_incr: INTEGER
 			l_val: INTEGER
+			n16: NATURAL_16
+			n32: NATURAL_32
 		do
 			l_pos := current_position
 
@@ -178,23 +185,23 @@ feature {NONE} -- Implementation
 				l_incr := 1;
 			elseif i <= 0x3FFF then
 					-- Copy two bytes added with 0x00008000.
-				l_val := i + 0x00008000
-				internal_put (((l_val & 0x0000FF00) |>> 8).to_integer_8, l_pos)
-				internal_put ((l_val & 0x000000FF).to_integer_8, l_pos + 1)
+				n16 := i.to_natural_16 + 0x00008000
+				internal_put (((n16 & 0x0000FF00) |>> 8).to_integer_8, l_pos)
+				internal_put ((n16 & 0x000000FF).to_integer_8, l_pos + 1)
 				l_incr := 2
 			else
 					-- Copy four bytes added with 0xC0000000
-				l_val := i + 0xC0000000
-				internal_put (((l_val & 0xFF000000) |>> 24).to_integer_8, l_pos)
-				internal_put (((l_val & 0x00FF0000) |>> 16).to_integer_8, l_pos + 1)
-				internal_put (((l_val & 0x0000FF00) |>> 8).to_integer_8, l_pos + 2)
-				internal_put ((l_val & 0x000000FF).to_integer_8, l_pos + 3)
+				n32 := i.to_natural_32 + 0xC0000000
+				internal_put (((n32 & 0xFF000000) |>> 24).to_integer_8, l_pos)
+				internal_put (((n32 & 0x00FF0000) |>> 16).to_integer_8, l_pos + 1)
+				internal_put (((n32 & 0x0000FF00) |>> 8).to_integer_8, l_pos + 2)
+				internal_put ((n32 & 0x000000FF).to_integer_8, l_pos + 3)
 				l_incr := 4
 			end
 			current_position := l_pos + l_incr
 		end
 
-	signed_compress (i: INTEGER)
+	compress_signed_data (i: INTEGER)
 			-- Compress `i' using using Partition II 22.2 specification for
 			-- signed integers and store it at currrent_position in current.
 		note
@@ -204,50 +211,56 @@ feature {NONE} -- Implementation
 				--checks if the input integer i lies between -2^28 and 2^28 - 1 inclusive
 		local
 			l_pos, l_incr: INTEGER
-			l_val: INTEGER_64
-
+			n8: NATURAL_8
+			n16: NATURAL_16
+			n32: NATURAL_32
 		do
 			l_pos := current_position
 
 				-- 2^6 and 2^6 -1 inclusive	
-			if i >= -64 and i <= 63 then
+			if -0x40 <= i and i <= 0x3F then
 					-- Two complement
-				l_val := i.to_natural_8
+				n8 := i.to_natural_8
 					-- rotate the value 1 bit lef
-				l_val := l_val |<< 1
-				   -- Encode as a one-byte integer: bit 7 clear, rotated value in bits 6 through 0
-     	    	l_val := l_val & 0x7F
+				n8 := (n8 |<< 1 + (n8 & 0b1000_0000) |>> 7) & 0b0111_1111
+					 -- Encode as a one-byte integer: bit 7 clear, rotated value in bits 6 through 0
+				n8 := n8 & 0x7F
 
-				internal_put (l_val.to_integer_8, l_pos)
+				internal_put (n8.to_integer_8, l_pos)
 				l_incr := 1
 				-- 2^13 and 2^13 -1 inclusive
-			elseif i >= -8192 and i <= 8191 then
-					-- two_complement
-				l_val := i.to_natural_16
-					-- rotate the value 1 bit lef
-				l_val := l_val |<< 1
-					-- Encode as a two-byte integer: bit 15 set, bit 14 clear, rotated value in bits 13 through 0
-				l_val := (1 |<< 15) + (l_val & 0x3FFF)
+			elseif -0x2000 <= i and i <= 0x1FFF then
+				n16 := i.to_natural_16
+					-- Represent the value as a 14-bit 2’s complement number, giving 0x2000 (-213) to 0x1FFF (213-1)
+				n16 := n16 & 0b0011_1111_1111_1111
+					-- Rotate this value 1 bit left, giving 0x0001 (-213) to 0x3FFE (213-1);
+				n16 := (n16 |<< 1 + (n16 & 0b0010_0000_0000_0000) |>> 13) & 0b0011_1111_1111_1111
 
-				internal_put (((l_val & 0x0000FF00) |>> 8).to_integer_8, l_pos)
-				internal_put ((l_val & 0x000000FF).to_integer_8, l_pos + 1)
+					-- Encode as a two-byte integer: bit 15 set, bit 14 clear, rotated value
+					-- in bits 13 through 0, giving 0x8001 (-213) to 0xBFFE (213-1).
+				n16 := (n16 + 0b1000_0000_0000_0000) & 0b1011_1111_1111_1111
+
+				internal_put (((n16 & 0b1111_1111_0000_0000) |>> 8).to_integer_8, l_pos)
+				internal_put ( (n16 & 0b0000_0000_1111_1111).to_integer_8, l_pos + 1)
 				l_incr := 2
 			else
-					-- 2^28 and 2^28 -1 inclusive
-					-- two complement
-				l_val := i.to_natural_32
-					-- Rotate this value 1 bit left
+				n32 := i.to_natural_32
+					-- Represent the value as a 29-bit 2’s complement representation,
+					-- giving 0x10000000 (-228) to 0xFFFFFFF (228-1);
+				n32 := n32 & 0b0011_1111_1111_1111_1111_1111_1111_1111
 
-				l_val := l_val |<< 1
+					-- Rotate this value 1-bit left, giving 0x00000001 (-228) to 0x1FFFFFFE (228-1)
+				n32 := (n32 |<< 1 + (n32 & 0b0010_0000_0000_0000_0000_0000_0000_0000) |>> 29) & 0b0011_1111_1111_1111_1111_1111_1111_1111
 
 					-- Encode as a four-byte integer: bit 31 set, bit 30 set, bit 29 clear,
 					-- rotated value in bits 28 through 0
-    		    l_val := (3 |<< 30) + (l_val & 0x1FFFFFFF)
+				n32 := (n32 + 0b1100_0000_0000_0000_0000_0000_0000_0000) & 0b1101_1111_1111_1111_1111_1111_1111_1111
 
-				internal_put (((l_val & 0xFF000000) |>> 24).to_integer_8, l_pos)
-				internal_put (((l_val & 0x00FF0000) |>> 16).to_integer_8, l_pos + 1)
-				internal_put (((l_val & 0x0000FF00) |>> 8).to_integer_8, l_pos + 2)
-				internal_put ((l_val & 0x000000FF).to_integer_8, l_pos + 3)
+
+				internal_put (((n32 & 0xFF000000) |>> 24).to_integer_8, l_pos)
+				internal_put (((n32 & 0x00FF0000) |>> 16).to_integer_8, l_pos + 1)
+				internal_put (((n32 & 0x0000FF00) |>> 8).to_integer_8, l_pos + 2)
+				internal_put ( (n32 & 0x000000FF).to_integer_8, l_pos + 3)
 				l_incr := 4
 			end
 			current_position := l_pos + l_incr

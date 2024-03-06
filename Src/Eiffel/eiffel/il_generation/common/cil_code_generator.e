@@ -491,7 +491,9 @@ feature -- Settings
 			debug ("il_emitter")
 				if attached current_module as m then
 					if l_old_module = Void or else l_old_module /= m then
-						print (generator + ".set_current_module_with (...) -> switched to "+ m.module_name_with_extension +"%N")
+						print (generator + ".set_current_module_with (...) -> switched to ")
+						print (m.module_name_with_extension)
+						print ("%N")
 					end
 				end
 			end
@@ -561,7 +563,8 @@ feature -- Generation Structure
 		local
 			p: PATH
 			ext: READABLE_STRING_GENERAL
-			l_assembly_name_with_extension: STRING_32
+			l_assembly_name_with_extension: STRING
+			s32: STRING_32
 		do
 				-- For netcore, use multi-assemblies instead of multi-modules.
 			is_using_multi_assemblies := system.is_il_netcore
@@ -620,7 +623,13 @@ feature -- Generation Structure
 			if a_assembly_name.to_string_32.ends_with (ext) then
 				l_assembly_name_with_extension := a_assembly_name
 			else
-				l_assembly_name_with_extension := (create {PATH}.make_from_string (a_assembly_name)).appended_with_extension (ext).name
+				s32 := (create {PATH}.make_from_string (a_assembly_name)).appended_with_extension (ext).name
+				if s32.is_valid_as_string_8 then
+					l_assembly_name_with_extension := s32.to_string_8
+				else
+					check expected_non_unicode_name: False end
+					l_assembly_name_with_extension := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s32)
+				end
 			end
 			create main_module.make (
 				l_assembly_name_with_extension, -- Extension is required
@@ -1045,14 +1054,14 @@ feature -- Generation Structure
 			(create {IL_RESOURCE_GENERATOR}.make (main_module, a_resources)).generate
 		end
 
-	define_file (a_module: IL_MODULE; a_file: READABLE_STRING_GENERAL; a_name: STRING; file_flags: INTEGER; a_signing: detachable MD_STRONG_NAME): INTEGER
+	define_file (a_module: IL_MODULE; a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL; file_flags: INTEGER; a_signing: detachable MD_STRONG_NAME): INTEGER
 			-- Add `a_file' of name `a_name' in list of files referenced by `a_module'.
 		require
 			a_module_not_void: a_module /= Void
 			a_file_not_void: a_file /= Void
 			a_name_not_void: a_name /= Void
 			a_file_valid: a_file.has_substring (a_name) and
-				a_name.same_string_general (
+				a_name.same_string (
 					a_file.substring (a_file.count - a_name.count + 1, a_file.count))
 			file_flags_valid:
 				(file_flags = {MD_FILE_FLAGS}.Has_meta_data) or
@@ -3390,6 +3399,8 @@ feature -- IL Generation
 				current_feature_token := l_meth_token
 				start_new_body (l_meth_token)
 
+				store_locals (l_meth_token, current_class_type)
+
 				if is_debug_info_enabled then
 					dbg_writer.open_method (l_meth_token)
 					local_start_offset := method_body.count
@@ -3403,7 +3414,6 @@ feature -- IL Generation
 
 				current_class_type.generate_il_feature (feat)
 				local_end_offset := method_body.count
-				store_locals (l_meth_token, current_class_type)
 				method_writer.write_current_body
 
 				if is_debug_info_enabled then
@@ -4064,9 +4074,10 @@ feature -- IL Generation
 			l_meth_sig: like method_sig
 			l_field_sig: like field_sig
 			l_class_token: INTEGER
-			i, gen_i, nb: INTEGER
+--			gen_i,
+			i, nb: INTEGER
 			l_context_class_type: CLASS_TYPE
-			p: CONSUMED_PROCEDURE
+--			p: CONSUMED_PROCEDURE
 			is_generic_method: BOOLEAN
 		do
 			is_generic_method := generic_method_parameters_info /= Void and then generic_method_parameters_info.has_generic
@@ -5089,7 +5100,8 @@ feature -- Assignments
 		local
 			l_token: INTEGER
 			l_type: TYPE_A
-			l_type_var, l_obj_var: INTEGER
+--			l_type_var,
+			l_obj_var: INTEGER
 		do
 			l_type := type_i.actual_type
 
@@ -5111,19 +5123,19 @@ feature -- Assignments
 					generate_current
 					generate_type_feature_call (l_type_feature_i)
 					generate_local (l_obj_var)
-					internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name.as_string_8,
-							"attempted_on_rt_type", Static_type, <<System_object_class_name.as_string_8, type_class_name, System_object_class_name>>, System_object_class_name,
+					internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name,
+							"attempted_on_rt_type", Static_type, <<System_object_class_name, type_class_name, System_object_class_name>>, System_object_class_name,
 							True, Void)
 				else
 					generate_current
 					put_integer_32_constant (l_formal_type.position)
-					internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name.as_string_8,
-							"type_of_generic_parameter", Static_type, <<System_object_class_name.as_string_8, "System.Int32">>, system_type_class_name,
+					internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name,
+							"type_of_generic_parameter", Static_type, <<System_object_class_name, "System.Int32">>, system_type_class_name,
 							False, Void)
 
 					generate_local (l_obj_var)
-					internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name.as_string_8,
-							"attempted_on_type", Static_type, <<System_type_class_name.as_string_8, System_object_class_name>>, System_object_class_name,
+					internal_generate_external_call (current_module.ise_runtime_token, 0, Runtime_class_name,
+							"attempted_on_type", Static_type, <<System_type_class_name, System_object_class_name>>, System_object_class_name,
 							True, Void)
 				end
 				put_void

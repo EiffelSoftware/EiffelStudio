@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of a sequence points blob"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -107,6 +107,10 @@ feature -- Setting
 			compress_data (a_value)
 		end
 
+	put_signed (a_value: INTEGER_32)
+		do
+			signed_compress (a_value)
+		end
 
 feature -- Copy
 
@@ -135,6 +139,7 @@ feature -- Copy
 		do
 			create Result.make_from_special (as_special)
 		end
+
 feature -- Status report
 
 	debug_output: STRING
@@ -180,6 +185,65 @@ feature {NONE} -- Implementation
 			else
 					-- Copy four bytes added with 0xC0000000
 				l_val := i + 0xC0000000
+				internal_put (((l_val & 0xFF000000) |>> 24).to_integer_8, l_pos)
+				internal_put (((l_val & 0x00FF0000) |>> 16).to_integer_8, l_pos + 1)
+				internal_put (((l_val & 0x0000FF00) |>> 8).to_integer_8, l_pos + 2)
+				internal_put ((l_val & 0x000000FF).to_integer_8, l_pos + 3)
+				l_incr := 4
+			end
+			current_position := l_pos + l_incr
+		end
+
+	signed_compress (i: INTEGER)
+			-- Compress `i' using using Partition II 22.2 specification for
+			-- signed integers and store it at currrent_position in current.
+		note
+			eis: "name=Signed Ingegers", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=237&zoom=100,116,848", "protocol=uri"
+		require
+			valid_i:  i >= -0x10000000 and i <= 0x0FFFFFFF
+				--checks if the input integer i lies between -2^28 and 2^28 - 1 inclusive
+		local
+			l_pos, l_incr: INTEGER
+			l_val: INTEGER_64
+
+		do
+			l_pos := current_position
+
+				-- 2^6 and 2^6 -1 inclusive	
+			if i >= -64 and i <= 63 then
+					-- Two complement
+				l_val := i.to_natural_8
+					-- rotate the value 1 bit lef
+				l_val := l_val |<< 1
+				   -- Encode as a one-byte integer: bit 7 clear, rotated value in bits 6 through 0
+     	    	l_val := l_val & 0x7F
+
+				internal_put (l_val.to_integer_8, l_pos)
+				l_incr := 1
+				-- 2^13 and 2^13 -1 inclusive
+			elseif i >= -8192 and i <= 8191 then
+					-- two_complement
+				l_val := i.to_natural_16
+					-- rotate the value 1 bit lef
+				l_val := l_val |<< 1
+					-- Encode as a two-byte integer: bit 15 set, bit 14 clear, rotated value in bits 13 through 0
+				l_val := (1 |<< 15) + (l_val & 0x3FFF)
+
+				internal_put (((l_val & 0x0000FF00) |>> 8).to_integer_8, l_pos)
+				internal_put ((l_val & 0x000000FF).to_integer_8, l_pos + 1)
+				l_incr := 2
+			else
+					-- 2^28 and 2^28 -1 inclusive
+					-- two complement
+				l_val := i.to_natural_32
+					-- Rotate this value 1 bit left
+
+				l_val := l_val |<< 1
+
+					-- Encode as a four-byte integer: bit 31 set, bit 30 set, bit 29 clear,
+					-- rotated value in bits 28 through 0
+    		    l_val := (3 |<< 30) + (l_val & 0x1FFFFFFF)
+
 				internal_put (((l_val & 0xFF000000) |>> 24).to_integer_8, l_pos)
 				internal_put (((l_val & 0x00FF0000) |>> 16).to_integer_8, l_pos + 1)
 				internal_put (((l_val & 0x0000FF00) |>> 8).to_integer_8, l_pos + 2)

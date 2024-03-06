@@ -103,7 +103,6 @@ feature -- Helper
 			sep_code := sep.natural_32_code.to_natural_8
 
 			create p.make_from_string (a_path)
---			create l_bytes.make (0)
 			create l_blob.make
 			l_blob.put_natural_8 (sep_code)
 			across
@@ -131,6 +130,13 @@ feature -- Definition
 			m: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
 			l_document_row_index: NATURAL_32
 			l_local_row_index: NATURAL_32
+			l_delta_lines: INTEGER_32
+			l_il_offset: INTEGER_32
+			l_prev_il_offset: INTEGER_32
+			l_start_line, l_start_col: INTEGER_32
+			l_end_line, l_end_col: INTEGER_32
+			l_prev_non_hidden_start_line: INTEGER_32
+			l_prev_non_hidden_start_column: INTEGER_32
 			was_hidden_sequence: BOOLEAN
 		do
 			-- Blob ::= header SequencePointRecord (SequencePointRecord | document-record)*
@@ -143,7 +149,6 @@ feature -- Definition
 				-- Extract table type and row from the local token
 			m := md_emit.extract_table_type_and_row (dbg_writer.local_token)
 			l_local_row_index := m.table_row_index
-
 
 			if count > 0 then
 					--| See https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md#sequence-points-blob
@@ -161,8 +166,8 @@ feature -- Definition
 					--| IntialDocument (Current Document Entry)
 					--	   TODO: check what value should we put if the document_id is already set.
 					--	   we put 0 in other case we need to use the current document id
-				l_sequence_points.set_document_id (0)
---				l_sequence_points.set_document_id (l_document_row_index.to_integer_32)
+					-- DO NOT SET the Document row id here, as it should already be set in the Document table entry.
+--				l_sequence_points.set_document_id (0)
 
 					--| Build the sequence points record
 					-- SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
@@ -171,40 +176,59 @@ feature -- Definition
 				until
 					i >= count
 				loop
-					if is_hidden_sequence_point (start_lines [start_lines.lower + i], end_lines [end_lines.lower + i],
-								 start_columns [start_columns.lower + i], end_columns [end_columns.lower + i]) then
+					l_il_offset := offsets [offsets.lower + i]
+					l_start_line := start_lines [start_lines.lower + i]
+					l_start_col := start_columns [start_columns.lower + i]
+					l_end_line := end_lines [end_lines.lower + i]
+					l_end_col := end_columns [end_columns.lower + i]
+
+					if is_hidden_sequence_point (l_start_line, l_end_line, l_start_col, l_end_col) then
 							-- Hidden-sequence-point-record
 						was_hidden_sequence := True
 						if i = 0 then
-							l_sequence_points.put_il_offset (offsets [offsets.lower + i])
+							l_sequence_points.put_il_offset (l_il_offset)
 						else
-							l_sequence_points.put_il_offset (offsets [offsets.lower + i] - offsets [offsets.lower + (i - 1)])
+							l_sequence_points.put_il_offset (l_il_offset - l_prev_il_offset)
 						end
 						l_sequence_points.put_lines (0)
 						l_sequence_points.put_columns (0)
 					else
 							-- sequence-point-record (it seems it the same as hidden)
 						if i = 0 then
-							l_sequence_points.put_il_offset (offsets [offsets.lower + i])
+							l_sequence_points.put_il_offset (l_il_offset)
 						else
-							l_sequence_points.put_il_offset (offsets [offsets.lower + i] - offsets [offsets.lower + (i - 1)])
+							l_sequence_points.put_il_offset (l_il_offset - l_prev_il_offset)
 						end
-						l_sequence_points.put_lines (end_lines [end_lines.lower + i] - start_lines [start_lines.lower + i])
-						l_sequence_points.put_columns (end_columns [end_columns.lower + i] - start_columns [start_columns.lower + i])
-						if was_hidden_sequence = True or else i = 0 then
-							l_sequence_points.put_start_line (start_lines [start_lines.lower + i])
-							l_sequence_points.put_start_column (start_columns [start_columns.lower + i])
-							was_hidden_sequence := False
+
+						l_delta_lines := l_end_line - l_start_line
+						l_sequence_points.put_lines (l_delta_lines)
+						if l_delta_lines = 0 then
+							l_sequence_points.put_columns (l_end_col - l_start_col)
 						else
-							l_sequence_points.put_start_line (start_lines [start_lines.lower + i] - start_lines [start_lines.lower + (i-1)])
-							l_sequence_points.put_start_column (start_columns [start_columns.lower + i] - start_columns [start_columns.lower + (i-1)])
+							l_sequence_points.put_signed_columns (l_end_col - l_start_col)
 						end
+						if
+							was_hidden_sequence = True
+							or else i = 0
+						then
+							l_sequence_points.put_start_line (l_start_line)
+							l_sequence_points.put_start_column (l_start_col)
+						else
+							l_sequence_points.put_signed_start_line (l_start_line - l_prev_non_hidden_start_line)
+							l_sequence_points.put_signed_start_column (l_start_col - l_prev_non_hidden_start_column)
+						end
+
+						l_prev_non_hidden_start_line := l_start_line
+						l_prev_non_hidden_start_line := l_start_col
+						was_hidden_sequence := False
 					end
+					l_prev_il_offset := l_il_offset
 					i := i + 1
 				end
 
 					-- Set the document record 0 for the offset
-				l_sequence_points.put_document_record (l_document_row_index.to_integer_32)
+-- TODO: check but I think it is useless.
+--				l_sequence_points.put_document_record (l_document_row_index.to_integer_32)
 
 				blob_data := l_sequence_points.as_array
 

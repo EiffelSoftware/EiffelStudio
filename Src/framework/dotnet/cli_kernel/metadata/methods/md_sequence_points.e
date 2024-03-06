@@ -60,6 +60,22 @@ feature -- Setting
 			compress_unsigned_data (a_value)
 		end
 
+	put_signed_start_line (a_value: INTEGER_32)
+			-- Insert `a_value' into Current.
+		require
+			valid_value: a_value <= 0x20000000
+		do
+			compress_signed_data (a_value)
+		end
+
+	put_signed_start_column (a_value: INTEGER_32)
+			-- Insert `a_value' into Current.
+		require
+			valid_value: a_value <= 0x10000
+		do
+			compress_signed_data (a_value)
+		end
+
 	put_lines (a_value: INTEGER_32)
 			-- Insert `a_value' into Current.
 		require
@@ -76,9 +92,15 @@ feature -- Setting
 			compress_unsigned_data (a_value)
 		end
 
+	put_signed_columns (a_value: INTEGER_32)
+			-- Insert `a_value' into Current.
+		require
+			valid_value: a_value >= 0
+		do
+			compress_signed_data (a_value)
+		end
 
-	put_document_record(a_value: INTEGER_32)
-			--
+	put_document_record (a_value: INTEGER_32)
 		require
 			valid_value: a_value <= 0x20000000
 		do

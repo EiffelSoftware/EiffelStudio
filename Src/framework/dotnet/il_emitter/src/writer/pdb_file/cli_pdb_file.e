@@ -27,15 +27,11 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 			emitter_attached: attached e
-
-		local
-			l_characteristics: INTEGER_16
 		do
 			is_debug_enabled := True
 			is_valid := True
 			file_name := a_name
 			emitter := e
-
 		ensure
 			file_name_set: file_name = a_name
 			is_valid_set: is_valid
@@ -83,8 +79,6 @@ feature -- Saving
 		local
 			l_pdb_file, l_meta_data_file: RAW_FILE
 			l_padding: MANAGED_POINTER
-			l_strong_name_location: INTEGER
-			l_size: INTEGER
 			l_uni_string: CLI_STRING
 			l_meta_data_file_name: like file_name
 		do

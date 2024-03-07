@@ -174,6 +174,11 @@ feature -- Compressed data
 			compress_unsigned_data (v.to_integer_32)
 		end
 
+	put_compressed_signed_integer_32 (v: INTEGER_32)
+		do
+			compress_signed_data (v)
+		end
+
 feature -- Copy
 
 	as_special: SPECIAL [NATURAL_8]
@@ -275,27 +280,28 @@ feature {NONE} -- Implementation
 		do
 			l_pos := current_position
 
-				-- 2^6 and 2^6 -1 inclusive	
-			if -0x40 <= i and i <= 0x3F then
-					-- Two complement
+			if -0x40 <= i and i <= 0x3F then -- 2^6 and 2^6 -1 inclusive	
+					--	Represent the value as a 7-bit 2’s complement number, giving 0x40 (-2^6) to 0x3F (2^6-1);
 				n8 := i.to_natural_8
-					-- rotate the value 1 bit lef
+
+					--	Rotate this value 1 bit left, giving 0x01 (-2^6) to 0x7E (2^6-1);
 				n8 := (n8 |<< 1 + (n8 & 0b1000_0000) |>> 7) & 0b0111_1111
-					 -- Encode as a one-byte integer: bit 7 clear, rotated value in bits 6 through 0
+
+					--	Encode as a one-byte integer, bit 7 clear, rotated value in bits 6 through 0, giving 0x01 (-2^6) to 0x7E (2^6-1).
 				n8 := n8 & 0x7F
 
 				internal_put (n8.to_integer_8, l_pos)
 				l_incr := 1
-				-- 2^13 and 2^13 -1 inclusive
-			elseif -0x2000 <= i and i <= 0x1FFF then
+
+			elseif -0x2000 <= i and i <= 0x1FFF then -- 2^13 and 2^13 -1 inclusive
 				n16 := i.to_natural_16
-					-- Represent the value as a 14-bit 2’s complement number, giving 0x2000 (-213) to 0x1FFF (213-1)
+					-- Represent the value as a 14-bit 2’s complement number, giving 0x2000 (-2^13) to 0x1FFF (2^13-1)
 				n16 := n16 & 0b0011_1111_1111_1111
-					-- Rotate this value 1 bit left, giving 0x0001 (-213) to 0x3FFE (213-1);
+					-- Rotate this value 1 bit left, giving 0x0001 (-2^13) to 0x3FFE (2^13-1);
 				n16 := (n16 |<< 1 + (n16 & 0b0010_0000_0000_0000) |>> 13) & 0b0011_1111_1111_1111
 
 					-- Encode as a two-byte integer: bit 15 set, bit 14 clear, rotated value
-					-- in bits 13 through 0, giving 0x8001 (-213) to 0xBFFE (213-1).
+					-- in bits 13 through 0, giving 0x8001 (-2^13) to 0xBFFE (2^13-1).
 				n16 := (n16 + 0b1000_0000_0000_0000) & 0b1011_1111_1111_1111
 
 				internal_put (((n16 & 0b1111_1111_0000_0000) |>> 8).to_integer_8, l_pos)
@@ -304,10 +310,10 @@ feature {NONE} -- Implementation
 			else
 				n32 := i.to_natural_32
 					-- Represent the value as a 29-bit 2’s complement representation,
-					-- giving 0x10000000 (-228) to 0xFFFFFFF (228-1);
+					-- giving 0x10000000 (-2^28) to 0xFFFFFFF (2^28-1);
 				n32 := n32 & 0b0011_1111_1111_1111_1111_1111_1111_1111
 
-					-- Rotate this value 1-bit left, giving 0x00000001 (-228) to 0x1FFFFFFE (228-1)
+					-- Rotate this value 1-bit left, giving 0x00000001 (-2^28) to 0x1FFFFFFE (2^28-1)
 				n32 := (n32 |<< 1 + (n32 & 0b0010_0000_0000_0000_0000_0000_0000_0000) |>> 29) & 0b0011_1111_1111_1111_1111_1111_1111_1111
 
 					-- Encode as a four-byte integer: bit 31 set, bit 30 set, bit 29 clear,
@@ -331,6 +337,79 @@ feature {NONE} -- Implementation
 		do
 			allocate (pos + 1)
 			item.put_integer_8_le (val, pos)
+		end
+
+feature -- Uncompressing
+
+	uncompressed_unsigned_data (v: MANAGED_POINTER; pos: INTEGER; nb_bytes: detachable CELL [INTEGER_32]): INTEGER_32
+		local
+			i1, i2, i3, i4: NATURAL_8
+			res: NATURAL_32
+			l_bytes_count: INTEGER
+		do
+			--| See II.23.2 Blobs and signatures (https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf)
+			i1 := v.read_natural_8 (pos + 0)
+			if i1 & 0x80 = 0 then --<= 0x7F then
+				res := i1
+				l_bytes_count := 1
+			else
+				i2 := v.read_natural_8 (pos + 1)
+				if i1 & 0x40 = 0 then
+					l_bytes_count := 2
+					res := ((i1 & 0x3F).to_natural_32 |<< 8) | i2.to_natural_32
+				else
+					i3 := v.read_natural_8 (pos + 2)
+					i4 := v.read_natural_8 (pos + 3)
+					if i1 & 0x20 = 0 then
+						l_bytes_count := 4
+						res := ((i1.to_natural_32 & 0x1F) |<< 24).to_natural_32
+							| ( i2.to_natural_32 |<< 16).to_natural_32
+							| ( i3.to_natural_32 |<< 8).to_natural_32
+							| ( i4).to_natural_32
+					end
+				end
+			end
+			if nb_bytes /= Void then
+				nb_bytes.replace (l_bytes_count)
+			end
+			Result := res.to_integer_32
+		ensure
+			class
+		end
+
+	uncompressed_signed_data (v: MANAGED_POINTER; pos: INTEGER; nb_bytes: detachable CELL [INTEGER_32]): INTEGER_32
+		local
+			l_bytes_count: INTEGER
+			l_sign_extend: BOOLEAN
+			val: INTEGER_32
+			l_nb_bytes: CELL [INTEGER_32]
+		do
+			l_nb_bytes := nb_bytes
+			if l_nb_bytes = Void then
+				create l_nb_bytes.put (0)
+			end
+			val := uncompressed_unsigned_data (v, pos, l_nb_bytes)
+			l_bytes_count := l_nb_bytes.item
+
+			l_sign_extend := (val & 0x1) /= 0
+            val := val |>> 1
+
+			if l_sign_extend then
+				inspect l_bytes_count
+				when 1 then
+					val := val | 0xFFFF_FFC0
+				when 2 then
+					val := val | 0xFFFF_E000
+				else
+					val := val | 0xF000_0000
+				end
+			end
+			Result := val
+			if nb_bytes /= Void then
+				nb_bytes.replace (l_bytes_count)
+			end
+		ensure
+			class
 		end
 
 feature {NONE} -- Internal signature

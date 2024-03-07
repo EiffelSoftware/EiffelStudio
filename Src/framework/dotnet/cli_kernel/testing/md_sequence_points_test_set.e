@@ -26,6 +26,7 @@ feature -- Test routines
 			mp.put_unsigned_value(0x03)
 			checker.assert_arrays_equal("Compress 0x03 -> 03", {ARRAY [NATURAL_8]}<<0x03>>, mp.as_array)
 
+
 			mp.reset
 			mp.put_unsigned_value(0x7F)
 			checker.assert_arrays_equal("Compress 0x7F -> 7F", {ARRAY [NATURAL_8]}<<0x7F>>, mp.as_array)
@@ -47,6 +48,83 @@ feature -- Test routines
 			mp.reset
 			mp.put_unsigned_value (0x1FFF_FFFF)
 			checker.assert_arrays_equal("Compress 0x1FFF_FFFF -> DFFF FFFF", {ARRAY [NATURAL_8]}<<0xDF, 0xFF, 0xFF, 0xFF>>, mp.as_array)
+		end
+
+	test_md_blob_data_unsigned
+		local
+			blob: MD_BLOB_DATA
+			cl: CELL [INTEGER_32]
+			n: NATURAL_32
+			o: INTEGER
+		do
+			n := 0x03
+			create blob.make
+			blob.put_compressed_natural_32 (n)
+			o := blob.uncompressed_unsigned_data (blob.item, 0, cl)
+			assert ("unsigned 0x03", n = o.to_natural_32)
+
+			n := 0x7F
+			create blob.make
+			blob.put_compressed_natural_32 (n)
+			o := blob.uncompressed_unsigned_data (blob.item, 0, cl)
+			assert ("unsigned 0x7F", n = o.to_natural_32)
+
+			n := 0x80
+			create blob.make
+			blob.put_compressed_natural_32 (n)
+			o := blob.uncompressed_unsigned_data (blob.item, 0, cl)
+			assert ("unsigned 0x80", n = o.to_natural_32)
+
+			n := 0x2E57
+			create blob.make
+			blob.put_compressed_natural_32 (n)
+			o := blob.uncompressed_unsigned_data (blob.item, 0, cl)
+			assert ("unsigned 0x2E57", n = o.to_natural_32)
+
+
+			n := 0x4000
+			create blob.make
+			blob.put_compressed_natural_32 (n)
+			o := blob.uncompressed_unsigned_data (blob.item, 0, cl)
+			assert ("unsigned 0x4000", n = o.to_natural_32)
+
+			n := 0x1FFF_FFFF
+			create blob.make
+			blob.put_compressed_natural_32 (n)
+			o := blob.uncompressed_unsigned_data (blob.item, 0, cl)
+			assert ("unsigned 0x1FFF_FFFF", n = o.to_natural_32)
+		end
+
+	test_md_blob_data_signed
+		local
+			blob: MD_BLOB_DATA
+			cl: CELL [INTEGER_32]
+			i,o: INTEGER
+		do
+
+			i := 3
+			create blob.make
+			blob.put_compressed_signed_integer_32 (i)
+			o := blob.uncompressed_signed_data (blob.item, 0, cl)
+			assert ("signed 3", i = o)
+
+			i := -3
+			create blob.make
+			blob.put_compressed_signed_integer_32 (i)
+			o := blob.uncompressed_signed_data (blob.item, 0, cl)
+			assert ("signed -3", i = o)
+
+			i := 64
+			create blob.make
+			blob.put_compressed_signed_integer_32 (i)
+			o := blob.uncompressed_signed_data (blob.item, 0, cl)
+			assert ("signed 64", i = o)
+
+			i := -64
+			create blob.make
+			blob.put_compressed_signed_integer_32 (i)
+			o := blob.uncompressed_signed_data (blob.item, 0, cl)
+			assert ("signed -64", i = o)
 		end
 
 	test_compress_signed_data

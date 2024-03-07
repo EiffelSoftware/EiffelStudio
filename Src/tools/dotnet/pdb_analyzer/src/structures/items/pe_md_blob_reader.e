@@ -166,35 +166,34 @@ feature {NONE} -- Implementation
 			class
 		end
 
+feature -- Uncompressing
+
 	uncompressed_unsigned_data (v: MANAGED_POINTER; pos: INTEGER; nb_bytes: detachable CELL [INTEGER_32]): INTEGER_32
 		local
-			i1, i2, i3, i4: NATURAL_32
+			i1, i2, i3, i4: NATURAL_8
 			res: NATURAL_32
 			l_bytes_count: INTEGER
 		do
 			--| See II.23.2 Blobs and signatures (https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf)
 			i1 := v.read_natural_8 (pos + 0)
-			if i1 <= 0x7F then
+			if i1 & 0x80 = 0 then --<= 0x7F then
 				res := i1
 				l_bytes_count := 1
 			else
 				i2 := v.read_natural_8 (pos + 1)
-				res := (i1 |<< 8)
-						+ i2
-						- 0x0000_8000
-				if res <= 0x3FFF then
+				if i1 & 0x40 = 0 then
 					l_bytes_count := 2
-					-- ok
+					res := ((i1 & 0x3F).to_natural_32 |<< 8) | i2.to_natural_32
 				else
 					i3 := v.read_natural_8 (pos + 2)
 					i4 := v.read_natural_8 (pos + 3)
-					l_bytes_count := 4
-
-					res := (i1 |<< 24).to_natural_32
-							+ (i2 |<< 16).to_natural_32
-							+ (i3 |<< 8).to_natural_32
-							+ (i4).to_natural_32
-							- 0xC000_0000
+					if i1 & 0x20 = 0 then
+						l_bytes_count := 4
+						res := ((i1.to_natural_32 & 0x1F) |<< 24).to_natural_32
+							| ( i2.to_natural_32 |<< 16).to_natural_32
+							| ( i3.to_natural_32 |<< 8).to_natural_32
+							| ( i4).to_natural_32
+					end
 				end
 			end
 			if nb_bytes /= Void then
@@ -206,11 +205,36 @@ feature {NONE} -- Implementation
 		end
 
 	uncompressed_signed_data (v: MANAGED_POINTER; pos: INTEGER; nb_bytes: detachable CELL [INTEGER_32]): INTEGER_32
+		local
+			l_bytes_count: INTEGER
+			l_sign_extend: BOOLEAN
+			val: INTEGER_32
+			l_nb_bytes: CELL [INTEGER_32]
 		do
-			--| See II.23.2 Blobs and signatures (https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf)
-			-- FIXME, signed data is not encoded the same way !!!
-			check implemented: False end
-			Result := uncompressed_data (v, pos, nb_bytes)
+			l_nb_bytes := nb_bytes
+			if l_nb_bytes = Void then
+				create l_nb_bytes.put (0)
+			end
+			val := uncompressed_unsigned_data (v, pos, l_nb_bytes)
+			l_bytes_count := l_nb_bytes.item
+
+			l_sign_extend := (val & 0x1) /= 0
+            val := val |>> 1
+
+			if l_sign_extend then
+				inspect l_bytes_count
+				when 1 then
+					val := val | 0xFFFF_FFC0
+				when 2 then
+					val := val | 0xFFFF_E000
+				else
+					val := val | 0xF000_0000
+				end
+			end
+			Result := val
+			if nb_bytes /= Void then
+				nb_bytes.replace (l_bytes_count)
+			end
 		ensure
 			class
 		end

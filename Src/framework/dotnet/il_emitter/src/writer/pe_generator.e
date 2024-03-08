@@ -591,6 +591,51 @@ feature -- Stream functions
 			hashed: Result = check_blob (a_blob_data)
 		end
 
+	blob_at (idx: PE_BLOB): detachable MANAGED_POINTER
+		local
+			blob_heap: SPECIAL [NATURAL_8]
+			blob_size: INTEGER_32
+			i, j, k, target_size, current_size: INTEGER
+		do
+			blob_heap := blob.base
+			blob_size := blob.size.to_integer_32
+			i := {MD_EMIT}.extract_table_type_and_row (idx.index.to_integer_32).table_row_index.to_integer_32
+			if i <= blob_size then
+					-- Check if the blob header matches the target blob size.
+				if blob_heap [i] < 0x80 then
+					-- 128 = 0x80 = 1000 0000
+					current_size := blob_heap [i]
+					j := i + 1
+				elseif blob_heap [i] < 0xC0 then -- 0xC0 = 1100 0000
+					-- 192 = 0xC0  =   1100 0000
+					-- 256 = 0x100 = 1 0000 0000
+					current_size := (blob_heap [i] - 0x80) * 0x100
+									+ blob_heap [i + 1]
+					j := i + 2
+				else
+					-- 16777216 = 0x100 0000 = 1 00000000 00000000 00000000
+					-- 65 536 	=   0x1 0000 =          1 00000000 00000000
+					-- 256 		=      0x100 =                   1 00000000
+					current_size := (blob_heap [i] - 0xC0) * 0x100_0000
+									+ blob_heap [i + 1] * 0x1_0000
+									+ blob_heap [i + 2] * 0x100
+									+ blob_heap [i + 3]
+					j := i + 4
+				end
+
+				create Result.make (current_size)
+				from
+					k := 1
+				until
+					k > current_size or
+					(j + k - 1) > blob_size
+				loop
+					Result.put_natural_8_le (blob_heap[j + k - 1], k - 1)
+					k := k + 1
+				end
+			end
+		end
+
 	check_blob (target_blob: ARRAY [NATURAL_8]): NATURAL_32
 			-- Check if `target_blob` exists in `blob` and return its index if found, otherwise return 0.
 		local

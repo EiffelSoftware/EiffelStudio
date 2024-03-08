@@ -44,7 +44,7 @@ feature {MD_TABLE_ACCESS} -- Access
 
 feature -- Access
 
-	item alias "[]" (i: NATURAL_32): PE_TABLE_ENTRY_BASE
+	item alias "[]" (i: NATURAL_32): PE_TABLE_ENTRY_BASE assign replace
 		do
 			Result := items [i.to_integer_32]
 		end

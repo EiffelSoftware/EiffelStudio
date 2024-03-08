@@ -66,6 +66,8 @@ feature {NONE} -- Initialization
 				-- Create a new PE_IMPORT_SCOPE_TABLE_ENTRY instance with the given data
 			l_scope_entry_index := a_md_emit.next_pdb_table_index ({PDB_TABLES}.timportscope)
 			scope_entry_token := a_md_emit.add_pdb_table_entry (create {PE_IMPORT_SCOPE_TABLE_ENTRY}.make_with_data (0, 0))
+
+			create pending_sequence_points_table.make (0)
 		end
 
 feature -- Access
@@ -82,6 +84,9 @@ feature -- Access
 
 	scope_entry_token: NATURAL_32
 
+	pending_sequence_points_table: HASH_TABLE [TUPLE [local_token: INTEGER_32; sequence_points: ARRAYED_LIST [MD_SEQUENCE_POINT]], INTEGER_32]
+			-- indexed by method token	
+
 feature -- Status
 
 	is_successful: BOOLEAN
@@ -94,6 +99,21 @@ feature -- Properties
 	doc_type: CIL_GUID
 
 	url: CLI_STRING
+
+feature -- Execution
+
+	flush_pending_sequence_points
+		local
+			meth_tok: INTEGER_32
+		do
+			across
+				pending_sequence_points_table as d
+			loop
+				meth_tok := @d.key
+				process_define_sequence_points (meth_tok, d.local_token, d.sequence_points)
+			end
+			pending_sequence_points_table.wipe_out
+		end
 
 feature -- Helper	
 
@@ -127,36 +147,99 @@ feature -- Definition
 			-- Set sequence points for `document'
 		local
 			i: INTEGER
+			seqpt: MD_SEQUENCE_POINT
+			meth_tok: INTEGER_32
+			l_tb_data: like pending_sequence_points_table.item
+			lst: ARRAYED_LIST [MD_SEQUENCE_POINT]
+		do
+			meth_tok := dbg_writer.current_method_token
+			l_tb_data := pending_sequence_points_table [meth_tok]
+			if l_tb_data = Void then
+				create lst.make (count)
+				l_tb_data := [dbg_writer.local_token, lst]
+				pending_sequence_points_table [meth_tok] := l_tb_data
+			else
+				check l_tb_data.local_token = dbg_writer.local_token end
+				lst := l_tb_data.sequence_points
+			end
+			from
+				i := 0
+			until
+				i >= count
+			loop
+				create seqpt.make (
+						offsets [offsets.lower + i],
+						start_lines [start_lines.lower + i],
+						start_columns [start_columns.lower + i],
+						end_lines [end_lines.lower + i],
+						end_columns [end_columns.lower + i]
+					)
+				lst.force (seqpt)
+				i := i + 1
+			end
+			debug ("il_emitter_dbg")
+				print (generator + ".define_sequence_points (")
+				print (document_entry_token.to_hex_string)
+				print (", " + count.out + ", .. )")
+				if lst.count > 0 then
+					print (" seq=")
+				end
+				across
+					lst as e
+				loop
+					print (e.debug_output)
+					print (" ")
+				end
+				print (" method=")
+				print (meth_tok.to_hex_string)
+				io.put_new_line
+			end
+			is_successful := True
+		end
+
+	process_define_sequence_points (a_method_token, a_local_token: INTEGER_32; lst: LIST [MD_SEQUENCE_POINT])
+			-- Set sequence points for Current document.
+		local
 			blob_data: ARRAY [NATURAL_8]
 			blob_hash: NATURAL_32
 			l_method_dbgi_table_entry: PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY
-			l_idx, l_method_index: NATURAL_32
+			l_method_index: NATURAL_32
 			l_sequence_points: MD_SEQUENCE_POINTS
 			d: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
 			m: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
 			l_document_row_index: NATURAL_32
 			l_local_row_index: NATURAL_32
-			l_delta_lines: INTEGER_32
-			l_il_offset: INTEGER_32
-			l_prev_il_offset: INTEGER_32
-			l_start_line, l_start_col: INTEGER_32
-			l_end_line, l_end_col: INTEGER_32
-			l_prev_non_hidden_start_line: INTEGER_32
-			l_prev_non_hidden_start_column: INTEGER_32
-			was_hidden_sequence: BOOLEAN
+			l_current_method_table_index: NATURAL_32
+			n: NATURAL_32
+			l_methoddebuginformation_table: MD_TABLE
 		do
-			-- Blob ::= header SequencePointRecord (SequencePointRecord | document-record)*
-			-- SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
-
 				-- Extract table type and row from the method token
 			d := md_emit.extract_table_type_and_row (document_entry_index.to_integer_32)
 			l_document_row_index := d.table_row_index
 
+				-- Ensure entry will be at same method row index.			
+			l_current_method_table_index := md_emit.extract_table_type_and_row (a_method_token).table_row_index
+			l_methoddebuginformation_table := md_emit.pdb_writer.md_table ({PDB_TABLES}.tmethoddebuginformation)
+			n := l_methoddebuginformation_table.count.to_natural_32
+			if l_current_method_table_index > n then
+					-- Fill previous rows with empty entries.
+				from
+				until
+					n >= l_current_method_table_index - 1
+				loop
+					l_method_index := md_emit.add_pdb_table_entry (create {PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY}.make_empty)
+					n := n + 1
+				end
+			end
+
+			-- Blob ::= header SequencePointRecord (SequencePointRecord | document-record)*
+			-- SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
+
 				-- Extract table type and row from the local token
-			m := md_emit.extract_table_type_and_row (dbg_writer.local_token)
+			m := md_emit.extract_table_type_and_row (a_local_token)
 			l_local_row_index := m.table_row_index
 
-			if count > 0 then
+			if lst.count > 0 then
 					--| See https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md#sequence-points-blob
 					--| PE_SEQUENCE_POINTS_BLOB
 					--| Sequence points blob has the following structure:
@@ -177,59 +260,15 @@ feature -- Definition
 
 					--| Build the sequence points record
 					-- SequencePointRecord ::= sequence-point-record | hidden-sequence-point-record
-				from
-					i := 0
-				until
-					i >= count
+				across
+					lst as seq_pt
 				loop
-					l_il_offset := offsets [offsets.lower + i]
-					l_start_line := start_lines [start_lines.lower + i]
-					l_start_col := start_columns [start_columns.lower + i]
-					l_end_line := end_lines [end_lines.lower + i]
-					l_end_col := end_columns [end_columns.lower + i]
-
-					if is_hidden_sequence_point (l_start_line, l_end_line, l_start_col, l_end_col) then
-							-- Hidden-sequence-point-record
-						was_hidden_sequence := True
-						if i = 0 then
-							l_sequence_points.put_il_offset (l_il_offset)
-						else
-							l_sequence_points.put_il_offset (l_il_offset - l_prev_il_offset)
-						end
-						l_sequence_points.put_lines (0)
-						l_sequence_points.put_columns (0)
-					else
-							-- sequence-point-record (it seems it the same as hidden)
-						if i = 0 then
-							l_sequence_points.put_il_offset (l_il_offset)
-						else
-							l_sequence_points.put_il_offset (l_il_offset - l_prev_il_offset)
-						end
-
-						l_delta_lines := l_end_line - l_start_line
-						l_sequence_points.put_lines (l_delta_lines)
-						if l_delta_lines = 0 then
-							l_sequence_points.put_columns (l_end_col - l_start_col)
-						else
-							l_sequence_points.put_signed_columns (l_end_col - l_start_col)
-						end
-						if
-							was_hidden_sequence = True
-							or else i = 0
-						then
-							l_sequence_points.put_start_line (l_start_line)
-							l_sequence_points.put_start_column (l_start_col)
-						else
-							l_sequence_points.put_signed_start_line (l_start_line - l_prev_non_hidden_start_line)
-							l_sequence_points.put_signed_start_column (l_start_col - l_prev_non_hidden_start_column)
-						end
-
-						l_prev_non_hidden_start_line := l_start_line
-						l_prev_non_hidden_start_line := l_start_col
-						was_hidden_sequence := False
-					end
-					l_prev_il_offset := l_il_offset
-					i := i + 1
+					l_sequence_points.put_sequence_point (seq_pt.il_offset,
+							seq_pt.start_line,
+							seq_pt.start_column,
+							seq_pt.end_line,
+							seq_pt.end_column
+						)
 				end
 
 					-- Set the document record 0 for the offset
@@ -240,21 +279,108 @@ feature -- Definition
 
 					-- Compute the Sequence Points Blob using hash_blob feature
 				blob_hash := md_emit.pdb_writer.hash_blob (blob_data, blob_data.count.to_natural_32)
-			else
-				l_document_row_index := 0
-				blob_hash := 0
-			end
 
 				-- Document (The row id of the single document containing all sequence points of the method,
 				-- or 0 if the method doesn't have sequence points or spans multiple documents)
-				--| note here `l_document_row_index` could be 0, see previous code.
-			create l_method_dbgi_table_entry.make_with_data (l_document_row_index, blob_hash)
+				create l_method_dbgi_table_entry.make (l_document_row_index, blob_hash)
+			else
+				-- Document (The row id of the single document containing all sequence points of the method,
+				-- or 0 if the method doesn't have sequence points or spans multiple documents)
+				create l_method_dbgi_table_entry.make_empty
+			end
 
-			l_idx := md_emit.next_pdb_table_index (l_method_dbgi_table_entry.table_index)
-			l_method_index := md_emit.add_pdb_table_entry (l_method_dbgi_table_entry)
+			if l_current_method_table_index.to_integer_32 <= l_methoddebuginformation_table.count then
+				check is_empty_entry: attached {PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY} l_methoddebuginformation_table [l_current_method_table_index] as e and then e.is_empty end
+					-- Replace
+				l_methoddebuginformation_table [l_current_method_table_index] := l_method_dbgi_table_entry
+			else
+				l_method_index := md_emit.add_pdb_table_entry (l_method_dbgi_table_entry)
+			end
+
 			is_successful := True
 		end
 
+	sequence_points_at (a_blob: PE_BLOB): detachable MD_SEQUENCE_POINTS
+		local
+			l_reader: MD_BLOB_DATA
+
+			l_il_offset: NATURAL_32
+			l_delta_start_lines,
+			l_delta_start_cols: INTEGER_32
+
+			l_start_line, l_start_col,
+			l_end_line, l_end_col: NATURAL_32
+			n32: NATURAL_32
+			l_is_first: BOOLEAN
+			l_prev_non_hidden_start_line,
+			l_prev_non_hidden_start_col: NATURAL_32
+			l_prev_offset: NATURAL_32
+			mp: MANAGED_POINTER
+			l_nb_bytes: CELL [INTEGER_32]
+			pos, max: INTEGER
+		do
+			mp := md_emit.pdb_writer.blob_at (a_blob)
+			if mp /= Void and then mp.count > 0 then
+				create Result.make
+				l_reader := Result
+				create l_nb_bytes.put (0)
+				pos := 0
+				max := mp.count
+				n32 := l_reader.uncompressed_unsigned_data (mp, pos, l_nb_bytes).to_natural_32
+				pos := pos + l_nb_bytes.item
+				Result.set_local_signature (n32.to_integer_32)
+
+					-- The document row id information is already known in the Document table row
+--				Result.set_document_id (n32)
+
+					-- Retrieve the sequence points
+				l_is_first := True
+				from
+				until
+					pos >= max
+				loop
+					l_il_offset := l_prev_offset + l_reader.uncompressed_unsigned_data (mp, pos, l_nb_bytes).to_natural_32
+					pos := pos + l_nb_bytes.item
+
+					l_delta_start_lines := l_reader.uncompressed_unsigned_data (mp, pos, l_nb_bytes)
+					pos := pos + l_nb_bytes.item
+					l_delta_start_cols := l_reader.uncompressed_unsigned_data (mp, pos, l_nb_bytes)
+					pos := pos + l_nb_bytes.item
+					if l_delta_start_lines = 0 and l_delta_start_cols = 0 then
+	--							hidden-sequence-point-record
+						l_start_line := 0x00FE_EFEE
+						l_end_line := 0x00FE_EFEE
+						l_start_col := 0
+						l_end_col := 0
+					else
+	--							sequence-point-record
+						if l_is_first then
+							l_is_first := False
+							l_start_line := l_reader.uncompressed_unsigned_data (mp, pos, l_nb_bytes).to_natural_32
+							pos := pos + l_nb_bytes.item
+							l_start_col := l_reader.uncompressed_unsigned_data (mp, pos, l_nb_bytes).to_natural_32
+							pos := pos + l_nb_bytes.item
+						else
+							l_start_line := (l_prev_non_hidden_start_line.to_integer_32
+									+ l_reader.uncompressed_signed_data (mp, pos, l_nb_bytes)
+									).to_natural_32
+							pos := pos + l_nb_bytes.item
+							l_start_col := (l_prev_non_hidden_start_col.to_integer_32
+									+ l_reader.uncompressed_signed_data (mp, pos, l_nb_bytes)
+									).to_natural_32
+							pos := pos + l_nb_bytes.item
+						end
+						l_end_line := (l_start_line.to_integer_32 + l_delta_start_lines).to_natural_32
+						l_end_col := (l_start_col.to_integer_32 + l_delta_start_cols).to_natural_32
+						Result.put_sequence_point (l_il_offset.to_integer_32, l_start_line.to_integer_32, l_start_col.to_integer_32,
+									l_end_line.to_integer_32, l_end_col.to_integer_32)
+						l_prev_non_hidden_start_line := l_start_line
+						l_prev_non_hidden_start_col := l_start_col
+					end
+					l_prev_offset := l_il_offset
+				end
+			end
+		end
 
 	is_hidden_sequence_point (a_start_line, a_end_line: INTEGER; a_start_column, a_end_column: INTEGER): BOOLEAN
 			-- True if: Hidden sequence point is a sequence point whose Start Line = End Line = 0xfeefee and Start Column = End Column = 0.

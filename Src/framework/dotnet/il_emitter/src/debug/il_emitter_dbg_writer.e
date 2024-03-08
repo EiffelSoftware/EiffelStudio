@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			initialize_debug_directory
 			current_method_token := -1
 			local_token := -1
+			create dbg_documents.make (2)
 			is_closed := False
 			is_successful := True
 		ensure
@@ -58,6 +59,10 @@ feature -- Access
 		-- Local token for the current method.
 		--| MD_LOCAL_SIGNATURE.
 
+feature -- Access
+
+	dbg_documents: ARRAYED_LIST [IL_EMITTER_DBG_DOCUMENT_WRITER]
+
 feature -- Update
 
 	close (a_pe_file: detachable CLI_PE_FILE)
@@ -72,6 +77,14 @@ feature -- Update
 			l_codeview_debug_info,
 			l_checksum_debug_info: MANAGED_POINTER
 		do
+				-- Process pending operation on Document (such as sequence points)
+			across
+				dbg_documents as dbg_doc
+			loop
+				dbg_doc.flush_pending_sequence_points
+			end
+			dbg_documents.wipe_out
+
 				-- update pdb_stream entry point
 			emitter.update_pdb_stream_entry_point (entry_point_token)
 			create l_pdb_file.make (associated_pdb_file_name.name, emitter)
@@ -228,6 +241,8 @@ feature -- Definition
 
 	define_document (url: CLI_STRING; language, vendor, doc_type: CIL_GUID): detachable DBG_DOCUMENT_WRITER_I
 			-- Create a new document writer needed to generated debug info.
+		local
+			dbg_doc_writer: IL_EMITTER_DBG_DOCUMENT_WRITER
 		do
 			debug ("il_emitter_dbg")
 				print (generator + ".define_document (")
@@ -235,7 +250,9 @@ feature -- Definition
 				print (", ..)%N")
 			end
 			if attached {MD_EMIT} emitter as l_md_emit then
-				create {IL_EMITTER_DBG_DOCUMENT_WRITER} Result.make (Current, l_md_emit, url, language, vendor, doc_type)
+				create dbg_doc_writer.make (Current, l_md_emit, url, language, vendor, doc_type)
+				dbg_documents.force (dbg_doc_writer)
+				Result := dbg_doc_writer
 				is_successful := True
 			else
 				is_successful := False
@@ -244,56 +261,7 @@ feature -- Definition
 
 	define_sequence_points (document: DBG_DOCUMENT_WRITER_I; count: INTEGER_32; offsets, start_lines, start_columns, end_lines, end_columns: ARRAY [INTEGER_32])
 			-- Set sequence points for `document`
-		local
-			j, n: INTEGER_32
 		do
-			debug ("il_emitter_dbg")
-				print (generator + ".define_sequence_points (")
-				if attached {IL_EMITTER_DBG_DOCUMENT_WRITER} document as doc then
-					print (doc.document_entry_token.to_hex_string)
-				else
-					print ("doc")
-				end
-				print (", " + count.out + ", ")
-				if count > 0 then
-					j := 0
-					across
-						<<offsets, start_lines, start_columns, end_lines, end_columns>> as arr
-					loop
-						print (", ")
-						j := j + 1
-						inspect j
-						when 2 then
-							print ("# start_lines")
-						when 3 then
-							print ("# start_columns")
-						when 4 then
-							print ("# end_lines")
-						when 5 then
-							print ("# end_columns")
-						else
-							print ("# ")
-						end
-						print ("[")
-						n := 0
-						across
-							arr as i
-						until
-							n >= count
-						loop
-							print (i.out)
-							n := n + 1
-							if n < count then
-								print (",")
-							end
-						end
-						print ("]")
-					end
-				else
-					print (",,,,,")
-				end
-				print (")%N")
-			end
 			document.define_sequence_points (count, offsets, start_lines, start_columns, end_lines, end_columns)
 			is_successful := document.is_successful
 		end

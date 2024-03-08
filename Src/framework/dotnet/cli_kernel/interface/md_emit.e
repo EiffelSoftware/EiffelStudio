@@ -438,6 +438,8 @@ feature -- Helpers
 				-- 2^ 24 -1 = 16777215 = 0xFF_FFFF
 			l_table_row_index := (a_token & 0xFF_FFFF).to_natural_32
 			Result := [l_table_type_index, l_table_row_index]
+		ensure
+			class
 		end
 
 end

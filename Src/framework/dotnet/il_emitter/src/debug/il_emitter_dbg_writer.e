@@ -242,19 +242,39 @@ feature -- Definition
 			end
 		end
 
-	define_sequence_points (document: DBG_DOCUMENT_WRITER_I; count: INTEGER; offsets, start_lines,
-			start_columns, end_lines, end_columns: ARRAY [INTEGER])
-			-- Set sequence points for `document'
+	define_sequence_points (document: DBG_DOCUMENT_WRITER_I; count: INTEGER_32; offsets, start_lines, start_columns, end_lines, end_columns: ARRAY [INTEGER_32])
+			-- Set sequence points for `document`
 		local
-			n: INTEGER
+			j, n: INTEGER_32
 		do
 			debug ("il_emitter_dbg")
-				print (generator + ".define_sequence_points (doc, " + count.out + ", ")
+				print (generator + ".define_sequence_points (")
+				if attached {IL_EMITTER_DBG_DOCUMENT_WRITER} document as doc then
+					print (doc.document_entry_token.to_hex_string)
+				else
+					print ("doc")
+				end
+				print (", " + count.out + ", ")
 				if count > 0 then
+					j := 0
 					across
 						<<offsets, start_lines, start_columns, end_lines, end_columns>> as arr
 					loop
-						print (", [")
+						print (", ")
+						j := j + 1
+						inspect j
+						when 2 then
+							print ("# start_lines")
+						when 3 then
+							print ("# start_columns")
+						when 4 then
+							print ("# end_lines")
+						when 5 then
+							print ("# end_columns")
+						else
+							print ("# ")
+						end
+						print ("[")
 						n := 0
 						across
 							arr as i
@@ -273,7 +293,6 @@ feature -- Definition
 					print (",,,,,")
 				end
 				print (")%N")
-
 			end
 			document.define_sequence_points (count, offsets, start_lines, start_columns, end_lines, end_columns)
 			is_successful := document.is_successful

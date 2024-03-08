@@ -569,7 +569,11 @@ feature {EB_CONTEXT_MENU_FACTORY, ES_WATCH_TOOL} -- Context menu
 					else
 						create dlg.make_with_expression_text (oname)
 					end
-					if cl /= Void and not dlg.has_class_text then
+					if
+						cl /= Void and then
+						dlg /= Void and then
+						not dlg.has_class_text
+					then
 						dlg.set_class_text (cl)
 					end
 				end
@@ -1970,7 +1974,7 @@ invariant
 note
 	ca_ignore:
 		"CA093", "CA093: manifest array type mismatch"
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

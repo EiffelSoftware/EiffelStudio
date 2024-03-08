@@ -105,6 +105,8 @@ feature -- Execution
 	flush_pending_sequence_points
 		local
 			meth_tok: INTEGER_32
+			n: INTEGER
+			tok: NATURAL_32
 		do
 			across
 				pending_sequence_points_table as d
@@ -112,6 +114,23 @@ feature -- Execution
 				meth_tok := @d.key
 				process_define_sequence_points (meth_tok, d.local_token, d.sequence_points)
 			end
+				-- Ensure Method PE table and MethodDebugInformation PDB tables have the same size
+			if
+				attached md_emit.pe_writer.md_table ({PE_TABLES}.tmethoddef) as l_methoddef_table and then
+				attached md_emit.pdb_writer.md_table ({PDB_TABLES}.tmethoddebuginformation) as l_methoddebuginformation_table
+			then
+				n := l_methoddef_table.count - l_methoddebuginformation_table.count
+				if n > 0 then
+					from
+					until
+						n = 0
+					loop
+						tok := md_emit.add_pdb_table_entry (create {PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY}.make_empty)
+						n := n - 1
+					end
+				end
+			end
+
 			pending_sequence_points_table.wipe_out
 		end
 

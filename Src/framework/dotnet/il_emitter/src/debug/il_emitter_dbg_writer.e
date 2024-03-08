@@ -229,9 +229,6 @@ feature -- Definition
 	define_document (url: CLI_STRING; language, vendor, doc_type: CIL_GUID): detachable DBG_DOCUMENT_WRITER_I
 			-- Create a new document writer needed to generated debug info.
 		do
-			debug ("refactor_fixme")
-				to_implement ("TODO: DBG_DOCUMENT_WRITER")
-			end
 			debug ("il_emitter_dbg")
 				print (generator + ".define_document (")
 				print (url.string_32)
@@ -251,9 +248,6 @@ feature -- Definition
 		local
 			n: INTEGER
 		do
-			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
-			end
 			debug ("il_emitter_dbg")
 				print (generator + ".define_sequence_points (doc, " + count.out + ", ")
 				if count > 0 then
@@ -295,9 +289,6 @@ feature -- Definition
 			idx: NATURAL_32
 			l_local_entry_entry_index: NATURAL_32
 		do
-			debug ("refactor_fixme")
-				to_implement ("TODO add implementation")
-			end
 			debug ("il_emitter_dbg")
 				print (generator + ".define_local_variable (%"")
 				print (name.string_32)
@@ -316,10 +307,6 @@ feature -- Definition
 	define_parameter (name: CLI_STRING; pos: INTEGER)
 			-- Define parameter `name' at position `pos' in current method.
 		do
-			debug ("refactor_fixme")
-				to_implement ("TODO this feature is not used by the old .Net implemenation")
-					-- Double check if the current implementation needs it.
-			end
 			debug ("il_emitter_dbg")
 				print (generator + ".define_parameter (%"")
 				print (name.string_32)
@@ -334,10 +321,6 @@ feature -- Settings
 	set_user_entry_point (a_entry_point_token: INTEGER)
 			-- Set `entry_point_token' as entry point.
 		do
-			debug ("refactor_fixme")
-				to_implement ("TODO double check if this is the correct way to setup the current entry point.")
-
-			end
 			debug ("il_emitter_dbg")
 				print (generator + ".set_user_entry_point (%"")
 				print (a_entry_point_token.out)

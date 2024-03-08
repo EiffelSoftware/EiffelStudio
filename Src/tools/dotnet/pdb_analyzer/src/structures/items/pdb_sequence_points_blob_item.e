@@ -87,6 +87,7 @@ feature -- Conversion
 						Result.append (" (#")
 						Result.append (l_il_offset.to_natural_32.out)
 						if l_is_first then
+							l_is_first := False
 							l_start_line := l_reader.uncompressed_value.to_natural_32
 							l_start_col := l_reader.uncompressed_value.to_natural_32
 						else

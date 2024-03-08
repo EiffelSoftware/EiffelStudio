@@ -240,13 +240,16 @@ feature -- Definition
 
 					-- Compute the Sequence Points Blob using hash_blob feature
 				blob_hash := md_emit.pdb_writer.hash_blob (blob_data, blob_data.count.to_natural_32)
-
-					-- Create a new PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY for the method with the
-					-- entry index (the current document id and the blob hash)
-				create l_method_dbgi_table_entry.make_with_data (l_document_row_index, blob_hash)
 			else
-				create l_method_dbgi_table_entry.make_with_data (l_document_row_index, 0)
+				l_document_row_index := 0
+				blob_hash := 0
 			end
+
+				-- Document (The row id of the single document containing all sequence points of the method,
+				-- or 0 if the method doesn't have sequence points or spans multiple documents)
+				--| note here `l_document_row_index` could be 0, see previous code.
+			create l_method_dbgi_table_entry.make_with_data (l_document_row_index, blob_hash)
+
 			l_idx := md_emit.next_pdb_table_index (l_method_dbgi_table_entry.table_index)
 			l_method_index := md_emit.add_pdb_table_entry (l_method_dbgi_table_entry)
 			is_successful := True

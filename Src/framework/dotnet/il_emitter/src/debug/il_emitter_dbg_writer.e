@@ -161,7 +161,7 @@ feature -- Update
 		do
 			check current_method_token /= -1 end
 			current_end_offset := end_offset
-			check current_end_offset > current_start_offset  end
+			check current_end_offset >= current_start_offset  end
 
 
 				-- create a new entry to PE_LOCAL_SCOPE_TABLE_ENTRY

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 				-- https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md#document-table-0x30
 			dbg_writer := a_dbg_writer
 			md_emit := a_md_emit
-			url := a_url
+			url := a_url.string_32
 			language := a_language
 			vendor := a_vendor
 			doc_type := a_doc_type
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			l_owner_index := d.table_row_index
 
 			debug ("il_emitter_table")
-				print ({STRING_32} "DefineDocument: owner=" + l_token.to_hex_string + " owner.index=" + l_owner_index.out + " name=" + url.string_32)
+				print ({STRING_32} "DefineDocument: owner=" + l_token.to_hex_string + " owner.index=" + l_owner_index.out + " name=" + url)
 			end
 
 				-- Compute the name index
@@ -98,7 +98,7 @@ feature -- Properties
 	vendor,
 	doc_type: CIL_GUID
 
-	url: CLI_STRING
+	url: STRING_32
 
 feature -- Execution
 
@@ -211,6 +211,14 @@ feature -- Definition
 				end
 				print (" method=")
 				print (meth_tok.to_hex_string)
+				if
+					attached {PE_METHOD_DEF_TABLE_ENTRY} md_emit.pe_writer.md_table_entry (meth_tok.to_natural_32) as meth_entry and then
+					attached md_emit.pe_writer.string_at (meth_entry.name_index) as meth_name
+				then
+					print (" %"")
+					print (meth_name)
+					print ("%"")
+				end
 				io.put_new_line
 			end
 			is_successful := True
@@ -309,9 +317,25 @@ feature -- Definition
 			end
 
 			if l_current_method_table_index.to_integer_32 <= l_methoddebuginformation_table.count then
-				check is_empty_entry: attached {PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY} l_methoddebuginformation_table [l_current_method_table_index] as e and then e.is_empty end
-					-- Replace
-				l_methoddebuginformation_table [l_current_method_table_index] := l_method_dbgi_table_entry
+				if attached {PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY} l_methoddebuginformation_table [l_current_method_table_index] as e and then not e.is_empty then
+					debug ("il_emitter_dbg")
+						if
+							attached sequence_points_at (e.sequence_points_index) as blob and then
+							attached {PE_METHOD_DEF_TABLE_ENTRY} md_emit.pe_writer.md_table ({PE_TABLES}.tmethoddef)[l_current_method_table_index] as metdef and then
+							attached md_emit.pe_writer.string_at (metdef.name_index) as met_name
+						then
+							do_nothing
+						end
+					end
+						-- Unexpected, but it happens for instance with ARRAY.$NewCursor and ITERABLE.$NewCursor .. same method token, but the second sequence points part is related
+						-- to the postconditions part of the ancestor  (ITERABLE) ...
+						-- For now, let's ignore .
+						-- FIXME: find out if this is expected behavior
+						-- TODO: if it is expected, see if merging is a potential solution.
+				else
+						-- Replace with meaningful content.
+					l_methoddebuginformation_table [l_current_method_table_index] := l_method_dbgi_table_entry
+				end
 			else
 				l_method_index := md_emit.add_pdb_table_entry (l_method_dbgi_table_entry)
 			end
@@ -319,7 +343,8 @@ feature -- Definition
 			is_successful := True
 		end
 
-	sequence_points_at (a_blob: PE_BLOB): detachable MD_SEQUENCE_POINTS
+	sequence_points_at (a_blob: PE_BLOB): detachable TUPLE [sequence_points: MD_SEQUENCE_POINTS; local_token: NATURAL_32; points: LIST [MD_SEQUENCE_POINT]]
+			-- Information related to the Sequence points stored in Blob heap at index `a_blob`.
 		local
 			l_reader: MD_BLOB_DATA
 
@@ -337,20 +362,28 @@ feature -- Definition
 			mp: MANAGED_POINTER
 			l_nb_bytes: CELL [INTEGER_32]
 			pos, max: INTEGER
+			l_sequence_points: MD_SEQUENCE_POINTS
+			seq_pt: MD_SEQUENCE_POINT
+			seq_pt_lst: ARRAYED_LIST [MD_SEQUENCE_POINT]
 		do
 			mp := md_emit.pdb_writer.blob_at (a_blob)
 			if mp /= Void and then mp.count > 0 then
-				create Result.make
-				l_reader := Result
+				create l_sequence_points.make
+				create seq_pt_lst.make (0)
+
+				l_reader := l_sequence_points
 				create l_nb_bytes.put (0)
 				pos := 0
 				max := mp.count
 				n32 := l_reader.uncompressed_unsigned_data (mp, pos, l_nb_bytes).to_natural_32
 				pos := pos + l_nb_bytes.item
-				Result.set_local_signature (n32.to_integer_32)
+				l_sequence_points.set_local_signature (n32.to_integer_32)
 
 					-- The document row id information is already known in the Document table row
---				Result.set_document_id (n32)
+--				l_sequence_points.set_document_id (n32)
+
+				Result := [l_sequence_points, n32, seq_pt_lst]
+
 
 					-- Retrieve the sequence points
 				l_is_first := True
@@ -391,8 +424,11 @@ feature -- Definition
 						end
 						l_end_line := (l_start_line.to_integer_32 + l_delta_start_lines).to_natural_32
 						l_end_col := (l_start_col.to_integer_32 + l_delta_start_cols).to_natural_32
-						Result.put_sequence_point (l_il_offset.to_integer_32, l_start_line.to_integer_32, l_start_col.to_integer_32,
-									l_end_line.to_integer_32, l_end_col.to_integer_32)
+						create seq_pt.make (l_il_offset.to_integer_32, l_start_line.to_integer_32, l_start_col.to_integer_32, l_end_line.to_integer_32, l_end_col.to_integer_32)
+						seq_pt_lst.force (seq_pt)
+						l_sequence_points.put_sequence_point (seq_pt.il_offset,
+									seq_pt.start_line, seq_pt.start_column,
+									seq_pt.end_line, seq_pt.end_column)
 						l_prev_non_hidden_start_line := l_start_line
 						l_prev_non_hidden_start_col := l_start_col
 					end

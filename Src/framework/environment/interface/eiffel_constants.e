@@ -76,7 +76,7 @@ feature -- Version
 	major_version: NATURAL_16 = 24
 			-- Major release version.
 
-	minor_version: NATURAL_16 = 02
+	minor_version: NATURAL_16 = 03
 			-- Minor release version.
 
 	two_digit_minimum_major_version: STRING

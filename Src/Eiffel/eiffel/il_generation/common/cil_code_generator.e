@@ -3203,6 +3203,7 @@ feature -- IL Generation
 			l_class_type: CLASS_TYPE
 			l_type_i, l_impl_type_i: TYPE_A
 			l_same_signature: BOOLEAN
+			l_dbg_document: DBG_DOCUMENT_WRITER
 			has_return_value: BOOLEAN
 		do
 			l_meth_token := feature_token (current_type_id, feat.feature_id)
@@ -3264,8 +3265,9 @@ feature -- IL Generation
 					l_same_signature)
 				then
 					if is_debug_info_enabled then
+						l_dbg_document := dbg_documents (l_sequence_point.written_class_id)
 						dbg_writer.open_method (l_meth_token)
-						dbg_writer.open_local_signature(method_body.local_token)
+						dbg_writer.open_local_signature (l_dbg_document, method_body.local_token)
 						across
 							current_module.method_sequence_points.item (l_token) as p
 						loop
@@ -3277,13 +3279,13 @@ feature -- IL Generation
 							dbg_end_lines := l_sequence_point.end_lines
 							dbg_end_columns := l_sequence_point.end_columns
 							dbg_writer.define_sequence_points (
-								dbg_documents (l_sequence_point.written_class_id),
+								l_dbg_document,
 								dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 								dbg_end_lines, dbg_end_columns
 								)
 						end
 						generate_local_debug_info (l_token, l_class_type)
-						dbg_writer.close_local_signature
+						dbg_writer.close_local_signature (l_dbg_document)
 						dbg_writer.close_method
 					end
 					method_writer.write_duplicate_body (l_token, l_meth_token)
@@ -3389,8 +3391,13 @@ feature -- IL Generation
 		local
 			l_meth_token: INTEGER
 			l_sequence_point_list: LINKED_LIST [like sequence_point]
+			l_dbg_document: DBG_DOCUMENT_WRITER
 		do
-			if not feat.is_attribute and then not feat.is_c_external and not feat.is_deferred then
+			if
+				not feat.is_attribute and then
+				not feat.is_c_external and
+				not feat.is_deferred
+			then
 				if is_implementation then
 					l_meth_token := implementation_feature_token (current_type_id, feat.feature_id)
 				else
@@ -3398,8 +3405,6 @@ feature -- IL Generation
 				end
 				current_feature_token := l_meth_token
 				start_new_body (l_meth_token)
-
-				store_locals (l_meth_token, current_class_type)
 
 				if is_debug_info_enabled then
 					dbg_writer.open_method (l_meth_token)
@@ -3414,16 +3419,19 @@ feature -- IL Generation
 
 				current_class_type.generate_il_feature (feat)
 				local_end_offset := method_body.count
+				store_locals (l_meth_token, current_class_type)
 				method_writer.write_current_body
 
 				if is_debug_info_enabled then
-					dbg_writer.open_local_signature (method_body.local_token)
+					l_dbg_document := dbg_documents (current_class.class_id)
+						-- Note: the local_token will be updated where needed by `open_local_signature`
+					dbg_writer.open_local_signature (l_dbg_document, method_body.local_token)
 					generate_local_debug_info (l_meth_token, current_class_type)
 					dbg_writer.define_sequence_points (
-						dbg_documents (current_class.class_id),
+						l_dbg_document,
 						dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 						dbg_end_lines, dbg_end_columns)
-					dbg_writer.close_local_signature
+					dbg_writer.close_local_signature (l_dbg_document)
 					dbg_writer.close_method
 					l_sequence_point_list :=
 						current_module.method_sequence_points.item (l_meth_token)
@@ -7406,12 +7414,12 @@ feature -- Line info
 				else
 					l_document := dbg_documents (a_class_type.associated_class.class_id)
 				end
-				dbg_writer.open_local_signature (method_body.local_token)
+				dbg_writer.open_local_signature (l_document, method_body.local_token)
 				dbg_writer.define_sequence_points (
 					l_document,
 					dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 					dbg_end_lines, dbg_end_columns)
-				dbg_writer.close_local_signature
+				dbg_writer.close_local_signature (l_document)
 				l_sequence_point_list :=
 					current_module.method_sequence_points.item (current_feature_token)
 				if l_sequence_point_list = Void then

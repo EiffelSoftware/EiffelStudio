@@ -102,6 +102,18 @@ feature -- Properties
 
 feature -- Execution
 
+	update_method_local_token (a_local_token: INTEGER; a_method_token: INTEGER)
+		require
+			a_local_token /= 0
+		do
+			if attached pending_sequence_points_table [a_method_token] as d then
+				check d.local_token /= 0 implies d.local_token = a_local_token end
+				d.local_token := a_local_token
+			end
+		ensure
+			attached pending_sequence_points_table [a_method_token] as en_d implies en_d.local_token = a_local_token
+		end
+
 	flush_pending_sequence_points
 		local
 			meth_tok: INTEGER_32
@@ -178,7 +190,9 @@ feature -- Definition
 				l_tb_data := [dbg_writer.local_token, lst]
 				pending_sequence_points_table [meth_tok] := l_tb_data
 			else
-				check l_tb_data.local_token = dbg_writer.local_token end
+				if dbg_writer.local_token > l_tb_data.local_token then
+					l_tb_data.local_token := dbg_writer.local_token
+				end
 				lst := l_tb_data.sequence_points
 			end
 			from
@@ -319,12 +333,14 @@ feature -- Definition
 			if l_current_method_table_index.to_integer_32 <= l_methoddebuginformation_table.count then
 				if attached {PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY} l_methoddebuginformation_table [l_current_method_table_index] as e and then not e.is_empty then
 					debug ("il_emitter_dbg")
+						print (generator + ".process_define_sequence_points (...): ISSUE doc["+ document_entry_token.to_hex_string +"] non empty sequence points already stored for method 0x" + l_current_method_table_index.to_hex_string + "%N")
+
 						if
 							attached sequence_points_at (e.sequence_points_index) as blob and then
 							attached {PE_METHOD_DEF_TABLE_ENTRY} md_emit.pe_writer.md_table ({PE_TABLES}.tmethoddef)[l_current_method_table_index] as metdef and then
 							attached md_emit.pe_writer.string_at (metdef.name_index) as met_name
 						then
-							do_nothing
+							print (" -> "+ document_entry_token.to_hex_string +"] Method %"" + met_name.to_string_8 + "%"%N")
 						end
 					end
 						-- Unexpected, but it happens for instance with ARRAY.$NewCursor and ITERABLE.$NewCursor .. same method token, but the second sequence points part is related

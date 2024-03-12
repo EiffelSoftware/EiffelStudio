@@ -57,7 +57,7 @@ feature -- Update
 			is_successful
 		end
 
-	open_local_signature (a_token: INTEGER)
+	open_local_signature (a_doc: DBG_DOCUMENT_WRITER; a_token: INTEGER)
 			-- Open Local signature token for the current method token.
 		require
 			not_is_closed: not is_closed
@@ -67,7 +67,7 @@ feature -- Update
 			is_successful
 		end
 
-	close_local_signature
+	close_local_signature (a_doc: DBG_DOCUMENT_WRITER)
 			-- Close local signature fo the current Method.
 		require
 			not_is_closed: not is_closed

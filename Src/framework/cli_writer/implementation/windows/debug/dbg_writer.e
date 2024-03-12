@@ -78,14 +78,14 @@ feature -- Update
 			last_call_success := c_close_scope (item, end_offset)
 		end
 
-	open_local_signature (a_token: INTEGER)
+	open_local_signature (a_doc: DBG_DOCUMENT_WRITER_I; a_token: INTEGER)
 			-- Open Local signature token for the current method token.
 		do
 				-- Not implemented for COM interface.
 			last_call_success := 0
 		end
 
-	close_local_signature
+	close_local_signature (a_doc: DBG_DOCUMENT_WRITER_I)
 			-- Close local signature fo the current Method.
 		do
 				-- Not implemented for COM interface.
@@ -137,7 +137,51 @@ feature -- Definition
 	define_sequence_points (document: DBG_DOCUMENT_WRITER_I; count: INTEGER; offsets, start_lines,
 			start_columns, end_lines, end_columns: ARRAY [INTEGER])
 			-- Set sequence points for `document'
+		local
+			j, n: INTEGER_32
 		do
+--			debug ("il_emitter_dbg")
+				print (generator + ".define_sequence_points (doc, " + count.out + ", ")
+				if count > 0 then
+					j := 0
+					across
+						<<offsets, start_lines, start_columns, end_lines, end_columns>> as arr
+					loop
+						print (", ")
+						j := j + 1
+						inspect j
+						when 2 then
+							print ("# start_lines")
+						when 3 then
+							print ("# start_columns")
+						when 4 then
+							print ("# end_lines")
+						when 5 then
+							print ("# end_columns")
+						else
+							print ("# ")
+						end
+						print ("[")
+						n := 0
+						across
+							arr as i
+						until
+							n >= count
+						loop
+							print (i.out)
+							n := n + 1
+							if n < count then
+								print (",")
+							end
+						end
+						print ("]")
+					end
+				else
+					print (",,,,,")
+				end
+				print (")%N")
+--			end;
+
 			document.define_sequence_points (count, offsets, start_lines,
 			start_columns, end_lines, end_columns)
 			if attached {DBG_DOCUMENT_WRITER} document as doc then

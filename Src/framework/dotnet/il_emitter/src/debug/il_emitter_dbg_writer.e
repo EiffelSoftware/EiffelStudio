@@ -187,14 +187,20 @@ feature -- Update
 			is_successful := True
 		end
 
-	open_local_signature (a_token: INTEGER)
+	open_local_signature (a_doc: DBG_DOCUMENT_WRITER_I; a_local_token: INTEGER)
 			-- Open Local signature token for the current method token.
 		do
-			local_token := a_token
+			local_token := a_local_token
+			if 
+				a_local_token /= 0 and then 
+				attached {IL_EMITTER_DBG_DOCUMENT_WRITER} a_doc as l_il_doc 
+			then
+				l_il_doc.update_method_local_token (a_local_token, current_method_token)
+			end
 		    is_successful := True
 		end
 
-	close_local_signature
+	close_local_signature (a_doc: DBG_DOCUMENT_WRITER_I)
 			-- Close local signature fo the current Method.
 		do
 			check local_token /= -1 end

@@ -28,11 +28,7 @@ feature {NONE} -- Implementation
 				-- maybe we can directly pass the method_row_id: as PE_METHOD_DEF_OR_REF.
 			create method_row_id.make_with_index (a_method_row_id)
 			create import_scope_row_id.make_with_index (a_import_scope_row_id)
-			if a_variable_list_row_id = 0 then
-				create variable_list_index.make_default
-			else
-				create variable_list_index.make_with_index (a_variable_list_row_id)
-			end
+			create variable_list_index.make_with_index (a_variable_list_row_id)
 			create constant_list_index.make_with_index (a_constant_list_row_id)
 			start_offset := a_start_offset
 			length := a_length

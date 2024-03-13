@@ -144,6 +144,11 @@ feature -- Update
 	open_scope (start_offset: INTEGER)
 			-- Create a new scope for defining local variables.
 		do
+			debug ("il_emitter_dbg")
+				print (generator + ".open_scope (")
+				print (start_offset.out)
+				print (")%N")
+			end
 			current_variables_scope := 0
 			check current_method_token /= -1 end
 			current_start_offset := start_offset
@@ -166,7 +171,7 @@ feature -- Update
 			check current_end_offset >= current_start_offset  end
 
 				-- create a new entry to PE_LOCAL_SCOPE_TABLE_ENTRY
-				
+
 				-- we use the current method token `current_method_token`
 			m := emitter.extract_table_type_and_row (current_method_token)
 			l_method_row_index := m.table_row_index
@@ -174,18 +179,27 @@ feature -- Update
 				-- with the current entry in the importscope table
 			l_import_scope_row_index := emitter.pdb_writer.md_table ({PDB_TABLES}.timportscope).size
 
-				-- then we compute the first entry to the localvariable rowid ( using the current index - (number of variables added in the scope)
-			l_local_variable_row_index := emitter.pdb_writer.md_table ({PDB_TABLES}.tlocalvariable).size - current_variables_scope
+				-- then we compute the first entry to the localvariable rowid ( using the current index - (number of variables added in the scope + 1)
+			l_local_variable_row_index := emitter.pdb_writer.md_table ({PDB_TABLES}.tlocalvariable).size - current_variables_scope + 1
 
+			create l_local_scope_entry.make_with_data (
+					l_method_row_index, -- MethodDef row id
+					l_import_scope_row_index, -- ImportScope row id
+					l_local_variable_row_index, -- VariableList = LocalVariable row id
+					0, -- ConstantList row id
+					current_start_offset.to_natural_32, -- StartOffset
+					(current_end_offset - current_start_offset).to_natural_32 -- Length
+				)
 
-
-			create l_local_scope_entry.make_with_data (l_method_row_index, -- MethodDef row id
-													   l_import_scope_row_index, -- ImportScope row id
-													   l_local_variable_row_index, -- VariableList = LocalVariable row id
-													   0, -- ConstantList row id
-													   current_start_offset.to_natural_32, -- StartOffset
-													   (current_end_offset - current_start_offset).to_natural_32 -- Length
-													  )
+			debug ("il_emitter_dbg")
+				print (generator + ".close_scope (")
+				print (end_offset.out)
+				print (")")
+				print (" method="+ current_method_token.to_hex_string)
+				print (" current_variables_scope="+ current_variables_scope.out)
+				print (" VariableList="+ l_local_variable_row_index.to_hex_string)
+				print ("%N")
+			end
 
 			l_local_scope_index := emitter.next_pdb_table_index ({PDB_TABLES}.tlocalscope)
 			idx := emitter.add_pdb_table_entry (l_local_scope_entry)
@@ -288,18 +302,19 @@ feature -- Definition
 			idx: NATURAL_32
 			l_local_entry_entry_index: NATURAL_32
 		do
-			debug ("il_emitter_dbg")
-				print (generator + ".define_local_variable (%"")
-				print (name.string_32)
-				print ("%", " + pos.out + ", " + signature.debug_output)
-				print (")%N")
-			end
+
 			l_attributes := 0 -- FIXME: All, DebuggerHidden ...
 			l_name_index := emitter.pdb_writer.hash_string (name.string_32)
 			create e.make_with_data (l_attributes, pos.to_natural_16, l_name_index)
 			l_local_entry_entry_index := emitter.next_pdb_table_index ({PDB_TABLES}.tlocalvariable)
 			idx := emitter.add_pdb_table_entry (e)
 			current_variables_scope := current_variables_scope + 1
+			debug ("il_emitter_dbg")
+				print (generator + ".define_local_variable (%"")
+				print (name.string_32)
+				print ("%", " + pos.out + ", " + signature.debug_output)
+				print (") -> idx=0x"+ idx.to_hex_string +" current_variables_scope="+current_variables_scope.out+"%N")
+			end
 			is_successful := True
 		end
 

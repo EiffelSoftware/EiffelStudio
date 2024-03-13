@@ -373,44 +373,28 @@ feature -- Stream functions
 		local
 			l_heap: SPECIAL [NATURAL_8]
 			l_size: INTEGER_32
-			i, j, k, current_size: INTEGER
+			i, k, current_size: INTEGER
 			mp: MANAGED_POINTER
 		do
 			l_heap := strings.base
 			l_size := strings.size.to_integer_32
 			i := {MD_EMIT}.extract_table_type_and_row (idx.index.to_integer_32).table_row_index.to_integer_32
 			if i <= l_size then
-					-- Check if the blob header matches the target blob size.
-				if l_heap [i] < 0x80 then
-					-- 128 = 0x80 = 1000 0000
-					current_size := l_heap [i]
-					j := i + 1
-				elseif l_heap [i] < 0xC0 then -- 0xC0 = 1100 0000
-					-- 192 = 0xC0  =   1100 0000
-					-- 256 = 0x100 = 1 0000 0000
-					current_size := (l_heap [i] - 0x80) * 0x100
-									+ l_heap [i + 1]
-					j := i + 2
-				else
-					-- 16777216 = 0x100 0000 = 1 00000000 00000000 00000000
-					-- 65 536 	=   0x1 0000 =          1 00000000 00000000
-					-- 256 		=      0x100 =                   1 00000000
-					current_size := (l_heap [i] - 0xC0) * 0x100_0000
-									+ l_heap [i + 1] * 0x1_0000
-									+ l_heap [i + 2] * 0x100
-									+ l_heap [i + 3]
-					j := i + 4
-				end
-
-				create mp.make (current_size)
 				from
-					k := 1
+					k := 0
 				until
-					k > current_size or
-					(j + k - 1) > l_size
+					(l_heap [i + k] = 0) or (i + k > l_size)
 				loop
-					mp.put_natural_8_le (l_heap[j + k - 1], k - 1)
 					k := k + 1
+				end
+				current_size := k
+				create mp.make (k + 1)
+				from
+				until
+					k = 0
+				loop
+					mp.put_natural_8_le (l_heap[i + k - 1], k - 1)
+					k := k - 1
 				end
 				Result := {UTF_CONVERTER}.utf_8_0_pointer_to_escaped_string_32 (mp)
 			end

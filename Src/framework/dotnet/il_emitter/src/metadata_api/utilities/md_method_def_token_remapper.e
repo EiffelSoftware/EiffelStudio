@@ -122,6 +122,8 @@ feature -- Visitor
 				safe_accepts (l_mr.parent_index)
 			elseif attached {PE_GENERIC_PARAM_TABLE_ENTRY} e as l_ge then
 				safe_accepts (l_ge.owner)
+			elseif attached {PE_METHOD_SEMANTICS_TABLE_ENTRY} e as l_sem then
+				safe_accepts (l_sem.method)
 			elseif attached {PE_DECL_SECURITY_TABLE_ENTRY} e as l_ds then
 --				safe_accepts (l_ds.parent)
 			else

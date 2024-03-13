@@ -158,28 +158,34 @@ feature -- Update
 			idx: NATURAL_32
 			m: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
 			l_method_row_index: NATURAL_32
+			l_import_scope_row_index,
+			l_local_variable_row_index: NATURAL_32
 		do
 			check current_method_token /= -1 end
 			current_end_offset := end_offset
 			check current_end_offset >= current_start_offset  end
 
-
 				-- create a new entry to PE_LOCAL_SCOPE_TABLE_ENTRY
+				
 				-- we use the current method token `current_method_token`
-				-- whith the current entry in the importscope table
-				-- then we compute the first entry to the localvariable rowid ( using the current index - (number of variables added in the scope)
-
-				-- Extract table type and row from the current_method token
 			m := emitter.extract_table_type_and_row (current_method_token)
 			l_method_row_index := m.table_row_index
 
+				-- with the current entry in the importscope table
+			l_import_scope_row_index := emitter.pdb_writer.md_table ({PDB_TABLES}.timportscope).size
+
+				-- then we compute the first entry to the localvariable rowid ( using the current index - (number of variables added in the scope)
+			l_local_variable_row_index := emitter.pdb_writer.md_table ({PDB_TABLES}.tlocalvariable).size - current_variables_scope
 
 
-			create l_local_scope_entry.make_with_data (l_method_row_index,
-													   emitter.pdb_writer.md_table ({PDB_TABLES}.timportscope).size,
-													   emitter.pdb_writer.md_table ({PDB_TABLES}.tlocalvariable).size - current_variables_scope,
-													   0,
-													   current_start_offset.to_natural_32, (current_end_offset - current_start_offset).to_natural_32)
+
+			create l_local_scope_entry.make_with_data (l_method_row_index, -- MethodDef row id
+													   l_import_scope_row_index, -- ImportScope row id
+													   l_local_variable_row_index, -- VariableList = LocalVariable row id
+													   0, -- ConstantList row id
+													   current_start_offset.to_natural_32, -- StartOffset
+													   (current_end_offset - current_start_offset).to_natural_32 -- Length
+													  )
 
 			l_local_scope_index := emitter.next_pdb_table_index ({PDB_TABLES}.tlocalscope)
 			idx := emitter.add_pdb_table_entry (l_local_scope_entry)
@@ -191,9 +197,9 @@ feature -- Update
 			-- Open Local signature token for the current method token.
 		do
 			local_token := a_local_token
-			if 
-				a_local_token /= 0 and then 
-				attached {IL_EMITTER_DBG_DOCUMENT_WRITER} a_doc as l_il_doc 
+			if
+				a_local_token /= 0 and then
+				attached {IL_EMITTER_DBG_DOCUMENT_WRITER} a_doc as l_il_doc
 			then
 				l_il_doc.update_method_local_token (a_local_token, current_method_token)
 			end

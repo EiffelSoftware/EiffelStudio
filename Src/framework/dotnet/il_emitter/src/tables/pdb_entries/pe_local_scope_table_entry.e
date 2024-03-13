@@ -24,7 +24,7 @@ feature {NONE} -- Implementation
 		do
 				-- TODO
 				-- maybe we can directly pass the method_row_id: as PE_METHOD_DEF_OR_REF.
-			create method_row_id.make_with_tag_and_index ({PE_METHOD_DEF_OR_REF}.methoddef, a_method_row_id)
+			create method_row_id.make_with_index (a_method_row_id)
 			create import_scope_row_id.make_with_index (a_import_scope_row_id)
 			create variable_list_row_id.make_with_index (a_variable_list_row_id)
 			create constant_list_row_id.make_with_index (a_constant_list_row_id)
@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	method_row_id: PE_METHOD_DEF_OR_REF
+	method_row_id: PE_METHOD_DEF
 			-- MethodDef row index.
 
 	import_scope_row_id: PE_IMPORT_SCOPE

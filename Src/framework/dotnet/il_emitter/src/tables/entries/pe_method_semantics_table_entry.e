@@ -55,7 +55,7 @@ feature -- Access
 			-- Defined as a word two bytes.
 			-- see MethodSemanticsAttributes https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=279&zoom=100,116,684
 
-	method: PE_METHOD_LIST
+	method: PE_METHOD_DEF
 			-- an index into the MethodDef table
 
 	association: PE_SEMANTICS

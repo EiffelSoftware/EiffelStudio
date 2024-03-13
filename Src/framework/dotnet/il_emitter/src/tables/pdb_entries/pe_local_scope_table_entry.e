@@ -15,6 +15,8 @@ class
 inherit
 	PE_TABLE_ENTRY_BASE
 
+	DEBUG_OUTPUT
+
 create
 	make_with_data
 
@@ -26,8 +28,12 @@ feature {NONE} -- Implementation
 				-- maybe we can directly pass the method_row_id: as PE_METHOD_DEF_OR_REF.
 			create method_row_id.make_with_index (a_method_row_id)
 			create import_scope_row_id.make_with_index (a_import_scope_row_id)
-			create variable_list_row_id.make_with_index (a_variable_list_row_id)
-			create constant_list_row_id.make_with_index (a_constant_list_row_id)
+			if a_variable_list_row_id = 0 then
+				create variable_list_index.make_default
+			else
+				create variable_list_index.make_with_index (a_variable_list_row_id)
+			end
+			create constant_list_index.make_with_index (a_constant_list_row_id)
 			start_offset := a_start_offset
 			length := a_length
 		end
@@ -40,7 +46,7 @@ feature -- Access
 	import_scope_row_id: PE_IMPORT_SCOPE
 			-- ImportScope row index.
 
-	variable_list_row_id: PE_LOCAL_VARIABLE_LIST
+	variable_list_index: PE_LOCAL_VARIABLE_LIST
 			-- LocalVariable row index.
 			-- An index into the LocalVariable table; it marks the first of a contiguous run of LocalVariables owned by this LocalScope.
 			-- The run continues to the smaller of:
@@ -48,7 +54,7 @@ feature -- Access
 			-- the next run of LocalVariables, found by inspecting the VariableList of the next row in this LocalScope table.
 
 
-	constant_list_row_id: PE_LOCAL_CONSTANT_LIST
+	constant_list_index: PE_LOCAL_CONSTANT_LIST
 			-- LocalConstant row index.
 			--| An index into the LocalConstant table; it marks the first of a contiguous run of LocalConstants owned by this LocalScope.
 			--| The run continues to the smaller of:
@@ -61,8 +67,30 @@ feature -- Access
 	length: NATURAL_32
 			-- The scope length in bytes.
 
+feature -- Status report
+
+	debug_output: STRING_8
+		do
+			create Result.make (10)
+			Result.append ("Meth:" + method_row_id.debug_output)
+			Result.append (" ImpScope:" + import_scope_row_id.debug_output)
+			Result.append (" Vars:" + variable_list_index.debug_output)
+			Result.append (" Csts:" + constant_list_index.debug_output)
+			Result.append (" #:" + start_offset.out)
+			Result.append (" Length:" + length.out)
+		end
 
 feature -- Status
+
+	is_variable_list_index_set: BOOLEAN
+		do
+			Result := variable_list_index.is_list_index_set
+		end
+
+	is_constant_list_index_set: BOOLEAN
+		do
+			Result := constant_list_index.is_list_index_set
+		end
 
 	less_than (o: like Current): BOOLEAN
 			-- Is Current less than `a_other` in associated table?
@@ -90,11 +118,11 @@ feature -- Operations
 				-- Render the import_scope_row_id and add the number of bytes written to l_bytes_written
 			l_bytes_written := l_bytes_written + import_scope_row_id.render (a_sizes, a_dest, l_bytes_written)
 
-				-- Render the variable_list_row_id and add the number of bytes written to l_bytes_written
-			l_bytes_written := l_bytes_written + variable_list_row_id.render (a_sizes, a_dest, l_bytes_written)
+				-- Render the variable_list_index and add the number of bytes written to l_bytes_written
+			l_bytes_written := l_bytes_written + variable_list_index.render (a_sizes, a_dest, l_bytes_written)
 
-				-- Render the constant_list_row_id and add the number of bytes written to l_bytes_written
-			l_bytes_written := l_bytes_written + constant_list_row_id.render (a_sizes, a_dest, l_bytes_written)
+				-- Render the constant_list_index and add the number of bytes written to l_bytes_written
+			l_bytes_written := l_bytes_written + constant_list_index.render (a_sizes, a_dest, l_bytes_written)
 
 				-- Write the start_offset to the destination array
 			{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, start_offset, l_bytes_written.to_integer_32)
@@ -121,11 +149,11 @@ feature -- Operations
 				-- Read the import_scope_row_id
 			l_bytes := l_bytes + import_scope_row_id.get (a_sizes, a_src, l_bytes)
 
-				-- Read the variable_list_row_id
-			l_bytes := l_bytes + variable_list_row_id.get (a_sizes, a_src, l_bytes)
+				-- Read the variable_list_index
+			l_bytes := l_bytes + variable_list_index.get (a_sizes, a_src, l_bytes)
 
-				-- Read the constant_list_row_id
-			l_bytes := l_bytes + constant_list_row_id.get (a_sizes, a_src, l_bytes)
+				-- Read the constant_list_index
+			l_bytes := l_bytes + constant_list_index.get (a_sizes, a_src, l_bytes)
 
 				-- Read the start_offset from the source array
 			start_offset := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, l_bytes.to_integer_32)

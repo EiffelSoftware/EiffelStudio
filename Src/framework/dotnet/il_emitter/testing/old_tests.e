@@ -331,7 +331,7 @@ feature -- C Byte Array
 
 	fun_test (a_arr: ARRAY [NATURAL_8])
 		do
-			{BYTE_ARRAY_HELPER}.put_array_integer_32 (a_arr, 2 | (27 |<< 24), 0)
+			{BYTE_ARRAY_HELPER}.put_integer_32 (a_arr, 2 | (27 |<< 24), 0)
 		end
 
 	file_test

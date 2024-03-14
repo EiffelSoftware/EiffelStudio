@@ -215,7 +215,7 @@ feature -- Definition
 				print (document_entry_token.to_hex_string)
 				print (", " + count.out + ", .. )")
 				if lst.count > 0 then
-					print (" seq=")
+					print (" -> seq=")
 				end
 				across
 					lst as e
@@ -225,13 +225,15 @@ feature -- Definition
 				end
 				print (" method=")
 				print (meth_tok.to_hex_string)
-				if
-					attached {PE_METHOD_DEF_TABLE_ENTRY} md_emit.pe_writer.md_table_entry (meth_tok.to_natural_32) as meth_entry and then
-					attached md_emit.pe_writer.string_at (meth_entry.name_index) as meth_name
-				then
-					print (" %"")
-					print (meth_name)
-					print ("%"")
+				debug ("il_emitter_dbg_extra")
+					if
+						attached {PE_METHOD_DEF_TABLE_ENTRY} md_emit.pe_writer.md_table_entry (meth_tok.to_natural_32) as meth_entry and then
+						attached md_emit.pe_writer.string_at (meth_entry.name_index) as meth_name
+					then
+						print (" %"")
+						print (meth_name)
+						print ("%"")
+					end
 				end
 				io.put_new_line
 			end

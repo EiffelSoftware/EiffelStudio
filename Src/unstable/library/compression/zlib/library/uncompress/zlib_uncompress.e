@@ -105,63 +105,63 @@ feature -- Access
 feature {NONE} -- Inflate Implementation
 
 	inflate_with_options (a_windows_bits: INTEGER)
-		--		Decompress from file `a_source' to `a_dest' until stream ends.
-		--   set the result in Zlib.last_operation with Z_OK on success, Z_MEM_ERROR if memory could not be
-		--   allocated for processing, Z_DATA_ERROR if the deflate data is
-		--   invalid or incomplete, Z_VERSION_ERROR if the version of zlib.h and
-		--   the version of the library linked do not match, or Z_ERRNO if there
-		--   is an error reading or writing the files.
-	local
-		l_have: INTEGER
-			-- amount of data return by inflate.
-		l_break: BOOLEAN
-	do
-		zlib.inflate_init_2 (zstream, a_windows_bits)
+			--		Decompress from file `a_source' to `a_dest' until stream ends.
+			--   set the result in Zlib.last_operation with Z_OK on success, Z_MEM_ERROR if memory could not be
+			--   allocated for processing, Z_DATA_ERROR if the deflate data is
+			--   invalid or incomplete, Z_VERSION_ERROR if the version of zlib.h and
+			--   the version of the library linked do not match, or Z_ERRNO if there
+			--   is an error reading or writing the files.
+		local
+			l_have: INTEGER
+				-- amount of data return by inflate.
+			l_break: BOOLEAN
+		do
+			zlib.inflate_init_2 (zstream, a_windows_bits)
 
-			-- Todo refactor inflate_common
-		if not has_error then
-				-- decompress until deflate stream ends or end of file
-			from
-			until
-				end_of_input or l_break
-			loop
-					-- run inflate on input until output buffer not full
+				-- Todo refactor inflate_common
+			if not has_error then
+					-- decompress until deflate stream ends or end of file
 				from
-					read
-					zstream.set_available_input (last_read_elements)
-					if zstream.available_input = 0 then
-						l_break := True
-					end
-					zstream.set_next_input (input_buffer.item)
-					zstream.set_available_output (chunk_size)
-					zstream.set_next_output (output_buffer.item)
-					zlib.inflate (zstream, {ZLIB_CONSTANTS}.Z_no_flush) -- False
-					l_have := chunk_size - zstream.available_output
-					write (l_have)
-					if last_write_elements /= l_have then
-						zlib.inflate_end (zstream)
-					end
 				until
-					zstream.available_output /= 0 or has_error
+					end_of_input or l_break
 				loop
-					zstream.set_available_output (chunk_size)
-					zstream.set_next_output (output_buffer.item)
-					zlib.inflate (zstream, {ZLIB_CONSTANTS}.Z_no_flush) -- False
-						-- Z_BUF_ERROR is just an indication that there was nothing for inflate() to do on that call.
-						-- Simply continue and provide more input data and more output space for the next inflate() call.
-					if zlib.last_operation /= zlib.z_buf_error then
+						-- run inflate on input until output buffer not full
+					from
+						read
+						zstream.set_available_input (last_read_elements)
+						if zstream.available_input = 0 then
+							l_break := True
+						end
+						zstream.set_next_input (input_buffer.item)
+						zstream.set_available_output (chunk_size)
+						zstream.set_next_output (output_buffer.item)
+						zlib.inflate (zstream, {ZLIB_CONSTANTS}.Z_no_flush) -- False
 						l_have := chunk_size - zstream.available_output
 						write (l_have)
 						if last_write_elements /= l_have then
 							zlib.inflate_end (zstream)
 						end
+					until
+						zstream.available_output /= 0 or has_error
+					loop
+						zstream.set_available_output (chunk_size)
+						zstream.set_next_output (output_buffer.item)
+						zlib.inflate (zstream, {ZLIB_CONSTANTS}.Z_no_flush) -- False
+							-- Z_BUF_ERROR is just an indication that there was nothing for inflate() to do on that call.
+							-- Simply continue and provide more input data and more output space for the next inflate() call.
+						if zlib.last_operation /= zlib.z_buf_error then
+							l_have := chunk_size - zstream.available_output
+							write (l_have)
+							if last_write_elements /= l_have then
+								zlib.inflate_end (zstream)
+							end
+						end
 					end
 				end
+					-- Clean up and return
+				zlib.inflate_end (zstream)
 			end
-				-- Clean up and return
-			zlib.inflate_end (zstream)
 		end
-	end
 
 
 	inflate

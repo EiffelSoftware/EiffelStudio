@@ -323,7 +323,7 @@ feature -- Utitlity Functions
 			Result := c_compress_bound (a_source_len)
 		end
 
-	gzopen (a_path: STRING; a_mode: STRING): POINTER
+	gzopen (a_path: READABLE_STRING_GENERAL; a_mode: STRING): POINTER
 			--   Opens a gzip (.gz) file for reading or writing.  The mode parameter is as
 			--   in fopen ("rb" or "wb") but can also include a compression level ("wb9") or
 			--   a strategy: 'f' for filtered data as in "wb6f", 'h' for Huffman-only

@@ -21,7 +21,6 @@ feature {NONE} -- Initialization
 			l_name_index: NATURAL_32
 			l_scope_entry_index: NATURAL_32
 			l_hash_algo_guid_idx, l_hash_blob_idx: NATURAL_32
-			d: TUPLE [table_type_index: NATURAL_32; table_row_index: NATURAL_32]
 		do
 				-- https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md#document-table-0x30
 			dbg_writer := a_dbg_writer
@@ -144,6 +143,7 @@ feature -- Helper
 		local
 			sep: CHARACTER_8
 			sep_code: NATURAL_8
+			s: STRING_8
 			p: PATH
 			bc: BYTE_ARRAY_CONVERTER
 			l_blob: MD_BLOB_DATA
@@ -157,8 +157,14 @@ feature -- Helper
 			across
 				p.components as l_part
 			loop
-				create bc.make_from_string (l_part.utf_8_name)
-				l_blob.put_compressed_natural_32 (pdb_writer.hash_blob (bc.to_natural_8_array, bc.count.to_natural_32))
+				s := l_part.utf_8_name
+				if s.count = 1 and then s[1] = sep then
+					-- Ignore
+				else
+					create bc.make_from_string (s)
+					l_blob.put_compressed_natural_32 (pdb_writer.hash_blob (bc.to_natural_8_array, bc.count.to_natural_32))
+
+				end
 			end
 			Result := pdb_writer.hash_blob (l_blob.as_array, l_blob.count.to_natural_32)
 		end

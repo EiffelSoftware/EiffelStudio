@@ -35,10 +35,20 @@ feature -- Access
 feature -- Status report
 
 	debug_output: STRING_8
+		local
+			hex: STRING
 		do
 			create Result.make (10)
 			Result.append_character ('#')
-			Result.append_integer (il_offset)
+			hex := il_offset.to_hex_string
+			from
+
+			until
+				hex.count <= 1 or hex[1] /= '0'
+			loop
+				hex.remove_head (1)
+			end
+			Result.append (hex)
 			Result.append_character ('[')
 			Result.append_integer (start_line)
 			Result.append_character (':')

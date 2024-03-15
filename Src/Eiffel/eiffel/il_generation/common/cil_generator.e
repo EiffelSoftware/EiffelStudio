@@ -557,9 +557,19 @@ feature -- Generation
       <HintPath>Eiffelsoftware.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="assembly_*.dll"/>
-  </ItemGroup>
+    ${LIB_EXTERNALS}
+  </ItemGroup>	
 </Project>
 			]"
+			if system.externals.count > 0 then
+				s.replace_substring_all ("${LIB_EXTERNALS}", "[
+				<Reference Include="lib${SYSTEM_NAME}.dll"/>
+			    <ContentWithTargetPath Include="lib${SYSTEM_NAME}.dll">
+			        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			        <TargetPath>lib${SYSTEM_NAME}.dll</TargetPath>
+			    </ContentWithTargetPath>
+				]")
+			end
 			s.replace_substring_all ("${FRAMEWORK_MONIKER}", vars.framework_moniker)
 			s.replace_substring_all ("${SYSTEM_NAME}", vars.system_name)
 			s.replace_substring_all ("${SYSTEM_TYPE}", vars.system_type)
@@ -1545,7 +1555,7 @@ invariant
 	system_exists: System /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

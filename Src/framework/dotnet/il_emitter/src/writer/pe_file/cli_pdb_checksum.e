@@ -63,9 +63,6 @@ feature -- Managed Pointer
 
 	item: CLI_MANAGED_POINTER
 			-- write the items to the buffer in  little-endian format.
-		local
-			ac: BYTE_ARRAY_CONVERTER
-
 		do
 			create Result.make (size_of)
 

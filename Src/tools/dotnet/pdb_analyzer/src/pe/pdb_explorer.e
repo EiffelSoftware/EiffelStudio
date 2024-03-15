@@ -220,6 +220,9 @@ feature -- Visitor
 				attached e.sequence_points (pdb_file) as seq_pts and then
 				attached seq_pts.to_sequence_points (pdb_file, e) as d
 			then
+				output.put_string ("LocalSignature: ")
+				output.put_string (d.local_token.to_hex_string)
+				output.put_new_line
 				across
 					d.points as ic
 				loop
@@ -238,6 +241,13 @@ feature -- Visitor
 --			output.put_new_line
 			if attached e.method as m then
 				output.put_string (" Method: " + m.token.to_hex_string)
+				if
+					attached pdb_file.metadata_tables.method_debug_information_table as tb and then
+					not tb.valid_index (m.index)
+				then
+					output.put_string ("OUT-OF-RANGE MethodToken!")
+
+				end
 			end
 			if attached e.import_scope as imp then
 				output.put_string (" ImportScope: " + imp.token.to_hex_string)

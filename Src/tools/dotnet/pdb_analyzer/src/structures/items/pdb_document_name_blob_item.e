@@ -55,7 +55,9 @@ feature -- Conversion
 						l_reader.exhausted
 					loop
 						blob_idx := l_reader.uncompressed_value.to_natural_32
-						if attached pdb_file.blob_heap_item_at (blob_idx) as l_blob_item then
+						if blob_idx = 0 then
+							Result.append_character (sep)
+						elseif attached pdb_file.blob_heap_item_at (blob_idx) as l_blob_item then
 							if Result.count > 0 then
 								Result.append_code (n8)
 							end

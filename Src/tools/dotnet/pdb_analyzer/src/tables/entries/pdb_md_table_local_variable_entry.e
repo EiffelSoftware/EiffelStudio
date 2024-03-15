@@ -29,6 +29,13 @@ feature -- Access
 			Result := structure.index_item ("Name")
 		end
 
+	index_value: NATURAL_16
+		do
+			if attached {PE_NATURAL_16_ITEM} structure.natural_16_item ("Index") as p16 then
+				Result := p16.value
+			end
+		end
+
 	resolved_identifier (pe: PDB_FILE): detachable STRING_32
 		do
 			create Result.make_empty

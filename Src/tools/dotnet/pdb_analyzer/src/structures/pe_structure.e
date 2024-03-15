@@ -332,7 +332,7 @@ feature -- Element change
 
 	add_local_variable_index (lab: STRING)
 		do
-			add (create {PE_LOCAL_VARIABLE_INDEX}.make (lab))
+			add (create {PDB_LOCAL_VARIABLE_LIST_INDEX}.make (lab))
 		end
 
 	add_local_constant_index (lab: STRING)

@@ -25,21 +25,19 @@ feature -- Initialization
 
 feature -- Access
 
-	name_index: detachable PE_INDEX_ITEM
+	name_index: detachable PE_BLOB_INDEX_ITEM
 		do
-			Result := structure.index_item ("Name")
+			if attached {like name_index} structure.index_item ("Name") as i then
+				Result := i
+			end
 		end
 
---	resolved_identifier (pdb: PDB_FILE): detachable STRING_32
---		do
---			create Result.make_empty
---			if attached name_index as tn_idx and then attached pdb.blob_heap_item (tn_idx) as blob then
---				Result.append_string_general (blob.dump)
---			end
---			if Result.is_whitespace then
---				Result := Void
---			end
---		end
+	language_index: detachable PE_GUID_INDEX_ITEM
+		do
+			if attached {like language_index} structure.index_item ("Language") as i then
+				Result := i
+			end
+		end
 
 feature -- Access
 

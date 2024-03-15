@@ -21,6 +21,19 @@ feature -- Initialization
 
 feature -- Access
 
+	parent: detachable PE_IMPORT_SCOPE_INDEX_ITEM
+		do
+			if attached {like parent} structure.index_item ("Parent") as p then
+				Result := p
+			end
+		end
+
+	imports_index: detachable PE_BLOB_INDEX_ITEM
+		do
+			if attached {like imports_index} structure.index_item ("Imports") as b then
+				Result := b
+			end
+		end
 
 feature -- Access
 

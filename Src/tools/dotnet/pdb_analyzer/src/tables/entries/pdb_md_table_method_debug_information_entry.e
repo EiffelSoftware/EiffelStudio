@@ -26,6 +26,15 @@ feature -- Access
 			Result := structure.index_item ("Document")
 		end
 
+	sequence_points (pdb: PDB_FILE): detachable PDB_SEQUENCE_POINTS_BLOB_ITEM
+		do
+			if attached {PE_BLOB_INDEX_ITEM} structure.index_item ("SequencePoints") as idx then
+				if attached {like sequence_points} pdb.sequence_points_blob_heap_item (idx) as i then
+					Result := i
+				end
+			end
+		end
+
 	Table_id: NATURAL_8
 		once
 			Result := {PDB_TABLES}.tMethodDebugInformation

@@ -21,15 +21,17 @@ feature {NONE} -- Initialization
 			fn: PATH
 			arg: STRING_32
 			i,n: INTEGER
-			o_printer, o_default: detachable READABLE_STRING_GENERAL
+			o_explorer, o_printer, o_default: detachable READABLE_STRING_GENERAL
 			l_usage: BOOLEAN
 		do
 			-- Default
 			has_analyzer := True
 			has_printer := True
+			has_explorer := True
 
 			default_output := io.output
 			printer_output := default_output
+			explorer_output := default_output
 
 			from
 				i := 1
@@ -52,6 +54,7 @@ feature {NONE} -- Initialization
 
 					elseif arg.is_case_insensitive_equal_general ("raw") then
 						has_analyzer := False
+						has_explorer := False
 						is_raw := True
 					elseif arg.is_case_insensitive_equal_general ("append") then
 						is_appending_output := True
@@ -60,11 +63,19 @@ feature {NONE} -- Initialization
 						has_analyzer := True
 					elseif arg.is_case_insensitive_equal_general ("no_analyze") then
 						has_analyzer := False
+					elseif arg.is_case_insensitive_equal_general ("explore") then
+						has_explorer := True
+						o_explorer := Void -- Default
+					elseif arg.is_case_insensitive_equal_general ("no_explore") then
+						has_explorer := False
 					elseif arg.is_case_insensitive_equal_general ("print") then
 						has_printer := True
 						o_printer := Void -- Default
 					elseif arg.is_case_insensitive_equal_general ("no_print") then
 						has_printer := False
+					elseif arg.starts_with_general ("explore=") then
+						has_explorer := True
+						o_explorer := arg.substring (arg.index_of ('=', 1) + 1,  arg.count)
 					elseif arg.starts_with_general ("print=") then
 						has_printer := True
 						o_printer := arg.substring (arg.index_of ('=', 1) + 1,  arg.count)
@@ -91,16 +102,30 @@ feature {NONE} -- Initialization
 				print ("%T --analyze|--no_analyze : enable/disable the analyzer (to resolve token, indexes, ...)%N")
 				print ("%T --print|--no_print     : enable/disable the printer%N")
 				print ("%T --print=output-file    : enable the printer and outputs to file or stdout|stderr%N")
+				print ("%T --explore|--no_explore : enable/disable the explorer%N")
+				print ("%T --explore=output-file  : enable the explorer and outputs to file or stdout|stderr%N")
+				print ("%T                        : if output-file starts with a dot such as '.ext' use%N")
+				print ("%T                        : the path-to-dll.ext as output%N")
 				print ("%T --append               : if output is redirected to a file, append the content%N")
-				print ("%T --raw                  : implies no_analyze%N")
+				print ("%T --raw                  : implies no_analyze and no_explorer%N")
 				print ("%T --help                 : display this help%N")
 				print ("%N")
 			else
+				if not has_analyzer then
+					has_explorer := False
+				end
 				if o_printer /= Void then
 					if o_printer.starts_with (".") then
 						o_printer := fn.absolute_path.appended (o_printer).name
 					end
 					printer_output := output_file (o_printer)
+				end
+				if o_explorer /= Void then
+					if o_explorer.starts_with (".") then
+						o_explorer := fn.absolute_path.appended (o_explorer).name
+					end
+
+					explorer_output := output_file (o_explorer)
 				end
 				if o_default /= Void then
 					if o_default.starts_with (".") then
@@ -117,10 +142,12 @@ feature {NONE} -- Initialization
 	is_raw,
 	is_appending_output,
 	has_analyzer,
+	has_explorer,
 	has_printer: BOOLEAN
 
 
 	default_output,
+	explorer_output,
 	printer_output: FILE
 
 feature -- Helper
@@ -143,6 +170,9 @@ feature -- Element change
 			if default_output = printer_output then
 				printer_output := o
 			end
+			if default_output = explorer_output then
+				explorer_output := o
+			end
 			default_output := o
 		end
 
@@ -156,6 +186,7 @@ feature -- Execution
 			o_dft, o: APP_OUTPUT
 			printer: PDB_PRINTER
 			analyzer: PDB_ANALYZER
+			explorer: PDB_EXPLORER
 			resolver: PE_POINTER_RESOLVER
 			l_error_count: NATURAL_32
 		do
@@ -218,6 +249,34 @@ feature -- Execution
 					create printer.make (o)
 					o.put_string ("File: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
 					pdb.accepts (printer)
+
+					if o /= o_dft and then not o.was_opened then
+						o.close
+					end
+				end
+				if has_explorer then
+					if explorer_output = default_output then
+						o := o_dft
+					else
+						create o.make (explorer_output)
+						if not o.was_opened then
+							if is_appending_output then
+								o.open_append
+							else
+								o.open_write
+							end
+						end
+					end
+					io.error.put_string ("Exploring ...")
+					if attached o.output_path as l_path then
+						io.error.put_string (" > ")
+						io.error.put_string_general (l_path.name)
+					end
+					io.error.put_string ("%N")
+
+					create explorer.make (o, pdb)
+					o.put_string ("File: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn.name) + "%N")
+					pdb.accepts (explorer)
 
 					if o /= o_dft and then not o.was_opened then
 						o.close

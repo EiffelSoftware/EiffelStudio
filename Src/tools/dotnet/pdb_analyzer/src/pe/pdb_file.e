@@ -267,6 +267,13 @@ feature -- Access
 			end
 		end
 
+	import_scope_blob_heap_item (idx: PE_BLOB_INDEX_ITEM): detachable PDB_IMPORTS_BLOB_ITEM
+		do
+			if attached blob_heap_item (idx) as blob then
+				create Result.make_from_item (blob)
+			end
+		end
+
 	blob_heap_item (idx: PE_INDEX_ITEM): detachable PE_BLOB_ITEM
 		do
 			Result := blob_heap_item_at (idx.index)

@@ -159,7 +159,8 @@ feature -- Helper
 			loop
 				s := l_part.utf_8_name
 				if s.count = 1 and then s[1] = sep then
-					-- Ignore
+						-- Useful for unix path /home/... first part if '/' 
+					l_blob.put_natural_8 (0)
 				else
 					create bc.make_from_string (s)
 					l_blob.put_compressed_natural_32 (pdb_writer.hash_blob (bc.to_natural_8_array, bc.count.to_natural_32))

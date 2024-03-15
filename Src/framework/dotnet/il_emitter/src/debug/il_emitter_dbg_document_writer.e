@@ -17,8 +17,7 @@ feature {NONE} -- Initialization
 
 	make (a_dbg_writer: IL_EMITTER_DBG_WRITER; a_md_emit: MD_EMIT; a_url: CLI_STRING; a_language, a_vendor, a_doc_type: CIL_GUID)
 		local
-			l_token, lang_idx: NATURAL_32
-			l_owner_index: NATURAL_32
+			lang_idx: NATURAL_32
 			l_name_index: NATURAL_32
 			l_scope_entry_index: NATURAL_32
 			l_hash_algo_guid_idx, l_hash_blob_idx: NATURAL_32
@@ -32,15 +31,8 @@ feature {NONE} -- Initialization
 			vendor := a_vendor
 			doc_type := a_doc_type
 
-				-- Compute the Pdb Document token
-			l_token := a_md_emit.define_pdb_string (a_url).to_natural_32
-
-				-- Extract table type and row from the method token
-			d := a_md_emit.extract_table_type_and_row (l_token.to_integer_32)
-			l_owner_index := d.table_row_index
-
 			debug ("il_emitter_table")
-				print ({STRING_32} "DefineDocument: owner=" + l_token.to_hex_string + " owner.index=" + l_owner_index.out + " name=" + url)
+				print ({STRING_32} "DefineDocument: name=" + url)
 			end
 
 				-- Compute the name index

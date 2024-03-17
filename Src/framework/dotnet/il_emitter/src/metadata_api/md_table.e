@@ -45,8 +45,17 @@ feature {MD_TABLE_ACCESS} -- Access
 feature -- Access
 
 	item alias "[]" (i: NATURAL_32): PE_TABLE_ENTRY_BASE assign replace
+		require
+			valid_index (i)
 		do
 			Result := items [i.to_integer_32]
+		end
+
+	item_for_token (tok: NATURAL_32): PE_TABLE_ENTRY_BASE
+		require
+			valid_token (tok)
+		do
+			Result := items [row_index_from_token (tok).to_integer_32]
 		end
 
 	new_cursor: ITERATION_CURSOR [PE_TABLE_ENTRY_BASE]
@@ -118,6 +127,21 @@ feature -- Status Report
 	valid_index (idx: NATURAL_32): BOOLEAN
 		do
 			Result := idx >= 0 and idx <= size + 1
+		end
+
+	valid_token (tok: NATURAL_32): BOOLEAN
+		local
+			tb_id: NATURAL_32
+			row_idx: NATURAL_32
+		do
+			tb_id := ((tok |>> 24) & 0x00FF).to_natural_32
+			row_idx := (tok & 0x00FF_FFFF).to_natural_32
+			Result := tb_id = table_id and then valid_index (row_idx)
+		end
+
+	row_index_from_token (tok: NATURAL_32): NATURAL_32
+		do
+			Result := (tok & 0x00FF_FFFF).to_natural_32
 		end
 
 feature -- Visitor

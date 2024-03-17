@@ -83,6 +83,13 @@ feature -- Access
 	md_ui: MD_UI
 			-- Integration with UI to process UI events.
 
+feature -- Helpers
+
+	method_def_table: detachable MD_TABLE
+		do
+			Result := pe_writer.md_table ({PE_TABLES}.tmethoddef)
+		end
+
 feature -- Optimization
 
 	opt_data_for_type_def: HASH_TABLE [MD_TYPE_DEF_DATA_FOR_OPTIMIZATION, NATURAL_32]

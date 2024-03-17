@@ -159,7 +159,7 @@ feature -- Helper
 			loop
 				s := l_part.utf_8_name
 				if s.count = 1 and then s[1] = sep then
-						-- Useful for unix path /home/... first part if '/' 
+						-- Useful for unix path /home/... first part if '/'
 					l_blob.put_natural_8 (0)
 				else
 					create bc.make_from_string (s)
@@ -335,13 +335,14 @@ feature -- Definition
 				if attached {PE_METHOD_DEBUG_INFORMATION_TABLE_ENTRY} l_methoddebuginformation_table [l_current_method_table_index] as e and then not e.is_empty then
 					debug ("il_emitter_dbg")
 						print (generator + ".process_define_sequence_points (...): ISSUE doc["+ document_entry_token.to_hex_string +"] non empty sequence points already stored for method 0x" + l_current_method_table_index.to_hex_string + "%N")
-
-						if
-							attached sequence_points_at (e.sequence_points_index) as blob and then
-							attached {PE_METHOD_DEF_TABLE_ENTRY} md_emit.pe_writer.md_table ({PE_TABLES}.tmethoddef)[l_current_method_table_index] as metdef and then
-							attached md_emit.pe_writer.string_at (metdef.name_index) as met_name
-						then
-							print (" -> "+ document_entry_token.to_hex_string +"] Method %"" + met_name.to_string_8 + "%"%N")
+						debug ("il_emitter_dbg_extra")
+							if
+								attached sequence_points_at (e.sequence_points_index) as blob and then
+								attached {PE_METHOD_DEF_TABLE_ENTRY} md_emit.pe_writer.md_table ({PE_TABLES}.tmethoddef)[l_current_method_table_index] as metdef and then
+								attached md_emit.pe_writer.string_at (metdef.name_index) as met_name
+							then
+								print (" -> "+ document_entry_token.to_hex_string + " Method %"" + met_name.to_string_8 + "%"%N")
+							end
 						end
 					end
 						-- Unexpected, but it happens for instance with ARRAY.$NewCursor and ITERABLE.$NewCursor .. same method token, but the second sequence points part is related

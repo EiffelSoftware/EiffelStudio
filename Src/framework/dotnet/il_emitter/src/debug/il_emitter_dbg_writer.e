@@ -135,10 +135,15 @@ feature -- Update
 	open_method (a_meth_token: INTEGER)
 			-- Open method `a_meth_token'.
 		do
+			check
+				has_method: attached emitter.method_def_table as tb and then tb.valid_token (a_meth_token.to_natural_32)
+			end
 			check current_method_token = -1 end
 					-- Set up state for new method.
 			current_method_token := a_meth_token
 			is_successful := True
+		ensure then
+			has_current_method: attached emitter.method_def_table as tb implies tb.valid_token (a_meth_token.to_natural_32)
 		end
 
 	open_scope (start_offset: INTEGER)

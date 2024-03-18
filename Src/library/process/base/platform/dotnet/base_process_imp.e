@@ -219,7 +219,7 @@ feature -- Interprocess data transmission
 					attached child_process.standard_output as r and then
 					attached r.base_stream as s
 				then
-					number_of_bytes_read := s.read (buffer.native_array, 0, buffer.count)
+					number_of_bytes_read := s.read (buffer.native_array, 0, buffer.capacity)
 					if number_of_bytes_read > 0 then
 							-- Update `buffer.count` with actual bytes read.
 						buffer.keep_head (number_of_bytes_read)
@@ -254,7 +254,7 @@ feature -- Interprocess data transmission
 					attached child_process.standard_error as r and then
 					attached r.base_stream as s
 				then
-					number_of_bytes_read := s.read (buffer.native_array, 0, buffer.count)
+					number_of_bytes_read := s.read (buffer.native_array, 0, buffer.capacity)
 					if number_of_bytes_read > 0 then
 							-- Update `buffer.count` with actual bytes read.
 						buffer.keep_head (number_of_bytes_read)

@@ -206,7 +206,7 @@ feature -- Interprocess data transmission
 			number_of_bytes_read: NATURAL_32
 			last_error: NATURAL_32
 		do
-			if {WEL_API}.cwin_read_file_with_error (child_process.std_output, $buffer, buffer.count.as_natural_32, $number_of_bytes_read, default_pointer, $last_error) then
+			if {WEL_API}.cwin_read_file_with_error (child_process.std_output, $buffer, buffer.capacity.as_natural_32, $number_of_bytes_read, default_pointer, $last_error) then
 					-- There was no error.
 				has_output_stream_error := False
 					-- Update `buffer.count` with actual bytes read.
@@ -233,7 +233,7 @@ feature -- Interprocess data transmission
 			number_of_bytes_read: NATURAL_32
 			last_error: NATURAL_32
 		do
-			if {WEL_API}.cwin_read_file_with_error (child_process.std_error, $buffer, buffer.count.as_natural_32, $number_of_bytes_read, default_pointer, $last_error) then
+			if {WEL_API}.cwin_read_file_with_error (child_process.std_error, $buffer, buffer.capacity.as_natural_32, $number_of_bytes_read, default_pointer, $last_error) then
 					-- There was no error.
 				has_error_stream_error := False
 					-- Update `buffer.count` with actual bytes read.

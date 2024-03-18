@@ -362,7 +362,7 @@ feature -- Input
 			count: INTEGER
 		do
 			last_read_successful := True
-			count := read (read_descriptor, $buffer, buffer.count)
+			count := read (read_descriptor, $buffer, buffer.capacity)
 			if count >= 0 then
 				buffer.keep_head (count)
 			else

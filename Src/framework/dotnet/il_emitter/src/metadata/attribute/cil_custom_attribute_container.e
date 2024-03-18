@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		end
 
 
-	attributes: HASH_TABLE [ LIST [CIL_CUSTOM_ATTRIBUTE_DESCRIPTOR], PE_CUSTOM_ATTRIBUTE]
+	attributes: HASH_TABLE [ LIST [CIL_CUSTOM_ATTRIBUTE_DESCRIPTOR], PE_HAS_CUSTOM_ATTRIBUTE]
 
 	descriptors: SET [CIL_CUSTOM_ATTRIBUTE_DESCRIPTOR]
 			-- To be checked
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	lookup (a_attribute: PE_CUSTOM_ATTRIBUTE): LIST [CIL_CUSTOM_ATTRIBUTE_DESCRIPTOR]
+	lookup (a_attribute: PE_HAS_CUSTOM_ATTRIBUTE): LIST [CIL_CUSTOM_ATTRIBUTE_DESCRIPTOR]
 		do
 			fixme ("To be checked.")
 			attributes.compare_objects
@@ -48,7 +48,7 @@ feature -- Access
 			end
 		end
 
-	has (a_attribute: PE_CUSTOM_ATTRIBUTE; a_name: STRING_32; a_data: detachable ARRAY [NATURAL_8]; a_size: NATURAL_32): BOOLEAN
+	has (a_attribute: PE_HAS_CUSTOM_ATTRIBUTE; a_name: STRING_32; a_data: detachable ARRAY [NATURAL_8]; a_size: NATURAL_32): BOOLEAN
 		do
 			fixme ("To be checked")
 			attributes.compare_objects

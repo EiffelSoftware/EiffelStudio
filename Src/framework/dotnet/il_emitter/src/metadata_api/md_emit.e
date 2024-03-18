@@ -1223,7 +1223,7 @@ feature -- Definition: Creation
 			l_owner_tuple: like extract_table_type_and_row
 			l_constructor_tuple: like extract_table_type_and_row
 			blob_count: INTEGER
-			l_ca: PE_CUSTOM_ATTRIBUTE
+			l_ca: PE_HAS_CUSTOM_ATTRIBUTE
 			l_ca_type: PE_CUSTOM_ATTRIBUTE_TYPE
 			pe_index: NATURAL_32
 		do

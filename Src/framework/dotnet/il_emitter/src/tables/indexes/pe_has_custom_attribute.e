@@ -1,10 +1,10 @@
 note
-	description: "Define a type of possible index type that occur in the tables we are interested in."
+	description: "Define a type of possible index type that occur in the tables we are interested in. See HasCustomAttribute"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PE_CUSTOM_ATTRIBUTE
+	PE_HAS_CUSTOM_ATTRIBUTE
 
 inherit
 	PE_CODED_INDEX_BASE
@@ -67,7 +67,7 @@ feature -- Access
 			when {PE_TABLES}.tinterfaceimpl then Result := InterfaceImpl
 			when {PE_TABLES}.tmemberref then Result := MemberRef
 			when {PE_TABLES}.tmodule then Result := Module
---			when {PE_TABLES}.tPermission then Result := Permission
+			when {PE_TABLES}.tdeclsecurity then Result := Permission
 			when {PE_TABLES}.tproperty then Result := Property
 			when {PE_TABLES}.tevent then Result := Event
 			when {PE_TABLES}.tstandalonesig then Result := StandaloneSig
@@ -103,19 +103,30 @@ feature -- Operations
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_32]): BOOLEAN
 		do
-			Result := large (a_sizes [{PE_TABLES}.tMethodDef.to_integer_32 + 1]) or else
-				large (a_sizes [{PE_TABLES}.tField.to_integer_32 + 1]) or else
-				large (a_sizes [{PE_TABLES}.tTypeRef.to_integer_32 + 1]) or else
-				large (a_sizes [{PE_TABLES}.tTypeDef.to_integer_32 + 1]) or else
-				large (a_sizes [{PE_TABLES}.tParam.to_integer_32 + 1]) or else
-				large (a_sizes [{PE_TABLES}.tImplMap.to_integer_32 + 1]) or else
-				large (a_sizes [{PE_TABLES}.tMemberRef.to_integer_32 + 1]) or else
-				large (a_sizes [{PE_TABLES}.tModule.to_integer_32 + 1]) or else
-				large (a_sizes [{PE_TABLES}.tStandaloneSig.to_integer_32 + 1]) or else
-				large (a_sizes [{PE_TABLES}.tModuleRef.to_integer_32 + 1]) or else
-				large (a_sizes [{PE_TABLES}.tTypeSpec.to_integer_32 + 1]) or else
-				large (a_sizes [{PE_TABLES}.tAssemblyDef.to_integer_32 + 1]) or else
-				large (a_sizes [{PE_TABLES}.tAssemblyRef.to_integer_32 + 1])
+			Result := large (a_sizes [{PE_TABLES}.tMethodDef.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tField.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tTypeRef.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tTypeDef.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tParam.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tinterfaceimpl.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tMemberRef.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tModule.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tStandaloneSig.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tModuleRef.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tTypeSpec.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tAssemblyDef.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tAssemblyRef.to_integer_32 + 1])
+
+				or else large (a_sizes [{PE_TABLES}.tDeclSecurity.to_integer_32 + 1]) -- Permission
+				or else large (a_sizes [{PE_TABLES}.tproperty.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tevent.to_integer_32 + 1])
+
+				or else large (a_sizes [{PE_TABLES}.tfile.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.texportedtype.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tmanifestresource.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tgenericparam.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tgenericparamconstraint.to_integer_32 + 1])
+				or else large (a_sizes [{PE_TABLES}.tmethodspec.to_integer_32 + 1])
 		end
 
 end

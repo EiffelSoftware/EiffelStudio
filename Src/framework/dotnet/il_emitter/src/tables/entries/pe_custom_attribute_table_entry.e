@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Intialization
 
-	make_with_data (a_parent_index: PE_CUSTOM_ATTRIBUTE; a_type_index: PE_CUSTOM_ATTRIBUTE_TYPE; a_value_index: NATURAL_32)
+	make_with_data (a_parent_index: PE_HAS_CUSTOM_ATTRIBUTE; a_type_index: PE_CUSTOM_ATTRIBUTE_TYPE; a_value_index: NATURAL_32)
 		do
 			parent_index := a_parent_index
 			type_index := a_type_index
@@ -60,7 +60,7 @@ feature -- Status
 
 feature -- Access
 
-	parent_index: PE_CUSTOM_ATTRIBUTE
+	parent_index: PE_HAS_CUSTOM_ATTRIBUTE
 			-- an index into a metadata table that has an associated HasCustomAttribute index.
 
 	type_index: PE_CUSTOM_ATTRIBUTE_TYPE

@@ -212,6 +212,8 @@ feature -- Visitor
 		end
 
 	visit_method_debug_information (e: PDB_MD_TABLE_METHOD_DEBUG_INFORMATION_ENTRY)
+		local
+			err: BOOLEAN
 		do
 			output_token (e)
 			output.put_new_line
@@ -220,6 +222,7 @@ feature -- Visitor
 				attached e.sequence_points (pdb_file) as seq_pts and then
 				attached seq_pts.to_sequence_points (pdb_file, e) as d
 			then
+				err := d.has_error
 				output.put_string ("LocalSignature: ")
 				output.put_string (d.local_token.to_hex_string)
 				output.put_new_line
@@ -229,6 +232,12 @@ feature -- Visitor
 					output.put_string (ic.item.debug_output)
 					output.put_new_line
 				end
+			else
+				err := True
+			end
+			if err then
+				output.put_string ("ERROR occurred!")
+				output.put_new_line
 			end
 			output.exdent
 		end

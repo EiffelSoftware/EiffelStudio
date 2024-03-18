@@ -145,6 +145,9 @@ feature -- Implementation
 		do
 			create cl.put (0)
 			Result := uncompressed_data (pointer, current_position, cl)
+			if cl.item = 0 then
+				report_error (generator + ": Bad value for uncompressed_value at position " + current_position.out)
+			end
 			forward_position (cl.item)
 		end
 
@@ -154,10 +157,24 @@ feature -- Implementation
 		do
 			create cl.put (0)
 			Result := uncompressed_signed_data (pointer, current_position, cl)
+			if cl.item = 0 then
+				report_error (generator + ": Bad value for uncompressed_signed_value at position " + current_position.out)
+			end
 			forward_position (cl.item)
 		end
 
-feature {NONE} -- Implementation		
+feature {NONE} -- Implementation
+
+	report_error (m: detachable READABLE_STRING_GENERAL)
+		local
+			err: DEVELOPER_EXCEPTION
+		do
+			create err
+			if m /= Void then
+				err.set_description (m)
+			end
+			err.raise
+		end
 
 	uncompressed_data (v: MANAGED_POINTER; pos: INTEGER; nb_bytes: detachable CELL [INTEGER_32]): INTEGER_32
 		do

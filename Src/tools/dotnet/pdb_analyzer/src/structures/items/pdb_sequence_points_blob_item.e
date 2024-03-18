@@ -37,7 +37,7 @@ feature -- Additional access
 
 feature -- Conversion
 
-	to_sequence_points (pdb: PDB_FILE; e: PDB_MD_TABLE_METHOD_DEBUG_INFORMATION_ENTRY): TUPLE [local_token: NATURAL_32; points: ARRAYED_LIST [MD_SEQUENCE_POINT]]
+	to_sequence_points (pdb: PDB_FILE; e: PDB_MD_TABLE_METHOD_DEBUG_INFORMATION_ENTRY): detachable TUPLE [local_token: NATURAL_32; points: ARRAYED_LIST [MD_SEQUENCE_POINT]; has_error: BOOLEAN]
 		local
 			offset: INTEGER
 			k: INTEGER_8
@@ -103,7 +103,12 @@ feature -- Conversion
 				points.force (pt)
 				l_prev_offset := l_il_offset
 			end
-			Result := [l_local_token, points]
+			Result := [l_local_token, points, False]
+		rescue
+			if points = Void then
+				create points.make (0)
+			end
+			Result := [l_local_token, points, True]
 		end
 
 	to_string_using_method_debug_information_entry (e: PDB_MD_TABLE_METHOD_DEBUG_INFORMATION_ENTRY): STRING_32
@@ -181,6 +186,14 @@ feature -- Conversion
 			end
 		rescue
 			Result := "!<<" + dump + ">>"
+			if attached {EXCEPTION_MANAGER}.last_exception as err then
+				Result.append_string (err.tag)
+				if attached err.message as mesg then
+					Result.append_string (" %"")
+					Result.append_string (mesg)
+					Result.append_string ("%"")
+				end
+			end
 			retry
 		end
 

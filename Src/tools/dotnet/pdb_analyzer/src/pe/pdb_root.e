@@ -72,7 +72,7 @@ feature -- Access
 			Result := signature.declaration_address
 		end
 
-	metadata_pdb_head: TUPLE [address: NATURAL_32; size: NATURAL_32]
+	metadata_pdb_heap: TUPLE [address: NATURAL_32; size: NATURAL_32]
 		local
 			a, sz: NATURAL_32
 		do
@@ -84,7 +84,7 @@ feature -- Access
 			Result := [a, sz]
 		end
 
-	metadata_string_head: TUPLE [address: NATURAL_32; size: NATURAL_32]
+	metadata_string_heap: TUPLE [address: NATURAL_32; size: NATURAL_32]
 		local
 			a, sz: NATURAL_32
 		do
@@ -96,7 +96,7 @@ feature -- Access
 			Result := [a, sz]
 		end
 
-	metadata_user_string_head: TUPLE [address: NATURAL_32; size: NATURAL_32]
+	metadata_user_string_heap: TUPLE [address: NATURAL_32; size: NATURAL_32]
 		local
 			a, sz: NATURAL_32
 		do
@@ -108,7 +108,7 @@ feature -- Access
 			Result := [a, sz]
 		end
 
-	metadata_guid_head: TUPLE [address: NATURAL_32; size: NATURAL_32]
+	metadata_guid_heap: TUPLE [address: NATURAL_32; size: NATURAL_32]
 		local
 			a, sz: NATURAL_32
 		do
@@ -120,7 +120,7 @@ feature -- Access
 			Result := [a, sz]
 		end
 
-	metadata_blob_head: TUPLE [address: NATURAL_32; size: NATURAL_32]
+	metadata_blob_heap: TUPLE [address: NATURAL_32; size: NATURAL_32]
 		local
 			a, sz: NATURAL_32
 		do

@@ -44,46 +44,46 @@ feature -- Input
 			bin: STRING
 			sz: PE_NATURAL_16_ITEM
 			l_tb_counts: like tables_counts
-			pe: like PDB_FILE
+			pdb: like PDB_FILE
 		do
-			pe := PDB_FILE
-			pe.go (address)
+			pdb := PDB_FILE
+			pdb.go (address)
 
 			l_tb_counts := tables_counts
 
-			reserved_1 := pe.read_natural_32_item ("reserved")
-			major_version := pe.read_natural_16_item ("MajorVersion")
-			minor_version := pe.read_natural_16_item ("MinorVersion")
---			heap_sizes := pe.read_natural_8_item ("HeapSizes")
---				-- See ECMA 335: II.24.2.6 #~ stream
---				-- the HeapSizes field is a bitvector that encodes the width of indexes into the various heaps. If bit 0 is set,
---				-- indexes into the “#String” heap are 4 bytes wide;
---				-- if bit 1 is set, indexes into the “#GUID” heap are 4 bytes wide;
---				-- if bit 2 is set, indexes into the “#Blob” heap are 4 bytes wide.
---				-- Conversely, if the HeapSize bit for a particular heap is not set, indexes into that heap are 2 bytes wide.
---			n8 := heap_sizes.value
---			if n8 & 0x01 = 0x01 then
---				 	-- Size of “#String” stream >= 2^16 = 0x1_0000
---				string_heap_index_bytes_size := 4
---			else
---				string_heap_index_bytes_size := 2
---			end
---			if n8 & 0x02 = 0x02 then
---					-- Size of “#GUID” stream >= 2^16 = 0x1_0000
---				guid_heap_index_bytes_size := 4
---			else
---				guid_heap_index_bytes_size := 2
---			end
---			if n8 & 0x04 = 0x04 then
---					-- Size of “#Blob” stream >= 2^16 = 0x1_0000	
---				blob_heap_index_bytes_size := 4
---			else
---				blob_heap_index_bytes_size := 2
---			end
+			reserved_1 := pdb.read_natural_32_item ("reserved")
+			major_version := pdb.read_natural_16_item ("MajorVersion")
+			minor_version := pdb.read_natural_16_item ("MinorVersion")
 
---			reserved_5 := pe.read_natural_8_item ("reserved")
-			valid := pe.read_natural_64_item ("Valid")
-			sorted := pe.read_natural_64_item ("Sorted")
+			if pdb.metadata_root.metadata_string_heap.size > 0xFFFF then
+				 	-- Size of “#String” stream >= 2^16 = 0x1_0000
+				string_heap_index_bytes_size := 4
+			else
+				string_heap_index_bytes_size := 2
+			end
+			if pdb.metadata_root.metadata_user_string_heap.size > 0xFFFF then
+				 	-- Size of “#US” stream >= 2^16 = 0x1_0000
+				user_string_heap_index_bytes_size := 4
+			else
+				user_string_heap_index_bytes_size := 2
+			end
+			if pdb.metadata_root.metadata_guid_heap.size > 0xFFFF then
+					-- Size of “#GUID” stream >= 2^16 = 0x1_0000
+				guid_heap_index_bytes_size := 4
+			else
+				guid_heap_index_bytes_size := 2
+			end
+
+			if pdb.metadata_root.metadata_blob_heap.size > 0xFFFF then
+					-- Size of “#Blob” stream >= 2^16 = 0x1_0000	
+				blob_heap_index_bytes_size := 4
+			else
+				blob_heap_index_bytes_size := 2
+			end
+
+--			reserved_5 := pdb.read_natural_8_item ("reserved")
+			valid := pdb.read_natural_64_item ("Valid")
+			sorted := pdb.read_natural_64_item ("Sorted")
 
 			bin := valid.to_binary_string
 			n := bin.occurrences ('1')
@@ -94,7 +94,7 @@ feature -- Input
 				i > l_upper
 			loop
 				if is_table_included (i.to_natural_8, bin) then
-					l_tb_counts[i] := pe.read_natural_32_item ("Size").value
+					l_tb_counts[i] := pdb.read_natural_32_item ("Size").value
 					debug ("pe_analyze")
 						if l_tb_counts[i] > 0x1_0000 then
 							io.error.put_string ("Big-")
@@ -106,7 +106,7 @@ feature -- Input
 				i := i + 1
 			end
 
-			address_of_tables := pe.position.to_natural_32
+			address_of_tables := pdb.position.to_natural_32
 		end
 
 	read_tables
@@ -158,6 +158,7 @@ feature -- Input
 feature -- Settings
 
 	string_heap_index_bytes_size: NATURAL_8
+	user_string_heap_index_bytes_size: NATURAL_8
 	guid_heap_index_bytes_size: NATURAL_8
 	blob_heap_index_bytes_size: NATURAL_8
 

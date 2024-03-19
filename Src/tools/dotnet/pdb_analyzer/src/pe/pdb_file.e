@@ -368,7 +368,7 @@ feature -- Helper
 		local
 			tu: TUPLE [address, size: NATURAL_32]
 		do
-			tu := metadata_root.metadata_string_head
+			tu := metadata_root.metadata_string_heap
 			go (tu.address)
 			create Result.make (Current, tu.address, tu.size)
 		end
@@ -377,7 +377,7 @@ feature -- Helper
 		local
 			tu: TUPLE [address, size: NATURAL_32]
 		do
-			tu := metadata_root.metadata_user_string_head
+			tu := metadata_root.metadata_user_string_heap
 			go (tu.address)
 			create Result.make (Current, tu.address, tu.size)
 		end
@@ -386,7 +386,7 @@ feature -- Helper
 		local
 			tu: TUPLE [address, size: NATURAL_32]
 		do
-			tu := metadata_root.metadata_guid_head
+			tu := metadata_root.metadata_guid_heap
 			go (tu.address)
 			create Result.make (Current, tu.address, tu.size)
 		end
@@ -395,7 +395,7 @@ feature -- Helper
 		local
 			tu: TUPLE [address, size: NATURAL_32]
 		do
-			tu := metadata_root.metadata_blob_head
+			tu := metadata_root.metadata_blob_heap
 			go (tu.address)
 			create Result.make (Current, tu.address, tu.size)
 		end

@@ -62,10 +62,10 @@ feature -- Visitor
 					+ "%N")
 			end
 			output.exdent
-			output.put_string (" - String heap("+o.metadata_string_head.size.out+"): 0x" + short_hex_string (o.metadata_string_head.address.to_hex_string) + "%N")
-			output.put_string (" - UserString heap("+o.metadata_user_string_head.size.out+"): 0x" + short_hex_string (o.metadata_user_string_head.address.to_hex_string) + "%N")
-			output.put_string (" - GUID heap("+o.metadata_guid_head.size.out+"): 0x" + short_hex_string (o.metadata_guid_head.address.to_hex_string) + "%N")
-			output.put_string (" - Blob heap("+o.metadata_blob_head.size.out+"): 0x" + short_hex_string (o.metadata_blob_head.address.to_hex_string) + "%N")
+			output.put_string (" - String heap("+o.metadata_string_heap.size.out+"): 0x" + short_hex_string (o.metadata_string_heap.address.to_hex_string) + "%N")
+			output.put_string (" - UserString heap("+o.metadata_user_string_heap.size.out+"): 0x" + short_hex_string (o.metadata_user_string_heap.address.to_hex_string) + "%N")
+			output.put_string (" - GUID heap("+o.metadata_guid_heap.size.out+"): 0x" + short_hex_string (o.metadata_guid_heap.address.to_hex_string) + "%N")
+			output.put_string (" - Blob heap("+o.metadata_blob_heap.size.out+"): 0x" + short_hex_string (o.metadata_blob_heap.address.to_hex_string) + "%N")
 			output.put_string (" - Metadata table: 0x" + short_hex_string (o.metadata_tables_address.to_hex_string) + "%N")
 
 			output.exdent

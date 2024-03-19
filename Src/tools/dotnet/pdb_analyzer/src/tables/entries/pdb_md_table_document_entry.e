@@ -16,11 +16,11 @@ feature -- Initialization
 			struct: like structure
 		do
 			create struct.make (4, "Document")
-			structure := struct;
-			struct.add_document_name_blob_index ("Name");
-			struct.add_guid_index ("HashAlgorithm");
-			struct.add_blob_index ("Hash");
-			struct.add_guid_index ("Language");
+			structure := struct
+			struct.add_document_name_blob_index ("Name")
+			struct.add_guid_index ("HashAlgorithm")
+			struct.add_blob_index ("Hash")
+			struct.add_guid_index ("Language")
 		end
 
 feature -- Access

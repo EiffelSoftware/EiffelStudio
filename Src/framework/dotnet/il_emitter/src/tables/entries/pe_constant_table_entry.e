@@ -61,7 +61,7 @@ feature -- Operations
 			Result := {PE_TABLES}.tconstant
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
@@ -79,20 +79,16 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
-				-- Set the type (from a_src)  to the type
-			type := {BYTE_ARRAY_HELPER}.natural_8_at (a_src, 0)
-				-- also unused byte +1
-
 				-- Initialize the number of bytes readad
-			l_bytes := 2
+			l_bytes := 2 -- 1 + 1
 
 				-- Read the parent_index and value_index from the buffer and update the number of bytes
-			l_bytes := l_bytes + parent_index.render (a_sizes, a_src, l_bytes)
-			l_bytes := l_bytes + value_index.render (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + parent_index.rendering_size (a_sizes)
+			l_bytes := l_bytes + value_index.rendering_size (a_sizes)
 
 				-- Return the total number of bytes readed
 			Result := l_bytes

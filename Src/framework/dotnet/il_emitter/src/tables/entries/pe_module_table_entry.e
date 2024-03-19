@@ -21,10 +21,10 @@ create
 
 feature {NONE} -- Implementation
 
-	make_with_data (a_name_index: NATURAL_32; a_guid_index: NATURAL_32)
+	make_with_data (a_name_index: NATURAL_32; a_Mvid_index: NATURAL_32)
 		do
 			create name_index.make_with_index (a_name_index)
-			create guid_index.make_with_index (a_guid_index)
+			create mvid_index.make_with_index (a_Mvid_index)
 		end
 
 feature -- Status
@@ -38,7 +38,7 @@ feature -- Status
 			Result := Precursor (e)
 				or else (
 					e.name_index.is_equal (name_index) and then
-					e.guid_index.is_equal (guid_index)
+					e.mvid_index.is_equal (mvid_index)
 				)
 		end
 
@@ -47,12 +47,12 @@ feature -- Access
 	name_index: PE_STRING
 			-- an index into the String heap.
 
-	guid_index: PE_GUID
+	mvid_index: PE_GUID
 			-- Mvid (an index into the Guid heap; simply a Guid used to distinguish between two
 			-- versions of the same module)
 
-		--  EncId (an index into the Guid heap; reserved, shall be zero)
-		--  EncBaseId (an index into the Guid heap; reserved, shall be zero)
+		-- EncId (an index into the Guid heap; reserved, shall be zero)
+		-- EncBaseId (an index into the Guid heap; reserved, shall be zero)
 
 feature -- Operations
 
@@ -61,68 +61,51 @@ feature -- Operations
 			Result := {PE_TABLES}.tmodule
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes_written: NATURAL_32
+			l_null_guid_index: PE_GUID
 		do
-				-- Initialize the first two bytes of dest to zero
+				-- Initialize the first two bytes of dest to zero:
+				-- Generation (a 2-byte value, reserved, shall be zero)
 			{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, 0, 0)
-
-				-- Set the initial number of bytes written to 2
 			l_bytes_written := 2
 
 				-- Render the name_index and add the number of bytes written to l_bytes_written
 			l_bytes_written := l_bytes_written + name_index.render (a_sizes, a_dest, l_bytes_written)
 
 				-- Render the guid_index and add the number of bytes written to l_bytes_written
-			l_bytes_written := l_bytes_written + guid_index.render (a_sizes, a_dest, l_bytes_written)
+			l_bytes_written := l_bytes_written + mvid_index.render (a_sizes, a_dest, l_bytes_written)
 
-				--  EncId (an index into the Guid heap; reserved, shall be zero)
-				--  EncBaseId (an index into the Guid heap; reserved, shall be zero)
-			if a_sizes [{PE_TABLE_CONSTANTS}.t_guid + 1] > 65535 then
-					-- If the size of the GUID table is greater than 65535, write two
-					-- zero-valued NATURAL_32 to the destination
-					--| DWord in C++
-				{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, 0, l_bytes_written.to_integer_32)
-				l_bytes_written := l_bytes_written + 4
-				{BYTE_ARRAY_HELPER}.put_natural_32 (a_dest, 0, l_bytes_written.to_integer_32)
-				l_bytes_written := l_bytes_written + 4
-			else
-					-- If the size of the GUID table is greater than 65535, write two
-					-- zero-valued NATURAL_16 to the destination
-					--| Word in C++
-				{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, 0, l_bytes_written.to_integer_32)
-				l_bytes_written := l_bytes_written + 2
-				{BYTE_ARRAY_HELPER}.put_natural_16 (a_dest, 0, l_bytes_written.to_integer_32)
-				l_bytes_written := l_bytes_written + 2
-			end
+				-- EncId (an index into the Guid heap; reserved, shall be zero)
+				-- EncBaseId (an index into the Guid heap; reserved, shall be zero)
+			create l_null_guid_index.make_with_index (0)
+			l_bytes_written := l_bytes_written + l_null_guid_index.render (a_sizes, a_dest, l_bytes_written) -- EncId
+			l_bytes_written := l_bytes_written + l_null_guid_index.render (a_sizes, a_dest, l_bytes_written) -- EncBaseId
 
 				-- Return the total number of bytes written
 			Result := l_bytes_written
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
+			l_null_guid_index: PE_GUID
 		do
 				-- Initialize the number of bytes read to 2.
-				-- TODO: why ?
-			l_bytes := 2
+
+			l_bytes := 2 -- Generation
 
 				-- Read the name_index.
-			l_bytes := l_bytes + name_index.get (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + name_index.rendering_size (a_sizes)
 
 				-- Read the guid_index.
-			l_bytes := l_bytes + guid_index.get (a_sizes, a_dest, l_bytes)
+			l_bytes := l_bytes + mvid_index.rendering_size (a_sizes)
 
-			if a_sizes [{PE_TABLE_CONSTANTS}.t_guid + 1] > 65535 then
-					-- If the size of the GUID index is greater than 65535,
-					-- add 8 bytes to the number of bytes read
-				l_bytes := l_bytes + 8
-			else
-					-- in other case, add 4 bytes to the number of bytes read.
-				l_bytes := l_bytes + 4
-			end
+			create l_null_guid_index.make_with_index (0)
+			l_bytes := l_bytes + l_null_guid_index.rendering_size (a_sizes) -- EncId
+			l_bytes := l_bytes + l_null_guid_index.rendering_size (a_sizes) -- EncBaseId
+
 				-- Return the total number of bytes read.
 			Result := l_bytes
 		end

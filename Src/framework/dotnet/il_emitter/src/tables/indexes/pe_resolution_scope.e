@@ -50,12 +50,12 @@ feature -- Operations
 			Result := tagbits
 		end
 
-	has_index_overflow (a_sizes: ARRAY [NATURAL_32]): BOOLEAN
+	has_index_overflow (a_sizes: SPECIAL [NATURAL_32]): BOOLEAN
 		do
-			Result := large(a_sizes[{PE_TABLES}.tModule.to_integer_32 + 1])
-				or else large(a_sizes[{PE_TABLES}.tModuleRef.to_integer_32 + 1])
-				or else large(a_sizes[{PE_TABLES}.tAssemblyRef.to_integer_32 + 1])
-				or else large(a_sizes[{PE_TABLES}.tTypeRef.to_integer_32 + 1])
+			Result := large (a_sizes, {PE_TABLES}.tModule)
+				or else large (a_sizes, {PE_TABLES}.tModuleRef)
+				or else large (a_sizes, {PE_TABLES}.tAssemblyRef)
+				or else large (a_sizes, {PE_TABLES}.tTypeRef)
 		end
 
 end

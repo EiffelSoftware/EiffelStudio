@@ -836,9 +836,8 @@ feature {MD_EMIT} -- Implementation
 			EIS: "name=Metadata Root", "src=https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf#page=297", "protocol=uri"
 		local
 			l_current_rva: NATURAL_32
-			l_counts: ARRAY [NATURAL_32]
+			l_counts: SPECIAL [NATURAL_32]
 			l_temp: NATURAL_32
-			l_buffer: ARRAY [NATURAL_8]
 			i,n: INTEGER
 			l_stream_headers: ARRAY2 [NATURAL_32]
 			l_tables_header: PE_DOTNET_META_TABLES_HEADER
@@ -913,12 +912,14 @@ feature {MD_EMIT} -- Implementation
 				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 0x4
 			end
 
-			create l_counts.make_filled (0, 1, Max_tables + Extra_indexes)
+			create l_counts.make_filled (0, Max_tables + Extra_indexes)
 
-			l_counts [t_string + 1] := strings_heap_size
-			l_counts [t_us + 1] := us_heap_size
-			l_counts [t_guid + 1] := guid_heap_size
-			l_counts [t_blob + 1] := blob_heap_size
+			l_counts [t_string] := strings_heap_size
+			l_counts [t_us] := us_heap_size
+			l_counts [t_guid] := guid_heap_size
+			l_counts [t_blob] := blob_heap_size
+
+			print ("Blob size -> " + l_counts [t_blob].out + "%N")
 
 			from
 				i := 0
@@ -927,7 +928,7 @@ feature {MD_EMIT} -- Implementation
 				i >= n
 			loop
 				if not l_md_tables [i].is_empty then
-					l_counts [i + 1] := l_md_tables [i].size
+					l_counts [i] := l_md_tables [i].size
 					l_tables_header.mask_valid := l_tables_header.mask_valid | ({INTEGER_64} 1 |<< i)
 					l_temp := l_temp + 1
 				end
@@ -945,10 +946,10 @@ feature {MD_EMIT} -- Implementation
 			until
 				i >= n
 			loop
-				if l_counts [i + 1] /= 0 then
-					create l_buffer.make_filled (0, 1, 512)
-					l_temp := l_md_tables [i][{NATURAL_32} 1].render (l_counts, l_buffer)
-					l_temp := l_temp * (l_counts [i + 1])
+				if l_counts [i] /= 0 then
+					l_temp := l_md_tables [i][{NATURAL_32} 1].rendering_size (l_counts)
+					print ("Rendering size for table 0x"+ i.to_natural_8.to_hex_string + "-> " + l_temp.out + " count=" + l_counts [i].out + "%N")
+					l_temp := l_temp * (l_counts [i])
 					l_current_rva := l_current_rva + l_temp
 				end
 				i := i + 1

@@ -64,14 +64,14 @@ feature -- Coded related
 				--| In Eiffel we could declared it as deferred.
 		end
 
-	large (a_x: NATURAL_32): BOOLEAN
+	large (a_md_table_sizes: SPECIAL [NATURAL_32]; a_md_table_id: NATURAL_32): BOOLEAN
 		do
-			Result := (a_x |<< get_index_shift) > 0xffff
+			Result := (a_md_table_sizes [a_md_table_id.to_integer_32] |<< get_index_shift) > 0xFFFF
 		end
 
 feature -- Operations
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]; a_pos: NATURAL_32): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]; a_pos: NATURAL_32): NATURAL_32
 			-- Number of bytes written to the destination `a_dest`
 		local
 			v: NATURAL_32
@@ -91,7 +91,7 @@ feature -- Operations
 			end
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]; a_pos: NATURAL_32): NATURAL_32
+	get (a_sizes: SPECIAL [NATURAL_32]; a_src: ARRAY [NATURAL_8]; a_pos: NATURAL_32): NATURAL_32
 			-- Number of bytes read from the source `a_src`	at position `a_pos`
 		local
 			v: NATURAL_32

@@ -73,7 +73,7 @@ feature -- Operations
 			Result := {PE_TABLES}.tExportedtype
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
@@ -93,22 +93,19 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
-			flags := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, 0)
-
 			l_bytes := 4
 
 				-- Get type_def_id
-			type_def_id := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, 0)
 			l_bytes := l_bytes + 4
 
 				-- Get type_name, type_name_space, implemenation and update bytes
-			l_bytes := l_bytes + type_name.get (a_sizes, a_src, l_bytes)
-			l_bytes := l_bytes + type_name_space.get (a_sizes, a_src, l_bytes)
-			l_bytes := l_bytes + implementation.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + type_name.rendering_size (a_sizes)
+			l_bytes := l_bytes + type_name_space.rendering_size (a_sizes)
+			l_bytes := l_bytes + implementation.rendering_size (a_sizes)
 
 			Result := l_bytes
 		end

@@ -805,8 +805,7 @@ feature -- Operations
 			l_exit: BOOLEAN
 			l_etiny: BOOLEAN
 			l_tables_header: PE_DOTNET_META_TABLES_HEADER
-			l_counts: ARRAY [NATURAL_32]
-			l_buffer: ARRAY [NATURAL_8]
+			l_counts: SPECIAL [NATURAL_32]
 			l_buf: ARRAY [NATURAL_8]
 			l_len: CELL [NATURAL_32]
 			l_sect: INTEGER
@@ -1028,11 +1027,11 @@ feature -- Operations
 				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 4
 			end
 
-			create l_counts.make_filled (0, 1, Max_tables + Extra_indexes)
-			l_counts [t_string + 1] := strings.size
-			l_counts [t_us + 1] := us.size
-			l_counts [t_guid + 1] := guid.size
-			l_counts [t_blob + 1] := blob.size
+			create l_counts.make_filled (0,  Max_tables + Extra_indexes)
+			l_counts [t_string] := strings.size
+			l_counts [t_us] := us.size
+			l_counts [t_guid] := guid.size
+			l_counts [t_blob] := blob.size
 
 			l_n := 0
 			from
@@ -1042,7 +1041,7 @@ feature -- Operations
 				i >= n
 			loop
 				if not tables [i].is_empty then
-					l_counts [i + 1] := tables [i].size.to_natural_32
+					l_counts [i] := tables [i].size.to_natural_32
 					l_tables_header.mask_valid := l_tables_header.mask_valid | ({INTEGER_64} 1 |<< i)
 					l_n := l_n + 1
 				end
@@ -1061,11 +1060,10 @@ feature -- Operations
 			until
 				i >= n
 			loop
-				if l_counts [i + 1] /= 0 then
-					create l_buffer.make_filled (0, 1, 512)
+				if l_counts [i] /= 0 then
 					check tables [i].table.valid_index (1)  end
-					l_n := tables [i].table [1].render (l_counts, l_buffer).to_integer_32
-					l_n := l_n * (l_counts [i + 1]).to_integer_32
+					l_n := tables [i].table [1].rendering_size (l_counts).to_integer_32
+					l_n := l_n * (l_counts [i]).to_integer_32
 					l_current_rva := l_current_rva + l_n.to_natural_32
 				end
 				i := i + 1
@@ -1361,18 +1359,18 @@ feature -- Write operations
 
 	write_methods: BOOLEAN
 		local
-			l_counts: ARRAY [NATURAL_32]
+			l_counts: SPECIAL [NATURAL_32]
 			l_dis: NATURAL_32
 		do
 			if attached output_file as l_stream then
-				create l_counts.make_filled (0, 1, max_tables + extra_indexes)
-				l_counts [t_string + 1] := strings.size
-				l_counts [t_us + 1] := us.size
-				l_counts [t_guid + 1] := guid.size
-				l_counts [t_blob + 1] := blob.size
+				create l_counts.make_filled (0, max_tables + extra_indexes)
+				l_counts [t_string] := strings.size
+				l_counts [t_us] := us.size
+				l_counts [t_guid] := guid.size
+				l_counts [t_blob] := blob.size
 
 				across 0 |..| (max_tables - 1) as i loop
-					l_counts [i + 1] := tables [i].size.to_natural_32
+					l_counts [i] := tables [i].size.to_natural_32
 				end
 
 				across methods as m loop
@@ -1425,7 +1423,7 @@ feature -- Write operations
 
 	write_tables: BOOLEAN
 		local
-			l_counts: ARRAY [NATURAL_32]
+			l_counts: SPECIAL [NATURAL_32]
 			l_buffer: ARRAY [NATURAL_8]
 			l_sz: NATURAL_32
 			i,n: INTEGER
@@ -1435,11 +1433,11 @@ feature -- Write operations
 			if
 				attached tables_header as l_tables_header
 			then
-				create l_counts.make_filled (0, 1, max_tables + extra_indexes)
-				l_counts [t_string + 1] := strings.size
-				l_counts [t_us + 1] := us.size
-				l_counts [t_guid + 1] := guid.size
-				l_counts [t_blob + 1] := blob.size
+				create l_counts.make_filled (0, max_tables + extra_indexes)
+				l_counts [t_string] := strings.size
+				l_counts [t_us] := us.size
+				l_counts [t_guid] := guid.size
+				l_counts [t_blob] := blob.size
 
 				put_tables_header (l_tables_header)
 
@@ -1450,7 +1448,7 @@ feature -- Write operations
 					i > n
 				loop
 					l_sz := tables [i].size.to_natural_32
-					l_counts [i + 1] := l_sz
+					l_counts [i] := l_sz
 					if l_sz /= 0 then
 						put_natural_32 (l_sz)
 					end

@@ -21,12 +21,9 @@ create
 
 feature -- Operations
 
-	has_index_overflow (a_sizes: ARRAY [NATURAL_32]): BOOLEAN
+	has_index_overflow (a_sizes: SPECIAL [NATURAL_32]): BOOLEAN
 		do
-			debug ("refactor_fixme")
-				fixme ("Todo double check if we need + 1 in this case.")
-			end
-			Result := large(a_sizes[{PE_TABLE_CONSTANTS}.t_string + 1])
+			Result := large (a_sizes, {PE_TABLE_CONSTANTS}.t_string.to_natural_32)
 		end
 
 end

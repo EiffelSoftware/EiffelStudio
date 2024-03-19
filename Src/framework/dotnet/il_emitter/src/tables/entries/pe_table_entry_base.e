@@ -50,14 +50,15 @@ feature -- Status
 
 feature -- Operations
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 			-- Write the Current table entry to the given destination buffer `a_dest`.
 			-- and returns the number of bytes written to the buffer.
 		deferred
 
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_bytes: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
+			-- Bytes needed to `render` Current using the global information on MD table sizes `a_sizes`.
 		deferred
 		end
 

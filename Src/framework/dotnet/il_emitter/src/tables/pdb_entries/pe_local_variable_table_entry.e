@@ -70,7 +70,7 @@ feature -- Operations
 			Result := {PDB_TABLES}.tlocalvariable
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 			-- <Precursor>
 		local
 			l_bytes_written: NATURAL_32
@@ -93,7 +93,7 @@ feature -- Operations
 			Result := l_bytes_written
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 			-- <Precursor>
 		local
 			l_bytes: NATURAL_32
@@ -102,15 +102,13 @@ feature -- Operations
 			l_bytes := 0
 
 				-- Read the attributes from the source array
-			attributes := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
 
 				-- Read the index from the source array
-			index := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 2
 
 				-- Read the name_index
-			l_bytes := l_bytes + name_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + name_index.rendering_size (a_sizes)
 
 				-- Return the total number of bytes read
 			Result := l_bytes

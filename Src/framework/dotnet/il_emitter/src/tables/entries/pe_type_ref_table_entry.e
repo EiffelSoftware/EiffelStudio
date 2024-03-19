@@ -56,7 +56,7 @@ feature -- Operations
 			Result := {PE_TABLES}.ttyperef
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
@@ -73,18 +73,18 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
 				-- read the number of bytes from resolution.
-			l_bytes := resolution.get (a_sizes, a_src, 0)
+			l_bytes := resolution.rendering_size (a_sizes)
 
 				-- read the number of bytes from type_name_index and update the readed bytes.
-			l_bytes := l_bytes + type_name_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + type_name_index.rendering_size (a_sizes)
 
 				-- read the number of bytes from type_name_space_index and update the readed bytes.
-			l_bytes := l_bytes + type_name_space_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + type_name_space_index.rendering_size (a_sizes)
 
 				-- Return the number of bytes readad.
 			Result := l_bytes

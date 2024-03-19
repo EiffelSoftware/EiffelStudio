@@ -57,7 +57,7 @@ feature -- Operations
 			Result := {PE_TABLES}.tMethodSpec
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
@@ -67,12 +67,12 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
-			l_bytes := method.get (a_sizes, a_src, 0)
-			l_bytes := l_bytes + instantiation.get (a_sizes, a_src, l_bytes)
+			l_bytes := method.rendering_size (a_sizes)
+			l_bytes := l_bytes + instantiation.rendering_size (a_sizes)
 
 			Result := l_bytes
 		end

@@ -70,7 +70,7 @@ feature -- Operations
 			Result := {PE_TABLES}.tManifestResource
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
@@ -88,20 +88,18 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
 				-- Initialize the bytes to write and set offset and flags to the buffer.
 			l_bytes := 0
-			offset := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
-			flags := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
 
 				-- Get name and implemention to the buffer and update the bytes.
-			l_bytes := l_bytes + name.get (a_sizes, a_src, l_bytes)
-			l_bytes := l_bytes + implementation.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + name.rendering_size (a_sizes)
+			l_bytes := l_bytes + implementation.rendering_size (a_sizes)
 
 			Result := l_bytes
 		end

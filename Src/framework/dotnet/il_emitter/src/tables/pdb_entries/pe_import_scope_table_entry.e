@@ -48,7 +48,7 @@ feature -- Operations
 			Result := {PDB_TABLES}.tImportScope
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 			-- <Precursor>
 		local
 			l_bytes_written: NATURAL_32
@@ -72,7 +72,7 @@ feature -- Operations
 			Result := l_bytes_written
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 			-- <Precursor>
 		local
 			l_bytes: NATURAL_32
@@ -84,13 +84,13 @@ feature -- Operations
 				-- Read the parent_row_id
 
 			if attached parent_row_id as l_parent_row_id then
-				l_bytes := l_bytes + l_parent_row_id.get (a_sizes, a_src, l_bytes)
+				l_bytes := l_bytes + l_parent_row_id.rendering_size (a_sizes)
 			else
 				create null_scope.make_with_index (0)
-				l_bytes := l_bytes + null_scope.get (a_sizes, a_src, l_bytes)
+				l_bytes := l_bytes + null_scope.rendering_size (a_sizes)
 			end
 				-- Read the imports_index
-			l_bytes := l_bytes + imports_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + imports_index.rendering_size (a_sizes)
 
 				-- Return the total number of bytes read
 			Result := l_bytes

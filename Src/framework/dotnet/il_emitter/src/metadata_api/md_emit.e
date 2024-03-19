@@ -308,18 +308,18 @@ feature {NONE} -- Implementation
 		require
 			open_write: a_file.is_open_write
 		local
-			l_counts: ARRAY [NATURAL_32]
+			l_counts: SPECIAL [NATURAL_32]
 			l_buffer: ARRAY [NATURAL_8]
 			l_sz: NATURAL_32
 			tb: MD_TABLE
 			i,n: INTEGER
 			j,m: NATURAL_32
 		do
-			create l_counts.make_filled (0, 1, max_tables + extra_indexes)
-			l_counts [t_string + 1] := a_writer.strings_heap_size
-			l_counts [t_us + 1] := a_writer.us_heap_size
-			l_counts [t_guid + 1] := a_writer.guid_heap_size
-			l_counts [t_blob + 1] := a_writer.blob_heap_size
+			create l_counts.make_filled (0, max_tables + extra_indexes)
+			l_counts [t_string] := a_writer.strings_heap_size
+			l_counts [t_us] := a_writer.us_heap_size
+			l_counts [t_guid] := a_writer.guid_heap_size
+			l_counts [t_blob] := a_writer.blob_heap_size
 
 			put_tables_header (a_file, a_writer.tables_header)
 
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 						print ("[" + a_file.count.to_hex_string + "] " +generator + ".write_tables: Table #" + i.to_natural_8.to_hex_string + " -> count=" + l_sz.out + "%N")
 					end
 				end
-				l_counts [i + 1] := l_sz
+				l_counts [i] := l_sz
 				if l_sz /= 0 then
 					a_file.put_natural_32 (l_sz)
 				end
@@ -354,9 +354,9 @@ feature {NONE} -- Implementation
 			loop
 				tb := a_writer.md_table (i.to_natural_32)
 				if not tb.is_empty then
-						-- TODO: what if l_counts [i + 1] = 0 ?
+						-- TODO: what if l_counts [i] = 0 ?
 					debug ("il_emitter_table")
-						if tb.size /= 0 and l_counts [i + 1] = 0 then check potential_issue: False end end
+						if tb.size /= 0 and l_counts [i] = 0 then check potential_issue: False end end
 					end
 					from
 						j := 1

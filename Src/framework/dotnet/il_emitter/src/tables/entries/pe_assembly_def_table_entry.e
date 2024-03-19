@@ -109,7 +109,7 @@ feature -- Operations
 			Result := {PE_TABLES}.tAssemblyDef
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
@@ -141,37 +141,28 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
--- 			hash_alg_id: NATURAL_32
 		do
 				-- always assume the right hash algorithm as there is currently only one spec'd
 				-- Initialize the number of bytes readed
-
-				-- TODO check if we need to get the hash from the buffer and set to
 				-- hash_alg_id
-			--	hash_alg_id := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, l_bytes.to_integer_32)
 			l_bytes := 4
 
 				-- Assembly version
-			major := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + 2
-			minor := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + 2
-			build := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + 2
-			revision := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + 2
-			flags := {BYTE_ARRAY_HELPER}.integer_32_at (a_src, l_bytes.to_integer_32)
-			l_bytes := l_bytes + 4
+			l_bytes := l_bytes + 2 -- major
+			l_bytes := l_bytes + 2 -- minor
+			l_bytes := l_bytes + 2 -- build
+			l_bytes := l_bytes + 2 -- revision
+			l_bytes := l_bytes + 4 -- flags
 
 				-- Get the public_key_index, name_index  culture_index and
 				-- update the number of bytes.
 
-			l_bytes := l_bytes + public_key_index.get (a_sizes, a_src, l_bytes)
-			l_bytes := l_bytes + name_index.get (a_sizes, a_src, l_bytes)
-			l_bytes := l_bytes + culture_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + public_key_index.rendering_size (a_sizes)
+			l_bytes := l_bytes + name_index.rendering_size (a_sizes)
+			l_bytes := l_bytes + culture_index.rendering_size (a_sizes)
 
 				-- Return the number of bytes readed.
 			Result := l_bytes

@@ -78,7 +78,7 @@ feature -- Operations
 			Result := {PE_TABLES}.tMethodSemantics
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
@@ -96,19 +96,16 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
-				-- Set the semantiics (from a_src)  to semantics
-			semantics := {BYTE_ARRAY_HELPER}.natural_16_at (a_src, 0)
-
 				-- Intialize the number of bytes.
 			l_bytes := 2
 
 				-- Read method and association from the buffer and update the number of bytes.
-			l_bytes := l_bytes + method.get (a_sizes, a_src, l_bytes)
-			l_bytes := l_bytes + association.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + method.rendering_size (a_sizes)
+			l_bytes := l_bytes + association.rendering_size (a_sizes)
 				-- Return the number of bytes readed
 			Result := l_bytes
 		end

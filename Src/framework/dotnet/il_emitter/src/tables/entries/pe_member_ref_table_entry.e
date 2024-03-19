@@ -64,7 +64,7 @@ feature -- Operations
 			Result := {PE_TABLES}.tmemberref
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
@@ -84,21 +84,21 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
 				-- Get the parent_index to the buffer and update the number
 				-- of bytes.
-			l_bytes := parent_index.get (a_sizes, a_src, 0)
+			l_bytes := parent_index.rendering_size (a_sizes)
 
 				-- Get the name_index to the buffer and update the number
 				-- of bytes.
-			l_bytes := l_bytes + name_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + name_index.rendering_size (a_sizes)
 
 				-- Get the signature_index to the buffer and update the number
 				-- of bytes.
-			l_bytes := l_bytes + signature_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + signature_index.rendering_size (a_sizes)
 
 				-- Return the number of bytes readed
 			Result := l_bytes

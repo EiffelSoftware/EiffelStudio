@@ -69,7 +69,7 @@ feature -- Access
 
 	method_def: NATURAL_32
 
-	write (a_sizes: ARRAY [NATURAL_32]; a_stream: FILE_STREAM): NATURAL_32
+	write (a_sizes: SPECIAL [NATURAL_32]; a_stream: FILE_STREAM): NATURAL_32
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		local

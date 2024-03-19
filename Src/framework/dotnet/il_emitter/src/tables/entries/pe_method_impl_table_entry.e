@@ -65,7 +65,7 @@ feature -- Operations
 			Result := {PE_TABLES}.tMethodimpl
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
@@ -78,14 +78,14 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
 				-- Read class, method_body and method_declaration from the buffer and update the number of bytes.
-			l_bytes := class_.get (a_sizes, a_src, 0)
-			l_bytes := l_bytes + method_body.get (a_sizes, a_src, l_bytes)
-			l_bytes := l_bytes + method_declaration.get (a_sizes, a_src, l_bytes)
+			l_bytes := class_.rendering_size (a_sizes)
+			l_bytes := l_bytes + method_body.rendering_size (a_sizes)
+			l_bytes := l_bytes + method_declaration.rendering_size (a_sizes)
 
 				-- Return the number of bytes written
 			Result := l_bytes

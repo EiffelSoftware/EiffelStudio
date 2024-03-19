@@ -48,16 +48,16 @@ feature -- Operations
 			Result := {PE_TABLES}.tStandaloneSig
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		do
 				-- Write signature_index and return the number of bytes.
 			Result := signature_index.render (a_sizes, a_dest, 0)
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		do
 				-- Read the signature_index fromt he buffer and return the number of bytes.
-			Result := signature_index.get (a_sizes, a_src, 0)
+			Result := signature_index.rendering_size (a_sizes)
 		end
 
 end

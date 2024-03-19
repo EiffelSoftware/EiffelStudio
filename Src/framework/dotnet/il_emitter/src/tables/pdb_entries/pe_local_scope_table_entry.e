@@ -101,7 +101,7 @@ feature -- Operations
 			Result := {PDB_TABLES}.tLocalScope
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes_written: NATURAL_32
 		do
@@ -132,7 +132,7 @@ feature -- Operations
 			Result := l_bytes_written
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
@@ -140,23 +140,21 @@ feature -- Operations
 			l_bytes := 0
 
 				-- Read the method_row_id
-			l_bytes := l_bytes + method_row_id.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + method_row_id.rendering_size (a_sizes)
 
 				-- Read the import_scope_row_id
-			l_bytes := l_bytes + import_scope_row_id.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + import_scope_row_id.rendering_size (a_sizes)
 
 				-- Read the variable_list_index
-			l_bytes := l_bytes + variable_list_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + variable_list_index.rendering_size (a_sizes)
 
 				-- Read the constant_list_index
-			l_bytes := l_bytes + constant_list_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + constant_list_index.rendering_size (a_sizes)
 
 				-- Read the start_offset from the source array
-			start_offset := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
 
 				-- Read the length from the source array
-			length := {BYTE_ARRAY_HELPER}.natural_32_at (a_src, l_bytes.to_integer_32)
 			l_bytes := l_bytes + 4
 
 				-- Return the total number of bytes read

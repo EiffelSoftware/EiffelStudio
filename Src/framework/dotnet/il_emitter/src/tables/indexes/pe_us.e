@@ -23,7 +23,7 @@ feature -- Operations
 
 	has_index_overflow (a_sizes: SPECIAL [NATURAL_32]): BOOLEAN
 		do
-			Result := large (a_sizes, {PE_TABLE_CONSTANTS}.T_US)
+			Result := large (a_sizes, {PE_TABLE_CONSTANTS}.T_US.to_natural_32)
 		end
 
 end

@@ -71,7 +71,7 @@ feature -- Operations
 			Result := {PDB_TABLES}.tLocalConstant
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 			-- <Precursor>
 		local
 			l_bytes_written: NATURAL_32
@@ -89,8 +89,8 @@ feature -- Operations
 			Result := l_bytes_written
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
-			-- <Precursor>
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
+			-- Bytes needed to `render` Current using the global information on MD table sizes `a_sizes`.
 		local
 			l_bytes: NATURAL_32
 		do
@@ -98,10 +98,10 @@ feature -- Operations
 			l_bytes := 0
 
 				-- Read the name_index
-			l_bytes := l_bytes + name_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + name_index.rendering_size (a_sizes)
 
 				-- Read the signature_index
-			l_bytes := l_bytes + signature_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + signature_index.rendering_size (a_sizes)
 
 				-- Return the total number of bytes read
 			Result := l_bytes

@@ -45,13 +45,13 @@ feature -- Operations
 			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
 				-- Read parent and event_list from the buffer and update the number of bytes.
-			l_bytes := parent.render (a_sizes, a_src, 0)
-			l_bytes := l_bytes + event_list.render (a_sizes, a_src, l_bytes)
+			l_bytes := parent.rendering_size (a_sizes)
+			l_bytes := l_bytes + event_list.rendering_size (a_sizes)
 				-- Return the number of bytes.
 			Result := l_bytes
 		end

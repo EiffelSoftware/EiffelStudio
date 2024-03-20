@@ -61,7 +61,7 @@ feature -- Operations
 			Result := {PDB_TABLES}.tStateMachineMethod
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 			-- <Precursor>
 		local
 			l_bytes_written: NATURAL_32
@@ -79,7 +79,7 @@ feature -- Operations
 			Result := l_bytes_written
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 			-- <Precursor>
 		local
 			l_bytes: NATURAL_32
@@ -88,10 +88,10 @@ feature -- Operations
 			l_bytes := 0
 
 				-- Read the move_next_method_row_id
-			l_bytes := l_bytes + move_next_method_row_id.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + move_next_method_row_id.rendering_size (a_sizes)
 
 				-- Read the kickoff_method_row_id
-			l_bytes := l_bytes + kickoff_method_row_id.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + kickoff_method_row_id.rendering_size (a_sizes)
 
 				-- Return the total number of bytes read
 			Result := l_bytes

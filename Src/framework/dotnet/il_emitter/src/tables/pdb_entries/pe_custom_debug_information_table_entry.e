@@ -94,7 +94,7 @@ feature -- Operations
 			Result := {PDB_TABLES}.tcustomdebuginformation
 		end
 
-	render (a_sizes: ARRAY [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
+	render (a_sizes: SPECIAL [NATURAL_32]; a_dest: ARRAY [NATURAL_8]): NATURAL_32
 		local
 			l_bytes_written: NATURAL_32
 		do
@@ -114,7 +114,7 @@ feature -- Operations
 			Result := l_bytes_written
 		end
 
-	get (a_sizes: ARRAY [NATURAL_32]; a_src: ARRAY [NATURAL_8]): NATURAL_32
+	rendering_size (a_sizes: SPECIAL [NATURAL_32]): NATURAL_32
 		local
 			l_bytes: NATURAL_32
 		do
@@ -122,13 +122,13 @@ feature -- Operations
 			l_bytes := 0
 
 				-- Read the parent_coded_index
-			l_bytes := l_bytes + parent_coded_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + parent_coded_index.rendering_size (a_sizes)
 
 				-- Read the kind_index
-			l_bytes := l_bytes + kind_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + kind_index.rendering_size (a_sizes)
 
 				-- Read the value_index
-			l_bytes := l_bytes + value_index.get (a_sizes, a_src, l_bytes)
+			l_bytes := l_bytes + value_index.rendering_size (a_sizes)
 
 				-- Return the total number of bytes read
 			Result := l_bytes

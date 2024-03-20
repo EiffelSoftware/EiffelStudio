@@ -143,7 +143,7 @@ feature -- Payment
 								 	["sub", a_invoice.subscription_id],
 								 	["status", a_invoice.status],
 								 	["event_date", create {DATE_TIME}.make_now_utc],
-								 	["data", a_invoice.to_json_string]
+								 	["data", to_fully_escaped_json_string (a_invoice.to_json_string)]
 								 >>)
 				sql_insert (sql_insert_payment, l_params)
 				sql_finalize_insert (sql_insert_payment)
@@ -163,7 +163,7 @@ feature -- Payment
 							 	["sub", Void],
 							 	["status", pi.status],
 							 	["event_date", create {DATE_TIME}.make_now_utc],
-							 	["data", pi.to_json_string]
+							 	["data", to_fully_escaped_json_string (pi.to_json_string)]
 							 >>)
 			sql_insert (sql_insert_payment, l_params)
 			sql_finalize_insert (sql_insert_payment)

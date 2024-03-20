@@ -165,6 +165,12 @@ feature -- Element change: license
 		deferred
 		end
 
+	restore_license (a_license: ES_CLOUD_LICENSE)
+		require
+			is_archived: a_license.is_archived
+		deferred
+		end
+
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

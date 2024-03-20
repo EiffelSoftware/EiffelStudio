@@ -93,8 +93,7 @@ CREATE TABLE es_licenses_archive(
   `status` INTEGER,
   `creation` DATETIME NOT NULL,
   `expiration` DATETIME,
-  `fallback` DATETIME,
-  `archiving_date` DATETIME
+  `fallback` DATETIME
 );
 
 CREATE TABLE es_license_subscriptions (

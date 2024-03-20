@@ -353,25 +353,28 @@ feature -- Hooks configuration
 			else
 				if
 					a_cloud_api.cms_api.has_permission (module.perm_manage_es_licenses) and then
-					attached fd.integer_item ("es-lic-lid") as lid and then
-					attached a_cloud_api.license (lid) as l_lic
+					attached fd.integer_item ("es-lic-lid") as lid
 				then
-					if attached fd.string_item ("es-lic-op-suspend") then
-						a_cloud_api.suspend_license (l_lic)
-					elseif attached fd.string_item ("es-lic-op-resume") then
-						a_cloud_api.resume_license (l_lic)
-					elseif attached fd.string_item ("es-lic-op-discard") then
-						a_cloud_api.discard_license (l_lic)
-					elseif attached fd.string_item ("es-lic-op-no-exp-date") then
-						a_cloud_api.remove_expiration_date (l_lic)
-					elseif attached fd.string_item ("es-lic-op-fallback") then
-						if attached fd.string_item ("es-lic-version") as v then
-							a_cloud_api.convert_to_fallback (l_lic, v)
-						else
---							ERROR: FIXME
+					if attached a_cloud_api.license (lid) as l_lic then
+						if attached fd.string_item ("es-lic-op-suspend") then
+							a_cloud_api.suspend_license (l_lic)
+						elseif attached fd.string_item ("es-lic-op-resume") then
+							a_cloud_api.resume_license (l_lic)
+						elseif attached fd.string_item ("es-lic-op-restore") then
+							a_cloud_api.restore_license (l_lic)
+						elseif attached fd.string_item ("es-lic-op-discard") then
+							a_cloud_api.discard_license (l_lic)
+						elseif attached fd.string_item ("es-lic-op-no-exp-date") then
+							a_cloud_api.remove_expiration_date (l_lic)
+						elseif attached fd.string_item ("es-lic-op-fallback") then
+							if attached fd.string_item ("es-lic-version") as v then
+								a_cloud_api.convert_to_fallback (l_lic, v)
+							else
+	--							ERROR: FIXME
+							end
+						elseif attached fd.string_item ("es-lic-op-undo-fallback") then
+							a_cloud_api.undo_convert_to_fallback (l_lic)
 						end
-					elseif attached fd.string_item ("es-lic-op-undo-fallback") then
-						a_cloud_api.undo_convert_to_fallback (l_lic)
 					end
 				end
 			end
@@ -455,6 +458,9 @@ feature -- Hooks configuration
 				create s.make_empty
 				s.append ("<div class=%"es-license%"><span class=%"warning%">This license is ARCHIVED</span></p>")
 				lic_fset.extend_html_text (s)
+				lic_fset.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("es-lic-lid", a_license.id.out))
+				create l_submit.make_with_text ("es-lic-op-restore", "Restore License")
+				lic_fset.extend (l_submit)
 			else
 				create l_select.make (l_var_prefix + "[plan]")
 				l_select.set_label ("Plan")

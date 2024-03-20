@@ -717,6 +717,15 @@ feature -- Element change license
 			es_cloud_storage.archive_license (lic)
 		end
 
+	restore_license (lic: ES_CLOUD_LICENSE)
+		require
+			existing_license: license (lic.id) /= Void
+			is_archived: lic.is_archived
+		do
+			es_cloud_storage.restore_license (lic)
+			lic.set_is_archived (False)
+		end
+
 feature -- Emailing
 
 	send_message_to_expired_licenses (a_licenses: ITERABLE [ES_CLOUD_LICENSE])

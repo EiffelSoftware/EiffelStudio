@@ -146,6 +146,10 @@ feature -- Element change: license
 		do
 		end
 
+	restore_license (a_license: ES_CLOUD_LICENSE)
+		do
+		end
+
 feature -- Subscriptions		
 
 	subscriptions: LIST [ES_CLOUD_PLAN_SUBSCRIPTION]

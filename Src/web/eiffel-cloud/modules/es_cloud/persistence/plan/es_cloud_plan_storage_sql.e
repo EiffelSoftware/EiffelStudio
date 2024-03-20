@@ -515,6 +515,17 @@ feature -- Element change: license
 			sql_finalize_delete (sql_delete_license)
 		end
 
+	delete_archived_license (a_license: ES_CLOUD_LICENSE)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (a_license.id, "lid")
+			sql_delete (sql_delete_archived_license, l_params)
+			sql_finalize_delete (sql_delete_archived_license)
+		end
+
 	subscribed_licenses (a_order_ref: READABLE_STRING_GENERAL): detachable LIST [ES_CLOUD_LICENSE]
 		local
 			l_params: STRING_TABLE [detachable ANY]
@@ -727,8 +738,10 @@ feature -- Element change: license
 			reset_error
 			sql_begin_transaction
 
-			create l_params.make (1)
+			create l_params.make (2)
 			l_params.force (lic.id, "lid")
+			l_params.force (create {DATE_TIME}.make_now_utc, "archiving_date")
+
 --			l_params.force (lic.plan.id, "pid")
 --			l_params.force (lic.key.as_lower, "lowerkey")
 
@@ -736,6 +749,31 @@ feature -- Element change: license
 			sql_finalize_insert (sql_archive_license)
 			if not has_error then
 				delete_license (lic)
+			end
+
+			if has_error then
+				sql_rollback_transaction
+			else
+				sql_commit_transaction
+			end
+		end
+
+	restore_license (lic: ES_CLOUD_LICENSE)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			sql_begin_transaction
+
+			create l_params.make (1)
+			l_params.force (lic.id, "lid")
+--			l_params.force (lic.plan.id, "pid")
+--			l_params.force (lic.key.as_lower, "lowerkey")
+
+			sql_insert (sql_restore_license, l_params)
+			sql_finalize_insert (sql_restore_license)
+			if not has_error then
+				delete_archived_license (lic)
 			end
 
 			if has_error then
@@ -1007,8 +1045,12 @@ feature {NONE} -- Queries: licenses
 	sql_delete_email_license: STRING = "DELETE FROM es_licenses_emails WHERE lid=:lid AND email=:email;"
 
 
-	sql_archive_license: STRING = "INSERT INTO es_licenses_archive (lid, pid, license_key, platform, version, status, creation, expiration, fallback) SELECT lid, pid, license_key, platform, version, status, creation, expiration, fallback FROM es_licenses WHERE lid=:lid ;"
+	sql_archive_license: STRING = "INSERT INTO es_licenses_archive (lid, pid, license_key, platform, version, status, creation, expiration, fallback, archiving_date) SELECT lid, pid, license_key, platform, version, status, creation, expiration, fallback, :archiving_date FROM es_licenses WHERE lid=:lid ;"
 		-- or ..?  WHERE pid = :pid AND lower(license_key)=:lowerkey
+
+	sql_restore_license: STRING = "INSERT INTO es_licenses (lid, pid, license_key, platform, version, status, creation, expiration, fallback) SELECT lid, pid, license_key, platform, version, status, creation, expiration, fallback FROM es_licenses_archive WHERE lid=:lid ;"
+
+	sql_delete_archived_license: STRING = "DELETE FROM es_licenses_archive WHERE lid=:lid;"
 
 
 note

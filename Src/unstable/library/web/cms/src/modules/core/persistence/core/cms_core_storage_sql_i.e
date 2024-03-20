@@ -352,7 +352,7 @@ feature -- Emails
 				create s.make_empty
 				create vis.make_custom (s, 3, 3)
 				vis.visit_json_object (mail_to_json (a_mail))
-				l_parameters.put (s, "data")
+				l_parameters.put (to_fully_escaped_json_string (s), "data")
 
 				sql_begin_transaction
 				sql_insert (sql_insert_message, l_parameters)

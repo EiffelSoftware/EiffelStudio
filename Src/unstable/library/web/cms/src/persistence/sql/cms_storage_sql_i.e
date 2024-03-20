@@ -180,6 +180,38 @@ feature -- Operation
 
 feature -- Helper
 
+	to_fully_escaped_json_string (s: READABLE_STRING_8): STRING_8
+			-- Ensure `s` is correctly escaped so that databases do not complain.
+		local
+			i,n: INTEGER
+			c: INTEGER_32
+			l_in_string: BOOLEAN
+			l_was_backslash: BOOLEAN
+		do
+			n := s.count
+			create Result.make (n)
+			from
+				i := 1
+			until
+				i > n
+			loop
+				c := s[i].code
+				if s[i] = '"' and not l_was_backslash then
+					l_in_string := not l_in_string
+					Result.append_character (s[i])
+				elseif l_in_string then
+					if c < 0x20 or 0x7F < c then
+						Result.append_string ("\u")
+						Result.append_string (c.to_natural_8.to_hex_string.as_lower)
+					else
+						Result.append_character (s[i])
+					end
+				end
+				l_was_backslash := s[i] = '\'
+				i := i + 1
+			end
+		end
+
 	sql_script_content (a_path: PATH): detachable STRING
 			-- Content of sql script located at `a_path'.
 		local

@@ -3,7 +3,7 @@
 
 {unless isempty="$products"}<p>Item(s):
 <ul>
-{foreach item="i" from="$products"}<li>{$i/}</li>{/foreach}
+{foreach item="i" from="$products"}<li>{htmlentities}{$i/}{/htmlentities}</li>{/foreach}
 </ul>
 {/unless}
 {if isset="$amount_paid"}<p>Amount paid: {$amount_paid/} {$currency/}{/if}

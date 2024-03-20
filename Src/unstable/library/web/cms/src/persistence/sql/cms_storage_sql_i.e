@@ -202,7 +202,7 @@ feature -- Helper
 				elseif l_in_string then
 					if c < 0x20 or 0x7F < c then
 						Result.append_string ("\u")
-						Result.append_string (c.to_natural_8.to_hex_string.as_lower)
+						Result.append_string (c.to_natural_32.to_hex_string.as_lower)
 					else
 						Result.append_character (s[i])
 					end

@@ -206,6 +206,8 @@ feature -- Helper
 					else
 						Result.append_character (s[i])
 					end
+				else
+					Result.append_character (s[i])
 				end
 				l_was_backslash := s[i] = '\'
 				i := i + 1

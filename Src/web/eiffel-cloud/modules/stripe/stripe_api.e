@@ -270,7 +270,6 @@ feature -- Subscriptions
 		local
 			cl: DEFAULT_HTTP_CLIENT
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
-			inv: STRIPE_INVOICE
 		do
 			if attached a_sub.customer_id as l_customer_id then
 				create cl

@@ -168,7 +168,7 @@ feature -- Execution
 					if attached es_cloud_api.license_billings (lic) as l_billings then
 						s.append ("<div class=%"info%">")
 						s.append ("<div class=%"es-billing%">")
-						s.append ("<table style=%"border: solid 1px black;%"><tr><th>Date</th><th>Item</th><th>Order-id</th><th>Total</th><th>Invoice/Receipt</th></tr>%N")
+						s.append ("<table style=%"border: solid 1px black;%"><tr><th>Date</th><th>Item</th><th>Order-id</th><th>Total</th><th>Invoice/Receipt</th><th>Status</th></tr>%N")
 						across
 							l_billings as ic
 						loop
@@ -195,6 +195,15 @@ feature -- Execution
 									s.append ("<a href=%"" + l_url + "%" target=%"_blank%">invoice</a>")
 								elseif attached l_bill.external_receipt_url as l_url then
 									s.append ("<a href=%"" + l_url + "%" target=%"_blank%">receipt</a>")
+								end
+								s.append ("</td>")
+								s.append ("<td class%"status%">")
+								inspect l_bill.status
+								when {SHOPPING_BILL}.draft_status then s.append ("Draft")
+								when {SHOPPING_BILL}.open_status then s.append ("Open")
+								when {SHOPPING_BILL}.paid_status then s.append ("Paid")
+								when {SHOPPING_BILL}.void_status then s.append ("Void")
+								else
 								end
 								s.append ("</td>")
 								s.append ("</tr>%N")

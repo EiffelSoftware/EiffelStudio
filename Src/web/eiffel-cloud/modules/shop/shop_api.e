@@ -278,6 +278,20 @@ feature -- Billings
 								if attached rec.total as l_total_tuple then
 									l_bill.set_total_price_as_string ({SHOPPING_CURRENCY_HELPER}.price_in_cents_as_string (l_total_tuple.price_in_cents, l_total_tuple.currency))
 								end
+								if
+									attached rec.invoice as l_invoice and then
+									attached l_invoice.status as l_status
+								then
+									if l_status.is_case_insensitive_equal ("paid") then
+										l_bill.set_status_to_paid
+									elseif l_status.is_case_insensitive_equal ("open") then
+										l_bill.set_status_to_open
+									elseif l_status.is_case_insensitive_equal ("void") then
+										l_bill.set_status_to_void
+									elseif l_status.is_case_insensitive_equal ("draft") then
+										l_bill.set_status_to_draft
+									end
+								end
 								Result.items.force (l_bill)
 							end
 						end

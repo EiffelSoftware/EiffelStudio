@@ -919,8 +919,6 @@ feature {MD_EMIT} -- Implementation
 			l_counts [t_guid] := guid_heap_size
 			l_counts [t_blob] := blob_heap_size
 
-			print ("Blob size -> " + l_counts [t_blob].out + "%N")
-
 			from
 				i := 0
 				n := l_md_tables.count
@@ -948,7 +946,6 @@ feature {MD_EMIT} -- Implementation
 			loop
 				if l_counts [i] /= 0 then
 					l_temp := l_md_tables [i][{NATURAL_32} 1].rendering_size (l_counts)
-					print ("Rendering size for table 0x"+ i.to_natural_8.to_hex_string + "-> " + l_temp.out + " count=" + l_counts [i].out + "%N")
 					l_temp := l_temp * (l_counts [i])
 					l_current_rva := l_current_rva + l_temp
 				end

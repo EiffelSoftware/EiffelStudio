@@ -25,6 +25,31 @@ perl Configure no-apps no-docs no-asm no-ssl3 no-zlib no-comp no-autoload-config
 nmake 
 nmake install_sw
 
+
+
+
+rem Create the builds directory
+mkdir %current_dir%spec
+cd spec
+mkdir win
+cd win
+mkdir lib
+cd lib
+mkdir dynamic
+
+cd ..
+cd ..
+cd ..
+cd ..
+
+rem Copy the generated .lib files to the specified directory
+xcopy /y /s %current_dir%builds\dynamic_32\lib\*.lib %current_dir%spec\win\lib\dynamic\
+rem Copy the generated .lib files to the specified directory
+xcopy /y /s %current_dir%builds\dynamic_32\bin\*.dll %current_dir%spec\win\lib\dynamic\
+
+
+
+
 rem Get end time:
 for /F "tokens=1-4 delims=:.," %%a in ("%time%") do (
   set /A "end=((((%%a*60)+1%%b %% 100)*60+1%%c %% 100)*100+1%%d %% 100)"

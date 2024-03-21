@@ -25,6 +25,28 @@ perl Configure no-apps no-docs no-asm no-ssl3 no-zlib no-comp no-autoload-config
 nmake 
 nmake install_sw
 
+rem Remove the builds directory if it exists
+if exist %current_dir%spec rmdir /s /q %current_dir%spec
+
+rem Create the builds directory
+mkdir %current_dir%spec
+cd spec
+mkdir win64
+cd win64
+mkdir lib
+cd lib
+mkdir dynamic
+
+cd ..
+cd ..
+cd ..
+cd ..
+
+rem Copy the generated .lib files to the specified directory
+xcopy /y /s %current_dir%builds\dynamic_64\lib\*.lib %current_dir%spec\win64\lib\dynamic\
+rem Copy the generated .lib files to the specified directory
+xcopy /y /s %current_dir%builds\dynamic_64\bin\*.dll %current_dir%spec\win64\lib\dynamic\
+
 
 rem Get end time:
 for /F "tokens=1-4 delims=:.," %%a in ("%time%") do (
@@ -39,8 +61,3 @@ if %mm% lss 10 set mm=0%mm%
 if %ss% lss 10 set ss=0%ss%
 if %cc% lss 10 set cc=0%cc%
 echo Elapsed Time: %hh%:%mm%:%ss%.%cc%
-
-
-
-
-

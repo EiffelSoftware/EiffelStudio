@@ -250,7 +250,11 @@ feature -- Payment
 					Result.set_subscription_payment_id (s)
 				end
 				Result.set_status (sql_read_string_8 (4))
-				Result.set_data (sql_read_string_8 (6))
+				if attached sql_read_string_8 (6) as s8 then
+					Result.set_data (s8)
+				elseif attached sql_read_string_32 (6) as s32 then
+					Result.set_data ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s32))
+				end
 			end
 		end
 

@@ -56,6 +56,7 @@ feature {CMS_API} -- Module Initialization
 		local
 			cfg: STRIPE_CONFIG
 			l_is_livemode: BOOLEAN
+			l_invoice_src_remote: BOOLEAN
 			l_pub,l_sec, l_sign_sec: detachable READABLE_STRING_8
 		do
 			Precursor (api)
@@ -69,6 +70,10 @@ feature {CMS_API} -- Module Initialization
 						l_is_livemode := not s.is_case_insensitive_equal_general ("no")
 					else
 						l_is_livemode := False -- by default, livemode is False
+					end
+
+					if attached l_cfg.resolved_text_item ("stripe.invoice_source") as s then
+						l_invoice_src_remote := s.is_case_insensitive_equal_general ("remote")
 					end
 
 					if l_is_livemode then
@@ -95,6 +100,9 @@ feature {CMS_API} -- Module Initialization
 							cfg.enable_live_mode
 						else
 							cfg.disable_live_mode
+						end
+						if l_invoice_src_remote then
+							cfg.set_remote_invoice_source
 						end
 						if attached l_cfg.utf_8_text_item ("stripe.base_path") as l_base_path then
 							if l_base_path.starts_with_general ("/") then

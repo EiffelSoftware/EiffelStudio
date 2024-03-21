@@ -42,6 +42,10 @@ feature -- Status report
 	is_live_mode: BOOLEAN
 			-- Is in live mode? Default=False
 
+	is_remote_invoice_source: BOOLEAN
+			-- Temporary hack to always get invoices from stripe api
+			-- when displaying the billing
+
 	is_valid: BOOLEAN
 		local
 			p,s: IMMUTABLE_STRING_8
@@ -81,6 +85,11 @@ feature -- Element change
 	enable_testing
 		do
 			disable_live_mode
+		end
+
+	set_remote_invoice_source
+		do
+			is_remote_invoice_source := True
 		end
 
 invariant

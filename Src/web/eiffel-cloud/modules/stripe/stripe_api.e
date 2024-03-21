@@ -692,7 +692,9 @@ feature -- Payment records
 		local
 			pay: STRIPE_PAYMENT_RECORD
 		do
-			Result := stripe_storage.subscription_payment_records (a_ref)
+			if not config.is_remote_invoice_source then
+				Result := stripe_storage.subscription_payment_records (a_ref)
+			end
 			if Result = Void or else Result.is_empty then
 				if attached subscription (a_ref) as l_stripe_sub then
 					if attached subscription_invoices (l_stripe_sub) as lst then

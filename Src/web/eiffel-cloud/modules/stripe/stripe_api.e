@@ -266,6 +266,42 @@ feature -- Subscriptions
 			end
 		end
 
+	subscription_invoices (a_sub: STRIPE_SUBSCRIPTION): detachable LIST [STRIPE_INVOICE]
+		local
+			cl: DEFAULT_HTTP_CLIENT
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+			inv: STRIPE_INVOICE
+		do
+			if attached a_sub.customer_id as l_customer_id then
+				create cl
+				if attached cl.new_session (stripe_api_url) as sess then
+					sess.set_credentials (config.secret_key, "")
+					create ctx.make_with_credentials_required
+					ctx.add_query_parameter ("customer", l_customer_id)
+--					ctx.add_query_parameter ("status", "paid")
+					ctx.add_query_parameter ("subscription", a_sub.id)
+					ctx.add_query_parameter ("limit", "100") -- Max for now ... check how to get the rest (see has_more, starting_after, ... https://docs.stripe.com/api/invoices/list)
+					if attached sess.get ("invoices", ctx) as l_response then
+						if attached valid_api_json_object_response (l_response) as j then
+							if attached {JSON_ARRAY} (j ["data"]) as l_data then
+								create {ARRAYED_LIST [STRIPE_INVOICE]} Result.make (l_data.count)
+								across
+									l_data as ic
+								loop
+									if attached {JSON_OBJECT} ic.item as l_invoice_obj then
+										Result.force (create {STRIPE_INVOICE}.make_with_json (l_invoice_obj))
+									end
+								end
+							end
+							debug
+								print (Result)
+							end
+						end
+					end
+				end
+			end
+		end
+
 	cancel_subscription (a_subscription: STRIPE_SUBSCRIPTION): detachable STRIPE_SUBSCRIPTION
 		local
 			cl: DEFAULT_HTTP_CLIENT
@@ -654,8 +690,41 @@ feature -- Payment records
 		end
 
 	subscription_payment_records (a_ref: READABLE_STRING_GENERAL): detachable LIST [STRIPE_PAYMENT_RECORD]
+		local
+			pay: STRIPE_PAYMENT_RECORD
 		do
 			Result := stripe_storage.subscription_payment_records (a_ref)
+			if Result = Void or else Result.is_empty then
+				if attached subscription (a_ref) as l_stripe_sub then
+					if attached subscription_invoices (l_stripe_sub) as lst then
+						if Result = Void then
+							create {ARRAYED_LIST [STRIPE_PAYMENT_RECORD]} Result.make (lst.count)
+						end
+						across
+							lst as ic
+						loop
+							if
+								attached ic.item as l_invoice and then
+								attached l_invoice.payment_intent_id as l_payment_id
+							then
+								create pay.make (l_payment_id.to_string_32, l_invoice.creation_date)
+								pay.set_data (l_invoice.to_json_string)
+								Result.force (pay)
+							end
+						end
+					elseif
+						attached l_stripe_sub.latest_invoice as l_invoice and then
+						attached l_invoice.payment_intent_id as l_payment_id
+					then
+						create pay.make (l_payment_id.to_string_32, l_invoice.creation_date)
+						pay.set_data (l_invoice.to_json_string)
+						if Result = Void then
+							create {ARRAYED_LIST [STRIPE_PAYMENT_RECORD]} Result.make (1)
+						end
+						Result.force (pay)
+					end
+				end
+			end
 		end
 
 feature -- Plans	

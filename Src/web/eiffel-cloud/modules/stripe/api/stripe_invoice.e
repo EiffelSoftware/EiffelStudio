@@ -130,6 +130,11 @@ feature -- Access
 
 	creation_timestamp: INTEGER
 
+	creation_date: DATE_TIME
+		do
+			create Result.make_from_epoch (creation_timestamp)
+		end
+
 	hosted_invoice_url,
 	invoice_pdf: detachable READABLE_STRING_8
 

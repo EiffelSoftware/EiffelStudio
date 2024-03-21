@@ -31,8 +31,8 @@ nmake install_sw
 rem Create the builds directory
 mkdir %current_dir%spec
 cd spec
-mkdir win
-cd win
+mkdir windows
+cd windows
 mkdir lib
 cd lib
 mkdir dynamic

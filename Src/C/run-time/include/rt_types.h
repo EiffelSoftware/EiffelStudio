@@ -149,7 +149,7 @@ doc:		<summary>Context used and updated during calls to `rt_id_of' computation i
 doc:		<field name="next_address" type="const EIF_TYPE_INDEX *">If `next_address_requested' is set, address of next entry in type array used by `rt_id_of'. This is useful when you have multiple types encoded one after the other and you do not know when the next type starts.</field>
 doc:		<field name="has_no_context" type="int">If we encounter an entity which requires the dynamic type used as context for the call to `rt_id_of', we stop all the computation in `rt_id_of' and we set `is_invalid' to `1'.</field>
 doc:		<field name="is_invalid" type="int">If `has_no_context' is set, it contains `1' if there was an element in the type array that refers to the dynamic type. This can be a formal, a routine ID. Callers should initialize this value before calling `rt_id_of'.</field>
-doc:		<field name="next_address_requested" type="int">Set it to `1' to updated `next_address' witþ the address in the type array.</field>
+doc:		<field name="next_address_requested" type="int">Set it to `1' to updated `next_address' with the address in the type array.</field>
 doc:	</struct>
 */
 

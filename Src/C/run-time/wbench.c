@@ -105,12 +105,12 @@ rt_public EIF_REFERENCE_FUNCTION wfeat(int routine_id, EIF_TYPE_INDEX dtype)
 	CBodyId(body_id,routine_id,dtype);		/* Get the body index */
 
 	if (egc_frozen [body_id])
-		return egc_frozen[body_id];			 /* Frozen feature */
+		return (EIF_REFERENCE_FUNCTION) egc_frozen[body_id];			 /* Frozen feature */
 	else {
 			/* Slow part. */
 		EIF_GET_CONTEXT
 		IC = melt[body_id];				 /* Position byte code to interpret */
-		return pattern[MPatId(body_id)].toi;
+		return (EIF_REFERENCE_FUNCTION) pattern[MPatId(body_id)].toi;
 	}
 }
 
@@ -507,10 +507,10 @@ rt_public void eif_invoke_test_routine (EIF_REFERENCE obj, int body_id)
 	nstcall = 1;                                            /* Invariant check on */
 
 	if (egc_frozen [body_id])
-			rout = egc_frozen[body_id];                      /* Frozen feature */
+			rout = (EIF_REFERENCE_FUNCTION) egc_frozen[body_id];                      /* Frozen feature */
 	else {
 			IC = melt[body_id];
-			rout = pattern[MPatId(body_id)].toi;
+			rout = (EIF_REFERENCE_FUNCTION) pattern[MPatId(body_id)].toi;
 	}
 	
 	(FUNCTION_CAST(void, (EIF_REFERENCE)) rout)(obj);

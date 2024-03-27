@@ -299,7 +299,7 @@ feature -- Element change
 			l_viewport_parent: detachable EV_VIEWPORT_IMP
 			l_fixed_parent: detachable EV_FIXED_IMP
 		do
-			{GTK2}.g_object_get_integer (c_object, height_request_string.item, $l_height)
+			{GOBJECT}.g_object_get_integer (c_object, height_request_string.item, $l_height)
 			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, l_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
@@ -321,7 +321,7 @@ feature -- Element change
 			l_viewport_parent: detachable EV_VIEWPORT_IMP
 			l_fixed_parent: detachable EV_FIXED_IMP
 		do
-			{GTK2}.g_object_get_integer (c_object, width_request_string.item, $l_width)
+			{GOBJECT}.g_object_get_integer (c_object, width_request_string.item, $l_width)
 			{GTK2}.gtk_widget_set_minimum_size (c_object, l_width, a_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
@@ -362,7 +362,7 @@ feature -- Element change
 		local
 			v: INTEGER
 		do
-			{GTK2}.g_object_get_integer (c_object, height_request_string.item, $v)
+			{GOBJECT}.g_object_get_integer (c_object, height_request_string.item, $v)
 			{GTK2}.gtk_widget_set_minimum_size (c_object, -1, v)
 		end
 
@@ -371,7 +371,7 @@ feature -- Element change
 		local
 			v: INTEGER
 		do
-			{GTK2}.g_object_get_integer (c_object, height_request_string.item, $v)
+			{GOBJECT}.g_object_get_integer (c_object, height_request_string.item, $v)
 			{GTK2}.gtk_widget_set_minimum_size (c_object, v, -1)
 		end
 

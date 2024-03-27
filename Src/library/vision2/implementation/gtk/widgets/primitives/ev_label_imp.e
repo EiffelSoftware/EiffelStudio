@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			set_c_object (text_label)
 			align_text_center
 			a_cs := app_implementation.c_string_from_eiffel_string (once "justify")
-			{GTK2}.g_object_get_integer (text_label, a_cs.item, $int_value)
+			{GOBJECT}.g_object_get_integer (text_label, a_cs.item, $int_value)
 			Precursor
 			set_is_initialized (True)
 		end

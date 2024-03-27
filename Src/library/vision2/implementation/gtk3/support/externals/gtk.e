@@ -1772,16 +1772,6 @@ feature -- Color Helper
     		instance_free: class
 	end
 
-
-feature -- Gobject Type
-
-	g_type_name (a_type: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_type_name (G_TYPE_FROM_INSTANCE($a_type))"
-		end
-
 note
 	copyright: "Copyright (c) 1984-2024, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -706,71 +706,6 @@ feature -- IMContext
 			"C signature (GtkIMContext*, gchar**, gint*): EIF_BOOLEAN use <ev_gtk.h>"
 		end
 
-feature -- Events		
-
-	frozen events_pending: BOOLEAN
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"g_main_context_pending (NULL)"
-		end
-
-	frozen gtk_event_iteration: BOOLEAN
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"g_main_context_iteration(NULL, FALSE)"
-		end
-
-	frozen g_main_context_pending (ctx: POINTER): BOOLEAN
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_main_context_pending ($ctx)"
-		end
-
-	frozen g_main_context_iteration (ctx: POINTER; a_may_block: BOOLEAN): BOOLEAN
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_main_context_iteration($ctx, $a_may_block)"
-		end
-
-	frozen dispatch_events
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"g_main_context_dispatch(g_main_context_default())"
-		end
-
-	frozen g_main_context_default: POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_main_context_default()"
-		end
-
-	frozen g_main_context_dispatch (a_context: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_main_context_dispatch((GMainContext*) $a_context)"
-		end
-
-	frozen g_main_context_release (a_context: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_main_context_release((GMainContext*) $a_context)"
-		end
-
-	frozen g_main_context_acquire (a_context: POINTER): BOOLEAN
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_main_context_acquire((GMainContext*) $a_context)"
-		end
-
 feature -- Widgets		
 
 	frozen gtk_widget_is_toplevel (a_widget: POINTER): BOOLEAN
@@ -948,11 +883,6 @@ feature -- Enum
 			"C inline use <ev_gtk.h>"
 		alias
 			"g_list_foreach ((GList*) $a_list, (GFunc) gtk_tree_path_free, NULL)"
-		end
-
-	frozen g_value_unset (a_value: POINTER)
-		external
-			"C signature (GValue*) use <ev_gtk.h>"
 		end
 
 	frozen gtk_tree_view_column_grow_only_enum: INTEGER_32
@@ -1749,20 +1679,6 @@ feature -- Enum
 			"gtk_tree_view_column_pack_end ((GtkTreeViewColumn*) $a_tree_column, (GtkCellRenderer*) $a_cell_renderer, (gboolean) $a_expand)"
 		end
 
-	frozen g_type_string: INTEGER_32
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"G_TYPE_STRING"
-		end
-
-	frozen g_type_boolean: INTEGER_32
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"G_TYPE_BOOLEAN"
-		end
-
 	frozen c_g_value_struct_allocate: POINTER
 		external
 			"C [macro <ev_gtk.h>]"
@@ -1775,97 +1691,6 @@ feature -- Enum
 			"C [macro <ev_gtk.h>]"
 		alias
 			"calloc (sizeof(GtkTreeIter), 1)"
-		end
-
-	frozen g_value_init_int (a_value: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_init ((GValue*) $a_value, G_TYPE_INT)"
-		end
-
-	frozen g_value_init_pointer (a_value: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_init ((GValue*) $a_value, G_TYPE_POINTER)"
-		end
-
-	frozen g_value_init_string (a_value: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_init ((GValue*) $a_value, G_TYPE_STRING)"
-		end
-
-	frozen g_value_init_object (a_value: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_init ((GValue*) $a_value, G_TYPE_OBJECT)"
-		end
-
-	frozen g_value_set_int (a_value: POINTER; a_int: INTEGER_32)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_set_int ((GValue*) $a_value, (gint) $a_int)"
-		end
-
-	frozen g_value_get_int (a_value: POINTER): INTEGER_32
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_get_int ((GValue*) $a_value)"
-		end
-
-	frozen g_value_set_boolean (a_value: POINTER; a_boolean: BOOLEAN)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_set_boolean ((GValue*) $a_value, (gboolean) $a_boolean)"
-		end
-
-	frozen g_value_get_boolean (a_value: POINTER): BOOLEAN
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_get_boolean ((GValue*) $a_value)"
-		end
-
-	frozen g_value_set_pointer (a_value: POINTER; a_pointer: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_set_pointer ((GValue*) $a_value, (gpointer) $a_pointer)"
-		end
-
-	frozen g_value_set_object (a_value: POINTER; a_pointer: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_set_object ((GValue*) $a_value, (gpointer) $a_pointer)"
-		end
-
-	frozen g_value_set_string (a_value: POINTER; a_string: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_set_string ((GValue*) $a_value, (gchar*) $a_string)"
-		end
-
-	frozen g_value_get_string (a_value: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_get_string ((GValue*) $a_value)"
-		end
-
-	frozen g_value_take_string (a_value: POINTER; a_string: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_value_take_string ((GValue*) $a_value, (gchar*) $a_string)"
 		end
 
 	frozen gtk_tree_view_new: POINTER
@@ -2022,13 +1847,6 @@ feature -- Enum
 			"((GValue*)$args_array + (int)($an_index))"
 		end
 
-	frozen g_value_array_i_th (args_array: POINTER; an_index: INTEGER_32): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"((GValue*)$args_array + (int)($an_index - 1))"
-		end
-
 	frozen gtk_color_chooser_get_rgba (a_color_selection, a_color: POINTER)
 		external
 			"C signature (GtkColorChooser*, GdkRGBA*) use <ev_gtk.h>"
@@ -2096,56 +1914,6 @@ feature -- i18n
 			]"
 		end
 
-feature -- Value		
-
-	frozen gtk_value_pointer (arg: POINTER): POINTER
-			-- Pointer to the value of a GtkArg.
-		external
-			"C signature (GValue*): EIF_POINTER use <ev_gtk.h>"
-		alias
-			"g_value_peek_pointer"
-		end
-
-	frozen gtk_value_int (arg: POINTER): INTEGER_32
-			-- Integer value from a GtkArg.
-		external
-			"C signature (GValue*): EIF_INTEGER use <ev_gtk.h>"
-		alias
-			"g_value_get_int"
-		end
-
-	frozen gtk_value_uchar (arg: POINTER): INTEGER_32
-			-- Integer value from a GtkArg.
-		external
-			"C signature (GValue*): EIF_INTEGER use <ev_gtk.h>"
-		alias
-			"g_value_get_uchar"
-		end
-
-	frozen gtk_value_enum (arg: POINTER): INTEGER_32
-			-- Integer value from a GtkArg.
-		external
-			"C signature (GValue*): EIF_INTEGER use <ev_gtk.h>"
-		alias
-			"g_value_get_enum"
-		end
-
-	frozen gtk_value_flags (arg: POINTER): INTEGER_32
-			-- Integer value from a GtkArg.
-		external
-			"C signature (GValue*): EIF_INTEGER use <ev_gtk.h>"
-		alias
-			"g_value_get_flags"
-		end
-
-	frozen gtk_value_uint (arg: POINTER): NATURAL_32
-			-- Integer value from a GtkArg.
-		external
-			"C signature (GValue*): EIF_NATURAL use <ev_gtk.h>"
-		alias
-			"g_value_get_uint"
-		end
-
 feature -- Widget		
 
 	frozen gtk_widget_get_pango_context (a_widget: POINTER): POINTER
@@ -2161,153 +1929,6 @@ feature -- Widget
 	frozen gtk_widget_get_mapped (a_widget: POINTER): BOOLEAN
 		external
 			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
-		end
-
-feature -- Object
-
-	frozen g_object_get_pointer (a_object: POINTER; a_property: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				EIF_POINTER v;
-				g_object_get ((gpointer) $a_object, (const gchar *) $a_property, &v, NULL);
-				return (EIF_POINTER) v;
-			]"
-		end
-
-	frozen g_object_set_pointer (a_object: POINTER; a_property: POINTER; arg1: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_object_set ((gpointer) $a_object, (gchar*) $a_property, (gpointer) $arg1, NULL)"
-		ensure
-			is_class: class
-		end
-
-
-	frozen g_object_set_string (a_object: POINTER; a_property: POINTER; string_arg: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"return g_object_set ((gpointer) $a_object, (gchar*) $a_property, (gchar*) $string_arg, NULL);"
-		ensure
-			is_class: class
-		end
-
-	frozen g_object_get_string (a_object: POINTER; a_property: POINTER; string_arg: TYPED_POINTER [POINTER])
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"return g_object_get ((gpointer) $a_object, (gchar*) $a_property, (gchar**) $string_arg, NULL);"
-		ensure
-			is_class: class
-		end
-
-	frozen g_object_get_object_property (a_object: POINTER; a_property: POINTER; obj: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"return g_object_get ($a_object, $a_property, $obj, NULL);"
-		end
-
-	frozen g_object_get_integer (a_object: POINTER; a_property: POINTER): INTEGER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				gint v;
-				g_object_get ((gpointer) $a_object, (const gchar *) $a_property, &v, NULL);
-				return (EIF_INTEGER) v;
-			]"
-		end
-
-	frozen g_object_set_integer (a_object: POINTER; a_property: POINTER; int_arg: INTEGER_32)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_object_set((gpointer) $a_object, (const gchar *) $a_property, $int_arg, NULL)"
-		end
-
-	frozen g_object_set_real_32 (a_object: POINTER; a_property: POINTER; real_arg: REAL_32)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_object_set((gpointer) $a_object, (gchar*) $a_property, (gfloat) $real_arg, NULL)"
-		end
-
-	frozen g_object_set_boolean (a_object: POINTER; a_property: POINTER; bool_arg: BOOLEAN)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $bool_arg ? TRUE : FALSE, NULL)"
-		end
-
-	frozen g_object_set_menu_icons (a_object: POINTER; a_property: POINTER; bool_arg: BOOLEAN)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $bool_arg ? TRUE : FALSE, NULL)"
-		end
-
-feature -- Signal
-
-	frozen signal_list_ids (a_object: POINTER): LIST [NATURAL_32]
-		local
-			i, nb: INTEGER
-			unb: NATURAL_32
-			p: POINTER
-			mp: MANAGED_POINTER
-		do
-			p := g_signal_list_ids (a_object, $unb)
-			nb := unb.to_integer_32
-			if nb > 0 and not p.is_default_pointer then
-				create {ARRAYED_LIST [NATURAL_32]} Result.make (nb)
-				create mp.share_from_pointer (p, nb * {MANAGED_POINTER}.natural_32_bytes)
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					Result.extend (mp.read_natural_32 ((i - 1) * {MANAGED_POINTER}.natural_32_bytes))
-					i := i + 1
-				end
-			else
-				create {ARRAYED_LIST [NATURAL_32]} Result.make (0)
-			end
-		ensure
-			instance_free: class
-		end
-
-	frozen g_signal_list_ids (a_object: POINTER; a_count: TYPED_POINTER [NATURAL_32]): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_signal_list_ids (G_OBJECT_TYPE($a_object), (guint *) $a_count)"
-		end
-
-	frozen signal_disconnect (a_object: POINTER; a_handler_id: INTEGER_32)
-		do
-			debug ("gtk_signal")
-				print ("signal_disconnect (" + a_object.out + ", " + a_handler_id.out + ")%N")
-			end
-			c_signal_disconnect (a_object, a_handler_id)
-		ensure
-			instance_free: class
-		end
-
-	frozen c_signal_disconnect (a_object: POINTER; a_handler_id: INTEGER_32)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_signal_handler_disconnect ((gpointer) $a_object, (gulong) $a_handler_id)"
-		end
-
-	frozen signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER_32): NATURAL_32
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_signal_handlers_disconnect_matched ((gpointer) $a_c_object, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, (gpointer) (rt_int_ptr) $data)"
 		end
 
 feature -- Editable		

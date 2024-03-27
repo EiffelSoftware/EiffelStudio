@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 					print (generator + ".marshal (..) completed%N")
 				end
 				if a_return_value /= default_pointer then
-					{GTK2}.g_value_set_boolean (a_return_value, b) -- TODO: #gtk check if this is ok to return FALSE?
+					{GOBJECT}.g_value_set_boolean (a_return_value, b) -- TODO: #gtk check if this is ok to return FALSE?
 				end
 
 			elseif retry_count = 1 then

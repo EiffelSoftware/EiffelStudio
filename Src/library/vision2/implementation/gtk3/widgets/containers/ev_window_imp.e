@@ -361,7 +361,7 @@ feature {NONE} -- Accelerators
 			if l_override_key /= Void then
 					-- `l_override_key' is usually used as a default window accelerator key, if we use it in a custom accelerator then we override the default setting
 				a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>" + l_override_key
-				{GTK2}.g_object_set_pointer (app_implementation.default_gtk_settings, {GTK_PROPERTIES}.gtk_menu_bar_accel, a_value.item)
+				{GOBJECT}.g_object_set_pointer (app_implementation.default_gtk_settings, {GTK_PROPERTIES}.gtk_menu_bar_accel, a_value.item)
 			end
 		end
 

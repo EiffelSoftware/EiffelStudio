@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 						a_item_imp ?= i_th (i).implementation
 						check a_item_imp /= Void end
 						if a_item_imp /= Void then
-							l_button_x := {GTK2}.g_object_get_integer (a_item_imp.c_object, {GTK_PROPERTIES}.x_offset)
+							l_button_x := {GOBJECT}.g_object_get_integer (a_item_imp.c_object, {GTK_PROPERTIES}.x_offset)
 						end
 						if l_button_x < l_x then
 							Result := Result + 1

@@ -702,7 +702,7 @@ feature -- Element change
 				i = {GTK}.g_list_length (a_cell_rend_list)
 			loop
 				a_cell_rend := {GTK}.g_list_nth_data (a_cell_rend_list, i)
-				{GTK2}.g_object_set_double (a_cell_rend, a_gtk_c_str.item, alignment)
+				{GOBJECT}.g_object_set_double (a_cell_rend, a_gtk_c_str.item, alignment)
 				i := i + 1
 			end
 
@@ -726,7 +726,7 @@ feature -- Element change
 			{GTK2}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
 
 			a_gtk_c_str := "height"
-			{GTK2}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
+			{GOBJECT}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
 			{GTK}.g_list_free (a_cell_rend_list)
 		end
 
@@ -1023,9 +1023,9 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			a_cs := a_text
 				-- Replace when we have UTF16 support
 			str_value := g_value_string_struct
-			{GTK2}.g_value_unset (str_value)
-			{GTK2}.g_value_init_string (str_value)
-			{GTK2}.g_value_set_string (str_value, a_cs.item)
+			{GOBJECT}.g_value_unset (str_value)
+			{GOBJECT}.g_value_init_string (str_value)
+			{GOBJECT}.g_value_set_string (str_value, a_cs.item)
 
 			a_list_iter := ev_children.i_th (a_row).list_iter
 			check a_list_iter /= Void then end
@@ -1036,7 +1036,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			-- Optimization for GValue struct access
 		once
 			Result := {GTK2}.c_g_value_struct_allocate
-			{GTK2}.g_value_init_string (Result)
+			{GOBJECT}.g_value_init_string (Result)
 		end
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)

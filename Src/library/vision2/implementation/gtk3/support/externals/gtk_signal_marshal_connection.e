@@ -37,7 +37,7 @@ feature -- Basic operation
 				is_connected and then
 				not c_object.is_default_pointer
 			then
-				{GTK2}.signal_disconnect (c_object, connection_id)
+				{GOBJECT}.signal_disconnect (c_object, connection_id)
 				is_connected := False
 			end
 		end
@@ -56,7 +56,7 @@ feature -- Disposal
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

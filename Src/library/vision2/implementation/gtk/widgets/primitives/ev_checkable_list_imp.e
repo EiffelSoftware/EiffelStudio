@@ -74,9 +74,9 @@ feature -- Initialization
 				a_list_item := child_array @ (mp.read_integer_32 (0) + 1)
 				a_gvalue := {GTK2}.c_g_value_struct_allocate
 				{GTK2}.gtk_tree_model_get_value (list_store, a_tree_iter.item, boolean_tree_model_column,  a_gvalue)
-				a_selected := {GTK2}.g_value_get_boolean (a_gvalue)
+				a_selected := {GOBJECT}.g_value_get_boolean (a_gvalue)
 					-- Toggle the currently selected value
-				{GTK2}.g_value_set_boolean (a_gvalue, not a_selected)
+				{GOBJECT}.g_value_set_boolean (a_gvalue, not a_selected)
 				{GTK2}.gtk_list_store_set_value (list_store, a_tree_iter.item, boolean_tree_model_column,  a_gvalue)
 
 				if a_selected then
@@ -122,7 +122,7 @@ feature -- Access
 			check l_list_iter /= Void then end
 			a_gvalue := {GTK2}.c_g_value_struct_allocate
 			{GTK2}.gtk_tree_model_get_value (list_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
-			Result := {GTK2}.g_value_get_boolean (a_gvalue)
+			Result := {GOBJECT}.g_value_get_boolean (a_gvalue)
 			a_gvalue.memory_free
 		end
 
@@ -142,7 +142,7 @@ feature -- Status setting
 			check l_list_iter /= Void then end
 			a_gvalue := {GTK2}.c_g_value_struct_allocate
 			{GTK2}.gtk_tree_model_get_value (list_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
-			{GTK2}.g_value_set_boolean (a_gvalue, True)
+			{GOBJECT}.g_value_set_boolean (a_gvalue, True)
 			{GTK2}.gtk_list_store_set_value (list_store, l_list_iter.item, boolean_tree_model_column, a_gvalue)
 			a_gvalue.memory_free
 			if check_actions_internal /= Void then
@@ -164,7 +164,7 @@ feature -- Status setting
 			check l_list_iter /= Void then end
 			a_gvalue := {GTK2}.c_g_value_struct_allocate
 			{GTK2}.gtk_tree_model_get_value (list_store, l_list_iter.item, boolean_tree_model_column,  a_gvalue)
-			{GTK2}.g_value_set_boolean (a_gvalue, False)
+			{GOBJECT}.g_value_set_boolean (a_gvalue, False)
 			{GTK2}.gtk_list_store_set_value (list_store, l_list_iter.item, boolean_tree_model_column, a_gvalue)
 			a_gvalue.memory_free
 			if uncheck_actions_internal /= Void then

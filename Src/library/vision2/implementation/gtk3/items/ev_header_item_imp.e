@@ -376,7 +376,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 					-- Store screen virtual coordinates used for normalize gdk event screen coordinates to vision2 screen coordinates.
 				l_screen_virtual_x := app_implementation.screen_virtual_x
 				l_screen_virtual_y := app_implementation.screen_virtual_y
-				gdk_event := {GTK2}.gtk_value_pointer (args)
+				gdk_event := {GOBJECT}.g_value_pointer (args)
 				if gdk_event /= default_pointer then
 					event_type := {GDK}.gdk_event_any_struct_type (gdk_event)
 					if event_type = {EV_GTK_ENUMS}.gdk_motion_notify_enum then

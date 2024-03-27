@@ -177,7 +177,7 @@ feature -- Implementation
 		local
 			font_name_ptr: POINTER
 		do
-			{GTK2}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
+			{GOBJECT}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			if font_name_ptr /= default_pointer then
 				if previous_font_settings /= default_pointer then
 					Result := c_strcmp (previous_font_settings, font_name_ptr) /= 0
@@ -221,7 +221,7 @@ feature -- Implementation
 			a_cs: EV_GTK_C_STRING
 			l_result: detachable STRING_32
 		do
-			{GTK2}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
+			{GOBJECT}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			if font_name_ptr /= default_pointer then
 				create a_cs.make_from_pointer (font_name_ptr)
 				l_result := a_cs.string

@@ -103,7 +103,7 @@ feature -- Implementation
 			-- Close connection `a_conn_id` for object `a_c_object`.
 			-- Note: the associated Eiffel agent will be "wean" by the run-time
 		do
-			{GTK2}.signal_disconnect (a_c_object, a_conn_id)
+			{GOBJECT}.signal_disconnect (a_c_object, a_conn_id)
 		end
 
 	last_signal_connection_id: INTEGER
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 				end
 
 				if a_return_value /= default_pointer then
-					{GTK2}.g_value_set_boolean (a_return_value, b) -- TODO: #gtk check if this is ok to return FALSE?
+					{GOBJECT}.g_value_set_boolean (a_return_value, b) -- TODO: #gtk check if this is ok to return FALSE?
 				end
 
 			elseif retry_count = 1 then

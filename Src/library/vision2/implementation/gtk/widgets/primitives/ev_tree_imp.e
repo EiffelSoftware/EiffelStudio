@@ -654,16 +654,16 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
 			a_g_value_string_struct := g_value_string_struct
-			{GTK2}.g_value_unset (a_g_value_string_struct)
+			{GOBJECT}.g_value_unset (a_g_value_string_struct)
 			l_list_iter := a_tree_node_imp.list_iter
 			check l_list_iter /= Void end
 			if l_list_iter /= Void then
 				{GTK2}.gtk_tree_model_get_value (tree_store, l_list_iter.item, 1, a_g_value_string_struct)
 			end
-			a_string := {GTK2}.g_value_get_string (a_g_value_string_struct)
+			a_string := {GOBJECT}.g_value_get_string (a_g_value_string_struct)
 			if a_string /= default_pointer then
 				a_cs := App_implementation.reusable_gtk_c_string
-				a_cs.share_from_pointer ({GTK2}.g_value_get_string (a_g_value_string_struct))
+				a_cs.share_from_pointer ({GOBJECT}.g_value_get_string (a_g_value_string_struct))
 				Result := a_cs.string
 			else
 				create Result.make_empty
@@ -680,7 +680,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			a_cs := App_implementation.reusable_gtk_c_string
 			a_cs.share_with_eiffel_string (a_text)
 			str_value := g_value_string_struct
-			{GTK2}.g_value_take_string (str_value, a_cs.item)
+			{GOBJECT}.g_value_take_string (str_value, a_cs.item)
 			l_list_iter := a_tree_node_imp.list_iter
 			check l_list_iter /= Void end
 			if l_list_iter /= Void then
@@ -692,7 +692,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			-- Optimization for GValue struct access
 		once
 			Result := {GTK2}.c_g_value_struct_allocate
-			{GTK2}.g_value_init_string (Result)
+			{GOBJECT}.g_value_init_string (Result)
 		end
 
 	update_row_pixmap (a_tree_node_imp: EV_TREE_NODE_IMP)
@@ -727,7 +727,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			{GTK2}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
 
 			a_gtk_c_str := "height"
-			{GTK2}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
+			{GOBJECT}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
 			{GTK}.g_list_free (a_cell_rend_list)
 		end
 

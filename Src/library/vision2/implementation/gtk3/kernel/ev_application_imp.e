@@ -141,7 +141,7 @@ feature {NONE} -- Initialization
 		local
 			l_gchar: POINTER
 		do
-			l_gchar := {GTK2}.gtk_value_pointer (a_arguments)
+			l_gchar := {GOBJECT}.g_value_pointer (a_arguments)
 			if l_gchar /= default_pointer then
 				reusable_gtk_c_string.share_from_pointer (l_gchar)
 			else
@@ -887,10 +887,10 @@ feature {EV_ANY_I} -- Implementation
 					{GDK}.gdk_event_free (gdk_event)
 				else
 						-- https://stackoverflow.com/questions/23817161/proper-way-force-refresh-of-window-in-gtk-3-using-pygobject
-					if {GTK2}.events_pending then
+					if {GLIB2}.events_pending then
 						process_gtk_events
 					else
-						l_no_more_events := not {GTK2}.events_pending
+						l_no_more_events := not {GLIB2}.events_pending
 					end
 				end
 			end
@@ -912,7 +912,7 @@ feature {EV_ANY_I} -- Implementation
 --					{GTK2}.g_main_context_dispatch (ctx)
 --					{GTK2}.g_main_context_release (ctx)
 --				end
-				{GTK2}.dispatch_events
+				{GLIB2}.dispatch_events
 			end
 		rescue
 				-- Catch any exceptions.
@@ -929,9 +929,9 @@ feature {EV_ANY_I} -- Implementation
 --				process_gtk_events -- FIXME
 				from
 				until
-					{GTK2}.events_pending
+					{GLIB2}.events_pending
 			    loop
-			    	l_event_dispatched := {GTK2}.gtk_event_iteration
+			    	l_event_dispatched := {GLIB2}.g_event_iteration
 					debug ("gdk_event")
 						print (generator + ".process_pending_events_on_default_context: event dispatched=" + l_event_dispatched.out + "%N")
 					end

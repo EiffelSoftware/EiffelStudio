@@ -211,7 +211,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_string (a_text_tag, family_string.item, a_text_tag_name.item)
+					{GOBJECT}.g_object_set_string (a_text_tag, family_string.item, a_text_tag_name.item)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -222,7 +222,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_integer (a_text_tag, size_string.item, height_in_points * {GTK2}.pango_scale)
+					{GOBJECT}.g_object_set_integer (a_text_tag, size_string.item, height_in_points * {GTK2}.pango_scale)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -239,7 +239,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_integer (a_text_tag, style_string.item, prop_value_int)
+					{GOBJECT}.g_object_set_integer (a_text_tag, style_string.item, prop_value_int)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -273,7 +273,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_integer (a_text_tag, weight_string.item, prop_value_int)
+					{GOBJECT}.g_object_set_integer (a_text_tag, weight_string.item, prop_value_int)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -289,7 +289,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 					{GTK}.set_gdk_color_struct_blue (App_implementation.reusable_color_struct, (fcolor |>> 16) * 257)
 					{GTK}.set_gdk_color_struct_green (App_implementation.reusable_color_struct, ((fcolor |<< 16) |>> 24) * 257)
 					{GTK}.set_gdk_color_struct_red (App_implementation.reusable_color_struct, ((fcolor |<< 24) |>> 24) * 257)
-					{GTK2}.g_object_set_pointer (a_text_tag, foreground_gdk_string.item, App_implementation.reusable_color_struct, default_pointer)
+					{GOBJECT}.g_object_set_pointer (a_text_tag, foreground_gdk_string.item, App_implementation.reusable_color_struct, default_pointer)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -304,7 +304,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 					{GTK}.set_gdk_color_struct_blue (App_implementation.reusable_color_struct, (bcolor |>> 16) * 257)
 					{GTK}.set_gdk_color_struct_green (App_implementation.reusable_color_struct, ((bcolor |<< 16) |>> 24) * 257)
 					{GTK}.set_gdk_color_struct_red (App_implementation.reusable_color_struct, ((bcolor |<< 24) |>> 24) * 257)
-					{GTK2}.g_object_set_pointer (a_text_tag, background_gdk_string.item, App_implementation.reusable_color_struct, default_pointer)
+					{GOBJECT}.g_object_set_pointer (a_text_tag, background_gdk_string.item, App_implementation.reusable_color_struct, default_pointer)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -319,7 +319,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_boolean (a_text_tag, strikethrough_string.item, is_striked_out)
+					{GOBJECT}.g_object_set_boolean (a_text_tag, strikethrough_string.item, is_striked_out)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -334,7 +334,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_boolean (a_text_tag, underline_string.item, is_underlined)
+					{GOBJECT}.g_object_set_boolean (a_text_tag, underline_string.item, is_underlined)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -345,7 +345,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_integer (a_text_tag, rise_string.item, vertical_offset)
+					{GOBJECT}.g_object_set_integer (a_text_tag, rise_string.item, vertical_offset)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -367,16 +367,16 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			if (applicable_attributes.font_family or else applicable_attributes.font_height or else applicable_attributes.font_shape or else applicable_attributes.font_weight) then
 				if applicable_attributes.font_family then
 					propvalue := (name)
-					{GTK2}.g_object_set_string (Result, family_string.item, propvalue.item)
+					{GOBJECT}.g_object_set_string (Result, family_string.item, propvalue.item)
 				end
 				if applicable_attributes.font_height then
-					{GTK2}.g_object_set_integer (Result, size_string.item, height_in_points * {GTK2}.pango_scale)
+					{GOBJECT}.g_object_set_integer (Result, size_string.item, height_in_points * {GTK2}.pango_scale)
 				end
 				if applicable_attributes.font_shape then
 					if shape = {EV_FONT_CONSTANTS}.shape_italic then
-						{GTK2}.g_object_set_integer (Result, style_string.item, 2)
+						{GOBJECT}.g_object_set_integer (Result, style_string.item, 2)
 					else
-						{GTK2}.g_object_set_integer (Result, style_string.item, 0)
+						{GOBJECT}.g_object_set_integer (Result, style_string.item, 0)
 					end
 				end
 				if applicable_attributes.font_weight then
@@ -385,19 +385,19 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 					when
 						{EV_FONT_CONSTANTS}.weight_bold
 					then
-						{GTK2}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_bold)
+						{GOBJECT}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_bold)
 					when
 						{EV_FONT_CONSTANTS}.weight_regular
 					then
-						{GTK2}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_normal)
+						{GOBJECT}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_normal)
 					when
 						{EV_FONT_CONSTANTS}.weight_thin
 					then
-						{GTK2}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_ultra_light)
+						{GOBJECT}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_ultra_light)
 					when
 						{EV_FONT_CONSTANTS}.weight_black
 					then
-						{GTK2}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_heavy)
+						{GOBJECT}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_heavy)
 					end
 				end
 			end
@@ -411,7 +411,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				temp_string.keep_tail (6)
 				temp_string.prepend_character ('#')
 				propvalue := temp_string
-				{GTK2}.g_object_set_string (Result, foreground_string.item, propvalue.item)
+				{GOBJECT}.g_object_set_string (Result, foreground_string.item, propvalue.item)
 
 				--feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, (fcolor |>> 16) * 257)
 				--feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, ((fcolor |<< 16) |>> 24) * 257)
@@ -428,22 +428,22 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				temp_string.keep_tail (6)
 				temp_string.prepend_character ('#')
 				propvalue := temp_string
-				{GTK2}.g_object_set_string (Result, background_string.item, propvalue.item)
+				{GOBJECT}.g_object_set_string (Result, background_string.item, propvalue.item)
 			end
 
 			if (applicable_attributes.effects_striked_out or else applicable_attributes.effects_underlined or else applicable_attributes.effects_vertical_offset) then
 				if applicable_attributes.effects_striked_out then
-					{GTK2}.g_object_set_boolean (Result, strikethrough_string.item, is_striked_out)
+					{GOBJECT}.g_object_set_boolean (Result, strikethrough_string.item, is_striked_out)
 				end
 				if applicable_attributes.effects_underlined then
 					if is_underlined then
-						{GTK2}.g_object_set_integer (Result, underline_string.item, {GTK2}.pango_underline_single_enum)
+						{GOBJECT}.g_object_set_integer (Result, underline_string.item, {GTK2}.pango_underline_single_enum)
 					else
-						{GTK2}.g_object_set_integer (Result, underline_string.item, {GTK2}.pango_underline_none_enum)
+						{GOBJECT}.g_object_set_integer (Result, underline_string.item, {GTK2}.pango_underline_none_enum)
 					end
 				end
 				if applicable_attributes.effects_vertical_offset then
-					{GTK2}.g_object_set_integer (Result, rise_string.item, vertical_offset)
+					{GOBJECT}.g_object_set_integer (Result, rise_string.item, vertical_offset)
 				end
 			end
 		end

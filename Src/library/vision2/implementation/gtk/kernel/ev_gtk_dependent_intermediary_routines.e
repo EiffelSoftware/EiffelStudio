@@ -84,8 +84,8 @@ feature -- Implementation
 		do
 			a_rich_text ?= eif_id_object (a_object_id)
 			if a_rich_text /= Void and then not a_rich_text.is_destroyed then
-				a_text_iter := {GTK2}.gtk_value_pointer ({GTK2}.g_value_array_i_th (args, 1))
-				a_text_mark := {GTK2}.gtk_value_pointer ({GTK2}.g_value_array_i_th (args, 2))
+				a_text_iter := {GOBJECT}.g_value_pointer ({GOBJECT}.g_value_array_i_th (args, 1))
+				a_text_mark := {GOBJECT}.g_value_pointer ({GOBJECT}.g_value_array_i_th (args, 2))
 				a_rich_text.on_text_mark_changed (a_text_iter, a_text_mark )
 			end
 		end
@@ -99,7 +99,7 @@ feature -- Implementation
 		do
 			a_tree_imp ?= eif_id_object (a_object_id)
 			if a_tree_imp /= Void and then not a_tree_imp.is_destroyed then
-				a_tree_path := {GTK2}.gtk_value_pointer ({GTK2}.gtk_args_array_i_th (args, 1))
+				a_tree_path := {GOBJECT}.g_value_pointer ({GTK2}.gtk_args_array_i_th (args, 1))
 				a_tree_node := a_tree_imp.node_from_tree_path (a_tree_path)
 				if is_expanded then
 					-- Call tree node expand actions
@@ -123,7 +123,7 @@ feature -- Implementation
 		do
 			a_list_imp ?= eif_id_object (a_object_id)
 			if a_list_imp /= Void and then not a_list_imp.is_destroyed then
-				a_tree_path_str := {GTK2}.gtk_value_pointer ({GTK2}.gtk_args_array_i_th (args, 0))
+				a_tree_path_str := {GOBJECT}.g_value_pointer ({GTK2}.gtk_args_array_i_th (args, 0))
 				a_list_imp.on_tree_path_toggle (a_tree_path_str)
 			end
 		end
@@ -134,7 +134,7 @@ feature -- Implementation
 			gtkarg2: POINTER
 		do
 			gtkarg2 := {GTK2}.gtk_args_array_i_th (args, 1)
-			Result := [{GTK2}.gtk_value_uint (gtkarg2)]
+			Result := [{GOBJECT}.g_value_uint (gtkarg2)]
 		end
 
 	on_pnd_deferred_item_parent_selection_change (a_object_id: INTEGER)

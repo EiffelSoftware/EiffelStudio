@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			textable_imp_initialize
 			set_c_object (text_label)
 			align_text_center
-			int_value := {GTK2}.g_object_get_integer (text_label, {GTK_PROPERTIES}.justify)
+			int_value := {GOBJECT}.g_object_get_integer (text_label, {GTK_PROPERTIES}.justify)
 			Precursor
 			set_is_initialized (True)
 		end

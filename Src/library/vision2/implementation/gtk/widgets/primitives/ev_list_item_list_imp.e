@@ -278,7 +278,7 @@ feature -- Insertion
 			a_cs := App_implementation.reusable_gtk_c_string
 			a_cs.share_with_eiffel_string (a_text)
 			str_value := g_value_string_struct
-			{GTK2}.g_value_take_string (str_value, a_cs.item)
+			{GOBJECT}.g_value_take_string (str_value, a_cs.item)
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
 			check a_list_item_imp /= Void end
 			if a_list_item_imp /= Void then
@@ -294,7 +294,7 @@ feature -- Insertion
 			-- Optimization for GValue struct access
 		once
 			Result := {GTK2}.c_g_value_struct_allocate
-			{GTK2}.g_value_init_string (Result)
+			{GOBJECT}.g_value_init_string (Result)
 		end
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)

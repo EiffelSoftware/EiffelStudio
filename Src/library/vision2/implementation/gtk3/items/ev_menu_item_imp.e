@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_box_pack_start (box, accel_label, True, True, 2)
 			{GTK}.gtk_label_set_justify (accel_label, {GTK}.gtk_justify_right_enum)
 
-			{GTK2}.g_object_set_menu_icons ({GTK}.gtk_settings_get_default, {GTK_PROPERTIES}.gtk_menu_icons, True)
+			{GOBJECT}.g_object_set_boolean ({GTK}.gtk_settings_get_default, {GTK_PROPERTIES}.gtk_menu_icons, True)
 		end
 
 	initialize_menu_item
@@ -173,7 +173,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_ITEM note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

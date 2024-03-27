@@ -55,13 +55,13 @@ feature -- Initialize
 		do
 				-- On macos, the cursor theme name is not set by default.
 			create l_cs.set_with_eiffel_string ("gtk-cursor-theme-name")
-			{GTK2}.g_object_get_string (default_gtk_settings, l_cs.item, $str_ptr)
+			{GOBJECT}.g_object_get_string (default_gtk_settings, l_cs.item, $str_ptr)
 			if str_ptr.is_default_pointer then
 				l_cs.set_with_eiffel_string ("gtk-theme-name")
-				{GTK2}.g_object_get_string (default_gtk_settings, l_cs.item, $str_ptr)
+				{GOBJECT}.g_object_get_string (default_gtk_settings, l_cs.item, $str_ptr)
 				if not str_ptr.is_default_pointer then
 					l_cs.set_with_eiffel_string ("gtk-cursor-theme-name")
-					{GTK2}.g_object_set_string (default_gtk_settings, l_cs.item, str_ptr)
+					{GOBJECT}.g_object_set_string (default_gtk_settings, l_cs.item, str_ptr)
 				end
 			end
 		end
@@ -196,7 +196,7 @@ feature -- Implementation
 		local
 			font_name_ptr: POINTER
 		do
-			{GTK2}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
+			{GOBJECT}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			if font_name_ptr /= default_pointer then
 				if previous_font_settings /= default_pointer then
 					Result := c_strcmp (previous_font_settings, font_name_ptr) /= 0
@@ -240,7 +240,7 @@ feature -- Implementation
 			a_cs: EV_GTK_C_STRING
 			l_result: detachable STRING_32
 		do
-			{GTK2}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
+			{GOBJECT}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			if font_name_ptr /= default_pointer then
 				create a_cs.make_from_pointer (font_name_ptr)
 				l_result := a_cs.string

@@ -1229,7 +1229,7 @@ feature -- Implementation
 				local
 					l_gchar: POINTER
 				do
-					l_gchar := {GTK2}.gtk_value_pointer (p)
+					l_gchar := {GOBJECT}.g_value_pointer (p)
 					if l_gchar /= default_pointer then
 						reusable_gtk_c_string.share_from_pointer (l_gchar)
 					else

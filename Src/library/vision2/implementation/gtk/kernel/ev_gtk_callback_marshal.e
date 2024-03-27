@@ -120,7 +120,7 @@ feature -- Agent functions.
 			agent (n: INTEGER; p: POINTER): TUPLE
 					-- Converted GtkWidget* to tuple.
 				do
-					Result := [{GTK2}.gtk_value_pointer (p)]
+					Result := [{GOBJECT}.g_value_pointer (p)]
 				end
 		end
 
@@ -132,7 +132,7 @@ feature -- Agent functions.
 				local
 					gdk_configure: POINTER
 				do
-					gdk_configure := {GTK2}.gtk_value_pointer (p)
+					gdk_configure := {GOBJECT}.g_value_pointer (p)
 					Result := dimension_tuple (
 						{GTK}.gdk_event_configure_struct_x (gdk_configure),
 						{GTK}.gdk_event_configure_struct_y (gdk_configure),
@@ -150,7 +150,7 @@ feature -- Agent functions.
 				local
 					gtk_alloc: POINTER
 				do
-					gtk_alloc := {GTK2}.gtk_value_pointer (p)
+					gtk_alloc := {GOBJECT}.g_value_pointer (p)
 					Result := dimension_tuple (
 						{GTK}.gtk_allocation_struct_x (gtk_alloc),
 						{GTK}.gtk_allocation_struct_y (gtk_alloc),
@@ -169,7 +169,7 @@ feature -- Agent functions.
 					gdk_expose_event: POINTER
 					l_rect: POINTER
 				do
-					gdk_expose_event := {GTK2}.gtk_value_pointer (p)
+					gdk_expose_event := {GOBJECT}.g_value_pointer (p)
 					l_rect := {GTK}.gdk_event_expose_struct_area (gdk_expose_event)
 					Result := dimension_tuple (
 						{GTK}.gdk_rectangle_struct_x (l_rect),
@@ -186,7 +186,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			-- Tuple containing integer value from first of `args'.
 		do
 			Result := integer_tuple
-			Result.put_integer ({GTK2}.gtk_value_int (args), 1)
+			Result.put_integer ({GOBJECT}.g_value_int (args), 1)
 		end
 
 	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE [INTEGER, INTEGER]
@@ -195,7 +195,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			gtkarg2: POINTER
 		do
 			gtkarg2 := {GTK2}.gtk_args_array_i_th (args, 1)
-			Result := [{GTK2}.gtk_value_int (args) + 1, {GTK2}.gtk_value_int (gtkarg2)]
+			Result := [{GOBJECT}.g_value_int (args) + 1, {GOBJECT}.g_value_int (gtkarg2)]
 			-- Column is zero based in gtk.
 		end
 
@@ -284,7 +284,7 @@ feature {NONE} -- Tuple optimizations.
 			-- Tuple containing integer value from first of `args'.
 		do
 			Result := pointer_tuple
-			Result.pointer := {GTK2}.gtk_value_pointer (args)
+			Result.pointer := {GOBJECT}.g_value_pointer (args)
 		end
 
 feature {EV_GTK_CALLBACK_MARSHAL} -- Externals

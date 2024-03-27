@@ -33,7 +33,7 @@ feature {EV_ANY_IMP} -- Notebook agent routines
 		do
 			if attached {EV_NOTEBOOK_IMP} eif_object_from_c (a_c_object) as l_notebook_imp then
 				gtkarg2 := {GTK2}.gtk_args_array_i_th (arguments, 1)
-				l_notebook_imp.page_switch ({GTK2}.gtk_value_uint (gtkarg2).to_integer_32)
+				l_notebook_imp.page_switch ({GOBJECT}.g_value_uint (gtkarg2).to_integer_32)
 			end
 		end
 
@@ -73,7 +73,7 @@ feature -- Draw and configure signal
 			--		True: stop all processing
 		do
 			if attached {EV_ANY_IMP} eif_object_from_c (a_c_object) as l_any_imp then
-				Result := l_any_imp.process_draw_event ({GTK2}.gtk_value_pointer (arguments))
+				Result := l_any_imp.process_draw_event ({GOBJECT}.g_value_pointer (arguments))
 			end
 		end
 
@@ -86,7 +86,7 @@ feature -- Draw and configure signal
 			l_gdk_configure: POINTER
 		do
 			if attached {EV_ANY_IMP} eif_object_from_c (a_c_object) as l_any_imp then
-				l_gdk_configure := {GTK2}.gtk_value_pointer (arguments)
+				l_gdk_configure := {GOBJECT}.g_value_pointer (arguments)
 				Result := l_any_imp.process_configure_event ({GDK}.gdk_event_configure_struct_x (l_gdk_configure), {GDK}.gdk_event_configure_struct_y (l_gdk_configure), {GDK}.gdk_event_configure_struct_width (l_gdk_configure), {GDK}.gdk_event_configure_struct_height (l_gdk_configure))
 			end
 		end
@@ -97,7 +97,7 @@ feature {EV_ANY_IMP} -- Scrolling event
 			-- "leave-notify-event" signal has been emitted.
 		do
 			if attached {EV_ANY_IMP} eif_object_from_c (a_c_object) as l_any_imp then
-				Result := l_any_imp.process_scroll_event ({GTK2}.gtk_value_pointer (arguments))
+				Result := l_any_imp.process_scroll_event ({GOBJECT}.g_value_pointer (arguments))
 			end
 		end
 
@@ -127,7 +127,7 @@ feature -- Widget agent routines
 				attached {EV_WIDGET_IMP} eif_id_object (a_object_id) as a_widget and then
 				not a_widget.is_destroyed
 			then
-				gtk_alloc := {GTK2}.gtk_value_pointer (arguments)
+				gtk_alloc := {GOBJECT}.g_value_pointer (arguments)
 				a_widget.on_size_allocate ({GTK}.gtk_allocation_struct_x (gtk_alloc), {GTK}.gtk_allocation_struct_y (gtk_alloc), {GTK}.gtk_allocation_struct_width (gtk_alloc), {GTK}.gtk_allocation_struct_height (gtk_alloc))
 			end
 		end
@@ -141,7 +141,7 @@ feature -- Widget set_focus routines
 				attached {EV_WINDOW_IMP} eif_id_object (a_object_id) as a_window and then
 				not a_window.is_destroyed
 			then
-				a_window.on_set_focus_event ({GTK2}.gtk_value_pointer (arguments))
+				a_window.on_set_focus_event ({GOBJECT}.g_value_pointer (arguments))
 			end
 		end
 
@@ -208,7 +208,7 @@ feature {EV_ANY_IMP} -- Dialog agent routines
 			-- Dialog "response" signal intermediary.
 		do
 			check attached {EV_STANDARD_DIALOG_IMP} eif_object_from_c (a_c_object) as l_sd then
-				l_sd.on_response ({GTK2}.gtk_value_int (arguments))
+				l_sd.on_response ({GOBJECT}.g_value_int (arguments))
 			end
 		end
 

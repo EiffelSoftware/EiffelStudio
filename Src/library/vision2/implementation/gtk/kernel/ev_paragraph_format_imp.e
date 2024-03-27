@@ -140,34 +140,34 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				inspect
 					alignment
 				when {EV_PARAGRAPH_CONSTANTS}.alignment_left then
-					{GTK2}.g_object_set_integer (Result, propname.item, {GTK}.gtk_justify_left_enum)
+					{GOBJECT}.g_object_set_integer (Result, propname.item, {GTK}.gtk_justify_left_enum)
 				when {EV_PARAGRAPH_CONSTANTS}.alignment_center then
-					{GTK2}.g_object_set_integer (Result, propname.item, {GTK}.gtk_justify_center_enum)
+					{GOBJECT}.g_object_set_integer (Result, propname.item, {GTK}.gtk_justify_center_enum)
 				when {EV_PARAGRAPH_CONSTANTS}.alignment_right then
-					{GTK2}.g_object_set_integer (Result, propname.item, {GTK}.gtk_justify_right_enum)
+					{GOBJECT}.g_object_set_integer (Result, propname.item, {GTK}.gtk_justify_right_enum)
 				when {EV_PARAGRAPH_CONSTANTS}.alignment_justified then
-					{GTK2}.g_object_set_integer (Result, propname.item, {GTK}.gtk_justify_fill_enum)
+					{GOBJECT}.g_object_set_integer (Result, propname.item, {GTK}.gtk_justify_fill_enum)
 				end
 			end
 
 			if applicable_attributes.left_margin then
 				propname := "left-margin"
-				{GTK2}.g_object_set_integer (Result, propname.item, left_margin)
+				{GOBJECT}.g_object_set_integer (Result, propname.item, left_margin)
 			end
 
 			if applicable_attributes.right_margin then
 				propname := "right-margin"
-				{GTK2}.g_object_set_integer (Result, propname.item, right_margin)
+				{GOBJECT}.g_object_set_integer (Result, propname.item, right_margin)
 			end
 
 			if applicable_attributes.top_spacing then
 				propname := "pixels-above-lines"
-				{GTK2}.g_object_set_integer (Result, propname.item, top_spacing)
+				{GOBJECT}.g_object_set_integer (Result, propname.item, top_spacing)
 			end
 
 			if applicable_attributes.bottom_spacing then
 				propname := "pixels-below-lines"
-				{GTK2}.g_object_set_integer (Result, propname.item, bottom_spacing)
+				{GOBJECT}.g_object_set_integer (Result, propname.item, bottom_spacing)
 			end
 		end
 

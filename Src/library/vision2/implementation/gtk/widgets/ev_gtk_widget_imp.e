@@ -161,7 +161,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			gr: POINTER
 		do
 			if not is_destroyed then
-				{GTK2}.g_object_get_integer (c_object, width_request_string.item, $Result)
+				{GOBJECT}.g_object_get_integer (c_object, width_request_string.item, $Result)
 				if Result = -1 then
 					gr := reusable_requisition_struct.item
 					{GTK}.gtk_widget_size_request (c_object, gr)
@@ -182,7 +182,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			gr: POINTER
 		do
 			if not is_destroyed then
-				{GTK2}.g_object_get_integer (c_object, height_request_string.item, $Result)
+				{GOBJECT}.g_object_get_integer (c_object, height_request_string.item, $Result)
 				if Result = -1 then
 					gr := reusable_requisition_struct.item
 					{GTK}.gtk_widget_size_request (c_object, gr)

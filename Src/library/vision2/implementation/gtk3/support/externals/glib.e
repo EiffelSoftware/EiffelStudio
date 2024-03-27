@@ -146,7 +146,6 @@ feature -- SList
 			"next"
 		end
 
-
 note
 	copyright: "Copyright (c) 1984-2024, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

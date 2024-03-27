@@ -270,9 +270,9 @@ feature {EV_ANY_I} -- Implementation
 			l_x := "x"
 			l_item := i_th_fixed_child (index_of (a_widget_imp.interface, 1))
 			l_gvalue := {GTK2}.c_g_value_struct_allocate
-			{GTK2}.g_value_init_int (l_gvalue)
+			{GOBJECT}.g_value_init_int (l_gvalue)
 			{GTK2}.gtk_container_child_get_property (container_widget, l_item, l_x.item, l_gvalue)
-			Result := {GTK2}.g_value_get_int (l_gvalue)
+			Result := {GOBJECT}.g_value_get_int (l_gvalue)
 			l_gvalue.memory_free
 		end
 
@@ -285,9 +285,9 @@ feature {EV_ANY_I} -- Implementation
 			l_y := "y"
 			l_item := i_th_fixed_child (index_of (a_widget_imp.interface, 1))
 			l_gvalue := {GTK2}.c_g_value_struct_allocate
-			{GTK2}.g_value_init_int (l_gvalue)
+			{GOBJECT}.g_value_init_int (l_gvalue)
 			{GTK2}.gtk_container_child_get_property (container_widget, l_item, l_y.item, l_gvalue)
-			Result := {GTK2}.g_value_get_int (l_gvalue)
+			Result := {GOBJECT}.g_value_get_int (l_gvalue)
 			l_gvalue.memory_free
 		end
 

@@ -58,6 +58,14 @@ feature {NONE} -- Initialization
 				put ("", "UBUNTU_MENUPROXY")
 			end
 
+				-- Added GDK_BACKEND quartz. for macOs	
+			if {PLATFORM}.is_mac then
+				create l_backend.make_from_pointer ({GDK}.gdk_display_get_name ( {GDK}.gdk_display_get_default ()))
+				print (l_backend.string)
+				{GDK}.gdk_set_allowed_backends ((create {EV_GTK_C_STRING}.set_with_eiffel_string ("quartz")).item)
+			end	
+
+
 			-- The possible backend names are x11, win32, quartz, broadway, wayland.
 			-- This call must happen prior to gdk_display_open(), gtk_init(), gtk_init_with_args() or gtk_init_check() in order to take effect.
 			if {GTK}.is_wayland_session then

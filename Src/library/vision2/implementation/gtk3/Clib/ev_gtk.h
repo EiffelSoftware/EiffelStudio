@@ -23,6 +23,15 @@ indexing
 #include <X11/Xlib.h>
 #endif
 
+/* 
+	For macOs GDB_BACKEND quarts maybe we need  
+    to check GDK_WINDOWING_QUARTZ
+*/
+#ifdef defined(EIF_MACOSX)
+	#include <gdk/gdkquartz.h>
+#endif
+
+
 #include <eif_eiffel.h>
 
 /* For dev/debug purpose, added output print statement */

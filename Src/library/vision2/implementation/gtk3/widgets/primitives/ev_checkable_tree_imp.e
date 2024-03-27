@@ -103,10 +103,10 @@ feature {NONE} -- Initialization
 		local
 			a_type_array: MANAGED_POINTER
 		do
-			create a_type_array.make (3 * {GDK}.sizeof_gtype)
+			create a_type_array.make (3 * {GOBJECT}.sizeof_gtype)
 			{GDK}.add_gdk_type_pixbuf (a_type_array.item, 0)
-			{GDK}.add_g_type_string (a_type_array.item, 1 * {GDK}.sizeof_gtype)
-			{GDK}.add_g_type_boolean (a_type_array.item, 2 * {GDK}.sizeof_gtype)
+			{GOBJECT}.add_g_type_string (a_type_array.item, 1 * {GOBJECT}.sizeof_gtype)
+			{GOBJECT}.add_g_type_boolean (a_type_array.item, 2 * {GOBJECT}.sizeof_gtype)
 			tree_store := {GTK2}.gtk_tree_store_newv (3, a_type_array.item)
 		end
 

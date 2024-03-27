@@ -273,7 +273,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					if not a_window.is_default_pointer then
 						a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
 						{GDK}.gdk_window_set_cursor (a_window, a_cursor_ptr)
-						{GDK}.g_object_unref (a_cursor_ptr)
+						{GOBJECT}.g_object_unref (a_cursor_ptr)
 						previously_set_pointer_style := a_cursor
 					end
 				end

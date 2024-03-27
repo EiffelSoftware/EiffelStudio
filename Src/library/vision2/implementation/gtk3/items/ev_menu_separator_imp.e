@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 		do
 			box := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
 				-- Use GDK instead using GTK
-			box := {GDK}.g_object_ref_sink (box)
+			box := {GOBJECT}.g_object_ref_sink (box)
 			{GTK}.gtk_box_pack_start (box, text_label, True, True, 0)
 			{GTK}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end
@@ -82,7 +82,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 	c_object_dispose
 		do
 			if not box.is_default_pointer then
-				{GDK}.g_object_unref (box)
+				{GOBJECT}.g_object_unref (box)
 				box := default_pointer
 			end
 			Precursor

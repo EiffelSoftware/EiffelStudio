@@ -213,7 +213,7 @@ feature -- Command
 				end
 				l_pixbuf := {GDK}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
 				l_pixmap_imp.set_pixmap_from_pixbuf (l_pixbuf)
-				{GDK}.g_object_unref (l_pixbuf)
+				{GOBJECT}.g_object_unref (l_pixbuf)
 			else
 				l_internal_pixmap := internal_pixmap
 				check
@@ -276,7 +276,7 @@ feature -- Command
 						(-a_rect.x).max (0), (-a_rect.x).max (0), 1.0, 1.0, {GDK}.gdk_interp_nearest)
 				end
 			end
-			{GDK}.g_object_unref (l_subpixbuf)
+			{GOBJECT}.g_object_unref (l_subpixbuf)
 		end
 
 	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32
@@ -370,13 +370,13 @@ feature -- Command
 			l_pixbuf_ptr := {GDK}.gdk_pixbuf_get_from_window ({GDK}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default), 0, 0, l_width, l_height)
 			l_pixbuf_ptr2 := {GDK}.gdk_pixbuf_add_alpha (l_pixbuf_ptr, True, l_grey_value, l_grey_value, l_grey_value)
 				-- Clean up
-			{GDK}.g_object_unref (l_pixbuf_ptr)
+			{GOBJECT}.g_object_unref (l_pixbuf_ptr)
 			l_pixbuf_ptr := default_pointer
 
 				-- Composite pixbuf with alpha on to `Current'
 			{GDK}.gdk_pixbuf_composite (l_pixbuf_ptr2, gdk_pixbuf, l_x, l_y, l_width, l_height, 0, 0, 1, 1, 0, l_composite_alpha)
 				-- Clean up
-			{GDK}.g_object_unref (l_pixbuf_ptr2)
+			{GOBJECT}.g_object_unref (l_pixbuf_ptr2)
 			l_pixbuf_ptr2 := default_pointer
 		end
 
@@ -513,7 +513,7 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 		do
 			l_label := {GTK}.gtk_label_new (default_pointer) -- Floating ref
 				-- Using GDK instead of GTK2
-			l_label := {GDK}.g_object_ref_sink (l_label) -- adopt floating ref
+			l_label := {GOBJECT}.g_object_ref_sink (l_label) -- adopt floating ref
 
 			if {GTK2}.gtk_widget_has_screen (l_label) then
 				l_screen:= {GTK2}.gtk_widget_get_screen (l_label)
@@ -530,7 +530,7 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 				end
 				e.free
 			end
-			{GDK}.g_object_unref (l_label)
+			{GOBJECT}.g_object_unref (l_label)
 			l_label := default_pointer
 
 			if stock_pixbuf /= default_pointer then
@@ -541,7 +541,7 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 					end
 				end
 				set_gdkpixbuf ({GDK}.gdk_pixbuf_copy (stock_pixbuf))
-				{GDK}.g_object_unref (stock_pixbuf)
+				{GOBJECT}.g_object_unref (stock_pixbuf)
 			end
 		end
 
@@ -560,15 +560,15 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implemen
 		do
 			if gdk_pixbuf /= default_pointer then
 					-- Unref previous gdkpixbuf
-				{GDK}.g_object_unref (gdk_pixbuf)
+				{GOBJECT}.g_object_unref (gdk_pixbuf)
 			end
 			if a_pixbuf /= default_pointer then
-				l_pixbuf := {GDK}.g_object_ref (a_pixbuf) -- incr ref (GdkPixbuf is not a GInitiallyUnowned)
+				l_pixbuf := {GOBJECT}.g_object_ref (a_pixbuf) -- incr ref (GdkPixbuf is not a GInitiallyUnowned)
 				if not {GDK}.gdk_pixbuf_get_has_alpha (a_pixbuf) then
 						-- Make sure that the pixel data is internally stored as R G B A
 					gdk_pixbuf := {GDK}.gdk_pixbuf_add_alpha (l_pixbuf, False, 0, 0, 0)
-					{GDK}.g_object_unref (a_pixbuf) -- gdk_pixbuf_add_alpha is creating a newly pixbuf, so unref previous one.
-					gdk_pixbuf := {GDK}.g_object_ref (gdk_pixbuf) -- incr ref for this newly pixbuf
+					{GOBJECT}.g_object_unref (a_pixbuf) -- gdk_pixbuf_add_alpha is creating a newly pixbuf, so unref previous one.
+					gdk_pixbuf := {GOBJECT}.g_object_ref (gdk_pixbuf) -- incr ref for this newly pixbuf
 				else
 					gdk_pixbuf := a_pixbuf
 				end

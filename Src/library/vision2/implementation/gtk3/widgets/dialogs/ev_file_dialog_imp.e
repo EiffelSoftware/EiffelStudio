@@ -70,7 +70,7 @@ feature -- Access
 				l_filename := {GTK2}.gtk_file_chooser_get_filename (c_object)
 				if l_filename /= default_pointer then
 					create Result.make_from_pointer (l_filename)
-					{GDK}.g_free (l_filename)
+					{GLIB}.g_free (l_filename)
 				else
 					create Result.make_empty
 				end
@@ -97,11 +97,11 @@ feature -- Access
 				from
 					i := 0
 				until
-					{GDK}.g_slist_nth_data (a_filter_list, i) = a_current_filter
+					{GLIB}.g_slist_nth_data (a_filter_list, i) = a_current_filter
 				loop
 					i := i + 1
 				end
-				{GDK}.g_slist_free (a_filter_list)
+				{GLIB}.g_slist_free (a_filter_list)
 				Result := i + 1
 			end
 
@@ -196,7 +196,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				if (not temp_file.exists or else not temp_file.is_directory) then
 					Precursor {EV_STANDARD_DIALOG_IMP}
 				end
-				{GDK}.g_free (a_filename)
+				{GLIB}.g_free (a_filename)
 			end
 		end
 
@@ -212,15 +212,15 @@ feature {NONE} -- Implementation
 			a_filter_list := {GTK2}.gtk_file_chooser_list_filters (c_object)
 			if not a_filter_list.is_default_pointer then
 				from
-					a_filter := {GDK}.g_slist_nth_data (a_filter_list, i)
+					a_filter := {GLIB}.g_slist_nth_data (a_filter_list, i)
 				until
 					a_filter.is_default_pointer
 				loop
 					{GTK2}.gtk_file_chooser_remove_filter (c_object, a_filter)
 					i := i + 1
-					a_filter := {GDK}.g_slist_nth_data (a_filter_list, i)
+					a_filter := {GLIB}.g_slist_nth_data (a_filter_list, i)
 				end
-				{GDK}.g_slist_free (a_filter_list)
+				{GLIB}.g_slist_free (a_filter_list)
 			end
 		end
 

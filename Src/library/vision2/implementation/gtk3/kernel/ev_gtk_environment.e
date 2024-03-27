@@ -33,7 +33,7 @@ feature -- Access
 			a_cs: EV_GTK_C_STRING
 		do
 			formats := {GDK}.gdk_pixbuf_get_formats
-			format_count := {GDK}.g_slist_length (formats)
+			format_count := {GLIB}.g_slist_length (formats)
 			from
 				i := 0
 				create Result.make (0)
@@ -41,7 +41,7 @@ feature -- Access
 			until
 				i = format_count
 			loop
-				pixbuf_format := {GDK}.g_slist_nth_data (formats, i)
+				pixbuf_format := {GLIB}.g_slist_nth_data (formats, i)
 				a_cs.share_from_pointer ({GDK}.gdk_pixbuf_format_get_name (pixbuf_format))
 				format_name := a_cs.string
 				if format_name.is_equal (once {STRING_32} "jpeg") then
@@ -56,7 +56,7 @@ feature -- Access
 				end
 				i := i + 1
 			end
-			{GDK}.g_slist_free (formats)
+			{GLIB}.g_slist_free (formats)
 		end
 
 note

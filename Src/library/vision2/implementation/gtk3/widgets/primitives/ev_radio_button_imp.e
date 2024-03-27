@@ -84,7 +84,7 @@ feature {EV_ANY_I} -- Implementation
 	widget_object (a_list: POINTER): POINTER
 			-- Returns c_object relative to a_list data.
 		do
-			Result := {GDK}.gslist_struct_data (a_list)
+			Result := {GLIB}.gslist_struct_data (a_list)
 			Result := {GTK}.gtk_widget_get_parent (Result)
 		end
 

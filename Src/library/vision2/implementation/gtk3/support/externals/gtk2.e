@@ -8,9 +8,6 @@
 class
 	GTK2
 
---inherit
---	GDK
-
 feature -- Style constants
 
 --GTK_TYPE_STYLE_CONTEXT
@@ -497,14 +494,14 @@ feature -- Icon
 		do
 			glist := gtk_icon_theme_list_icons (icon_theme, a_context)
 			if not glist.is_default_pointer then
-				n := {GDK}.g_list_length (glist)
+				n := {GLIB}.g_list_length (glist)
 				create Result.make (n)
 				from
 					i := 1
 				until
 					i > n
 				loop
-					p := {GDK}.g_list_nth_data (glist, i - 1)
+					p := {GLIB}.g_list_nth_data (glist, i - 1)
 					if not p.is_default_pointer then
 						create str.make_from_pointer (p)
 						Result.extend (str.string)
@@ -514,7 +511,7 @@ feature -- Icon
 					i := i + 1
 				end
 			end
-			{GDK}.g_list_free (glist)
+			{GLIB}.g_list_free (glist)
 		ensure
 			instance_free: class
 		end

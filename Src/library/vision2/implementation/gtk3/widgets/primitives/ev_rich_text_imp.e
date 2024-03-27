@@ -571,7 +571,7 @@ feature -- Status setting
 			if not buffer_locked_in_format_mode then
 				buffer_locked_in_format_mode := True
 					-- Temporarily remove text buffer to avoid redraw and event firing
-				append_buffer := {GDK}.g_object_ref (text_buffer) -- Increase ref count on `text_buffer`
+				append_buffer := {GOBJECT}.g_object_ref (text_buffer) -- Increase ref count on `text_buffer`
 				{GTK2}.gtk_text_view_set_buffer (text_view, {GTK2}.gtk_text_buffer_new (default_pointer))
 			end
 			check attached {EV_CHARACTER_FORMAT_IMP} format.implementation as a_format_imp then
@@ -593,7 +593,7 @@ feature -- Status setting
 			if l_count >= 1 then
 				if not buffer_locked_in_append_mode then
 					if not append_buffer.is_default_pointer then
-						{GDK}.g_object_unref (append_buffer)
+						{GOBJECT}.g_object_unref (append_buffer)
 					end
 					text_tag_table := {GTK2}.gtk_text_buffer_get_tag_table (text_buffer)
 					append_buffer := {GTK2}.gtk_text_buffer_new (text_tag_table) -- Normal ref
@@ -627,7 +627,7 @@ feature -- Status setting
 				{GTK2}.gtk_text_view_set_buffer (text_view, append_buffer) -- Incr ref to `append_buffer`
 				text_buffer := append_buffer
 				initialize_buffer_events
-				{GDK}.g_object_unref (append_buffer)
+				{GOBJECT}.g_object_unref (append_buffer)
 				append_buffer := default_pointer
 				buffer_locked_in_format_mode := False
 			elseif buffer_locked_in_append_mode then
@@ -635,7 +635,7 @@ feature -- Status setting
 				{GTK2}.gtk_text_view_set_buffer (text_view, append_buffer) -- Incr ref to `append_buffer`
 				text_buffer := append_buffer
 				initialize_buffer_events
-				{GDK}.g_object_unref (append_buffer)
+				{GOBJECT}.g_object_unref (append_buffer)
 				append_buffer := default_pointer
 				buffer_locked_in_append_mode := False
 			end
@@ -936,7 +936,7 @@ feature {NONE} -- Implementation
 			-- Clean up `append_buffer'.
 		do
 			if not append_buffer.is_default_pointer then
-				{GDK}.g_object_unref (append_buffer)
+				{GOBJECT}.g_object_unref (append_buffer)
 				append_buffer := default_pointer
 			end
 		end
@@ -949,7 +949,7 @@ feature {NONE} -- Implementation
 	c_object_dispose
 		do
 			if not append_buffer.is_default_pointer then
-				{GDK}.g_object_unref (append_buffer)
+				{GOBJECT}.g_object_unref (append_buffer)
 				append_buffer := default_pointer
 			end
 			Precursor

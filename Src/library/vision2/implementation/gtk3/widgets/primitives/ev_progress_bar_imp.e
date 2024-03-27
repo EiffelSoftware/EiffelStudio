@@ -133,7 +133,7 @@ feature -- Element change / colors
 				-- TODO Handle error
 			end
 			if not l_provider.is_default_pointer then
-				{GDK}.g_object_unref (l_provider)
+				{GOBJECT}.g_object_unref (l_provider)
 			end
 		end
 

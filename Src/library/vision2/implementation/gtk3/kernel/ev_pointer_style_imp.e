@@ -279,7 +279,7 @@ feature -- Implementation
 				l_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
 			else
 				l_image := gdk_pixbuf
-				l_image := {GDK}.g_object_ref (l_image)
+				l_image := {GOBJECT}.g_object_ref (l_image)
 			end
 
 			if Result = default_pointer and then predefined_cursor_code /= {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
@@ -292,7 +292,7 @@ feature -- Implementation
 					attached_interface.x_hotspot,
 					attached_interface.y_hotspot
 				)
-				{GDK}.g_object_unref (l_image)
+				{GOBJECT}.g_object_unref (l_image)
 			end
 		end
 
@@ -308,7 +308,7 @@ feature -- Implementation
 			-- Set gdk_pixbuf to `a_pixbuf'.
 		do
 			if gdk_pixbuf /= default_pointer then
-				{GDK}.g_object_unref (gdk_pixbuf)
+				{GOBJECT}.g_object_unref (gdk_pixbuf)
 			end
 			gdk_pixbuf := a_pixbuf
 		end

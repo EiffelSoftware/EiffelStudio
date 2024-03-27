@@ -257,8 +257,8 @@ feature {EV_ANY_I} -- Implementation
 			glist: POINTER
 		do
 			glist := {GTK}.gtk_container_get_children (container_widget)
-			Result := {GDK}.g_list_nth_data (glist, i - 1)
-			{GDK}.g_list_free (glist)
+			Result := {GLIB}.g_list_nth_data (glist, i - 1)
+			{GLIB}.g_list_free (glist)
 		end
 
 	x_position_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER

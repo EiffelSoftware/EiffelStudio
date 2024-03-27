@@ -96,14 +96,14 @@ feature -- Initialization
 			list_store: POINTER
 			l_gtype_size: INTEGER
 		do
-			l_gtype_size := {GDK}.sizeof_gtype
+			l_gtype_size := {GOBJECT}.sizeof_gtype
 			create a_type_array.make ((a_columns) * l_gtype_size)
 			from
 				i := 1
 			until
 				i > a_columns
 			loop
-				{GDK}.add_g_type_string (a_type_array.item, (i - 1)  * l_gtype_size)
+				{GOBJECT}.add_g_type_string (a_type_array.item, (i - 1)  * l_gtype_size)
 				i := i + 1
 			end
 

@@ -75,13 +75,13 @@ feature {NONE} -- Access
 				until
 					fnlist = default_pointer
 				loop
-					fname := {GDK}.gslist_struct_data (fnlist)
+					fname := {GLIB}.gslist_struct_data (fnlist)
 					a_cs.share_from_pointer (fname)
 					Result.extend (a_cs.string)
-					{GDK}.g_free (fname)
-					fnlist := {GDK}.gslist_struct_next (fnlist)
+					{GLIB}.g_free (fname)
+					fnlist := {GLIB}.gslist_struct_next (fnlist)
 				end
-				{GDK}.g_slist_free (fnlist)
+				{GLIB}.g_slist_free (fnlist)
 			end
 		end
 
@@ -100,12 +100,12 @@ feature {NONE} -- Access
 				until
 					fnlist = default_pointer
 				loop
-					fname := {GDK}.gslist_struct_data (fnlist)
+					fname := {GLIB}.gslist_struct_data (fnlist)
 					Result.extend (create {PATH}.make_from_pointer (fname))
-					{GDK}.g_free (fname)
-					fnlist := {GDK}.gslist_struct_next (fnlist)
+					{GLIB}.g_free (fname)
+					fnlist := {GLIB}.gslist_struct_next (fnlist)
 				end
-				{GDK}.g_slist_free (fnlist)
+				{GLIB}.g_slist_free (fnlist)
 			end
 		end
 

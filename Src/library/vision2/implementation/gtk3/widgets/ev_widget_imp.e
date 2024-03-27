@@ -663,14 +663,14 @@ feature {NONE} -- Implementation
 				until
 					l.is_default_pointer
 				loop
-					child := {GDK}.glist_struct_data (l)
+					child := {GLIB}.glist_struct_data (l)
 					real_set_foreground_color (child, fg)
 					if {GTK}.gtk_is_container (child) then
 						propagate_foreground_color_internal (fg, child)
 					end
-					l := {GDK}.glist_struct_next (l)
+					l := {GLIB}.glist_struct_next (l)
 				end
-				{GDK}.g_list_free (a_child_list)
+				{GLIB}.g_list_free (a_child_list)
 			else
 				real_set_foreground_color (a_c_object, fg)
 			end
@@ -696,14 +696,14 @@ feature {NONE} -- Implementation
 				until
 					l.is_default_pointer
 				loop
-					child := {GDK}.glist_struct_data (l)
+					child := {GLIB}.glist_struct_data (l)
 					real_set_background_color (child, bg)
 					if {GTK}.gtk_is_container (child) then
 						propagate_background_color_internal (bg, child)
 					end
-					l := {GDK}.glist_struct_next (l)
+					l := {GLIB}.glist_struct_next (l)
 				end
-				{GDK}.g_list_free (a_child_list)
+				{GLIB}.g_list_free (a_child_list)
 			else
 				real_set_background_color (a_c_object, bg)
 			end

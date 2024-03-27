@@ -68,7 +68,7 @@ feature -- Access
 				a_filename := {GTK2}.gtk_file_chooser_get_filename (c_object)
 				if not a_filename.is_default_pointer then
 					create Result.make_from_pointer (a_filename)
-					{GDK}.g_free (a_filename)
+					{GLIB}.g_free (a_filename)
 				else
 					create Result.make_empty
 				end

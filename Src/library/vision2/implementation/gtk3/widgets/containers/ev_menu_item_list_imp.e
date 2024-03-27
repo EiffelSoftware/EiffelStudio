@@ -165,10 +165,10 @@ feature {NONE} -- Implementation
 			if radio_imp /= Void then
 				if radio_imp.is_selected then
 					-- Select the first item in the radio group
-					if {GDK}.g_slist_length (radio_imp.radio_group) > 1 then
-						temp_item_pointer := {GDK}.g_slist_nth_data (radio_imp.radio_group, 0)
+					if {GLIB}.g_slist_length (radio_imp.radio_group) > 1 then
+						temp_item_pointer := {GLIB}.g_slist_nth_data (radio_imp.radio_group, 0)
 						if temp_item_pointer = radio_imp.c_object then
-							temp_item_pointer := {GDK}.g_slist_nth_data (radio_imp.radio_group, 1)
+							temp_item_pointer := {GLIB}.g_slist_nth_data (radio_imp.radio_group, 1)
 						end
 						radio_imp ?= eif_object_from_c (temp_item_pointer)
 						if radio_imp /= Void then

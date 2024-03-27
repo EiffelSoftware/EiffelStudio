@@ -525,7 +525,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				-- Clean up previous pixmap if any
 			if gdk_pixbuf /= default_pointer then
 					--Use GDK instead of GTK2
-				{GDK}.g_object_unref (gdk_pixbuf)
+				{GOBJECT}.g_object_unref (gdk_pixbuf)
 				gdk_pixbuf := default_pointer
 			end
 			check attached {EV_PIXMAP_IMP} a_pixmap.implementation as a_pix_imp then
@@ -546,7 +546,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			par_tree: detachable EV_TREE_IMP
 		do
 			if gdk_pixbuf /= default_pointer then
-				{GDK}.g_object_unref (gdk_pixbuf)
+				{GOBJECT}.g_object_unref (gdk_pixbuf)
 				gdk_pixbuf := default_pointer
 			end
 			par_tree := parent_tree_imp
@@ -654,7 +654,7 @@ feature {NONE} -- Implementation
 				not is_in_final_collect and then
 				not gdk_pixbuf.is_default_pointer
 			then
-				{GDK}.g_object_unref (gdk_pixbuf)
+				{GOBJECT}.g_object_unref (gdk_pixbuf)
 				gdk_pixbuf := default_pointer
 			end
 		end

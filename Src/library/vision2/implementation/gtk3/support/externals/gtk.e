@@ -171,20 +171,20 @@ feature -- Window
 		do
 			glist := gtk_window_list_toplevels
 			if not glist.is_default_pointer then
-				n := {GDK}.g_list_length (glist)
+				n := {GLIB}.g_list_length (glist)
 				from
 					i := 1
 				until
 					i > n or not Result.is_default_pointer
 				loop
-					p := {GDK}.g_list_nth_data (glist, i - 1)
+					p := {GLIB}.g_list_nth_data (glist, i - 1)
 					if gtk_window_is_active (p) then
 						Result := p
 					end
 					i := i + 1
 				end
 			end
-			{GDK}.g_list_free (glist)
+			{GLIB}.g_list_free (glist)
 		ensure
 			instance_free: class
 		end

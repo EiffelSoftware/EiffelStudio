@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			text_view := {GTK2}.gtk_text_view_new -- floating ref
 			text_buffer := {GTK2}.gtk_text_view_get_buffer (text_view) -- floating ref
 				-- Using GDK instead of GTK2
-			text_buffer := {GDK}.g_object_ref_sink (text_buffer) -- adopt floating ref (see `dispose` for the unref)
+			text_buffer := {GOBJECT}.g_object_ref_sink (text_buffer) -- adopt floating ref (see `dispose` for the unref)
 			{GTK}.gtk_widget_show (text_view)
 			{GTK}.gtk_container_add (scrolled_window, text_view) -- `scrolled_window` adopts the floating ref of `text_view`
 			{GTK}.gtk_widget_set_size_request (text_view, 1, 1)
@@ -619,7 +619,7 @@ feature {NONE} -- Implementation
 			-- Clean up `Current'
 		do
 			if not text_buffer.is_default_pointer then
-				{GDK}.g_object_unref (text_buffer)
+				{GOBJECT}.g_object_unref (text_buffer)
 				text_buffer := default_pointer
 			end
 			Precursor {EV_TEXT_COMPONENT_IMP}

@@ -266,10 +266,10 @@ feature -- Status report
 			a_tree_path_list := {GTK2}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
 
 			if not a_tree_path_list.is_default_pointer then
-					a_tree_path := {GDK}.glist_struct_data (a_tree_path_list)
+					a_tree_path := {GLIB}.glist_struct_data (a_tree_path_list)
 					a_tree_node_imp := node_from_tree_path (a_tree_path)
 					{GTK2}.gtk_tree_path_list_free_contents (a_tree_path_list)
-					{GDK}.g_list_free (a_tree_path_list)
+					{GLIB}.g_list_free (a_tree_path_list)
 					Result := a_tree_node_imp.interface
 			end
 		end
@@ -720,12 +720,12 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 		do
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
 			a_cell_rend_list := {GTK}.gtk_cell_layout_get_cells (a_column_ptr)
-			a_cell_rend := {GDK}.g_list_nth_data (a_cell_rend_list, 0)
+			a_cell_rend := {GLIB}.g_list_nth_data (a_cell_rend_list, 0)
 
 			{GTK2}.gtk_widget_style_get_integer (tree_view, {GTK_PROPERTIES}.vertical_separator, $a_vert_sep)
 
 			{GTK2}.g_object_set_integer (a_cell_rend, {GTK_PROPERTIES}.height, value - a_vert_sep)
-			{GDK}.g_list_free (a_cell_rend_list)
+			{GLIB}.g_list_free (a_cell_rend_list)
 		end
 
 	row_height: INTEGER

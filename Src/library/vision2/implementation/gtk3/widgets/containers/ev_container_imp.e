@@ -194,7 +194,7 @@ feature -- Status setting
 						end
 					end
 					if a_child_list /= default_pointer then
-						{GDK}.g_list_free (a_child_list)
+						{GLIB}.g_list_free (a_child_list)
 					end
 					a_child_list := {GTK}.gtk_container_get_children (container_widget)
 					l := glist_to_eiffel (a_child_list)
@@ -223,7 +223,7 @@ feature -- Status setting
 						end
 					end
 					if a_child_list /= default_pointer then
-						{GDK}.g_list_free (a_child_list)
+						{GLIB}.g_list_free (a_child_list)
 					end
 				end
 			end
@@ -260,16 +260,16 @@ feature -- Status setting
 		do
 			r ?= a_widget_imp
 			if r /= Void then
-				a_max_index := {GDK}.g_slist_length (radio_group) - 1
-				a_item_index := {GDK}.g_slist_index (radio_group, r.visual_widget)
+				a_max_index := {GLIB}.g_slist_length (radio_group) - 1
+				a_item_index := {GLIB}.g_slist_index (radio_group, r.visual_widget)
 
 				if a_max_index - a_item_index > 0 then
-					a_item_pointer := {GDK}.g_slist_nth_data (
+					a_item_pointer := {GLIB}.g_slist_nth_data (
 								radio_group,
 								a_max_index
 							)
 				elseif a_max_index > 0 then
-					a_item_pointer := {GDK}.g_slist_nth_data (
+					a_item_pointer := {GLIB}.g_slist_nth_data (
 								radio_group,
 								a_max_index - 1
 							)
@@ -290,7 +290,7 @@ feature -- Status setting
 				if r.is_selected then
 					if not radio_group.is_default_pointer then
 						{GTK}.gtk_toggle_button_set_active (
-							{GDK}.gslist_struct_data (radio_group),
+							{GLIB}.gslist_struct_data (radio_group),
 							True
 						)
 					end
@@ -478,8 +478,8 @@ feature {NONE} -- Externals
 			until
 				cur.is_default_pointer
 			loop
-				Result.extend ({GDK}.gslist_struct_data (cur))
-				cur := {GDK}.gslist_struct_next (cur)
+				Result.extend ({GLIB}.gslist_struct_data (cur))
+				cur := {GLIB}.gslist_struct_next (cur)
 			end
 		ensure
 		--	same_size: Result.count = g_slist_length (gslist)
@@ -496,8 +496,8 @@ feature {NONE} -- Externals
 			until
 				cur.is_default_pointer
 			loop
-				Result.extend ({GDK}.glist_struct_data (cur))
-				cur := {GDK}.glist_struct_next (cur)
+				Result.extend ({GLIB}.glist_struct_data (cur))
+				cur := {GLIB}.glist_struct_next (cur)
 			end
 		ensure
 		--	same_size: Result.count = g_slist_length (gslist)

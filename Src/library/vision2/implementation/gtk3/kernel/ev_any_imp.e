@@ -49,23 +49,23 @@ feature {EV_ANY_I} -- Access
 			if needs_event_box then
 				l_c_object := {GTK}.gtk_event_box_new -- Floating ref
 							-- TODO using GDK instead of GTK
-				l_c_object := {GDK}.g_object_ref_sink (l_c_object) -- Adopt floating ref count
+				l_c_object := {GOBJECT}.g_object_ref_sink (l_c_object) -- Adopt floating ref count
 
 				{GTK}.gtk_container_add (l_c_object, a_c_object) -- Adopt `a_c_object` floating ref, or add ref if a_c_object was not floating.
 				{GTK}.gtk_widget_show (a_c_object)
 			else
-				if {GDK}.g_object_is_floating (a_c_object) then
+				if {GOBJECT}.g_object_is_floating (a_c_object) then
 					c_object_was_floating := True
 						-- Adopt floating ref count, or increase ref count
 						-- Using GDK instead of GTK
-					l_c_object := {GDK}.g_object_ref_sink (a_c_object)
+					l_c_object := {GOBJECT}.g_object_ref_sink (a_c_object)
 				else
 					check
 						is_gtk_top_window: {GTK}.gtk_is_widget (a_c_object) and then
 											{GTK}.gtk_widget_is_toplevel (a_c_object)
 					end
 					l_c_object := a_c_object -- Already has a ref
-					l_c_object := {GDK}.g_object_ref (l_c_object) -- Increase ref count to protect the marshal callback
+					l_c_object := {GOBJECT}.g_object_ref (l_c_object) -- Increase ref count to protect the marshal callback
 				end
 			end
 
@@ -82,13 +82,13 @@ feature {EV_ANY_I} -- Access
 				{GTK}.gtk_is_widget (l_c_object) and then
 				{GTK}.gtk_widget_is_toplevel (l_c_object)
 			then
-				if {GDK}.internal_g_object_ref_count (l_c_object) /= 2 then
+				if {GOBJECT}.internal_g_object_ref_count (l_c_object) /= 2 then
 					check unexpected_ref_count: False end
-					{GDK}.printf (generator + ".set_c_object: unexpected ref count for c_object=" + l_c_object.out + " #" + {GDK}.internal_g_object_ref_count (l_c_object).out + " /= 2 !%N")
+					{GLIB}.printf (generator + ".set_c_object: unexpected ref count for c_object=" + l_c_object.out + " #" + {GOBJECT}.internal_g_object_ref_count (l_c_object).out + " /= 2 !%N")
 				end
-			elseif {GDK}.internal_g_object_ref_count (l_c_object) /= 1 then
+			elseif {GOBJECT}.internal_g_object_ref_count (l_c_object) /= 1 then
 				check unexpected_ref_count: False end
-				{GDK}.printf (generator + ".set_c_object: unexpected ref count for c_object=" + l_c_object.out + " #" + {GDK}.internal_g_object_ref_count (l_c_object).out + " /= 1 !%N")
+				{GLIB}.printf (generator + ".set_c_object: unexpected ref count for c_object=" + l_c_object.out + " #" + {GOBJECT}.internal_g_object_ref_count (l_c_object).out + " /= 1 !%N")
 			end
 
 			debug ("gtk_name")
@@ -388,14 +388,14 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
 						{GTK2}.gtk_widget_destroy (l_c_object)
 					else
 							-- the run dispose is usually called by gtk_widget_destroy.
-						{GDK}.g_object_run_dispose (l_c_object)
+						{GOBJECT}.g_object_run_dispose (l_c_object)
 					end
 
 						-- Decrement the reference count for `l_c_object` (should correspond to the reference used to protect the marshal callback  see `set_c_object`)
 					debug ("gtk_memory")
-						{GDK}.printf (generator + ".c_object_dispose before final unref " + l_c_object.out + " #" + {GDK}.internal_g_object_ref_count (l_c_object).out + " .%N")
+						{GLIB}.printf (generator + ".c_object_dispose before final unref " + l_c_object.out + " #" + {GOBJECT}.internal_g_object_ref_count (l_c_object).out + " .%N")
 					end
-					{GDK}.g_object_unref (l_c_object)
+					{GOBJECT}.g_object_unref (l_c_object)
 
 					c_object := default_pointer
 				end

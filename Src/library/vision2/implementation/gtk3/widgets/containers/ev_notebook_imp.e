@@ -121,8 +121,8 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 			if a_event_box /= default_pointer then
 				a_hbox := {GTK}.gtk_bin_get_child (a_event_box)
 				a_list := {GTK}.gtk_container_get_children (a_hbox)
-				a_label := {GDK}.g_list_nth_data (a_list, 1)
-				{GDK}.g_list_free (a_list)
+				a_label := {GLIB}.g_list_nth_data (a_list, 1)
+				{GLIB}.g_list_free (a_list)
 			end
 
 			if a_label /= default_pointer then
@@ -148,8 +148,8 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 			if a_event_box /= default_pointer then
 				a_hbox := {GTK}.gtk_bin_get_child (a_event_box)
 				a_list := {GTK}.gtk_container_get_children (a_hbox)
-				a_image := {GDK}.g_list_nth_data (a_list, 0)
-				{GDK}.g_list_free (a_list)
+				a_image := {GLIB}.g_list_nth_data (a_list, 0)
+				{GLIB}.g_list_free (a_list)
 				a_pixbuf := {GTK2}.gtk_image_get_pixbuf (a_image)
 				if a_pixbuf /= default_pointer then
 					create Result
@@ -303,9 +303,9 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 			a_event_box := {GTK}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
 			a_hbox := {GTK}.gtk_bin_get_child (a_event_box)
 			a_list := {GTK}.gtk_container_get_children (a_hbox)
-			a_label := {GDK}.g_list_nth_data (a_list, 1)
+			a_label := {GLIB}.g_list_nth_data (a_list, 1)
 			{GTK}.gtk_label_set_text (a_label, a_cs.item)
-			{GDK}.g_list_free (a_list)
+			{GLIB}.g_list_free (a_list)
 		end
 
 	set_item_pixmap (an_item: attached like item; a_pixmap: detachable EV_PIXMAP)
@@ -322,8 +322,8 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 			a_hbox := {GTK}.gtk_bin_get_child (a_event_box)
 
 			a_list := {GTK}.gtk_container_get_children (a_hbox)
-			a_image := {GDK}.g_list_nth_data (a_list, 0)
-			{GDK}.g_list_free (a_list)
+			a_image := {GLIB}.g_list_nth_data (a_list, 0)
+			{GLIB}.g_list_free (a_list)
 
 			if a_pixmap /= Void then
 				a_pix_imp ?= a_pixmap.implementation

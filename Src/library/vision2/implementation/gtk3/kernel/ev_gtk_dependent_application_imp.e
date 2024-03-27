@@ -39,9 +39,9 @@ feature -- Initialize
 			dlg := {GTK2}.gtk_dialog_new
 				-- take ownership
 				-- Using GDK instead GDK
-			dlg := {GDK}.g_object_ref_sink (dlg)
+			dlg := {GOBJECT}.g_object_ref_sink (dlg)
 				-- unref the dialog, as we do nothing with it
-			{GDK}.g_object_unref (dlg)
+			{GOBJECT}.g_object_unref (dlg)
 				-- destroy dlg
 			{GTK2}.gtk_widget_destroy (dlg)
 			initialize_gtk_theme_properties
@@ -202,11 +202,11 @@ feature -- Implementation
 					Result := c_strcmp (previous_font_settings, font_name_ptr) /= 0
 					if Result then
 							-- Font settings have changed
-						{GDK}.g_free (previous_font_settings)
+						{GLIB}.g_free (previous_font_settings)
 						previous_font_settings := font_name_ptr
 					else
 							-- Font settings have not changed so we free font_name_ptr.
-						{GDK}.g_free (font_name_ptr)
+						{GLIB}.g_free (font_name_ptr)
 					end
 				else
 					Result := True

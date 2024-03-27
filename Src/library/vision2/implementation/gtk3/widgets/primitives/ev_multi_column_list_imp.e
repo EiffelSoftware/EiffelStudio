@@ -285,14 +285,14 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			if a_columns > model_column_count - 1 then
-				create a_type_array.make ((a_columns + 1) * {GDK}.sizeof_gtype)
+				create a_type_array.make ((a_columns + 1) * {GOBJECT}.sizeof_gtype)
 				from
 					{GDK}.add_gdk_type_pixbuf (a_type_array.item, 0)
 					i := 1
 				until
 					i > a_columns
 				loop
-					{GDK}.add_g_type_string (a_type_array.item, i * {GDK}.sizeof_gtype)
+					{GOBJECT}.add_g_type_string (a_type_array.item, i * {GOBJECT}.sizeof_gtype)
 					i := i + 1
 				end
 
@@ -439,8 +439,8 @@ feature -- Access
 		do
 			col_list := {GTK2}.gtk_tree_view_get_columns (tree_view)
 			if col_list /= default_pointer then
-				Result := {GDK}.g_list_length (col_list)
-				{GDK}.g_list_free (col_list)
+				Result := {GLIB}.g_list_length (col_list)
+				{GLIB}.g_list_free (col_list)
 			end
 		end
 
@@ -478,12 +478,12 @@ feature -- Access
 			a_tree_path_list := {GTK2}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
 
 			if a_tree_path_list /= default_pointer then
-					a_tree_path := {GDK}.glist_struct_data (a_tree_path_list)
+					a_tree_path := {GLIB}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
 					Result := ((ev_children @ (mp.read_integer_32 (0) + 1)).attached_interface)
 					{GTK2}.gtk_tree_path_list_free_contents (a_tree_path_list)
-					{GDK}.g_list_free (a_tree_path_list)
+					{GLIB}.g_list_free (a_tree_path_list)
 			end
 		end
 
@@ -509,14 +509,14 @@ feature -- Access
 				until
 					a_tree_path_list = default_pointer
 				loop
-					a_tree_path := {GDK}.glist_struct_data (a_tree_path_list)
+					a_tree_path := {GLIB}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
 					Result.extend ((ev_children @ (mp.read_integer_32 (0) + 1)).attached_interface)
-					a_tree_path_list := {GDK}.glist_struct_next (a_tree_path_list)
+					a_tree_path_list := {GLIB}.glist_struct_next (a_tree_path_list)
 				end
 				{GTK2}.gtk_tree_path_list_free_contents (a_tree_path_list)
-				{GDK}.g_list_free (a_tree_path_list)
+				{GLIB}.g_list_free (a_tree_path_list)
 			end
 		end
 
@@ -699,15 +699,15 @@ feature -- Element change
 			from
 				i := 0
 			until
-				i = {GDK}.g_list_length (a_cell_rend_list)
+				i = {GLIB}.g_list_length (a_cell_rend_list)
 			loop
-				a_cell_rend := {GDK}.g_list_nth_data (a_cell_rend_list, i)
+				a_cell_rend := {GLIB}.g_list_nth_data (a_cell_rend_list, i)
 				{GTK2}.g_object_set_real_32 (a_cell_rend, {GTK_PROPERTIES}.xalign, alignment)
 				i := i + 1
 			end
 
 			{GTK2}.gtk_tree_view_column_set_alignment (a_column_ptr, alignment)
-			{GDK}.g_list_free (a_cell_rend_list)
+			{GLIB}.g_list_free (a_cell_rend_list)
 		end
 
 	set_row_height (value: INTEGER)
@@ -718,13 +718,13 @@ feature -- Element change
 		do
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
 			a_cell_rend_list := {GTK}.gtk_cell_layout_get_cells (a_column_ptr)
-			a_cell_rend := {GDK}.g_list_nth_data (a_cell_rend_list, 0)
+			a_cell_rend := {GLIB}.g_list_nth_data (a_cell_rend_list, 0)
 
 				-- Row height setting has to take the vertical spacing of the tree view in to account
 			{GTK2}.gtk_widget_style_get_integer (tree_view, {GTK_PROPERTIES}.vertical_separator, $a_vert_sep)
 
 			{GTK2}.g_object_set_integer (a_cell_rend, {GTK_PROPERTIES}.height, value - a_vert_sep)
-			{GDK}.g_list_free (a_cell_rend_list)
+			{GLIB}.g_list_free (a_cell_rend_list)
 		end
 
 	wipe_out
@@ -1045,7 +1045,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 				a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 				check attached {EV_GTK_TREE_ITER_STRUCT} ev_children.i_th (a_row).list_iter as  a_list_iter then
 					{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
-					{GDK}.g_object_unref (a_pixbuf)
+					{GOBJECT}.g_object_unref (a_pixbuf)
 				end
 			end
 		end

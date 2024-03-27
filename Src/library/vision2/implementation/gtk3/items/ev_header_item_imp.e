@@ -68,7 +68,7 @@ feature -- Initialization
 				{GTK2}.gtk_label_set_ellipsize (text_label, 3)
 			end
 			box := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
-			box := {GDK}.g_object_ref_sink (box)
+			box := {GOBJECT}.g_object_ref_sink (box)
 			{GTK}.gtk_widget_show (box)
 			{GTK}.gtk_box_pack_start (box, pixmap_box, False, False, 0)
 			{GTK}.gtk_box_pack_end (box, text_label, True, True, 0)
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 	c_object_dispose
 		do
 			if not box.is_default_pointer then
-				{GDK}.g_object_unref (box)
+				{GOBJECT}.g_object_unref (box)
 				box := default_pointer
 			end
 			Precursor

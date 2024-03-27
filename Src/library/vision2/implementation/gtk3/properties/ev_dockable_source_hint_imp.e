@@ -204,7 +204,7 @@ feature {EV_ANY} -- Size change
 	discard_pixbuf
 		do
 			if not pixbuf.is_default_pointer then
-				{GDK}.g_object_unref (pixbuf)
+				{GOBJECT}.g_object_unref (pixbuf)
 				pixbuf := default_pointer
 				pixbuf_rectangle := Void
 			end

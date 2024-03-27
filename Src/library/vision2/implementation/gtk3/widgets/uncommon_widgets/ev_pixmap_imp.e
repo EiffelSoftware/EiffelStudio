@@ -226,7 +226,7 @@ feature -- Element change
 			end
 			set_pixmap_from_pixbuf (filepixbuf)
 				-- Unreference pixbuf so that it may be collected.
-			{GDK}.g_object_unref (filepixbuf)
+			{GOBJECT}.g_object_unref (filepixbuf)
 		end
 
 	pixbuf: POINTER
@@ -261,9 +261,9 @@ feature -- Element change
 					a_scale_type := {GDK}.gdk_interp_bilinear
 				end
 				scaled_pixbuf := {GDK}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y, a_scale_type)
-				{GDK}.g_object_unref (a_gdkpixbuf)
+				{GOBJECT}.g_object_unref (a_gdkpixbuf)
 				set_pixmap_from_pixbuf (scaled_pixbuf)
-				{GDK}.g_object_unref (scaled_pixbuf)
+				{GOBJECT}.g_object_unref (scaled_pixbuf)
 			end
 		end
 
@@ -513,7 +513,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 
 			set_pixmap_from_pixbuf (xpmpixbuf)
 				-- Unreference pixbuf so that it may be collected.
-			{GDK}.g_object_unref (xpmpixbuf)
+			{GOBJECT}.g_object_unref (xpmpixbuf)
 		end
 
 	set_from_stock_id (a_stock_id: POINTER)
@@ -539,7 +539,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 			if stock_pixbuf /= default_pointer then
 					-- If a stock pixmap can be found then set it, else do nothing.
 				set_pixmap_from_pixbuf (stock_pixbuf)
-				{GDK}.g_object_unref (stock_pixbuf)
+				{GOBJECT}.g_object_unref (stock_pixbuf)
 			end
 		end
 
@@ -562,12 +562,12 @@ feature {NONE} -- Implementation
 				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
 					stretched_pixbuf := {GDK}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {GDK}.gdk_interp_bilinear)
 						-- Unref original pixbuf so it gets deleted from memory
-					{GDK}.g_object_unref (a_gdkpixbuf)
+					{GOBJECT}.g_object_unref (a_gdkpixbuf)
 						-- Set our scaled pixbuf to be the one that is saved
 					a_gdkpixbuf := stretched_pixbuf
 				end
 				{GDK}.gdk_pixbuf_save (a_gdkpixbuf, a_handle.item, a_filetype.item, $gerror)
-				{GDK}.g_object_unref (a_gdkpixbuf)
+				{GOBJECT}.g_object_unref (a_gdkpixbuf)
 				if not gerror.is_default_pointer then
 						-- GDK cannot save the image. Raise an exception.
 					create e.make_from_pointer (gerror)

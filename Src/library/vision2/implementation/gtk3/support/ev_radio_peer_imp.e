@@ -41,7 +41,7 @@ feature -- Status report
 							Result.extend (l_interface)
 						end
 					end
-					cur := {GDK}.gslist_struct_next (cur)
+					cur := {GLIB}.gslist_struct_next (cur)
 				end
 			end
 		end
@@ -68,7 +68,7 @@ feature -- Status report
 							l_result ?= peer_imp.interface
 						end
 					end
-					cur := {GDK}.gslist_struct_next (cur)
+					cur := {GLIB}.gslist_struct_next (cur)
 				end
 				check l_result /= Void then end
 				Result := l_result
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 	widget_object (a_list: POINTER): POINTER
 			-- Returns c_object relative to a_list data.
 		do
-			Result := {GDK}.gslist_struct_data (a_list)
+			Result := {GLIB}.gslist_struct_data (a_list)
 		end
 
 feature {EV_ANY_I} -- Implementation

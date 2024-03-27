@@ -1211,7 +1211,7 @@ feature -- Basic operation
 			until
 				a_target_list.is_default_pointer
 			loop
-				a_target := {GDK}.glist_struct_data (a_target_list)
+				a_target := {GLIB}.glist_struct_data (a_target_list)
 				if not a_target.is_default_pointer then
 						-- This is a target atom indicating the type of the drop.
 					{GDK}.gdk_selection_convert (src_window, a_selection, a_target, a_time)
@@ -1237,7 +1237,7 @@ feature -- Basic operation
 						end
 					end
 				end
-				a_target_list := {GDK}.glist_struct_next (a_target_list)
+				a_target_list := {GLIB}.glist_struct_next (a_target_list)
 			end
 			if l_success and then attached l_file_list then
 				dest_window := {GDK}.gdk_drag_context_get_dest_window (a_context)
@@ -1261,8 +1261,8 @@ feature -- Basic operation
 			end
 			{GDK}.gdk_drop_finish (a_context, l_success, a_time)
 			{GTK}.gtk_drag_finish (a_context, l_success, False, a_time)
-			{GDK}.g_free (prop_data)
-			{GDK}.g_free (a_target_list)
+			{GLIB}.g_free (prop_data)
+			{GLIB}.g_free (a_target_list)
 		end
 
 
@@ -1332,7 +1332,7 @@ feature -- Basic operation
 		do
 			if not is_destroyed then
 				if tooltips /= default_pointer then
-					{GDK}.g_object_unref (tooltips)
+					{GOBJECT}.g_object_unref (tooltips)
 				end
 				set_is_destroyed (True)
 					-- This will exit our main loop

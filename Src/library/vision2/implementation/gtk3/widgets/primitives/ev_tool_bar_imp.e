@@ -255,7 +255,7 @@ feature -- Implementation
 				check
 					radio_button_not_null: l_radio_group /= default_pointer
 				end
-				if {GDK}.g_slist_length (l_radio_group) = 1 then
+				if {GLIB}.g_slist_length (l_radio_group) = 1 then
 					-- This is the last radio button in the group so we set `radio_group' to null.
 					radio_group := default_pointer
 				end

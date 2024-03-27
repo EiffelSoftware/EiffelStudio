@@ -102,8 +102,8 @@ feature {NONE} -- Implementation
 		do
 			a_child_list := {GTK}.gtk_container_get_children (pixmap_box)
 			if a_child_list /= l_null then
-				Result := {GDK}.g_list_nth_data (a_child_list, 0)
-				{GDK}.g_list_free (a_child_list)
+				Result := {GLIB}.g_list_nth_data (a_child_list, 0)
+				{GLIB}.g_list_free (a_child_list)
 			end
 		end
 

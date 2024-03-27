@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 		external
 			"C inline use %"ev_gtk_callback_marshal.h%""
 		alias
-			"c_ev_gtk_callback_marshal_init ((EIF_REFERENCE) $object, (void (*) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)) $a_marshal);"
+			"c_ev_gtk_callback_marshal_init ((EIF_REFERENCE) $object, (void (*) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER)) $a_marshal);"
 		end
 
 	frozen marshal_set_is_enabled (a_enabled_state: BOOLEAN)

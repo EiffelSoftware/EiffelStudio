@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			--| This is just to satisfy pixmapable and textable contracts.
 		do
 			box := {GTK}.gtk_hbox_new (False, 0)
-			{GTK2}.object_ref (box)
+			{GOBJECT}.g_object_ref (box)
 			{GTK}.gtk_object_sink (box)
 			{GTK}.gtk_box_pack_start (box, text_label, True, True, 0)
 			{GTK}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
@@ -82,7 +82,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 	dispose
 			-- Unreference unwanted gtk widgets.
 		do
-			{GTK2}.object_unref (box)
+			{GOBJECT}.g_object_unref (box)
 			Precursor
 		end
 

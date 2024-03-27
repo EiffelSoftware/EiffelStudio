@@ -403,7 +403,7 @@ feature {EV_HEADER_IMP} -- Implementation
 					{GTK2}.signal_disconnect (a_button, item_event_id)
 					item_event_id := 0
 				end
-				{GTK2}.object_ref (box)
+				{GOBJECT}.g_object_ref (box)
 				{GTK2}.gtk_tree_view_column_set_widget (c_object, {GTK}.gtk_label_new (default_pointer))
 			end
 		end
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 	destroy
 			-- Destroy `c_object'.
 		do
-			{GTK2}.object_unref (c_object)
+			{GOBJECT}.g_object_unref (c_object)
 			c_object := default_pointer
 			set_is_destroyed (True)
 		end

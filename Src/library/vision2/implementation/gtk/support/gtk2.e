@@ -3225,23 +3225,6 @@ feature -- Externals
 			is_class: class
 		end
 
-	frozen object_ref (a_c_object: POINTER)
-		external
-			"C signature (gpointer) use <ev_gtk.h>"
-		alias
-			"g_object_ref"
-		ensure
-			is_class: class
-		end
-
-	frozen object_unref, g_object_unref (a_c_object: POINTER)
-		external
-			"C signature (gpointer) use <ev_gtk.h>"
-		alias
-			"g_object_unref"
-		ensure
-			is_class: class
-		end
 
 	frozen gtk_text_view_new: POINTER
 		external

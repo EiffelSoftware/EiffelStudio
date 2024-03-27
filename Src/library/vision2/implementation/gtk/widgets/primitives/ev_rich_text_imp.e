@@ -565,7 +565,7 @@ feature -- Status setting
 				buffer_locked_in_format_mode := True
 					-- Temporarily remove text buffer to avoid redraw and event firing
 				append_buffer := text_buffer
-				{GTK2}.object_ref (append_buffer)
+				{GOBJECT}.g_object_ref (append_buffer)
 				{GTK2}.gtk_text_view_set_buffer (text_view, {GTK2}.gtk_text_buffer_new (default_pointer))
 			end
 			a_format_imp ?= format.implementation
@@ -618,14 +618,14 @@ feature -- Status setting
 				{GTK2}.gtk_text_view_set_buffer (text_view, append_buffer)
 				text_buffer := append_buffer
 				initialize_buffer_events
-				{GTK2}.object_unref (append_buffer)
+				{GOBJECT}.g_object_unref (append_buffer)
 				append_buffer := NULL
 				buffer_locked_in_format_mode := False
 			elseif buffer_locked_in_append_mode then
 				{GTK2}.gtk_text_view_set_buffer (text_view, append_buffer)
 				text_buffer := append_buffer
 				initialize_buffer_events
-				{GTK2}.object_unref (append_buffer)
+				{GOBJECT}.g_object_unref (append_buffer)
 				append_buffer := NULL
 				buffer_locked_in_append_mode := False
 			end
@@ -925,7 +925,7 @@ feature {NONE} -- Implementation
 	dispose_append_buffer
 			-- Clean up `append_buffer'.
 		do
-			{GTK2}.object_unref (append_buffer)
+			{GOBJECT}.g_object_unref (append_buffer)
 			append_buffer := default_pointer
 		end
 

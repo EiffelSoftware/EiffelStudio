@@ -53,7 +53,7 @@ feature {EV_ANY_I} -- Access
 			end
 
 				-- Remove floating state.
-			{GTK2}.object_ref (l_c_object)
+			{GOBJECT}.g_object_ref (l_c_object)
 			{GTK}.gtk_object_sink (l_c_object)
 
 			debug ("EV_GTK_CREATION")
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 						-- Windows need to be explicitly destroyed.
 					{GTK2}.object_destroy (l_c_object)
 				end
-				{GTK2}.object_unref (l_c_object)
+				{GOBJECT}.g_object_unref (l_c_object)
 			end
 			Precursor {IDENTIFIED}
 
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 
 				-- The object has been marked for destruction from its parent so we unref
 				-- so that gtk will reap back the memory.
-			{GTK2}.object_unref (c_object)
+			{GOBJECT}.g_object_unref (c_object)
 			c_object := l_null
 			set_is_destroyed (True)
 

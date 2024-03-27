@@ -1052,7 +1052,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			a_list_iter := ev_children.i_th (a_row).list_iter
 			check a_list_iter /= Void then end
 			{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
-			{GTK2}.object_unref (a_pixbuf)
+			{GOBJECT}.g_object_unref (a_pixbuf)
 		end
 
 	remove_row_pixmap (a_row: INTEGER)

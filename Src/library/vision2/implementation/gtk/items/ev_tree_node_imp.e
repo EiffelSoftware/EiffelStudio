@@ -553,7 +553,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			par_tree: detachable EV_TREE_IMP
 		do
 			if gdk_pixbuf /= default_pointer then
-				{GTK2}.object_unref (gdk_pixbuf)
+				{GOBJECT}.g_object_unref (gdk_pixbuf)
 				gdk_pixbuf := default_pointer
 			end
 			par_tree := parent_tree_imp
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 			-- Clean up
 		do
 			if not is_in_final_collect and then gdk_pixbuf /= default_pointer then
-					{GTK2}.object_unref (gdk_pixbuf)
+					{GOBJECT}.g_object_unref (gdk_pixbuf)
 					gdk_pixbuf := default_pointer
 			end
 		end

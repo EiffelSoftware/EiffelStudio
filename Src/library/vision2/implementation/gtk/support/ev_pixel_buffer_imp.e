@@ -185,7 +185,7 @@ feature -- Command
 				check l_pixmap_imp /= Void then end
 				l_pixbuf := {GTK}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
 				l_pixmap_imp.set_pixmap_from_pixbuf (l_pixbuf)
-				{GTK2}.object_unref (l_pixbuf)
+				{GOBJECT}.g_object_unref (l_pixbuf)
 			else
 				l_internal_pixmap := internal_pixmap
 				check l_internal_pixmap /= Void then end
@@ -249,7 +249,7 @@ feature -- Command
 							(-a_rect.x).max (0), (-a_rect.x).max (0), 1.0, 1.0, {GTK2}.gdk_interp_nearest)
 					end
 				end
-				{GTK2}.object_unref (l_subpixbuf)
+				{GOBJECT}.g_object_unref (l_subpixbuf)
 			else
 				create Result
 				l_internal_pixmap := sub_pixmap (a_rect)
@@ -346,13 +346,13 @@ feature -- Command
 			l_pixbuf_ptr := {GTK2}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_width, l_height)
 			l_pixbuf_ptr2 := {GTK2}.gdk_pixbuf_add_alpha (l_pixbuf_ptr, True, l_grey_value, l_grey_value, l_grey_value)
 				-- Clean up
-			{GTK2}.object_unref (l_pixbuf_ptr)
+			{GOBJECT}.g_object_unref (l_pixbuf_ptr)
 			l_pixbuf_ptr := default_pointer
 
 				-- Composite pixbuf with alpha on to `Current'
 			{GTK2}.gdk_pixbuf_composite (l_pixbuf_ptr2, gdk_pixbuf, l_x, l_y, l_width, l_height, 0, 0, 1, 1, 0, l_composite_alpha)
 				-- Clean up
-			{GTK2}.object_unref (l_pixbuf_ptr2)
+			{GOBJECT}.g_object_unref (l_pixbuf_ptr2)
 			l_pixbuf_ptr2 := default_pointer
 		end
 
@@ -454,14 +454,14 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 			l_label: POINTER
 		do
 			l_label := {GTK}.gtk_label_new (default_pointer)
-			{GTK2}.object_ref (l_label)
+			{GOBJECT}.g_object_ref (l_label)
 			stock_pixbuf := {GTK2}.gtk_widget_render_icon (l_label, a_stock_id, {GTK2}.gtk_icon_size_dialog_enum, default_pointer)
-			{GTK2}.object_unref (l_label)
+			{GOBJECT}.g_object_unref (l_label)
 			l_label := default_pointer
 			if stock_pixbuf /= default_pointer then
 					-- If a stock pixmap can be found then set it, else do nothing.
 				set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (stock_pixbuf))
-				{GTK2}.object_unref (stock_pixbuf)
+				{GOBJECT}.g_object_unref (stock_pixbuf)
 			end
 		end
 
@@ -478,13 +478,13 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implemen
 		do
 			if gdk_pixbuf /= default_pointer then
 					-- Unref previous gdkpixbuf
-				{GTK2}.object_unref (gdk_pixbuf)
+				{GOBJECT}.g_object_unref (gdk_pixbuf)
 			end
 			if a_pixbuf /= default_pointer then
 				if not {GTK2}.gdk_pixbuf_get_has_alpha (a_pixbuf) then
 						-- Make sure that the pixel data is internally stored as R G B A
 					gdk_pixbuf := {GTK2}.gdk_pixbuf_add_alpha (a_pixbuf, False, 0, 0, 0)
-					{GTK2}.object_unref (a_pixbuf)
+					{GOBJECT}.g_object_unref (a_pixbuf)
 				else
 					gdk_pixbuf := a_pixbuf
 				end

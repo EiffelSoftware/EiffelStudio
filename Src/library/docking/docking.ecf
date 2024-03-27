@@ -94,4 +94,7 @@
 		<setting name="platform" value="macintosh"/>
 		<variable name="vision_implementation" value="cocoa"/>
 	</target>
+	<target name="docking_gtk2" extends="docking">
+		<variable name="vision_implementation" value="gtk2"/>
+	</target>
 </system>

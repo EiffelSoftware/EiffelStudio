@@ -200,7 +200,7 @@ feature -- Element change
 			else
 				set_pixmap_from_pixbuf (filepixbuf)
 			end
-			{GTK2}.object_unref (filepixbuf)
+			{GOBJECT}.g_object_unref (filepixbuf)
 		end
 
 	set_with_default
@@ -229,9 +229,9 @@ feature -- Element change
 					a_scale_type := {GTK2}.gdk_interp_bilinear
 				end
 				scaled_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y, a_scale_type)
-				{GTK2}.object_unref (a_gdkpixbuf)
+				{GOBJECT}.g_object_unref (a_gdkpixbuf)
 				set_pixmap_from_pixbuf (scaled_pixbuf)
-				{GTK2}.object_unref (scaled_pixbuf)
+				{GOBJECT}.g_object_unref (scaled_pixbuf)
 			end
 		end
 
@@ -441,7 +441,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 			if stock_pixbuf /= NULL then
 					-- If a stock pixmap can be found then set it, else do nothing.
 				set_pixmap_from_pixbuf (stock_pixbuf)
-				{GTK2}.object_unref (stock_pixbuf)
+				{GOBJECT}.g_object_unref (stock_pixbuf)
 			end
 		end
 
@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
 					stretched_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {GTK2}.gdk_interp_bilinear)
 						-- Unref original pixbuf so it gets deleted from memory
-					{GTK2}.object_unref (a_gdkpixbuf)
+					{GOBJECT}.g_object_unref (a_gdkpixbuf)
 						-- Set our scaled pixbuf to be the one that is saved
 					a_gdkpixbuf := stretched_pixbuf
 				end
@@ -491,7 +491,7 @@ feature {NONE} -- Implementation
 					-- We could not save the image so raise an exception
 					(create {EXCEPTIONS}).raise ("Could not save image file.")
 				end
-				{GTK2}.object_unref (a_gdkpixbuf)
+				{GOBJECT}.g_object_unref (a_gdkpixbuf)
 			else
 				-- If Gtk cannot save the file then the default is called
 				Precursor {EV_PIXMAP_I} (a_format, a_file_path)

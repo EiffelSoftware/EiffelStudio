@@ -684,7 +684,7 @@ feature -- Drawing operations
 					l_pixels := {GTK}.gdk_pixbuf_get_pixels (l_back_buffer)
 					l_rowstride := {GTK}.gdk_pixbuf_get_rowstride (l_back_buffer)
 					{GTK}.gdk_draw_rgb_32_image (drawable, gc, l_x + device_x_offset, l_y + device_y_offset, l_rect.width, l_rect.height, 0, l_pixels, l_rowstride.as_integer_32)
-					{GTK2}.object_unref (l_back_buffer)
+					{GOBJECT}.g_object_unref (l_back_buffer)
 				end
 			end
 		end
@@ -800,7 +800,7 @@ feature -- Drawing operations
 			check pix_imp /= Void then end
 			a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
 			pix_imp.set_pixmap_from_pixbuf (a_pix)
-			{GTK2}.object_unref (a_pix)
+			{GOBJECT}.g_object_unref (a_pix)
 		end
 
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE)
@@ -1071,7 +1071,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 					l_mask_pix := {GTK2}.gdk_pixbuf_add_alpha (l_mask_pix, True, 255, 255, 255)
 						-- Free the original `l_mask_pix' as it was replaced by a new
 						-- one with alpha channel.
-					{GTK2}.object_unref (l_temp_pix)
+					{GOBJECT}.g_object_unref (l_temp_pix)
 
 						-- Add alpha channel to Result as required by
 						-- `draw_mask_on_pixbuf' since the creation of `Result'
@@ -1080,7 +1080,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 					Result := {GTK2}.gdk_pixbuf_add_alpha (Result, False, 0, 0, 0)
 						-- Free the original `Result' as it was replaced by a new
 						-- one with alpha channel.
-					{GTK2}.object_unref (l_temp_pix)
+					{GOBJECT}.g_object_unref (l_temp_pix)
 
 						-- Draw mask on top of pixbuf.
 					{GTK2}.gdk_pixbuf_composite (l_mask_pix, Result, 0, 0, a_width, a_height, 0.0, 0.0, 1.0, 1.0, {GTK2}.gdk_interp_bilinear, 255)
@@ -1088,7 +1088,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 					draw_mask_on_pixbuf (Result, l_mask_pix)
 
 						-- Clean up
-					{GTK2}.object_unref (l_mask_pix)
+					{GOBJECT}.g_object_unref (l_mask_pix)
 				end
 			end
 		end
@@ -1100,7 +1100,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 		do
 			a_pixbuf := pixbuf_from_drawable
 			Result := {GTK2}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, {GTK2}.gdk_interp_bilinear)
-			{GTK2}.object_unref (a_pixbuf)
+			{GOBJECT}.g_object_unref (a_pixbuf)
 		end
 
 feature {NONE} -- Implementation

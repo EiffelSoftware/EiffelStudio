@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 				gtk_dependent_initialize
 
 				tooltips := {GTK}.gtk_tooltips_new
-				{GTK2}.object_ref (tooltips)
+				{GOBJECT}.g_object_ref (tooltips)
 				{GTK}.gtk_object_sink (tooltips)
 				set_tooltip_delay (500)
 
@@ -143,7 +143,7 @@ feature {NONE} -- Initialization
 				-- then the display will be slow anyway so the usage of this function will remain the same.
 			is_display_remote := l_image = default_pointer
 			if not is_display_remote then
-				{GTK2}.object_unref (l_image)
+				{GOBJECT}.g_object_unref (l_image)
 			end
 
 				-- Check whether display supports transparency
@@ -1103,7 +1103,7 @@ feature -- Basic operation
 			-- End the application.
 		do
 			if not is_destroyed then
-				{GTK2}.object_unref (tooltips)
+				{GOBJECT}.g_object_unref (tooltips)
 				set_is_destroyed (True)
 					-- This will exit our main loop
 				destroy_actions.call (Void)

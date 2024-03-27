@@ -407,7 +407,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_button_number: INTEGER
 		do
-			if {GDK}.gdk_event_scroll_struct_scroll_direction (a_gdk_event) = {GTK2}.gdk_scroll_up_enum then
+			if {GDK}.gdk_event_scroll_struct_scroll_direction (a_gdk_event) = {GDK}.gdk_scroll_up_enum then
 				l_button_number := 4
 			else
 				l_button_number := 5
@@ -515,7 +515,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

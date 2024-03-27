@@ -165,10 +165,10 @@ feature {NONE} -- Implementation
 			if radio_imp /= Void then
 				if radio_imp.is_selected then
 					-- Select the first item in the radio group
-					if {GTK}.g_slist_length (radio_imp.radio_group) > 1 then
-						temp_item_pointer := {GTK}.g_slist_nth_data (radio_imp.radio_group, 0)
+					if {GDK}.g_slist_length (radio_imp.radio_group) > 1 then
+						temp_item_pointer := {GDK}.g_slist_nth_data (radio_imp.radio_group, 0)
 						if temp_item_pointer = radio_imp.c_object then
-							temp_item_pointer := {GTK}.g_slist_nth_data (radio_imp.radio_group, 1)
+							temp_item_pointer := {GDK}.g_slist_nth_data (radio_imp.radio_group, 1)
 						end
 						radio_imp ?= eif_object_from_c (temp_item_pointer)
 						if radio_imp /= Void then
@@ -263,7 +263,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_ITEM_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

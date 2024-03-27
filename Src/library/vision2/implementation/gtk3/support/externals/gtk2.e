@@ -8,8 +8,8 @@
 class
 	GTK2
 
-inherit
-	GDK
+--inherit
+--	GDK
 
 feature -- Style constants
 
@@ -497,14 +497,14 @@ feature -- Icon
 		do
 			glist := gtk_icon_theme_list_icons (icon_theme, a_context)
 			if not glist.is_default_pointer then
-				n := g_list_length (glist)
+				n := {GDK}.g_list_length (glist)
 				create Result.make (n)
 				from
 					i := 1
 				until
 					i > n
 				loop
-					p := g_list_nth_data (glist, i - 1)
+					p := {GDK}.g_list_nth_data (glist, i - 1)
 					if not p.is_default_pointer then
 						create str.make_from_pointer (p)
 						Result.extend (str.string)
@@ -514,7 +514,7 @@ feature -- Icon
 					i := i + 1
 				end
 			end
-			{GTK}.g_list_free (glist)
+			{GDK}.g_list_free (glist)
 		ensure
 			instance_free: class
 		end
@@ -2836,7 +2836,7 @@ feature -- Tooltip
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

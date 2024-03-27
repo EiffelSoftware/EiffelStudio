@@ -171,20 +171,20 @@ feature -- Window
 		do
 			glist := gtk_window_list_toplevels
 			if not glist.is_default_pointer then
-				n := g_list_length (glist)
+				n := {GDK}.g_list_length (glist)
 				from
 					i := 1
 				until
 					i > n or not Result.is_default_pointer
 				loop
-					p := g_list_nth_data (glist, i - 1)
+					p := {GDK}.g_list_nth_data (glist, i - 1)
 					if gtk_window_is_active (p) then
 						Result := p
 					end
 					i := i + 1
 				end
 			end
-			{GTK}.g_list_free (glist)
+			{GDK}.g_list_free (glist)
 		ensure
 			instance_free: class
 		end
@@ -1636,7 +1636,7 @@ feature -- Color Helper
 			c_rgba: POINTER
 			l_found: BOOLEAN
 		do
-			c_rgba := {GTK}.c_gdk_rgba_struct_allocate
+			c_rgba := {GDK}.c_gdk_rgba_struct_allocate
 			create l_gtk_c_string.set_with_eiffel_string (a_name)
 			l_found := {GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
 			if l_found then
@@ -1653,7 +1653,7 @@ feature -- Color Helper
 			c_rgba: POINTER
 			l_found: BOOLEAN
 		do
-			c_rgba := {GTK}.c_gdk_rgba_struct_allocate
+			c_rgba := {GDK}.c_gdk_rgba_struct_allocate
 			create l_gtk_c_string.set_with_eiffel_string (a_name)
 			l_found := {GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
 			if l_found then
@@ -1727,7 +1727,7 @@ feature -- Color Helper
 			color: POINTER
 		do
 			if a_reuse_color_object.is_default_pointer then
-				color := {GTK}.c_gdk_rgba_struct_allocate
+				color := {GDK}.c_gdk_rgba_struct_allocate
 			else
 				color := a_reuse_color_object
 			end

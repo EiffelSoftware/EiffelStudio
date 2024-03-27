@@ -60,7 +60,7 @@ feature -- Access
 			l_rgba_struct: POINTER
 		do
 			if user_clicked_ok then
-				l_rgba_struct := {GTK}.c_gdk_rgba_struct_allocate
+				l_rgba_struct := {GDK}.c_gdk_rgba_struct_allocate
 				{GTK2}.gtk_color_chooser_get_rgba (c_object, l_rgba_struct)
 				create Result.make_with_rgb (
 					{GDK}.rgba_struct_red (l_rgba_struct).truncated_to_real,
@@ -84,7 +84,7 @@ feature -- Element change
 			l_rgba_struct: POINTER
 		do
 			internal_set_color := a_color.twin
-			l_rgba_struct := {GTK}.c_gdk_rgba_struct_allocate
+			l_rgba_struct := {GDK}.c_gdk_rgba_struct_allocate
 			{GDK}.set_rgba_struct_with_rgb24 (l_rgba_struct, a_color.rgb_24_bit)
 			{GTK2}.gtk_color_chooser_set_rgba (c_object, l_rgba_struct)
 			l_rgba_struct.memory_free
@@ -100,7 +100,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COLOR_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

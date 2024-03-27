@@ -30,7 +30,7 @@ feature -- Access
 				l_style_context := background_color_style_context
 				Result := {GTK}.style_color (l_style_context, once "theme_bg_color")
 				if Result = Void then
-					l_rgba_color := {GTK}.c_gdk_rgba_struct_allocate
+					l_rgba_color := {GDK}.c_gdk_rgba_struct_allocate
 					{GTK}.gtk_style_context_save (l_style_context)
 					{GTK}.gtk_style_context_set_state (l_style_context, {GTK}.gtk_state_flag_normal_enum)
 					--{GTK}.gtk_style_context_get_color (l_style_context, {GTK}.gtk_style_context_get_state (l_style_context), l_rgba_color)
@@ -58,7 +58,7 @@ feature -- Access
 				l_style_context := foreground_color_style_context
 				Result := {GTK}.style_color (l_style_context, once "theme_fg_color")
 				if Result = Void then
-					l_rgba_color := {GTK}.c_gdk_rgba_struct_allocate
+					l_rgba_color := {GDK}.c_gdk_rgba_struct_allocate
 					{GTK}.gtk_style_context_save (l_style_context)
 					{GTK}.gtk_style_context_set_state (l_style_context, {GTK}.gtk_state_flag_normal_enum)
 					--{GTK}.gtk_style_context_get_color (l_style_context, {GTK}.gtk_style_context_get_state (l_style_context), l_rgba_color)
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 			color: POINTER
 		do
 			if a_reuse_color_object.is_default_pointer then
-				color := {GTK}.c_gdk_rgba_struct_allocate
+				color := {GDK}.c_gdk_rgba_struct_allocate
 			else
 				color := a_reuse_color_object
 			end
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 			a: REAL_64
 			l_found: BOOLEAN
 		do
-			c_rgba := {GTK}.c_gdk_rgba_struct_allocate
+			c_rgba := {GDK}.c_gdk_rgba_struct_allocate
 			create l_gtk_c_string.set_with_eiffel_string (a_name)
 			l_found := {GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
 			if l_found then
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 		local
 			l_gdk_rgba: POINTER
 		do
-			l_gdk_rgba := {GTK}.c_gdk_rgba_struct_allocate
+			l_gdk_rgba := {GDK}.c_gdk_rgba_struct_allocate
 			{GTK2}.gtk_style_context_get (context, {GTK}.gtk_state_flag_normal_enum, {GTK2}.GTK_STYLE_PROPERTY_BACKGROUND_COLOR, l_gdk_rgba )
 			create Result.make_with_rgb (
 							{GDK}.rgba_struct_red (l_gdk_rgba).truncated_to_real,
@@ -442,7 +442,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COLORIZABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

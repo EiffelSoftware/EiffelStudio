@@ -101,9 +101,9 @@ feature {NONE} -- Implementation
 		local
 			close_fct: INTEGER
 		do
-			close_fct := {GTK}.Gdk_func_close_enum
-			close_fct := close_fct.bit_or ({GTK}.Gdk_func_move_enum)
-			close_fct := close_fct.bit_or ({GTK}.Gdk_func_resize_enum)
+			close_fct := {GDK}.Gdk_func_close_enum
+			close_fct := close_fct.bit_or ({GDK}.Gdk_func_move_enum)
+			close_fct := close_fct.bit_or ({GDK}.Gdk_func_resize_enum)
 			{GDK}.gdk_window_set_functions (
 				{GTK}.gtk_widget_get_window (c_object),
 				close_fct
@@ -158,7 +158,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			else
 				s := a_path.utf_8_name
 				n := s.count
-				item := {GTK}.g_malloc (n + 1)
+				item := {GDK}.g_malloc (n + 1)
 				a := s.to_c
 				item.memory_copy ($a, n + 1)
 				string_length := n
@@ -237,7 +237,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

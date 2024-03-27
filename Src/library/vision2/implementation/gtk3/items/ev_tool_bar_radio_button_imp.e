@@ -84,7 +84,7 @@ feature {EV_ANY_I} -- Implementation
 	widget_object (a_list: POINTER): POINTER
 			-- Returns c_object relative to a_list data.
 		do
-			Result := {GTK}.gslist_struct_data (a_list)
+			Result := {GDK}.gslist_struct_data (a_list)
 			Result := {GTK}.gtk_widget_get_parent (Result)
 		end
 
@@ -100,7 +100,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface of `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

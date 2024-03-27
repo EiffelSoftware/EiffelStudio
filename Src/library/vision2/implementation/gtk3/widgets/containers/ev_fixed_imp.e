@@ -257,8 +257,8 @@ feature {EV_ANY_I} -- Implementation
 			glist: POINTER
 		do
 			glist := {GTK}.gtk_container_get_children (container_widget)
-			Result := {GTK}.g_list_nth_data (glist, i - 1)
-			{GTK}.g_list_free (glist)
+			Result := {GDK}.g_list_nth_data (glist, i - 1)
+			{GDK}.g_list_free (glist)
 		end
 
 	x_position_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER
@@ -335,7 +335,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

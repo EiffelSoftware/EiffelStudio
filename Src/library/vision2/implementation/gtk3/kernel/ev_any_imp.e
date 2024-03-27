@@ -65,7 +65,7 @@ feature {EV_ANY_I} -- Access
 											{GTK}.gtk_widget_is_toplevel (a_c_object)
 					end
 					l_c_object := a_c_object -- Already has a ref
-					l_c_object := {GTK}.g_object_ref (l_c_object) -- Increase ref count to protect the marshal callback
+					l_c_object := {GDK}.g_object_ref (l_c_object) -- Increase ref count to protect the marshal callback
 				end
 			end
 

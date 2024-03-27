@@ -571,7 +571,7 @@ feature -- Status setting
 			if not buffer_locked_in_format_mode then
 				buffer_locked_in_format_mode := True
 					-- Temporarily remove text buffer to avoid redraw and event firing
-				append_buffer := {GTK2}.g_object_ref (text_buffer) -- Increase ref count on `text_buffer`
+				append_buffer := {GDK}.g_object_ref (text_buffer) -- Increase ref count on `text_buffer`
 				{GTK2}.gtk_text_view_set_buffer (text_view, {GTK2}.gtk_text_buffer_new (default_pointer))
 			end
 			check attached {EV_CHARACTER_FORMAT_IMP} format.implementation as a_format_imp then
@@ -963,7 +963,7 @@ invariant
 	has_c_object_implies_has_append_buffer: not c_object.is_default_pointer implies not append_buffer.is_default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

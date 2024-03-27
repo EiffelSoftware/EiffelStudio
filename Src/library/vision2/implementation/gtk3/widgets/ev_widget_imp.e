@@ -288,13 +288,13 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 				-- Mouse Wheel implementation.
-			if a_type /= {GTK}.GDK_BUTTON_RELEASE_ENUM then
+			if a_type /= {GDK}.GDK_BUTTON_RELEASE_ENUM then
 					-- A button press must have occurred
-				if a_type = {GTK}.GDK_BUTTON_PRESS_ENUM then
+				if a_type = {GDK}.GDK_BUTTON_PRESS_ENUM then
 					mouse_wheel_delta := 1
-				elseif a_type = {GTK}.GDK_2BUTTON_PRESS_ENUM then
+				elseif a_type = {GDK}.GDK_2BUTTON_PRESS_ENUM then
 					mouse_wheel_delta := 1
-				elseif a_type = {GTK}.GDK_3BUTTON_PRESS_ENUM then
+				elseif a_type = {GDK}.GDK_3BUTTON_PRESS_ENUM then
 					mouse_wheel_delta := 1
 				end
 				if a_button = 4 and mouse_wheel_delta > 0 then
@@ -316,14 +316,14 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				end
 
 				if a_button >= 1 and then a_button <= 3 then
-					if a_type = {GTK}.GDK_BUTTON_PRESS_ENUM then
+					if a_type = {GDK}.GDK_BUTTON_PRESS_ENUM then
 						if app_implementation.pointer_button_press_actions_internal /= Void then
 							app_implementation.pointer_button_press_actions.call ([attached_interface, a_button, a_screen_x, a_screen_y])
 						end
 						if attached pointer_button_press_actions_internal as l_pointer_button_press_actions_internal then
 							l_pointer_button_press_actions_internal.call (t)
 						end
-					elseif a_type = {GTK}.GDK_2BUTTON_PRESS_ENUM then
+					elseif a_type = {GDK}.GDK_2BUTTON_PRESS_ENUM then
 						if app_implementation.pointer_double_press_actions_internal /= Void then
 							app_implementation.pointer_double_press_actions.call ([attached_interface, a_button, a_screen_x, a_screen_y])
 						end
@@ -663,14 +663,14 @@ feature {NONE} -- Implementation
 				until
 					l.is_default_pointer
 				loop
-					child := {GTK}.glist_struct_data (l)
+					child := {GDK}.glist_struct_data (l)
 					real_set_foreground_color (child, fg)
 					if {GTK}.gtk_is_container (child) then
 						propagate_foreground_color_internal (fg, child)
 					end
-					l := {GTK}.glist_struct_next (l)
+					l := {GDK}.glist_struct_next (l)
 				end
-				{GTK}.g_list_free (a_child_list)
+				{GDK}.g_list_free (a_child_list)
 			else
 				real_set_foreground_color (a_c_object, fg)
 			end
@@ -696,14 +696,14 @@ feature {NONE} -- Implementation
 				until
 					l.is_default_pointer
 				loop
-					child := {GTK}.glist_struct_data (l)
+					child := {GDK}.glist_struct_data (l)
 					real_set_background_color (child, bg)
 					if {GTK}.gtk_is_container (child) then
 						propagate_background_color_internal (bg, child)
 					end
-					l := {GTK}.glist_struct_next (l)
+					l := {GDK}.glist_struct_next (l)
 				end
-				{GTK}.g_list_free (a_child_list)
+				{GDK}.g_list_free (a_child_list)
 			else
 				real_set_background_color (a_c_object, bg)
 			end

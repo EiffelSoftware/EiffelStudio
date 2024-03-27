@@ -255,7 +255,7 @@ feature -- Implementation
 				check
 					radio_button_not_null: l_radio_group /= default_pointer
 				end
-				if {GTK}.g_slist_length (l_radio_group) = 1 then
+				if {GDK}.g_slist_length (l_radio_group) = 1 then
 					-- This is the last radio button in the group so we set `radio_group' to null.
 					radio_group := default_pointer
 				end
@@ -277,7 +277,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

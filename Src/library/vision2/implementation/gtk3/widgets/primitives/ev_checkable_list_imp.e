@@ -100,10 +100,10 @@ feature -- Initialization
 		local
 			a_type_array: MANAGED_POINTER
 		do
-			create a_type_array.make (3 * {GTK2}.sizeof_gtype)
-			{GTK2}.add_gdk_type_pixbuf (a_type_array.item, 0)
-			{GTK2}.add_g_type_string (a_type_array.item, 1 * {GTK2}.sizeof_gtype)
-			{GTK2}.add_g_type_boolean (a_type_array.item, 2 * {GTK2}.sizeof_gtype)
+			create a_type_array.make (3 * {GDK}.sizeof_gtype)
+			{GDK}.add_gdk_type_pixbuf (a_type_array.item, 0)
+			{GDK}.add_g_type_string (a_type_array.item, 1 * {GDK}.sizeof_gtype)
+			{GDK}.add_g_type_boolean (a_type_array.item, 2 * {GDK}.sizeof_gtype)
 			list_store := {GTK2}.gtk_list_store_newv (3, a_type_array.item)
 		end
 
@@ -177,7 +177,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_CHECKABLE_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

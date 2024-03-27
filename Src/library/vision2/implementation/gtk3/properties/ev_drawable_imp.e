@@ -924,7 +924,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 			a_pixbuf: POINTER
 		do
 			a_pixbuf := pixbuf_from_drawable
-			Result := {GDK}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, {GTK2}.gdk_interp_bilinear)
+			Result := {GDK}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, {GDK}.gdk_interp_bilinear)
 			{GDK}.g_object_unref (a_pixbuf)
 		end
 

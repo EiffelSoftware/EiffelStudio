@@ -522,7 +522,7 @@ feature {EV_ANY_I} -- Implementation
 								l_widget_imp ?= eif_object_from_gtk_object (event_widget)
 							end
 							if l_widget_imp /= Void then
-								if {GDK}.gdk_event_scroll_struct_scroll_direction (gdk_event) = {GTK2}.gdk_scroll_up_enum then
+								if {GDK}.gdk_event_scroll_struct_scroll_direction (gdk_event) = {GDK}.gdk_scroll_up_enum then
 									l_button_number := 4
 								else
 									l_button_number := 5
@@ -708,7 +708,7 @@ feature {EV_ANY_I} -- Implementation
 							l_gtk_widget_imp := l_focused_popup_window
 								-- Change window of `gdk_event' to be that of focused widget.
 							l_gdk_window := {GDK}.gdk_event_any_struct_window (gdk_event)
-							{GTK}.set_gdk_event_any_struct_window (gdk_event, {GTK}.gtk_widget_get_window (l_gtk_widget_imp.c_object))
+							{GDK}.set_gdk_event_any_struct_window (gdk_event, {GTK}.gtk_widget_get_window (l_gtk_widget_imp.c_object))
 						else
 							if l_has_grab_widget then
 								l_gtk_widget_imp ?= eif_object_from_gtk_object (l_grab_widget)
@@ -736,7 +736,7 @@ feature {EV_ANY_I} -- Implementation
 						end
 						if not l_gdk_window.is_default_pointer then
 								-- Restore remapped event.
-							{GTK}.set_gdk_event_any_struct_window (gdk_event, l_gdk_window)
+							{GDK}.set_gdk_event_any_struct_window (gdk_event, l_gdk_window)
 							l_gdk_window := default_pointer
 						end
 					when GDK_DELETE then
@@ -1211,7 +1211,7 @@ feature -- Basic operation
 			until
 				a_target_list.is_default_pointer
 			loop
-				a_target := {GTK}.glist_struct_data (a_target_list)
+				a_target := {GDK}.glist_struct_data (a_target_list)
 				if not a_target.is_default_pointer then
 						-- This is a target atom indicating the type of the drop.
 					{GDK}.gdk_selection_convert (src_window, a_selection, a_target, a_time)
@@ -1237,7 +1237,7 @@ feature -- Basic operation
 						end
 					end
 				end
-				a_target_list := {GTK}.glist_struct_next (a_target_list)
+				a_target_list := {GDK}.glist_struct_next (a_target_list)
 			end
 			if l_success and then attached l_file_list then
 				dest_window := {GDK}.gdk_drag_context_get_dest_window (a_context)
@@ -1641,7 +1641,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 	reusable_rgba_struct: POINTER
 			-- Persistent GdkRGBA struct.
 		once
-			Result := {GTK}.c_gdk_rgba_struct_allocate
+			Result := {GDK}.c_gdk_rgba_struct_allocate
 		end
 
 feature -- Thread Handling.

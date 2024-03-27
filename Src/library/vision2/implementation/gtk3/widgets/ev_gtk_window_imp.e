@@ -515,16 +515,16 @@ feature {EV_ANY_I} -- Implementation
 			l_geometry := {GDK}.c_gdk_geometry_struct_allocate
 			l_width := width
 			l_height := height
-			{GTK}.set_gdk_geometry_struct_max_width (l_geometry, l_width)
-			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, l_height)
-			{GTK}.set_gdk_geometry_struct_min_width (l_geometry, l_width)
-			{GTK}.set_gdk_geometry_struct_min_height (l_geometry, l_height)
-			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GTK}.Gdk_hint_max_size_enum | {GDK}.gdk_hint_min_size_enum)
+			{GDK}.set_gdk_geometry_struct_max_width (l_geometry, l_width)
+			{GDK}.set_gdk_geometry_struct_max_height (l_geometry, l_height)
+			{GDK}.set_gdk_geometry_struct_min_width (l_geometry, l_width)
+			{GDK}.set_gdk_geometry_struct_min_height (l_geometry, l_height)
+			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GDK}.Gdk_hint_max_size_enum | {GDK}.gdk_hint_min_size_enum)
 			l_geometry.memory_free
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -41,7 +41,7 @@ feature -- Status report
 							Result.extend (l_interface)
 						end
 					end
-					cur := {GTK}.gslist_struct_next (cur)
+					cur := {GDK}.gslist_struct_next (cur)
 				end
 			end
 		end
@@ -68,7 +68,7 @@ feature -- Status report
 							l_result ?= peer_imp.interface
 						end
 					end
-					cur := {GTK}.gslist_struct_next (cur)
+					cur := {GDK}.gslist_struct_next (cur)
 				end
 				check l_result /= Void then end
 				Result := l_result
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 	widget_object (a_list: POINTER): POINTER
 			-- Returns c_object relative to a_list data.
 		do
-			Result := {GTK}.gslist_struct_data (a_list)
+			Result := {GDK}.gslist_struct_data (a_list)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -109,7 +109,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RADIO_PEER note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

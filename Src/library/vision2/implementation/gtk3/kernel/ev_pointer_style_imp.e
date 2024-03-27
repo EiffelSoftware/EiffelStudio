@@ -279,7 +279,7 @@ feature -- Implementation
 				l_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
 			else
 				l_image := gdk_pixbuf
-				l_image := {GTK2}.g_object_ref (l_image)
+				l_image := {GDK}.g_object_ref (l_image)
 			end
 
 			if Result = default_pointer and then predefined_cursor_code /= {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

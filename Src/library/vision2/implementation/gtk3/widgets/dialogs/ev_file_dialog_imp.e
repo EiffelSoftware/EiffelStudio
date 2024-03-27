@@ -97,11 +97,11 @@ feature -- Access
 				from
 					i := 0
 				until
-					{GTK}.g_slist_nth_data (a_filter_list, i) = a_current_filter
+					{GDK}.g_slist_nth_data (a_filter_list, i) = a_current_filter
 				loop
 					i := i + 1
 				end
-				{GTK}.g_slist_free (a_filter_list)
+				{GDK}.g_slist_free (a_filter_list)
 				Result := i + 1
 			end
 
@@ -212,15 +212,15 @@ feature {NONE} -- Implementation
 			a_filter_list := {GTK2}.gtk_file_chooser_list_filters (c_object)
 			if not a_filter_list.is_default_pointer then
 				from
-					a_filter := {GTK}.g_slist_nth_data (a_filter_list, i)
+					a_filter := {GDK}.g_slist_nth_data (a_filter_list, i)
 				until
 					a_filter.is_default_pointer
 				loop
 					{GTK2}.gtk_file_chooser_remove_filter (c_object, a_filter)
 					i := i + 1
-					a_filter := {GTK}.g_slist_nth_data (a_filter_list, i)
+					a_filter := {GDK}.g_slist_nth_data (a_filter_list, i)
 				end
-				{GTK}.g_slist_free (a_filter_list)
+				{GDK}.g_slist_free (a_filter_list)
 			end
 		end
 
@@ -285,7 +285,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FILE_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

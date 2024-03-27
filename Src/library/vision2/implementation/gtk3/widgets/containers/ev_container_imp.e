@@ -194,7 +194,7 @@ feature -- Status setting
 						end
 					end
 					if a_child_list /= default_pointer then
-						{GTK}.g_list_free (a_child_list)
+						{GDK}.g_list_free (a_child_list)
 					end
 					a_child_list := {GTK}.gtk_container_get_children (container_widget)
 					l := glist_to_eiffel (a_child_list)
@@ -223,7 +223,7 @@ feature -- Status setting
 						end
 					end
 					if a_child_list /= default_pointer then
-						{GTK}.g_list_free (a_child_list)
+						{GDK}.g_list_free (a_child_list)
 					end
 				end
 			end
@@ -260,16 +260,16 @@ feature -- Status setting
 		do
 			r ?= a_widget_imp
 			if r /= Void then
-				a_max_index := {GTK}.g_slist_length (radio_group) - 1
-				a_item_index := {GTK}.g_slist_index (radio_group, r.visual_widget)
+				a_max_index := {GDK}.g_slist_length (radio_group) - 1
+				a_item_index := {GDK}.g_slist_index (radio_group, r.visual_widget)
 
 				if a_max_index - a_item_index > 0 then
-					a_item_pointer := {GTK}.g_slist_nth_data (
+					a_item_pointer := {GDK}.g_slist_nth_data (
 								radio_group,
 								a_max_index
 							)
 				elseif a_max_index > 0 then
-					a_item_pointer := {GTK}.g_slist_nth_data (
+					a_item_pointer := {GDK}.g_slist_nth_data (
 								radio_group,
 								a_max_index - 1
 							)
@@ -290,7 +290,7 @@ feature -- Status setting
 				if r.is_selected then
 					if not radio_group.is_default_pointer then
 						{GTK}.gtk_toggle_button_set_active (
-							{GTK}.gslist_struct_data (radio_group),
+							{GDK}.gslist_struct_data (radio_group),
 							True
 						)
 					end
@@ -478,8 +478,8 @@ feature {NONE} -- Externals
 			until
 				cur.is_default_pointer
 			loop
-				Result.extend ({GTK}.gslist_struct_data (cur))
-				cur := {GTK}.gslist_struct_next (cur)
+				Result.extend ({GDK}.gslist_struct_data (cur))
+				cur := {GDK}.gslist_struct_next (cur)
 			end
 		ensure
 		--	same_size: Result.count = g_slist_length (gslist)
@@ -496,8 +496,8 @@ feature {NONE} -- Externals
 			until
 				cur.is_default_pointer
 			loop
-				Result.extend ({GTK}.glist_struct_data (cur))
-				cur := {GTK}.glist_struct_next (cur)
+				Result.extend ({GDK}.glist_struct_data (cur))
+				cur := {GDK}.glist_struct_next (cur)
 			end
 		ensure
 		--	same_size: Result.count = g_slist_length (gslist)
@@ -510,7 +510,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

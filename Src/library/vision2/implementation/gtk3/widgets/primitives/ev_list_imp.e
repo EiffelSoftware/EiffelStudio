@@ -118,12 +118,12 @@ feature -- Access
 			a_tree_path_list := {GTK2}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
 
 			if a_tree_path_list /= default_pointer then
-					a_tree_path := {GTK}.glist_struct_data (a_tree_path_list)
+					a_tree_path := {GDK}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
-					Result := (child_array @ (mp.read_integer_32 (0) + 1))
+					Result := (child_array [mp.read_integer_32 (0) + 1])
 					{GTK2}.gtk_tree_path_list_free_contents (a_tree_path_list)
-					{GTK}.g_list_free (a_tree_path_list)
+					{GDK}.g_list_free (a_tree_path_list)
 			end
 		end
 
@@ -149,14 +149,14 @@ feature -- Access
 				until
 					a_tree_path_list = default_pointer
 				loop
-					a_tree_path := {GTK}.glist_struct_data (a_tree_path_list)
+					a_tree_path := {GDK}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
-					Result.extend ((child_array @ (mp.read_integer_32 (0) + 1)))
-					a_tree_path_list := {GTK}.glist_struct_next (a_tree_path_list)
+					Result.extend ((child_array [mp.read_integer_32 (0) + 1]))
+					a_tree_path_list := {GDK}.glist_struct_next (a_tree_path_list)
 				end
 				{GTK2}.gtk_tree_path_list_free_contents (a_tree_path_list)
-				{GTK}.g_list_free (a_tree_path_list)
+				{GDK}.g_list_free (a_tree_path_list)
 			end
 		end
 
@@ -306,7 +306,7 @@ feature -- PND
 		do
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
 			a_cell_rend_list := {GTK}.gtk_cell_layout_get_cells (a_column_ptr)
-			a_cell_rend := {GTK}.g_list_nth_data (a_cell_rend_list, 0)
+			a_cell_rend := {GDK}.g_list_nth_data (a_cell_rend_list, 0)
 			{GTK2}.gtk_cell_renderer_get_fixed_size (a_cell_rend, default_pointer, $Result)
 			a_gtk_c_str := once "vertical-separator"
 			{GTK2}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

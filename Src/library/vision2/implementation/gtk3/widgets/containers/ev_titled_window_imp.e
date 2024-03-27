@@ -63,15 +63,15 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implemen
 		local
 			l_call_restore: BOOLEAN
 		do
-			if a_changed_mask & {GDK}.gdk_window_state_iconified_enum = {GTK2}.gdk_window_state_iconified_enum then
-				if a_new_state & {GDK}.gdk_window_state_iconified_enum = {GTK2}.gdk_window_state_iconified_enum then
+			if a_changed_mask & {GDK}.gdk_window_state_iconified_enum = {GDK}.gdk_window_state_iconified_enum then
+				if a_new_state & {GDK}.gdk_window_state_iconified_enum = {GDK}.gdk_window_state_iconified_enum then
 						-- Window has been minimized
 					is_minimized := True
 					is_maximized := False
 					if minimize_actions_internal /= Void then
 						minimize_actions_internal.call (Void)
 					end
-				elseif a_new_state & {GDK}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
+				elseif a_new_state & {GDK}.gdk_window_state_maximized_enum = {GDK}.gdk_window_state_maximized_enum then
 						-- Window has been restored to a maximized state from a previous minimized state
 						-- We need to call maximize actions to match Windows behavior instead of calling restore.
 					is_maximized := True
@@ -83,8 +83,8 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implemen
 						-- We must be restoring from a minimized to a non maximized state.
 					l_call_restore := True
 				end
-			elseif a_changed_mask & {GDK}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
-				if a_new_state & {GDK}.gdk_window_state_maximized_enum = {GTK2}.gdk_window_state_maximized_enum then
+			elseif a_changed_mask & {GDK}.gdk_window_state_maximized_enum = {GDK}.gdk_window_state_maximized_enum then
+				if a_new_state & {GDK}.gdk_window_state_maximized_enum = {GDK}.gdk_window_state_maximized_enum then
 						-- The window has been maximized
 					is_maximized := True
 					is_minimized := False
@@ -250,7 +250,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TITLED_WINDOW note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2022, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

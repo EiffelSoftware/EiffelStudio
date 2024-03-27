@@ -232,11 +232,11 @@ feature -- Status setting
 			l_geometry: POINTER
 		do
 			l_geometry := {GDK}.c_gdk_geometry_struct_allocate
-			{GTK}.set_gdk_geometry_struct_max_width (l_geometry, maximum_width)
-			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, maximum_height)
-			{GTK}.set_gdk_geometry_struct_min_width (l_geometry, minimum_width)
-			{GTK}.set_gdk_geometry_struct_min_height (l_geometry, minimum_height)
-			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GTK}.Gdk_hint_max_size_enum | {GDK}.gdk_hint_min_size_enum)
+			{GDK}.set_gdk_geometry_struct_max_width (l_geometry, maximum_width)
+			{GDK}.set_gdk_geometry_struct_max_height (l_geometry, maximum_height)
+			{GDK}.set_gdk_geometry_struct_min_width (l_geometry, minimum_width)
+			{GDK}.set_gdk_geometry_struct_min_height (l_geometry, minimum_height)
+			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GDK}.Gdk_hint_max_size_enum | {GDK}.gdk_hint_min_size_enum)
 			l_geometry.memory_free
 			internal_enable_border
 		end
@@ -423,9 +423,9 @@ feature {NONE} -- Implementation
 			l_geometry: POINTER
 		do
 			l_geometry := {GDK}.c_gdk_geometry_struct_allocate
-			{GTK}.set_gdk_geometry_struct_max_width (l_geometry, a_max_width)
-			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, a_max_height)
-			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GTK}.Gdk_hint_max_size_enum)
+			{GDK}.set_gdk_geometry_struct_max_width (l_geometry, a_max_width)
+			{GDK}.set_gdk_geometry_struct_max_height (l_geometry, a_max_height)
+			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GDK}.Gdk_hint_max_size_enum)
 			l_geometry.memory_free
 			maximum_width := a_max_width
 			maximum_height := a_max_height
@@ -694,7 +694,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

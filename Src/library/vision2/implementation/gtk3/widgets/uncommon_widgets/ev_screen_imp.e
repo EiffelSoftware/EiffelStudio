@@ -105,7 +105,7 @@ feature {NONE} -- Drawing initialization
 				drawing_initialized := True
 				-- TODO update this code to support different environments like (Wayland)
 				if has_x11_support then
-					drawable := {GDK}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
+					drawable := {GDK}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default)
 					debug ("refactor_fixme")
 						{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
 					end
@@ -427,7 +427,7 @@ feature -- Measurement
 	horizontal_resolution: INTEGER
 			-- Number of logical pixels per inch along horizontal axis
 		do
-			Result := {GDK}.gdk_screen_get_resolution ({GTK2}.gdk_screen_get_default)
+			Result := {GDK}.gdk_screen_get_resolution ({GDK}.gdk_screen_get_default)
 			if Result = -1 then
 					-- If no resolution has been set then default to 96.
 				Result := 96
@@ -437,7 +437,7 @@ feature -- Measurement
 	vertical_resolution: INTEGER
 			-- Number of logical pixels per inch along vertical axis
 		do
-			Result := {GDK}.gdk_screen_get_resolution ({GTK2}.gdk_screen_get_default)
+			Result := {GDK}.gdk_screen_get_resolution ({GDK}.gdk_screen_get_default)
 			if Result = -1 then
 					-- If no resolution has been set then default to 96.
 				Result := 96

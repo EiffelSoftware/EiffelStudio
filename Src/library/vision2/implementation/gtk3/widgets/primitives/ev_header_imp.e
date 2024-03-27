@@ -96,14 +96,14 @@ feature -- Initialization
 			list_store: POINTER
 			l_gtype_size: INTEGER
 		do
-			l_gtype_size := {GTK2}.sizeof_gtype
+			l_gtype_size := {GDK}.sizeof_gtype
 			create a_type_array.make ((a_columns) * l_gtype_size)
 			from
 				i := 1
 			until
 				i > a_columns
 			loop
-				{GTK2}.add_g_type_string (a_type_array.item, (i - 1)  * l_gtype_size)
+				{GDK}.add_g_type_string (a_type_array.item, (i - 1)  * l_gtype_size)
 				i := i + 1
 			end
 
@@ -314,7 +314,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_HEADER note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

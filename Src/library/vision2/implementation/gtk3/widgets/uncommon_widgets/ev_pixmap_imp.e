@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 				create a_handle.make_from_path (a_file_path)
 				a_filetype := a_format.file_extension
 				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
-					stretched_pixbuf := {GDK}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {GTK2}.gdk_interp_bilinear)
+					stretched_pixbuf := {GDK}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {GDK}.gdk_interp_bilinear)
 						-- Unref original pixbuf so it gets deleted from memory
 					{GDK}.g_object_unref (a_gdkpixbuf)
 						-- Set our scaled pixbuf to be the one that is saved
@@ -628,7 +628,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

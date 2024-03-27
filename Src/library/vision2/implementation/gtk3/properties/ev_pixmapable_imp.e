@@ -102,8 +102,8 @@ feature {NONE} -- Implementation
 		do
 			a_child_list := {GTK}.gtk_container_get_children (pixmap_box)
 			if a_child_list /= l_null then
-				Result := {GTK}.g_list_nth_data (a_child_list, 0)
-				{GTK}.g_list_free (a_child_list)
+				Result := {GDK}.g_list_nth_data (a_child_list, 0)
+				{GDK}.g_list_free (a_child_list)
 			end
 		end
 
@@ -115,7 +115,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PIXMAPABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

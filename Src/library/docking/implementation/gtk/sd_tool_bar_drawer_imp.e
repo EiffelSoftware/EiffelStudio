@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 						c_gdk_desatuate (l_temp_imp.pixbuf_from_drawable, $l_pixbuf)
 						check exist: l_pixbuf /= default_pointer end
 						l_temp_imp.set_pixmap_from_pixbuf (l_pixbuf)
-						{GTK2}.g_object_unref (l_pixbuf)
+						{GOBJECT}.g_object_unref (l_pixbuf)
 					end
 					l_argument_tool_bar.draw_pixmap (l_position.x, l_position.y, l_temp_pixmap)
 				end
@@ -485,7 +485,7 @@ feature {NONE} -- Externals
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

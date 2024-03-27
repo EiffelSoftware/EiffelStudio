@@ -44,6 +44,8 @@ feature {NONE} -- Initialization
 
 	make
 			-- Set up the callback marshal and initialize GTK+.
+		local
+			l_backend: EV_GTK_C_STRING
 		do
 --			if {EV_GTK_DEPENDENT_EXTERNALS}.g_mem_is_system_malloc then
 --				{EV_GTK_DEPENDENT_EXTERNALS}.g_mem_set_vtable ({EV_GTK_EXTERNALS}.glib_mem_profiler_table)
@@ -63,7 +65,7 @@ feature {NONE} -- Initialization
 				create l_backend.make_from_pointer ({GDK}.gdk_display_get_name ( {GDK}.gdk_display_get_default ()))
 				print (l_backend.string)
 				{GDK}.gdk_set_allowed_backends ((create {EV_GTK_C_STRING}.set_with_eiffel_string ("quartz")).item)
-			end	
+			end
 
 
 			-- The possible backend names are x11, win32, quartz, broadway, wayland.

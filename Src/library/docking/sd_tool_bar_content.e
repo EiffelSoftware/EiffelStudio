@@ -444,7 +444,9 @@ feature -- Query
 	is_menu_bar: BOOLEAN
 			-- If Current is a menu bar which only contain SD_TOOL_BAR_MENU_ITEM.
 		do
-			Result := ∀ i: items ¦ attached {SD_TOOL_BAR_MENU_ITEM} i
+			if attached items as l_items and then not l_items.is_empty then
+				Result := ∀ i: l_items ¦ attached {SD_TOOL_BAR_MENU_ITEM} i
+			end
 		end
 
 	hash_code: INTEGER
@@ -682,7 +684,7 @@ invariant
 
 note
 	library: "SmartDocking: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -27,7 +27,7 @@ indexing
 	For macOs GDB_BACKEND quarts maybe we need  
     to check GDK_WINDOWING_QUARTZ
 */
-#ifdef defined(EIF_MACOSX)
+#ifdef EIF_MACOSX
 	#include <gdk/gdkquartz.h>
 #endif
 

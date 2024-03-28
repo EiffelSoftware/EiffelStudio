@@ -101,6 +101,12 @@ if [ -e "$output_dir/last_revision_built" ]; then
 		fi
 	fi
 	if [ -e "$porterpackage_tar" ]; then
+		if [ "$include_64bits" = "false" ] && [ "$include_32bits" = "false" ]; then
+			echo "======================================"
+			echo "= Do not build any platform delivery ="
+			echo "= only the PorterPackage             ="
+			echo "======================================"
+		fi
 		if [ "$include_64bits" = "true" ]; then
 			echo "===================================="
 			echo "= Build the $edition_name 64bits ============="

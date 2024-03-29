@@ -13,7 +13,7 @@ feature -- Access
 	error, rgn_error: INTEGER = 0
 			-- No region was created.
 
-	null_regiion: INTEGER = 1
+	null_region: INTEGER = 1
 			-- Region is empty.
 
 	simple_region: INTEGER = 2
@@ -21,6 +21,15 @@ feature -- Access
 
 	complex_region: INTEGER = 3
 			-- Region is more than one rectangle.
+
+	null_regision: INTEGER
+		obsolete
+			"Use null_region [2023-03-29]"
+		once
+			Result := null_region
+		ensure
+			instance_free: class
+		end
 
 	complex_regision: INTEGER
 		obsolete

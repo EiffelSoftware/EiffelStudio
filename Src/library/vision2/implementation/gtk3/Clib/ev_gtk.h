@@ -28,7 +28,11 @@ indexing
     to check GDK_WINDOWING_QUARTZ
 */
 #ifdef EIF_MACOSX
-	#include <gdk/gdkquartz.h>
+	#include <TargetConditionals.h>
+	#ifdef TARGET_OS_MAC
+		#include <gdk/gdk.h>
+		#include <gdk/gdkquartz.h>
+	#endif
 #endif
 
 

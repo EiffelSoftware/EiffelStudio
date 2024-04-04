@@ -73,7 +73,7 @@ feature -- Basic operations
 					end
 					dial.set_full_file_path (l_path)
 					dial.show_modal_to_window (tool.develop_window.window)
-					if not dial.full_file_path.is_empty then
+					if not dial.full_file_path.is_empty and then not dial.selected_button_name.same_string ((create {EV_DIALOG_NAMES}).ev_cancel) then
 						error := 1
 						p := tool.projector.world_as_pixmap (5)
 						if p /= Void then
@@ -138,7 +138,7 @@ feature -- Basic operations
 			-- preferences.
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

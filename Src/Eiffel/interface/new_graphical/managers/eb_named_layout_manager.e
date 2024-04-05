@@ -123,9 +123,9 @@ feature -- Command
 				l_item := layouts.item (a_name.as_string_32)
 				if l_item /= Void then
 					create l_file.make_with_path (l_item.file_path)
-					l_file.open_read_write
-
-					l_file.delete
+					if l_file.exists then
+						l_file.delete
+					end
 					layouts.remove (a_name.as_string_32)
 
 					Result := True
@@ -261,7 +261,7 @@ invariant
 	not_void: layouts /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -33,6 +33,7 @@
 		</external_include>
 		<external_include location="$(ISE_LIBRARY)/library/vision2/implementation/gtk3/Clib">
 			<condition>
+				<platform excluded_value="windows"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
 				<custom name="vision_implementation" excluded_value="gtk2"/>
 			</condition>
@@ -293,6 +294,10 @@
 		<variable name="vision_implementation" value="gtk2"/>
 	</target>
 	<target name="vision2_gtk3" extends="vision2">
+		<setting name="platform" value="unix"/>
+		<variable name="vision_implementation" value="gtk3"/>
+	</target>
+	<target name="vision2_gtk3_windows" extends="vision2">
 		<variable name="vision_implementation" value="gtk3"/>
 	</target>
 </system>

@@ -12,7 +12,7 @@ description: "WEL: library of reusable components for Windows."
 		]"
 */
 
-#ifndef __WEL_LOGFONT_
+#ifndef __WEL_LOGFONT__
 #define __WEL_LOGFONT__
 
 #ifndef __WEL__

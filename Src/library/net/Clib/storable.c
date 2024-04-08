@@ -307,7 +307,7 @@ rt_public char *eif_net_retrieved(EIF_INTEGER file_desc)
 #endif
 }
 
-rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)
+rt_public void eif_net_basic_store(EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
 #ifndef EIF_IL_DLL
 	GTCX
@@ -316,7 +316,7 @@ rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)
 #endif
 }
 
-rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
+rt_public void eif_net_independent_store(EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
 #ifndef EIF_IL_DLL
 	GTCX
@@ -325,7 +325,7 @@ rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 #endif
 }
 
-rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
+rt_public void eif_net_general_store(EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
 	eif_net_independent_store (file_desc, object);
 }

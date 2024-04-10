@@ -170,14 +170,14 @@ feature {NONE} -- Implementation functions
 			l_str := text_for_name.text
 			if l_str /= Void and then not l_str.is_empty then
 				if manager.layouts.has (l_str) then
-					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (interface_names.l_overwrite_layout (l_str), dialog, agent on_overwirte_and_destroy (l_str), agent veto_close)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (interface_names.l_overwrite_layout (l_str), dialog, agent on_overwrite_and_destroy (l_str), agent veto_close)
 				else
-					on_overwirte_and_destroy (l_str)
+					on_overwrite_and_destroy (l_str)
 				end
 			end
 		end
 
-	on_overwirte_and_destroy (a_name: STRING_GENERAL)
+	on_overwrite_and_destroy (a_name: STRING_GENERAL)
 			-- Handle overwrite and destroy actions.
 		local
 			l_result: BOOLEAN
@@ -347,7 +347,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -94,19 +94,17 @@ feature -- Command
 			not_empty: not a_name.is_empty
 		local
 			l_fn: PATH
-			l_file_utils: GOBO_FILE_UTILITIES
-			l_name: READABLE_STRING_32
+			l_file_utils: FILE_UTILITIES
 		do
-			l_name := a_name.as_string_32
-			if layouts.has (l_name) then
-				l_fn := layouts.item (l_name).file_path
+			if layouts.has (a_name) then
+				l_fn := layouts.item (a_name).file_path
 			else
-				l_fn := layout_file_name (l_name, is_normal_mode)
+				l_fn := layout_file_name (a_name, is_normal_mode)
 			end
 			if attached l_fn.parent as l_p then
 				l_file_utils.create_directory_path (l_p)
 			end
-			Result := development_window.docking_manager.save_tools_data_with_name_and_path (l_fn, l_name)
+			Result := development_window.docking_manager.save_tools_data_with_name_and_path (l_fn, a_name)
 		end
 
 	delete_layout (a_name: READABLE_STRING_GENERAL): BOOLEAN
@@ -116,18 +114,15 @@ feature -- Command
 			a_name_not_empty: not a_name.is_empty
 		local
 			retried: BOOLEAN
-			l_item: TUPLE [file_path: PATH; is_normal_mode: BOOLEAN]
 			l_file: RAW_FILE
 		do
 			if not retried then
-				l_item := layouts.item (a_name.as_string_32)
-				if l_item /= Void then
+				if attached layouts.item (a_name) as l_item then
 					create l_file.make_with_path (l_item.file_path)
-					l_file.open_read_write
-
-					l_file.delete
-					layouts.remove (a_name.as_string_32)
-
+					if l_file.exists then
+						l_file.delete
+					end
+					layouts.remove (a_name)
 					Result := True
 				end
 			end
@@ -141,7 +136,7 @@ feature -- Command
 			-- `a_win' is the window which show modal to.
 		require
 			a_name_not_void: a_name /= Void
-			has: layouts.has (a_name.as_string_32)
+			has: layouts.has (a_name)
 		local
 			l_fn: PATH
 			l_r: BOOLEAN
@@ -153,7 +148,7 @@ feature -- Command
 			l_ok_to_open: BOOLEAN
 			l_cmd: EB_COMMAND
 		do
-			l_info := layouts.item (a_name.as_string_32)
+			l_info := layouts.item (a_name)
 
 			if l_info.is_normal_mode /= is_normal_mode then
 				-- Layout saved in different mode. We need swtich mode now.
@@ -203,7 +198,7 @@ feature -- Command
 
 feature -- Query
 
-	layouts: HASH_TABLE [TUPLE [file_path: PATH; is_normal_mode: BOOLEAN], READABLE_STRING_32]
+	layouts: STRING_TABLE [TUPLE [file_path: PATH; is_normal_mode: BOOLEAN]]
 			-- All names of layouts.
 			-- Key is name of a layout.
 
@@ -261,7 +256,7 @@ invariant
 	not_void: layouts /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

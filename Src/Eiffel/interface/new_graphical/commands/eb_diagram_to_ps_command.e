@@ -50,53 +50,67 @@ feature -- Basic operations
 			-- Perform operation
 		local
 			l_path: PATH
-			png_format: EV_PNG_FORMAT
-			p: EV_PIXMAP
 			dial: EB_FILE_SAVE_DIALOG
-			test_file: RAW_FILE
-			error: INTEGER
 			l_pref: PATH_PREFERENCE
 		do
 			if is_sensitive then
-				if error = 0 then
-					l_pref := preferences.dialog_data.last_saved_diagram_postscript_directory_preference
-					if l_pref.value = Void or else l_pref.value.is_empty then
-						l_pref.set_value (eiffel_layout.user_projects_path)
-					end
-					create dial.make_with_preference (l_pref)
-					set_dialog_filters_and_add_all (dial, {ARRAY [STRING_32]} <<Png_files_filter>>)
+				l_pref := preferences.dialog_data.last_saved_diagram_postscript_directory_preference
+				if l_pref.value = Void or else l_pref.value.is_empty then
+					l_pref.set_value (eiffel_layout.user_projects_path)
+				end
+				create dial.make_with_preference (l_pref)
+				set_dialog_filters_and_add_all (dial, {ARRAY [STRING_32]} <<Png_files_filter>>)
 
-					if tool.class_graph /= Void then
-						create l_path.make_from_string (tool.class_graph.center_class.name_32 + ".png")
-					else
-						create l_path.make_from_string (tool.cluster_graph.center_cluster.name_32 + ".png")
-					end
-					dial.set_full_file_path (l_path)
-					dial.show_modal_to_window (tool.develop_window.window)
-					if not dial.full_file_path.is_empty then
-						error := 1
-						p := tool.projector.world_as_pixmap (5)
-						if p /= Void then
-							create test_file.make_with_path (dial.full_file_path)
-							test_file.open_write
-							if test_file.is_writable then
-								test_file.close
-								create png_format
-								tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
-								p.save_to_named_path (png_format, dial.full_file_path)
-								tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
-								error := 0
-							else
-								test_file.close
-							end
-						end
-					end
+				if tool.class_graph /= Void then
+					create l_path.make_from_string (tool.class_graph.center_class.name_32 + ".png")
 				else
-					if error = 1 then
-						prompts.show_error_prompt (Warning_messages.w_cannot_save_png_file (dial.full_file_path.name), tool.develop_window.window, Void)
-					elseif error = 2 then
-						prompts.show_error_prompt (Warning_messages.W_cannot_generate_png, tool.develop_window.window, Void)
+					create l_path.make_from_string (tool.cluster_graph.center_cluster.name_32 + ".png")
+				end
+				dial.set_full_file_path (l_path)
+				dial.save_actions.extend (agent (i_dial: EB_FILE_SAVE_DIALOG)
+						local
+							loc: PATH
+						do
+							loc := i_dial.full_file_path
+							if not loc.is_empty then
+								export_to_as_png_file (loc)
+							end
+						end (dial)
+					)
+				dial.show_modal_to_window (tool.develop_window.window)
+			end
+		end
+
+	export_to_as_png_file (a_png_location: PATH)
+			-- Save as png file at location `a_png_location`.
+		require
+			not a_png_location.is_empty
+		local
+			png_format: EV_PNG_FORMAT
+			test_file: RAW_FILE
+			error: INTEGER
+		do
+			if error = 0 then
+				error := 1
+				if attached tool.projector.world_as_pixmap (5) as pix then
+					create test_file.make_with_path (a_png_location)
+					test_file.open_write
+					if test_file.is_writable then
+						test_file.close
+						create png_format
+						tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
+						pix.save_to_named_path (png_format, a_png_location)
+						tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
+						error := 0
+					else
+						test_file.close
 					end
+				end
+			else
+				if error = 1 then
+					prompts.show_error_prompt (Warning_messages.w_cannot_save_png_file (a_png_location.name), tool.develop_window.window, Void)
+				elseif error = 2 then
+					prompts.show_error_prompt (Warning_messages.W_cannot_generate_png, tool.develop_window.window, Void)
 				end
 			end
 		rescue
@@ -138,7 +152,7 @@ feature -- Basic operations
 			-- preferences.
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

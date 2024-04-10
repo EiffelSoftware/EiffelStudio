@@ -38,14 +38,14 @@ feature -- Event
 				l_title := utf.utf_32_string_to_utf_8_string_8 (a_title)
 				l_message := utf.utf_32_string_to_utf_8_string_8 (a_message)
 				if attached a_user.email as l_email then
-					create m.make (admin_email, 
+					create m.make (admin_email,
 								utf.utf_32_string_to_utf_8_string_8 (l_email),
-								l_title, 
+								l_title,
 								l_message
 							)
 					mailer.process_email (m)
 				end
-				create m.make (admin_email, admin_email, l_title, l_message)
+				create m.make (admin_email, admin_email, "[Administration]" + l_title, l_message)
 				mailer.process_email (m)
 			end
 		end
@@ -126,7 +126,7 @@ feature -- Event
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

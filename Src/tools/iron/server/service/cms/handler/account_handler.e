@@ -294,6 +294,7 @@ feature -- Users
 						u.set_data_item ("activation.code", l_uuid)
 						u.set_data_item ("activation.url", req.absolute_script_url (iron.account_page (u) + "?activate=" + l_uuid))
 						u.set_data_item ("activation.datetime", (create {HTTP_DATE}.make_now_utc).string)
+						u.set_data_item ("registration.remote_address", req.remote_addr)
 						if attached d.string_item ("note") as l_note and then not l_note.is_empty then
 							u.set_data_item ("profile.note", l_note)
 						end
@@ -404,7 +405,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

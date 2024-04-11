@@ -281,43 +281,57 @@ feature {NONE} -- Implementation
 			-- if `sfn' is Void retrieve the short file name from `fn'.
 		local
 			prompt: EV_WARNING_DIALOG
-			subfix: STRING_32
+			eimgemb: EIMGEMB
+			loc: PATH
+			pix: EV_PIXEL_BUFFER
+			fut: FILE_UTILITIES
+			retried: BOOLEAN
 		do
-			if sfn = Void then
-				create file_name.make_from_string (fn.substring (fn.last_index_of (Operating_environment.directory_separator, fn.count) + 1, fn.count))
-			else
-				create file_name.make_from_string (sfn)
-			end
-			if file_name.has ('.') then
+			if not retried then
 				set_busy_pointer
-				subfix := file_name.as_lower
-				subfix.keep_tail (file_name.count - file_name.last_index_of ('.', file_name.count))
+				create fut
+				create loc.make_from_string (fn)
+				if loc.extension = Void then
+					create prompt.make_with_text ("Is it an image file?")
+					prompt.show_modal_to_window (Current)
+				elseif fut.file_exists (fn) then
+					create pix
+					pix.set_with_named_file (fn)
+					origin_pixmap := pix
+					create eimgemb.make (pix)
+					if sfn = Void then
+						class_name := eimgemb.eiffel_class_name_suggestion (loc)
+					else
+						class_name := eimgemb.eiffel_class_name_suggestion (create {PATH}.make_from_string (sfn))
+					end
+					create loc.make_from_string (class_name.as_lower)
+					loc := loc.appended_with_extension ("e")
+					file_name := loc.name
 
-				create origin_pixmap
-				origin_pixmap.set_with_named_file (fn)
+					pixmap_window.set_title (file_name)
+					class_name_field.set_text (class_name)
 
-				pixmap_window.set_title (file_name)
+					class_file := eimgemb.to_eiffel_class_text (class_name)
+					saved := False
+					toggle_save
+					text_panel.set_text (class_file)
+					create file_path.make_from_string (file_name)
 
-				build_class_name (file_name)
-				class_name_field.set_text (class_name)
+					set_title (default_title + " -- (Text not saved)")
 
-				build_file (origin_pixmap)
-				saved := False
-				toggle_save
-				text_panel.set_text (class_file)
-				create file_path.make_from_string (fn)
-
-				set_title (default_title + " -- (Text not saved)")
-
-					-- Load picture and show in the window.
-				pixmap_window.set_pixmap (origin_pixmap)
-				pixmap_window.show
-				pixmap_window.update_size
-				set_standard_pointer
-			else
-				create prompt.make_with_text ("Is it an image file?")
-				prompt.show_modal_to_window (Current)
+						-- Load picture and show in the window.
+					pixmap_window.set_pixmap (pix)
+					pixmap_window.show
+					pixmap_window.update_size
+				else
+					create prompt.make_with_text ("File does not exists!")
+					prompt.show_modal_to_window (Current)
+				end
 			end
+			set_standard_pointer
+		rescue
+			retried := True
+			retry
 		end
 
 	save_file
@@ -340,20 +354,20 @@ feature {NONE} -- Implementation
 			text_panel.select_all
 		end
 
-	build_class_name (a_file_name: STRING_32)
-			-- Build class name from `a_file_name'
-		local
-			l_index: INTEGER
-		do
-			class_name := file_name.as_upper
-			l_index := class_name.last_index_of ('.', class_name.count)
-			if l_index > 0 then
-				class_name.keep_head (l_index - 1)
-			end
-			if not class_name.is_valid_as_string_8 or else not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (class_name.as_string_8) then
-				class_name := {STRING_32} "NEW_CLASS"
-			end
-		end
+--	build_class_name (a_file_name: STRING_32)
+--			-- Build class name from `a_file_name'
+--		local
+--			l_index: INTEGER
+--		do
+--			class_name := file_name.as_upper
+--			l_index := class_name.last_index_of ('.', class_name.count)
+--			if l_index > 0 then
+--				class_name.keep_head (l_index - 1)
+--			end
+--			if not class_name.is_valid_as_string_8 or else not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (class_name.as_string_8) then
+--				class_name := {STRING_32} "NEW_CLASS"
+--			end
+--		end
 
 feature {NONE} -- Implementation / Constants
 
@@ -405,50 +419,10 @@ feature {NONE} -- Implementation / Constants
 		require
 			a_pixmap_attached: a_pixmap /= Void
 		local
-			i, j: INTEGER
-			colors: ARRAYED_LIST [ARRAYED_LIST [NATURAL_32]]
-			l_arrayed_list : ARRAYED_LIST [NATURAL_32]
-			l_width: INTEGER
-			l_iterator: EV_PIXEL_BUFFER_ITERATOR
-			l_item: EV_PIXEL_BUFFER_PIXEL
+			eimgemb: EIMGEMB
 		do
-			l_width := a_pixmap.width
-			create class_file.make_empty
-			create colors.make (a_pixmap.width)
-			from
-				i := 1
-				a_pixmap.lock
-				l_iterator := a_pixmap.pixel_iterator
-				l_iterator.start
-			until
-				i > a_pixmap.height
-
-			loop
-				create l_arrayed_list.make (l_width)
-				colors.extend (l_arrayed_list)
-				from
-					j := 1
-				until
-					j > l_width
-				loop
-					l_item := l_iterator.item
-					l_arrayed_list.extend (l_item.rgba_value)
-					l_iterator.forth
-
-					j := j + 1
-				end
-				i := i + 1
-			end
-			a_pixmap.unlock
-
-			class_file.append (code_producer.build_top_code (class_name))
-			class_file.append (code_producer.build_initialization_code (a_pixmap.width, a_pixmap.height))
-			class_file.append (code_producer.build_c_external_data_code (a_pixmap))
-			class_file.append (code_producer.build_colors_code)
-			class_file.append (code_producer.new_line)
-			class_file.append (code_producer.build_fill_memory_code (colors, a_pixmap.width, a_pixmap.height))
-			class_file.append (code_producer.new_line)
-			class_file.append ("end -- " + class_name +"%N")
+			create eimgemb.make (a_pixmap)
+			class_file := eimgemb.to_eiffel_class_text (class_name)
 		end
 
 	class_file: STRING_8
@@ -473,7 +447,7 @@ feature {NONE} -- Implementation / Constants
 			-- Original pixmap.
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

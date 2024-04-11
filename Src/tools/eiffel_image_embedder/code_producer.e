@@ -48,7 +48,7 @@ feature -- Commands
 				else
 					last_tab_indention := 1
 					Result.append (tab (0) + "c_colors_" + l_feature_count.out + " (a_ptr: POINTER; a_offset: INTEGER)" + new_line)
-					Result.append (tab (2) + "-- Fill `a_ptr' with colors data from `a_offset'." + new_line)
+					Result.append (tab (2) + "-- Fill `a_ptr` with colors data from `a_offset`." + new_line)
 					Result.append (tab (-1) + "external" + new_line)
 					Result.append (tab (1) + "%"C inline%"" + new_line)
 					Result.append (tab (-1) + "alias" + new_line)
@@ -87,7 +87,7 @@ feature -- Commands
 					end
 
 					Result.append (";" + new_line)
-					-- `sizeof l_data' should minus one sice there is additional `0' added by C compiler automatically.
+					-- `sizeof l_data` should minus one sice there is additional `0` added by C compiler automatically.
 					Result.append (tab (0) + "memcpy ((EIF_NATURAL_32 *)$a_ptr + $a_offset, &l_data, sizeof l_data - 1);" + new_line)
 					Result.append (tab (-1) + "}" + new_line)
 					Result.append (tab (0) + "]%"" + new_line)
@@ -107,7 +107,7 @@ feature -- Commands
 			last_tab_indention := 1
 			create Result.make (200)
 			Result.append (tab (0) + "build_colors (a_ptr: POINTER)" + new_line)
-			Result.append (tab (2) + "-- Build `colors'." + new_line)
+			Result.append (tab (2) + "-- Build `colors`." + new_line)
 			Result.append (tab (-1) + "do" + new_line)
 			from
 				check build_c_external_data_code_called: c_external_data_features_count > 0 end
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			-- Last tab indention.
 
 	tab (a_add: INTEGER): STRING
-			-- `a_add' can be negative.
+			-- `a_add` can be negative.
 		local
 			l_i: INTEGER
 		do

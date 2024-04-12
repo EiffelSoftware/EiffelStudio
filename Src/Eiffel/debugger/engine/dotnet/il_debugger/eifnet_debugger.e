@@ -104,7 +104,7 @@ feature -- Initialization
 			end
 		end
 
-	cli_debugger: detachable CLI_DEBUGGER
+	cli_debugger: detachable CLI_DEBUGGER_I
 
 	init_debugging_data
 		do
@@ -144,7 +144,7 @@ feature -- Initialization
 				-- Reset objects who has session related data
 			init_debugging_data
 
-			create cli_debugger.make (eiffel_system.system.clr_runtime_version, Current)
+			create {NETFMWK_CLI_DEBUGGER} cli_debugger.make (eiffel_system.system.clr_runtime_version, Current)
 			if cli_debugger.is_debugging then
 					--| Initialize the dbg synchronization
 				init_dbg_synchronisation (a_wel_item_pointer)

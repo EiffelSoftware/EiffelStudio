@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="cli_debugger" uuid="96A64D12-AB4A-49D8-B843-CF8A31B99026" library_target="default">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="cli_debugger" uuid="BBC631A9-0DFA-489F-B4C0-EA87DDDB2B41" library_target="default">
 	<target name="default">
 		<root all_classes="true"/>
 		<file_rule>
+			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<option warning="error">
@@ -11,40 +12,12 @@
 		<capability>
 			<void_safety support="conformance"/>
 		</capability>
-		<external_include location="$(EIFFEL_SRC)\framework\cli_debugger\Clib">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_include>
-		<external_cflag value="-D_WIN32_DCOM">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_cflag>
-		<external_object location="$(EIFFEL_SRC)\framework\cli_debugger\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\cli_debugger.lib">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf"/>
 		<library name="cli_kernel" location="$EIFFEL_SRC\framework\dotnet\cli_kernel\cli_kernel.ecf"/>
-		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf"/>
-		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>
-		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
-		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</library>
 		<cluster name="cli_debugger" location=".\" recursive="true">
-			<condition>
-				<platform value="windows"/>
-			</condition>
 			<file_rule>
-				<exclude>/Clib$</exclude>
-				<exclude>/spec$</exclude>
+				<exclude>/netcore$</exclude>
+				<exclude>/framework$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

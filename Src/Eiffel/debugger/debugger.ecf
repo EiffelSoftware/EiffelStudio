@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="debugger" uuid="DF764393-641F-4099-A39E-55F4465F0AC8" library_target="debugger">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="debugger" uuid="DF764393-641F-4099-A39E-55F4465F0AC8" library_target="debugger">
 	<description>ISE Eiffel - Debugger engine</description>
 	<target name="debugger">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<option is_obsolete_iteration="true"/>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>
@@ -46,7 +47,6 @@
 				<build value="finalize"/>
 			</condition>
 		</external_object>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="cli_debugger" location="$EIFFEL_SRC\framework\cli_debugger\cli_debugger.ecf" readonly="false" use_application_options="true">
@@ -54,8 +54,14 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
-		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf" readonly="false" use_application_options="true"/>
+		<library name="cli_debugger_framework" location="$EIFFEL_SRC\framework\cli_debugger\framework\cli_debugger_framework.ecf" readonly="false" use_application_options="true">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+			<renaming old_name="CLI_DEBUGGER" new_name="NETFMWK_CLI_DEBUGGER"/>
+		</library>
 		<library name="cli_kernel" location="$EIFFEL_SRC\framework\dotnet\cli_kernel\cli_kernel.ecf" readonly="false" use_application_options="true"/>
+		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf" readonly="false" use_application_options="true"/>
 		<library name="compiler_encoding" location="$EIFFEL_SRC\framework\compiler_encoding\compiler_encoding.ecf"/>
 		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true"/>
 		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler.ecf" readonly="false" use_application_options="true"/>
@@ -98,6 +104,7 @@
 			</condition>
 		</library>
 		<cluster name="debugger" location=".\" recursive="true">
+			<option is_obsolete_iteration="true"/>
 			<file_rule>
 				<exclude>/dotnet_fake$</exclude>
 				<condition>

@@ -10,6 +10,8 @@ class
 	CLI_DEBUGGER
 
 inherit
+	CLI_DEBUGGER_I
+
 	ICOR_EXPORTER
 
 create
@@ -83,7 +85,7 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	clr_runtime_version: detachable STRING_32
+	clr_runtime_version: STRING_32
 
 	create_icor_debug
 			-- Create icor_debug as ICorDebug

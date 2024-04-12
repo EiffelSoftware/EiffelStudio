@@ -54,6 +54,11 @@ inherit
 
 	SHARED_DEBUGGER_MANAGER
 
+	CLI_DEBUGGER_INTEGRATION
+		rename
+			enable_debugger_callback as enable_estudio_callback
+		end
+
 	DEBUG_OUTPUT_SYSTEM_I
 		export
 			{NONE} all
@@ -99,66 +104,7 @@ feature -- Initialization
 			end
 		end
 
-	create_icor_debug
-			-- Create icor_debug as ICorDebug
-		local
-			icor_debug_managed_callback_obj: ICOR_DEBUG_MANAGED_CALLBACK
-			icor_debug_unmanaged_callback_obj: ICOR_DEBUG_UNMANAGED_CALLBACK
-			l_icor_debug: ICOR_DEBUG
-			last_icor_debug_pointer: POINTER -- Last ICorDebug created
-			icor_debug_factory: ICOR_DEBUG_FACTORY
-		do
-			if icor_debug = Void then
-					-- And now for the dotnet world			
-				initialize_clr_host
-
-				create icor_debug_factory
-
-				eif_debug_display ("[EIFDBG] initialize debugger session")
-				last_icor_debug_pointer := icor_debug_factory.new_cordebug_pointer_for (eiffel_system.system.clr_runtime_version)
-
-				if last_icor_debug_pointer /= Default_pointer then
-					create icor_debug.make_by_pointer (last_icor_debug_pointer)
-					l_icor_debug := icor_debug
-					l_icor_debug.add_ref
-
-					l_icor_debug.initialize
-					if l_icor_debug.last_call_succeed then
-							--| We keep the callback server objects alive in the C/Cpp glue
-							--| then let's add a ref, but we'll leave `dispose' the responsibility
-							--| to Release the object
-						icor_debug_managed_callback_obj := icor_debug_factory.new_cordebug_managed_callback
-						icor_debug_managed_callback_obj.add_ref
-						icor_debug_managed_callback_obj.initialize_callback
-						l_icor_debug.set_managed_handler (icor_debug_managed_callback_obj)
-
-						icor_debug_unmanaged_callback_obj := icor_debug_factory.new_cordebug_unmanaged_callback
-						icor_debug_unmanaged_callback_obj.add_ref
-						icor_debug_unmanaged_callback_obj.initialize_callback
-						l_icor_debug.set_unmanaged_handler (icor_debug_unmanaged_callback_obj)
-
-							--| Enable callback to update data in the estudio world.
-						enable_estudio_callback
-					else
-						l_icor_debug.release
-						l_icor_debug := Void
-					end
-				end
-			end
-		end
-
-	icor_debug: ICOR_DEBUG
-			-- ICorDebug object used to control and access Dotnet debugger
-
-	initialize_clr_host
-			-- Initialize dotnet runtime, to be sure to use the correct version of the
-			-- runtime after while
-		local
-			l_host: CLR_HOST
-		once
-			;(create {CLI_COM}).initialize_com
-			l_host := (create {CLR_HOST_FACTORY}).runtime_host (Eiffel_system.System.clr_runtime_version)
-		end
+	cli_debugger: detachable CLI_DEBUGGER
 
 	init_debugging_data
 		do
@@ -194,15 +140,12 @@ feature -- Initialization
 			-- Initialize a debugger session
 		require
 			not is_debugging
-		local
-			l_icor_debug: ICOR_DEBUG
 		do
 				-- Reset objects who has session related data
 			init_debugging_data
 
-			create_icor_debug
-			l_icor_debug := icor_debug
-			if l_icor_debug /= Void then
+			create cli_debugger.make (eiffel_system.system.clr_runtime_version, Current)
+			if cli_debugger.is_debugging then
 					--| Initialize the dbg synchronization
 				init_dbg_synchronisation (a_wel_item_pointer)
 					--| start the timer which will trigger the callbacks
@@ -215,7 +158,7 @@ feature -- Initialization
 				is_debugging := False
 			end
 		ensure
-			is_debugging implies icor_debug /= Void
+			is_debugging implies attached cli_debugger as cli_dbg and then cli_dbg.is_debugging
 		end
 
 	is_debugging: BOOLEAN
@@ -285,7 +228,7 @@ feature -- Debugging session Termination ...
 			eifnet_dbg_evaluator.reset
 			reset_info
 			Icor_objects_manager.clean
-			icor_debug.clean_data
+			cli_debugger.clean_data
 		end
 
 	terminate_debugging
@@ -313,7 +256,7 @@ end
 					if icor_debug_process /= Void then
 						l_pro_hdl := icor_debug_process.get_handle
 					else
-						l_pro_hdl := icor_debug.last_icor_debug_process_handle
+						l_pro_hdl := cli_debugger.last_icor_debug_process_handle
 					end
 					l_success := {WEL_API}.terminate_process (l_pro_hdl, 0)
 				end
@@ -1111,9 +1054,9 @@ feature -- Interaction with .Net Debugger
 			l_icd_process: POINTER
 			n: INTEGER
 		do
-			l_icd_process := icor_debug.create_process (cmd + {STRING_32} " " + args, a_working_dir, env)
+			l_icd_process := cli_debugger.create_process (cmd + {STRING_32} " " + args, a_working_dir, env)
 
-			if icor_debug.last_call_succeed then
+			if cli_debugger.last_call_succeed then
 				n := {CLI_COM}.add_ref (l_icd_process)
 				set_last_controller_by_pointer (l_icd_process)
 				set_last_process_by_pointer (l_icd_process)
@@ -1133,7 +1076,7 @@ feature -- Interaction with .Net Debugger
 		do
 			do_create_process (cmd, cwd, args, env)
 			waiting_debugger_callback ("run process")
-			last_dbg_call_success := icor_debug.last_call_success
+			last_dbg_call_success := cli_debugger.last_call_success
 		end
 
 	do_stop
@@ -2507,7 +2450,7 @@ feature {NONE} -- External
 			-- Value for C externals to have an infinite wait
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

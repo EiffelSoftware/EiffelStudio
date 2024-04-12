@@ -10,6 +10,43 @@
 			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
+		<external_object location="$(EIFFEL_SRC)/C/ipc/ewb/libmtwewb.a">
+			<condition>
+				<platform excluded_value="windows"/>
+				<build value="workbench"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_SRC)/C/ipc/ewb/libmtewb.a">
+			<condition>
+				<platform excluded_value="windows"/>
+				<build value="finalize"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_SRC)/C/ipc/shared/libmtipc.a">
+			<condition>
+				<platform excluded_value="windows"/>
+				<build value="finalize"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_SRC)\C\ipc\ewb\mtwewb.lib">
+			<condition>
+				<platform value="windows"/>
+				<build value="workbench"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_SRC)\C\ipc\ewb\mtewb.lib">
+			<condition>
+				<platform value="windows"/>
+				<build value="finalize"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_SRC)\C\ipc\shared\mtipc.lib">
+			<condition>
+				<platform value="windows"/>
+				<build value="finalize"/>
+			</condition>
+		</external_object>
+		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="cli_debugger" location="$EIFFEL_SRC\framework\cli_debugger\cli_debugger.ecf" readonly="false" use_application_options="true">

@@ -545,7 +545,6 @@ feature {NONE} -- Output
 				-preference preference_name preference_value |
 				-ca_class (-all | class) | -ca_default | -ca_rule rule | -ca_setting file |
 				-gc_stats]
-
 			]")
 		end
 
@@ -563,6 +562,7 @@ feature {NONE} -- Output
 			more_help: like extension.service.help
 		do
 			print_usage
+			io.put_string ("%N")
 			localized_print (ewb_names.options)
 			localized_print (ewb_names.default_quick_melt_the_system)
 

@@ -19,7 +19,8 @@ inherit
 			optimized_byte_node,
 			pre_inlined_code,
 			set_line_number,
-			size
+			size,
+			enlarged
 		end
 
 create
@@ -105,6 +106,12 @@ feature -- Code generation: C
 			Result :=
 				condition.used (r) or else
 				expression.used (r)
+		end
+
+	enlarged: ELSIF_EXPRESSION_B
+			-- Redefined for type check.
+		do
+			Result := Current
 		end
 
 	enlarge_tree
@@ -197,7 +204,7 @@ feature -- Inlining
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

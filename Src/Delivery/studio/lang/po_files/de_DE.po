@@ -14,13 +14,13 @@ msgstr ""
 "X-Poedit-Language: German\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#. Source code: default_quick_melt_the_system: STRING_GENERAL is			do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
+#. Source code: default_quick_melt_the_system: STRING_GENERAL is			do Result := locale.translation ("default (no option): quick melt the system.%N%N") end
 #: ewb_names.e:45
 msgid ""
-"\tdefault (no option): quick melt the system.\n"
+"default (no option): quick melt the system.\n"
 "\n"
 msgstr ""
-"\tStandard (keine Option): System schnell schmelzen.\n"
+"Standard (keine Option): System schnell schmelzen.\n"
 "\n"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N   + Module = $1"), [a_module])
@@ -27451,14 +27451,12 @@ msgstr "Urdu (India)"
 msgid "Urdu (Pakistan)"
 msgstr "Urdu (Pakistan)"
 
-#. Source code: usage: STRING_GENERAL is									do Result := locale.translation ("Usage:%N%T") end
+#. Source code: usage: STRING_GENERAL is									do Result := locale.translation ("Usage:%N") end
 #: ewb_names.e:43
 msgid ""
 "Usage:\n"
-"\t"
 msgstr ""
 "Gebrauch:\n"
-"\t"
 
 #. Source code: library_use_application_options_name: STRING_GENERAL is do Result := locale.translation ("Use Application Options")	end
 #: conf_interface_names.e:243

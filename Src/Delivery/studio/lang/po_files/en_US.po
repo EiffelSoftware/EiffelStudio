@@ -12,10 +12,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.1.1\n"
 
-#. Source code: default_quick_melt_the_system: STRING_32				do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
+#. Source code: default_quick_melt_the_system: STRING_32				do Result := locale.translation ("default (no option): quick melt the system.%N%N") end
 #: ewb_names.e:45
 msgid ""
-"\tdefault (no option): quick melt the system.\n"
+"default (no option): quick melt the system.\n"
 "\n"
 msgstr ""
 
@@ -37836,11 +37836,10 @@ msgstr ""
 msgid "Urdu (Pakistan)"
 msgstr ""
 
-#. Source code: usage: STRING_32										do Result := locale.translation ("Usage:%N%T") end
+#. Source code: usage: STRING_32										do Result := locale.translation ("Usage:%N") end
 #: ewb_names.e:43
 msgid ""
 "Usage:\n"
-"\t"
 msgstr ""
 
 #. Source code: capability_header_if_root_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Use", "configuration.capability") end

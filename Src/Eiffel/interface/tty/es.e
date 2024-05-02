@@ -478,6 +478,12 @@ feature -- Setting
 
 feature {NONE} -- Output
 
+	print_line_indentation
+		do
+			io.put_character (' ')
+			io.put_character (' ')
+		end
+
 	print_option_error
 			-- Print the incorrect usage of ewb.
 		do
@@ -522,29 +528,33 @@ feature {NONE} -- Output
 			print_version
 			io.put_new_line
 			localized_print (ewb_names.usage)
+			print_line_indentation
 			localized_print (argument (0))
 				-- The leading space on the first line is required to delimit options from the command name.
+				-- Ensure the first line in "%T%T%T"
+				-- and the other lines starts with "%T%T%T  "  i.e 3 tabs and 2 spaces.
+				-- Check `print_line_indentation` if ever the indentation changed and is not anymore 2 spaces.
 			io.put_string ("[
-				-help | -version | -appinfo name |
-				-full |	-batch | -clean | -verbose | -use_settings |
-				-freeze | -finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |
-				-loop | -debug | -quick_melt | -melt |
-				(-clients | -suppliers | -ancestors | -descendants) [-filter filtername] class |
-				(-flatshort | -flat | -short) [-filter filtername] [-all | -all_and_parents | class] |
-				(-aversions | -dversions | -implementers) [-filter filtername] class feature |
-				-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |
-				-callees [-filter filtername] [-show_all] [-assignees | -creators] class feature |
-				-filter filtername [-all | class] |
-				-pretty input_filename [output_filename] |
-				-reset_ide_layout |
-				[[-config config.ecf] [-target target] [-config_option option] |
-				[class_file.e [-library library_name]] |
-				-stop | -no_library |
-				-project_path project_directory | -file file |
-				-preference preference_name preference_value |
-				-ca_class (-all | class) | -ca_default | -ca_rule rule | -ca_setting file |
-				-gc_stats]
-
+			
+			  -help | -version | -appinfo name |
+			  -full |	-batch | -clean | -verbose | -use_settings |
+			  -freeze | -finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |
+			  -loop | -debug | -quick_melt | -melt |
+			  (-clients | -suppliers | -ancestors | -descendants) [-filter filtername] class |
+			  (-flatshort | -flat | -short) [-filter filtername] [-all | -all_and_parents | class] |
+			  (-aversions | -dversions | -implementers) [-filter filtername] class feature |
+			  -callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |
+			  -callees [-filter filtername] [-show_all] [-assignees | -creators] class feature |
+			  -filter filtername [-all | class] |
+			  -pretty input_filename [output_filename] |
+			  -reset_ide_layout |
+			  [[-config config.ecf] [-target target] [-config_option option] |
+			  [class_file.e [-library library_name]] |
+			  -stop | -no_library |
+			  -project_path project_directory | -file file |
+			  -preference preference_name preference_value |
+			  -ca_class (-all | class) | -ca_default | -ca_rule rule | -ca_setting file |
+			  -gc_stats]
 			]")
 		end
 
@@ -562,7 +572,9 @@ feature {NONE} -- Output
 			more_help: like extension.service.help
 		do
 			print_usage
+			io.put_new_line
 			localized_print (ewb_names.options)
+			print_line_indentation
 			localized_print (ewb_names.default_quick_melt_the_system)
 
 			create command_list.make
@@ -575,6 +587,7 @@ feature {NONE} -- Output
 				command_list as c
 			loop
 				cmd_name := c.item
+				print_line_indentation
 				print_one_help (cmd_name,
 					if attached more_help and then more_help.has (cmd_name) then
 						more_help [cmd_name]

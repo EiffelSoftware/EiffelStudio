@@ -12,13 +12,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#. Source code: default_quick_melt_the_system: STRING_32				do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
+#. Source code: default_quick_melt_the_system: STRING_32				do Result := locale.translation ("default (no option): quick melt the system.%N%N") end
 #: ewb_names.e:45
 msgid ""
-"\tdefault (no option): quick melt the system.\n"
+"\efault (no option): quick melt the system.\n"
 "\n"
 msgstr ""
-"\t默认值 (无选项)：快速融化该系统。\n"
+"默认值 (无选项)：快速融化该系统。\n"
 "\n"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N   + Module = $1"), [a_module])
@@ -36691,14 +36691,12 @@ msgstr "乌尔都语 (印度)"
 msgid "Urdu (Pakistan)"
 msgstr "乌尔都语 (巴基斯坦)"
 
-#. Source code: usage: STRING_32										do Result := locale.translation ("Usage:%N%T") end
+#. Source code: usage: STRING_32										do Result := locale.translation ("Usage:%N") end
 #: ewb_names.e:43
 msgid ""
 "Usage:\n"
-"\t"
 msgstr ""
 "使用方法：\n"
-"\t"
 
 #. Source code: library_use_application_options_name: STRING_32 do Result := locale.translation ("Use Application Options")	end
 #: conf_interface_names.e:271

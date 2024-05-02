@@ -40,9 +40,9 @@ feature -- Access
 	enter_location_for_new_project: STRING_32 			do Result := locale.translation ("Enter location for new project: ") end
 	precompile_will_automtically_be_built: STRING_32 	do Result := locale.translation ("Precompile will automatically be built%Nbecause of the -stop/-batch option.%N") end
 	incorrect_options: STRING_32 						do Result := locale.translation (": incorrect options%N") end
-	usage: STRING_32										do Result := locale.translation ("Usage:%N%T") end
+	usage: STRING_32										do Result := locale.translation ("Usage:%N") end
 	options: STRING_32									do Result := locale.translation ("%NOptions:%N") end
-	default_quick_melt_the_system: STRING_32				do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
+	default_quick_melt_the_system: STRING_32				do Result := locale.translation ("default (no option): quick melt the system.%N%N") end
 	disable: STRING_32									do Result := locale.translation ("disable") end
 	enable: STRING_32									do Result := locale.translation ("enable") end
 	no_previous_value: STRING_32							do Result := locale.translation ("No previous value%N") end
@@ -268,7 +268,7 @@ feature -- Errors
 		end
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

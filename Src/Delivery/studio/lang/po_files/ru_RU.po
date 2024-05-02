@@ -18,13 +18,13 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#. Source code: default_quick_melt_the_system: STRING_32				do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
+#. Source code: default_quick_melt_the_system: STRING_32				do Result := locale.translation ("default (no option): quick melt the system.%N%N") end
 #: ewb_names.e:45
 msgid ""
-"\tdefault (no option): quick melt the system.\n"
+"default (no option): quick melt the system.\n"
 "\n"
 msgstr ""
-"\tпо умолчанию (без опций): быстро расплавить систему.\n"
+"по умолчанию (без опций): быстро расплавить систему.\n"
 "\n"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N   + Module = $1"), [a_module])
@@ -42363,11 +42363,10 @@ msgctxt "parser.eiffel.warning"
 msgid "Usage of `indexing` has been replaced by `note`."
 msgstr "Ключевое слово `indexing` было заменено на `note`."
 
-#. Source code: usage: STRING_32										do Result := locale.translation ("Usage:%N%T") end
+#. Source code: usage: STRING_32										do Result := locale.translation ("Usage:%N") end
 #: ewb_names.e:43
 msgid ""
 "Usage:\n"
-"\t"
 msgstr ""
 "Использование:\n"
 "\t"

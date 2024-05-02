@@ -1876,10 +1876,8 @@ msgstr "Démarrer"
 
 msgid ""
 "Usage:\n"
-"\t"
 msgstr ""
 "Usage:\n"
-"\t"
 
 msgid ""
 "The file you have supplied as Runtime Information Record\n"
@@ -8791,7 +8789,7 @@ msgid "Current version and all its descendant versions"
 msgstr ""
 
 msgid ""
-"\tdefault (no option): quick melt the system.\n"
+"default (no option): quick melt the system.\n"
 "\n"
 msgstr ""
 

@@ -17,10 +17,10 @@ msgstr ""
 "X-Generator: Poedit 1.8.7\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#. Source code: default_quick_melt_the_system: STRING_32				do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
+#. Source code: default_quick_melt_the_system: STRING_32				do Result := locale.translation ("default (no option): quick melt the system.%N%N") end
 #: ewb_names.e:45
 msgid ""
-"\tdefault (no option): quick melt the system.\n"
+"default (no option): quick melt the system.\n"
 "\n"
 msgstr ""
 "\tpor defecto (sin opción): rápido derretimiento del sistema.\n"
@@ -35868,11 +35868,10 @@ msgstr ""
 msgid "Urdu (Pakistan)"
 msgstr ""
 
-#. Source code: usage: STRING_32										do Result := locale.translation ("Usage:%N%T") end
+#. Source code: usage: STRING_32										do Result := locale.translation ("Usage:%N") end
 #: ewb_names.e:43
 msgid ""
 "Usage:\n"
-"\t"
 msgstr ""
 
 #. Source code: library_use_application_options_name: STRING_32 do Result := locale.translation ("Use Application Options")	end

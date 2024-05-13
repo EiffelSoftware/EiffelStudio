@@ -56,11 +56,8 @@ feature {NONE} -- Query
 
 	row_item_text (a_item: EV_GRID_ITEM): STRING_32
 			-- <Precursor>
-		local
-			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 		do
-			l_editor_item ?= a_item
-			if l_editor_item /= Void then
+			if attached {EB_GRID_EDITOR_TOKEN_ITEM} a_item as l_editor_item then
 				Result := l_editor_item.text
 			else
 				Result := Precursor {ES_EVENT_LIST_TOOL_PANEL_BASE} (a_item)
@@ -98,9 +95,9 @@ feature {NONE} -- Query
 
 			if not Result.is_empty then
 					-- Ensures no blank lines at the end of the text
-				l_eol ?= Result.last
+				l_eol := {EDITOR_TOKEN_EOL} / Result.last
 				from Result.finish until Result.before or l_eol = Void loop
-					l_eol ?= Result.item
+					l_eol := {EDITOR_TOKEN_EOL} / Result.item
 					if l_eol /= Void then
 						Result.remove
 					end
@@ -241,7 +238,7 @@ feature {NONE} -- Factory
 		local
 			l_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
-			Result ?= a_item.data
+			Result := {EB_EDITOR_TOKEN_TOOLTIP} / a_item.data
 			if Result = Void then
 				if grid_events.is_single_item_selection_enabled or grid_events.is_multiple_row_selection_enabled then
 					l_select_actions := a_item.row.select_actions
@@ -278,7 +275,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

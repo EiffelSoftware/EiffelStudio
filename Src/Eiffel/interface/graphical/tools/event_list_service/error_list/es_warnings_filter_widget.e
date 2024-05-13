@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 				l_id := l_internal.generic_dynamic_type (l_item.type, 1)
 				l_warning := Void
 				if l_item.exact_only then
-					l_warning ?= l_internal.new_instance_of (l_id)
+					l_warning := {ERROR} / l_internal.new_instance_of (l_id)
 				end
 				if l_warning /= Void then
 						-- In order to evaluate `code' we need to disable assertion monitoring.
@@ -154,8 +154,6 @@ feature -- Access
 		local
 			l_grid: like grid_warnings
 			l_row: EV_GRID_ROW
-			l_item: EV_GRID_CHECKABLE_LABEL_ITEM
-			l_data: TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]
 			l_count, i: INTEGER
 			l_result: DS_ARRAYED_LIST [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
 		do
@@ -165,10 +163,11 @@ feature -- Access
 				create l_result.make (0)
 				from l_count := l_grid.row_count; i := 1 until i > l_count loop
 					l_row := l_grid.row (i)
-					l_item ?= l_row.item (1)
-					if l_item /= Void and not l_item.is_checked then
-						l_data ?= l_item.data
-						if l_data /= Void then
+					if
+						attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_row.item (1) as l_item and then
+						not l_item.is_checked
+					then
+						if attached {TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]} l_item.data as l_data then
 							l_result.force_last (l_data)
 						end
 					end
@@ -329,12 +328,9 @@ feature {NONE} -- Action handlers
 			-- Call when a filter state has changed.
 			--
 			-- `a_item': Changed item.
-		local
-			l_data: TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]
 		do
 			internal_filtered := Void
-			l_data ?= a_item.data
-			if l_data /= Void then
+			if attached {TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]} a_item.data as l_data then
 				filter_changed_actions.call ([l_data.type, l_data.exact_only, not a_item.is_checked])
 			end
 		end
@@ -376,7 +372,7 @@ invariant
 	filter_changed_actions_attached: filter_changed_actions /= Void
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

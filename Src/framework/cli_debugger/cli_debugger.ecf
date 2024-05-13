@@ -12,6 +12,28 @@
 		<capability>
 			<void_safety support="conformance"/>
 		</capability>
+		<external_include location="$(EIFFEL_SRC)\framework\cli_debugger\include\coreclr\inc">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$(EIFFEL_SRC)\framework\cli_debugger\Clib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="$(EIFFEL_SRC)\framework\cli_debugger\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\cli_debugger.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<!--
+		<external_cflag value="">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_cflag>
+		-->
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cli_kernel" location="$EIFFEL_SRC\framework\dotnet\cli_kernel\cli_kernel.ecf"/>
 		<cluster name="cli_debugger" location=".\" recursive="true">

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="cli_debugger_netcore" uuid="957FF216-53B8-4193-8DE1-DEC2875EBA8A" library_target="default">
+	<target name="default">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="error">
+			<warning name="obsolete_feature" value="all"/>
+		</option>
+		<capability>
+			<void_safety support="conformance"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="cli_debugger" location="..\cli_debugger.ecf">
+			<renaming old_name="CLI_DEBUGGER" new_name="CLI_DEBUGGER_I"/>
+			<renaming old_name="ICOR_MD_IMPORT" new_name="ICOR_MD_IMPORT_I"/>
+			<renaming old_name="ICOR_OBJECTS_MANAGER" new_name="ICOR_OBJECTS_MANAGER_I"/>
+			<renaming old_name="ICOR_DEBUG_APP_DOMAIN" new_name="ICOR_DEBUG_APP_DOMAIN_I"/>
+			<renaming old_name="ICOR_DEBUG_APP_DOMAIN_ENUM" new_name="ICOR_DEBUG_APP_DOMAIN_ENUM_I"/>
+			<renaming old_name="ICOR_DEBUG_ARRAY_VALUE" new_name="ICOR_DEBUG_ARRAY_VALUE_I"/>
+			<renaming old_name="ICOR_DEBUG_ASSEMBLY" new_name="ICOR_DEBUG_ASSEMBLY_I"/>
+			<renaming old_name="ICOR_DEBUG_ASSEMBLY_ENUM" new_name="ICOR_DEBUG_ASSEMBLY_ENUM_I"/>
+			<renaming old_name="ICOR_DEBUG_BOX_VALUE" new_name="ICOR_DEBUG_BOX_VALUE_I"/>
+			<renaming old_name="ICOR_DEBUG_BREAKPOINT" new_name="ICOR_DEBUG_BREAKPOINT_I"/>
+			<renaming old_name="ICOR_DEBUG_BREAKPOINT_ENUM" new_name="ICOR_DEBUG_BREAKPOINT_ENUM_I"/>
+			<renaming old_name="ICOR_DEBUG_CHAIN" new_name="ICOR_DEBUG_CHAIN_I"/>
+			<renaming old_name="ICOR_DEBUG_CHAIN_ENUM" new_name="ICOR_DEBUG_CHAIN_ENUM_I"/>
+			<renaming old_name="ICOR_DEBUG_CLASS" new_name="ICOR_DEBUG_CLASS_I"/>
+			<renaming old_name="ICOR_DEBUG_CODE" new_name="ICOR_DEBUG_CODE_I"/>
+			<renaming old_name="ICOR_DEBUG_CONTROLLER" new_name="ICOR_DEBUG_CONTROLLER_I"/>
+			<renaming old_name="ICOR_DEBUG_ENUM" new_name="ICOR_DEBUG_ENUM_I"/>
+			<renaming old_name="ICOR_DEBUG_EVAL" new_name="ICOR_DEBUG_EVAL_I"/>
+			<renaming old_name="ICOR_DEBUG_FRAME" new_name="ICOR_DEBUG_FRAME_I"/>
+			<renaming old_name="ICOR_DEBUG_FRAME_ENUM" new_name="ICOR_DEBUG_FRAME_ENUM_I"/>
+			<renaming old_name="ICOR_DEBUG_FUNCTION" new_name="ICOR_DEBUG_FUNCTION_I"/>
+			<renaming old_name="ICOR_DEBUG_FUNCTION_BREAKPOINT" new_name="ICOR_DEBUG_FUNCTION_BREAKPOINT_I"/>
+			<renaming old_name="ICOR_DEBUG_GENERIC_VALUE" new_name="ICOR_DEBUG_GENERIC_VALUE_I"/>
+			<renaming old_name="ICOR_DEBUG_HANDLE_VALUE" new_name="ICOR_DEBUG_HANDLE_VALUE_I"/>
+			<renaming old_name="ICOR_DEBUG_HEAP_VALUE" new_name="ICOR_DEBUG_HEAP_VALUE_I"/>
+			<renaming old_name="ICOR_DEBUG_HEAP_VALUE2" new_name="ICOR_DEBUG_HEAP_VALUE2_I"/>
+			<renaming old_name="ICOR_DEBUG_IL_FRAME" new_name="ICOR_DEBUG_IL_FRAME_I"/>
+			<renaming old_name="ICOR_DEBUG_MODULE" new_name="ICOR_DEBUG_MODULE_I"/>
+			<renaming old_name="ICOR_DEBUG_MODULE_BREAKPOINT" new_name="ICOR_DEBUG_MODULE_BREAKPOINT_I"/>
+			<renaming old_name="ICOR_DEBUG_MODULE_ENUM" new_name="ICOR_DEBUG_MODULE_ENUM_I"/>
+			<renaming old_name="ICOR_DEBUG_NATIVE_FRAME" new_name="ICOR_DEBUG_NATIVE_FRAME_I"/>
+			<renaming old_name="ICOR_DEBUG_OBJECT_VALUE" new_name="ICOR_DEBUG_OBJECT_VALUE_I"/>
+			<renaming old_name="ICOR_DEBUG_PROCESS" new_name="ICOR_DEBUG_PROCESS_I"/>
+			<renaming old_name="ICOR_DEBUG_REFERENCE_VALUE" new_name="ICOR_DEBUG_REFERENCE_VALUE_I"/>
+			<renaming old_name="ICOR_DEBUG_REGISTER_SET" new_name="ICOR_DEBUG_REGISTER_SET_I"/>
+			<renaming old_name="ICOR_DEBUG_STEPPER" new_name="ICOR_DEBUG_STEPPER_I"/>
+			<renaming old_name="ICOR_DEBUG_STEPPER_ENUM" new_name="ICOR_DEBUG_STEPPER_ENUM_I"/>
+			<renaming old_name="ICOR_DEBUG_STRING_VALUE" new_name="ICOR_DEBUG_STRING_VALUE_I"/>
+			<renaming old_name="ICOR_DEBUG_THREAD" new_name="ICOR_DEBUG_THREAD_I"/>
+			<renaming old_name="ICOR_DEBUG_THREAD_ENUM" new_name="ICOR_DEBUG_THREAD_ENUM_I"/>
+			<renaming old_name="ICOR_DEBUG_VALUE" new_name="ICOR_DEBUG_VALUE_I"/>
+			<renaming old_name="ICOR_DEBUG_VALUE_BREAKPOINT" new_name="ICOR_DEBUG_VALUE_BREAKPOINT_I"/>
+			<renaming old_name="ICOR_DEBUG_VALUE_ENUM" new_name="ICOR_DEBUG_VALUE_ENUM_I"/>
+			<renaming old_name="ICOR_DEBUG_VALUE_WITH_VALUE" new_name="ICOR_DEBUG_VALUE_WITH_VALUE_I"/>
+			<renaming old_name="ICOR_DEBUG_MANAGED_CALLBACK" new_name="ICOR_DEBUG_MANAGED_CALLBACK_I"/>
+		</library>
+		<library name="cli_kernel" location="..\..\dotnet\cli_kernel\cli_kernel.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<cluster name="cli_debugger_netcore" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/Clib$</exclude>
+				<exclude>/spec$</exclude>
+				<exclude>/testing$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

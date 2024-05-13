@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 		do
 			integration := a_integration
 			clr_runtime_version := a_clr_runtime_version
+			create icor_debug_factory
 			create_icor_debug
 		end
 
@@ -51,6 +52,10 @@ feature -- Status
 feature -- Access
 
 	integration: CLI_DEBUGGER_INTEGRATION
+
+feature -- Factory		
+
+	icor_debug_factory: ICOR_DEBUG_FACTORY
 
 feature {NONE} -- Access
 
@@ -94,13 +99,10 @@ feature {NONE} -- Implementation
 			icor_debug_unmanaged_callback_obj: ICOR_DEBUG_UNMANAGED_CALLBACK
 			l_icor_debug: ICOR_DEBUG
 			last_icor_debug_pointer: POINTER -- Last ICorDebug created
-			icor_debug_factory: ICOR_DEBUG_FACTORY
 		do
 			if icor_debug = Void then
 					-- And now for the dotnet world			
 				initialize_clr_host
-
-				create icor_debug_factory
 
 				last_icor_debug_pointer := icor_debug_factory.new_cordebug_pointer_for (clr_runtime_version)
 

@@ -11,6 +11,13 @@ class
 	ICOR_OBJECT
 
 inherit
+	ICOR_DEBUG_I
+		export
+			{ICOR_EXPORTER} item, last_call_success, default_pointer
+		redefine
+			out
+		end
+
 	COM_OBJECT
 		export
 			{ICOR_EXPORTER} item, last_call_success, default_pointer
@@ -20,31 +27,19 @@ inherit
 			dispose
 		end
 
-	ICOR_EXPORTER
+	ICOR_DEBUG_FACTORY
 		export
-			{NONE} all
+			{ICOR_EXPORTER} all
 		redefine
 			out
-		end
-
-	LOCALIZED_PRINTER
-		export
-			{NONE} all
-		redefine
-			out
-		end
-
-	SHARED_ICOR_OBJECTS_MANAGER
-		redefine
-			out
-		end
+		end		
 
 feature {ICOR_EXPORTER} -- Initialisation
 
-	make_by_pointer (an_item: POINTER)
+	make_by_pointer (a_item: POINTER)
 			-- Make Current by pointer.
 		do
-			Precursor (an_item)
+			Precursor (a_item)
 			init_icor
 		end
 
@@ -54,16 +49,28 @@ feature {ICOR_EXPORTER} -- Initialisation
 		do
 		end
 
+feature {ICOR_EXPORTER} -- Access
+
+	last_call_succeed: BOOLEAN
+			-- Is last call a success ?
+		do
+			Result := last_call_success = 0 -- S_OK
+					or last_call_success = 1 -- S_FALSE
+				--| HRESULT .. < 0 if error ...
+		end		
+
+feature {ICOR_EXPORTER} -- Implementation
+
+	set_last_call_success (n: like last_call_success)
+		do
+			last_call_success := n
+		end
+
 feature {ICOR_OBJECTS_MANAGER} -- Special feature for ICOR_OBJECTS_MANAGER
 
 	update_item (p: POINTER)
-		require
-			p_valid: p /= Default_pointer
-			item_previously_removed: item = Default_pointer
 		do
 			item := p
-		ensure
-			item_set: item = p
 		end
 
 feature -- dispose
@@ -150,11 +157,11 @@ feature -- Ref management
 			check item /= Default_pointer end
 
 			debug ("COM_OBJECT")
-				localized_print_error ({STRING_32} "Entering ["+ generating_type.name_32 +"].add_ref ... on " + item.out + "%N")
+				io.error.put_string_32 ({STRING_32} "Entering ["+ generating_type.name_32 +"].add_ref ... on " + item.out + "%N")
 			end
 			l_nb_ref := {CLI_COM}.add_ref (item)
 			debug ("COM_OBJECT")
-				localized_print_error ({STRING_32} "Quitting ["+ generating_type.name_32 +"].add_ref [" + l_nb_ref.out + "] on " + item.out + "%N")
+				io.error.put_string_32 ({STRING_32} "Quitting ["+ generating_type.name_32 +"].add_ref [" + l_nb_ref.out + "] on " + item.out + "%N")
 			end
 		end
 
@@ -165,11 +172,11 @@ feature -- Ref management
 		do
 			check item /= Default_pointer end
 			debug ("COM_OBJECT")
-				localized_print_error ({STRING_32} "Entering [" + generating_type.name_32 + "].release ... on " + item.out + "%N")
+				io.error.put_string_32 ({STRING_32} "Entering [" + generating_type.name_32 + "].release ... on " + item.out + "%N")
 			end
 			l_nb_ref := {CLI_COM}.release (item)
 			debug ("COM_OBJECT")
-				localized_print_error ({STRING_32} "Quitting [" + generating_type.name_32 + "].release [" + l_nb_ref.out + "] on " + item.out + "%N")
+				io.error.put_string_32 ({STRING_32} "Quitting [" + generating_type.name_32 + "].release [" + l_nb_ref.out + "] on " + item.out + "%N")
 			end
 			if l_nb_ref = 0 then
 				item := default_pointer
@@ -180,13 +187,8 @@ feature -- Equality
 
 	is_equal_as_icor_object (other: like Current): BOOLEAN
 			-- Comparison of pointer
-		require
-			other_not_void: other /= Void
 		do
 			Result := item.is_equal (other.item)
-		ensure
-			symmetric: Result implies other.is_equal_as_icor_object (Current)
-			consistent: is_equal_as_icor_object (other) implies Result
 		end
 
 feature {ICOR_EXPORTER} -- Access
@@ -212,19 +214,6 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 feature -- Access status
-
-	item_not_null: BOOLEAN
-		do
-			Result := item /= Default_pointer
-		end
-
-	last_call_succeed: BOOLEAN
-			-- Is last call a success ?
-		do
-			Result := last_call_success = 0
-				or last_call_success = 1 -- S_OK or S_FALSE
-				--| HRESULT .. < 0 if error ...
-		end
 
 	last_error_code: INTEGER
 			-- Convert `last_call_success' to hex and keep the last word

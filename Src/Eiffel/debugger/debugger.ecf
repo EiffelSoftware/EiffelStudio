@@ -121,6 +121,7 @@
 				</condition>
 			</file_rule>
 			<file_rule>
+				<exclude>/fake$</exclude>
 				<exclude>/dotnet$</exclude>
 				<condition>
 					<platform excluded_value="windows"/>

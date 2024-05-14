@@ -29,7 +29,7 @@ feature -- Factory
 
 feature -- Execution
 
-	create_process (a_command_line: READABLE_STRING_GENERAL; a_working_directory: PATH; a_ns_env: NATIVE_STRING): POINTER
+	create_process (a_command_line: READABLE_STRING_GENERAL; a_working_directory: PATH; a_ns_env: detachable NATIVE_STRING): POINTER
 			-- Pointer on the freshly creared ICorDebugProcess
 		deferred
 		end

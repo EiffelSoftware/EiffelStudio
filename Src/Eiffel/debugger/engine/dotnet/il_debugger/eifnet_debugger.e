@@ -104,7 +104,14 @@ feature -- Initialization
 			end
 		end
 
-	cli_debugger: detachable CLI_DEBUGGER_I
+	cli_debugger: detachable CLI_DEBUGGER
+
+	icor_debug_factory: detachable ICOR_DEBUG_FACTORY_I
+		do
+			if attached cli_debugger as dbg then
+				Result := dbg.icor_debug_factory
+			end
+		end
 
 	init_debugging_data
 		do
@@ -136,7 +143,7 @@ feature -- Initialization
 			Debug_value_keeper.recycle
 		end
 
-	initialize_debugger_session (a_wel_item_pointer: POINTER)
+	initialize_debugger_session (a_wel_item_pointer: POINTER; a_is_netcore: BOOLEAN)
 			-- Initialize a debugger session
 		require
 			not is_debugging
@@ -144,8 +151,8 @@ feature -- Initialization
 				-- Reset objects who has session related data
 			init_debugging_data
 
-			create {NETFMWK_CLI_DEBUGGER} cli_debugger.make (eiffel_system.system.clr_runtime_version, Current)
-			if cli_debugger.is_debugging then
+			build_cli_debugger (a_is_netcore)
+			if cli_debugger /= Void and then cli_debugger.is_debugging then
 					--| Initialize the dbg synchronization
 				init_dbg_synchronisation (a_wel_item_pointer)
 					--| start the timer which will trigger the callbacks
@@ -161,8 +168,22 @@ feature -- Initialization
 			is_debugging implies attached cli_debugger as cli_dbg and then cli_dbg.is_debugging
 		end
 
+	build_cli_debugger (a_is_netcore: BOOLEAN)
+		do
+			if a_is_netcore then
+				is_netcore_debugging := True
+				create {NETCORE_CLI_DEBUGGER} cli_debugger.make (eiffel_system.system.clr_runtime_version, Current)
+			else
+				is_netcore_debugging := False
+				create {NETFMWK_CLI_DEBUGGER} cli_debugger.make (eiffel_system.system.clr_runtime_version, Current)
+			end
+		end
+
 	is_debugging: BOOLEAN
 			-- Is current process in debugging session ?
+
+	is_netcore_debugging: BOOLEAN
+			-- Is current debugging using netcore?
 
 	exit_process_occurred: BOOLEAN
 			-- Does Call back "ExitProcess" occurred ?
@@ -460,7 +481,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				set_last_process_by_pointer (p)
 				p := dbg_cb_info_pointer_item (2) -- p_app_domain
 				debug ("debugger_trace_callback_data")
-					io.error.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 ((create {ICOR_DEBUG_APP_DOMAIN}.make_by_pointer (p)).get_name) + "%N")
+					io.error.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (new_app_domain (p).get_name) + "%N")
 				end
 				r := {ICOR_DEBUG_APP_DOMAIN}.cpp_is_attached (p, $i)
 				if not i.to_boolean then
@@ -577,7 +598,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				debug ("debugger_trace_callback_data")
 					p := dbg_cb_info_pointer_item (2) -- p_app_class
 					if p /= Default_pointer then
-						debugger_message ({STRING_32} "Class loaded :%"" + Icor_objects_manager.icd_class (p).get_module.md_type_name (Icor_objects_manager.icd_class (p).token) + "%"")
+						debugger_message ({STRING_32} "Class loaded :%"" + Icor_objects_manager.icd_class (p, Current).get_module.md_type_name (Icor_objects_manager.icd_class (p, Current).token) + "%"")
 					end
 				end
 			when Cst_managed_cb_load_module then
@@ -586,7 +607,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				set_last_controller_by_pointer (icor_debug_controller_interface (p))
 				p := dbg_cb_info_pointer_item (2) -- p_module
 				if p /= Default_pointer then
-					l_module := Icor_objects_manager.icd_module (p)
+					l_module := Icor_objects_manager.icd_module (p, Current)
 					debug ("debugger_trace_callback_data")
 						io.error.put_string_32 ({STRING_32} "Module loaded : %"" + l_module.name + "%" %N")
 					end
@@ -1053,10 +1074,20 @@ feature -- Interaction with .Net Debugger
 		local
 			l_icd_process: POINTER
 			n: INTEGER
+			l_cmd_line: STRING_32
 		do
-			l_icd_process := cli_debugger.create_process (cmd + {STRING_32} " " + args, a_working_dir, env)
+			if is_netcore_debugging then
+				l_cmd_line := {STRING_32} "dotnet " + cmd
+			else
+				l_cmd_line := cmd.string
+			end
+			if args /= Void then
+				l_cmd_line.append (" ")
+				l_cmd_line.append (args)
+			end
+			l_icd_process := cli_debugger.create_process (l_cmd_line, a_working_dir, env)
 
-			if cli_debugger.last_call_succeed then
+			if cli_debugger.last_call_succeed and then not l_icd_process.is_default_pointer then
 				n := {CLI_COM}.add_ref (l_icd_process)
 				set_last_controller_by_pointer (l_icd_process)
 				set_last_process_by_pointer (l_icd_process)
@@ -1134,7 +1165,7 @@ feature -- Interaction with .Net Debugger
 
 feature {NONE} -- Stepping Implementation
 
-	new_stepper: ICOR_DEBUG_STEPPER
+	new_icor_debug_stepper: detachable ICOR_DEBUG_STEPPER
 			-- Retrieve or Create Stepper
 			-- Result value is the error code
 		local
@@ -1147,7 +1178,7 @@ feature {NONE} -- Stepping Implementation
 			end
 			edti := info.managed_thread (thid)
 			if edti /= Void then
-				Result := edti.new_stepper
+				Result := edti.new_stepper (icor_debug_factory)
 				if Result /= Void then
 					Result.add_ref
 				end
@@ -1166,7 +1197,7 @@ feature {NONE} -- Stepping Implementation
 		local
 			l_stepper: ICOR_DEBUG_STEPPER
 		do
-			l_stepper := new_stepper
+			l_stepper := new_icor_debug_stepper
 			if l_stepper /= Void then
 				--| Manage the step
 				inspect	a_mode
@@ -1202,7 +1233,7 @@ feature -- Stepping Access
 			debug ("debugger_trace_operation")
 				print ("[enter] EIFNET_DEBUGGER.do_step_range (" + a_bstep_in.out + ")%N")
 			end
-			l_stepper := new_stepper
+			l_stepper := new_icor_debug_stepper
 			if l_stepper /= Void then
 				debug  ("DEBUGGER_TRACE_EIFNET")
 					print ("[>] Stepping using ICorDebugStepper [0x" + l_stepper.out + "]%N")
@@ -2079,27 +2110,29 @@ feature -- Specific function evaluation
 -- FIXME jfiat [2004/07/20] : why do we use a_icd as l_icd if failed ?
 --			l_icd := a_icd
 			l_icd_module := info.icor_debug_module_for_mscorlib
-			l_feature_token := Edv_external_formatter.token_Exception_get_Message
-			l_func := l_icd_module.get_function_from_token (l_feature_token)
-			if l_func /= Void then
-				l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<a_icd>>)
-				if eifnet_dbg_evaluator.last_eval_is_exception and l_icd /= Void then
-					l_icd.clean_on_dispose
-					l_icd := Void
-				end
-				if l_icd /= Void then
-						--| We should get a System.String
-					create l_debug_info.make (l_icd)
-					l_icdov := l_debug_info.new_interface_debug_object_value
-					if l_icdov /= Void then
-						Result := Edv_external_formatter.system_string_value_to_string (l_icdov)
-						l_icdov.clean_on_dispose
+			if l_icd_module /= Void then
+				l_feature_token := Edv_external_formatter.token_Exception_get_Message
+				l_func := l_icd_module.get_function_from_token (l_feature_token)
+				if l_func /= Void then
+					l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<a_icd>>)
+					if eifnet_dbg_evaluator.last_eval_is_exception and l_icd /= Void then
+						l_icd.clean_on_dispose
+						l_icd := Void
 					end
-					l_debug_info.icd_prepared_value.clean_on_dispose
-					l_debug_info.clean
-					l_icd.clean_on_dispose
-				else
-					Result := Void -- "WARNING: Could not evaluate output"	
+					if l_icd /= Void then
+							--| We should get a System.String
+						create l_debug_info.make (l_icd)
+						l_icdov := l_debug_info.new_interface_debug_object_value
+						if l_icdov /= Void then
+							Result := Edv_external_formatter.system_string_value_to_string (l_icdov)
+							l_icdov.clean_on_dispose
+						end
+						l_debug_info.icd_prepared_value.clean_on_dispose
+						l_debug_info.clean
+						l_icd.clean_on_dispose
+					else
+						Result := Void -- "WARNING: Could not evaluate output"	
+					end
 				end
 			end
 			debug ("debugger_trace_eval")

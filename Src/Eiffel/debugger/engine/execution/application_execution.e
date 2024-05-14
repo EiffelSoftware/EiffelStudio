@@ -102,7 +102,9 @@ feature -- Execution event callbacks
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
-			status.quit_execution
+			if attached status as st then
+				st.quit_execution
+			end
 			Debugger_manager.on_application_quit
 		end
 
@@ -1368,7 +1370,7 @@ feature {NONE} -- fake
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

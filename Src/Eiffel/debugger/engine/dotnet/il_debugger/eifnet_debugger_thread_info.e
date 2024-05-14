@@ -63,16 +63,16 @@ feature -- Cleaning
 
 feature -- Access
 
-	refresh_thread_details
+	refresh_thread_details (a_factory: ICOR_DEBUG_FACTORY_I)
 			-- Get again thread details
 		do
 			thread_details_fetched := False
 			thread_name := Void
 			thread_priority := 0
-			get_thread_details
+			get_thread_details (a_factory)
 		end
 
-	get_thread_details
+	get_thread_details (a_factory: ICOR_DEBUG_FACTORY_I)
 			-- Get the thread details
 			-- i.e: name, priority and so on ...
 		local
@@ -90,7 +90,7 @@ feature -- Access
 
 				r := {ICOR_DEBUG_THREAD}.cpp_get_object (icd_thread_pointer, $p)
 				if p /= Default_pointer then
-					create l_icd.make_by_pointer (p)
+					l_icd := a_factory.new_value (p)
 				end
 
 				if l_icd /= Void then
@@ -127,23 +127,23 @@ feature -- Access
 			thread_details_fetched
 		end
 
-	get_thread_name
+	get_thread_name (a_factory: ICOR_DEBUG_FACTORY_I)
 			-- Get thread's name
 		do
-			get_thread_details
+			get_thread_details (a_factory)
 		end
 
-	get_thread_priority
+	get_thread_priority (a_factory: ICOR_DEBUG_FACTORY_I)
 			-- Get thread's priority
 		do
-			get_thread_details
+			get_thread_details (a_factory)
 		end
 
-	icd_thread: ICOR_DEBUG_THREAD
+	icd_thread (a_factory: ICOR_DEBUG_FACTORY_I): ICOR_DEBUG_THREAD
 		do
 			Result := opo_icd_thread
 			if Result = Void then
-				create opo_icd_thread.make_by_pointer (icd_thread_pointer)
+				opo_icd_thread := a_factory.new_thread (icd_thread_pointer)
 				opo_icd_thread.add_ref
 				Result := opo_icd_thread
 			end
@@ -151,7 +151,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	new_stepper: ICOR_DEBUG_STEPPER
+	new_stepper (a_factory: ICOR_DEBUG_FACTORY_I): ICOR_DEBUG_STEPPER
 			--
 		local
 			l_frame: ICOR_DEBUG_FRAME
@@ -161,7 +161,7 @@ feature -- Access
 		do
 			clean_pending_steppers
 			-- FIXME jfiat: for now we do this way, find the way to reuse steppers
-			l_thread := icd_thread
+			l_thread := icd_thread (a_factory)
 			if l_thread /= Void then
 				l_frame := l_thread.get_active_frame
 				if l_thread.last_call_succeed and then l_frame /= Void then
@@ -181,7 +181,7 @@ feature -- Access
 --					l_stepper.set_intercept_mask (l_stepper.enum_cor_debug_intercept__interce)
 					Result := l_stepper
 					Result.add_ref
-					add_icd_stepper (Result.item)
+					add_icd_stepper (Result.item, Result)
 				end
 			end
 		ensure
@@ -190,7 +190,7 @@ feature -- Access
 
 feature -- Change
 
-	add_icd_stepper (p: POINTER)
+	add_icd_stepper (p: POINTER; a_factory: ICOR_DEBUG_FACTORY_I)
 			-- Add pointer to Stepper
 			--
 			-- Nota: call AddRef before adding it
@@ -198,7 +198,7 @@ feature -- Change
 		require
 			stepper_not_null: p /= Default_pointer
 		do
-			pending_steppers.put (create {ICOR_DEBUG_STEPPER}.make_by_pointer (p), p)
+			pending_steppers.put (a_factory.new_stepper (p), p)
 		end
 
 	has_icd_stepper (p: POINTER): BOOLEAN
@@ -269,7 +269,7 @@ feature -- Disposable
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

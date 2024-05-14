@@ -3,6 +3,8 @@
 	<description>ISE Eiffel - Debugger engine</description>
 	<target name="debugger">
 		<root all_classes="true"/>
+		<variable name="cli_debugger_framework_disabled" value="false"/>
+		<variable name="cli_debugger_netcore_disabled" value="false"/>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
@@ -54,11 +56,17 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
-		<library name="cli_debugger_framework" location="$EIFFEL_SRC\framework\cli_debugger\framework\cli_debugger_framework.ecf" readonly="false" use_application_options="true">
+		<library name="cli_debugger_framework" location="$EIFFEL_SRC\framework\cli_debugger\framework\cli_debugger_framework.ecf" readonly="false" use_application_options="true" prefix="NETFMWK_">
 			<condition>
 				<platform value="windows"/>
+				<custom name="cli_debugger_framework_disabled" excluded_value="true"/>
 			</condition>
-			<renaming old_name="CLI_DEBUGGER" new_name="NETFMWK_CLI_DEBUGGER"/>
+		</library>
+		<library name="cli_debugger_netcore" location="$EIFFEL_SRC\framework\cli_debugger\netcore\cli_debugger_netcore.ecf" readonly="false" use_application_options="true" prefix="NETCORE_">
+			<condition>
+				<platform value="windows"/>
+				<custom name="cli_debugger_netcore_disabled" excluded_value="true"/>
+			</condition>
 		</library>
 		<library name="cli_kernel" location="$EIFFEL_SRC\framework\dotnet\cli_kernel\cli_kernel.ecf" readonly="false" use_application_options="true"/>
 		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf" readonly="false" use_application_options="true"/>
@@ -106,6 +114,7 @@
 		<cluster name="debugger" location=".\" recursive="true">
 			<option is_obsolete_iteration="true"/>
 			<file_rule>
+				<exclude>/fake$</exclude>
 				<exclude>/dotnet_fake$</exclude>
 				<condition>
 					<platform value="windows"/>
@@ -140,6 +149,18 @@
 					<custom name="vision_implementation" excluded_value="cocoa"/>
 				</condition>
 			</file_rule>
+		</cluster>
+		<cluster name="cli_debugger_fake_framework" location="fake\netfmwk">
+			<condition>
+				<platform value="windows"/>
+				<custom name="cli_debugger_framework_disabled" value="true"/>
+			</condition>
+		</cluster>
+		<cluster name="cli_debugger_fake_netcore" location="fake\netcore">
+			<condition>
+				<platform value="windows"/>
+				<custom name="cli_debugger_netcore_disabled" value="true"/>
+			</condition>
 		</cluster>
 	</target>
 </system>

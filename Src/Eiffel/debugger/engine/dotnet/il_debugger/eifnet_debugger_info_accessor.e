@@ -10,7 +10,6 @@ deferred class
 	EIFNET_DEBUGGER_INFO_ACCESSOR
 
 inherit
-
 	REFACTORING_HELPER
 
 	SHARED_IL_DEBUG_INFO_RECORDER
@@ -40,12 +39,17 @@ inherit
 
 	EIFNET_EXPORTER
 
+	ICOR_DEBUG_FACTORY_BRIDGE
+		export
+			{NONE} all
+		end
+
 feature {EIFNET_EXPORTER}
 
 	make
 		do
-			create eifnet_debugger_info.make
 			create callback_info.make
+			create eifnet_debugger_info.make (Current)
 		end
 
 	reset_info
@@ -322,7 +326,7 @@ feature {EIFNET_EXPORTER} -- Stepping Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

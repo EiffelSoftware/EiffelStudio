@@ -1004,7 +1004,7 @@ feature {NONE} -- Debug purpose only
 			-- Display information related to feature `icd_f'
 			-- debug purpose only
 		local
-			mdi: MD_IMPORT
+			mdi: ICOR_MD_IMPORT
 			l_class: ICOR_DEBUG_CLASS
 		do
 			debug ("debugger_trace_eval_data")
@@ -1045,7 +1045,7 @@ feature {NONE} -- Debug purpose only
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

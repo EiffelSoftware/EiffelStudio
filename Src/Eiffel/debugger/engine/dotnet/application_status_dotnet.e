@@ -167,7 +167,7 @@ feature -- Thread info
 		do
 			dbg_info := Eifnet_debugger.info
 			if dbg_info.is_valid_managed_thread_id (a_id) then
-				dbg_info.managed_thread (a_id).get_thread_name
+				dbg_info.managed_thread (a_id).get_thread_name (dbg_info)
 				Result := dbg_info.managed_thread (a_id).thread_name
 			else
 				Result := Precursor (a_id)
@@ -180,7 +180,7 @@ feature -- Thread info
 		do
 			dbg_info := Eifnet_debugger.info
 			if dbg_info.is_valid_managed_thread_id (a_id) then
-				dbg_info.managed_thread (a_id).get_thread_priority
+				dbg_info.managed_thread (a_id).get_thread_priority (dbg_info)
 				Result := dbg_info.managed_thread (a_id).thread_priority
 			else
 				Result := Precursor (a_id)
@@ -278,7 +278,7 @@ feature {APPLICATION_EXECUTION_DOTNET} -- Constants
 			-- Key used to fetch exception other info for IL type name
 
 ;note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

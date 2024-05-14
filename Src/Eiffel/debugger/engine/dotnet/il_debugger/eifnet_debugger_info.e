@@ -31,14 +31,17 @@ inherit
 
 	COR_DEBUG_STEP_REASON_ENUM
 
+	ICOR_DEBUG_FACTORY_BRIDGE
+
 create {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Creation
 	make
 
 feature {NONE} -- Initialization
 
-	make
+	make (icd_fact: ICOR_DEBUG_FACTORY_I)
 			-- Create Current data.
 		do
+			icor_debug_factory := icd_fact
 			create_jit_info
 			init
 		end
@@ -48,6 +51,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EIFNET_DEBUGGER_BREAKPOINT_INFO}
 		end
+
+	icor_debug_factory: ICOR_DEBUG_FACTORY_I
 
 feature -- Reset
 
@@ -609,7 +614,7 @@ feature {NONE} -- COM Object
 						last_icd_controller := Void
 					end
 				else
-					create last_icd_controller.make_by_pointer (last_p_icd_controller)
+					last_icd_controller := icor_debug_factory.new_controller (last_p_icd_controller)
 					n := {CLI_COM}.add_ref (last_p_icd_controller)
 				end
 				last_icd_controller_updated := True
@@ -630,7 +635,7 @@ feature {NONE} -- COM Object
 						last_icd_process := Void
 					end
 				else
-					create last_icd_process.make_by_pointer (last_p_icd_process)
+					last_icd_process := icor_debug_factory.new_process (last_p_icd_process)
 					n := {CLI_COM}.add_ref (last_p_icd_process)
 				end
 				last_icd_process_updated := True
@@ -651,7 +656,7 @@ feature {NONE} -- COM Object
 						last_icd_breakpoint := Void
 					end
 				else
-					create last_icd_breakpoint.make_by_pointer (last_p_icd_breakpoint)
+					last_icd_breakpoint := icor_debug_factory.new_breakpoint (last_p_icd_breakpoint)
 					n := {CLI_COM}.add_ref (last_p_icd_breakpoint)
 				end
 				last_icd_breakpoint_updated := True
@@ -672,7 +677,7 @@ feature {NONE} -- COM Object
 						last_icd_exception := Void
 					end
 				else
-					create last_icd_exception.make_value_by_pointer (last_p_icd_exception)
+					last_icd_exception := icor_debug_factory.new_value (last_p_icd_exception)
 					n := {CLI_COM}.add_ref (last_p_icd_exception)
 				end
 				last_icd_exception_updated := True
@@ -688,12 +693,12 @@ feature {NONE} -- COM Object
 				if
 					last_p_evaluation_icd_exception = Default_pointer
 				then
-					if last_evaluation_icd_exception /= Void then
-						last_evaluation_icd_exception.clean_on_dispose
+					if attached last_evaluation_icd_exception as e then
+						e.clean_on_dispose
 						last_evaluation_icd_exception := Void
 					end
 				else
-					create last_evaluation_icd_exception.make_value_by_pointer (last_p_evaluation_icd_exception)
+					last_evaluation_icd_exception := icor_debug_factory.new_value (last_p_evaluation_icd_exception)
 					n := {CLI_COM}.add_ref (last_p_evaluation_icd_exception)
 				end
 				last_evaluation_icd_exception_updated := True
@@ -870,7 +875,7 @@ feature -- JIT Thread
 		do
 			t := managed_thread (last_icd_thread_id)
 			if t /= Void then
-				t.refresh_thread_details
+				t.refresh_thread_details (icor_debug_factory)
 			end
 		end
 
@@ -905,7 +910,7 @@ feature -- JIT Thread
 				edti := default_managed_thread
 			end
 			if edti /= Void then
-				Result := edti.icd_thread
+				Result := edti.icd_thread (icor_debug_factory)
 				check
 					Result /= Void
 				end
@@ -923,7 +928,7 @@ feature -- JIT Thread
 				edti := default_managed_thread
 			end
 			if edti /= Void then
-				Result := edti.icd_thread
+				Result := edti.icd_thread (icor_debug_factory)
 				check
 					Result /= Void
 				end
@@ -1138,7 +1143,7 @@ invariant
 	loaded_managed_threads_not_void: loaded_managed_threads /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

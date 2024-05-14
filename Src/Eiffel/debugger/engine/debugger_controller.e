@@ -99,8 +99,8 @@ feature -- Debug Operation
 					if uf.exists then
 						if is_dotnet_system then
 							create l_il_env.make (Eiffel_system.System.clr_runtime_version)
-							if eiffel_system.system.is_il_netcore then
-									-- TODO: for now Eiffel NETCORE has no support for debug execution
+							if eiffel_system.system.is_il_netcore and then not {PLATFORM}.is_windows then
+									-- TODO: for now Eiffel NETCORE has no support for debug execution on on Windows platforms
 									-- so launch the workbench app outside the IDE.
 								start_workbench_application (param)
 								launch_program := True
@@ -693,7 +693,7 @@ invariant
 	manager_not_void: manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

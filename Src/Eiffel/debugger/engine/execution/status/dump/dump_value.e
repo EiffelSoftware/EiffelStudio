@@ -732,7 +732,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		do
 			if debugger_manager.safe_application_is_stopped then
 				Result := debugger_manager.application.debugger_type_string_evaluation (Current, Void)
-				if Result.is_empty then
+				if Result = Void or else Result.is_empty then
 						--| In case the RT_ .. classes are not up to date.
 						--| TODO: 2009-09-16: remove this after next release.
 					if is_dotnet_value then
@@ -1212,7 +1212,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+CWD="`dirname \"$0\"`"
+$CWD/../../../EiffelStudio.app/Contents/Resources/EiffelLauncher vision2_demo &
+

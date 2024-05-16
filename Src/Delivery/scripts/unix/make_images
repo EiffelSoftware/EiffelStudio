@@ -80,6 +80,16 @@ fi
 if [ -f licensing/eiffelstudio/license.txt ]; then
 	cp licensing/eiffelstudio/license.txt $INSTALL_DIR/LICENSE
 fi
+case $ISE_PLATFORM in
+	macosx*)
+			if [ -d osx-launcher ]; then
+				remtrace Copy OSX launcher scripts
+				cp -rf osx-launcher $INSTALL_DIR/tools/spec/$ISE_PLATFORM/osx-launcher
+			fi
+		;;
+	*)
+		;;
+esac
 
 if [ -z "$IS_MINIMAL" ]; then
 	remtrace Building Standard CD image

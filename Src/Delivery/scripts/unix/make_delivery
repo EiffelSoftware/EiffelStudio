@@ -408,6 +408,10 @@ if [ ! "$NO_INSTALL" ]; then
 
 	# checkout eiffelstudio licenses
 	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/scripts/licensing $EXPORT_DIR/licensing
+
+	# checkout OSX launcher scripts
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/scripts/spec/macosx/launcher $EXPORT_DIR/osx-launcher
+
 		# Update the set_aliases to reset the EXPORT_DIR to current directory
 	cd $EXPORT_DIR
 	rm -f tmp

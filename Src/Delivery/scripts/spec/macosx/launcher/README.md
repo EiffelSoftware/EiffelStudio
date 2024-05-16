@@ -1,2 +1,1 @@
-Script to launch eiffel studio from Finder
-(see https://github.com/roederja/eiffel-launcher)
+Script to launch Eiffel Studio from MacOSX Finder.

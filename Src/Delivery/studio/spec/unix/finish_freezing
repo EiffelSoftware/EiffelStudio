@@ -39,7 +39,7 @@ if [ $# -gt 0 ]; then
 fi
 
 if [ "$nologo" = "" ]; then
-	echo "Eiffel C/C++ Compilation Tool - Version 24.04"
+	echo "Eiffel C/C++ Compilation Tool - Version 24.05"
 	echo "Copyright Eiffel Software 1985-2024. All Rights Reserved"
 	echo
 fi
@@ -51,7 +51,7 @@ if [ -z "$ISE_EIFFEL" ]; then
 		export ISE_PREFIX
 	fi
 	if [ -z "$ISE_VERSION" ]; then
-		ISE_VERSION=24.04
+		ISE_VERSION=24.05
 		export ISE_VERSION
 	fi
 	if [ -z "$ISE_PLATFORM" ]; then

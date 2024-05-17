@@ -1,9 +1,7 @@
 #ifndef __CLI_COMMON_H_
 #define __CLI_COMMON_H_
 
-#ifdef EIF_WINDOWS
 #include <objbase.h>
-#endif
 
 #ifdef _cplusplus
 extern "C" {

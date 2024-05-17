@@ -68,7 +68,11 @@ rt_public EIF_INTEGER initialize_debug_session (LPWSTR a_command_line, LPVOID a_
 	DBGTRACE("[DEBUGGER] initialize_debug_session (...) ...");
 
 	DBGTRACE("[DEBUGGER] Loading dbgshim dyn lib");
+#ifdef EIF_WINDOWS
 	dbgshim_module = LoadLibrary(L"dbgshim.dll");
+#else
+	dbgshim_module = LoadLibrary(u"dbgshim.dll");
+#endif
 	if (dbgshim_module != NULL) {
 		rt_private FARPROC create_process_for_launch_address = GetProcAddress (dbgshim_module, "CreateProcessForLaunch");
 		if (create_process_for_launch_address) {
@@ -123,7 +127,11 @@ rt_private HRESULT unregister_for_runtime_startup (PVOID a_token)
 	HMODULE dbgshim_module;
 
 	DBGTRACE("[DEBUGGER] Loading dbgshim dyn lib");
+#ifdef EIF_WINDOWS
 	dbgshim_module = LoadLibrary(L"dbgshim.dll");
+#else
+	dbgshim_module = LoadLibrary(u"dbgshim.dll");
+#endif
 	CHECK (((dbgshim_module != NULL) ? 0 : 1), "Could not load dbgshim.dll");
 
 	unregister_for_runtime_startup_address = GetProcAddress (dbgshim_module, "UnregisterForRuntimeStartup");

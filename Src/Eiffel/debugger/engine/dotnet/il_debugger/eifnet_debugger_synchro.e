@@ -198,84 +198,84 @@ feature {NONE} -- External Dbg Sync routine
 
 	c_dbg_is_synchronizing: BOOLEAN
 		external
-			"C signature (): EIF_BOOLEAN use %"cli_debugger.h%" "
+			"C++ inline use %"cli_debugger.h%" "
 		alias
-			"dbg_is_synchronizing"
+			"dbg_is_synchronizing()"
 		end
 
 	c_init_dbg_synchronisation (p: POINTER)
 		external
-			"C signature (HWND) use %"cli_debugger.h%" "
+			"C++ inline use %"cli_debugger.h%" "
 		alias
-			"dbg_init_synchro"
+			"dbg_init_synchro((HWND) $p)"
 		end
 
 	c_terminate_dbg_synchronisation
 		external
-			"C use %"cli_debugger.h%" "
+			"C++ inline use %"cli_debugger.h%" "
 		alias
-			"dbg_terminate_synchro"
+			"dbg_terminate_synchro()"
 		end
 
 	c_dbg_enable_estudio_callback (obj: EIFNET_DEBUGGER_SYNCHRO; p_cb: POINTER)
 		external
-			"C signature () use %"cli_debugger.h%" "
+			"C++ inline use %"cli_debugger.h%" "
 		alias
-			"dbg_enable_estudio_callback"
+			"dbg_enable_estudio_callback((EIF_OBJECT)$obj, (EIF_POINTER) $p_cb)"
 		end
 
 	c_dbg_timer_id: INTEGER
 		external
-			"C signature (): EIF_INTEGER use %"cli_debugger.h%" "
+			"C++ inline use %"cli_debugger.h%" "
 		alias
-			"dbg_timer_id"
+			"dbg_timer_id()"
 		end
 
 	c_start_dbg_timer
 		external
-			"C use %"cli_debugger.h%" "
+			"C++ inline use %"cli_debugger.h%" "
 		alias
-			"dbg_start_timer"
+			"dbg_start_timer()"
 		end
 
 	c_stop_dbg_timer
 		external
-			"C use %"cli_debugger.h%" "
+			"C++ inline use %"cli_debugger.h%" "
 		alias
-			"dbg_stop_timer"
+			"dbg_stop_timer()"
 		end
 
 	c_dbg_continue (icdc_p: POINTER; a_f_is_out_of_band: INTEGER): INTEGER
 		external
-			"C signature (void*, BOOL): EIF_INTEGER use %"cli_debugger.h%" "
+			"C++ inline use %"cli_debugger.h%" "
 		alias
-			"dbg_continue"
+			"dbg_continue((void*) $icdc_p, (BOOL) $a_f_is_out_of_band)"
 		end
 
 	c_dbg_process_evaluation (icdeval_p: POINTER; icdc_p: POINTER; timeout: INTEGER)
 		external
-			"C signature (void*, void*, EIF_INTEGER) use %"cli_debugger.h%" "
+			"C++ inline use %"cli_debugger.h%" "
 		alias
-			"dbg_process_evaluation"
+			"dbg_process_evaluation((void*) $icdeval_p, (void*) $icdc_p, (EIF_INTEGER) $timeout)"
 		end
 
 	c_restore_cb_notification_state
 		external
-			"C use %"cli_debugger.h%" "
+			"C++ inline use %"cli_debugger.h%" "
 		alias
-			"dbg_restore_cb_notification_state"
+			"dbg_restore_cb_notification_state()"
 		end
 
 	c_notify_from_estudio (p: POINTER)
 		external
-			"C signature (char*) use %"cli_debugger.h%" "
+			"C++ inline use %"cli_debugger.h%" "
 		alias
-			"dbg_notify_from_estudio"
+			"dbg_notify_from_estudio((char*)$p)"
 		end
 
 	c_dbg_clear_cb_info
 		external
-			"C inline use %"cli_debugger.h%""
+			"C++ inline use %"cli_debugger.h%" "
 		alias
 			"CLEAR_DBG_CB_INFO"
 		end
@@ -283,7 +283,7 @@ feature {NONE} -- External Dbg Sync routine
 	c_dbg_cb_info_get_callback_id: INTEGER
 			-- Access `callback_id' data member of `dbg_cb_info' struct.
 		external
-			"C inline use %"cli_debugger.h%""
+			"C++ inline use %"cli_debugger.h%" "
 		alias
 			"(EIF_INTEGER)((struct CorDbgCallbackInfo *) dbg_cb_info)->callback_id"
 		end
@@ -291,7 +291,7 @@ feature {NONE} -- External Dbg Sync routine
 	c_dbg_cb_info_pointer_ith (i: INTEGER): POINTER
 			-- Access `ptr1' data member of `dbg_cb_info' struct.
 		external
-			"C inline use %"cli_debugger.h%""
+			"C++ inline use %"cli_debugger.h%" "
 		alias
 			"DBG_CB_INFO_POINTER_ITEM($i)"
 		end
@@ -299,13 +299,13 @@ feature {NONE} -- External Dbg Sync routine
 	c_dbg_cb_info_integer_ith (i: INTEGER): INTEGER
 			-- Access `ptr1' data member of `dbg_cb_info' struct.
 		external
-			"C inline use %"cli_debugger.h%""
+			"C++ inline use %"cli_debugger.h%" "
 		alias
 			"DBG_CB_INFO_INTEGER_ITEM($i)"
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -318,22 +318,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFNET_DEBUGGER_SYNCHRO

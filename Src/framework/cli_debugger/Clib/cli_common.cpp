@@ -39,7 +39,7 @@ rt_public void trace_init ()
 {
 	CLI_MUTEX_CREATE(trace_mutex, "");
 }
-rt_public void trace_event (char* mesg)
+rt_public void trace_event (const char* mesg)
 {
   FILE *out;
 
@@ -56,7 +56,7 @@ rt_public void trace_event (char* mesg)
   fclose(out);
   UNLOCK_DEBUG_OUTPUT_ACCESS;
 }
-rt_public void trace_event (char* mesg, char* mesg2)
+rt_public void trace_event (const char* mesg, const char* mesg2)
 {
   FILE *out;
 
@@ -72,7 +72,7 @@ rt_public void trace_event (char* mesg, char* mesg2)
   fclose(out);
   UNLOCK_DEBUG_OUTPUT_ACCESS;
 }
-rt_public void trace_event_dbg_hr (char* mesg,HRESULT hr)
+rt_public void trace_event_dbg_hr (const char* mesg, HRESULT hr)
 {
   FILE *out;
   LOCK_DEBUG_OUTPUT_ACCESS;
@@ -88,7 +88,7 @@ rt_public void trace_event_dbg_hr (char* mesg,HRESULT hr)
   fclose(out);
   UNLOCK_DEBUG_OUTPUT_ACCESS;
 }
-rt_public void trace_event_dbg_dword (char* mesg,DWORD dw)
+rt_public void trace_event_dbg_dword (const char* mesg, DWORD dw)
 {
   FILE *out;
   LOCK_DEBUG_OUTPUT_ACCESS;
@@ -105,7 +105,7 @@ rt_public void trace_event_dbg_dword (char* mesg,DWORD dw)
   UNLOCK_DEBUG_OUTPUT_ACCESS;
 }
 
-rt_public void trace_event_dbg_pointer (char* mesg,  void* p)
+rt_public void trace_event_dbg_pointer (const char* mesg, void* p)
 {
   FILE *out;
   LOCK_DEBUG_OUTPUT_ACCESS;

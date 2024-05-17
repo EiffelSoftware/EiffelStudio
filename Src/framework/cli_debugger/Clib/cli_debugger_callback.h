@@ -156,7 +156,7 @@ public:
 
     ULONG STDMETHODCALLTYPE AddRef() 
     {
-        return (InterlockedIncrement((long *) &m_refCount));
+        return (InterlockedIncrement(&m_refCount));
     }
 
     ULONG STDMETHODCALLTYPE Release() 
@@ -371,7 +371,7 @@ public:
     // IUnknown
     ULONG STDMETHODCALLTYPE AddRef() 
     {
-        return (InterlockedIncrement((long *) &m_refCount));
+        return (InterlockedIncrement(&m_refCount));
     }
 
     ULONG STDMETHODCALLTYPE Release() 

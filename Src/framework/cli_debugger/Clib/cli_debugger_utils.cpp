@@ -1,4 +1,3 @@
-#include "cli_debugger.h"
 #include "cli_debugger_utils.h"
 
 #ifdef _cplusplus

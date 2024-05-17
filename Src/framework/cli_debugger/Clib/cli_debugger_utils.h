@@ -2,19 +2,7 @@
 #define __PE_DEBUGGER_UTILS_H_
 
 #include "eif_eiffel.h"
-#include <windows.h>
 #include "cli_debugger_headers.h"
-
-
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#ifdef __cplusplus
-}
-#endif
 
 /* ------------------------------------------------------------------------- *
  * ICorDebugHandleValue
@@ -73,10 +61,4 @@ EXTERN_C const IID IID_ICorDebugHeapValue2;
 
 #endif
 
-
-
-#ifdef __cplusplus
-
-#endif /* __cplusplus */
-
-#endif
+#endif // __PE_DEBUGGER_UTILS_H_

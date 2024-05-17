@@ -2,13 +2,14 @@
 #define __CLI_DEBUGGER_NETCORE_H_
 
 #include "eif_eiffel.h"
-#include <windows.h>
 #include <ole2.h>
 //#include <dbgshim.h>
 
+#include <eif_lmalloc.h>
 #include "cli_cordebug.h"
 #include "cli_debugger_headers.h"
 #include "cli_debugger_callback_id.h"
+#include "cli_common.h"
 
 #ifdef __cplusplus
 extern "C" {

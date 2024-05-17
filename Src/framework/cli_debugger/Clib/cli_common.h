@@ -1,7 +1,9 @@
 #ifndef __CLI_COMMON_H_
 #define __CLI_COMMON_H_
 
+#ifdef EIF_WINDOWS
 #include <objbase.h>
+#endif
 
 #ifdef _cplusplus
 extern "C" {
@@ -16,11 +18,19 @@ extern "C" {
 #endif
 
 /*  Interlocked protection */
+#ifdef EIF_WINDOWS
 #define LOCKED_VALUE(a) InterlockedExchangeAdd ((LONG*) &a, 0)
 #define LOCKED_SET_VALUE(a,v) InterlockedExchange ((LONG*) &a, v)
 #define LOCKED_INCREMENT_VALUE(a) InterlockedIncrement ((LONG*) &a)
-#define LOCKED_VALUE_IS_EQUAL(a,v) (InterlockedExchangeAdd ((LONG*) &a, 0) == v)
-#define LOCKED_VALUE_IS_NOT_EQUAL(a,v) (InterlockedExchangeAdd ((LONG*) &a, 0) != v)
+#else
+	/* See https://gcc.gnu.org/onlinedocs/gcc-4.4.3/gcc/Atomic-Builtins.html#Atomic-Builtins */
+#define LOCKED_VALUE(a) a
+#define LOCKED_SET_VALUE(a,v) a = v
+#define LOCKED_INCREMENT_VALUE(a) a = a + 1
+#endif
+
+#define LOCKED_VALUE_IS_EQUAL(a,v) (LOCKED_VALUE(a) == v)
+#define LOCKED_VALUE_IS_NOT_EQUAL(a,v) (LOCKED_VALUE(a) != v)
 
 rt_private volatile LONG dbg_state ;
 #define LOCKED_DBG_STATE_VALUE LOCKED_VALUE(dbg_state)
@@ -59,6 +69,21 @@ rt_private UINT once_enter_ec_cb;
 #endif
 
 
+#ifdef EIF_ASSERTIONS
+	/* Error message for exceptions */
+rt_private char message [1024];
+	/* Raise an Eiffel exception */
+#define raise_error(hr,pref,msg) { sprintf (message, "%s 0x%x: %s", pref, hr, msg); eraise (message, EN_PROG); }
+#define CHECK(hr,msg) if (hr) raise_error (hr, "check", msg);
+#define CHECKHR(cond, hr, msg) if (cond) raise_error (hr, "check", msg);
+#define REQUIRE(cond,msg) if (!cond) raise_error (-1, "require", msg);
+#define ENSURE(cond,msg) if (!cond) raise_error (-1, "ensure", msg);
+#else
+#define CHECK(hr,msg)
+#define CHECKHR(cond,hr,msg)
+#define REQUIRE(cond,msg)
+#define ENSURE(cond,msg)
+#endif
 
 #ifdef _cplusplus
 }

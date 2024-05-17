@@ -1,11 +1,5 @@
 #include "cli_debugger.h"
 #include "cli_debugger_callback.h"
-#include "cli_debugger_callback_id.h"
-
-#include <objbase.h>
-#include <cor.h>
-
-#include <cordebug.h>
 
 #include <mscoree.h>
 
@@ -16,52 +10,6 @@ extern "C" {
 const IID IID_ICorDebugManagedCallback = {0x3d6f5f60,0x7538,0x11d3,0x8d,0x5b,0x00,0x10,0x4b,0x35,0xe7,0xef};
 const IID IID_ICorDebugUnmanagedCallback = {0x5263E909,0x8CB5,0x11d3,0xBD,0x2F,0x00,0x00,0xF8,0x08,0x49,0xBD};
 const IID IID_ICorDebugManagedCallback2 = {0x250E5EEA,0xDB5C,0x4C76,0xB6,0xF3,0x8C,0x46,0xF1,0x2E,0x32,0x03};
-
-#ifdef DBGTRACE_ENABLED
-rt_public void trace_event_cb (char* mesg)
-{
-  FILE *out;
-  out=fopen("eif_debugger.out","a+");
-  fprintf(out,"%s\n",mesg);
-  fclose(out);
-}
-rt_public void trace_event_cb_hr (char* mesg,HRESULT hr)
-{
-  FILE *out;
-  out=fopen("eif_debugger.out","a+");
-  fprintf(out,"<HR=%d> %s \n",
-					hr,
-					mesg
-					);
-  fclose(out);
-}
-
-#define DBGTRACE(msg) trace_event_cb(msg);
-#define DBGTRACE_HR(msg,hr) trace_event_cb_hr(msg,hr);
-#else
-#define DBGTRACE(msg)
-#define DBGTRACE_HR(msg)
-#endif
-
-#ifdef EIF_ASSERTIONS
-	/* Error message for exceptions */
-rt_private char message [1024];
-rt_private void raise_error (HRESULT hr,char *pref, char *msg)
-	/* Raise an Eiffel exception */
-{
-	sprintf (message, "%s 0x%x: %s", pref, hr, msg);
-	eraise (message, EN_PROG);
-}
-#define CHECK(hr,msg) if (hr) raise_error (hr, "check", msg);
-#define CHECKHR(cond, hr, msg) if (cond) raise_error (hr, "check", msg);
-#define REQUIRE(cond,msg) if (!cond) raise_error (-1, "require", msg);
-#define ENSURE(cond,msg) if (!cond) raise_error (-1, "ensure", msg);
-#else
-#define CHECK(hr,msg)
-#define CHECKHR(cond,hr,msg)
-#define REQUIRE(cond,msg)
-#define ENSURE(cond,msg)
-#endif
 
 /*
 feature -- COM specific

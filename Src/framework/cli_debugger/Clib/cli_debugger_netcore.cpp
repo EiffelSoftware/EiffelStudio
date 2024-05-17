@@ -1,8 +1,4 @@
-#include <objbase.h>
 
-#include <eif_lmalloc.h>
-
-#include "cli_common.h"
 #include "cli_debugger_netcore.h"
 
 //#include <dbgshim.h>
@@ -15,26 +11,6 @@ typedef VOID (*PSTARTUP_CALLBACK)(IUnknown *pCordb, PVOID parameter, HRESULT hr)
 
 rt_private EIF_OBJECT dbg_startup_cb_obj;	
 rt_private EIF_POINTER dbg_startup_cb_fct;
-
-#ifdef EIF_ASSERTIONS
-	/* Error message for exceptions */
-rt_private char message [1024];
-rt_private void raise_error (HRESULT hr,char *pref, char *msg)
-	/* Raise an Eiffel exception */
-{
-	sprintf (message, "%s 0x%x: %s", pref, hr, msg);
-	eraise (message, EN_PROG);
-}
-#define CHECK(hr,msg) if (hr) raise_error (hr, "check", msg);
-#define CHECKHR(cond, hr, msg) if (cond) raise_error (hr, "check", msg);
-#define REQUIRE(cond,msg) if (!cond) raise_error (-1, "require", msg);
-#define ENSURE(cond,msg) if (!cond) raise_error (-1, "ensure", msg);
-#else
-#define CHECK(hr,msg)
-#define CHECKHR(cond,hr,msg)
-#define REQUIRE(cond,msg)
-#define ENSURE(cond,msg)
-#endif
 
 /**************************************************************************/
 /* dbgshim    */

@@ -6,9 +6,11 @@
 #include <ole2.h>
 #include <mscoree.h>
 
+#include <eif_lmalloc.h>
 #include "cli_cordebug.h"
 #include "cli_debugger_headers.h"
 #include "cli_debugger_callback_id.h"
+#include "cli_common.h"
 
 #ifdef __cplusplus
 extern "C" {

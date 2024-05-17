@@ -2,10 +2,7 @@
 #define __PE_DEBUGGER_CALLBACK_H_
 
 #include "eif_eiffel.h"
-#include <windows.h>
 #include "cli_debugger_headers.h"
-
-
 
 #ifdef __cplusplus
 extern "C" {

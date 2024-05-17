@@ -42,11 +42,11 @@ rt_private volatile LONG dbg_state ;
 #ifdef DBGTRACE_ENABLED
 
 extern void trace_init ();
-extern void trace_event (char* mesg);
-extern void trace_event (char* mesg, char* mesg2);
-extern void trace_event_dbg_hr (char* mesg,HRESULT hr);
-extern void trace_event_dbg_dword (char* mesg,DWORD dw);
-extern void trace_event_dbg_pointer (char* mesg, void* p);
+extern void trace_event (const char* mesg);
+extern void trace_event (const char* mesg, const char* mesg2);
+extern void trace_event_dbg_hr (const char* mesg,HRESULT hr);
+extern void trace_event_dbg_dword (const char* mesg,DWORD dw);
+extern void trace_event_dbg_pointer (const char* mesg, void* p);
 #endif
 
 #ifdef DBGTRACE_ENABLED

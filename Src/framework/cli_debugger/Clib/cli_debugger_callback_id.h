@@ -73,6 +73,6 @@ enum e_callback_id {
 /* 35 */	CB_DEBUG_EVENT
 	};
 typedef enum e_callback_id Callback_ids;
-extern char* Callback_name (Callback_ids id);
+extern const char* Callback_name (Callback_ids id);
 
 #endif

@@ -3,9 +3,7 @@
 extern "C" {
 #endif
 
-
-
-rt_public char* Callback_name (e_callback_id id) {
+rt_public const char* Callback_name (e_callback_id id) {
 	switch (id) {
 		case CB_BREAKPOINT:
 			return "breakpoint";

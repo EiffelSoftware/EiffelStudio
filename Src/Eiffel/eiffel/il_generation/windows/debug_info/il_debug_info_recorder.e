@@ -393,7 +393,16 @@ feature -- Access to module name computing
 					l_type_id := a_class_type.associated_class.class_id // System.msil_classes_per_module + 1
 				end
 					--| There complete creation of module file name
-				Result := Result.extended ("module_" + l_type_id.out + ".dll")
+				if system.is_il_netcore then
+					Result := Result.extended ("assembly_")
+					if l_type_id < 10 then
+						Result := Result.appended ("0")
+					end
+					Result := Result.appended (l_type_id.out)
+				else
+					Result := Result.extended ("module_" + l_type_id.out)
+				end
+				Result := Result.appended_with_extension ("dll")
 			end
 		end
 
@@ -1509,7 +1518,7 @@ feature {NONE} -- Module indexer implementation
 			-- and internal key for module
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

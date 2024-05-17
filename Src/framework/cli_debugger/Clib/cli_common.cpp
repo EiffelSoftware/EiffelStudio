@@ -1,8 +1,6 @@
 #include <stdio.h>
-#include <objbase.h>
 
 #include <eif_lmalloc.h>
-
 #include "cli_common.h"
 
 #ifdef _cplusplus

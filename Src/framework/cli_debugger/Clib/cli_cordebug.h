@@ -1,7 +1,6 @@
 #ifndef __CLI_CORDEBUG_H_
 #define __CLI_CORDEBUG_H_
 
-#include <objbase.h>
 #include <cor.h>
 #include <cordebug.h>
 

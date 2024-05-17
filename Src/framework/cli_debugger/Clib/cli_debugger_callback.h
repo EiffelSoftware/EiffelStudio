@@ -161,7 +161,7 @@ public:
 
     ULONG STDMETHODCALLTYPE Release() 
     {
-        long refCount = InterlockedDecrement(&m_refCount);
+        LONG refCount = InterlockedDecrement(&m_refCount);
         if (refCount == 0)
             delete this;
 
@@ -349,7 +349,7 @@ public:
 								/* [in] */ ICorDebugMDA *pMDA);
 
 protected:
-    long        m_refCount;
+    LONG        m_refCount;
 
 };
 
@@ -376,7 +376,7 @@ public:
 
     ULONG STDMETHODCALLTYPE Release() 
     {
-        long refCount = InterlockedDecrement(&m_refCount);
+        LONG refCount = InterlockedDecrement(&m_refCount);
         if (refCount == 0)
             delete this;
 
@@ -399,7 +399,7 @@ public:
     COM_METHOD DebugEvent(LPDEBUG_EVENT pDebugEvent, BOOL fIsOutOfband);
 
 protected:
-    long        m_refCount;
+    LONG        m_refCount;
 
 };
 

@@ -29,7 +29,7 @@ feature {ICOR_EXPORTER} -- Access
 
 	printf_pointer (p: POINTER)
 		external
-			"C inline"
+			"C++ inline"
 		alias
 			"[
 				printf("pointer=%p", (void*)$p);
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation routines
 	cwin_create_new_console: INTEGER
 			-- SDK CREATE_NEW_CONSOLE constant
 		external
-			"C macro use %"cli_debugger_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CREATE_NEW_CONSOLE"
 		end
@@ -369,7 +369,7 @@ feature {NONE} -- Implementation routines
 			-- SDK CREATE_UNICODE_ENVIRONMENT constant
 			-- Environment variables passed to new process uses Unicode characters instead of ANSI characters.
 		external
-			"C macro use %"cli_debugger_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CREATE_UNICODE_ENVIRONMENT"
 		end
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation routines
 	cwin_debug_only_this_process: INTEGER
 			-- SDK DEBUG_ONLY_THIS_PROCESS constant
 		external
-			"C macro use %"cli_debugger_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"DEBUG_ONLY_THIS_PROCESS"
 		end
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation routines
 	cwin_debug_no_specials_options: INTEGER
 			-- SDK DEBUG_NO_SPECIAL_OPTIONS constant
 		external
-			"C macro use %"cli_debugger_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"DEBUG_NO_SPECIAL_OPTIONS"
 		end

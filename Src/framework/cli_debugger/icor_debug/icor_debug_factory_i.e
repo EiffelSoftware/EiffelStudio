@@ -259,4 +259,30 @@ feature -- Enum
 		deferred
 		end
 
+feature {NONE} -- Externals
+	
+	cpp_new_cordebug_managed_callback: POINTER
+			-- create an instance of DebuggerManagedCallback
+		external
+			"[
+				C++ creator DebuggerManagedCallback
+				signature ()
+				use "cli_debugger_callback.h"
+			]"
+		ensure
+			class
+		end
+
+	cpp_new_cordebug_unmanaged_callback: POINTER
+			-- create an instance of DebuggerUnmanagedCallback
+		external
+			"[
+				C++ creator DebuggerUnmanagedCallback
+				signature ()
+				use "cli_debugger_callback.h"
+			]"
+		ensure
+			class
+		end
+
 end

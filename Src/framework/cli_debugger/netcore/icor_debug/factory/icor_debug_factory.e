@@ -224,25 +224,6 @@ feature -- Enum
 
 feature {ICOR_EXPORTER} -- Initialization
 
-	new_cordebug_pointer_for (a_dbg_version: READABLE_STRING_GENERAL): POINTER
-			-- Create a new instance of ICorDebug for `a_dbg_version'.
-		local
-			l_version: CLI_STRING
-			res: INTEGER
-		do
-			--initialize_com
-			if a_dbg_version = Void then
-				create l_version.make ((create {IL_ENVIRONMENT}).default_version)
-			else
-				create l_version.make (a_dbg_version)
-			end
-			res := c_get_cordebug (l_version.item, $Result)
-		ensure
-			class
-		rescue
-			retry
-		end
-
 	new_cordebug_managed_callback: ICOR_DEBUG_MANAGED_CALLBACK
 			-- Create a new instance of ICOR_DEBUG_MANAGED_CALLBACK.
 		local
@@ -270,42 +251,6 @@ feature {ICOR_EXPORTER} -- Initialization
 			end
 		ensure
 			result_exists: Result /= Void
-			class
-		end
-
-feature {NONE} -- Externals
-
-	c_get_cordebug (a_dbg_version: POINTER; a_cor_debug: TYPED_POINTER [POINTER]): INTEGER
-			-- New instance of ICorDebug
-		external
-			"C signature (LPWSTR, EIF_POINTER **): EIF_INTEGER use %"cli_debugger.h%""
-		alias
-			"get_cordebug"
-		ensure
-			class
-		end
-
-	cpp_new_cordebug_managed_callback: POINTER
-			-- create an instance of DebuggerManagedCallback
-		external
-			"[
-				C++ creator DebuggerManagedCallback
-				signature ()
-				use "cli_debugger_callback.h"
-			]"
-		ensure
-			class
-		end
-
-	cpp_new_cordebug_unmanaged_callback: POINTER
-			-- create an instance of DebuggerUnmanagedCallback
-		external
-			"[
-				C++ creator DebuggerUnmanagedCallback
-				signature ()
-				use "cli_debugger_callback.h"
-			]"
-		ensure
 			class
 		end
 

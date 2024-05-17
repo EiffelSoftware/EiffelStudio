@@ -278,36 +278,13 @@ feature {NONE} -- Externals
 	c_get_cordebug (a_dbg_version: POINTER; a_cor_debug: TYPED_POINTER [POINTER]): INTEGER
 			-- New instance of ICorDebug
 		external
-			"C signature (LPWSTR, EIF_POINTER **): EIF_INTEGER use %"cli_debugger.h%""
+			"C++ inline use %"cli_debugger_framework.h%""
 		alias
-			"get_cordebug"
+			"get_cordebug((LPWSTR) $a_dbg_version, (EIF_POINTER**) $a_cor_debug)"
 		ensure
 			class
 		end
 
-	cpp_new_cordebug_managed_callback: POINTER
-			-- create an instance of DebuggerManagedCallback
-		external
-			"[
-				C++ creator DebuggerManagedCallback
-				signature ()
-				use "cli_debugger_callback.h"
-			]"
-		ensure
-			class
-		end
-
-	cpp_new_cordebug_unmanaged_callback: POINTER
-			-- create an instance of DebuggerUnmanagedCallback
-		external
-			"[
-				C++ creator DebuggerUnmanagedCallback
-				signature ()
-				use "cli_debugger_callback.h"
-			]"
-		ensure
-			class
-		end
 
 note
 	copyright: "Copyright (c) 1984-2024, Eiffel Software"

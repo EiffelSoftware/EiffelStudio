@@ -20,7 +20,7 @@ MKDIR = $mkdir
 LINK = $link32
 DLL_FLAGS = $dll_flags
 DLL_LIBS = $dll_libs
-OBJECTS = cli_debugger.$obj cli_debugger_callback.$obj cli_debugger_callback_id.$obj cli_debugger_utils.$obj cli_debugger_netcore.$obj cli_common.$obj cli_cordebug.$obj
+OBJECTS = cli_debugger.$obj cli_debugger_callback.$obj cli_debugger_callback_id.$obj cli_debugger_utils.$obj cli_debugger_framework.$obj cli_debugger_netcore.$obj cli_common.$obj cli_cordebug.$obj
 
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<

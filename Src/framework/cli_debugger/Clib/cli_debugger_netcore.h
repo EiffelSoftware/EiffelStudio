@@ -4,6 +4,7 @@
 #include "eif_eiffel.h"
 #include <windows.h>
 #include <ole2.h>
+//#include <dbgshim.h>
 
 #include "cli_cordebug.h"
 #include "cli_debugger_headers.h"

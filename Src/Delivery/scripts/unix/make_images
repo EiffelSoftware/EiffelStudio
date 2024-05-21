@@ -86,7 +86,10 @@ case $ISE_PLATFORM in
 				remtrace Copy OSX launcher scripts
 				cp -rf osx-launcher/*.app $INSTALL_DIR/
 				for d in $INSTALL_DIR/*.app/ ; do
-        				sed -i 's/#ISE_PLATFORM#/'$ISE_PLATFORM'/' $d/Contents/Resources/EiffelLauncher
+					# note: sed on macosx is not GNU sed ... issue with -i
+					if [ -f "$d/Contents/Resources/EiffelLauncher" ]; then
+						sed -i' ' "s/#ISE_PLATFORM#/$ISE_PLATFORM/" "$d/Contents/Resources/EiffelLauncher"
+					fi
 				done				
 			fi
 		;;

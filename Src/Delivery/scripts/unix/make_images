@@ -84,7 +84,10 @@ case $ISE_PLATFORM in
 	macosx*)
 			if [ -d osx-launcher ]; then
 				remtrace Copy OSX launcher scripts
-				cp -rf osx-launcher $INSTALL_DIR/tools/spec/$ISE_PLATFORM/osx-launcher
+				cp -rf osx-launcher/*.app $INSTALL_DIR/
+				for d in $INSTALL_DIR/*.app/ ; do
+        				sed -i 's/#ISE_PLATFORM#/'$ISE_PLATFORM'/' $d/Contents/Resources/EiffelLauncher
+				done				
 			fi
 		;;
 	*)

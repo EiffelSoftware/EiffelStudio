@@ -9,16 +9,7 @@ CONSOLE_STRING=console
 
 # Setup Environment Variables and create settings files
 export ISE_EIFFEL=$CWD/../../..
-
-if [ `uname -p` == "powerpc" ]; then
-	ISE_PLATFORM=macosx-ppc
-elif [ `uname -p` == "i386" ]; then
-	if (( `uname -r|cut -f1 -d.` >= 10 )) && [[ `sysctl hw.cpu64bit_capable` == "hw.cpu64bit_capable: 1" ]]; then
-		export ISE_PLATFORM=macosx-x86-64
-	else
-		export ISE_PLATFORM=macosx-x86
-	fi
-fi
+export ISE_PLATFORM=#ISE_PLATFORM#
 
 EIFFEL_PATH=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/library/gobo/spec/$ISE_PLATFORM/bin
 

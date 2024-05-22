@@ -88,7 +88,11 @@ case $ISE_PLATFORM in
 				for d in $INSTALL_DIR/*.app/ ; do
 					# note: sed on macosx is not GNU sed ... issue with -i
 					if [ -f "$d/Contents/Resources/EiffelLauncher" ]; then
-						sed -i' ' "s/#ISE_PLATFORM#/$ISE_PLATFORM/" "$d/Contents/Resources/EiffelLauncher"
+						sed -i '' "s/#ISE_PLATFORM#/$ISE_PLATFORM/" "$d/Contents/Resources/EiffelLauncher"
+						chmod u+x "$d/Contents/Resources/EiffelLauncher"
+					fi
+					if [ -f "$d/Contents/MacOS/estudio" ]; then
+						chmod u+x "$d/Contents/MacOS/estudio"
 					fi
 				done				
 			fi

@@ -1,41 +1,1 @@
-#!/bin/bash
-
-CWD="`dirname \"$0\"`"
-
-STUDIO_STRING=studio
-BUILD_STRING=build
-VISION2_DEMO_STRING=vision2_demo
-CONSOLE_STRING=console
-
-# Setup Environment Variables and create settings files
-export ISE_EIFFEL=$CWD/../../..
-export ISE_PLATFORM=#ISE_PLATFORM#
-
-EIFFEL_PATH=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/library/gobo/spec/$ISE_PLATFORM/bin
-
-if [ $1 = $STUDIO_STRING ]
-then
-	osascript -e "tell application \"Terminal\"
-    				set newTab to do script \"export PATH=$EIFFEL_PATH:\$PATH; export ISE_EIFFEL=$ISE_EIFFEL; export ISE_PLATFORM=$ISE_PLATFORM; clear; estudio;\"
-    				set custom title of newTab to \"Eiffel Console\"
-				  end tell"
-fi
-
-if [ $1 = $BUILD_STRING ]
-then
-	$ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin/esbuilder
-fi
-
-if [ $1 = $VISION2_DEMO_STRING ]
-then
-	$ISE_EIFFEL/vision2_demo/spec/$ISE_PLATFORM/bin/vision2_demo
-fi
-
-if [ $1 = $CONSOLE_STRING ]
-then
-	osascript -e "tell application \"Terminal\"
-    				set newTab to do script \"export PATH=$EIFFEL_PATH:\$PATH; export ISE_EIFFEL=$ISE_EIFFEL; export ISE_PLATFORM=$ISE_PLATFORM; clear;\"
-    				set custom title of newTab to \"Eiffel Console\"
-					activate
-				  end tell"
-fi
+#!/bin/bashCWD="`dirname \"$0\"`"STUDIO_STRING=studioBUILD_STRING=buildVISION2_DEMO_STRING=vision2_demoCONSOLE_STRING=console# Setup Environment Variables and create settings filesexport ISE_EIFFEL=$CWD/../../..export ISE_PLATFORM=#ISE_PLATFORM#EIFFEL_PATH=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/library/gobo/spec/$ISE_PLATFORM/binif [ $1 = $STUDIO_STRING ]then	osascript -e "tell application \"Terminal\"    				set newTab to do script \"export PATH=$EIFFEL_PATH:\$PATH; export ISE_EIFFEL=$ISE_EIFFEL; export ISE_PLATFORM=$ISE_PLATFORM; clear; estudio;\"    				set custom title of newTab to \"Eiffel Console\"				  end tell"fiif [ $1 = $BUILD_STRING ]then	$ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin/esbuilderfiif [ $1 = $VISION2_DEMO_STRING ]then	$ISE_EIFFEL/vision2_demo/spec/$ISE_PLATFORM/bin/vision2_demofiif [ $1 = $CONSOLE_STRING ]then	osascript -e "tell application \"Terminal\"    				set newTab to do script \"export PATH=$EIFFEL_PATH:\$PATH; export ISE_EIFFEL=$ISE_EIFFEL; export ISE_PLATFORM=$ISE_PLATFORM; clear;\"    				set custom title of newTab to \"Eiffel Console\"					activate				  end tell"fi

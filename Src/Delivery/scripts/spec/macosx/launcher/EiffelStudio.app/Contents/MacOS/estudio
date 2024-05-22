@@ -1,1 +1,5 @@
-#!/bin/shCWD="`dirname \"$0\"`"$CWD/../Resources/EiffelLauncher studio &
+#!/bin/sh
+
+CWD="`dirname \"$0\"`"
+$CWD/../Resources/EiffelLauncher studio &
+

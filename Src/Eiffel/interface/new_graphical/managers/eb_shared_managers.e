@@ -83,6 +83,12 @@ feature -- Status report
 			create Result
 		end
 
+	composer_manager: COMPOSER_MANAGER
+			-- The composer manager.
+		once
+			create Result.make
+		end
+
 	Refactoring_manager: ERF_MANAGER
 			-- The refactoring manager.
 		once
@@ -122,7 +128,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

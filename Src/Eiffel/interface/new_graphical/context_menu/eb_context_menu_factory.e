@@ -535,6 +535,7 @@ feature {NONE} -- Menu section, Granularity 2.
 			if attached {FEATURE_STONE} a_pebble as l_feature_stone then
 				extend_basic_opening_menus (a_menu, l_feature_stone, True)
 				extend_separator (a_menu)
+				extend_composer_menus (a_menu, l_feature_stone)
 				extend_feature_refactoring_menus (a_menu, l_feature_stone)
 				extend_separator (a_menu)
 				extend_feature_formatter_menus (a_menu, l_feature_stone)
@@ -546,6 +547,7 @@ feature {NONE} -- Menu section, Granularity 2.
 			elseif attached {CLASSC_STONE} a_pebble as l_stonec then
 				extend_basic_opening_menus (a_menu, l_stonec, True)
 				extend_separator (a_menu)
+				extend_composer_menus (a_menu, l_stonec)
 				extend_class_refactoring_menus (a_menu, l_stonec)
 				extend_separator (a_menu)
 				extend_class_formatter_menus (a_menu, l_stonec)
@@ -556,6 +558,7 @@ feature {NONE} -- Menu section, Granularity 2.
 			elseif attached {CLASSI_STONE} a_pebble as l_stonei then
 				extend_basic_opening_menus (a_menu, l_stonei, True)
 				extend_separator (a_menu)
+				extend_composer_menus (a_menu, l_stonei)
 				extend_class_refactoring_menus (a_menu, l_stonei)
 				extend_add_to_menu (a_menu, l_stonei)
 			elseif attached {CLUSTER_STONE} a_pebble as l_cluster_stone then
@@ -1045,6 +1048,35 @@ feature {NONE} -- Menu section, Granularity 1.
 				a_menu.last.select_actions.extend (agent a_tool.show)
 				a_menu.last.select_actions.extend (agent (ic.item).execute_with_stone (a_stone))
 			end
+		end
+
+	extend_composer_menus (a_menu: EV_MENU; a_stone: STONE)
+			-- Extend class composer menus.
+		require
+			a_menu_not_void: a_menu /= Void
+			a_stone_not_void: a_stone /= Void
+		local
+			l_menu: EV_MENU
+			mi: EV_MENU_ITEM
+		do
+			create l_menu.make_with_text (names.m_composer)
+			across
+				dev_window.composer_manager.all_commands as ic
+			loop
+				if attached ic.item as cmd then
+					mi := cmd.new_menu_item_unmanaged
+					mi.select_actions.wipe_out
+					if
+						cmd.can_drop (a_stone)
+					then
+						mi.select_actions.extend (agent (cmd).drop (a_stone))
+					else
+						mi.disable_sensitive
+					end
+					l_menu.extend (mi)
+				end
+			end
+			a_menu.extend (l_menu)
 		end
 
 	extend_class_refactoring_menus (a_menu: EV_MENU; a_stone: CLASSI_STONE)

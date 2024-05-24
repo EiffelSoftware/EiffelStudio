@@ -788,6 +788,13 @@ feature -- Command
 				-- Having a default minimum height on the editor is perfectly reasonable.
 				--			develop_window.tools.editor_tool.widget.set_minimum_height (20)
 
+				-- Build the composer tools
+			across
+				develop_window.composer_manager.all_commands as ic
+			loop
+				l_dev_commands.toolbarable_commands.extend (ic.item)
+			end
+
 				-- Build the refactoring tools
 			l_dev_commands.toolbarable_commands.extend (develop_window.refactoring_manager.pull_command)
 			l_dev_commands.toolbarable_commands.extend (develop_window.refactoring_manager.rename_command)
@@ -1133,7 +1140,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

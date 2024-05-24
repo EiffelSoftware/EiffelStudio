@@ -398,6 +398,7 @@ feature {NONE} -- Implementation
 			end
 			develop_window.commands.c_workbench_compilation_cmd.enable_sensitive
 			develop_window.commands.c_finalized_compilation_cmd.enable_sensitive
+			develop_window.composer_manager.enable_sensitive
 			develop_window.refactoring_manager.enable_sensitive
 			develop_window.commands.customized_formatter_command.enable_sensitive
 --			develop_window.commands.customized_tool_command.enable_sensitive
@@ -420,6 +421,9 @@ feature {NONE} -- Implementation
 			develop_window.commands.delete_class_cluster_cmd.disable_sensitive
 			develop_window.commands.c_workbench_compilation_cmd.disable_sensitive
 			develop_window.commands.c_finalized_compilation_cmd.disable_sensitive
+
+			develop_window.composer_manager.disable_sensitive
+
 			develop_window.refactoring_manager.disable_sensitive
 			develop_window.refactoring_manager.forget_undo_redo
 			develop_window.commands.customized_formatter_command.disable_sensitive
@@ -433,7 +437,7 @@ invariant
 	not_void: not is_recycled implies develop_window /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

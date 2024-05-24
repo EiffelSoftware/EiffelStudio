@@ -519,6 +519,13 @@ feature -- Accelerator, focus label and menu name
 
 	m_Force_execution_mode: STRING_32		do Result := locale.translation("Force Execution Mode")	end
 	m_Launch_With_Arguments: STRING_32	do Result := locale.translation("Start With Arguments")	end
+	f_composer_add_setter: STRING_32		do Result := locale.translation("Add Attribute Setter")	end
+	b_composer_add_setter: STRING_32		do Result := locale.translation("Add Setter")	end
+	f_composer_remove_feature: STRING_32		do Result := locale.translation("Remove Feature")	end
+	b_composer_remove_feature: STRING_32		do Result := locale.translation("Remove Feature")	end
+	f_composer_add_creator: STRING_32		do Result := locale.translation("Add Creation Procedure")	end
+	b_composer_add_creator: STRING_32		do Result := locale.translation("Add Creation")	end
+
 	f_diagram_delete: STRING_32			do Result := locale.translation("Delete")	end
 	l_data: STRING_32					do Result := locale.translation("Data")	end
 	l_details: STRING_32					do Result := locale.translation("Details") end
@@ -710,6 +717,7 @@ feature -- Accelerator, focus label and menu name
 	b_refactoring_rename: STRING_32		do Result := locale.translation_in_context ("Rename", "eiffelstudio.refactor_tool")	end
 	b_refactoring_undo: STRING_32		do Result := locale.translation("Undo Refactoring")	end
 	b_refactoring_redo: STRING_32		do Result := locale.translation("Redo Refactoring")	end
+
 	l_rename_file: STRING_32				do Result := locale.translation("Rename File")	end
 	l_regexp: STRING_32					do Result := locale.translation("Regexp")	end
 	l_replace_comments: STRING_32		do Result := locale.translation("Replace Name in Comments")	end
@@ -1059,6 +1067,7 @@ feature -- Menu mnenomics
 	m_When_hits: STRING_32				do Result := locale.translation("When Hits...")	end
 
 	m_Window: STRING_32					do Result := locale.translation("&Window")	end
+	m_composer: STRING_32				do Result := locale.translation("&Composer")	end
 	m_Refactoring: STRING_32				do Result := locale.translation("&Refactor")	end
 
 feature -- Context menu
@@ -3066,7 +3075,7 @@ note
 	ca_ignore:
 		"CA033", "CA033: too large class",
 		"CA011", "CA011: too many arguments"
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

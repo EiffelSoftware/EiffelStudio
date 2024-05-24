@@ -643,6 +643,7 @@ feature -- Actions on all windows
 			for_all (agent c_compilation_start_action)
 			melt_project_cmd.enable_sensitive
 			terminate_c_compilation_cmd.disable_sensitive
+			composer_manager.enable_sensitive
 			refactoring_manager.enable_sensitive
 			discover_melt_cmd.enable_sensitive
 			analyze_cmd.enable_sensitive
@@ -1106,11 +1107,13 @@ feature -- Events
 			analyze_editor_cmd.disable_sensitive
 			analyze_parent_cmd.disable_sensitive
 			analyze_target_cmd.disable_sensitive
+			composer_manager.disable_sensitive
 			refactoring_manager.disable_sensitive
 			for_all (agent c_compilation_start_action)
 			compile_start_actions.call (Void)
 		end
 
+	on_composer_start,
 	on_refactoring_start
 			-- A refactoring has been started.
 		do
@@ -1126,6 +1129,7 @@ feature -- Events
 			for_all (agent c_compilation_start_action)
 		end
 
+	on_composer_end,
 	on_refactoring_end
 			-- A refactoring has finished.
 		do
@@ -1651,7 +1655,7 @@ feature{NONE} -- Implementation
 note
 	ca_ignore:
 		"CA033", "CA033: too long class"
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -220,10 +220,10 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	original_text: STRING_8
+	original_text: detachable STRING_8
 			-- Original text we loaded.
 
-	text: STRING_8
+	text: detachable STRING_8
 			-- Text to work on.
 			-- Treat text as bytes stream. UTF-8 encoded.
 
@@ -234,7 +234,7 @@ invariant
 	modified_needs_text_managed: is_modified implies text_managed
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -42,7 +42,7 @@ feature -- Status
 	class_set: BOOLEAN
 			-- Has the class to change been set?
 		do
-			Result := class_i /= void
+			Result := class_i /= Void
 		end
 
 feature -- Element change
@@ -50,7 +50,7 @@ feature -- Element change
 	set_class (a_class: like class_i)
 			-- That class that get's renamed
 		require
-			a_class_not_void: a_class /= void
+			a_class_not_void: a_class /= Void
 		do
 			class_i := a_class
 		end

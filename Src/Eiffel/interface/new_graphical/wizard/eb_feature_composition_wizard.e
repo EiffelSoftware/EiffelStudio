@@ -139,11 +139,8 @@ feature -- Access
 
 	feature_type: STRING_32
 			-- Return type if attribute or function.
-		local
-			qe: EB_QUERY_EDITOR
 		do
-			qe ?= feature_editor
-			if qe /= Void then
+			if attached {EB_QUERY_EDITOR} feature_editor as qe then
 				Result := qe.type
 			end
 		end
@@ -151,22 +148,17 @@ feature -- Access
 	feature_arguments: STRING_32
 			-- Arguments of current feature if any.
 		local
-			qe: EB_QUERY_EDITOR
 		do
-			qe ?= feature_editor
-			if qe /= Void then
+			if attached {EB_QUERY_EDITOR} feature_editor as qe then
 				Result := qe.arguments_code
 			end
 		end
 
 	generate_setter_procedure: BOOLEAN
 			-- Should a set-procedure be generated?
-		local
-			e: EB_QUERY_EDITOR
 		do
-			e ?= feature_editor
-			if e /= Void then
-				Result := e.generate_setter_procedure
+			if attached {EB_QUERY_EDITOR} feature_editor as qe then
+				Result := qe.generate_setter_procedure
 			end
 		end
 
@@ -175,31 +167,24 @@ feature -- Access
 		local
 			e: EB_QUERY_EDITOR
 		do
-			e ?= feature_editor
-			if e /= Void then
-				Result := e.setter_name
+			if attached {EB_QUERY_EDITOR} feature_editor as qe then
+				Result := qe.setter_name
 			end
 		end
 
 	precondition: STRING_32
 			-- Precondition selected for set-procedure.
 			-- Void if none.
-		local
-			e: EB_ATTRIBUTE_EDITOR
 		do
-			e ?= feature_editor
-			if e /= Void then
+			if attached {EB_ATTRIBUTE_EDITOR} feature_editor as e then
 				Result := e.precondition
 			end
 		end
 
 	invariant_part: STRING_32
 			-- Invariant for feature. Void if none.
-		local
-			e: EB_ATTRIBUTE_EDITOR
 		do
-			e ?= feature_editor
-			if e /= Void then
+			if attached {EB_ATTRIBUTE_EDITOR} feature_editor as e then
 				Result := e.invariant_part
 			end
 		end
@@ -222,11 +207,8 @@ feature -- Status setting
 
 	set_name_number (a_number: INTEGER)
 			-- Assign `a_number' to `name_number'.
-		local
-			qe: EB_QUERY_EDITOR
 		do
-			qe ?= feature_editor
-			if qe /= Void then
+			if attached {EB_QUERY_EDITOR} feature_editor as qe then
 				qe.set_name_number (a_number)
 			end
 		ensure
@@ -326,7 +308,7 @@ feature {NONE} -- Implementation
 			-- Container of `feature_editor'.
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

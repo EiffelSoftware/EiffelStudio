@@ -687,6 +687,26 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_sub_menu.extend (develop_window.menus.formatting_marks_command_menu_item)
 
 			develop_window.menus.edit_menu.extend (l_sub_menu)
+
+				-- Composer sub menu
+			add_composer_submenu_to (develop_window.menus.edit_menu)
+		end
+
+	add_composer_submenu_to (m: EV_MENU)
+			-- Add sub menu "composer" to `m`.
+		local
+			l_command_menu_item: EB_COMMAND_MENU_ITEM
+			l_composer_menu: EV_MENU
+		do
+			create l_composer_menu.make_with_text (develop_window.Interface_names.m_composer)
+			across
+				develop_window.composer_manager.all_commands as ic
+			loop
+				l_command_menu_item := ic.item.new_menu_item
+				auto_recycle (l_command_menu_item)
+				l_composer_menu.extend (l_command_menu_item)
+			end
+			m.extend (l_composer_menu)
 		end
 
 	build_view_menu
@@ -1660,7 +1680,7 @@ feature -- Docking library menu items
 		end
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

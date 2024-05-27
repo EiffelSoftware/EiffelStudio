@@ -33,7 +33,6 @@ rt_public void* get_icor_debug()
 
 rt_private void StartupCallback(IUnknown *pCordb, PVOID parameter, HRESULT hr)
 {
-	DBGTRACE_PTR("[DEBUGGER] StartupCallback <enter> ... pCordb=", (char*) pCordb);
 	if (pCordb) {
 		m_pCordb = pCordb;
 		m_pCordb_set = true;
@@ -50,7 +49,6 @@ rt_private void StartupCallback(IUnknown *pCordb, PVOID parameter, HRESULT hr)
 	} else {
 		DBGTRACE("[DEBUGGER] StartupCallback... no m_unregister_token !");
 	}
-	printf("[DEBUGGER] StartupCallBack <exit>.\n");
 }
 
 rt_public EIF_INTEGER initialize_debug_session (LPWSTR a_command_line, LPVOID a_env, LPCWSTR a_curr_dir, PDWORD p_proc_id, EIF_OBJECT cb_obj, EIF_POINTER cb_fct)
@@ -66,8 +64,6 @@ rt_public EIF_INTEGER initialize_debug_session (LPWSTR a_command_line, LPVOID a_
 	dbg_startup_cb_fct = cb_fct;
 
 	DBGTRACE("[DEBUGGER] initialize_debug_session (...) ...");
-
-	DBGTRACE("[DEBUGGER] Loading dbgshim dyn lib");
 #ifdef EIF_WINDOWS
 	dbgshim_module = LoadLibrary(L"dbgshim.dll");
 #else
@@ -96,7 +92,6 @@ rt_public EIF_INTEGER initialize_debug_session (LPWSTR a_command_line, LPVOID a_
 							parameter,
 							&m_unregister_token
 						);
-				DBGTRACE_HR("[DEBUGGER] RegisterForRuntimeStartup(..) : hr = ", hr);
 				rt_private FARPROC resume_process_address = GetProcAddress (dbgshim_module, "ResumeProcess");
 				if (resume_process_address) {
 					hr = (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (HANDLE)) resume_process_address)(resume_handle);
@@ -126,7 +121,6 @@ rt_private HRESULT unregister_for_runtime_startup (PVOID a_token)
 	rt_private FARPROC unregister_for_runtime_startup_address;
 	HMODULE dbgshim_module;
 
-	DBGTRACE("[DEBUGGER] Loading dbgshim dyn lib");
 #ifdef EIF_WINDOWS
 	dbgshim_module = LoadLibrary(L"dbgshim.dll");
 #else

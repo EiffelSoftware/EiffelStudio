@@ -48,12 +48,18 @@ feature -- Factory
 
 	icor_debug_factory: ICOR_DEBUG_FACTORY
 
+feature {NONE} -- Implementation
+
+	icor_debug: detachable ICOR_DEBUG
+
 feature {ICOR_EXPORTER} -- Access
 
 	last_icor_debug_process_handle: POINTER
 		do
-				-- FIXME
-		end
+			if attached icor_debug as dbg then
+				Result := dbg.last_icor_debug_process_handle
+			end
+		end	
 
 feature -- Change
 
@@ -66,8 +72,9 @@ feature -- Change
 			l_pid: INTEGER
 			n: INTEGER
 			p: POINTER
-			icor_debug: ICOR_DEBUG
+			l_icor_debug: ICOR_DEBUG
 		do
+			icor_debug := Void
 			create c_cmd_line.make (a_command_line)
 			create c_cwd.make (a_working_directory.name)
 			if a_ns_env /= Void then
@@ -80,29 +87,30 @@ feature -- Change
 			from
 				n := 100
 			until
-				n <= 0 or icor_debug /= Void
+				n <= 0 or l_icor_debug /= Void
 			loop
 				{EXECUTION_ENVIRONMENT}.sleep (50_000_000) -- 50 ms
 				p := c_get_icor_debug
 				if not p.is_default_pointer then
-					create icor_debug.make_by_pointer (p)
+					create l_icor_debug.make_by_pointer (p)
+					icor_debug := l_icor_debug
 				end
 				n := n -1
 			end
-			if icor_debug /= Void then
-				icor_debug.initialize
-				n := icor_debug.can_launch_or_attach (123, False)
+			if l_icor_debug /= Void then
+				l_icor_debug.initialize
+				n := l_icor_debug.can_launch_or_attach (123, False)
 				if attached {ICOR_DEBUG_FACTORY}.new_cordebug_managed_callback as l_managed_cb then
 					l_managed_cb.add_ref
 					l_managed_cb.initialize_callback
-					icor_debug.set_managed_handler (l_managed_cb)
+					l_icor_debug.set_managed_handler (l_managed_cb)
 				end
 				if attached {ICOR_DEBUG_FACTORY}.new_cordebug_unmanaged_callback as l_unmanaged_cb then
 					l_unmanaged_cb.add_ref
 					l_unmanaged_cb.initialize_callback
-					icor_debug.set_unmanaged_handler (l_unmanaged_cb)
+					l_icor_debug.set_unmanaged_handler (l_unmanaged_cb)
 				end
-				Result := icor_debug.get_debug_active_process_pointer (l_pid)
+				Result := l_icor_debug.get_debug_active_process_pointer (l_pid)
 			else
 				last_call_success := -1
 			end
@@ -117,7 +125,10 @@ feature -- Change
 
 	clean_data
 		do
-			-- TODO / FIXME
+			if attached icor_debug as dbg then
+				dbg.clean_data
+				icor_debug := Void
+			end
 		end
 
 feature {NONE} -- Implementation

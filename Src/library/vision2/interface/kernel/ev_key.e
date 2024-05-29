@@ -113,7 +113,7 @@ feature -- Standard output
 	text: STRING_32
 			-- Readable representation of `code'.
 		do
-			Result := (key_strings @ code)
+			Result := key_strings [code]
 		end
 
 	out: STRING
@@ -121,14 +121,14 @@ feature -- Standard output
 		obsolete
 			"Use `text' instead. [2017-05-31]"
 		do
-			Result := (key_strings @ code).as_string_8_conversion
+			Result := (key_strings [code]).as_string_8_conversion
 		end
 
 invariant
 	code_valid: valid_key_code (code)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

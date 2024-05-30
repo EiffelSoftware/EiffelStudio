@@ -1,6 +1,6 @@
 note
 	description: "[
-			Manages all available composing operations.
+			Manages all available composer operations.
 		]"
 	author: "$Author$"
 	date: "$Date$"
@@ -41,16 +41,23 @@ feature {NONE} -- Initialization
 			create feature_remover_command.make (Current)
 			create class_creator_adder_command.make (Current)
 
+				-- All commands except `shortcut_command` which is hidden
 			all_commands := {ARRAY [EB_COMPOSER_COMMAND_I]} <<
 					feature_setter_adder_command,
 					feature_remover_command,
 					class_creator_adder_command
 				>>
+
+			create shortcut_command.make
 		end
+
+	accelerator: EV_ACCELERATOR
 
 feature -- Commands
 
 	all_commands: ITERABLE [EB_COMPOSER_COMMAND_I]
+
+	shortcut_command: EB_COMPOSER_SHORTCUT_COMMAND
 
 	feature_setter_adder_command: EB_COMPOSER_ADD_SETTER_COMMAND
 
@@ -58,7 +65,50 @@ feature -- Commands
 
 	class_creator_adder_command: EB_COMPOSER_ADD_CREATOR_COMMAND
 
+feature -- Query
+
+	process_command_for_shortcut (k: EV_KEY; is_ctrl, is_alt, is_shift: BOOLEAN)
+		local
+			cmd: EB_COMPOSER_COMMAND_I
+			acc: EV_ACCELERATOR
+			done: BOOLEAN
+		do
+			across
+				all_commands as ic
+			until
+				done
+			loop
+				cmd := ic.item
+				acc := cmd.composer_and_then_accelerator
+				if acc /= Void then
+					if
+						acc.key.code = k.code and then
+						acc.control_required = is_ctrl and then
+						acc.alt_required = is_alt and then
+						acc.shift_required = is_shift
+					then
+						done := True
+						acc.actions.call (Void)
+					end
+				end
+			end
+		end
+
+feature -- Execution
+
+	update_all_commands (a_window: EV_WINDOW)
+		do
+			across
+				all_commands as ic
+			loop
+				ic.item.update (a_window)
+			end
+			shortcut_command.update (a_window)
+		end
+
 feature -- Access
+
+	preferences_prefix: STRING = "editor.composer."
 
 	feature_setter_adder: COMPOSER_FEATURE_SETTER_ADDER
 		do
@@ -107,7 +157,15 @@ feature -- Basic operation
 					do
 						disable_sensitive
 						window_manager.on_composer_start
+						act.reset
 						act.execute
+						if not act.succeed then
+							if attached act.last_error_message as err then
+								prompts.show_error_prompt (err, Void,Void)
+							else
+								prompts.show_error_prompt ("Operation failed", Void,Void)
+							end
+						end
 						window_manager.on_composer_end
 						enable_sensitive
 					end (a_action)

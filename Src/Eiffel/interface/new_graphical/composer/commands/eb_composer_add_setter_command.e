@@ -13,13 +13,32 @@ inherit
 		redefine
 			new_sd_toolbar_item,
 			is_tooltext_important,
-			tooltext
+			tooltext,
+			initialize
 		end
 
 	EB_SHARED_MANAGERS
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	initialize
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
+			acc: EV_ACCELERATOR
+		do
+			Precursor
+			l_shortcut := composer_shortcut ("add_setter")
+			if l_shortcut = Void then
+					-- Default
+				l_shortcut := composer_custom_shortcut ("add_setter", False, False, False, "s")
+			end
+			create acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			acc.actions.extend (agent execute)
+			register_composer_and_then_accelerator (acc)
+		end
 
 feature -- Status
 
@@ -89,20 +108,8 @@ feature -- Events
 
 	drop_feature (fs: FEATURE_STONE)
 			-- Process feature stone.
-		local
-			feature_i: FEATURE_I
 		do
-			if fs.e_class /= Void then
-				feature_i := fs.e_class.feature_of_feature_id (fs.e_feature.feature_id)
-			end
-			if feature_i /= Void and then fs.e_feature.associated_class.class_id = feature_i.written_in then
-				if attached manager.feature_setter_adder as act then
-					act.set_feature (feature_i)
-					manager.execute_composer (act)
-				end
-			else
-				prompts.show_error_prompt (warning_messages.w_feature_not_written_in_class, Void, Void)
-			end
+			process_feature_stone (fs, False)
 		end
 
 	can_drop (a_stone: ANY): BOOLEAN
@@ -114,12 +121,67 @@ feature -- Events
 					l_feat_stone.is_storable
 		end
 
+	process_feature_stone (fs: FEATURE_STONE; is_batch: BOOLEAN)
+			-- Process feature stone.
+		local
+			feature_i: FEATURE_I
+			l_setter_name: detachable READABLE_STRING_32
+			pre_inc, post_inc: BOOLEAN
+			dlg: ES_COMPOSER_ADD_FEATURE_SETTER_DIALOG
+			cont: BOOLEAN
+		do
+			if fs.e_class /= Void then
+				feature_i := fs.e_class.feature_of_feature_id (fs.e_feature.feature_id)
+			end
+			if
+				feature_i /= Void and then
+				fs.e_feature.associated_class.class_id = feature_i.written_in
+			then
+				if is_batch then
+					pre_inc := True
+					post_inc := True
+					cont := True
+				else
+					create dlg.make_with_feature (feature_i)
+					dlg.show_on_active_window
+					if dlg.is_validated then
+					cont := True
+						l_setter_name := dlg.setter_name
+						pre_inc := dlg.include_preconditions
+						post_inc := dlg.include_postconditions
+					end
+				end
+				if
+					cont and then
+					attached manager.feature_setter_adder as act
+				then
+					act.set_feature (feature_i)
+					act.set_setter_name (l_setter_name)
+					act.preconditions_included := pre_inc
+					act.postconditions_included := post_inc
+
+					manager.execute_composer (act)
+				end
+			else
+				prompts.show_error_prompt (warning_messages.w_feature_not_written_in_class, Void, Void)
+			end
+		end
+
 feature -- Execution
+
+	batch_execute
+		do
+			if attached feature_stone as fs then
+				process_feature_stone (fs, True)
+			else
+				prompts.show_info_prompt (warning_messages.w_Select_feature_to_add_setter, window_manager.last_focused_development_window.window, Void)
+			end
+		end
 
 	execute
 		do
 			if attached feature_stone as fs then
-				drop_feature (fs)
+				process_feature_stone (fs, False)
 			else
 				prompts.show_info_prompt (warning_messages.w_Select_feature_to_add_setter, window_manager.last_focused_development_window.window, Void)
 			end

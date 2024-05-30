@@ -9,6 +9,12 @@ deferred class
 
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+		redefine
+			shortcut_string,
+			shortcut_available
+		end
+
+	EB_SHARED_PREFERENCES
 
 feature {NONE} -- Initialization
 
@@ -18,6 +24,11 @@ feature {NONE} -- Initialization
 			a_manager_not_void: a_manager /= Void
 		do
 			manager := a_manager
+			initialize
+		end
+
+	initialize
+		do
 		end
 
 feature -- Basic operations
@@ -28,6 +39,10 @@ feature -- Basic operations
 		deferred
 		end
 
+	execute
+		deferred
+		end
+
 feature -- Status
 
 	can_drop (a_stone: ANY): BOOLEAN
@@ -35,7 +50,53 @@ feature -- Status
 		deferred
 		end
 
+feature -- Shortcuts
+
+	shortcut_available: BOOLEAN
+		do
+			Result := Precursor
+			if not Result then
+				Result := manager.shortcut_command.shortcut_available and then composer_and_then_accelerator /= Void
+			end
+		end
+
+	shortcut_string: STRING_GENERAL
+			-- Shortcut string.
+		do
+			Result := Precursor
+			if
+				Result.is_whitespace and then
+				attached composer_and_then_accelerator as sc
+			then
+				create {STRING_32} Result.make_from_string_general (manager.shortcut_command.shortcut_string)
+				Result.append (" , ")
+				Result.append (sc.text)
+			end
+		end
+
+	composer_and_then_accelerator: detachable EV_ACCELERATOR
+			-- Optional key associated with the global composer shortcut (if any)
+
+feature -- Element change
+
+	register_composer_and_then_accelerator (acc: EV_ACCELERATOR)
+		require
+			composer_and_then_accelerator = Void
+		do
+			composer_and_then_accelerator := acc
+		end
+
 feature {NONE} -- Helpers
+
+	composer_shortcut (a_name: READABLE_STRING_8): detachable SHORTCUT_PREFERENCE
+		do
+			Result := preferences.editor_data.shortcuts.item (manager.preferences_prefix +  "then." + a_name)
+		end
+
+	composer_custom_shortcut (a_name: READABLE_STRING_8; is_ctrl, is_alt, is_shift: BOOLEAN; key: READABLE_STRING_8): SHORTCUT_PREFERENCE
+		do
+			Result := preferences.editor_data.custom_shortcut (manager.preferences_prefix +  "then." + a_name, [is_alt, is_ctrl, is_shift, key])
+		end
 
 	feature_stone: detachable FEATURE_STONE
 			-- Eventual feature stone

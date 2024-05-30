@@ -13,13 +13,34 @@ inherit
 		redefine
 			new_sd_toolbar_item,
 			tooltext,
-			is_tooltext_important
+			is_tooltext_important,
+			initialize
 		end
 
 	EB_SHARED_MANAGERS
 
+	EB_SHARED_PREFERENCES
+
 create
 	make
+
+feature {NONE} -- Initialization
+
+	initialize
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
+			acc: EV_ACCELERATOR
+		do
+			Precursor
+			l_shortcut := composer_shortcut ("remove_feature")
+			if l_shortcut = Void then
+					-- Default
+				l_shortcut := composer_custom_shortcut ("remove_feature", False, False, False, "x")
+			end
+			create acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			acc.actions.extend (agent execute)
+			register_composer_and_then_accelerator (acc)
+		end
 
 feature -- Status
 
@@ -132,7 +153,7 @@ feature -- Execution
 			if attached feature_stone as fs then
 				drop_feature (fs)
 			else
-				prompts.show_info_prompt (warning_messages.w_Select_feature_to_add_setter, window_manager.last_focused_development_window.window, Void)
+				prompts.show_info_prompt (warning_messages.w_select_feature_to_remove, window_manager.last_focused_development_window.window, Void)
 			end
 		end
 

@@ -13,13 +13,32 @@ inherit
 		redefine
 			new_sd_toolbar_item,
 			is_tooltext_important,
-			tooltext
+			tooltext,
+			initialize
 		end
 
 	EB_SHARED_MANAGERS
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	initialize
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
+			acc: EV_ACCELERATOR
+		do
+			Precursor
+			l_shortcut := composer_shortcut ("add_creator")
+			if l_shortcut = Void then
+					-- Default
+				l_shortcut := composer_custom_shortcut ("add_creator", False, False, False, "c")
+			end
+			create acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			acc.actions.extend (agent execute)
+			register_composer_and_then_accelerator (acc)
+		end
 
 feature -- Status
 
@@ -91,24 +110,10 @@ feature -- Events
 			-- Process class stone.
 		local
 			class_i: CLASS_I
-			dlg: ES_ADD_CREATOR_DIALOG
---			l_attribs: ARRAYED_LIST [ATTRIBUTE_I]
+			dlg: ES_COMPOSER_ADD_CREATOR_DIALOG
 		do
 			class_i := cs.class_i
 			if class_i /= Void then
---				if
---					attached class_i.compiled_class as cc and then
---					attached cc.feature_table.features as lst
---				then
---					create l_attribs.make (10)
---					across
---						lst as ic
---					loop
---						if attached {ATTRIBUTE_I} ic.item as l_attrib_i then
---							l_attribs.force (l_attrib_i)
---						end
---					end
---				end
 				create dlg.make_with_class (class_i)
 				dlg.show_on_active_window
 				if
@@ -118,6 +123,8 @@ feature -- Events
 					act.set_class (class_i)
 					act.set_creator_name (tu.creator_name)
 					act.set_attributes (tu.attributes)
+					act.set_types (tu.type_names)
+					act.update_creator_list := dlg.update_creator_list
 					manager.execute_composer (act)
 				end
 			end

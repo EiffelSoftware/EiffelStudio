@@ -17,14 +17,66 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
+	reset
+		do
+			last_error_message := Void
+			succeed := False
+		end
+
 	execute
 			-- Execute the composer action.	
+		require
+			last_error_message = Void
 		deferred
 		end
 
+	report_error (m: READABLE_STRING_GENERAL)
+		do
+			last_error_message := m
+			succeed := False
+		end
+
+feature -- Error
+
+	last_error_message: detachable READABLE_STRING_GENERAL
+
+	succeed: BOOLEAN
+
 feature -- Helper
 
-	feature_clause_position (ctm: ES_CLASS_TEXT_AST_MODIFIER; a_export, a_comment: READABLE_STRING_GENERAL; a_created_if_not_found: BOOLEAN): TUPLE [begin_position, end_position: INTEGER; is_new: BOOLEAN]
+	create_insert_position (ctm: ES_CLASS_TEXT_AST_MODIFIER): detachable TUPLE [begin_position, end_position: INTEGER; exists: BOOLEAN]
+		local
+			class_as: CLASS_AS
+			match_list: LEAF_AS_LIST
+			insertion_position: INTEGER
+		do
+			class_as := ctm.ast
+			match_list := ctm.ast_match_list
+			if
+				attached class_as.creators as l_creators and then
+				attached l_creators.last as l_creator
+			then
+				insertion_position := l_creator.end_position + 1
+				Result := [l_creator.start_position, insertion_position, True]
+			elseif
+				attached class_as.convertors as l_convertors and then
+				attached l_convertors as l_convertor
+			then
+				insertion_position := l_convertor.start_position
+			elseif
+				attached class_as.features as l_features and then
+				attached l_features.first as l_feature
+			then
+				insertion_position := l_feature.start_position
+			else
+				insertion_position := class_as.feature_clause_insert_position
+			end
+			if Result = Void and insertion_position > 0 then
+				Result := [insertion_position, insertion_position, False]
+			end
+		end
+
+	feature_clause_position (ctm: ES_CLASS_TEXT_AST_MODIFIER; a_export, a_comment: READABLE_STRING_GENERAL; a_created_if_not_found: BOOLEAN): detachable TUPLE [begin_position, end_position: INTEGER; is_new: BOOLEAN]
 		local
 			class_as: CLASS_AS
 			match_list: LEAF_AS_LIST

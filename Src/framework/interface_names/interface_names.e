@@ -125,6 +125,7 @@ feature -- Button texts
 	b_Total_time: STRING_32						do Result := locale.translation("Total Time")	end
 	b_Up_text: STRING_32 						do Result := locale.translation("Up")	end
 	b_Update: STRING_32 							do Result := locale.translation("Update")	end
+	b_exit_and_clean_project: STRING_32			do Result := locale.translation("Exit and clean")	end
 	b_Clean_compile: STRING_32					do Result := locale.translation("Compile from scratch")	end
 	b_Compile: STRING_32							do Result := locale.translation("Compile")	end
 	b_Launch: STRING_32							do Result := locale.translation("Start")	end
@@ -524,7 +525,10 @@ feature -- Accelerator, focus label and menu name
 	f_composer_remove_feature: STRING_32		do Result := locale.translation("Remove Feature")	end
 	b_composer_remove_feature: STRING_32		do Result := locale.translation("Remove Feature")	end
 	f_composer_add_creator: STRING_32		do Result := locale.translation("Add Creation Procedure")	end
-	b_composer_add_creator: STRING_32		do Result := locale.translation("Add Creation")	end
+	b_composer_add_creator: STRING_32		do Result := locale.translation("Add Creation Procedure")	end
+	l_generate_creation_procedure_of_name: STRING_32		do Result := locale.translation("Generate a creation procedure of name")	end
+	l_that_sets_attributes: STRING_32		do Result := locale.translation("That sets attributes")	end
+
 
 	f_diagram_delete: STRING_32			do Result := locale.translation("Delete")	end
 	l_data: STRING_32					do Result := locale.translation("Data")	end
@@ -659,6 +663,12 @@ feature -- Accelerator, focus label and menu name
 	m_lock_docking_editor: STRING_32		do Result := locale.translation ("Lock the Editors") end
 	f_match_case_question: STRING_32		do Result := locale.translation("Match case?")	end
 	f_Melt: STRING_32					do Result := locale.translation("Compile current project")	end
+	h_exit_and_clean_project: STRING_32
+		do
+			Result := locale.translation("Exit and clean the current project? (i.e: remove the directory EIFGENs/$target/)%NDo you wish to continue?")
+		end
+	f_exit_and_clean_project: STRING_32					do Result := locale.translation("Exit and clean current project")	end
+	m_exit_and_clean_project: STRING_32		do Result := locale.translation("Exit and clean")	end
 	h_clean_compile: STRING_32
 		do
 			Result := locale.translation("Compile from scratch is not needed in ordinary work with EiffelStudio, and is only useful to enable EiffelStudio to recover from an internal error.%NCompile from scratch erases all compiler-generated information about your project.%NDo you wish to continue?")

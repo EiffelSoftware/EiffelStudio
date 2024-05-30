@@ -51,7 +51,7 @@ feature -- Element change
 
 feature -- Access
 
-	feature_i: detachable FEATURE_I;
+	feature_i: detachable FEATURE_I
 			-- The associated feature
 
 feature -- Main operation
@@ -82,12 +82,14 @@ feature -- Main operation
 							level_found := -1
 							class_modifier := modifier
 							process_class_as (a)
---							modifier.remove_ast_code (f_as, {ES_CLASS_TEXT_AST_MODIFIER}.Remove_white_space_trailing)
-						end
-						if modifier.ast_match_list.is_text_modified (r) then
-							modifier.replace_code (s.start_position, s.end_position, modifier.ast_match_list.text_32 (r))
-						end
 
+							if modifier.ast_match_list.is_text_modified (r) then
+								modifier.replace_code (s.start_position, s.end_position, modifier.ast_match_list.text_32 (r))
+							end
+							succeed := True
+						else
+							report_error ({STRING_32} "Feature %""+ fi.feature_name_32 + {STRING_32} "%" was not found")
+						end
 					end(ctm, l_feat_i)
 					, True, True
 				)

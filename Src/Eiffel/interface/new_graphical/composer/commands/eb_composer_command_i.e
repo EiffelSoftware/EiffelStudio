@@ -90,12 +90,12 @@ feature {NONE} -- Helpers
 
 	composer_shortcut (a_name: READABLE_STRING_8): detachable SHORTCUT_PREFERENCE
 		do
-			Result := preferences.editor_data.shortcuts.item (manager.preferences_prefix +  "then." + a_name)
+			Result := preferences.editor_data.shortcuts.item ({COMPOSER_MANAGER}.preferences_prefix +  "then." + a_name)
 		end
 
 	composer_custom_shortcut (a_name: READABLE_STRING_8; is_ctrl, is_alt, is_shift: BOOLEAN; key: READABLE_STRING_8): SHORTCUT_PREFERENCE
 		do
-			Result := preferences.editor_data.custom_shortcut (manager.preferences_prefix +  "then." + a_name, [is_alt, is_ctrl, is_shift, key])
+			Result := preferences.editor_data.custom_shortcut ({COMPOSER_MANAGER}.preferences_prefix +  "then." + a_name, [is_alt, is_ctrl, is_shift, key])
 		end
 
 	feature_stone: detachable FEATURE_STONE

@@ -27,11 +27,10 @@ feature {NONE} -- Initialization
 			l_shortcut: SHORTCUT_PREFERENCE
 			acc: ES_ACCELERATOR_AND_THEN_KEY
 		do
-
-			l_shortcut := preferences.editor_data.shortcuts.item (composer_manager.preferences_prefix + "*")
+			l_shortcut := preferences.editor_data.shortcuts.item ({COMPOSER_MANAGER}.preferences_prefix + "*")
 			if l_shortcut = Void then
 					-- Default
-				l_shortcut := preferences.editor_data.custom_shortcut (composer_manager.preferences_prefix + "*", [False, True, False, "e"])
+				l_shortcut := preferences.editor_data.custom_shortcut ({COMPOSER_MANAGER}.preferences_prefix + "*", [False, True, False, "e"])
 			end
 			create acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			accelerator := acc

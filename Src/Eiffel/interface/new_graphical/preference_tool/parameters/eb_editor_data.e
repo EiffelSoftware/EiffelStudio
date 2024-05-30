@@ -1301,6 +1301,21 @@ feature -- Keybord shortcuts Customization
 	completion_shortcut_toggle_remember_size: STRING = "toggle_remember_size"
 	completion_shortcut_next_completion_panel: STRING = "next_completion_panel"
 
+feature -- Custom shortcut
+
+	custom_shortcut (a_name: STRING_8; a_fallback_value: TUPLE [alt: BOOLEAN; ctrl: BOOLEAN; shift: BOOLEAN; key_string: READABLE_STRING_GENERAL]): SHORTCUT_PREFERENCE
+			-- Add custom shortcut associated with name `a_name`,
+		local
+			l_manager: EB_PREFERENCE_MANAGER
+		do
+			if attached shortcuts.item (a_name) as shcut then
+				Result := shcut
+			else
+				create l_manager.make (preferences, "shortcuts.editor.custom")
+				Result := l_manager.new_shortcut_preference_value (l_manager, a_name, a_fallback_value)
+				shortcuts [a_name] := Result
+			end
+		end
 
 invariant
 	preferences_not_void: preferences /= Void
@@ -1376,7 +1391,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -22,18 +22,7 @@ feature {ICOR_EXPORTER} -- Access
 
 	initialize
 		do
-			print (generator + ".initialize (" + item.out + ")%N")
-			printf_pointer (item)
 			last_call_success := cpp_initialize (item)
-		end
-
-	printf_pointer (p: POINTER)
-		external
-			"C++ inline"
-		alias
-			"[
-				printf("pointer=%p", (void*)$p);
-			]"
 		end
 
 	terminate
@@ -56,61 +45,6 @@ feature {ICOR_EXPORTER} -- Access
  			retried := True
  			retry
 		end
-
---	create_process (a_command_line: READABLE_STRING_GENERAL; a_working_directory: PATH; a_ns_env: detachable NATIVE_STRING): POINTER
---			-- Pointer on the freshly creared ICorDebugProcess
---		require
---			not_empty_command_line: a_command_line /= Void and then not a_command_line.is_empty
---			not_empty_working_directory: a_working_directory /= Void and then not a_working_directory.is_empty
---		local
-----			icordebug_process: POINTER
-----			l_hr: INTEGER
-----			create_flags: INTEGER
-----			p_cmd,
-----			p_cwd,
-----			p_env: POINTER
-----			h: like last_icor_debug_process_handle
---		do
-----			create process_info.make
-
-----				--| Flags
-----			create_flags := create_flags | cwin_create_new_console
-------			create_flags := create_flags | cwin_debug_only_this_process
-
-----				--| Parameters
-----			p_cmd := (create {CLI_STRING}.make (a_command_line)).item
-----			p_cwd := (create {CLI_STRING}.make (a_working_directory.name)).item
-----			if a_ns_env /= Void and then not a_ns_env.is_empty then
-----				create_flags := create_flags | cwin_create_unicode_environment
-----				p_env := a_ns_env.item
-----			end
-
-----				--| Call
-----			last_call_success := cpp_createprocess (item,
-----										Default_pointer,
-----										p_cmd,
-----										Default_pointer,
-----										Default_pointer,
-----										(True).to_integer,
-----										create_flags,
-----										p_env,
-----										p_cwd,
-----										startup_info.item,
-----										process_info.item,
-----										cwin_debug_no_specials_options,
-----										$icordebug_process
-----									)
-----			if last_call_succeed then
-----				last_icor_debug_process_id := process_info.process_id
-
-----				Result := icordebug_process
-----				l_hr := {ICOR_DEBUG_PROCESS}.cpp_get_handle (icordebug_process, $h)
-----				last_icor_debug_process_handle := h
-----			else
-----				last_icor_debug_process_id     := 0
-----				last_icor_debug_process_handle := default_pointer
-----			end
---		end
 
 	debug_active_process (p_id: INTEGER; win32_attach: BOOLEAN): ICOR_DEBUG_PROCESS
 			-- Debug process indentified by `p_id' and return the Process object.
@@ -201,88 +135,42 @@ feature {NONE} -- Implementation
 	cpp_initialize (obj: POINTER): INTEGER
 			-- Call `ICorDebug->Initialize'.
 		external
-			"[
-				C++ ICorDebug signature 
-					(): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"Initialize"
+			"((ICorDebug*)$obj)->Initialize()"
 		ensure
 			is_class: class
 		end
 
---	cpp_createprocess (obj: POINTER;
---						a_name, a_cmdline, a_sec_process_attrib, a_sec_thread_attrib: POINTER;
---						a_inherit_handle: INTEGER;
---						a_flag: INTEGER;
---						a_environnement, a_directory, a_startup_info, a_process_info: POINTER;
---					 	a_cordebug_createprocess_flags: INTEGER;
---						icordebugprocess: TYPED_POINTER [POINTER]
---						): INTEGER
---			-- Call `ICorDebug->CreateProcess'.
---		external
---			"[
---				C++ ICorDebug signature
---					(LPCWSTR, LPWSTR, LPSECURITY_ATTRIBUTES, LPSECURITY_ATTRIBUTES,
---					BOOL, DWORD, PVOID, LPCWSTR, LPSTARTUPINFOW, LPPROCESS_INFORMATION,
---					CorDebugCreateProcessFlags, ICorDebugProcess**): EIF_INTEGER
---				use "cli_debugger_headers.h"
---			]"
---		alias
---			"CreateProcess"
---		ensure
---			is_class: class
---		end
-
 	cpp_terminate (obj: POINTER): INTEGER
 			-- Call `ICorDebug->Terminate'.
 		external
-			"[
-				C++ ICorDebug signature(): EIF_INTEGER
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"Terminate"
+			"((ICorDebug*)$obj)->Terminate()"
 		ensure
 			is_class: class
 		end
 
 	cpp_set_managed_handler (obj: POINTER; a_icordebug_managed_callback: POINTER): INTEGER
 		external
-			"[
-				C++ ICorDebug signature(ICorDebugManagedCallback*): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"SetManagedHandler"
+			"((ICorDebug*)$obj)->SetManagedHandler((ICorDebugManagedCallback*)$a_icordebug_managed_callback)"
 		ensure
 			is_class: class
 		end
 
 	cpp_set_unmanaged_handler (obj: POINTER; a_icordebug_unmanaged_callback: POINTER): INTEGER
 		external
-			"[
-				C++ ICorDebug signature(ICorDebugUnmanagedCallback*): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"SetUnmanagedHandler"
+			"((ICorDebug*)$obj)->SetUnmanagedHandler((ICorDebugUnmanagedCallback*)$a_icordebug_unmanaged_callback)"
 		ensure
 			is_class: class
 		end
 
 	cpp_get_debug_active_process (obj: POINTER; a_process_id: INTEGER; b: BOOLEAN; a_p_process: TYPED_POINTER [POINTER]): INTEGER
---		external
---			"[
---				C++ ICorDebug signature(DWORD, BOOL, ICorDebugProcess**): EIF_INTEGER
---				use "cli_debugger_headers.h"
---			]"
---		alias
---			"GetDebugActiveProcess"
---		ensure
---			is_class: class
---		end
 		external
 			"C++ inline use %"cli_debugger_headers.h%""
 		alias
@@ -291,40 +179,30 @@ feature {NONE} -- Implementation
 
 	cpp_get_process (obj: POINTER; a_process_id: INTEGER; a_p_process: TYPED_POINTER [POINTER]): INTEGER
 		external
-			"[
-				C++ ICorDebug signature(DWORD, ICorDebugProcess**): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"GetProcess"
+			"((ICorDebug*)$obj)->GetProcess((DWORD)$a_process_id, (ICorDebugProcess**) $a_p_process)"
 		ensure
 			is_class: class
 		end
 
 	cpp_can_launch_or_attach (obj: POINTER; a_process_id: INTEGER; a_win32_debugging_enabled: BOOLEAN): INTEGER
 		external
-			"[
-				C++ ICorDebug signature(DWORD, BOOL): EIF_INTEGER
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"CanLaunchOrAttach"
+			"((ICorDebug*)$obj)->CanLaunchOrAttach((DWORD)$a_process_id, (BOOL) $a_win32_debugging_enabled)"
 		ensure
 			is_class: class
 		end
-
 
 feature {NONE} -- Implementation
 
 	cpp_debug_active_process (obj: POINTER; p_id: INTEGER; win32_attach: INTEGER; icordebugprocess: TYPED_POINTER [POINTER]): INTEGER
 			-- Call `ICorDebug->DebugActiveProcess'.
 		external
-			"[
-				C++ ICorDebug signature(DWORD, BOOL, ICorDebugProcess**): EIF_INTEGER
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"DebugActiveProcess"
+			"((ICorDebug*)$obj)->DebugActiveProcess((DWORD)$p_id, (BOOL) $win32_attach, (ICorDebugProcess**) $icordebugprocess)"
 		ensure
 			is_class: class
 		end
@@ -344,18 +222,6 @@ feature {NONE} -- Implementation routines
 
 	last_icd_unmanaged_callback: detachable ICOR_DEBUG_UNMANAGED_CALLBACK
 		-- Last ICorDebugUnmanagedCallback associated with Current
-
---	process_info: detachable WEL_PROCESS_INFO
---			-- Process information
-
---	startup_info: WEL_STARTUP_INFO
---			-- Process startup information
---		do
---			create Result.make
---			Result.initialize
---		ensure
---			Result_attached: Result /= Void
---		end
 
 	cwin_create_new_console: INTEGER
 			-- SDK CREATE_NEW_CONSOLE constant

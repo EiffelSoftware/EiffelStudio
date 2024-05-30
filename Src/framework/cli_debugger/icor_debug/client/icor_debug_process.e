@@ -80,51 +80,38 @@ feature {NONE} -- Implementation
 
 	cpp_get_id (obj: POINTER; a_p_id: TYPED_POINTER [INTEGER]): INTEGER
 		external
-			"[
-				C++ ICorDebugProcess signature(DWORD*): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"GetID"
+			"((ICorDebugProcess*)$obj)->GetID((DWORD*)$a_p_id)"
 		ensure
 			is_class: class
 		end
 
 	cpp_get_thread (obj: POINTER; a_thread_id: INTEGER; a_p_thread: TYPED_POINTER [POINTER]): INTEGER
 		external
-			"[
-				C++ ICorDebugProcess signature(DWORD, ICorDebugThread**): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"GetThread"
+			"((ICorDebugProcess*)$obj)->GetThread((DWORD)$a_thread_id, (ICorDebugThread**) $a_p_thread)"
 		ensure
 			is_class: class
 		end
 
 	cpp_enumerate_app_domains (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
-			"[
-				C++ ICorDebugProcess signature(ICorDebugAppDomainEnum **): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"EnumerateAppDomains"
+			"((ICorDebugProcess*)$obj)->EnumerateAppDomains((ICorDebugAppDomainEnum**)$a_p)"
 		ensure
 			is_class: class
 		end
 
 	cpp_get_helper_thread_id (obj: POINTER; a_p_id: TYPED_POINTER [INTEGER]): INTEGER
 		external
-			"[
-				C++ ICorDebugProcess signature(DWORD*): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"GetHelperThreadID"
+			"((ICorDebugProcess*)$obj)->GetHelperThreadID((DWORD*)$a_p_id)"
 		ensure
 			is_class: class
 		end
-
 
 end

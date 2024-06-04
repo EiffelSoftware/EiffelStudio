@@ -340,24 +340,34 @@ feature -- Generation
 
 					-- Copy precompiled assemblies.
 				if
-					Workbench.Precompilation_directories /= Void and then
-					not Workbench.Precompilation_directories.is_empty
+					attached Workbench.Precompilation_directories as l_pre_directories and then
+					not l_pre_directories.is_empty
 				then
 					from
-						Workbench.Precompilation_directories.start
+						l_pre_directories.start
 						project_location.create_local_assemblies_directory (is_finalizing)
 						l_has_local := True
 					until
-						Workbench.Precompilation_directories.after
+						l_pre_directories.after
 					loop
-						l_precomp := Workbench.Precompilation_directories.item_for_iteration
+						l_precomp := l_pre_directories.item_for_iteration
 							-- Copy assembly file
 							-- Copy associated libXXX.dll file if any.
-						l_use_optimized_precomp := l_precomp.is_precompile_finalized and system.msil_use_optimized_precompile
+
+							-- Detect if precompiled files should be copied from W_code or F_code .
+						l_use_optimized_precomp := l_precomp.is_precompile_finalized		-- Finalized mode
+												and system.msil_use_optimized_precompile	-- or use optimized precompile
+
 						if system.msil_use_optimized_precompile and not l_precomp.is_precompile_finalized then
-								-- generate warning informing them they is no ompitzed precompiled library
+								-- generate warning informing them they is no optimized precompiled library
 							create l_viop.make (l_precomp.name)
 							error_handler.insert_warning (l_viop, universe.target.options.is_warning_as_error)
+						end
+
+						if l_precomp.is_precompile_finalized and system.is_il_netcore then
+								-- FIXME: for now, using precompiled workbench seems to cause troubles, 
+								-- so let's use F_code
+							l_use_optimized_precomp := True
 						end
 
 						l_assembly_references.force ([l_precomp.system_name, Void])
@@ -367,7 +377,7 @@ feature -- Generation
 							copy_to_local (l_precomp.assembly_debug_info (l_use_optimized_precomp), l_assembly_location, Void, is_debug_enabled)
 						end
 
-						Workbench.Precompilation_directories.forth
+						l_pre_directories.forth
 					end
 				end
 

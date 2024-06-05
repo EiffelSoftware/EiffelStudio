@@ -180,7 +180,7 @@ feature -- Loading
 								elseif lace.is_precompilation_needed then
 									ask_compile_precompile (lace.precompile)
 									if is_user_wants_precompile then
-										compile_precompile (lace.precompile)
+										compile_precompile (lace.precompile, lace.target)
 										if is_precompilation_error then
 											report_precompilation_error
 										end
@@ -704,16 +704,15 @@ feature {NONE} -- Settings
 		deferred
 		end
 
-	compile_precompile (a_precompile: CONF_PRECOMPILE)
+	compile_precompile (a_precompile: CONF_PRECOMPILE; a_target: CONF_TARGET)
 			-- Generate the precompile `a_precompile'.
 		require
 			a_precompile_not_void: a_precompile /= Void
+			a_target_set: a_target /= Void
 		local
 			l_path: STRING_32
-			l_target: CONF_TARGET
 			l_args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 		do
-			l_target := a_precompile.target
 			create l_args.make (10)
 			across compiler_profile.command_line_list as c loop
 				l_args.extend (c.item)
@@ -724,11 +723,11 @@ feature {NONE} -- Settings
 			l_args.extend ("-clean")
 			l_args.extend ("-c_compile")
 			l_args.extend ("-batch")
-			if l_target.setting_msil_generation then
+			if a_target.setting_msil_generation then
 				l_args.extend ("-finalize")
 				l_path := overridden_metadata_cache_path
 				if l_path = Void then
-					l_path := l_target.setting_metadata_cache_path
+					l_path := a_target.setting_metadata_cache_path
 				end
 				if l_path /= Void and then not l_path.is_empty then
 					l_args.extend ("-metadata_cache_path")
@@ -1190,7 +1189,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

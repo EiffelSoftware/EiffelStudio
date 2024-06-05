@@ -17,7 +17,15 @@ feature -- Settings
 
 	is_debug_enabled: BOOLEAN
 		do
-			Result := True
+			if
+				attached {EXECUTION_ENVIRONMENT}.item ({IL_ENVIRONMENT}.ise_il_emitter_debug_env) as v and then
+				v.is_case_insensitive_equal ("no")
+			then
+					-- TODO: remove later, for now, to debug
+				Result := False
+			else
+				Result := True
+			end
 		end
 
 	is_signing_enabled: BOOLEAN
@@ -50,7 +58,9 @@ feature -- Setup
 	setup_cil_code_generation (a_clr_runtime_version: READABLE_STRING_GENERAL)
 			-- Setup CIL code generation underlying services for the runtime `a_clr_runtime_version`.
 		do
-			if not is_using_il_emitter then
+			if is_using_il_emitter then
+					-- Nothing special to do
+			else
 					-- using the COM interface on Windows
 				if attached (create {CLR_HOST_FACTORY}).runtime_host (a_clr_runtime_version) as l_host then
 						-- CLR Host initialized for `a_clr_runtime_version`

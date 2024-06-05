@@ -37,7 +37,14 @@ feature -- Access / Environment names
 
 	ise_dotnet_version_env: STRING = "ISE_DOTNET_VERSION"
 			-- .NETCore runtime precise version environment variable
-			-- (Only for NETCore)		
+			-- (Only for NETCore)	
+
+feature -- Additional internal variables
+
+	ise_il_emitter_debug_env: STRING = "ISE_IL_EMITTER_DEBUG"
+			-- Variable used to disable PDB file generation for .NETCore
+			--   value: "no" to disable
+			-- (Only for NETCore)	
 
 feature -- Access
 
@@ -243,7 +250,7 @@ invariant
 	version_valid: is_valid_version (version)
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

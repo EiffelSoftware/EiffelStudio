@@ -170,8 +170,7 @@ feature {NONE} -- Implementation
 							l_string.append (shortcut_delimiter)
 						end
 						if a_key.is_alpha then
-							l_key := a_key.text.twin
-							l_key.to_upper
+							l_key := a_key.text.as_upper
 							l_string.append (l_key)
 						else
 							l_string.append (a_key.text)
@@ -260,7 +259,7 @@ invariant
 	preference_attached: preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

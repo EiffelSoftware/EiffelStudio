@@ -140,7 +140,7 @@ feature -- Definition
 		local
 			j, n: INTEGER_32
 		do
---			debug ("il_emitter_dbg")
+			debug ("il_emitter_dbg")
 				print (generator + ".define_sequence_points (doc, " + count.out + ", ")
 				if count > 0 then
 					j := 0
@@ -180,7 +180,7 @@ feature -- Definition
 					print (",,,,,")
 				end
 				print (")%N")
---			end;
+			end;
 
 			document.define_sequence_points (count, offsets, start_lines,
 			start_columns, end_lines, end_columns)

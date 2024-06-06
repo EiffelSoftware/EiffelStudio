@@ -669,12 +669,22 @@ feature {NONE} -- Handle keystrokes
 				basic_cursor_move (agent l_cursor.go_right_word)
 
 			when Key_up then
-					-- Up arrow action
-				basic_cursor_move (agent l_cursor.go_up_line)
+				if not (ev_application.shift_pressed or ev_application.alt_pressed) then
+						-- Scroll one line up for Ctrl+up
+					set_first_line_displayed ((first_line_displayed - 1).max (1), True)
+				else
+						-- Up arrow action
+					basic_cursor_move (agent l_cursor.go_up_line)
+				end
 
 			when Key_down then
-					-- Down arrow action
-				basic_cursor_move (agent l_cursor.go_down_line)
+				if not (ev_application.shift_pressed or ev_application.alt_pressed) then
+						-- Scroll one line down for Ctrl+down
+					set_first_line_displayed ((first_line_displayed + 1).max (1), True)
+				else
+						-- Down arrow action
+					basic_cursor_move (agent l_cursor.go_down_line)
+				end
 
 			when Key_home then
 				set_first_line_displayed (1, True)
@@ -1528,7 +1538,7 @@ invariant
 	stored_first_line_not_negative: stored_first_line >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

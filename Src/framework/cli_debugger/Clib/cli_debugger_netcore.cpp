@@ -59,6 +59,13 @@ rt_public EIF_INTEGER initialize_debug_session (LPWSTR a_command_line, LPVOID a_
 #ifdef DBGTRACE_ENABLED
 	trace_init();
 #endif
+	/* Reset */
+	m_unregister_token = NULL;
+	m_pCordb = NULL;
+	m_iCorDebug = NULL;
+	m_pCordb_set = false;
+
+	/* Init */
 
 	dbg_startup_cb_obj = eif_adopt (cb_obj);
 	dbg_startup_cb_fct = cb_fct;

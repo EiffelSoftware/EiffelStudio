@@ -295,6 +295,11 @@
 	<PREF NAME="recent_projects.last_opened_projects" DESCRIPTION="List of recently opened projects."><LIST></LIST></PREF>
 	<PREF NAME="recent_projects.keep_n_projects" DESCRIPTION="Number of recent projects to keep in the list."><INTEGER>10</INTEGER></PREF>
 	
+	<PREF NAME="editor.composer.*" DESCRIPTION="Trigger the composer commands selection (followed by a composer.then. shortcut." RESTART="True"><SHORTCUT Ctrl="True" Shift="True">E</SHORTCUT></PREF>
+	<PREF NAME="editor.composer.then.add_creator" DESCRIPTION="Trigger the composer Add Creation Procedure command." RESTART="True"><SHORTCUT Ctrl="True">C</SHORTCUT></PREF>
+	<PREF NAME="editor.composer.then.add_setter" DESCRIPTION="Trigger the composer Add Attribute Setter Procedure command." RESTART="True"><SHORTCUT Ctrl="True">S</SHORTCUT></PREF>
+	<PREF NAME="editor.composer.then.remove_feature" DESCRIPTION="Trigger the composer Remove Current Feature command." RESTART="True"><SHORTCUT Ctrl="True">X</SHORTCUT></PREF>
+
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_1" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_2" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_3" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>

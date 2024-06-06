@@ -169,6 +169,8 @@ feature -- Initialization
 		end
 
 	build_cli_debugger (a_is_netcore: BOOLEAN)
+		require
+			cli_debugger = Void
 		do
 			if a_is_netcore then
 				is_netcore_debugging := True

@@ -106,6 +106,16 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
+	set_last_icor_debug_process_id (pid: like last_icor_debug_process_id)
+		do
+			last_icor_debug_process_id := pid
+		end
+
+	set_last_icor_debug_process_handle (h: like last_icor_debug_process_handle)
+		do
+			last_icor_debug_process_handle := h
+		end
+
 feature -- Disposable
 
 	dispose
@@ -121,8 +131,11 @@ feature {ICOR_EXPORTER} -- Access
 		local
 --			l_hr: INTEGER
 		do
-			-- FIXME: find portable solution
+			last_call_success := 0
+			last_icor_debug_process_id := 0
+			last_icor_debug_process_handle := default_pointer
 
+				-- FIXME: find portable solution
 --			if process_info /= Void then
 --				l_hr := cwin_close_handle (process_info.process_handle)
 --				l_hr := cwin_close_handle (process_info.thread_handle)
@@ -209,10 +222,10 @@ feature {NONE} -- Implementation
 
 feature -- ICorDebugProcess handle
 
-	last_icor_debug_process_handle: POINTER
+	last_icor_debug_process_handle: POINTER assign set_last_icor_debug_process_handle
 			-- Handle on the process debugged
 
-	last_icor_debug_process_id: INTEGER
+	last_icor_debug_process_id: INTEGER assign set_last_icor_debug_process_id
 			-- Process ID of the created process
 
 feature {NONE} -- Implementation routines

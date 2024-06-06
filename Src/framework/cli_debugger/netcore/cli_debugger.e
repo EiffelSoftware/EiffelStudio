@@ -30,7 +30,7 @@ feature -- Status
 
 	is_debugging: BOOLEAN
 		do
-			Result := True
+			Result := True -- icor_debug will be created later by `create_process`
 		end
 
 	last_call_success: INTEGER
@@ -59,7 +59,7 @@ feature {ICOR_EXPORTER} -- Access
 			if attached icor_debug as dbg then
 				Result := dbg.last_icor_debug_process_handle
 			end
-		end	
+		end
 
 feature -- Change
 
@@ -70,8 +70,8 @@ feature -- Change
 			c_env: POINTER
 			c_cwd: NATIVE_STRING
 			l_pid: INTEGER
-			n: INTEGER
-			p: POINTER
+			n, hr: INTEGER
+			p,proc_h: POINTER
 			l_icor_debug: ICOR_DEBUG
 		do
 			icor_debug := Void
@@ -94,6 +94,7 @@ feature -- Change
 				if not p.is_default_pointer then
 					create l_icor_debug.make_by_pointer (p)
 					icor_debug := l_icor_debug
+					l_icor_debug.last_icor_debug_process_id := l_pid
 				end
 				n := n -1
 			end
@@ -111,6 +112,12 @@ feature -- Change
 					l_icor_debug.set_unmanaged_handler (l_unmanaged_cb)
 				end
 				Result := l_icor_debug.get_debug_active_process_pointer (l_pid)
+				if not Result.is_default_pointer then
+					hr := {ICOR_DEBUG_PROCESS}.cpp_get_handle (Result, $proc_h)
+				else
+					check has_active_process: False end
+				end
+				l_icor_debug.last_icor_debug_process_handle := proc_h
 			else
 				last_call_success := -1
 			end

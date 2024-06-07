@@ -18,6 +18,8 @@ rt_public EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** icd)
 	trace_init();
 #endif
 
+	set_is_netcore_debugging(FALSE);
+
 	rt_private FARPROC create_debug_address;
 	HMODULE mscoree_module;
 

@@ -16,32 +16,60 @@ rt_private EIF_POINTER dbg_startup_cb_fct;
 /* dbgshim    */
 
 rt_private PVOID m_unregister_token;
-rt_private IUnknown *m_pCordb;
-rt_private ICorDebug *m_iCorDebug;
+rt_private IUnknown* m_pCordb;
+rt_private ICorDebug* m_iCorDebug;
+rt_private DWORD m_process_id;
 rt_private bool m_pCordb_set;
 
 rt_private HRESULT unregister_for_runtime_startup (PVOID a_token);
 
-rt_public void* get_icor_debug()
+rt_public ICorDebug* get_icor_debug()
 {
 	if (m_iCorDebug) {
 		return m_iCorDebug;
 	} else {
-		return (void*) 0;
+		return (ICorDebug*) 0;
 	}
+}
+
+rt_public void on_netcore_create_process_callback()
+{
+	/* Disabled for now, as useless */
+	/*
+	ICorDebugProcess* p_icdproc;
+	HRESULT ret;
+	if (m_iCorDebug) {
+		DBGTRACE("[DEBUGGER] on_netcore_create_process_callback (pCordb, ..) -> iCorDebug");
+    	ret = ((ICorDebug*)m_iCorDebug)->GetProcess((DWORD) m_process_id, (ICorDebugProcess**) &p_icdproc);
+    	if (ret == S_OK) {
+			DBGTRACE_HR("[DEBUGGER] on_netcore_create_process_callback (pCordb, ..) GetProcess -> OK, try to STOP ... ret=", ret);
+    		ret = ((ICorDebugProcess*)p_icdproc)->Stop((DWORD) 0);
+			DBGTRACE_HR("[DEBUGGER] on_netcore_create_process_callback (pCordb, ..) GetProcess.Stop(..) -> ", ret);
+    	} else {
+			DBGTRACE("[DEBUGGER] on_netcore_create_process_callback (pCordb, ..) GetProcess -> BAD");
+		}
+	} else {
+		DBGTRACE("[DEBUGGER] on_netcore_create_process_callback (pCordb, ..) -> NO iCorDebug!");
+	}
+	*/
 }
 
 rt_private void StartupCallback(IUnknown *pCordb, PVOID parameter, HRESULT hr)
 {
+	PDWORD ppid = (PDWORD) parameter;
 	if (pCordb) {
+		DBGTRACE_DWORD("[DEBUGGER] StartupCallback (pCordb, pid, ..) pid=", *ppid);
 		m_pCordb = pCordb;
 		m_pCordb_set = true;
 		pCordb->QueryInterface(IID_ICorDebug, (void **)&m_iCorDebug);
+		/* FIXME jfiat [2024/06/07] : give some time for the debugger to stop the execution if needed (step, breakpoint, ...) */
+		Sleep(1000);
 	} else {
-		m_pCordb = (ICorDebug* )0;
+		DBGTRACE("[DEBUGGER] StartupCallback (NULL, ..)");
+		m_pCordb = (IUnknown*) 0;
+		m_iCorDebug = (ICorDebug*) 0;
 		m_pCordb_set = false;
 	}
-
 	if (m_unregister_token) {
 		HRESULT l_hr;
 		l_hr = unregister_for_runtime_startup(m_unregister_token);
@@ -49,6 +77,7 @@ rt_private void StartupCallback(IUnknown *pCordb, PVOID parameter, HRESULT hr)
 	} else {
 		DBGTRACE("[DEBUGGER] StartupCallback... no m_unregister_token !");
 	}
+	DBGTRACE("[DEBUGGER] StartupCallback... exit");
 }
 
 rt_public EIF_INTEGER initialize_debug_session (LPWSTR a_command_line, LPVOID a_env, LPCWSTR a_curr_dir, PDWORD p_proc_id, EIF_OBJECT cb_obj, EIF_POINTER cb_fct)
@@ -61,11 +90,13 @@ rt_public EIF_INTEGER initialize_debug_session (LPWSTR a_command_line, LPVOID a_
 #endif
 	/* Reset */
 	m_unregister_token = NULL;
-	m_pCordb = NULL;
-	m_iCorDebug = NULL;
+	m_pCordb = (IUnknown*) NULL;
+	m_iCorDebug = (ICorDebug*) NULL;
+	m_process_id = 0;
 	m_pCordb_set = false;
 
 	/* Init */
+	set_is_netcore_debugging(TRUE);
 
 	dbg_startup_cb_obj = eif_adopt (cb_obj);
 	dbg_startup_cb_fct = cb_fct;
@@ -89,9 +120,11 @@ rt_public EIF_INTEGER initialize_debug_session (LPWSTR a_command_line, LPVOID a_
 			DBGTRACE_HR("[DEBUGGER] CreateProcessForLaunch(..) : hr=", hr);
 			DBGTRACE_HR("[DEBUGGER]  -> Process ID(..) : pid=", *p_proc_id);
 
+			m_process_id = *p_proc_id;
+
 			rt_private FARPROC register_for_runtime_startup_address = GetProcAddress (dbgshim_module, "RegisterForRuntimeStartup");
 			if (register_for_runtime_startup_address) {
-				PVOID parameter=0;
+				PVOID parameter=p_proc_id;
 				m_unregister_token = (PVOID) 0;
 				hr = (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (DWORD, PSTARTUP_CALLBACK, PVOID, PVOID*)) register_for_runtime_startup_address)(
 							*p_proc_id,
@@ -99,10 +132,19 @@ rt_public EIF_INTEGER initialize_debug_session (LPWSTR a_command_line, LPVOID a_
 							parameter,
 							&m_unregister_token
 						);
+
 				rt_private FARPROC resume_process_address = GetProcAddress (dbgshim_module, "ResumeProcess");
 				if (resume_process_address) {
 					hr = (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (HANDLE)) resume_process_address)(resume_handle);
 					DBGTRACE_HR("[DEBUGGER] ResumeProcess(..) : hr = ", hr);
+
+					rt_private FARPROC close_resume_handle_address = GetProcAddress (dbgshim_module, "CloseResumeHandle");
+					if (close_resume_handle_address) {
+						hr = (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (HANDLE)) close_resume_handle_address)(resume_handle);
+						DBGTRACE_HR("[DEBUGGER] CloseResumeHandle(..) : hr = ", hr);
+					} else {
+						DBGTRACE("[DEBUGGER] Not Found: CloseResumeHandle");
+					}
 				} else {
 					DBGTRACE("[DEBUGGER] Not Found: ResumeProcess");
 				}
@@ -114,6 +156,7 @@ rt_public EIF_INTEGER initialize_debug_session (LPWSTR a_command_line, LPVOID a_
 		}
 
 		CHECKHR ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), hr, "Could not CreateProcessForLaunch");
+		
 	} else {
 		CHECK (((dbgshim_module != NULL) ? 0 : 1), "Could not load dbgshim.dll");
 		hr = -1;

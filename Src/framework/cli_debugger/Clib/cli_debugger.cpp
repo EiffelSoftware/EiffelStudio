@@ -1,5 +1,6 @@
 
 #include "cli_debugger.h"
+#include "cli_debugger_netcore.h"
 
 #ifdef _cplusplus
 extern "C" {
@@ -381,7 +382,7 @@ rt_private time_t dbgEval_start_time_t;
 rt_private void dbg_set_eval_start_time () {
 	DBGTRACE("[ES::Eval] START eval timeout");
 	dbgEval_start_time_t=time(NULL);
-	DBGTRACE_DWORD("[ES::Eval] start timeout =", dbgEval_start_time_t);
+	DBGTRACE_DWORD("[ES::Eval] start timeout =", (DWORD) dbgEval_start_time_t);
 }
 rt_private BOOL dbg_check_eval_timeout (EIF_INTEGER timeout) {
 	time_t delay;
@@ -556,6 +557,9 @@ rt_public void dbg_begin_callback (Callback_ids callback_id) {
 	while (LOCKED_DBG_STATE_IS_EQUAL (4)) {
 		/* <4> Wait for ec to finish */
 		if (callback_id == CB_CREATE_PROCESS) {
+			if (is_netcore_debugging()) {
+				on_netcore_create_process_callback();
+			}
 			/* Special case here to let EiffelStudio debugger to have time
 			 * to refresh itself before starting debugging. */
 			Sleep (100);
@@ -585,6 +589,9 @@ rt_public void dbg_begin_callback (Callback_ids callback_id) {
 		while (LOCKED_DBG_STATE_IS_EQUAL (1)) {
 			/* <1> Wait for ec to finish */
 			if (callback_id == CB_CREATE_PROCESS) {
+				if (is_netcore_debugging()) {
+					on_netcore_create_process_callback();
+				}
 				/* Special case here to let EiffelStudio debugger to have time
 				 * to refresh itself before starting debugging. */
 				Sleep (100);

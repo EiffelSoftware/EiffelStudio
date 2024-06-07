@@ -7,6 +7,15 @@
 extern "C" {
 #endif
 
+/* Debugging info */
+rt_private BOOL m_dbg_is_netcore = FALSE;
+rt_public BOOL is_netcore_debugging() {
+	return m_dbg_is_netcore;
+};
+rt_public void set_is_netcore_debugging(BOOL v) {
+	m_dbg_is_netcore = v;
+}
+
 /*
 //////////////////////////////////////////////////
 /// Tracing debug output                       ///

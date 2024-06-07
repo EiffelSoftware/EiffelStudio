@@ -7,6 +7,9 @@
 extern "C" {
 #endif
 
+extern BOOL is_netcore_debugging();
+extern void set_is_netcore_debugging(BOOL v);
+
 /* Do not compile with assertions, by default. */
 #ifdef ISE_USE_ASSERT
 #define EIF_ASSERTIONS

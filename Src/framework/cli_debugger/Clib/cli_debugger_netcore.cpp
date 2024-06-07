@@ -56,7 +56,9 @@ rt_public void on_netcore_create_process_callback()
 
 rt_private void StartupCallback(IUnknown *pCordb, PVOID parameter, HRESULT hr)
 {
+#ifdef DBGTRACE_ENABLED
 	PDWORD ppid = (PDWORD) parameter;
+#endif
 	if (pCordb) {
 		DBGTRACE_DWORD("[DEBUGGER] StartupCallback (pCordb, pid, ..) pid=", *ppid);
 		m_pCordb = pCordb;

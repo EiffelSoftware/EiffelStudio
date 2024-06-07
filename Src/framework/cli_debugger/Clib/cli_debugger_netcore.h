@@ -16,7 +16,8 @@ extern "C" {
 #endif
 
 extern EIF_INTEGER initialize_debug_session (LPWSTR a_command_line, LPVOID a_env, LPCWSTR a_curr_dir, PDWORD a_proc_id, EIF_OBJECT cb_obj, EIF_POINTER cb_fct);
-rt_public void on_netcore_create_process_callback();
+extern ICorDebug* get_icor_debug();
+extern void on_netcore_create_process_callback();
 
 #ifdef __cplusplus
 }

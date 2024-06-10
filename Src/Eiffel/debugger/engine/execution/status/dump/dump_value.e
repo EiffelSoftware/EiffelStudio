@@ -899,7 +899,9 @@ feature -- Access
 					l_generating_type_string := dynamic_class.external_class_name
 				elseif dynamic_class.is_generic or dynamic_class.is_tuple then
 					if generating_type_evaluation_enabled then
-						l_generating_type_string := generating_type_evaluated_string
+						if attached generating_type_evaluated_string as gt then
+							l_generating_type_string := gt.to_string_32
+						end
 					end
 				elseif type = type_bits then
 					l_generating_type_string := as_dump_value_basic.type_of_bits

@@ -129,6 +129,52 @@ feature -- Enumerating collections
 			end
 		end
 
+	enum_fields_for_agent (a_enum_hdl: POINTER; a_typedef: NATURAL_32; a_max_count: INTEGER): detachable ARRAY [NATURAL_32]
+			-- Enumerates all fields defined on a specified TypeDef.
+			-- The tokens are returned in the same order as originally emitted into metadata.
+			-- If you specify cl as nil, the method will enumerate all the global
+			-- static data members defined in the current scope.
+		local
+			l_md_size: INTEGER
+			l_mp_tokens: MANAGED_POINTER
+			l_count: INTEGER
+		do
+			l_md_size := sizeof_mdFieldDef
+			create l_mp_tokens.make (a_max_count * l_md_size)
+
+			set_last_call_success (cpp_enum_fields_for_agent (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count))
+
+			if
+				(last_call_success = 0 or last_call_success = 1 )
+				and then l_count > 0
+			then
+				Result := array_of_mdtoken_from (l_mp_tokens, l_md_size, l_count)
+			end
+		end
+
+	enum_properties_for_agent (a_enum_hdl: POINTER; a_typedef: NATURAL_32; a_max_count: INTEGER): detachable ARRAY [NATURAL_32]
+			-- Enumerates all properties defined on a specified TypeDef.
+			-- The tokens are returned in the same order as originally emitted into metadata.
+			-- If you specify cl as nil, the method will enumerate all the global
+			-- static data members defined in the current scope.
+		local
+			l_md_size: INTEGER
+			l_mp_tokens: MANAGED_POINTER
+			l_count: INTEGER
+		do
+			l_md_size := sizeof_mdProperty
+			create l_mp_tokens.make (a_max_count * l_md_size)
+
+			set_last_call_success (cpp_enum_properties_for_agent (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count))
+
+			if
+				(last_call_success = 0 or last_call_success = 1 )
+				and then l_count > 0
+			then
+				Result := array_of_mdtoken_from (l_mp_tokens, l_md_size, l_count)
+			end
+		end
+
 	enum_fields (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): detachable ARRAY [NATURAL_32]
 			-- Enumerates all fields defined on a specified TypeDef.
 			-- The tokens are returned in the same order as originally emitted into metadata.
@@ -420,18 +466,18 @@ feature -- Queries
 		require
 			a_class_token > 0
 		do
-			Result := enum_tokens (a_class_token, agent enum_fields)
+			Result := enum_tokens (a_class_token, agent enum_fields_for_agent)
 		end
 
 	property_tokens (a_class_token: NATURAL_32): detachable ARRAYED_LIST [NATURAL_32]
 		require
 			a_class_token > 0
 		do
-			Result := enum_tokens (a_class_token, agent enum_properties)
+			Result := enum_tokens (a_class_token, agent enum_properties_for_agent)
 		end
 
 	enum_tokens (   a_class_token: NATURAL_32;
-					enum_agent: FUNCTION [TYPED_POINTER [POINTER], NATURAL_32, INTEGER, detachable ARRAY [NATURAL_32]];
+					enum_agent: FUNCTION [TUPLE [POINTER, NATURAL_32, INTEGER], detachable ARRAY [NATURAL_32]];
 				): detachable ARRAYED_LIST [NATURAL_32]
 		require
 			a_class_token > 0
@@ -444,13 +490,16 @@ feature -- Queries
 			l_t_upper: INTEGER
 			l_tokens_count: INTEGER
 			l_enum_hdl: POINTER
+			args : TUPLE [ptr: POINTER; tok: NATURAL_32; tok_count: INTEGER]
 		do
 				--| Get inherited "direct" entry
 			create l_tokens.make (5)
 
---			l_enum_hdl := Default_pointer
+				-- Note: weird behavior with POINTER, TYPED_POINTER [POINTER] and agent ...
 			l_tp := $l_enum_hdl --| BUG: ... TUPLE with typed_pointer !!!
-			l_tokens_array := enum_agent.item ([l_tp, a_class_token, 10])
+			args := [l_tp.to_pointer, a_class_token, 10]
+			l_tokens_array := enum_agent.item (args)
+
 			l_tokens_count := count_enum (l_enum_hdl)
 			if l_tokens_array /= Void and l_tokens_count > 0 then
 				if l_tokens_count > l_tokens.capacity - l_tokens.count then
@@ -468,7 +517,9 @@ feature -- Queries
 				if l_tokens_count > l_tokens_array.count then
 						-- We need to retrieve the rest of the data
 
-					l_tokens_array := enum_agent.item ([l_tp, a_class_token, l_tokens_count - 10])
+					args.tok_count := l_tokens_count - 10
+
+					l_tokens_array := enum_agent.item (args)
 					check l_tokens_array /= Void then
 						from
 							l_t_upper := l_tokens_array.upper
@@ -484,6 +535,30 @@ feature -- Queries
 			end
 			close_enum (l_enum_hdl)
 			Result := l_tokens
+		end
+
+feature {NONE} -- Implementation Enum ... for agent
+
+	frozen cpp_enum_fields_for_agent (obj: POINTER; a_enum_hdl_p: POINTER; a_typedef: NATURAL_32; r_fields: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER
+			-- For agent limitation reason, `cpp_enum_fields_for_agent` is a copy of `cpp_enum_fields` but with `a_enum_hdl_p` declared as `POINTER` and not `TYPED_POINTER [POINTER]`.
+		external
+			"[
+				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdFieldDef*, ULONG, ULONG*): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"EnumFields"
+		end
+		
+	frozen cpp_enum_properties_for_agent (obj: POINTER; a_enum_hdl_p: POINTER; a_typedef: NATURAL_32; r_properties: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER
+			-- For agent limitation reason, `cpp_enum_properties_for_agent` is a copy of `cpp_enum_properties` but with `a_enum_hdl_p` declared as `POINTER` and not `TYPED_POINTER [POINTER]`.	
+		external
+			"[
+				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdProperty*, ULONG, ULONG*): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"EnumProperties"
 		end
 
 feature {NONE} -- Implementation Enum...
@@ -556,7 +631,7 @@ feature {NONE} -- Implementation Enum...
 			]"
 		alias
 			"EnumMethods"
-		end
+		end		
 
 	frozen cpp_enum_fields (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; r_fields: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER
 		external

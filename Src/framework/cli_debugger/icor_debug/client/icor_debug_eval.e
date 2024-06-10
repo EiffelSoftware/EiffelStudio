@@ -172,6 +172,8 @@ feature {ICOR_EXPORTER} -- Access
 	new_object_no_constructor (a_icd_class: ICOR_DEBUG_CLASS)
 			-- NewObjectNoConstructor allocates a new object without
 			-- attempting to call any constructor on the object.
+		require
+			a_icd_class /= Void
 		do
 			set_last_call_success (cpp_new_object_no_constructor (item, a_icd_class.item))
 		end

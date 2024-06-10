@@ -395,142 +395,206 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 
 feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 
-	icdv_string_8_from_icdv_system_string (a_frame: detachable ICOR_DEBUG_FRAME; a_sys_string: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_string_8_from_icdv_system_string (a_frame: detachable ICOR_DEBUG_FRAME; a_sys_string: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for STRING object created from SystemString `a_sys_string'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (eiffel_string_8_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, eiffel_string_8_make_from_cil_constructor, <<Result, a_sys_string>>)
+			if attached eiffel_string_8_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, eiffel_string_8_make_from_cil_constructor, <<Result, a_sys_string>>)
+			else
+				check has_eiffel_string_8_icd_class: False end
+			end
 		end
 
-	icdv_string_32_from_icdv_system_string (a_frame: detachable ICOR_DEBUG_FRAME; a_sys_string: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_string_32_from_icdv_system_string (a_frame: detachable ICOR_DEBUG_FRAME; a_sys_string: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for STRING object created from SystemString `a_sys_string'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (eiffel_string_32_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, eiffel_string_32_make_from_cil_constructor, <<Result, a_sys_string>>)
+			if attached eiffel_string_32_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, eiffel_string_32_make_from_cil_constructor, <<Result, a_sys_string>>)
+			else
+				check has_eiffel_string_32_icd_class: False end
+			end
 		end
 
-	icdv_reference_integer_8_from_icdv_integer_8 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_integer_8_from_icdv_integer_8 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for INTEGER_8_REF object created from SystemInteger `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_integer_8_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_integer_8_set_item_method, <<Result, a_icdv>>)
+			if attached reference_integer_8_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_integer_8_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_integer_8_icd_class: False end
+			end
 		end
-	icdv_reference_integer_16_from_icdv_integer_16 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_integer_16_from_icdv_integer_16 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for INTEGER_16_REF object created from SystemInteger `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_integer_16_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_integer_16_set_item_method, <<Result, a_icdv>>)
+			if attached reference_integer_16_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_integer_16_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_integer_16_icd_class: False end
+			end
 		end
-	icdv_reference_integer_32_from_icdv_integer_32 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_integer_32_from_icdv_integer_32 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for INTEGER_REF object created from SystemInteger `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_integer_32_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_integer_32_set_item_method, <<Result, a_icdv>>)
+			if attached reference_integer_32_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_integer_32_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_integer_32_icd_class: False end
+			end
 		end
-	icdv_reference_integer_64_from_icdv_integer_64 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_integer_64_from_icdv_integer_64 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for INTEGER_64_REF object created from SystemInteger `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_integer_64_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_integer_64_set_item_method, <<Result, a_icdv>>)
+			if attached reference_integer_64_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_integer_64_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_integer_64_icd_class: False end
+			end
 		end
 
-	icdv_reference_natural_8_from_icdv_natural_8 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_natural_8_from_icdv_natural_8 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for NATURAL_8_REF object created from SystemInteger `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_natural_8_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_natural_8_set_item_method, <<Result, a_icdv>>)
+			if attached reference_natural_8_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_natural_8_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_natural_8_icd_class: False end
+			end
 		end
-	icdv_reference_natural_16_from_icdv_natural_16 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_natural_16_from_icdv_natural_16 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for NATURAL_16_REF object created from SystemInteger `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_natural_16_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_natural_16_set_item_method, <<Result, a_icdv>>)
+			if attached reference_natural_16_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_natural_16_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_natural_16_icd_class: False end
+			end
 		end
-	icdv_reference_natural_32_from_icdv_natural_32 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_natural_32_from_icdv_natural_32 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for NATURAL_REF object created from SystemInteger `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_natural_32_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_natural_32_set_item_method, <<Result, a_icdv>>)
+			if attached reference_natural_32_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_natural_32_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_natural_32_icd_class: False end
+			end
 		end
-	icdv_reference_natural_64_from_icdv_natural_64 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_natural_64_from_icdv_natural_64 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for NATURAL_64_REF object created from SystemInteger `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_natural_64_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_natural_64_set_item_method, <<Result, a_icdv>>)
+			if attached reference_natural_64_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_natural_64_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_natural_64_icd_class: False end
+			end
 		end
 
-	icdv_reference_real_from_icdv_real (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_real_from_icdv_real (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for REAL_REF object created from SystemReal `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_real_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_real_set_item_method, <<Result, a_icdv>>)
+			if attached reference_real_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_real_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_real_icd_class: False end
+			end
 		end
 
-	icdv_reference_double_from_icdv_double (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_double_from_icdv_double (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for DOUBLE_REF object created from SystemDouble `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_double_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_double_set_item_method, <<Result, a_icdv>>)
+			if attached reference_double_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_double_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_double_icd_class: False end
+			end
 		end
 
-	icdv_reference_boolean_from_icdv_boolean (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_boolean_from_icdv_boolean (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for BOOLEAN_REF object created from SystemBoolean `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_boolean_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_boolean_set_item_method, <<Result, a_icdv>>)
+			if attached reference_boolean_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_boolean_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_boolean_icd_class: False end
+			end
 		end
 
-	icdv_reference_character_8_from_icdv_character_8 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_character_8_from_icdv_character_8 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for CHARACTER_REF object created from SystemChar `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_character_8_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_character_8_set_item_method, <<Result, a_icdv>>)
+			if attached reference_character_8_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_character_8_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_character_8_icd_class: False end
+			end
 		end
 
-	icdv_reference_character_32_from_icdv_character_32 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_character_32_from_icdv_character_32 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for CHARACTER_REF object created from SystemChar `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_character_32_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_character_32_set_item_method, <<Result, a_icdv>>)
+			if attached reference_character_32_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_character_32_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_character_32_icd_class: False end
+			end
 		end
 
-	icdv_reference_pointer_from_icdv_pointer (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_reference_pointer_from_icdv_pointer (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): detachable ICOR_DEBUG_VALUE
 			-- ICorDebugValue for POINTER_REF object created from SystemPtr `a_icdv'
 		do
-			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (reference_pointer_icd_class)
-			Result := complete_function_evaluation
-			method_evaluation (a_frame, reference_pointer_set_item_method, <<Result, a_icdv>>)
+			if attached reference_pointer_icd_class as icd_class then
+				prepare_evaluation (a_frame, True)
+				last_icor_debug_eval.new_object_no_constructor (icd_class)
+				Result := complete_function_evaluation
+				method_evaluation (a_frame, reference_pointer_set_item_method, <<Result, a_icdv>>)
+			else
+				check has_reference_pointer_icd_class: False end
+			end
 		end
 
 feature {NONE} -- Backup state
@@ -1240,7 +1304,7 @@ feature {NONE} -- Helper Impl
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

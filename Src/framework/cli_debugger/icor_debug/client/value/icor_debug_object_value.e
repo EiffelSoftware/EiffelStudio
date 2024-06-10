@@ -74,55 +74,52 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
+
+
 	cpp_get_class (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
-			"[
-				C++ ICorDebugObjectValue signature(ICorDebugClass**): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"GetClass"
+			"((ICorDebugObjectValue*)$obj)->GetClass((ICorDebugClass**)$a_p)"
+		ensure
+			is_class: class
 		end
 
 	cpp_get_field_value (obj: POINTER; a_class: POINTER; a_mdfield_def: NATURAL_32; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
-			"[
-				C++ ICorDebugObjectValue signature(ICorDebugClass*,mdFieldDef, ICorDebugValue**): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"GetFieldValue"
+			"((ICorDebugObjectValue*)$obj)->GetFieldValue((ICorDebugClass*)$a_class, (mdFieldDef) $a_mdfield_def, (ICorDebugValue**) $a_p)"
+		ensure
+			is_class: class
 		end
 
 	cpp_is_value_class (obj: POINTER; a_is_value_class: TYPED_POINTER [INTEGER]): INTEGER
 			-- Call `ICorDebugObjectValue->IsValueClass'.
 		external
-			"[
-				C++ ICorDebugObjectValue signature(BOOL*): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"IsValueClass"
+			"((ICorDebugObjectValue*)$obj)->IsValueClass((BOOL*)$a_is_value_class)"
+		ensure
+			is_class: class
 		end
 
 	cpp_get_managed_copy (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
-			"[
-				C++ ICorDebugObjectValue signature(IUnknown**): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"GetManagedCopy"
+			"((ICorDebugObjectValue*)$obj)->GetManagedCopy((IUnknown**)$a_p)"
+		ensure
+			is_class: class
 		end
 
 	cpp_set_from_managed_copy (obj: POINTER; a_p: POINTER): INTEGER
 		external
-			"[
-				C++ ICorDebugObjectValue signature(IUnknown*): EIF_INTEGER 
-				use "cli_debugger_headers.h"
-			]"
+			"C++ inline use %"cli_debugger_headers.h%""
 		alias
-			"SetFromManagedCopy"
+			"((ICorDebugObjectValue*)$obj)->SetFromManagedCopy((IUnknown*)$a_p)"
+		ensure
+			is_class: class
 		end
-
+	
 end

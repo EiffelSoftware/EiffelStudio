@@ -34,7 +34,7 @@ feature {ICOR_EXPORTER} -- Access
  		do
  			if not retried then
 				last_call_success := cpp_terminate (item)
-				n := {CLI_COM}.release (item)
+				n := cli_release (item)
 
 				last_icd_managed_callback.terminate_callback
 				last_icd_unmanaged_callback.terminate_callback

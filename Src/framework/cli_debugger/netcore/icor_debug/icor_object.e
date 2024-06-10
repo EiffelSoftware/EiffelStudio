@@ -97,7 +97,7 @@ feature {NONE}
 				end
 			end
 			if item /= Default_pointer then
-				l_nb_ref := {CLI_COM}.release (item)
+				l_nb_ref := cli_release (item)
 				item := default_pointer
 			end
 			debug ("com_object")
@@ -158,7 +158,7 @@ feature -- Ref management
 			debug ("COM_OBJECT")
 				io.error.put_string_32 ({STRING_32} "Entering ["+ generating_type.name_32 +"].add_ref ... on " + item.out + "%N")
 			end
-			l_nb_ref := {CLI_COM}.add_ref (item)
+			l_nb_ref := cli_add_ref (item)
 			debug ("COM_OBJECT")
 				io.error.put_string_32 ({STRING_32} "Quitting ["+ generating_type.name_32 +"].add_ref [" + l_nb_ref.out + "] on " + item.out + "%N")
 			end
@@ -173,7 +173,7 @@ feature -- Ref management
 			debug ("COM_OBJECT")
 				io.error.put_string_32 ({STRING_32} "Entering [" + generating_type.name_32 + "].release ... on " + item.out + "%N")
 			end
-			l_nb_ref := {CLI_COM}.release (item)
+			l_nb_ref := cli_release (item)
 			debug ("COM_OBJECT")
 				io.error.put_string_32 ({STRING_32} "Quitting [" + generating_type.name_32 + "].release [" + l_nb_ref.out + "] on " + item.out + "%N")
 			end
@@ -243,6 +243,28 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"CloseHandle"
+		end
+
+feature {NONE} -- Reference management
+
+	frozen cli_release (a_pointer: POINTER): INTEGER
+			-- Release COM objects represented by `a_pointer'.
+		external
+			"C++ inline use %"cli_debugger_headers.h%""
+		alias
+			"((IUnknown*)$a_pointer)->Release()"
+		ensure
+			is_class: class
+		end
+
+	frozen cli_add_ref (a_pointer: POINTER): INTEGER
+			-- AddRef COM objects represented by `a_pointer'.
+		external
+			"C++ inline use %"cli_debugger_headers.h%""
+		alias
+			"((IUnknown*)$a_pointer)->AddRef()"
+		ensure
+			is_class: class
 		end
 
 feature {NONE} -- Implementation

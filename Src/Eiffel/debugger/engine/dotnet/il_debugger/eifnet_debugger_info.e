@@ -1047,7 +1047,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- JIT info implementation
 
 feature -- JIT Info access
 
-	icor_debug_module (a_mod_name: STRING_32): ICOR_DEBUG_MODULE
+	icor_debug_module (a_mod_name: STRING_32): detachable ICOR_DEBUG_MODULE
 			-- ICorDebugModule interface related to `a_mod_name'.
 		require
 			mod_name_valid: a_mod_name /= Void and then not a_mod_name.is_empty

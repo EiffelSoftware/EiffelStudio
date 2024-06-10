@@ -341,7 +341,7 @@ feature -- Access to module name computing
 					l_type_id := a_class_c.class_id // System.msil_classes_per_module + 1
 				end
 					--| There complete creation of module file name
-				Result := Result.extended ("module_" + l_type_id.out + ".dll")
+				Result := module_file_name_for_type_id_to (l_type_id, Result)
 			end
 		end
 
@@ -393,17 +393,24 @@ feature -- Access to module name computing
 					l_type_id := a_class_type.associated_class.class_id // System.msil_classes_per_module + 1
 				end
 					--| There complete creation of module file name
-				if system.is_il_netcore then
-					Result := Result.extended ("assembly_")
-					if l_type_id < 10 then
-						Result := Result.appended ("0")
-					end
-					Result := Result.appended (l_type_id.out)
-				else
-					Result := Result.extended ("module_" + l_type_id.out)
-				end
-				Result := Result.appended_with_extension ("dll")
+				Result := module_file_name_for_type_id_to (l_type_id, Result)
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	module_file_name_for_type_id_to (a_type_id: INTEGER; a_base_path: PATH): PATH
+		do
+			if system.is_il_netcore then
+				Result := a_base_path.extended ("assembly_")
+				if a_type_id < 10 then
+					Result := Result.appended ("0")
+				end
+				Result := Result.appended (a_type_id.out)
+			else
+				Result := a_base_path.extended ("module_" + a_type_id.out)
+			end
+			Result := Result.appended_with_extension ("dll")
 		end
 
 feature -- Queries : dotnet data from estudio data

@@ -210,7 +210,7 @@ eiflib='finalized'
 if [ -n "$LD" ]; then
 	ld=$LD
 else
-	ld=$cc
+	ld='ld'
 fi
 lintflags=''
 ldflags=""

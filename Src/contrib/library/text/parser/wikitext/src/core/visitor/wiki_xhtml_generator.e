@@ -66,6 +66,23 @@ feature -- Callback
 
 feature -- Callback change
 
+	register_resolvers (r: WIKI_ITEM_RESOLVER)
+			-- Auto detect available resolvers
+		do
+			if attached {WIKI_LINK_RESOLVER} r as l_link_resolver then
+				set_link_resolver (l_link_resolver)
+			end
+			if attached {WIKI_FILE_RESOLVER} r as l_file_resolver then
+				set_file_resolver (l_file_resolver)
+			end
+			if attached {WIKI_TEMPLATE_RESOLVER} r as l_tpl_resolver then
+				set_template_resolver (l_tpl_resolver)
+			end
+			if attached {WIKI_IMAGE_RESOLVER} r as l_img_resolver then
+				set_image_resolver (l_img_resolver)
+			end
+		end
+
 	set_link_resolver (r: like link_resolver)
 		do
 			link_resolver := r
@@ -954,21 +971,116 @@ feature -- Links
 			end
 		end
 
+	link_paramter_to_url (lnk: READABLE_STRING_8; a_page: detachable WIKI_PAGE): detachable READABLE_STRING_8
+			-- Resolved link provided as parameter.
+		require
+			lnk /= Void
+		local
+			w_link: WIKI_LINK
+			e_link: WIKI_EXTERNAL_LINK
+		do
+			if lnk.is_whitespace then
+				Result := Void
+			elseif
+				lnk.starts_with_general ("http://")
+				or lnk.starts_with_general ("https://")
+				or lnk.starts_with_general ("mailto:")
+				or lnk.starts_with_general ("file://")
+				or lnk.starts_with_general ("#") -- Anchor name ...
+			then
+				Result := lnk
+			else
+				create w_link.make ("[["+ lnk +"]]")
+				if
+					attached link_resolver as r and then
+					attached r.wiki_url (w_link, a_page) as w_url
+				then
+					Result := w_url
+				else
+					Result := lnk
+				end
+			end
+		end
+
 	visit_file_link (a_link: WIKI_FILE_LINK)
 		local
-			l_url: detachable READABLE_STRING_8
+			l_wiki_url, l_file_url, l_url: detachable READABLE_STRING_8
+			l_lnk_name: READABLE_STRING_8
 		do
 			if
 				attached file_resolver as r and then
 				attached r.file_to_url (a_link, current_page) as u
 			then
-				l_url := u
+				l_file_url := u
 			else
-				l_url := a_link.name
+				l_file_url := a_link.name
 			end
-			output ("<a href=%"" + l_url + "%" class=%"wiki_link%">")
-			a_link.text.process (Current)
-			output ("</a>")
+			if attached a_link.link_parameter as lnk then
+				l_url := link_paramter_to_url (lnk, current_page)
+				-- l_url can be Void, in this case, no link is generated
+			else
+				l_url := l_file_url
+			end
+			if a_link.is_image then
+				l_lnk_name := a_link.name
+				if not a_link.inlined then
+					output ("<div class=%"wiki_image")
+					if a_link.has_frame or a_link.has_thumb_parameter or a_link.has_border then
+						output (" wiki_frame")
+					end
+					output ("%"")
+					if attached a_link.location_parameter as l_location then
+						output (" style=%"text-align: "+ l_location +"%"")
+					end
+					output (">")
+				end
+				if l_url /= Void then
+					output ("<a href=%"" + l_url + "%">")
+				end
+				output ("<img src=%"" + l_file_url + "%" border=%"0%"")
+				if attached a_link.width_parameter as w then
+					output (" width=%"")
+					output (w)
+					output ("%"")
+				end
+				if attached a_link.height_parameter as h then
+					output (" height=%"")
+					output (h)
+					output ("%"")
+				end
+				if attached a_link.alt_parameter as l_alt then
+					output (" alt=%"")
+					output (l_alt)
+					output ("%"")
+				end
+				output ("/>")
+				if l_url /= Void then
+					output ("</a>")
+				end
+				if not a_link.inlined then
+					if not a_link.text.is_empty then
+						output ("<div class=%"wiki_caption%">")
+						if attached {WIKI_RAW_STRING} a_link.text as l_raw then
+							visit_raw_string (l_raw)
+						else
+							a_link.text.process (Current)
+						end
+						output ("</div>")
+					end
+				end
+				if not a_link.inlined then
+					output ("</div>")
+	--				set_next_output_require_newline
+				end
+			else
+				if l_url /= Void then
+					output ("<a href=%"" + l_url + "%" class=%"wiki_link%">")
+				end
+				a_link.text.process (Current)
+				if l_url /= Void then
+					output ("</a>")
+				end
+			end
 		end
 
 	visit_category_link (a_link: WIKI_CATEGORY_LINK)
@@ -1234,7 +1346,7 @@ feature -- Implementation
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2024, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

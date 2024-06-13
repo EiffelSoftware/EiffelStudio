@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="demo" uuid="13FA22BB-3843-4BE6-9CEF-2CF0FC34C923">
+	<target name="demo">
+		<root class="DEMO" feature="make"/>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="wikitext" location="..\wikitext.ecf" readonly="false"/>
+		<cluster name="demo" location=".\"/>
+	</target>
+</system>

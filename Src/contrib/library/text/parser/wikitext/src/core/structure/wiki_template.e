@@ -199,6 +199,12 @@ feature -- Status report
 			Result := False
 		end
 
+	is_named (a_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is Current template named `a_name`?
+		do
+			Result := name.is_case_insensitive_equal_general (a_name)
+		end
+
 feature -- Element change
 
 	set_expression (a_exp: like expression)
@@ -243,7 +249,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2024, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

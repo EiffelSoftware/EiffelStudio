@@ -1,5 +1,5 @@
 
-test_name 	diamond-pattern-vmrc
+test_name 	diamond-pattern-attached-attribute
 test_description A system that has a diamond pattern of inheritance should not causes the compiler to report an incorrect VEVI error.  
 
 copy_sub 	Ace $TEST Ace

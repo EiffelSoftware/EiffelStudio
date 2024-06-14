@@ -16,14 +16,5 @@ feature -- Access
 
 	name: STRING
 
-	code: STRING
-	    do
-	        Result := name.as_lower
-	    end
-
-	to_string: STRING
-		do
-			Result := name
-	    end
-
+invariant
 end

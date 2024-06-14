@@ -596,6 +596,7 @@ test	obsolete-feature-call-date	valid296 tcf pass validity warning obsolete_call
 test	redeclaration-export-status	valid297 tcf fail validity export
 test	adaptation-export-status	valid298 tcf fail validity export
 test	anchored-argument-on-merged-feature	valid299 tcf pass validity anchored_type
+test	diamond-pattern-attached_attribute			valid300 tcf pass validity void_safety
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

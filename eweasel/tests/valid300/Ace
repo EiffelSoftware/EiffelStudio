@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="test" uuid="17450FA3-1FE0-4D39-81D0-BF53A7AF9D2F">
+	<target name="test">
+		<root cluster="root_cluster" class="TEST" feature="make"/>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+	</target>
+</system>

@@ -285,15 +285,25 @@ feature -- Status update
 				end
 			end
 
-				-- Initialize User specific precompiled libraries
-				-- Note: for netcore, this is initialized on demand.
-			init_precompile_directory (False, Void)
-			init_precompile_directory (True, Void)
+			if current_ec_name.same_string (default_ide_ec_name) then
+					-- Initialize precompile directories, only for the compiler
+					-- as EIFFEL_ENV may be used by other tools (finish_freezing, estudio, iron, wizards, ...)
+					-- there is no point to initialize the precompile directories for those tools.
+				init_precompile_directories
+			end
 
 				-- Check dotnet related settings
 			check_dotnet_environment
 		ensure
 			is_valid_environment: is_valid_environment
+		end
+
+	init_precompile_directories
+				-- Initialize User specific precompiled libraries
+		do
+				-- Note: for netcore, this is initialized on demand.
+			init_precompile_directory (False, Void)
+			init_precompile_directory (True, Void)
 		end
 
 	check_ise_eiffel_library_environment_variables
@@ -520,6 +530,10 @@ feature -- Status setting
 		local
 			l_clr_version: detachable READABLE_STRING_GENERAL
 		do
+				-- In case the precompile directories were not initiliazed, or deleted.
+				-- call `init_precompile_directories`
+			init_precompile_directories
+
 				-- For a dotnet project, if the clr_version setting is empty, use the default version.
 			if a_is_dotnet and then (a_clr_version = Void or else a_clr_version.is_whitespace) then
 				l_clr_version := default_il_environment.default_version
@@ -2050,9 +2064,7 @@ feature -- Executable names
 			if l_var /= Void then
 				Result := l_var
 			else
-				create Result.make (6)
-				Result.append ({STRING_32} "ec")
-				Result.append_string_general (release_suffix)
+				Result := default_ide_ec_name
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -2637,7 +2649,7 @@ feature {NONE} -- Helper
 		end
 
 note
-	copyright: "Copyright (c) 1984-2023, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

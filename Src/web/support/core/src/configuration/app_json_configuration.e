@@ -75,7 +75,7 @@ feature -- Application Configuration
 				if
 					l_parser.is_valid and l_parser.is_parsed and then
 					attached l_parser.parsed_json_object as jv and then
-					attached {JSON_BOOLEAN} (jv @ "settings" @ "use_safe_redirection") as jb
+					attached {JSON_BOOLEAN} (jv / "settings" / "use_safe_redirection") as jb
 				then
 					Result := jb.item
 				end

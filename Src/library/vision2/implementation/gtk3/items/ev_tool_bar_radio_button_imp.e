@@ -69,7 +69,7 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_item_parent_imp (a_container_imp: EV_ITEM_LIST_IMP [EV_ITEM])
+	set_item_parent_imp (a_container_imp: detachable EV_ITEM_LIST_IMP [EV_ITEM])
 			-- Set `parent_imp' to `a_container_imp'.
 		do
 			Precursor {EV_TOOL_BAR_BUTTON_IMP} (a_container_imp)

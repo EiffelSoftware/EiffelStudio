@@ -60,10 +60,10 @@ feature -- Access
 			-- Container of `Current'.
 			-- Used to access surface on which `Current' is displayed.
 
-	class_of_id (a_id: STRING): ES_CLASS
-			-- Class of `a_id'
+	class_of_name (a_name: STRING): ES_CLASS
+			-- Class of `a_name'
 		require
-			a_id_not_void: a_id /= Void
+			a_name_not_void: a_name /= Void
 		local
 			l_nodes: like nodes
 			l_class: ES_CLASS
@@ -75,7 +75,7 @@ feature -- Access
 				l_nodes.after or Result /= Void
 			loop
 				l_class ?= l_nodes.item
-				if l_class /= Void and then l_class.es_class_id.is_equal (a_id) then
+				if l_class /= Void and then l_class.name.is_equal (a_name) then
 					Result := l_class
 				end
 				l_nodes.forth
@@ -960,7 +960,7 @@ invariant
 	client_supplier_links_lookup_not_void: client_supplier_links_lookup /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

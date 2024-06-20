@@ -1342,7 +1342,7 @@ feature {NONE} -- Update
 				elseif option_name.same_string_general (dumpoperands_cmd_name) then --| -dumpoperands
 					if command /= Void then
 						option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
-					elseif current_option + 1 < argument_count then
+					elseif current_option + 2 <= argument_count then
 						current_option := current_option + 1
 						cn := argument (current_option)
 						current_option := current_option + 1
@@ -1359,7 +1359,7 @@ feature {NONE} -- Update
 						is_precompiling := True
 					end
 				elseif option_name.same_string_general (metadata_cache_path_cmd_name) then --| -metadata_cache_path
-					if current_option + 1 < argument_count then
+					if current_option + 1 <= argument_count then
 						current_option := current_option + 1
 						set_overridden_metadata_cache_path (argument (current_option))
 					else

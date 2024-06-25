@@ -122,10 +122,6 @@ feature -- Initialization
 
 				--| prepare the battle field ... the field of mines
 			reset_mine_field
-
-			if attached (create {MA_WINDOW}.make ("c:\dev\trunk\src\library\memory_analyzer")) as w then
-				w.show
-			end
 		end;
 
 feature -- About box

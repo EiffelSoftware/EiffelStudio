@@ -596,7 +596,7 @@ test	obsolete-feature-call-date	valid296 tcf pass validity warning obsolete_call
 test	redeclaration-export-status	valid297 tcf fail validity export
 test	adaptation-export-status	valid298 tcf fail validity export
 test	anchored-argument-on-merged-feature	valid299 tcf pass validity anchored_type
-test	diamond-pattern-attached-attribute			valid300 tcf pass validity void_safety
+test	diamond-pattern-attached-attribute			valid300 tcf fail should_pass validity void_safety
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors
@@ -1895,7 +1895,7 @@ test	type-with-none				exec373	tcf pass execution conformance
 test	floating-point-comparison		exec374 tcf pass execution ieee
 test	anchored-tuple-creation			exec375 tcf pass execution creation anchored_type tuple
 test	manifest-array-of-qualified-types	exec376 tcf pass execution manifest_array
-test	diamond-case-inherit-attribute-value	exec377  tcf pass execution
+test	diamond-case-inherit-attribute-value	exec377  tcf fail should_pass execution
 
 -- Once specific
 

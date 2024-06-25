@@ -648,7 +648,7 @@ feature -- command action
 			is_debuggable := True
 		end
 
-	toggle_debug_action (z_key: EV_KEY)
+	toggle_debug_action
 			-- Toggle debugging action.
 		do
 			debugging := not debugging

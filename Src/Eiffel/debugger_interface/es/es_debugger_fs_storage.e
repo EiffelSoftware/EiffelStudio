@@ -99,7 +99,10 @@ feature -- Access: profiles
 							create prof.make
 						end
 						Result.add (prof)
-
+						att := e.attribute_by_name (xml_group_id)
+						if att /= Void then
+							prof.set_group (att.value)
+						end
 						att := e.attribute_by_name (xml_title_id)
 						if att /= Void then
 							prof.set_title (att.value)
@@ -311,6 +314,9 @@ feature {NONE} -- Persistence
 			create elt.make (a_parent, xml_profile_id, a_parent.namespace)
 			a_parent.force_last (elt)
 			elt.add_unqualified_attribute (xml_uuid_id, a_profile.uuid.out)
+			if attached a_profile.group as grp then
+				elt.add_unqualified_attribute (xml_group_id, grp)
+			end
 			if attached a_profile.title as l_title then
 				elt.add_unqualified_attribute (xml_title_id, l_title)
 			end
@@ -393,6 +399,7 @@ feature {NONE} -- Implementation: xml
 	xml_last_profile_id: STRING = "last_profile"
 	xml_profile_id: STRING = "profile"
 	xml_uuid_id: STRING = "uuid"
+	xml_group_id: STRING = "group"
 	xml_title_id: STRING = "title"
 	xml_arguments_id: STRING = "arguments"
 	xml_working_directory_id: STRING = "working_directory"
@@ -466,7 +473,7 @@ feature {NONE} -- Implementation: xml
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

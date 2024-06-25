@@ -43,6 +43,9 @@ feature {NONE} -- Initialization
 		local
 			vbox: EV_VERTICAL_BOX
 		do
+			create profile_select_actions
+			create profile_deselect_actions
+
 			create execution_panel
 			a_widget.extend (execution_panel)
 
@@ -69,6 +72,9 @@ feature {NONE} -- Initialization
         do
         	Precursor
 			update
+-- FIXME: disabled for now, as there is an issue with double-click to edit grid item, and DnD action.	[2024-06-25]
+--			profiles_grid.set_drag_and_drop_mode
+--			profiles_grid.set_item_pebble_function (agent grid_item_pebble)
         end
 
 	Layout_constants: EV_LAYOUT_CONSTANTS
@@ -84,6 +90,10 @@ feature {NONE} -- Initialization
 
 feature -- Interface access
 
+	profile_select_actions: ACTION_SEQUENCE [TUPLE [detachable DEBUGGER_EXECUTION_PROFILE]]
+
+	profile_deselect_actions: ACTION_SEQUENCE [TUPLE [detachable DEBUGGER_EXECUTION_PROFILE]]
+
 	set_focus_on_widget
 			-- Set focus on widget
 		do
@@ -98,9 +108,14 @@ feature {EB_EXECUTION_PARAMETERS_DIALOG} -- Storage
 			-- Retrieve and initialize the arguments from user options.
 		local
 			l_row: EV_GRID_ROW
-			l_prof: like profile_from_row
 			dm: DEBUGGER_MANAGER
-			profs: DEBUGGER_PROFILE_MANAGER
+			profs: STRING_TABLE [ARRAYED_LIST [DEBUGGER_EXECUTION_PROFILE]]
+			lst: ARRAYED_LIST [DEBUGGER_EXECUTION_PROFILE]
+			p: DEBUGGER_EXECUTION_PROFILE
+			l_last_profile: DEBUGGER_EXECUTION_PROFILE
+			g: READABLE_STRING_GENERAL
+			l_group_rows: STRING_TABLE [EV_GRID_ROW]
+			l_grp_row: EV_GRID_ROW
 		do
 				--| Reset cached data
 			internal_sorted_environment_variables := Void
@@ -109,28 +124,60 @@ feature {EB_EXECUTION_PARAMETERS_DIALOG} -- Storage
 			profiles_grid.set_row_count_to (0)
 
 				--| Default
-			l_row := added_profile_text_row (Void, False)
+			l_row := added_profile_text_row (Void, False, Void)
 
 			dm := debugger_manager
-			profs := dm.profiles
-			if profs /= Void then
-					--| It is safer to work on a copy to be able to cancel
-					--| changes easily
-				profs := profs.duplication
-				from
-					profs.start
-				until
-					profs.after
+			if attached dm.profiles as l_profiles then
+				l_last_profile := l_profiles.last_profile
+
+				create profs.make (5)
+				across
+					l_profiles as ic
 				loop
-					l_row := added_profile_text_row (profs.item_for_iteration, False)
-					profs.forth
+					p := ic.item
+					g := p.group
+					if g = Void then
+						g := "."
+					end
+					lst := profs [g]
+					if lst = Void then
+						create lst.make (1)
+						profs [g] := lst
+					end
+						--| It is safer to work on a copy to be able to cancel
+						--| changes easily
+					lst.force (p.duplication (False))
+				end
+			end
+
+			if profs /= Void then
+				create l_group_rows.make (0)
+				across
+					profs as tb
+				loop
+					across
+						tb.item as ic
+					loop
+						p := ic.item
+						if attached p.group as grp then
+							l_grp_row := l_group_rows [grp]
+							if l_grp_row = Void then
+								l_grp_row := new_group_row (grp)
+								l_group_rows [grp] := l_grp_row
+							end
+						else
+							l_grp_row := Void
+						end
+						l_row := added_profile_text_row (p, False, l_grp_row)
+					end
 				end
 
-				l_prof := profs.last_profile
-				if l_prof /= Void then
-					l_row := grid_row_with_profile (l_prof)
+				if l_last_profile /= Void then
+					l_last_profile := l_last_profile.duplication (False)
+					l_row := grid_row_with_profile (l_last_profile)
 					if l_row = Void then
-						l_row := added_profile_text_row (l_prof, True)
+						check has_already_row_for_last_profile: False end
+						l_row := added_profile_text_row (l_last_profile, True, Void)
 					else
 						request_select_row (l_row)
 					end
@@ -160,35 +207,34 @@ feature {EB_EXECUTION_PARAMETERS_DIALOG} -- Storage
 			profs: DEBUGGER_PROFILE_MANAGER
 			r: INTEGER
 			p: like profile_from_row
-			toprows: LINKED_LIST [EV_GRID_ROW]
 			lrow: EV_GRID_ROW
+			l_profs: ARRAYED_LIST [like profile_from_row]
 		do
 				--| Find the top rows (containing the profile data)
 			from
-				create toprows.make
+				create l_profs.make (1)
 				r := 1
 			until
 				r > profiles_grid.row_count
 			loop
 				lrow := profiles_grid.row (r)
-				check lrow.parent_row_root = lrow end
-				toprows.extend (lrow)
-				r := r + lrow.subrow_count_recursive + 1
+				p := profile_from_row (lrow)
+				if p /= Void then
+					l_profs.extend (p)
+					r := r + lrow.subrow_count_recursive + 1
+				else
+					r := r + 1
+				end
 			end
 
 				--| Set profiles
 			profs := debugger_manager.profiles
-			from
-				profs.wipe_out
-				toprows.start
-			until
-				toprows.after
+			profs.wipe_out
+			across
+				l_profs as ic
 			loop
-				p := profile_from_row (toprows.item)
-				if p /= Void then
-					profs.add (p)
-				end
-				toprows.forth
+				p := ic.item
+				profs.add (p)
 			end
 
 			p := selected_profile
@@ -221,6 +267,45 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Query
+
+	grid_item_pebble (gi: EV_GRID_ITEM): detachable ANY
+		do
+			if
+				attached gi.row as r and then
+				attached profile_from_row (r) as prof
+			then
+				Result := prof
+			end
+		end
+
+	has_selected_profile_or_group: BOOLEAN
+		local
+			lrow: EV_GRID_ROW
+		do
+			if
+				profiles_grid.row_count > 0 and then
+				profiles_grid.has_selected_row
+			then
+				lrow := profiles_grid.selected_rows.first
+				if attached parent_profile_row_root (lrow) then
+					Result := True
+				elseif attached parent_group_row_root (lrow) then
+					Result := True
+				end
+			end
+		end
+
+	selected_group: like group_from_row
+		local
+			lrow: EV_GRID_ROW
+		do
+			if profiles_grid.row_count > 0 and then profiles_grid.has_selected_row then
+				lrow := profiles_grid.selected_rows.first
+				if lrow /= Void then
+					Result := group_from_row (parent_group_row_root (lrow))
+				end
+			end
+		end
 
 	selected_profile: like profile_from_row
 		local
@@ -290,6 +375,10 @@ feature {NONE} -- Display profiles impl
 			layout_constants.set_default_width_for_button (dup_button)
 			dup_button.disable_sensitive
 
+			create add_group_button.make_with_text_and_action (interface_names.b_add_group, agent add_new_group)
+			layout_constants.set_default_width_for_button (add_group_button)
+			add_group_button.enable_sensitive
+
 --			if control_in_tool then --| provide a way to "Apply" changes
 				create apply_button.make_with_text_and_action (interface_names.b_apply, agent apply_changes)
 				layout_constants.set_default_width_for_button (apply_button)
@@ -303,6 +392,7 @@ feature {NONE} -- Display profiles impl
 						m: EV_MENU
 						mi: EV_MENU_ITEM
 						mci: EV_CHECK_MENU_ITEM
+						l_has_selection: BOOLEAN
 					do
 						create m.make_with_text ("...")
 						create mi.make_with_text_and_action (interface_names.b_reset, agent reset_changes)
@@ -312,6 +402,24 @@ feature {NONE} -- Display profiles impl
 							mi.disable_sensitive
 						end
 						m.extend (mi)
+
+						l_has_selection := has_selected_profile_or_group
+
+						create mi.make_with_text_and_action (interface_names.b_up_text, agent move_first_selected_row_by (-1))
+						m.extend (mi)
+						if l_has_selection then
+							mi.enable_sensitive
+						else
+							mi.disable_sensitive
+						end
+						create mi.make_with_text_and_action (interface_names.b_down_text, agent move_first_selected_row_by (+1))
+						m.extend (mi)
+						if l_has_selection then
+							mi.enable_sensitive
+						else
+							mi.disable_sensitive
+						end
+
 						m.extend (create {EV_MENU_SEPARATOR})
 						create mi.make_with_text_and_action (interface_names.m_import_debugger_profiles, agent do_import_from)
 						m.extend (mi)
@@ -342,6 +450,8 @@ feature {NONE} -- Display profiles impl
 			hb.disable_item_expand (add_button)
 			hb.extend (dup_button)
 			hb.disable_item_expand (dup_button)
+			hb.extend (add_group_button)
+			hb.disable_item_expand (add_group_button)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
 			hb.extend (create {EV_CELL})
@@ -402,7 +512,8 @@ feature {NONE} -- GUI Properties
 	display_profiles_box: EV_VERTICAL_BOX
 			-- Widget containing profile settings.
 
-	add_button, dup_button, remove_button: EV_BUTTON
+	add_button, dup_button, add_group_button, remove_button: EV_BUTTON
+
 	apply_button: EV_BUTTON
 
 feature {NONE} -- Grid events
@@ -453,23 +564,124 @@ feature {NONE} -- Grid events
 	move_first_selected_row_by (offset: INTEGER)
 			-- Move first selected row by `offset'
 		local
+			l_row, l_target_row: EV_GRID_ROW
 			c: INTEGER
 			d: INTEGER
 		do
-			if attached profiles_grid.grid_selected_top_rows (profiles_grid) as lst then
+			if attached profiles_grid.selected_rows as lst then
 				if lst.count > 0 then
-					if attached lst.first as row then
+					l_row := lst.first
+					if l_row /= Void then
+						l_row := parent_row_root (l_row)
+					end
+					if l_row /= Void then
 						d := default_profile_row.index
-							--| Do not move the first row (which is the default profile)
-						if row.index /= d and row.index + offset /= d then
-							c := profiles_grid.grid_move_top_row_node_by (profiles_grid, row.index, offset)
-							if c > 0 then
-								set_changed (Void, True)
+							--| Do not move or replace the first row (which is the default profile)
+						if
+							l_row.index /= d and l_row.index + offset /= d and
+							(offset < 0 or else l_row.index + l_row.subrow_count_recursive < profiles_grid.row_count) -- Already at the end ...
+						then
+							if is_group_row (l_row) and then l_row.parent_row = Void then
+									-- Top row handling.
+								c := profiles_grid.grid_move_top_row_node_by (profiles_grid, l_row.index, offset)
+								if c > 0 then
+									set_changed (Void, True)
+								end
+								profiles_grid.remove_selection
+								l_row.enable_select
+							else
+								if offset < 0 then
+									c := l_row.index + offset
+								else
+									c := l_row.index + l_row.subrow_count_recursive + offset
+								end
+								l_target_row := profiles_grid.row (c)
+								if l_target_row /= Void then
+									l_target_row := parent_row_root (l_target_row)
+								end
+								if l_target_row /= Void then
+									c := l_target_row.index
+									if offset > 0 then
+										if is_group_row (l_target_row) then
+											c := c + 1
+										else
+											c := c + 1 + l_target_row.subrow_count_recursive
+										end
+									end
+									if is_group_row (l_target_row) then
+										if
+											offset < 0 and then
+											l_target_row.index = l_row.index - 1 and then
+											is_group_row (l_target_row)
+										then
+											profiles_grid.move_rows (l_row.index, c, 1 + l_row.subrow_count_recursive)
+										else
+											profiles_grid.move_rows_to_parent (l_row.index, c, 1 + l_row.subrow_count_recursive, l_target_row)
+										end
+									elseif
+										offset < 0 and then
+										attached parent_group_row_root (l_target_row) as l_par_row and then
+										l_par_row /= l_row.parent_row
+									then
+										profiles_grid.move_rows_to_parent (l_row.index, l_par_row.index + l_par_row.subrow_count_recursive, 1 + l_row.subrow_count_recursive, l_par_row)
+--									elseif
+--										offset > 0 and then
+--										attached parent_group_row_root (l_target_row) as l_par_row and then
+--										l_par_row /= l_row.parent_row
+--									then
+--										profiles_grid.move_rows_to_parent (l_row.index, l_par_row.index + 1, 1 + l_row.subrow_count_recursive, l_par_row)
+
+									elseif attached l_target_row.parent_row as par then
+										profiles_grid.move_rows_to_parent (l_row.index, c, 1 + l_row.subrow_count_recursive, par)
+									else
+										profiles_grid.move_rows (l_row.index, c, 1 + l_row.subrow_count_recursive)
+									end
+--									if c /= l_row.index then
+										set_changed (Void, True)
+--									end
+									profiles_grid.remove_selection
+									l_row.enable_select
+								end
 							end
-							profiles_grid.remove_selection
-							row.enable_select
+						elseif
+							offset > 0 and then
+							l_row.index + l_row.subrow_count_recursive = profiles_grid.row_count and then
+							is_group_row (l_row.parent_row)
+						then
+							c := l_row.index + l_row.subrow_count_recursive + 1
+							profiles_grid.move_rows (l_row.index, c, 1 + l_row.subrow_count_recursive)
 						end
 					end
+				end
+			end
+		end
+
+	move_profile_to_group (prof: like profile_from_row; a_row: EV_GRID_ROW)
+		local
+			l_group_row: EV_GRID_ROW
+			l_ref_row: EV_GRID_ROW
+			nb: INTEGER
+		do
+			if attached grid_row_with_profile (prof) as l_prof_row then
+				nb := 1 + l_prof_row.subrow_count_recursive
+				l_group_row := parent_group_row_root (a_row)
+				if l_group_row /= Void and then attached group_from_row (l_group_row) as grp then
+					if a_row /= l_group_row then
+						l_ref_row := parent_row_root (a_row)
+						profiles_grid.move_rows_to_parent (l_prof_row.index, l_ref_row.index, nb, l_group_row)
+					else
+						profiles_grid.move_rows_to_parent (l_prof_row.index, l_group_row.index + 1, nb, l_group_row)
+					end
+					prof.set_group (grp.title)
+					set_changed (prof, True)
+				else
+					if a_row /= default_profile_row then
+						profiles_grid.move_rows (l_prof_row.index, a_row.index, nb)
+					else
+						profiles_grid.move_rows (l_prof_row.index, profiles_grid.row_count + 1, nb)
+					end
+					prof.set_group (Void)
+					set_changed (prof, True)
 				end
 			end
 		end
@@ -480,8 +692,10 @@ feature {NONE} -- Grid events
 			r: EV_GRID_ROW
 		do
 			if not inside_row_operation and a_row /= Void then
+				on_profile_deselected (Void)
+
 				set_row_root_as_selected (False, default_profile_row)
-				r := a_row.parent_row_root
+				r := parent_row_root (a_row)
 				check r /= Void end
 
 				if r = a_row then
@@ -494,20 +708,73 @@ feature {NONE} -- Grid events
 				if r.data /= Void then
 					remove_button.enable_sensitive
 					dup_button.enable_sensitive
+					if attached {like profile_from_row} r.data as p then
+						on_profile_selected (p)
+					end
 				else
 					remove_button.disable_sensitive
 					dup_button.disable_sensitive
+					on_profile_selected (Void)
 				end
 			end
 		end
 
+	on_profile_selected (p: detachable DEBUGGER_EXECUTION_PROFILE)
+		do
+			profile_select_actions.call (p)
+		end
+
+	on_profile_deselected (p: detachable DEBUGGER_EXECUTION_PROFILE)
+		do
+			profile_deselect_actions.call (p)
+		end
+
+	parent_row_root (a_row: EV_GRID_ROW): detachable EV_GRID_ROW
+		do
+			if attached {like profile_from_row} a_row.data as p then
+				Result := a_row
+			elseif attached {like group_from_row} a_row.data as g then
+				Result := a_row
+			elseif attached a_row.parent_row as pr then
+				Result := parent_row_root (pr)
+			else
+				Result := a_row.parent_row_root
+			end
+		end
+
+	parent_profile_row_root (a_row: EV_GRID_ROW): detachable EV_GRID_ROW
+		do
+			if attached {like profile_from_row} a_row.data as p then
+				Result := a_row
+			else
+				Result := a_row.parent_row
+			end
+		ensure
+			Result = Void or else is_profile_row (Result)
+		end
+
+	parent_group_row_root (a_row: EV_GRID_ROW): detachable EV_GRID_ROW
+		do
+			if attached {like group_from_row} a_row.data as g then
+				Result := a_row
+			elseif attached a_row.parent_row as pr then
+				Result := parent_group_row_root (pr)
+			else
+				Result := a_row.parent_row
+			end
+		ensure
+			Result = Void or else is_group_row (Result)
+		end
+
 	set_row_root_as_selected (a_is_selected: BOOLEAN; a_row: EV_GRID_ROW)
 		require
-			a_row /= Void implies a_row.parent_row_root = a_row
+			a_row /= Void implies parent_row_root (a_row) = a_row
 		do
 			if a_row /= Void and then a_row.count > 0 then
 				if attached {EV_GRID_SPAN_LABEL_ITEM} a_row.item (1) as gi then
-					if a_is_selected then
+					if is_group_row (a_row) then
+--						gi.set_pixmap (stock_pixmaps.folder_cluster_icon)					
+					elseif a_is_selected then
 						gi.set_pixmap (mini_stock_pixmaps.general_next_icon)
 					else
 						gi.remove_pixmap
@@ -526,14 +793,18 @@ feature {NONE} -- Grid events
 				remove_button.disable_sensitive
 				dup_button.disable_sensitive
 				if a_row /= Void then
-					r := a_row.parent_row_root
+					r := parent_row_root (a_row)
 					if r = a_row then
 						r.set_background_color (profiles_grid.separator_color)
 						r.set_foreground_color (profiles_grid.foreground_color)
 					end
 					if r.count > 0 then
 						if attached {EV_GRID_SPAN_LABEL_ITEM} r.item (1) as gi then
-							gi.remove_pixmap
+							if is_group_row (r) then
+--								gi.set_pixmap (stock_pixmaps.folder_cluster_icon)
+							else
+								gi.remove_pixmap
+							end
 							profiles_grid.safe_resize_column_to_content (gi.column, False, False)
 						end
 					end
@@ -606,6 +877,19 @@ feature -- Data change
 			Result_not_void: Result /= Void
 		end
 
+	new_group (a_title: detachable READABLE_STRING_GENERAL): like group_from_row
+			-- New empty group
+		do
+			if a_title = Void then
+				create Result.make_without_title
+			else
+				create Result.make (a_title)
+			end
+			update_group_title (Result)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	update_title (p: like new_profile)
 			-- Update profile's title of `p'
 			-- with a new unused name
@@ -655,6 +939,36 @@ feature -- Data change
 			title_not_empty: p.title /= Void and then not p.title.is_empty
 		end
 
+	update_group_title (g: like new_group)
+			-- Update group's title of `p'
+			-- with a new unused name
+		require
+			g_not_void: g /= Void
+		local
+			s32, s: STRING_32
+			i: INTEGER
+		do
+			if g.title = Void or else g.title.is_empty then
+				s32 := interface_names.l_profiles_group
+				from
+					i := 1
+					create s.make_from_string (s32)
+				until
+					s.count > s32.count and then group_named (s) = Void
+				loop
+					s.keep_head (s32.count)
+					s.append_character (' ')
+					s.append_character ('#')
+					s.append_integer (i)
+					i := i + 1
+				end
+				s32 := s
+				g.set_title (s32)
+			end
+		ensure
+			title_not_empty: g.title /= Void and then not g.title.is_empty
+		end
+
 	same_string_value (s1, s2: READABLE_STRING_GENERAL): BOOLEAN
 			-- is `s1' and `s2' the same text ?
 		do
@@ -686,6 +1000,28 @@ feature -- Data change
 			if not same_string_value (old_title, p.title) then
 				update_title_row_of (p)
 				set_changed (p, True)
+			end
+		end
+
+	change_group_title_on (v: READABLE_STRING_GENERAL; grp: like group_from_row)
+		require
+			v_attached: v /= Void
+		local
+			s: READABLE_STRING_GENERAL
+			old_grp_title: READABLE_STRING_GENERAL
+		do
+			old_grp_title := grp.title
+			if v.is_empty then
+				s := Void
+			else
+				s := v
+			end
+			grp.set_title (s)
+			update_group_title (grp)
+
+			if not same_string_value (old_grp_title, grp.title) then
+				update_group_title_row_of (grp)
+				set_changed (Void, True)
 			end
 		end
 
@@ -754,6 +1090,16 @@ feature -- Data change
 			l_row := grid_row_with_profile (p)
 			if l_row /= Void then
 				refresh_title_row_text (l_row)
+			end
+		end
+
+	update_group_title_row_of (g: like group_from_row)
+		local
+			l_row: EV_GRID_ROW
+		do
+			l_row := grid_row_with_group (g)
+			if l_row /= Void then
+				refresh_group_title_row_text (l_row)
 			end
 		end
 
@@ -882,12 +1228,35 @@ feature {NONE} -- Button Actions
 	add_new_profile
 			-- Add a new profile
 		local
-			r: EV_GRID_ROW
+			sel, r: EV_GRID_ROW
 		do
+			if attached profiles_grid.selected_rows as l_rows then
+				sel := l_rows.first
+				if sel /= Void then
+					sel := parent_group_row_root (sel)
+				end
+			end
 			profiles_grid.remove_selection
-			r := added_profile_text_row (new_profile, True)
+			r := added_profile_text_row (new_profile, True, sel)
 			if r.is_expandable and then not r.is_expanded then
 				r.expand
+			end
+		end
+
+	add_new_group
+			-- Add a new group
+		local
+			r: EV_GRID_ROW
+		do
+			r := new_group_row (Void)
+		end
+
+	new_group_row (grp: detachable READABLE_STRING_GENERAL): EV_GRID_ROW
+		do
+			profiles_grid.remove_selection
+			Result := added_group_text_row (new_group (grp), True)
+			if Result.is_expandable and then not Result.is_expanded then
+				Result.expand
 			end
 		end
 
@@ -907,7 +1276,7 @@ feature {NONE} -- Button Actions
 						p.set_title (description_from_profile (p))
 					end
 					p.set_title (interface_names.m_copy_of (p.title))
-					r := added_profile_text_row (p, True)
+					r := added_profile_text_row (p, True, parent_group_row_root (r))
 					if r.is_expandable and then not r.is_expanded then
 						r.expand
 					end
@@ -922,7 +1291,7 @@ feature {NONE} -- Button Actions
 		do
 			r := profiles_grid.single_selected_row
 			if r /= Void then
-				r := r.parent_row_root
+				r := parent_row_root (r)
 				profiles_grid.remove_row (r.index)
 			end
 			set_changed (Void, True)
@@ -942,6 +1311,28 @@ feature {NONE} -- Button Actions
 				loop
 					l_row := profiles_grid.row (r)
 					Result := profile_from_row (l_row)
+					if Result /= Void and then not same_string_value (a_name, Result.title) then
+						Result := Void
+					end
+					r := r + l_row.subrow_count_recursive + 1
+				end
+			end
+		end
+
+	group_named (a_name: STRING_32): like group_from_row
+			-- group named `a_name' if any
+		local
+			r: INTEGER_32
+			l_row: EV_GRID_ROW
+		do
+			if profiles_grid.row_count > 0 then
+				from
+					r := 1
+				until
+					r > profiles_grid.row_count or Result /= Void
+				loop
+					l_row := profiles_grid.row (r)
+					Result := group_from_row (l_row)
 					if Result /= Void and then not same_string_value (a_name, Result.title) then
 						Result := Void
 					end
@@ -996,18 +1387,30 @@ feature {NONE} -- Queries
 
 feature {NONE} -- Profile actions
 
-	added_profile_text_row (a_profile: like profile_from_row; is_selected: BOOLEAN): EV_GRID_ROW
-			-- Action to take when user chooses to add a new argument.
-			-- if `store_arguments' is true, store_arguments if any change occurred
+	added_profile_text_row (a_profile: like profile_from_row; is_selected: BOOLEAN; a_parent_row: detachable EV_GRID_ROW): EV_GRID_ROW
+			-- Add a new profile, and select it if `is_selecte` is True.
 		do
 			if a_profile = Void then
-				Result := profiles_grid.extended_new_row
+				if a_parent_row = Void then
+					Result := profiles_grid.extended_new_row
+				else
+					Result := profiles_grid.extended_new_subrow (a_parent_row)
+				end
 				Result.set_data (Void)
 				add_title_to_row (Void, Result)
 			else
 				Result := grid_row_with_profile (a_profile)
 				if Result = Void then
-					Result := profiles_grid.extended_new_row
+					if a_parent_row = Void then
+						Result := profiles_grid.extended_new_row
+					else
+						Result := profiles_grid.extended_new_subrow (a_parent_row)
+						if attached group_from_row (a_parent_row) as grp then
+							if not a_profile.is_in_group (grp.title) then
+								a_profile.set_group (grp.title)
+							end
+						end
+					end
 					Result.set_data (a_profile)
 
 						-- Entitled the row `a_row'
@@ -1019,6 +1422,37 @@ feature {NONE} -- Profile actions
 						profiles_grid.safe_resize_column_to_content (profiles_grid.column (1), False, False)
 					end
 					set_changed (a_profile, True)
+				end
+			end
+			if
+				a_parent_row /= Void and then
+			 	a_parent_row.is_expandable and then
+			 	not a_parent_row.is_expanded
+			then
+				a_parent_row.expand
+			end
+		end
+
+	added_group_text_row (a_group: like group_from_row; is_selected: BOOLEAN): EV_GRID_ROW
+			-- Add a new group, and select it if `is_selecte` is True.
+		do
+			if a_group = Void then
+				Result := profiles_grid.extended_new_row
+				Result.set_data (Void)
+				add_group_title_to_row (Void, Result)
+			else
+				Result := grid_row_with_group (a_group)
+				if Result = Void then
+					Result := profiles_grid.extended_new_row
+					Result.set_data (a_group)
+
+					add_group_title_to_row (a_group, Result)
+					if is_selected then
+						Result.ensure_visible
+						Result.enable_select
+						profiles_grid.safe_resize_column_to_content (profiles_grid.column (1), False, False)
+					end
+					set_changed (Void, True)
 				end
 			end
 		end
@@ -1174,6 +1608,12 @@ feature {NONE} -- Profile actions
 
 			l_master_item.pointer_button_press_actions.extend (agent on_profile_title_clicked (a_row, ?,?,?,?,?,?,?,?))
 
+			l_master_item.drop_actions.extend (agent (prof: like profile_from_row; i_row: EV_GRID_ROW)
+							do
+								move_profile_to_group (prof, i_row)
+							end(?, a_row)
+						)
+
 			a_row.set_item (1, l_master_item)
 
 
@@ -1210,9 +1650,11 @@ feature {NONE} -- Profile actions
 		local
 			p: like profile_from_row
 			s: STRING_32
+			l_is_dft: BOOLEAN
 		do
 			p := profile_from_row (a_row)
 			if p = Void then
+				l_is_dft := True
 				s := interface_names.l_default
 			else
 				s := p.title
@@ -1221,9 +1663,107 @@ feature {NONE} -- Profile actions
 				end
 			end
 			if attached {EV_GRID_SPAN_LABEL_ITEM} a_row.item (1) as l_item then
+				if l_is_dft then
+					check no_drop_action: l_item.drop_actions.is_empty end
+
+					l_item.drop_actions.extend (agent move_profile_to_group (?, a_row))
+				end
 				l_item.set_text (s)
 			else
 				check False end
+			end
+		end
+
+	add_group_title_to_row (a_group: like group_from_row; a_row: EV_GRID_ROW)
+			-- Add group title items to `a_row' for group `a_group`
+		require
+			a_row /= Void
+		local
+			l_master_item: EV_GRID_EDITABLE_SPAN_LABEL_ITEM
+			l_item: EV_GRID_SPAN_LABEL_ITEM
+		do
+			a_row.set_data (a_group)
+
+			create l_master_item.make_master (1)
+			l_master_item.set_font (title_font)
+			l_master_item.set_editable_font (Void)
+			l_master_item.set_editable_background_color (profiles_grid.background_color)
+			l_master_item.set_editable_foreground_color (profiles_grid.foreground_color)
+			l_master_item.set_pixmap (stock_pixmaps.folder_blank_icon)
+
+			l_master_item.drop_actions.extend (agent move_profile_to_group (?, a_row))
+
+
+			a_row.set_item (1, l_master_item)
+
+			create l_item.make_span (1)
+			a_row.set_item (2, l_item)
+			a_row.set_background_color (profiles_grid.separator_color)
+
+			refresh_group_title_row_text (a_row)
+			if a_group /= Void then
+				-- DEBUG --
+				l_master_item.set_tooltip (a_group.title)
+
+				a_row.item (1).pointer_double_press_actions.extend (agent activate_grid_item (l_master_item, ?,?,?,?,?,?,?,?))
+				l_master_item.deactivate_actions.extend (agent (ia_master_item: EV_GRID_EDITABLE_SPAN_LABEL_ITEM)
+						do
+							if
+								attached ia_master_item.row as l_row and then
+								attached group_from_row (l_row) as ia_grp
+							then
+								change_group_title_on (ia_master_item.text, ia_grp)
+							end
+						end(l_master_item)
+					)
+				a_row.item (2).pointer_double_press_actions.extend (agent activate_grid_item (l_master_item, ?,?,?,?,?,?,?,?))
+				a_row.ensure_expandable
+			end
+			set_changed (Void, True)
+		end
+
+	refresh_group_title_row_text (a_row: EV_GRID_ROW)
+			-- Refresh `a_row' by recomputing the group title's text related to `a_row'
+		require
+			a_row /= Void
+		local
+			g: like group_from_row
+			s: STRING_32
+		do
+			g := group_from_row (a_row)
+			if g = Void or else g.title.is_whitespace then
+				s := interface_names.l_default
+			else
+				s := g.title
+			end
+			if attached {EV_GRID_SPAN_LABEL_ITEM} a_row.item (1) as l_item then
+				l_item.set_text (s)
+			else
+				check False end
+			end
+		end
+
+	is_group_row (a_row: detachable EV_GRID_ROW): BOOLEAN
+		do
+			if a_row /= Void and then attached {like group_from_row} a_row.data then
+				Result := True
+			end
+		end
+
+	is_profile_row (a_row: detachable EV_GRID_ROW): BOOLEAN
+		do
+			if a_row /= Void and then attached {like profile_from_row} a_row.data then
+				Result := True
+			end
+		end
+
+	group_from_row (a_row: EV_GRID_ROW): detachable DEBUGGER_EXECUTION_PROFILE_GROUP
+			-- Profile related to `a_row'.
+		require
+			a_row_not_void: a_row /= Void
+		do
+			if attached {like group_from_row} parent_row_root (a_row).data as g then
+				Result := g
 			end
 		end
 
@@ -1232,7 +1772,7 @@ feature {NONE} -- Profile actions
 		require
 			a_row_not_void: a_row /= Void
 		do
-			if attached {like profile_from_row} a_row.parent_row_root.data as p then
+			if attached {like profile_from_row} parent_row_root (a_row).data as p then
 				Result := p
 			end
 		end
@@ -1251,8 +1791,31 @@ feature {NONE} -- Profile actions
 				r > profiles_grid.row_count or Result /= Void
 			loop
 				p := profile_from_row (profiles_grid.row (r))
-				if p /= Void and then p.is_equal (a_profile) then
+				if p /= Void and then p.same_as (a_profile) then
 					Result := profiles_grid.row (r)
+				end
+				r := r + 1
+			end
+		end
+
+	grid_row_with_group (grp: like group_from_row): EV_GRID_ROW
+			-- Grid's row related to `grp'.
+		require
+			grp_not_void: grp /= Void
+		local
+			r: INTEGER
+			g: like group_from_row
+			l_row: EV_GRID_ROW
+		do
+			from
+				r := 1
+			until
+				r > profiles_grid.row_count or Result /= Void
+			loop
+				l_row := profiles_grid.row (r)
+				g := group_from_row (l_row)
+				if g /= Void and then grp.same_as (g) then
+					Result := l_row
 				end
 				r := r + 1
 			end
@@ -1865,7 +2428,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2023, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -39,6 +39,9 @@ feature -- Properties
 	uuid: UUID
 			-- unique identifier
 
+	group: detachable STRING_32
+			-- Associated group
+
 	title: detachable STRING_32
 			-- Associated title
 			--| not required, just for information
@@ -77,12 +80,26 @@ feature {DEBUGGER_EXECUTION_PROFILE, DEBUGGER_EXECUTION_RESOLVED_PROFILE} -- Acc
 
 feature -- Status report
 
-	same_profile_parameters (p: like Current): BOOLEAN
+	same_uuid_as (p: like Current): BOOLEAN
 			-- Has `p' same parameters as Current?
 		require
 			p_attached: p /= Void
 		do
-			Result := version = p.version
+			Result := uuid.out.same_string (p.uuid.out)
+		end
+
+	same_as (p: like Current): BOOLEAN
+			-- Has `p' same parameters as Current?
+		require
+			p_attached: p /= Void
+		do
+			Result := same_uuid_as (p) and then version = p.version
+		end
+
+	is_in_group (grp: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is Current profile inside group `grp`?
+		do
+			Result := attached group as g and then grp.same_string (g)
 		end
 
 feature -- Duplication
@@ -96,7 +113,9 @@ feature -- Duplication
 			else
 				create Result.make_with_uuid (uuid)
 			end
-
+			if attached group as grp then
+				Result.set_group (grp.twin)
+			end
 			if attached title as l_title then
 				Result.set_title (l_title.twin)
 			end
@@ -141,6 +160,16 @@ feature -- Element change
 				version := version + 1
 			else
 				version := 1
+			end
+		end
+
+	set_group (v: detachable READABLE_STRING_GENERAL)
+			-- Set `group'
+		do
+			if v = Void then
+				group := Void
+			else
+				group := v.to_string_32
 			end
 		end
 
@@ -208,9 +237,19 @@ feature -- Element change
 
 feature -- debug output
 
-	debug_output: STRING
+	debug_output: STRING_32
 		do
-			Result := "uuid=" + uuid.out + " version=" + version.out
+			create Result.make (32)
+			if attached group as g then
+				Result.append_character ('[')
+				Result.append (g)
+				Result.append_character (']')
+				Result.append_character (' ')
+			end
+			Result.append_string_general ("uuid=")
+			Result.append_string_general (uuid.out)
+			Result.append_string_general (" version=")
+			Result.append_string_general (version.out)
 		end
 
 invariant
@@ -219,7 +258,7 @@ invariant
 	arguments_attached: arguments /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

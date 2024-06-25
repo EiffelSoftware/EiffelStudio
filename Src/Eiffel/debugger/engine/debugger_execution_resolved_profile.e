@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			uuid := a_profile.uuid
 			version := a_profile.version
 			title := a_profile.title
+			group := a_profile.group
 
 			p := a_profile.parent
 			if p /= Void then
@@ -94,6 +95,9 @@ feature -- Properties
 	uuid: UUID
 			-- Unique identifier
 
+	group: detachable STRING_32
+			-- Optional group
+
 	title: detachable STRING_32
 			-- Optional title
 
@@ -161,7 +165,7 @@ invariant
 	parent_set_if_not_void: parent_uuid /= Void implies parent_version > 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2024, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

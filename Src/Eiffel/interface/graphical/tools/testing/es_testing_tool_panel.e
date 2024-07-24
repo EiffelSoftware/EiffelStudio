@@ -243,7 +243,7 @@ feature {NONE} -- Access: test creation
 			create l_item.make_with_text_and_action (locale.translation (generate_all_text) + l_suffix,
 				agent on_generate_test (l_launch_wizard))
 			Result.extend (l_item)
-			if not l_system_valid then
+			if not l_system_valid or else open_classes.is_empty then
 					-- Can only be used if we have a valid system.
 				l_item.disable_sensitive
 			end
@@ -271,6 +271,10 @@ feature {NONE} -- Access: test creation
 
 			create l_item.make_with_text_and_action (locale.translation (preferences_text) + "...",
 				agent on_launch_creation_preferences)
+			if not l_system_valid then
+					-- Can only be used if we have a valid system.
+				l_item.disable_sensitive
+			end
 			Result.extend (l_item)
 		end
 
@@ -307,6 +311,38 @@ feature {NONE} -- Status setting: stones
 			end
 		end
 
+feature {NONE} -- Query
+
+    open_classes: STRING
+    		-- Classes currently open in editor pane
+    	do
+    		create Result.make (200)
+			if attached window_manager.windows as l_windows then
+				if attached {EB_DEVELOPMENT_WINDOW} l_windows.item as l_window and then l_window.is_interface_usable then
+					if attached l_window.editors_manager.editors as l_editors then
+						from l_editors.start until l_editors.after loop
+							if
+								attached l_editors.item as l_editor and then
+								l_editor.is_interface_usable and then
+								attached {CLASSI_STONE} l_editor.stone as l_class
+							then
+									-- We have the class stone
+								if attached l_class.class_i as l_class_i then
+									if l_class_i.is_compiled then
+										if not Result.is_empty then
+											Result.append_character (',')
+										end
+										Result.append (l_class_i.name)
+									end
+								end
+							end
+							l_editors.forth
+						end
+					end
+				end
+			end
+    	end
+
 feature -- Basic operations
 
 	set_test_tree_filter (a_filter: STRING_GENERAL)
@@ -326,22 +362,26 @@ feature {NONE} -- Events: test creation
 			--
 			-- `a_launch_wizard': True if wizard should be launched in advance, False otherwise.
 		local
+			l_system_available: BOOLEAN
 			l_composition: ES_TEST_WIZARD_COMPOSITION
 			l_wizard: ES_TEST_LAUNCH_WIZARD
 			l_launch: BOOLEAN
 		do
-			if a_launch_wizard then
-				create l_composition.make (locale.translation ("Create manual test"), {ARRAY [ES_TEST_WIZARD_PAGE]} <<
-					create {ES_TEST_MANUAL_WIZARD_PAGE},
-					create {ES_TEST_TAGS_WIZARD_PAGE},
-					create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
-				create l_wizard.make (l_composition, develop_window.window)
-				l_launch := l_wizard.is_launch_requested
-			else
-				l_launch := True
-			end
-			if l_launch and attached session_manager.service as l_service then
-				launch_session_type ({ETEST_MANUAL_CREATION}, agent launch_manual_test_creation (?, l_service))
+			l_system_available := Workbench.is_in_stable_state and then not Workbench.is_compiling
+			if l_system_available then
+				if a_launch_wizard then
+					create l_composition.make (locale.translation ("Create manual test"), {ARRAY [ES_TEST_WIZARD_PAGE]} <<
+						create {ES_TEST_MANUAL_WIZARD_PAGE},
+						create {ES_TEST_TAGS_WIZARD_PAGE},
+						create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
+					create l_wizard.make (l_composition, develop_window.window)
+					l_launch := l_wizard.is_launch_requested
+				else
+					l_launch := True
+				end
+				if l_launch and attached session_manager.service as l_service then
+					launch_session_type ({ETEST_MANUAL_CREATION}, agent launch_manual_test_creation (?, l_service))
+				end
 			end
 		end
 
@@ -355,31 +395,7 @@ feature {NONE} -- Events: test creation
 			l_launch: BOOLEAN
 			l_types: STRING
 		do
-			create l_types.make (200)
-			if attached window_manager.windows as l_windows then
-				if attached {EB_DEVELOPMENT_WINDOW} l_windows.item as l_window and then l_window.is_interface_usable then
-					if attached l_window.editors_manager.editors as l_editors then
-						from l_editors.start until l_editors.after loop
-							if
-								attached l_editors.item as l_editor and then
-								l_editor.is_interface_usable and then
-								attached {CLASSI_STONE} l_editor.stone as l_class
-							then
-									-- We have the class stone
-								if attached l_class.class_i as l_class_i then
-									if l_class_i.is_compiled then
-										if not l_types.is_empty then
-											l_types.append_character (',')
-										end
-										l_types.append (l_class_i.name)
-									end
-								end
-							end
-							l_editors.forth
-						end
-					end
-				end
-			end
+			l_types := open_classes
 			if not l_types.is_empty and attached session_manager.service as l_session_service then
 				l_session_service.retrieve (True).set_value (l_types, {TEST_SESSION_CONSTANTS}.temporary_types)
 				if a_launch_wizard then
@@ -768,7 +784,7 @@ feature {NONE} -- Internationalization
 	tt_debug_selected: STRING = "Run selected tests"
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

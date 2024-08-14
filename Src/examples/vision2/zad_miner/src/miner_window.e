@@ -122,10 +122,6 @@ feature -- Initialization
 
 				--| prepare the battle field ... the field of mines
 			reset_mine_field
-
-			if attached (create {MA_WINDOW}.make ("c:\dev\trunk\src\library\memory_analyzer")) as w then
-				w.show
-			end
 		end;
 
 feature -- About box
@@ -652,7 +648,7 @@ feature -- command action
 			is_debuggable := True
 		end
 
-	toggle_debug_action (z_key: EV_KEY)
+	toggle_debug_action
 			-- Toggle debugging action.
 		do
 			debugging := not debugging

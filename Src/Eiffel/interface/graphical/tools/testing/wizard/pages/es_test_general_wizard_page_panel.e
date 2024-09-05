@@ -101,7 +101,8 @@ feature {NONE} -- Initialization
 	initialize_with_session (a_service: SESSION_MANAGER_S)
 			-- <Precursor>
 		local
-			l_name, l_path: STRING
+			l_name: STRING
+			l_path: READABLE_STRING_32
 			l_cluster: detachable CONF_CLUSTER
 			l_global_session, l_session: SESSION_I
 		do
@@ -123,7 +124,7 @@ feature {NONE} -- Initialization
 			class_name.set_text (l_name)
 
 			if
-				attached {STRING} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.cluster_name,
+				attached {READABLE_STRING_32} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.cluster_name,
 					{TEST_SESSION_CONSTANTS}.cluster_name_default) as l_cluster_name
 			then
 				if not l_cluster_name.is_empty then
@@ -133,7 +134,7 @@ feature {NONE} -- Initialization
 
 			if l_cluster /= Void then
 				l_path := {TEST_SESSION_CONSTANTS}.path_default
-				if attached {STRING} l_session.value ({TEST_SESSION_CONSTANTS}.path) as l_spath then
+				if attached {READABLE_STRING_32} l_session.value ({TEST_SESSION_CONSTANTS}.path) as l_spath then
 					l_path := l_spath
 				end
 				class_tree.show_subfolder (l_cluster, l_path)
@@ -165,7 +166,7 @@ feature {NONE} -- Access
 			create Result
 		end
 
-	selected_cluster: detachable STRING
+	selected_cluster: detachable IMMUTABLE_STRING_32
 			-- Name of selected cluster, Void if no cluster is selected
 
 	selected_path: detachable IMMUTABLE_STRING_32
@@ -244,16 +245,16 @@ feature {ES_TEST_WIZARD_PAGE} -- Basic operations
 			-- <Precursor>
 		local
 			l_global_session, l_session: SESSION_I
-			l_cluster, l_path: STRING
+			l_cluster, l_path: READABLE_STRING_32
 		do
 			l_session := a_service.retrieve (True)
 			l_global_session := a_service.retrieve (False)
 			l_session.set_value (class_name.text.to_string_8, {TEST_SESSION_CONSTANTS}.class_name)
 			l_cluster := {TEST_SESSION_CONSTANTS}.cluster_name_default
 			l_path := {TEST_SESSION_CONSTANTS}.path_default
-			if attached {STRING} selected_cluster as l_scluster then
+			if attached {READABLE_STRING_32} selected_cluster as l_scluster then
 				l_cluster := l_scluster
-				if attached {STRING} selected_path as l_spath then
+				if attached {READABLE_STRING_32} selected_path as l_spath then
 					l_path := l_spath
 				end
 			end
@@ -271,7 +272,7 @@ feature {NONE} -- Internationalization
 	launch_wizard_text: STRING = "Always show wizard before launching test creation"
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

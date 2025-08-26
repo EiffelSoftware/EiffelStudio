@@ -374,8 +374,13 @@ feature {NONE} -- Implementation: tags
 			check l_test_class /= Void end
 
 			if project_access.is_initialized then
-				l_class := l_test_class.eiffel_class
-				l_group := l_class.cluster
+				if a_tag.starts_with ("covers/") then
+	 				if attached {EIFFEL_CLASS_I} project_access.class_from_name (a_class_name, Void) as l_ec then
+	 					l_class := l_ec
+	 				end
+				else
+					l_class := l_test_class.eiffel_class
+				end
 			end
 
 			if l_class /= Void then
@@ -637,7 +642,7 @@ invariant
 		attached old_test_map implies attached test_class
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2025, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
